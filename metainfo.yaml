@@ -1,0 +1,20 @@
+description: A Qt style supporting both QtQuick and QtWidgets.
+fancyname: Union
+maintainer: ahiemstra
+group: frameworks
+subgroup: tier 2
+release: true
+type: functional
+platforms:
+- name: Linux
+- name: FreeBSD
+- name: Android
+- name: Windows
+- name: macOS
+public_lib: true
+public_source_dirs:
+- src
+libraries:
+ - cmake: Union
+cmakename: Union
+irc: kde-devel
