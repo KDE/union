@@ -8,6 +8,7 @@ target_sources(Union PRIVATE
     ElementIdentifier.cpp
     Size.cpp
 
+    input/plasmasvg/PlasmaSvgLoader.cpp
 )
 
 ecm_qt_declare_logging_category(Union

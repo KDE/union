@@ -6,16 +6,39 @@
 
 #pragma once
 
+#include <optional>
+
+#include <QHash>
+
 #include "StyleLoader.h"
+
+class QSvgRenderer;
+
+namespace Plasma
+{
+class Theme;
+}
+
+namespace Union
+{
+struct CornerDefinition;
+struct LineDefinition;
+struct ImageDefinition;
+}
 
 class PlasmaSvgLoader : public Union::StyleLoader
 {
     Q_OBJECT
 
 public:
-    PlasmaSvgLoader(QObject* parent = nullptr);
+    PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *parent = nullptr);
 
-    bool load(const QUrl &url) override;
+    // bool load(const QUrl &url) override;
+    bool loadElement(const Union::ElementIdentifier &element) override;
 
-    std::shared_ptr<Union::StyleElement> get(const Union::ElementSelector &selector) override;
+private:
+    std::shared_ptr<Union::StyleElement> createElement(Plasma::Theme &theme, const QString &elementName, const QString &prefix);
+    std::optional<Union::LineDefinition> createLineDefinition(QSvgRenderer &renderer, const QString &elementName);
+    std::optional<Union::CornerDefinition> createCornerDefinition(QSvgRenderer &renderer, const QString &elementName);
+    std::optional<Union::ImageDefinition> renderElement(QSvgRenderer &renderer, const QString &elementName);
 };
