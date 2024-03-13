@@ -8,8 +8,7 @@ target_sources(Union PRIVATE
     StyleLoader.cpp
     ElementIdentifier.cpp
     Size.cpp
-
-    input/plasmasvg/PlasmaSvgLoader.cpp
+    InputPlugin.cpp
 )
 
 ecm_qt_declare_logging_category(Union
