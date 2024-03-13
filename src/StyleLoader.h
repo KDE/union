@@ -9,24 +9,34 @@
 #include <memory>
 #include <QObject>
 
+#include "Style.h"
 #include "union_export.h"
 
 namespace Union {
 
-class ElementSelector;
+// class ElementSelector;
+class ElementIdentifier;
 class StyleElement;
+class Style;
 
 class UNION_EXPORT StyleLoader : public QObject
 {
     Q_OBJECT
 
 public:
-    StyleLoader(QObject* parent = nullptr);
+    StyleLoader(std::shared_ptr<Style> style, const QString &name, QObject *parent = nullptr);
     ~StyleLoader() override;
 
-    virtual bool load(const QUrl &url) = 0;
+    std::shared_ptr<Style> style() const;
+    QString name() const;
 
-    virtual std::shared_ptr<StyleElement> get(const ElementSelector &selector) = 0;
+    bool load();
+
+    virtual bool loadElement(const ElementIdentifier &element) = 0;
+
+private:
+    std::shared_ptr<Style> m_style;
+    QString m_name;
 };
 
 }
