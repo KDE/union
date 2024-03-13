@@ -17,7 +17,7 @@
 #include <StyleElement.h>
 
 PlasmaSvgLoader::PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *parent)
-    : Union::StyleLoader(style, u"plasma_svg"_qs, parent)
+    : Union::StyleLoader(style, u"plasmasvg"_qs, parent)
 {
 }
 
