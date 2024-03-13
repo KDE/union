@@ -1,5 +1,6 @@
 
 add_library(Union)
+add_library(Union::Union ALIAS Union)
 
 target_sources(Union PRIVATE
     Style.cpp
