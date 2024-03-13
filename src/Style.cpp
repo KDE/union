@@ -6,20 +6,25 @@
 
 #include "Style.h"
 
+#include <filesystem>
+
+#include <QCoreApplication>
+#include <QPluginLoader>
 #include <QUrl>
 
 #include "ElementIdentifier.h"
+#include "InputPlugin.h"
 #include "StyleLoader.h"
-#include "input/plasmasvg/PlasmaSvgLoader.h"
 
 #include "union_logging.h"
 
 using namespace Union;
+using namespace Qt::StringLiterals;
 
 class UNION_NO_EXPORT Style::Private
 {
 public:
-    std::unique_ptr<StyleLoader> styleLoader;
+    std::unordered_map<QString, std::unique_ptr<StyleLoader>> styleLoaders;
 
     std::unordered_map<ElementIdentifier, std::shared_ptr<StyleElement>> elements;
 };
@@ -32,22 +37,62 @@ Style::Style()
 
 Style::~Style() = default;
 
-std::shared_ptr<StyleElement> Style::get(const ElementIdentifier &selector)
+void Style::load()
 {
-    if (!d->styleLoader) {
-        d->styleLoader = std::make_unique<PlasmaSvgLoader>(instance());
-        if (!d->styleLoader->load()) {
-            qCCritical(UNION_GENERAL) << "Failed to load input!";
-            return nullptr;
+    const auto pluginDirs = QCoreApplication::libraryPaths();
+    for (const auto &dir : pluginDirs) {
+        const auto path = std::filesystem::path(dir.toStdString()) / "union";
+
+        if (!std::filesystem::exists(path)) {
+            continue;
+        }
+
+        for (const auto &entry : std::filesystem::directory_iterator(path)) {
+            QPluginLoader loader(QString::fromStdString(entry.path()));
+            const auto metaData = loader.metaData().value(u"MetaData").toObject();
+            const auto name = metaData.value(u"union-pluginname").toString();
+
+            if (metaData.value(u"union-plugintype").toString() == u"input"_qs) {
+                auto inputPlugin = static_cast<InputPlugin *>(loader.instance());
+                if (inputPlugin) {
+                    qCDebug(UNION_GENERAL) << "Loaded input plugin" << name;
+                    auto loader = inputPlugin->createStyleLoader(instance());
+                    if (!loader->load()) {
+                        qCWarning(UNION_GENERAL) << "Style loader failed to load";
+                    } else {
+                        d->styleLoaders.insert(std::make_pair(name, std::move(loader)));
+                    }
+                } else {
+                    qCWarning(UNION_GENERAL) << "Failed loading plugin" << name << loader.errorString();
+                }
+            }
         }
     }
+}
 
+std::shared_ptr<StyleElement> Style::get(const ElementIdentifier &selector)
+{
     auto element = d->elements.find(selector);
     if (element != d->elements.end()) {
         return element->second;
     }
 
-    return nullptr;
+    auto loader = d->styleLoaders.find(selector.style());
+    if (loader == d->styleLoaders.end()) {
+        return nullptr;
+    }
+
+    if (!loader->second->loadElement(selector)) {
+        return nullptr;
+    }
+
+    element = d->elements.find(selector);
+    if (element != d->elements.end()) {
+        return element->second;
+    } else {
+        qCDebug(UNION_GENERAL) << "Could not find an element matching identifier" << selector;
+        return nullptr;
+    }
 }
 
 void Style::insert(const ElementIdentifier &identifier, std::shared_ptr<StyleElement> element)

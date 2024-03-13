@@ -24,6 +24,8 @@ public:
     Style();
     ~Style() override;
 
+    void load();
+
     std::shared_ptr<StyleElement> get(const ElementIdentifier &selector);
 
     void insert(const ElementIdentifier &identifier, std::shared_ptr<StyleElement> element);
