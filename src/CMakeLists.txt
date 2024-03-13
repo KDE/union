@@ -15,7 +15,7 @@ ecm_qt_declare_logging_category(Union
     HEADER union_logging.h
     IDENTIFIER UNION_GENERAL
     CATEGORY_NAME union.general
-    DEFAULT_SEVERITY Warning
+    DEFAULT_SEVERITY Debug
     DESCRIPTION "Union - General"
     EXPORT Union
 )
