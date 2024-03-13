@@ -6,6 +6,8 @@ target_sources(Union PRIVATE
     StyleElement.cpp
     StyleLoader.cpp
     ElementIdentifier.cpp
+    Size.cpp
+
 )
 
 ecm_qt_declare_logging_category(Union
