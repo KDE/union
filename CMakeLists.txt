@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(KF_VERSION "5.96.0") # handled by release scripts
-set(KF_DEP_VERSION "5.95.0") # handled by release scripts
+set(KF_VERSION "5.240.0") # handled by release scripts
+set(KF_DEP_VERSION "5.240.0") # handled by release scripts
 
 project(Union VERSION ${KF_VERSION})
 
@@ -10,7 +10,7 @@ find_package(ECM ${KF_DEP_VERSION} NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 include(KDEInstallDirs)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
@@ -24,13 +24,16 @@ include(ECMQmlModule)
 
 option(BUILD_EXAMPLES "Build example applications" OFF)
 
-set(REQUIRED_QT_VERSION 5.15.2)
-find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui)
+set(REQUIRED_QT_VERSION 6.5.0)
+find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui)
 
-find_package(Qt${QT_MAJOR_VERSION}Quick ${REQUIRED_QT_VERSION} CONFIG)
-find_package(Qt${QT_MAJOR_VERSION}Widgets ${REQUIRED_QT_VERSION} CONFIG)
+find_package(Qt6Quick ${REQUIRED_QT_VERSION} CONFIG)
+find_package(Qt6Widgets ${REQUIRED_QT_VERSION} CONFIG)
+find_package(Qt6Svg ${REQUIRED_QT_VERSION} CONFIG)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
+
+find_package(KF6Plasma ${KF_DEP_VERSION})
 
 add_subdirectory(src)
 

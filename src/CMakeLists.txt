@@ -31,8 +31,11 @@ set_target_properties(Union PROPERTIES
 )
 
 target_link_libraries(Union PUBLIC
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::Gui
+    Qt6::Core
+    Qt6::Gui
+
+    Qt6::Svg
+    KF6::Plasma
 )
 
 target_include_directories(Union PUBLIC
