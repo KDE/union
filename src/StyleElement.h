@@ -11,6 +11,8 @@
 
 #include <QObject>
 
+#include "Definition.h"
+
 #include "union_export.h"
 
 namespace Union {
@@ -25,10 +27,30 @@ public:
     StyleElement(QObject *parent = nullptr);
     ~StyleElement() override;
 
-//     Q_PROPERTY(VisualDefinition *foreground READ foreground NOTIFY foregroundChanged)
-//     VisualDefinition
 
-//     Q_PROPERTY(VisualDefinition *background READ background NOTIFY backgroundChanged)
+    std::optional<AreaDefinition> foreground() const;
+    void setForeground(const std::optional<AreaDefinition> &newForeground);
+
+    std::optional<AreaDefinition> background() const;
+    void setBackground(const std::optional<AreaDefinition> &newBackground);
+
+    std::optional<BorderDefinition> border() const;
+    void setBorder(const std::optional<BorderDefinition> &newBorder);
+
+    std::optional<ShadowDefinition> shadow() const;
+    void setShadow(const std::optional<ShadowDefinition> &newShadow);
+
+    std::optional<SizeDefinition> margin() const;
+    void setMargin(const std::optional<SizeDefinition> &newMargin);
+
+    std::optional<SizeDefinition> padding() const;
+    void setPadding(const std::optional<SizeDefinition> &newPadding);
+
+    std::optional<BorderDefinition> outset() const;
+    void setOutset(const std::optional<BorderDefinition> &newOutset);
+
+    std::optional<CornersDefinition> corners() const;
+    void setCorners(const std::optional<CornersDefinition> &newCorners);
 
 private:
     class Private;
