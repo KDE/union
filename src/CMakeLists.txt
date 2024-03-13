@@ -5,7 +5,7 @@ target_sources(Union PRIVATE
     Style.cpp
     StyleElement.cpp
     StyleLoader.cpp
-    ElementSelector.cpp
+    ElementIdentifier.cpp
 )
 
 ecm_qt_declare_logging_category(Union
