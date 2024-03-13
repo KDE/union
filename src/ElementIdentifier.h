@@ -8,6 +8,7 @@
 
 #include <memory>
 
+#include <QDebug>
 #include <QObject>
 
 #include "union_export.h"
@@ -55,3 +56,5 @@ struct std::hash<Union::ElementIdentifier> {
         return qHash(items);
     }
 };
+
+QDebug operator<<(QDebug debug, const Union::ElementIdentifier &identifier);

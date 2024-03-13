@@ -79,3 +79,10 @@ void ElementIdentifier::setSubElement(const QString &name)
 {
     m_subElement = name;
 }
+
+QDebug operator<<(QDebug debug, const Union::ElementIdentifier &identifier)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "ElementIdentifier(" << identifier.style() << ", " << identifier.element() << ", " << identifier.subElement() << ")";
+    return debug;
+}
