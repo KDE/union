@@ -14,7 +14,7 @@
 namespace Union {
 
 class StyleElement;
-class ElementSelector;
+class ElementIdentifier;
 
 class UNION_EXPORT Style : public QObject
 {
@@ -24,7 +24,9 @@ public:
     Style();
     ~Style() override;
 
-    std::shared_ptr<StyleElement> get(const ElementSelector &selector);
+    std::shared_ptr<StyleElement> get(const ElementIdentifier &selector);
+
+    void insert(const ElementIdentifier &identifier, std::shared_ptr<StyleElement> element);
 
     static std::shared_ptr<Style> instance();
 
