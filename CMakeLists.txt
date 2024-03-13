@@ -33,7 +33,8 @@ find_package(Qt6Svg ${REQUIRED_QT_VERSION} CONFIG)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 
-find_package(KF6Plasma ${KF_DEP_VERSION})
+find_package(KF6Config ${KF_DEP_VERSION})
+find_package(KF6Svg ${KF_DEP_VERSION})
 
 add_subdirectory(src)
 

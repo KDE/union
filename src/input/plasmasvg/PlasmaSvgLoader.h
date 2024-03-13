@@ -14,9 +14,9 @@
 
 class QSvgRenderer;
 
-namespace Plasma
+namespace KSvg
 {
-class Theme;
+class ImageSet;
 }
 
 namespace Union
@@ -37,7 +37,7 @@ public:
     bool loadElement(const Union::ElementIdentifier &element) override;
 
 private:
-    std::shared_ptr<Union::StyleElement> createElement(Plasma::Theme &theme, const QString &elementName, const QString &prefix);
+    std::shared_ptr<Union::StyleElement> createElement(KSvg::ImageSet &imageSet, const QString &elementName, const QString &prefix);
     std::optional<Union::LineDefinition> createLineDefinition(QSvgRenderer &renderer, const QString &elementName);
     std::optional<Union::CornerDefinition> createCornerDefinition(QSvgRenderer &renderer, const QString &elementName);
     std::optional<Union::ImageDefinition> renderElement(QSvgRenderer &renderer, const QString &elementName);
