@@ -17,7 +17,10 @@ class TestPlasmaSvg : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto normalButtonId = ElementIdentifier{QStringLiteral("plasma-svg"), QStringLiteral("button"), QStringLiteral("normal")};
+        auto style = Style::instance();
+        style->load();
+
+        auto normalButtonId = ElementIdentifier{QStringLiteral("plasmasvg"), QStringLiteral("button"), QStringLiteral("normal")};
         auto element = Style::instance()->get(normalButtonId);
 
         QVERIFY(element);
