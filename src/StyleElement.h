@@ -27,6 +27,12 @@ public:
     StyleElement(QObject *parent = nullptr);
     ~StyleElement() override;
 
+    Ptr parentElement();
+    void setParentElement(Ptr newParent);
+
+    Ptr child(const QString &identifier);
+    void addChild(const QString &identifier, Ptr child);
+    void removeChild(const QString &identifier);
 
     std::optional<AreaDefinition> foreground() const;
     void setForeground(const std::optional<AreaDefinition> &newForeground);
