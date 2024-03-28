@@ -8,6 +8,7 @@
 
 #include <ElementIdentifier.h>
 #include <Style.h>
+#include <StyleElement.h>
 
 using namespace Union;
 
@@ -24,6 +25,10 @@ private Q_SLOTS:
         auto element = Style::instance()->get(normalButtonId);
 
         QVERIFY(element);
+        QVERIFY(element->background().has_value());
+        QVERIFY(element->background()->image.has_value());
+
+        // QVERIFY(element->background().value().)
     }
 };
 
