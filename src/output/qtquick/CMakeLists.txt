@@ -5,6 +5,10 @@ target_sources(UnionQmlPlugin PRIVATE
     Element.cpp
     Background.cpp
     UnionPlugin.cpp
+    UnionNode.cpp
+    AreaNode.cpp
+    LineNode.cpp
+    CornerNode.cpp
 )
 target_link_libraries(UnionQmlPlugin PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Union::Union)
 
