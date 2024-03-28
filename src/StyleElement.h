@@ -33,6 +33,9 @@ public:
     Ptr child(const QString &identifier);
     void addChild(const QString &identifier, Ptr child);
     void removeChild(const QString &identifier);
+    QSizeF contentSize() const;
+    QRectF boundingRect() const;
+    QMarginsF borderSizes() const;
 
     std::optional<AreaDefinition> foreground() const;
     void setForeground(const std::optional<AreaDefinition> &newForeground);

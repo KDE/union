@@ -65,6 +65,40 @@ void StyleElement::removeChild(const QString &identifier)
     }
 }
 
+QSizeF StyleElement::contentSize() const
+{
+    auto f = foreground().value_or(AreaDefinition{});
+    auto b = background().value_or(AreaDefinition{});
+
+    return QSizeF{std::max(f.size().width(), b.size().width()), std::max(f.size().height(), b.size().height())};
+}
+
+QMarginsF StyleElement::borderSizes() const
+{
+    auto b = border().value_or(BorderDefinition{});
+
+    QMarginsF result;
+    result.setLeft(b.left.value_or(LineDefinition{}).size.value());
+    result.setRight(b.right.value_or(LineDefinition{}).size.value());
+    result.setTop(b.top.value_or(LineDefinition{}).size.value());
+    result.setBottom(b.bottom.value_or(LineDefinition{}).size.value());
+
+    return result;
+}
+
+QRectF StyleElement::boundingRect() const
+{
+    QRectF result;
+
+    auto c = contentSize();
+    auto b = borderSizes();
+
+    result.setWidth(b.left() + c.width() + b.right());
+    result.setHeight(b.top() + c.height() + b.bottom());
+
+    return result;
+}
+
 std::optional<AreaDefinition> StyleElement::foreground() const
 {
     if (!d->foreground && d->parent) {
