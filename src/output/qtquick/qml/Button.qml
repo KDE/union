@@ -40,26 +40,7 @@ T.Button {
 
     background: Union.Background {
         element: elementInfo
-        // element {
-        //     name: "button"
-        //     hovered: control.hovered
-        //     focus: control.focus
-        //     activeFocus: control.activeFocus
-        //     pressed: control.pressed
-        // }
 
-        // subElement: {
-        //     if (control.pressed) {
-        //         return "pressed"
-        //     }
-        //     if (control.hovered) {
-        //         return "hovered"
-        //     }
-        //     if (control.activeFocus) {
-        //         return "focus"
-        //     }
-        //     return "normal"
-        // }
     }
 
     Union.Element {
@@ -70,13 +51,5 @@ T.Button {
         activeFocus: control.activeFocus
         pressed: control.pressed
     }
-    // Unified.StyleItem {
-    //     id: styleItem
-    //     elementName: "button"
-    //
-    //     hover: control.hovered
-    //     focus: control.focus
-    //     active: control.down
-    // }
 }
 
