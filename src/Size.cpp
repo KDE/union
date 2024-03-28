@@ -6,7 +6,10 @@
 
 #include "Size.h"
 
+#include <QString>
+
 using namespace Union;
+using namespace Qt::StringLiterals;
 
 Size::Size()
 {
@@ -42,4 +45,27 @@ Size::Unit Size::unit() const
 void Size::setUnit(Size::Unit newUnit)
 {
     m_unit = newUnit;
+}
+
+QDebug operator<<(QDebug debug, const Union::Size &size)
+{
+    QDebugStateSaver saver(debug);
+
+    auto unitString = u"(Unknown Unit)"_qs;
+    switch (size.unit()) {
+    case Size::Unit::LogicalPixels:
+        unitString = u"lp"_qs;
+        break;
+    case Size::Unit::DevicePixels:
+        unitString = u"dp"_qs;
+        break;
+    case Size::Unit::Millimeter:
+        unitString = u"mm"_qs;
+        break;
+    case Size::Unit::Unknown:
+        break;
+    }
+
+    debug.nospace() << "Size(" << size.value() << " " << qPrintable(unitString) << ")";
+    return debug;
 }

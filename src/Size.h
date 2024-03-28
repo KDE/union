@@ -9,6 +9,8 @@
 #include <memory>
 #include <optional>
 
+#include <QDebug>
+
 #include "union_export.h"
 
 namespace Union
@@ -44,3 +46,5 @@ private:
 };
 
 }
+
+UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Size &size);
