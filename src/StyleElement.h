@@ -44,12 +44,6 @@ public:
     void addAttribute(const QString &name, const QVariant &value);
     void removeAttribute(const QString &name);
 
-    Ptr parentElement();
-    void setParentElement(Ptr newParent);
-
-    Ptr child(const QString &identifier);
-    void addChild(const QString &identifier, Ptr child);
-    void removeChild(const QString &identifier);
     QSizeF contentSize() const;
     QRectF boundingRect() const;
     QMarginsF borderSizes() const;

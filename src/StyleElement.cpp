@@ -19,9 +19,6 @@ public:
     QStringList hints;
     QHash<QString, QVariant> attributes;
 
-    StyleElement::Ptr parent;
-    QHash<QString, StyleElement::Ptr> children;
-
     std::optional<AreaDefinition> foreground;
     std::optional<AreaDefinition> background;
     std::optional<BorderDefinition> border;
@@ -94,37 +91,6 @@ void StyleElement::addAttribute(const QString &name, const QVariant &value)
 void StyleElement::removeAttribute(const QString &name)
 {
     d->attributes.remove(name);
-}
-
-StyleElement::Ptr StyleElement::parentElement()
-{
-    return d->parent;
-}
-
-void StyleElement::setParentElement(StyleElement::Ptr newParent)
-{
-    d->parent = newParent;
-}
-
-StyleElement::Ptr StyleElement::child(const QString &identifier)
-{
-    if (d->children.contains(identifier)) {
-        return d->children.value(identifier);
-    }
-
-    return nullptr;
-}
-
-void StyleElement::addChild(const QString &identifier, StyleElement::Ptr child)
-{
-    d->children[identifier] = child;
-}
-
-void StyleElement::removeChild(const QString &identifier)
-{
-    if (d->children.contains(identifier)) {
-        d->children.remove(identifier);
-    }
 }
 
 QSizeF StyleElement::contentSize() const
