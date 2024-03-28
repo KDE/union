@@ -21,23 +21,7 @@ PlasmaSvgLoader::PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *p
 {
 }
 
-// bool PlasmaSvgLoader::load(const QUrl& url)
-// {
-//     Q_UNUSED(url);
-//
-//     Plasma::Theme theme;
-//     auto normalButton = createElement(theme, QStringLiteral("widgets/button"), QStringLiteral("normal"));
-//
-//     Union::ElementIdentifier id;
-//     id.setStyle(QStringLiteral("plasma-svg"));
-//     id.setElement(QStringLiteral("button"));
-//     id.setSubElement(QStringLiteral("normal"));
-//     style()->insert(id, normalButton);
-//
-//     return true;
-// }
-
-bool PlasmaSvgLoader::loadElement(const Union::ElementIdentifier &element)
+bool PlasmaSvgLoader::load()
 {
     auto e = createElement(u"widgets/"_qs + element.element(), element.subElement());
     style()->insert(element, e);

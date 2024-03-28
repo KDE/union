@@ -34,21 +34,3 @@ QString StyleLoader::name() const
 {
     return m_name;
 }
-
-bool StyleLoader::load()
-{
-    std::unordered_map<QString, std::vector<QString>> elements = {
-        {u"button"_qs, {u"normal"_qs, u"hovered"_qs, u"focus"_qs, u"activeFocus"_qs, u"pressed"_qs}},
-        {u"toolbutton"_qs, {u"normal"_qs, u"hovered"_qs, u"focus"_qs, u"activeFocus"_qs, u"pressed"_qs}},
-    };
-
-    for (const auto &[element, subelements] : elements) {
-        for (const auto &subelement : subelements) {
-            if (!loadElement(ElementIdentifier{m_name, element, subelement})) {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}

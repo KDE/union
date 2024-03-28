@@ -30,9 +30,7 @@ public:
     std::shared_ptr<Style> style() const;
     QString name() const;
 
-    bool load();
-
-    virtual bool loadElement(const ElementIdentifier &element) = 0;
+    virtual bool load() = 0;
 
 private:
     std::shared_ptr<Style> m_style;

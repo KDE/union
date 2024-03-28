@@ -30,8 +30,7 @@ class PlasmaSvgLoader : public Union::StyleLoader
 public:
     PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *parent = nullptr);
 
-    // bool load(const QUrl &url) override;
-    bool loadElement(const Union::ElementIdentifier &element) override;
+    bool load() override;
 
 private:
     std::shared_ptr<Union::StyleElement> createElement(const QString &elementName, const QString &prefix);
