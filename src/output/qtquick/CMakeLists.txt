@@ -1,10 +1,10 @@
 
-ecm_add_qml_module(UnionQmlPlugin URI "org.kde.union" GENERATE_PLUGIN_SOURCE)
+ecm_add_qml_module(UnionQmlPlugin URI "org.kde.union")
 
 target_sources(UnionQmlPlugin PRIVATE
-    # UnionPlugin.cpp
     Element.cpp
     Background.cpp
+    UnionPlugin.cpp
 )
 target_link_libraries(UnionQmlPlugin PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Union::Union)
 
