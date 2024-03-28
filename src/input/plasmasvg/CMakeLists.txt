@@ -6,7 +6,7 @@ target_sources(union-plasmasvg PRIVATE
     PlasmaSvgPlugin.cpp
 )
 
-target_link_libraries(union-plasmasvg PRIVATE Union Qt6::Svg KF6::Svg)
+target_link_libraries(union-plasmasvg PRIVATE Union Qt6::Svg Plasma::Plasma)
 
 set_target_properties(union-plasmasvg PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/union

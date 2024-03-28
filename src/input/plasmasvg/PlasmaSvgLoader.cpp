@@ -9,7 +9,7 @@
 #include <QPainter>
 #include <QSvgRenderer>
 
-#include <KSvg/ImageSet>
+#include <Plasma/Theme>
 
 #include <Definition.h>
 #include <ElementIdentifier.h>
@@ -39,17 +39,16 @@ PlasmaSvgLoader::PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *p
 
 bool PlasmaSvgLoader::loadElement(const Union::ElementIdentifier &element)
 {
-    KSvg::ImageSet imageSet;
-    auto e = createElement(imageSet, u"widget"_qs + element.element(), element.subElement());
+    auto e = createElement(u"widgets/"_qs + element.element(), element.subElement());
     style()->insert(element, e);
     return true;
 }
 
-std::shared_ptr<Union::StyleElement> PlasmaSvgLoader::createElement(KSvg::ImageSet &imageSet, const QString &elementName, const QString &prefix)
+std::shared_ptr<Union::StyleElement> PlasmaSvgLoader::createElement(const QString &elementName, const QString &prefix)
 {
     auto element = std::make_shared<Union::StyleElement>();
 
-    auto fileName = imageSet.imagePath(elementName);
+    auto fileName = m_theme.imagePath(elementName);
     QSvgRenderer renderer(fileName);
 
     Union::AreaDefinition area;

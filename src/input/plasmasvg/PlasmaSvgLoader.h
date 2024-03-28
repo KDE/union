@@ -10,14 +10,11 @@
 
 #include <QHash>
 
+#include <Plasma/Theme>
+
 #include "StyleLoader.h"
 
 class QSvgRenderer;
-
-namespace KSvg
-{
-class ImageSet;
-}
 
 namespace Union
 {
@@ -37,8 +34,10 @@ public:
     bool loadElement(const Union::ElementIdentifier &element) override;
 
 private:
-    std::shared_ptr<Union::StyleElement> createElement(KSvg::ImageSet &imageSet, const QString &elementName, const QString &prefix);
+    std::shared_ptr<Union::StyleElement> createElement(const QString &elementName, const QString &prefix);
     std::optional<Union::LineDefinition> createLineDefinition(QSvgRenderer &renderer, const QString &elementName);
     std::optional<Union::CornerDefinition> createCornerDefinition(QSvgRenderer &renderer, const QString &elementName);
     std::optional<Union::ImageDefinition> renderElement(QSvgRenderer &renderer, const QString &elementName);
+
+    Plasma::Theme m_theme;
 };
