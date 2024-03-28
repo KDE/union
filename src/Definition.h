@@ -23,15 +23,17 @@ enum ImageFlag {
     None = 0, //
     RepeatX = 1 << 0, //
     RepeatY = 1 << 1, //
+    RepeatBoth = RepeatX | RepeatY, //
     StretchX = 1 << 2, //
-    StretchY = 1 << 3 //
+    StretchY = 1 << 3, //
+    StretchBoth = StretchX | StretchY, //
 };
 Q_ENUM_NS(ImageFlag)
 Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 
 struct ImageDefinition {
     QImage imageData;
-    ImageFlags flags = ImageFlag::None;
+    ImageFlags flags = ImageFlag::StretchBoth;
     Size xOffset;
     Size yOffset;
     Size width;
