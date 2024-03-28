@@ -25,7 +25,7 @@ public:
     /**
      * TODO: Documentation
      */
-    Q_PROPERTY(Union::Element *element READ element WRITE setElement NOTIFY elementChanged)
+    Q_PROPERTY(Element *element READ element WRITE setElement NOTIFY elementChanged)
     Element *element() const;
     void setElement(Element *newElement);
     Q_SIGNAL void elementChanged();

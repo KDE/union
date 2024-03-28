@@ -11,8 +11,59 @@
 
 #include "StyleElement.h"
 
-namespace Union
+class Element;
+
+class BordersGroup : public QObject
 {
+    Q_OBJECT
+    QML_ANONYMOUS
+
+public:
+    BordersGroup(Element *parent);
+
+    Q_PROPERTY(qreal leftSize READ leftSize NOTIFY changed)
+    qreal leftSize() const;
+
+    Q_PROPERTY(qreal rightSize READ rightSize NOTIFY changed)
+    qreal rightSize() const;
+
+    Q_PROPERTY(qreal topSize READ topSize NOTIFY changed)
+    qreal topSize() const;
+
+    Q_PROPERTY(qreal bottomSize READ bottomSize NOTIFY changed)
+    qreal bottomSize() const;
+
+    Q_SIGNAL void changed();
+
+private:
+    Element *m_parent;
+};
+
+class PaddingGroup : public QObject
+{
+    Q_OBJECT
+    QML_ANONYMOUS
+
+public:
+    PaddingGroup(Element *parent);
+
+    Q_PROPERTY(qreal left READ left NOTIFY changed)
+    qreal left() const;
+
+    Q_PROPERTY(qreal right READ right NOTIFY changed)
+    qreal right() const;
+
+    Q_PROPERTY(qreal top READ top NOTIFY changed)
+    qreal top() const;
+
+    Q_PROPERTY(qreal bottom READ bottom NOTIFY changed)
+    qreal bottom() const;
+
+    Q_SIGNAL void changed();
+
+private:
+    Element *m_parent;
+};
 
 class Element : public QObject
 {
@@ -50,22 +101,31 @@ public:
     void setPressed(bool newPressed);
     Q_SIGNAL void pressedChanged();
 
-    // Q_PROPERTY(PaddingGroup * padding READ padding CONSTANT)
-    // PaddingGroup * padding() const;
     //
     // Q_PROPERTY(MarginGroup * margin READ margin CONSTANT)
+
+    Q_PROPERTY(PaddingGroup *padding READ padding CONSTANT)
+    PaddingGroup *padding() const;
+
     // MarginGroup * margin() const;
+
+    Q_PROPERTY(BordersGroup *borders READ borders CONSTANT)
+    BordersGroup *borders() const;
     //
     // Q_PROPERTY(ShadowGroup * shadow READ shadow CONSTANT)
     // ShadowGroup * shadow() const;
     //
-    // Q_PROPERTY(BorderGroup * border READ border CONSTANT)
-    // BorderGroup * border() const;
     //
     // Q_PROPERTY(BackgroundGroup* background READ background CONSTANT)
     // BackgroundGroup* background() const;
 
-    StyleElement::Ptr styleElement() const;
+    Q_PROPERTY(qreal implicitWidth READ implicitWidth CONSTANT)
+    qreal implicitWidth() const;
+
+    Q_PROPERTY(qreal implicitHeight READ implicitHeight CONSTANT)
+    qreal implicitHeight() const;
+
+    Union::StyleElement::Ptr styleElement() const;
     Q_SIGNAL void stateChanged();
 
 private:
@@ -78,11 +138,12 @@ private:
     bool m_activeFocus = false;
     bool m_pressed = false;
 
-    StyleElement::Ptr m_normalElement;
-    StyleElement::Ptr m_hoverElement;
-    StyleElement::Ptr m_focusElement;
-    StyleElement::Ptr m_activeFocusElement;
-    StyleElement::Ptr m_pressElement;
-};
+    Union::StyleElement::Ptr m_normalElement;
+    Union::StyleElement::Ptr m_hoverElement;
+    Union::StyleElement::Ptr m_focusElement;
+    Union::StyleElement::Ptr m_activeFocusElement;
+    Union::StyleElement::Ptr m_pressElement;
 
-}
+    std::unique_ptr<PaddingGroup> m_paddingGroup;
+    std::unique_ptr<BordersGroup> m_bordersGroup;
+};

@@ -11,9 +11,64 @@
 
 using namespace Union;
 
+BordersGroup::BordersGroup(Element *parent)
+    : QObject()
+    , m_parent(parent)
+{
+    connect(m_parent, &Element::stateChanged, this, &BordersGroup::changed);
+}
+
+qreal BordersGroup::leftSize() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->borderSizes().left() : 0.0;
+}
+
+qreal BordersGroup::rightSize() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->borderSizes().right() : 0.0;
+}
+
+qreal BordersGroup::topSize() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->borderSizes().top() : 0.0;
+}
+
+qreal BordersGroup::bottomSize() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->borderSizes().bottom() : 0.0;
+}
+
+PaddingGroup::PaddingGroup(Element *parent)
+    : QObject()
+    , m_parent(parent)
+{
+}
+
+qreal PaddingGroup::left() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->padding().value_or(SizeDefinition{}).left.value() : 0.0;
+}
+
+qreal PaddingGroup::right() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->padding().value_or(SizeDefinition{}).right.value() : 0.0;
+}
+
+qreal PaddingGroup::top() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->padding().value_or(SizeDefinition{}).top.value() : 0.0;
+}
+
+qreal PaddingGroup::bottom() const
+{
+    return m_parent->styleElement() ? m_parent->styleElement()->padding().value_or(SizeDefinition{}).bottom.value() : 0.0;
+}
+
 Element::Element(QObject *parent)
     : QObject(parent)
 {
+    m_bordersGroup = std::make_unique<BordersGroup>(this);
+    m_paddingGroup = std::make_unique<PaddingGroup>(this);
 }
 
 QString Element::name() const
@@ -96,6 +151,43 @@ void Element::setPressed(bool newPressed)
     Q_EMIT stateChanged();
 }
 
+PaddingGroup *Element::padding() const
+{
+    return m_paddingGroup.get();
+}
+
+BordersGroup *Element::borders() const
+{
+    return m_bordersGroup.get();
+}
+
+qreal Element::implicitWidth() const
+{
+    auto element = styleElement();
+    return element ? element->boundingRect().width() : 0.0;
+}
+
+qreal Element::implicitHeight() const
+{
+    auto element = styleElement();
+    return element ? element->boundingRect().height() : 0.0;
+}
+
+StyleElement::Ptr Element::styleElement() const
+{
+    if (m_pressed) {
+        return m_pressElement;
+    } else if (m_activeFocus) {
+        return m_activeFocusElement;
+    } else if (m_focus) {
+        return m_focusElement;
+    } else if (m_hovered) {
+        return m_hoverElement;
+    } else {
+        return m_normalElement;
+    }
+}
+
 // void Element::stateChanged(Element::StateChange change)
 // {
 //     switch (change) {
@@ -155,7 +247,7 @@ void Element::setPressed(bool newPressed)
 //
 void Element::updateElement()
 {
-    ElementIdentifier identifier{QStringLiteral("plasma-svg"), m_name, QStringLiteral("normal")};
+    ElementIdentifier identifier{QStringLiteral("plasmasvg"), m_name, QStringLiteral("normal")};
 
     auto element = Style::instance()->get(identifier);
     m_normalElement = element;

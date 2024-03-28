@@ -32,6 +32,7 @@ Background::Background(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents);
+    m_internalElement = std::make_unique<Element>();
 }
 
 Element *Background::element() const
