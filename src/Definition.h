@@ -53,7 +53,7 @@ struct LineDefinition {
     };
 
     QColor color;
-    Size width;
+    Size size;
     LineStyle style;
     std::optional<ImageDefinition> image;
 };
