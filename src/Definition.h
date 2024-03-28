@@ -83,6 +83,8 @@ struct ShadowDefinition {
 
 struct CornerDefinition {
     Size radius;
+    Size width;
+    Size height;
     std::optional<ImageDefinition> image;
 };
 
