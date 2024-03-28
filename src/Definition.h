@@ -44,6 +44,14 @@ struct AreaDefinition {
     QColor color = Qt::transparent;
     std::optional<ImageDefinition> image;
     std::optional<QGradient> gradient;
+
+    QSizeF size()
+    {
+        if (image.has_value()) {
+            return QSizeF{image->width.value(), image->height.value()};
+        }
+        return QSizeF{0.0, 0.0};
+    }
 };
 
 struct LineDefinition {
