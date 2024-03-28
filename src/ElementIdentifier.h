@@ -57,4 +57,4 @@ struct std::hash<Union::ElementIdentifier> {
     }
 };
 
-QDebug operator<<(QDebug debug, const Union::ElementIdentifier &identifier);
+UNION_EXPORT QDebug operator<<(QDebug debug, const Union::ElementIdentifier &identifier);
