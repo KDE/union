@@ -10,6 +10,7 @@
 #include <optional>
 
 #include <QObject>
+#include <QVariant>
 
 #include "Definition.h"
 
@@ -24,8 +25,24 @@ class UNION_EXPORT StyleElement : public QObject
 public:
     using Ptr = std::shared_ptr<StyleElement>;
 
-    StyleElement(QObject *parent = nullptr);
+    StyleElement(const QString &type, QObject *parent = nullptr);
     ~StyleElement() override;
+
+    QString type() const;
+
+    QString id() const;
+    void setId(const QString &newId);
+
+    QString state() const;
+    void setState(const QString &newState);
+
+    QStringList hints() const;
+    void setHints(const QStringList &newHints);
+
+    QHash<QString, QVariant> attributes() const;
+    QVariant attribute(const QString &name) const;
+    void addAttribute(const QString &name, const QVariant &value);
+    void removeAttribute(const QString &name);
 
     Ptr parentElement();
     void setParentElement(Ptr newParent);

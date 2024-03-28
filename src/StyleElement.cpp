@@ -13,6 +13,12 @@ using namespace Union;
 class UNION_NO_EXPORT StyleElement::Private
 {
 public:
+    QString type;
+    QString id;
+    QString state;
+    QStringList hints;
+    QHash<QString, QVariant> attributes;
+
     StyleElement::Ptr parent;
     QHash<QString, StyleElement::Ptr> children;
 
@@ -26,13 +32,69 @@ public:
     std::optional<CornersDefinition> corners;
 };
 
-StyleElement::StyleElement(QObject *parent)
+StyleElement::StyleElement(const QString &type, QObject *parent)
     : QObject(parent)
     , d(std::make_unique<Private>())
 {
+    d->type = type;
 }
 
 StyleElement::~StyleElement() = default;
+
+QString StyleElement::type() const
+{
+    return d->type;
+}
+
+QString StyleElement::id() const
+{
+    return d->id;
+}
+
+void StyleElement::setId(const QString &newId)
+{
+    d->id = newId;
+}
+
+QString StyleElement::state() const
+{
+    return d->state;
+}
+
+void StyleElement::setState(const QString &newState)
+{
+    d->state = newState;
+}
+
+QStringList StyleElement::hints() const
+{
+    return d->hints;
+}
+
+void StyleElement::setHints(const QStringList &newHints)
+{
+    d->hints = newHints;
+}
+
+QHash<QString, QVariant> StyleElement::attributes() const
+{
+    return d->attributes;
+}
+
+QVariant Union::StyleElement::attribute(const QString &name) const
+{
+    return d->attributes.value(name);
+}
+
+void StyleElement::addAttribute(const QString &name, const QVariant &value)
+{
+    d->attributes.insert(name, value);
+}
+
+void StyleElement::removeAttribute(const QString &name)
+{
+    d->attributes.remove(name);
+}
 
 StyleElement::Ptr StyleElement::parentElement()
 {
