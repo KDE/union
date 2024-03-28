@@ -41,7 +41,7 @@ struct ImageDefinition {
 };
 
 struct AreaDefinition {
-    QColor color;
+    QColor color = Qt::transparent;
     std::optional<ImageDefinition> image;
     std::optional<QGradient> gradient;
 };
