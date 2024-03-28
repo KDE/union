@@ -6,11 +6,11 @@
 
 #pragma once
 
-#include <optional>
-
-#include <QHash>
-
 #include <Plasma/Theme>
+
+#include <yaml-cpp/yaml.h>
+
+#include <StyleElement.h>
 
 #include "StyleLoader.h"
 
@@ -23,6 +23,8 @@ struct LineDefinition;
 struct ImageDefinition;
 }
 
+struct LoaderContext;
+
 class PlasmaSvgLoader : public Union::StyleLoader
 {
     Q_OBJECT
@@ -33,10 +35,18 @@ public:
     bool load() override;
 
 private:
-    std::shared_ptr<Union::StyleElement> createElement(const QString &elementName, const QString &prefix);
-    std::optional<Union::LineDefinition> createLineDefinition(QSvgRenderer &renderer, const QString &elementName);
-    std::optional<Union::CornerDefinition> createCornerDefinition(QSvgRenderer &renderer, const QString &elementName);
-    std::optional<Union::ImageDefinition> renderElement(QSvgRenderer &renderer, const QString &elementName);
+    std::shared_ptr<Union::StyleElement> createElement(const YAML::Node &node, QStack<LoaderContext> &context);
+    std::optional<Union::LineDefinition> createLineDefinition(std::shared_ptr<QSvgRenderer> renderer,
+                                                              const QString &elementName,
+                                                              Qt::Orientation orientation,
+                                                              Union::LineDefinition parentLine);
+    std::optional<Union::CornerDefinition> createCornerDefinition(std::shared_ptr<QSvgRenderer> renderer,
+                                                                  const QString &elementName,
+                                                                  Union::CornerDefinition parentCorner);
+    std::optional<Union::ImageDefinition> renderElement(std::shared_ptr<QSvgRenderer> renderer,
+                                                        const QString &elementName,
+                                                        const Union::ImageDefinition &parentImage);
+    QSizeF elementSize(std::shared_ptr<QSvgRenderer> renderer, const QString &elementName);
 
     Plasma::Theme m_theme;
 };

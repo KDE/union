@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/org/kde/union/input/plasmasvg">
+        <file>PlasmaSvgStructure.yml</file>
+    </qresource>
+</RCC>

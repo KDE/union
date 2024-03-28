@@ -35,6 +35,7 @@ set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprec
 
 find_package(KF6Config)
 find_package(Plasma)
+find_package(yaml-cpp)
 
 add_subdirectory(src)
 

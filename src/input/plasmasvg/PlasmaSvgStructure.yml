@@ -1,0 +1,34 @@
+-   type: Button
+    render: false
+    children:
+    -   type: Background
+        path: widgets/button
+        prefix: ""
+
+        children:
+        -   state: hovered
+            prefix: hover
+        -   state: focus
+            prefix: focus
+        -   state: pressed
+            prefix: pressed
+
+    -   type: ContentItem
+        children:
+        -   type: Icon
+        -   type: Label
+
+# ToolButton:
+#     Background:
+#         path: widgets/button
+#         prefix: "toolbutton"
+#
+#         states:
+#         -   hovered:
+#             prefix: hover
+#         -   focus:
+#             prefix: focus
+#         -   activeFocus:
+#             prefix: focus
+#         -   pressed:
+#             prefix: pressed
