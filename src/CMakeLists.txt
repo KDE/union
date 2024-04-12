@@ -6,7 +6,7 @@ target_sources(Union PRIVATE
     Style.cpp
     StyleElement.cpp
     StyleLoader.cpp
-    ElementIdentifier.cpp
+    Element.cpp
     InputPlugin.cpp
 )
 
