@@ -10,9 +10,9 @@
 
 #include "AreaNode.h"
 #include "CornerNode.h"
+#include "Element.h"
 #include "LineNode.h"
 #include "Style.h"
-#include "StyleElement.h"
 
 using namespace Union;
 
@@ -32,74 +32,24 @@ Background::Background(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents);
-    m_internalElement = std::make_unique<Element>();
 }
 
-Element *Background::element() const
+void Union::Background::componentComplete()
 {
-    if (m_elementOverride) {
-        return m_elementOverride;
-    } else {
-        return m_internalElement.get();
-    }
+    QQuickItem::componentComplete();
+
+    m_element = qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(this, true));
+    connect(m_element, &QuickElement::updated, this, &Background::update);
 }
-
-void Background::setElement(Element *newElement)
-{
-    if (newElement == m_elementOverride) {
-        return;
-    }
-
-    m_elementOverride = newElement;
-    connect(m_elementOverride, &Element::stateChanged, this, &QQuickItem::update);
-    setImplicitSize(m_elementOverride->implicitWidth(), m_elementOverride->implicitHeight());
-    Q_EMIT elementChanged();
-}
-
-// QString Background::elementName() const
-// {
-//     return m_elementName;
-// }
-//
-// void Background::setElementName(const QString &newElementName)
-// {
-//     if (newElementName == m_elementName) {
-//         return;
-//     }
-//
-//     m_elementName = newElementName;
-//     m_element = Style::instance()->get(m_elementName);
-//     m_activeElement = Style::instance()->get(m_elementName, QStringLiteral("active"));
-//     m_focusElement = Style::instance()->get(m_elementName, QStringLiteral("focus"));
-//     m_hoverElement = Style::instance()->get(m_elementName, QStringLiteral("hover"));
-//
-//     update();
-//     Q_EMIT elementNameChanged();
-// }
-
-// StyleElement *Background::styleElement() const
-// {
-//     if (m_active && m_activeElement) {
-//         return m_activeElement.get();
-//     }
-//     if (m_focus && m_focusElement) {
-//         return m_focusElement.get();
-//     }
-//     if (m_hover && m_hoverElement) {
-//         return m_hoverElement.get();
-//     }
-//
-//     return m_element.get();
-// }
-
-// void Background::stateChanged(ElementState::StateChange change)
-// {
-//
-// }
 
 QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData * /*data*/)
 {
-    if (!element() || !element()->styleElement()) {
+    if (!m_element) {
+        return nullptr;
+    }
+
+    auto query = m_element->buildQuery();
+    if (!query.execute()) {
         return nullptr;
     }
 
@@ -117,18 +67,17 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
         }
     }
 
-    auto e = element()->styleElement();
     auto win = window();
     auto bounds = boundingRect();
-    auto borderSizes = e->borderSizes();
+    auto borderSizes = query.borderSizes();
 
     auto center = static_cast<AreaNode *>(node->childAtIndex(0));
-    center->area = e->background().value_or(AreaDefinition());
+    center->area = query.background().value_or(AreaDefinition());
     center->rect = bounds - borderSizes;
     center->update(win);
 
-    if (e->border().has_value()) {
-        auto borders = e->border().value();
+    if (query.border().has_value()) {
+        auto borders = query.border().value();
 
         for (auto [position, definition] : std::initializer_list<std::pair<NodeElement, LineDefinition>>{
                  {NodeElement::Left, borders.left.value_or(LineDefinition{})},
@@ -138,26 +87,26 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
              }) {
             auto lineNode = static_cast<LineNode *>(node->childAtIndex(position));
             lineNode->line = definition;
-            lineNode->margins = e->borderSizes();
+            lineNode->margins = borderSizes;
 
             switch (position) {
             case NodeElement::Left:
-                lineNode->rect = QRectF{0.0, borderSizes.top(), definition.size.value(), bounds.height() - borderSizes.top() - borderSizes.bottom()};
+                lineNode->rect = QRectF{0.0, borderSizes.top(), definition.size, bounds.height() - borderSizes.top() - borderSizes.bottom()};
                 break;
             case NodeElement::Right:
-                lineNode->rect = QRectF{bounds.width() - definition.size.value(),
+                lineNode->rect = QRectF{bounds.width() - definition.size, //
                                         borderSizes.top(),
-                                        definition.size.value(),
+                                        definition.size,
                                         bounds.height() - borderSizes.top() - borderSizes.bottom()};
                 break;
             case NodeElement::Top:
-                lineNode->rect = QRectF{borderSizes.left(), 0.0, bounds.width() - borderSizes.left() - borderSizes.right(), definition.size.value()};
+                lineNode->rect = QRectF{borderSizes.left(), 0.0, bounds.width() - borderSizes.left() - borderSizes.right(), definition.size};
                 break;
             case NodeElement::Bottom:
-                lineNode->rect = QRectF{borderSizes.left(),
-                                        bounds.height() - definition.size.value(),
+                lineNode->rect = QRectF{borderSizes.left(), //
+                                        bounds.height() - definition.size,
                                         bounds.width() - borderSizes.left() - borderSizes.right(),
-                                        definition.size.value()};
+                                        definition.size};
                 break;
             default:
                 break;
@@ -167,8 +116,8 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
         }
     }
 
-    if (e->corners().has_value()) {
-        auto corners = e->corners().value();
+    if (query.corners().has_value()) {
+        auto corners = query.corners().value();
 
         for (auto [position, definition] : std::initializer_list<std::pair<NodeElement, CornerDefinition>>{
                  {NodeElement::TopLeft, corners.topLeft.value_or(CornerDefinition{})},
@@ -190,7 +139,7 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
                 cornerNode->rect = QRectF{0.0, bounds.height() - borderSizes.bottom(), borderSizes.left(), borderSizes.bottom()};
                 break;
             case NodeElement::BottomRight:
-                cornerNode->rect = QRectF{bounds.width() - borderSizes.right(),
+                cornerNode->rect = QRectF{bounds.width() - borderSizes.right(), //
                                           bounds.height() - borderSizes.bottom(),
                                           borderSizes.right(),
                                           borderSizes.bottom()};

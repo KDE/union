@@ -34,13 +34,13 @@ QSGTexture *UnionNode::createTextureForImageDefinition(QQuickWindow *window,
     texture->setVerticalWrapMode(imageDefinition.flags & Union::ImageFlag::RepeatY ? QSGTexture::Repeat : QSGTexture::ClampToEdge);
 
     if (imageDefinition.flags & Union::ImageFlag::StretchX) {
-        sourceRect.setWidth(imageDefinition.width.value());
+        sourceRect.setWidth(imageDefinition.width);
     } else {
         sourceRect.setWidth(destinationRect.width());
     }
 
     if (imageDefinition.flags & Union::ImageFlag::StretchY) {
-        sourceRect.setWidth(imageDefinition.height.value());
+        sourceRect.setWidth(imageDefinition.height);
     } else {
         sourceRect.setWidth(destinationRect.height());
     }

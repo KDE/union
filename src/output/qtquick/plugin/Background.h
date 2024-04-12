@@ -9,7 +9,7 @@
 #include <QQuickItem>
 #include <qqmlregistration.h>
 
-#include "Element.h"
+#include "QuickElement.h"
 
 namespace Union
 {
@@ -22,21 +22,13 @@ class Background : public QQuickItem
 public:
     Background(QQuickItem *parent = nullptr);
 
-    /**
-     * TODO: Documentation
-     */
-    Q_PROPERTY(Element *element READ element WRITE setElement NOTIFY elementChanged)
-    Element *element() const;
-    void setElement(Element *newElement);
-    Q_SIGNAL void elementChanged();
+    void componentComplete() override;
 
 protected:
-    // void stateChanged(ElementState::StateChange change) override;
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *data) override;
 
 private:
-    std::unique_ptr<Element> m_internalElement;
-    Element *m_elementOverride = nullptr;
+    QuickElement *m_element;
 };
 
 }
