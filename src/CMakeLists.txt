@@ -11,6 +11,8 @@ target_sources(Union PRIVATE
     StyleLoader.h
     Element.cpp
     InputPlugin.cpp
+    Selector.cpp
+    Selector.h
 )
 
 ecm_qt_declare_logging_category(Union
