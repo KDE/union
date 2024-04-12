@@ -10,11 +10,14 @@ target_sources(Union PRIVATE
     StyleLoader.cpp
     StyleLoader.h
     Element.cpp
+    Element.h
     ElementQuery.cpp
     ElementQuery.h
     InputPlugin.cpp
+    InputPlugin.h
     Selector.cpp
     Selector.h
+    Definition.h
 )
 
 ecm_qt_declare_logging_category(Union
