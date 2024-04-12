@@ -13,8 +13,6 @@
 #include <QGradient>
 #include <QImage>
 
-#include "Size.h"
-
 namespace Union
 {
 Q_NAMESPACE
@@ -34,10 +32,10 @@ Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 struct ImageDefinition {
     QImage imageData;
     ImageFlags flags = ImageFlag::StretchBoth;
-    Size xOffset;
-    Size yOffset;
-    Size width;
-    Size height;
+    qreal xOffset;
+    qreal yOffset;
+    qreal width;
+    qreal height;
 };
 
 struct AreaDefinition {
@@ -61,7 +59,7 @@ struct LineDefinition {
     };
 
     QColor color;
-    Size size;
+    qreal size;
     LineStyle style;
     std::optional<ImageDefinition> image;
 };
@@ -75,13 +73,13 @@ struct BorderDefinition {
 
 struct ShadowEdgeDefinition {
     QColor color;
-    Size width;
+    qreal width;
     std::optional<ImageDefinition> image;
 };
 
 struct ShadowDefinition {
-    Size xOffset;
-    Size yOffset;
+    qreal xOffset;
+    qreal yOffset;
 
     std::optional<ShadowEdgeDefinition> top;
     std::optional<ShadowEdgeDefinition> bottom;
@@ -90,9 +88,9 @@ struct ShadowDefinition {
 };
 
 struct CornerDefinition {
-    Size radius;
-    Size width;
-    Size height;
+    qreal radius;
+    qreal width;
+    qreal height;
     std::optional<ImageDefinition> image;
 };
 
@@ -104,10 +102,10 @@ struct CornersDefinition {
 };
 
 struct SizeDefinition {
-    Size top;
-    Size bottom;
-    Size left;
-    Size right;
+    qreal top;
+    qreal bottom;
+    qreal left;
+    qreal right;
 };
 
 }
