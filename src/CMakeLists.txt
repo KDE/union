@@ -10,6 +10,8 @@ target_sources(Union PRIVATE
     StyleLoader.cpp
     StyleLoader.h
     Element.cpp
+    ElementQuery.cpp
+    ElementQuery.h
     InputPlugin.cpp
     Selector.cpp
     Selector.h
