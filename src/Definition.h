@@ -13,9 +13,11 @@
 #include <QGradient>
 #include <QImage>
 
+#include "union_export.h"
+
 namespace Union
 {
-Q_NAMESPACE
+Q_NAMESPACE_EXPORT(UNION_EXPORT)
 
 enum ImageFlag {
     None = 0, //
