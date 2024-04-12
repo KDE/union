@@ -291,7 +291,7 @@ QString Selector::toString() const
     return d->toString();
 }
 
-bool selectorListMatches(const SelectorList &selectors, const QList<Element::Ptr> &elements)
+bool Union::selectorListMatches(const SelectorList &selectors, const QList<Element::Ptr> &elements)
 {
     auto sitr = selectors.begin();
     auto eitr = elements.begin();
