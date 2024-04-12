@@ -22,7 +22,7 @@ class UNION_EXPORT InputPlugin : public QObject
 public:
     InputPlugin(QObject *parent = nullptr);
 
-    virtual std::unique_ptr<StyleLoader> createStyleLoader(std::shared_ptr<Style> style) const = 0;
+    virtual std::unique_ptr<StyleLoader> createStyleLoader(std::shared_ptr<Theme> theme) const = 0;
 };
 
 }

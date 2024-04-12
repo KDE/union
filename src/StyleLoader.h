@@ -14,26 +14,25 @@
 
 namespace Union {
 
-// class ElementSelector;
-class ElementIdentifier;
-class StyleElement;
+class Element;
 class Style;
+class Theme;
 
 class UNION_EXPORT StyleLoader : public QObject
 {
     Q_OBJECT
 
 public:
-    StyleLoader(std::shared_ptr<Style> style, const QString &name, QObject *parent = nullptr);
+    StyleLoader(std::shared_ptr<Theme> theme, const QString &name, QObject *parent = nullptr);
     ~StyleLoader() override;
 
-    std::shared_ptr<Style> style() const;
+    std::shared_ptr<Theme> theme() const;
     QString name() const;
 
     virtual bool load() = 0;
 
 private:
-    std::shared_ptr<Style> m_style;
+    std::shared_ptr<Theme> m_theme;
     QString m_name;
 };
 

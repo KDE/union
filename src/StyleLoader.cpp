@@ -9,14 +9,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "ElementIdentifier.h"
 #include "Style.h"
+#include "Theme.h"
 
 using namespace Union;
 
-StyleLoader::StyleLoader(std::shared_ptr<Style> style, const QString &name, QObject *parent)
+StyleLoader::StyleLoader(std::shared_ptr<Theme> theme, const QString &name, QObject *parent)
     : QObject(parent)
-    , m_style(style)
+    , m_theme(theme)
     , m_name(name)
 {
 }
@@ -25,9 +25,9 @@ StyleLoader::~StyleLoader() noexcept
 {
 }
 
-std::shared_ptr<Style> StyleLoader::style() const
+std::shared_ptr<Theme> StyleLoader::theme() const
 {
-    return m_style;
+    return m_theme;
 }
 
 QString StyleLoader::name() const

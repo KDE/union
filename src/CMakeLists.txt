@@ -3,9 +3,12 @@ add_library(Union)
 add_library(Union::Union ALIAS Union)
 
 target_sources(Union PRIVATE
+    Theme.cpp
+    Theme.h
     Style.cpp
     Style.h
     StyleLoader.cpp
+    StyleLoader.h
     Element.cpp
     InputPlugin.cpp
 )
