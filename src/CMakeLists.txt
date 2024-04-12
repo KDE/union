@@ -23,14 +23,14 @@ ecm_qt_declare_logging_category(Union
 ecm_generate_export_header(Union
     BASE_NAME Union
     GROUP_BASE_NAME KF
-    VERSION ${KF_VERSION}
+    VERSION ${PROJECT_VERSION}
     DEPRECATED_BASE_VERSION 0
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
 )
 
 set_target_properties(Union PROPERTIES
-    VERSION ${KF_VERSION}
-    SOVERSION 0
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
 target_link_libraries(Union PUBLIC
