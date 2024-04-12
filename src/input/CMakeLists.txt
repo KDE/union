@@ -1,4 +1,4 @@
 
-if (TARGET Plasma::Plasma AND TARGET yaml-cpp::yaml-cpp)
+if (WITH_PLASMASVG_INPUT)
     add_subdirectory(plasmasvg)
 endif()

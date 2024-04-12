@@ -24,15 +24,18 @@ include(ECMQmlModule)
 
 option(BUILD_EXAMPLES "Build example applications" OFF)
 
-find_package(Qt6Svg ${REQUIRED_QT_VERSION} CONFIG)
 set(REQUIRED_QT_VERSION 6.6.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 
-find_package(KF6Config)
-find_package(Plasma)
-find_package(yaml-cpp)
+option(WITH_PLASMASVG_INPUT "Enable Plasma SVG input plugin" ON)
+if (WITH_PLASMASVG_INPUT)
+    find_package(Qt6Svg ${REQUIRED_QT_VERSION} REQUIRED CONFIG)
+    find_package(KF6Config REQUIRED)
+    find_package(Plasma REQUIRED)
+    find_package(ryml REQUIRED)
+endif()
 
 add_subdirectory(src)
 
