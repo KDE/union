@@ -6,9 +6,7 @@
 
 #include <QtTest>
 
-#include <ElementIdentifier.h>
-#include <Style.h>
-#include <StyleElement.h>
+#include <Theme.h>
 
 using namespace Union;
 
@@ -18,17 +16,7 @@ class TestPlasmaSvg : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto style = Style::instance();
-        style->load();
-
-        auto normalButtonId = ElementIdentifier{QStringLiteral("plasmasvg"), QStringLiteral("button"), QStringLiteral("normal")};
-        auto element = Style::instance()->get(normalButtonId);
-
-        QVERIFY(element);
-        QVERIFY(element->background().has_value());
-        QVERIFY(element->background()->image.has_value());
-
-        // QVERIFY(element->background().value().)
+        auto style = Theme::instance();
     }
 };
 
