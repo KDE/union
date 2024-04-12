@@ -4,7 +4,7 @@ add_library(Union::Union ALIAS Union)
 
 target_sources(Union PRIVATE
     Style.cpp
-    StyleElement.cpp
+    Style.h
     StyleLoader.cpp
     Element.cpp
     InputPlugin.cpp

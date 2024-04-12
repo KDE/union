@@ -1,109 +1,178 @@
 /*
- * SPDX-FileCopyrightText: 2020 Arjen Hiemstra <ahiemstra@heimr.nl>
- * 
+ * SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  */
 
 #include "Style.h"
 
-#include <filesystem>
-
-#include <QCoreApplication>
-#include <QPluginLoader>
-#include <QUrl>
-
-#include "ElementIdentifier.h"
-#include "InputPlugin.h"
-#include "StyleLoader.h"
-
-#include "union_logging.h"
+#include <QHash>
 
 using namespace Union;
-using namespace Qt::StringLiterals;
 
-class UNION_NO_EXPORT Style::Private
+class Union::StylePrivate
 {
 public:
-    std::unordered_map<QString, std::unique_ptr<StyleLoader>> styleLoaders;
+    SelectorList selectors;
 
-    std::unordered_map<ElementIdentifier, std::shared_ptr<StyleElement>> elements;
+    std::optional<AreaDefinition> foreground;
+    std::optional<AreaDefinition> background;
+    std::optional<BorderDefinition> border;
+    std::optional<ShadowDefinition> shadow;
+    std::optional<SizeDefinition> margin;
+    std::optional<SizeDefinition> padding;
+    std::optional<BorderDefinition> outset;
+    std::optional<CornersDefinition> corners;
 };
 
-Style::Style()
-    : QObject(nullptr)
-    , d(std::make_unique<Private>())
+Style::Style(std::unique_ptr<StylePrivate> &&d)
+    : QObject()
+    , d(std::move(d))
 {
 }
 
 Style::~Style() = default;
 
-void Style::load()
+SelectorList Style::selectors() const
 {
-    const auto pluginDirs = QCoreApplication::libraryPaths();
-    for (const auto &dir : pluginDirs) {
-        const auto path = std::filesystem::path(dir.toStdString()) / "union";
-
-        if (!std::filesystem::exists(path)) {
-            continue;
-        }
-
-        for (const auto &entry : std::filesystem::directory_iterator(path)) {
-            QPluginLoader loader(QString::fromStdString(entry.path()));
-            const auto metaData = loader.metaData().value(u"MetaData").toObject();
-            const auto name = metaData.value(u"union-pluginname").toString();
-
-            if (metaData.value(u"union-plugintype").toString() == u"input"_qs) {
-                auto inputPlugin = static_cast<InputPlugin *>(loader.instance());
-                if (inputPlugin) {
-                    qCDebug(UNION_GENERAL) << "Loaded input plugin" << name;
-                    auto loader = inputPlugin->createStyleLoader(instance());
-                    if (!loader->load()) {
-                        qCWarning(UNION_GENERAL) << "Style loader failed to load";
-                    } else {
-                        d->styleLoaders.insert(std::make_pair(name, std::move(loader)));
-                    }
-                } else {
-                    qCWarning(UNION_GENERAL) << "Failed loading plugin" << name << loader.errorString();
-                }
-            }
-        }
-    }
+    return d->selectors;
 }
 
-std::shared_ptr<StyleElement> Style::get(const ElementIdentifier &selector)
+void Style::setSelectors(const SelectorList &selectors)
 {
-    auto element = d->elements.find(selector);
-    if (element != d->elements.end()) {
-        return element->second;
-    }
-
-    auto loader = d->styleLoaders.find(selector.style());
-    if (loader == d->styleLoaders.end()) {
-        return nullptr;
-    }
-
-    if (!loader->second->loadElement(selector)) {
-        return nullptr;
-    }
-
-    element = d->elements.find(selector);
-    if (element != d->elements.end()) {
-        return element->second;
-    } else {
-        qCDebug(UNION_GENERAL) << "Could not find an element matching identifier" << selector;
-        return nullptr;
-    }
+    d->selectors = selectors;
 }
 
-void Style::insert(const ElementIdentifier &identifier, std::shared_ptr<StyleElement> element)
+QSizeF Style::contentSize() const
 {
-    auto pair = std::make_pair(identifier, element);
-    d->elements.insert(pair);
+    const auto f = d->foreground.value_or(AreaDefinition{});
+    const auto b = d->background.value_or(AreaDefinition{});
+
+    return QSizeF{std::max(f.size.width(), b.size.width()), std::max(f.size.height(), b.size.height())};
 }
 
-std::shared_ptr<Style> Style::instance()
+QMarginsF Style::borderSizes() const
 {
-    static std::shared_ptr<Style> inst = std::make_shared<Style>();
-    return inst;
+    if (!border().has_value()) {
+        return QMarginsF{};
+    }
+
+    const auto b = border().value();
+
+    QMarginsF result;
+    result.setLeft(b.left.value_or(LineDefinition{}).size);
+    result.setRight(b.right.value_or(LineDefinition{}).size);
+    result.setTop(b.top.value_or(LineDefinition{}).size);
+    result.setBottom(b.bottom.value_or(LineDefinition{}).size);
+
+    return result;
 }
 
+QRectF Style::boundingRect() const
+{
+    QRectF result;
+
+    auto c = contentSize();
+    auto b = borderSizes();
+
+    if (!c.isValid() && b.isNull()) {
+        return QRectF{};
+    }
+
+    result.setWidth(b.left() + c.width() + b.right());
+    result.setHeight(b.top() + c.height() + b.bottom());
+
+    return result;
+}
+
+std::optional<AreaDefinition> Style::foreground() const
+{
+    return d->foreground;
+}
+
+void Style::setForeground(const std::optional<AreaDefinition> &newForeground)
+{
+    d->foreground = newForeground;
+}
+
+std::optional<AreaDefinition> Style::background() const
+{
+    return d->background;
+}
+
+void Style::setBackground(const std::optional<AreaDefinition> &newBackground)
+{
+    d->background = newBackground;
+}
+
+std::optional<BorderDefinition> Style::border() const
+{
+    return d->border;
+}
+
+void Style::setBorder(const std::optional<BorderDefinition> &newBorder)
+{
+    d->border = newBorder;
+}
+
+std::optional<ShadowDefinition> Style::shadow() const
+{
+    return d->shadow;
+}
+
+void Style::setShadow(const std::optional<ShadowDefinition> &newShadow)
+{
+    d->shadow = newShadow;
+}
+
+std::optional<SizeDefinition> Style::margin() const
+{
+    return d->margin;
+}
+
+void Style::setMargin(const std::optional<SizeDefinition> &newMargin)
+{
+    d->margin = newMargin;
+}
+
+std::optional<SizeDefinition> Style::padding() const
+{
+    return d->padding;
+}
+
+void Style::setPadding(const std::optional<SizeDefinition> &newPadding)
+{
+    d->padding = newPadding;
+}
+
+std::optional<BorderDefinition> Style::outset() const
+{
+    return d->outset;
+}
+
+void Style::setOutset(const std::optional<BorderDefinition> &newOutset)
+{
+    d->outset = newOutset;
+}
+
+std::optional<CornersDefinition> Style::corners() const
+{
+    return d->corners;
+}
+
+void Style::setCorners(const std::optional<CornersDefinition> &newCorners)
+{
+    d->corners = newCorners;
+}
+
+Style::Ptr Style::create()
+{
+    return std::make_shared<Style>(std::make_unique<StylePrivate>());
+}
+
+QDebug operator<<(QDebug debug, std::shared_ptr<Union::Style> style)
+{
+    QDebugStateSaver saver(debug);
+    debug << "Style(" << style->selectors() << ")";
+    return debug;
+}
