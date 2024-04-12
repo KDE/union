@@ -36,7 +36,6 @@ set_target_properties(Union PROPERTIES
 target_link_libraries(Union PUBLIC
     Qt6::Core
     Qt6::Gui
-    Qt6::Svg
 )
 
 target_include_directories(Union PUBLIC
