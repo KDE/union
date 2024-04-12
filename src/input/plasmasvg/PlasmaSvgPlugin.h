@@ -16,5 +16,5 @@ class PlasmaSvgPlugin : public Union::InputPlugin
 public:
     PlasmaSvgPlugin(QObject *parent = nullptr);
 
-    std::unique_ptr<Union::StyleLoader> createStyleLoader(std::shared_ptr<Union::Style> style) const override;
+    std::unique_ptr<Union::StyleLoader> createStyleLoader(std::shared_ptr<Union::Theme> theme) const override;
 };

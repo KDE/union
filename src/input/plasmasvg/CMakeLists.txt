@@ -7,7 +7,7 @@ target_sources(union-plasmasvg PRIVATE
     PlasmaSvgPlugin.qrc
 )
 
-target_link_libraries(union-plasmasvg PRIVATE Union Qt6::Svg Plasma::Plasma yaml-cpp::yaml-cpp)
+target_link_libraries(union-plasmasvg PRIVATE Union Qt6::Svg Plasma::Plasma ryml::ryml)
 
 ecm_qt_declare_logging_category(union-plasmasvg
     HEADER plasmasvg_logging.h

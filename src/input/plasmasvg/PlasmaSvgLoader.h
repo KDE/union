@@ -6,11 +6,15 @@
 
 #pragma once
 
+#include <QMetaEnum>
+
 #include <Plasma/Theme>
 
-#include <yaml-cpp/yaml.h>
+#define RYML_DEFAULT_CALLBACK_USES_EXCEPTIONS
+#include <ryml.hpp>
+#include <ryml_std.hpp>
 
-#include <StyleElement.h>
+#include <Element.h>
 
 #include "StyleLoader.h"
 
@@ -23,30 +27,37 @@ struct LineDefinition;
 struct ImageDefinition;
 }
 
-struct LoaderContext;
-
 class PlasmaSvgLoader : public Union::StyleLoader
 {
     Q_OBJECT
 
 public:
-    PlasmaSvgLoader(std::shared_ptr<Union::Style> style, QObject *parent = nullptr);
+    PlasmaSvgLoader(std::shared_ptr<Union::Theme> theme, QObject *parent = nullptr);
 
     bool load() override;
 
 private:
-    std::shared_ptr<Union::StyleElement> createElement(const YAML::Node &node, QStack<LoaderContext> &context);
-    std::optional<Union::LineDefinition> createLineDefinition(std::shared_ptr<QSvgRenderer> renderer,
-                                                              const QString &elementName,
-                                                              Qt::Orientation orientation,
-                                                              Union::LineDefinition parentLine);
-    std::optional<Union::CornerDefinition> createCornerDefinition(std::shared_ptr<QSvgRenderer> renderer,
-                                                                  const QString &elementName,
-                                                                  Union::CornerDefinition parentCorner);
-    std::optional<Union::ImageDefinition> renderElement(std::shared_ptr<QSvgRenderer> renderer,
-                                                        const QString &elementName,
-                                                        const Union::ImageDefinition &parentImage);
-    QSizeF elementSize(std::shared_ptr<QSvgRenderer> renderer, const QString &elementName);
+    void createStyles(ryml::ConstNodeRef node, const Union::SelectorList &parentSelectors);
+    Union::Style::Ptr createStyle(ryml::ConstNodeRef node, const Union::SelectorList &parentSelectors);
+
+    std::optional<Union::SizeDefinition> createSizeDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::BorderDefinition> createBorderDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::CornersDefinition> createCornersDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::AreaDefinition> createAreaDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::LineDefinition> createLineDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::CornerDefinition> createCornerDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::ImageDefinition> createImageDefinition(ryml::ConstNodeRef node);
+
+    QVariant elementProperty(ryml::ConstNodeRef node);
+
+    QSizeF elementSize(QAnyStringView path, QAnyStringView element);
+    qreal elementWidth(QAnyStringView path, QAnyStringView element);
+    qreal elementHeight(QAnyStringView path, QAnyStringView element);
+    QImage elementImage(QAnyStringView path, QAnyStringView element);
+    QImage elementImageBlend(QAnyStringView path, ryml::ConstNodeRef elements);
+
+    std::shared_ptr<QSvgRenderer> rendererForPath(QAnyStringView path);
 
     Plasma::Theme m_theme;
+    QHash<QString, std::shared_ptr<QSvgRenderer>> m_renderers;
 };

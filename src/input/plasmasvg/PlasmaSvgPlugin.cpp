@@ -13,7 +13,7 @@ PlasmaSvgPlugin::PlasmaSvgPlugin(QObject *parent)
 {
 }
 
-std::unique_ptr<Union::StyleLoader> PlasmaSvgPlugin::createStyleLoader(std::shared_ptr<Union::Style> style) const
+std::unique_ptr<Union::StyleLoader> PlasmaSvgPlugin::createStyleLoader(std::shared_ptr<Union::Theme> theme) const
 {
-    return std::make_unique<PlasmaSvgLoader>(style);
+    return std::make_unique<PlasmaSvgLoader>(theme);
 }
