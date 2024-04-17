@@ -10,7 +10,10 @@
 
 #include <QCoreApplication>
 #include <QGlobalStatic>
+#include <QMetaObject>
 #include <QPluginLoader>
+#include <QThread>
+#include <QTimer>
 #include <QUrl>
 
 #include "InputPlugin.h"
@@ -23,7 +26,27 @@ using namespace Qt::StringLiterals;
 
 static void loadThemeOnStartup()
 {
-    Theme::instance()->load();
+    if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
+        Theme::instance()->load();
+    }
+
+    // If we are not running on the main thread, which may happen if we're being
+    // loaded by QML, ensure we only create and load the Theme instance on the
+    // main thread by using a QTimer that we explicitly move to the main thread.
+    QTimer *mainThreadTimer = new QTimer();
+    mainThreadTimer->moveToThread(QCoreApplication::instance()->thread());
+    mainThreadTimer->setSingleShot(true);
+    QObject::connect(
+        mainThreadTimer,
+        &QTimer::timeout,
+        mainThreadTimer,
+        [mainThreadTimer]() {
+            Theme::instance()->load();
+            mainThreadTimer->deleteLater();
+        },
+        Qt::QueuedConnection);
+    // The timer is now on the main thread so it needs to be started from there.
+    QMetaObject::invokeMethod(mainThreadTimer, "start", Qt::QueuedConnection, Q_ARG(int, 0));
 }
 Q_COREAPP_STARTUP_FUNCTION(loadThemeOnStartup)
 
@@ -63,7 +86,7 @@ void Theme::load()
                 if (inputPlugin) {
                     qCDebug(UNION_GENERAL) << "Loaded input plugin" << name;
                     auto loader = inputPlugin->createStyleLoader(instance());
-                    if (!loader->load()) {
+                    if (!loader || !loader->load()) {
                         qCWarning(UNION_GENERAL) << "Style loader failed to load";
                     } else {
                         d->styleLoaders.insert(std::make_pair(name, std::move(loader)));
@@ -97,6 +120,12 @@ QList<Style::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
 
 std::shared_ptr<Theme> Theme::instance()
 {
-    static std::shared_ptr<Theme> inst = std::make_shared<Theme>(std::make_unique<ThemePrivate>());
+    static std::shared_ptr<Theme> inst;
+    if (!inst) {
+        if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
+            qCFatal(UNION_GENERAL) << "Theme cannot be instantiated on a different thread than the main thread";
+        }
+        inst = std::make_shared<Theme>(std::make_unique<ThemePrivate>());
+    }
     return inst;
 }

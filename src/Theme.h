@@ -33,10 +33,7 @@ public:
 
     void load();
 
-    // std::shared_ptr<Element> get(const ElementIdentifier &selector);
-    // QList<Style::Ptr> get(const SelectorList &selectors);
-
-    void insert(std::shared_ptr<Style> style);
+    void insert(Style::Ptr style);
     QList<Style::Ptr> matches(const QList<Element::Ptr> &elements);
 
     static std::shared_ptr<Theme> instance();
