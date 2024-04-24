@@ -17,6 +17,7 @@ public:
     Union::CornerDefinition corner;
     QRectF rect;
     QPointF offset;
+    QColor color = Qt::transparent;
 
     void update(QQuickWindow *window) override;
 };
