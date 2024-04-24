@@ -34,12 +34,38 @@ Background::Background(QQuickItem *parent)
     setFlag(QQuickItem::ItemHasContents);
 }
 
-void Union::Background::componentComplete()
+QuickElement *Background::element() const
+{
+    return m_element;
+}
+
+void Background::setElement(QuickElement *element)
+{
+    if (element == m_element) {
+        return;
+    }
+
+    if (m_element) {
+        disconnect(m_element, &QuickElement::updated, this, &Background::update);
+    }
+
+    m_element = element;
+
+    if (m_element) {
+        connect(m_element, &QuickElement::updated, this, &Background::update);
+    }
+
+    Q_EMIT elementChanged();
+    update();
+}
+
+void Background::componentComplete()
 {
     QQuickItem::componentComplete();
 
-    m_element = qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(this, true));
-    connect(m_element, &QuickElement::updated, this, &Background::update);
+    if (!m_element) {
+        setElement(qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(this, true)));
+    }
 }
 
 QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData * /*data*/)
