@@ -111,7 +111,13 @@ public:
     QBindable<bool> bindableEnabled();
     Q_SIGNAL void enabledChanged();
 
-    Q_PROPERTY(QStringList activeStates READ activeStates STORED false NOTIFY activeStatesChanged BINDABLE bindableActiveStates)
+    Q_PROPERTY(bool highlighted READ highlighted WRITE setHighlighted NOTIFY highlightedChanged BINDABLE bindableHighlighted)
+    bool highlighted() const;
+    void setHighlighted(bool newHighlighted);
+    QBindable<bool> bindableHighlighted();
+    Q_SIGNAL void highlightedChanged();
+
+    Q_PROPERTY(QStringList activeStates READ activeStates NOTIFY activeStatesChanged BINDABLE bindableActiveStates)
     QStringList activeStates() const;
     QBindable<QStringList> bindableActiveStates();
     Q_SIGNAL void activeStatesChanged();
@@ -122,6 +128,7 @@ private:
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_pressed, &StatesGroup::pressedChanged)
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(StatesGroup, bool, m_enabled, true, &StatesGroup::enabledChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_highlighted, &StatesGroup::highlightedChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, QStringList, m_activeStates, &StatesGroup::activeStatesChanged)
 };
 

@@ -213,6 +213,21 @@ QBindable<bool> StatesGroup::bindableEnabled()
     return QBindable<bool>(&m_enabled);
 }
 
+bool StatesGroup::highlighted() const
+{
+    return m_highlighted;
+}
+
+void StatesGroup::setHighlighted(bool newHighlighted)
+{
+    m_highlighted = newHighlighted;
+}
+
+QBindable<bool> StatesGroup::bindableHighlighted()
+{
+    return QBindable<bool>(&m_highlighted);
+}
+
 QStringList StatesGroup::activeStates() const
 {
     return m_activeStates;
