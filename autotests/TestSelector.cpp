@@ -81,6 +81,31 @@ private Q_SLOTS:
 
         QCOMPARE(selectorListMatches(selectors, elements), expected);
     }
+
+    void testSkipEmpty()
+    {
+        ElementList elements;
+        auto element = Element::create();
+        elements.append(element);
+
+        element = Element::create();
+        element->setType(u"type"_qs);
+        elements.append(element);
+
+        element = Element::create();
+        elements.append(element);
+
+        element = Element::create();
+        element->setStates({u"state"_qs});
+        elements.append(element);
+
+        SelectorList selectors = {
+            Selector(Selector::SelectorType::Type, u"type"_qs),
+            Selector(Selector::SelectorType::State, u"state"_qs),
+        };
+
+        QVERIFY(selectorListMatches(selectors, elements));
+    }
 };
 
 QTEST_MAIN(TestSelector)
