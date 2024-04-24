@@ -21,7 +21,28 @@ namespace Union {
 
 class StylePrivate;
 
-class UNION_EXPORT Style : public QObject, public std::enable_shared_from_this<Style>
+class StyleInterface
+{
+public:
+    virtual ~StyleInterface()
+    {
+    }
+
+    virtual QSizeF contentSize() const = 0;
+    virtual QRectF boundingRect() const = 0;
+    virtual QMarginsF borderSizes() const = 0;
+
+    virtual std::optional<AreaDefinition> foreground() const = 0;
+    virtual std::optional<AreaDefinition> background() const = 0;
+    virtual std::optional<BorderDefinition> border() const = 0;
+    virtual std::optional<CornersDefinition> corners() const = 0;
+    virtual std::optional<ShadowDefinition> shadow() const = 0;
+    virtual std::optional<BorderDefinition> outset() const = 0;
+    virtual std::optional<SizeDefinition> margins() const = 0;
+    virtual std::optional<SizeDefinition> padding() const = 0;
+};
+
+class UNION_EXPORT Style : public QObject, public StyleInterface, public std::enable_shared_from_this<Style>
 {
     Q_OBJECT
 
@@ -34,33 +55,33 @@ public:
     SelectorList selectors() const;
     void setSelectors(const SelectorList &selectors);
 
-    QSizeF contentSize() const;
-    QRectF boundingRect() const;
-    QMarginsF borderSizes() const;
+    QSizeF contentSize() const override;
+    QRectF boundingRect() const override;
+    QMarginsF borderSizes() const override;
 
-    std::optional<AreaDefinition> foreground() const;
+    std::optional<AreaDefinition> foreground() const override;
     void setForeground(const std::optional<AreaDefinition> &newForeground);
 
-    std::optional<AreaDefinition> background() const;
+    std::optional<AreaDefinition> background() const override;
     void setBackground(const std::optional<AreaDefinition> &newBackground);
 
-    std::optional<BorderDefinition> border() const;
+    std::optional<BorderDefinition> border() const override;
     void setBorder(const std::optional<BorderDefinition> &newBorder);
 
-    std::optional<ShadowDefinition> shadow() const;
+    std::optional<CornersDefinition> corners() const override;
+    void setCorners(const std::optional<CornersDefinition> &newCorners);
+
+    std::optional<ShadowDefinition> shadow() const override;
     void setShadow(const std::optional<ShadowDefinition> &newShadow);
 
-    std::optional<SizeDefinition> margin() const;
-    void setMargin(const std::optional<SizeDefinition> &newMargin);
-
-    std::optional<SizeDefinition> padding() const;
-    void setPadding(const std::optional<SizeDefinition> &newPadding);
-
-    std::optional<BorderDefinition> outset() const;
+    std::optional<BorderDefinition> outset() const override;
     void setOutset(const std::optional<BorderDefinition> &newOutset);
 
-    std::optional<CornersDefinition> corners() const;
-    void setCorners(const std::optional<CornersDefinition> &newCorners);
+    std::optional<SizeDefinition> margins() const override;
+    void setMargins(const std::optional<SizeDefinition> &newMargin);
+
+    std::optional<SizeDefinition> padding() const override;
+    void setPadding(const std::optional<SizeDefinition> &newPadding);
 
     static Style::Ptr create();
 

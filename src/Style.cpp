@@ -19,7 +19,7 @@ public:
     std::optional<AreaDefinition> background;
     std::optional<BorderDefinition> border;
     std::optional<ShadowDefinition> shadow;
-    std::optional<SizeDefinition> margin;
+    std::optional<SizeDefinition> margins;
     std::optional<SizeDefinition> padding;
     std::optional<BorderDefinition> outset;
     std::optional<CornersDefinition> corners;
@@ -125,14 +125,14 @@ void Style::setShadow(const std::optional<ShadowDefinition> &newShadow)
     d->shadow = newShadow;
 }
 
-std::optional<SizeDefinition> Style::margin() const
+std::optional<SizeDefinition> Style::margins() const
 {
-    return d->margin;
+    return d->margins;
 }
 
-void Style::setMargin(const std::optional<SizeDefinition> &newMargin)
+void Style::setMargins(const std::optional<SizeDefinition> &newMargins)
 {
-    d->margin = newMargin;
+    d->margins = newMargins;
 }
 
 std::optional<SizeDefinition> Style::padding() const
