@@ -28,6 +28,11 @@ T.Button {
     topPadding: Union.Element.padding.top
     bottomPadding: Union.Element.padding.bottom
 
+    leftInset: Union.Element.margins.left
+    rightInset: Union.Element.margins.right
+    topInset: Union.Element.margins.top
+    bottomInset: Union.Element.margins.bottom
+
     // font: elementInfo.font
 
     contentItem: Text {
