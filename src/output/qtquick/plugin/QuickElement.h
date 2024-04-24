@@ -26,7 +26,8 @@ class Sizes
 public:
     Sizes();
     Sizes(qreal left, qreal right, qreal top, qreal bottom);
-    Sizes(const QMarginsF &margins);
+    explicit Sizes(const QMarginsF &margins);
+    explicit Sizes(const std::optional<Union::SizeDefinition> &other);
 
     bool operator==(const Sizes &other);
 

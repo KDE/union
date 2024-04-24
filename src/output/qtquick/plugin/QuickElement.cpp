@@ -27,6 +27,13 @@ Sizes::Sizes(const QMarginsF &margins)
 {
 }
 
+Sizes::Sizes(const std::optional<Union::SizeDefinition> &other)
+{
+    if (other.has_value()) {
+        m_margins = other.value().toMargins();
+    }
+}
+
 bool Sizes::operator==(const Sizes &other)
 {
     return m_margins == other.m_margins;
