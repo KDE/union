@@ -67,9 +67,9 @@ public:
     QBindable<Sizes> bindableSizes();
     Q_SIGNAL void sizesChanged();
 
-private:
-    void onUpdated();
+    void update(const std::optional<Union::BorderDefinition> &borders);
 
+private:
     Q_OBJECT_BINDABLE_PROPERTY(BordersGroup, Sizes, m_sizes, &BordersGroup::sizesChanged)
 };
 
@@ -191,12 +191,14 @@ public:
     // Q_PROPERTY(BackgroundGroup* background READ background CONSTANT)
     // BackgroundGroup* background() const;
 
-    // Union::Element::Ptr styleElement() const;
-    Union::ElementQuery buildQuery() const;
+    Union::ElementQuery query() const;
 
     Q_SIGNAL void updated();
 
     static QuickElement *qmlAttachedProperties(QObject *parent);
+
+protected:
+    void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
 
 private:
     friend class StatesGroup;
@@ -211,6 +213,8 @@ private:
     std::shared_ptr<Union::Element> m_element;
     std::unique_ptr<BordersGroup> m_bordersGroup;
     std::unique_ptr<StatesGroup> m_statesGroup;
+
+    Union::ElementQuery m_query;
 
     QPropertyNotifier m_activeStatesNotifier;
 };

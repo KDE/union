@@ -99,10 +99,20 @@ QBindable<Sizes> BordersGroup::bindableSizes()
     return QBindable<Sizes>(&m_sizes);
 }
 
-void BordersGroup::onUpdated()
+void BordersGroup::update(const std::optional<Union::BorderDefinition> &borders)
 {
-    // Sizes s = m_parent->styleElement()->borderSizes();
-    // m_sizes = s;
+    if (!borders.has_value()) {
+        m_sizes = Sizes();
+        return;
+    }
+
+    auto value = borders.value();
+    Sizes newSizes;
+    newSizes.setLeft(value.left.value_or(LineDefinition()).size);
+    newSizes.setRight(value.right.value_or(LineDefinition()).size);
+    newSizes.setTop(value.top.value_or(LineDefinition()).size);
+    newSizes.setBottom(value.bottom.value_or(LineDefinition()).size);
+    m_sizes = newSizes;
 }
 
 StatesGroup::StatesGroup()
@@ -216,12 +226,10 @@ QBindable<QStringList> StatesGroup::bindableActiveStates()
 QuickElement::QuickElement(QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
 {
-    initialize();
-
     m_element = Element::create();
 
-    m_bordersGroup = std::make_unique<BordersGroup>(this);
-    m_statesGroup = std::make_unique<StatesGroup>(this);
+    m_bordersGroup = std::make_unique<BordersGroup>();
+    m_statesGroup = std::make_unique<StatesGroup>();
 
     m_element->bindableStates().setBinding([this]() {
         return m_statesGroup->bindableActiveStates().value();
@@ -230,6 +238,8 @@ QuickElement::QuickElement(QObject *parent)
     m_activeStatesNotifier = m_statesGroup->bindableActiveStates().addNotifier([this]() {
         update();
     });
+
+    initialize();
 }
 
 QString QuickElement::type() const
@@ -342,9 +352,24 @@ QBindable<qreal> QuickElement::bindableImplicitHeight()
     return QBindable<qreal>(&m_implicitHeight);
 }
 
-Union::ElementQuery QuickElement::buildQuery() const
+Union::ElementQuery QuickElement::query() const
 {
-    Union::ElementQuery query(Union::Theme::instance());
+    return m_query;
+}
+
+QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
+{
+    return new QuickElement(parent);
+}
+
+void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *)
+{
+    update();
+}
+
+void QuickElement::update()
+{
+    m_query = Union::ElementQuery(Union::Theme::instance());
 
     QList<Element::Ptr> elements;
     elements.append(m_element);
@@ -355,17 +380,19 @@ Union::ElementQuery QuickElement::buildQuery() const
         parent = qobject_cast<QuickElement *>(parent->attachedParent());
     }
 
-    query.setElements(elements);
-    return query;
-}
+    m_query.setElements(elements);
+    m_query.execute();
 
-QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
-{
-    return new QuickElement(parent);
-}
+    auto rect = m_query.boundingRect();
 
-void QuickElement::update()
-{
+    m_implicitWidth = rect.width();
+    m_implicitHeight = rect.height();
+
+    m_margins = m_query.margins();
+    m_padding = m_query.padding();
+
+    m_bordersGroup->update(m_query.border());
+
     Q_EMIT updated();
 
     const auto children = attachedChildren();
