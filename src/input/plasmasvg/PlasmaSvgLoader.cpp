@@ -507,6 +507,27 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
         maxHeight = std::max(maxHeight, image.height());
     }
 
+    auto align = 0;
+    if (node.has_child("align")) {
+        auto alignHorizontal = nodeToString(node["align"]["horizontal"]);
+        if (alignHorizontal == u"left") {
+            align |= Qt::AlignLeft;
+        } else if (alignHorizontal == u"center") {
+            align |= Qt::AlignHCenter;
+        } else if (alignHorizontal == u"right") {
+            align |= Qt::AlignRight;
+        }
+
+        auto alignVertical = nodeToString(node["align"]["vertical"]);
+        if (alignVertical == u"top") {
+            align |= Qt::AlignTop;
+        } else if (alignVertical == u"center") {
+            align |= Qt::AlignVCenter;
+        } else if (alignVertical == u"bottom") {
+            align |= Qt::AlignBottom;
+        }
+    }
+
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 
@@ -519,7 +540,24 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
 
     QPainter painter(&result);
     for (const auto &image : images) {
-        painter.drawImage(geometry, image);
+        QPoint position;
+        if (align & Qt::AlignLeft) {
+            position.setX(0);
+        } else if (align & Qt::AlignHCenter) {
+            position.setX((maxWidth - image.width()) / 2);
+        } else if (align & Qt::AlignRight) {
+            position.setX(maxWidth - image.width());
+        }
+
+        if (align & Qt::AlignTop) {
+            position.setY(0);
+        } else if (align & Qt::AlignVCenter) {
+            position.setY((maxHeight - image.height()) / 2);
+        } else if (align & Qt::AlignBottom) {
+            position.setY(maxHeight - image.height());
+        }
+
+        painter.drawImage(position, image);
     }
 
     return result;
