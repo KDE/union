@@ -235,6 +235,10 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     // element->addAttribute(u"plugin"_qs, QString::fromUtf16(PluginName));
     // element->addAttribute(u"themeName"_qs, m_theme.themeName());
 
+    if (node.has_child("margins")) {
+        style->setMargins(createSizeDefinition(node["margins"], context));
+    }
+
     if (node.has_child("padding")) {
         style->setPadding(createSizeDefinition(node["padding"], context));
     }
