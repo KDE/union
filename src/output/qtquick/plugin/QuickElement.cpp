@@ -403,8 +403,8 @@ void QuickElement::update()
     m_implicitWidth = rect.width();
     m_implicitHeight = rect.height();
 
-    m_margins = m_query.margins();
-    m_padding = m_query.padding();
+    m_margins = Sizes(m_query.margins());
+    m_padding = Sizes(m_query.padding());
 
     m_bordersGroup->update(m_query.border());
 
