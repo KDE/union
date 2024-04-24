@@ -380,6 +380,10 @@ std::optional<Union::ImageDefinition> PlasmaSvgLoader::createImageDefinition(rym
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
+    if (node.is_val() || node.is_keyval()) {
+        return constantValue(node, context);
+    }
+
     if (!node.is_map()) {
         return QVariant{};
     }
@@ -390,6 +394,10 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
     }
 
     auto cleanup = context.pushFromNode(node);
+
+    if (name == "constant") {
+        return constantValue(node, context);
+    }
 
     if (name == "element-size") {
         return elementSize(node, context).value_or(QSizeF{});
@@ -414,6 +422,19 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
     }
 
     return QVariant{};
+}
+
+QVariant PlasmaSvgLoader::constantValue(ryml::ConstNodeRef node, LoadingContext &)
+{
+    auto value = node;
+    if (node.is_map() && node.has_child("value")) {
+        value = node["value"];
+    }
+
+    qreal result;
+    value >> result;
+
+    return result;
 }
 
 std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
