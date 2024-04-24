@@ -27,14 +27,17 @@ void ElementQuery::setElements(const QList<Element::Ptr> &elements)
     m_elements = elements;
 }
 
-bool ElementQuery::execute()
+void ElementQuery::execute()
 {
     m_styles = m_theme->matches(m_elements);
     if (m_styles.isEmpty()) {
-        return false;
+        m_combined = Style::create();
+        m_result = false;
+        return;
     }
 
     m_combined = Style::create();
+    m_result = true;
 
     for (auto style : std::as_const(m_styles)) {
         if (style->foreground().has_value() && !m_combined->foreground().has_value()) {
@@ -69,6 +72,11 @@ bool ElementQuery::execute()
             m_combined->setPadding(style->padding());
         }
     }
+}
+
+bool ElementQuery::result() const
+{
+    return m_result;
 }
 
 QSizeF ElementQuery::contentSize() const

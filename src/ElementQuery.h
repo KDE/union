@@ -29,7 +29,8 @@ public:
     QList<Element::Ptr> elements();
     void setElements(const QList<Element::Ptr> &elements);
 
-    bool execute();
+    void execute();
+    bool result() const;
 
     QSizeF contentSize() const override;
     QRectF boundingRect() const override;
@@ -50,7 +51,8 @@ private:
     QList<Style::Ptr> m_styles;
 
     Style::Ptr m_combined;
-    // SelectorList m_selectors;
+
+    bool m_result = false;
 };
 
 }
