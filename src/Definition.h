@@ -38,7 +38,26 @@ struct ImageDefinition {
     qreal yOffset = 0.0;
     qreal width = 0.0;
     qreal height = 0.0;
+
+    inline bool operator==(const ImageDefinition &other) const
+    {
+        return imageData == other.imageData && flags == other.flags;
+    }
 };
+
+inline bool operator==(const std::optional<ImageDefinition> &first, const std::optional<ImageDefinition> &second)
+{
+    if (first.has_value()) {
+        if (second.has_value()) {
+            return *first == *second;
+        }
+    } else {
+        if (!second.has_value()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 struct SizeDefinition {
     qreal left = 0.0;
@@ -64,6 +83,11 @@ struct LineDefinition {
     qreal size = 0.0;
     LineStyle style = LineStyle::Solid;
     std::optional<ImageDefinition> image;
+
+    inline bool operator==(const LineDefinition &other) const
+    {
+        return color == other.color && qFuzzyCompare(size, other.size) && style == other.style && image == other.image;
+    }
 };
 
 struct CornerDefinition {
@@ -71,6 +95,11 @@ struct CornerDefinition {
     qreal width = 0.0;
     qreal height = 0.0;
     std::optional<ImageDefinition> image;
+
+    inline bool operator==(const CornerDefinition &other) const
+    {
+        return qFuzzyCompare(radius, other.radius) && qFuzzyCompare(width, other.width) && qFuzzyCompare(height, other.height) && image == other.image;
+    }
 };
 
 struct BorderDefinition {
