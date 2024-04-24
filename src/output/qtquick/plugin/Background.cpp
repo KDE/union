@@ -12,11 +12,13 @@
 #include "CornerNode.h"
 #include "Element.h"
 #include "LineNode.h"
+#include "ShadowNode.h"
 #include "Style.h"
 
 using namespace Union;
 
-enum NodeElement {
+enum class NodeElement {
+    Shadow, //
     Center, //
     Left, //
     Right, //
@@ -25,7 +27,8 @@ enum NodeElement {
     TopLeft, //
     TopRight, //
     BottomLeft, //
-    BottomRight //
+    BottomRight, //
+    ElementCount, //
 };
 
 Background::Background(QQuickItem *parent)
@@ -74,30 +77,40 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
         return nullptr;
     }
 
-    auto query = m_element->buildQuery();
-    if (!query.execute()) {
+    auto query = m_element->query();
+    if (!query.result()) {
         return nullptr;
     }
 
     if (!node) {
         node = new QSGNode();
 
+        node->appendChildNode(new ShadowNode());
+
         node->appendChildNode(new AreaNode());
 
-        for (auto element [[maybe_unused]] : {Left, Right, Top, Bottom}) {
+        for (auto element [[maybe_unused]] : {NodeElement::Left, NodeElement::Right, NodeElement::Top, NodeElement::Bottom}) {
             node->appendChildNode(new LineNode{});
         }
 
-        for (auto element [[maybe_unused]] : {TopLeft, TopRight, BottomLeft, BottomRight}) {
+        for (auto element [[maybe_unused]] : {NodeElement::TopLeft, NodeElement::TopRight, NodeElement::BottomLeft, NodeElement::BottomRight}) {
             node->appendChildNode(new CornerNode{});
         }
     }
 
+    Q_ASSERT(node->childCount() == int(NodeElement::ElementCount));
+
     auto win = window();
+    auto margins = query.margins().value_or(SizeDefinition{}).toMargins();
     auto bounds = boundingRect();
     auto borderSizes = query.borderSizes();
 
-    auto center = static_cast<AreaNode *>(node->childAtIndex(0));
+    auto shadow = static_cast<ShadowNode *>(node->childAtIndex(int(NodeElement::Shadow)));
+    shadow->shadow = query.shadow().value_or(ShadowDefinition{});
+    shadow->rect = bounds + margins;
+    shadow->update(win);
+
+    auto center = static_cast<AreaNode *>(node->childAtIndex(int(NodeElement::Center)));
     center->area = query.background().value_or(AreaDefinition());
     center->rect = bounds - borderSizes;
     center->update(win);
@@ -111,9 +124,8 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
                  {NodeElement::Top, borders.top.value_or(LineDefinition{})},
                  {NodeElement::Bottom, borders.bottom.value_or(LineDefinition{})},
              }) {
-            auto lineNode = static_cast<LineNode *>(node->childAtIndex(position));
+            auto lineNode = static_cast<LineNode *>(node->childAtIndex(int(position)));
             lineNode->line = definition;
-            lineNode->margins = borderSizes;
 
             switch (position) {
             case NodeElement::Left:
@@ -151,7 +163,7 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
                  {NodeElement::BottomLeft, corners.bottomLeft.value_or(CornerDefinition{})},
                  {NodeElement::BottomRight, corners.bottomRight.value_or(CornerDefinition{})},
              }) {
-            auto cornerNode = static_cast<CornerNode *>(node->childAtIndex(position));
+            auto cornerNode = static_cast<CornerNode *>(node->childAtIndex(int(position)));
             cornerNode->corner = definition;
 
             switch (position) {

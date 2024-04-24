@@ -9,6 +9,7 @@ target_sources(UnionQuickImpl PRIVATE
     AreaNode.cpp
     LineNode.cpp
     CornerNode.cpp
+    ShadowNode.cpp
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
