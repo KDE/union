@@ -1,0 +1,474 @@
+button: &button
+    type: Button
+
+    path: widgets/button
+    prefix: normal
+
+    padding: &button-padding
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+
+    # children: &button-children
+    #     background: &button-background
+    #         type: Background
+    border: &button-border
+        left: &button-border-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &button-border-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top: &button-border-top
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom: &button-border-bottom
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+
+    corners: &button-corners
+        top-left: &button-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right: &button-corner-top-right
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left: &button-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right: &button-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
+
+    background: &button-background
+        element: center
+        size:
+            property: element-size
+        image:
+            property: element-image
+
+    shadow: &button-shadow
+        prefix: shadow
+
+        offsets: &button-shadow-offsets
+            left:
+                property: element-width
+                element: hint-left-margin
+                invert: true
+            right:
+                property: element-width
+                element: hint-right-margin
+                invert: true
+            top:
+                property: element-height
+                element: hint-top-margin
+                invert: true
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+                invert: true
+
+        left: &button-shadow-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &button-shadow-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top: &button-shadow-top
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom: &button-shadow-bottom
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+
+        top-left: &button-shadow-top-left
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right: &button-shadow-top-right
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left: &button-shadow-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right: &button-shadow-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
+
+    text:
+        align:
+            horizontal: center
+            vertical: center
+
+        # contentItem: &button-content
+        #     type: ContentItem
+        #     children: &button-content-children
+        #         icon:
+        #             type: Icon
+        #         label:
+        #             type: Label
+
+button-hovered:
+    <<: *button
+
+    state: hovered
+
+    border:
+        left:
+            <<: *button-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-left
+                -   hover-left
+        right:
+            <<: *button-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-right
+                -   hover-right
+
+        top:
+            <<: *button-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-top
+                -   hover-top
+
+        bottom:
+            <<: *button-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottom
+                -   hover-bottom
+
+    corners:
+        top-left:
+            <<: *button-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-topleft
+                -   hover-topleft
+        top-right:
+            <<: *button-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-topright
+                -   hover-topright
+        bottom-left:
+            <<: *button-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottomleft
+                -   hover-bottomleft
+        bottom-right:
+            <<: *button-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottomright
+                -   hover-bottomright
+
+    background:
+        <<: *button-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   normal-center
+            -   hover-center
+
+button-focus:
+    <<: *button
+
+    state: focus
+
+    margins:
+        prefix: focus
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+
+    border:
+        left:
+            <<: *button-border-left
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: center
+                elements:
+                -   normal-left
+                -   focus-left
+        right:
+            <<: *button-border-right
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: center
+                elements:
+                -   normal-right
+                -   focus-right
+
+        top:
+            <<: *button-border-top
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: bottom
+                elements:
+                -   normal-top
+                -   focus-top
+
+        bottom:
+            <<: *button-border-bottom
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: top
+                elements:
+                -   normal-bottom
+                -   focus-bottom
+
+    corners:
+        top-left:
+            <<: *button-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: bottom
+                elements:
+                -   normal-topleft
+                -   focus-topleft
+        top-right:
+            <<: *button-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: bottom
+                elements:
+                -   normal-topright
+                -   focus-topright
+        bottom-left:
+            <<: *button-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: top
+                elements:
+                -   normal-bottomleft
+                -   focus-bottomleft
+        bottom-right:
+            <<: *button-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: top
+                elements:
+                -   normal-bottomright
+                -   focus-bottomright
+
+    background:
+        <<: *button-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   normal-center
+            -   focus-center
+
+button-pressed:
+    <<: *button
+
+    state: pressed
+
+    padding:
+        <<: *button-padding
+        prefix: pressed
+
+    margins:
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+
+    border:
+        left:
+            <<: *button-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-left
+                -   pressed-left
+        right:
+            <<: *button-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-right
+                -   pressed-right
+
+        top:
+            <<: *button-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-top
+                -   pressed-top
+
+        bottom:
+            <<: *button-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottom
+                -   pressed-bottom
+
+    corners:
+        top-left:
+            <<: *button-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-topleft
+                -   pressed-topleft
+        top-right:
+            <<: *button-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-topright
+                -   pressed-topright
+        bottom-left:
+            <<: *button-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottomleft
+                -   pressed-bottomleft
+        bottom-right:
+            <<: *button-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   normal-bottomright
+                -   pressed-bottomright
+
+    background:
+        <<: *button-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   normal-center
+            -   pressed-center

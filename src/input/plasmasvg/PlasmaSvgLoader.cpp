@@ -57,30 +57,40 @@ PlasmaSvgLoader::PlasmaSvgLoader(std::shared_ptr<Theme> theme, QObject *parent)
 
 bool PlasmaSvgLoader::load()
 {
-    QFile file(u":/org/kde/union/input/plasmasvg/PlasmaSvgStructure.yml"_qs);
-    if (!file.open(QFile::ReadOnly)) {
+    QDir dir(u":/org/kde/union/input/plasmasvg"_s);
+    const auto entries = dir.entryList({u"*.yml"_s});
+    if (entries.isEmpty()) {
+        qCWarning(UNION_PLASMASVG) << "No style definitions found";
         return false;
     }
 
-    auto data = file.readAll().toStdString();
-    ryml::Tree parsed;
-    try {
-        parsed = ryml::parse_in_place(ryml::to_substr(data));
-    } catch (const std::runtime_error &e) {
-        qCWarning(UNION_PLASMASVG) << "Could not parse PlasmaSvgStructure.yml:" << e.what();
-        return false;
+    for (auto entry : entries) {
+        QFile file(dir.absoluteFilePath(entry));
+        if (!file.open(QFile::ReadOnly)) {
+            qCWarning(UNION_PLASMASVG) << "Could not read file" << entry << file.errorString();
+            continue;
+        }
+
+        auto data = file.readAll().toStdString();
+        ryml::Tree parsed;
+        try {
+            parsed = ryml::parse_in_place(ryml::to_substr(data));
+        } catch (const std::runtime_error &e) {
+            qCWarning(UNION_PLASMASVG) << "Could not parse" << entry << e.what();
+            continue;
+        }
+
+        parsed.resolve();
+        auto root = parsed.crootref();
+
+        if (!root.is_map()) {
+            qCWarning(UNION_PLASMASVG) << "Invalid structure in" << entry;
+            continue;
+        }
+
+        SelectorList selectors;
+        createStyles(root, selectors);
     }
-
-    parsed.resolve();
-    auto root = parsed.crootref();
-
-    if (!root.is_map()) {
-        qCWarning(UNION_PLASMASVG) << "Invalid structure in PlasmaSvgStructure.yml, root is not a map";
-        return false;
-    }
-
-    SelectorList selectors;
-    createStyles(root, selectors);
 
     m_renderers.clear();
 
