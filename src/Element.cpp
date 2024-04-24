@@ -71,7 +71,7 @@ void Element::setId(const QString &newId)
     d->id = newId;
 }
 
-QBindable<QString> Union::Element::bindableId()
+QBindable<QString> Element::bindableId()
 {
     return QBindable<QString>(&d->id);
 }
@@ -86,7 +86,7 @@ void Element::setStates(const QStringList &newStates)
     d->states = newStates;
 }
 
-QBindable<QStringList> Union::Element::bindableStates()
+QBindable<QStringList> Element::bindableStates()
 {
     return QBindable<QStringList>(&d->states);
 }
@@ -101,7 +101,7 @@ void Element::setHints(const QStringList &newHints)
     d->hints = newHints;
 }
 
-QBindable<QStringList> Union::Element::bindableHints()
+QBindable<QStringList> Element::bindableHints()
 {
     return QBindable<QStringList>(&d->hints);
 }
@@ -116,17 +116,17 @@ void Element::setAttributes(const QVariantMap &attributes)
     d->attributes = attributes;
 }
 
-QBindable<QVariantMap> Union::Element::bindableAttributes()
+QBindable<QVariantMap> Element::bindableAttributes()
 {
     return QBindable<QVariantMap>(&d->attributes);
 }
 
-bool Union::Element::hasAttribute(const QString &name) const
+bool Element::hasAttribute(const QString &name) const
 {
     return (*d->attributes).contains(name);
 }
 
-QVariant Union::Element::attribute(const QString &name) const
+QVariant Element::attribute(const QString &name) const
 {
     return (*d->attributes).value(name);
 }
