@@ -10,6 +10,7 @@
 #include <optional>
 
 #include <QColor>
+#include <QDebug>
 #include <QGradient>
 #include <QImage>
 #include <QMarginsF>
@@ -137,3 +138,24 @@ struct CornersDefinition {
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::ImageFlags)
+
+UNION_EXPORT inline QDebug operator<<(QDebug debug, const Union::ImageDefinition &image)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "ImageDefinition(data=" << image.imageData << ", flags=" << image.flags << ")";
+    return debug;
+}
+
+UNION_EXPORT inline QDebug operator<<(QDebug debug, const Union::SizeDefinition &size)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "SizeDefinition(left=" << size.left << ", right=" << size.right << ", top=" << size.top << ", bottom=" << size.bottom << ")";
+    return debug;
+}
+
+UNION_EXPORT inline QDebug operator<<(QDebug debug, const Union::AreaDefinition &area)
+{
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "AreaDefinition(size=" << area.size << ", color=" << area.color << ", image=" << area.image << ")";
+    return debug;
+}
