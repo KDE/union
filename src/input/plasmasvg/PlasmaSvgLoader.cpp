@@ -255,6 +255,10 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
         style->setBackground(createAreaDefinition(node["background"], context));
     }
 
+    if (node.has_child("shadow")) {
+        style->setShadow(createShadowDefinition(node["shadow"], context));
+    }
+
     if (node.has_child("children")) {
         createStyles(node["children"], context);
     }
@@ -380,6 +384,36 @@ std::optional<Union::ImageDefinition> PlasmaSvgLoader::createImageDefinition(rym
     image.height = image.imageData.height();
     image.flags = Union::RepeatBoth;
     return image;
+}
+
+std::optional<Union::ShadowDefinition> PlasmaSvgLoader::createShadowDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    Union::ShadowDefinition shadow;
+
+    if (node.has_child("offsets")) {
+        shadow.offsets = createSizeDefinition(node["offsets"], context);
+    }
+
+    forEachEntry({"left", "right", "top", "bottom"}, {&shadow.left, &shadow.right, &shadow.top, &shadow.bottom}, node, [this, &context](auto node) {
+        context.pushFromNode(node);
+        return createLineDefinition(node, context);
+    });
+
+    forEachEntry({"top-left", "top-right", "bottom-left", "bottom-right"},
+                 {&shadow.topLeft, &shadow.topRight, &shadow.bottomLeft, &shadow.bottomRight},
+                 node,
+                 [this, &context](auto node) {
+                     context.pushFromNode(node);
+                     return createCornerDefinition(node, context);
+                 });
+
+    return shadow;
 }
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
