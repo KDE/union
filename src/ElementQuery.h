@@ -20,21 +20,29 @@ namespace Union
 class Style;
 class Theme;
 
-class UNION_EXPORT ElementQuery
+class UNION_EXPORT ElementQuery : public StyleInterface
 {
 public:
     ElementQuery(std::shared_ptr<Theme> theme);
+    ~ElementQuery() override;
 
     QList<Element::Ptr> elements();
     void setElements(const QList<Element::Ptr> &elements);
 
     bool execute();
 
-    QMarginsF borderSizes() const;
+    QSizeF contentSize() const override;
+    QRectF boundingRect() const override;
+    QMarginsF borderSizes() const override;
 
-    std::optional<AreaDefinition> background();
-    std::optional<BorderDefinition> border();
-    std::optional<CornersDefinition> corners();
+    std::optional<AreaDefinition> foreground() const override;
+    std::optional<AreaDefinition> background() const override;
+    std::optional<BorderDefinition> border() const override;
+    std::optional<CornersDefinition> corners() const override;
+    std::optional<ShadowDefinition> shadow() const override;
+    std::optional<BorderDefinition> outset() const override;
+    std::optional<SizeDefinition> margins() const override;
+    std::optional<SizeDefinition> padding() const override;
 
 private:
     std::shared_ptr<Theme> m_theme;
