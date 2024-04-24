@@ -27,6 +27,8 @@ struct LineDefinition;
 struct ImageDefinition;
 }
 
+struct LoadingContext;
+
 class PlasmaSvgLoader : public Union::StyleLoader
 {
     Q_OBJECT
@@ -37,24 +39,24 @@ public:
     bool load() override;
 
 private:
-    void createStyles(ryml::ConstNodeRef node, const Union::SelectorList &parentSelectors);
-    Union::Style::Ptr createStyle(ryml::ConstNodeRef node, const Union::SelectorList &parentSelectors);
+    void createStyles(ryml::ConstNodeRef node, LoadingContext &context);
+    Union::Style::Ptr createStyle(ryml::ConstNodeRef node, LoadingContext &context);
 
-    std::optional<Union::SizeDefinition> createSizeDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::BorderDefinition> createBorderDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::CornersDefinition> createCornersDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::AreaDefinition> createAreaDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::LineDefinition> createLineDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::CornerDefinition> createCornerDefinition(ryml::ConstNodeRef node);
-    std::optional<Union::ImageDefinition> createImageDefinition(ryml::ConstNodeRef node);
+    std::optional<Union::SizeDefinition> createSizeDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::BorderDefinition> createBorderDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::CornersDefinition> createCornersDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::AreaDefinition> createAreaDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::LineDefinition> createLineDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::CornerDefinition> createCornerDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::ImageDefinition> createImageDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::ShadowDefinition> createShadowDefinition(ryml::ConstNodeRef node, LoadingContext &context);
 
-    QVariant elementProperty(ryml::ConstNodeRef node);
+    QVariant elementProperty(ryml::ConstNodeRef node, LoadingContext &context);
 
-    QSizeF elementSize(QAnyStringView path, QAnyStringView element);
-    qreal elementWidth(QAnyStringView path, QAnyStringView element);
-    qreal elementHeight(QAnyStringView path, QAnyStringView element);
-    QImage elementImage(QAnyStringView path, QAnyStringView element);
-    QImage elementImageBlend(QAnyStringView path, ryml::ConstNodeRef elements);
+    QVariant constantValue(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<QSizeF> elementSize(ryml::ConstNodeRef node, LoadingContext &context);
+    QImage elementImage(ryml::ConstNodeRef node, LoadingContext &context);
+    QImage elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
 
     std::shared_ptr<QSvgRenderer> rendererForPath(QAnyStringView path);
 
