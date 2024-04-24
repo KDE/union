@@ -15,63 +15,68 @@ class TestSelector : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
-    void testSelectorListMatches_data()
+    void testSimpleStructureMatches_data()
     {
         QTest::addColumn<SelectorList>("selectors");
-        QTest::addColumn<ElementList>("elements");
         QTest::addColumn<bool>("expected");
 
-        ElementList elements;
-        auto element = Element::create();
-        element->setId(u"window-contents"_qs);
-        elements.append(element);
+        SelectorList selectors = {
+            Selector(Selector::SelectorType::Id, u"id"_qs),
+            Selector(Selector::SelectorType::Type, u"Type"_qs),
+            Selector(Selector::SelectorType::State, u"state"_qs),
+        };
+        QTest::addRow("exact") << selectors << true;
 
-        element = Element::create();
-        element->setType(u"Button"_qs);
-        elements.append(element);
+        selectors = {
+            Selector(Selector::SelectorType::Type, u"Type"_qs),
+            Selector(Selector::SelectorType::State, u"state"_qs),
+        };
+        QTest::addRow("skip first") << selectors << true;
 
-        element = Element::create();
-        element->setType(u"Background"_qs);
-        elements.append(element);
+        selectors = {
+            Selector(Selector::SelectorType::Id, u"id"_qs),
+            Selector(Selector::SelectorType::State, u"state"_qs),
+        };
+        QTest::addRow("skip middle") << selectors << true;
 
-        SelectorList selectors;
-        selectors.append(Selector(Selector::SelectorType::Type, u"Button"_qs));
-        selectors.append(Selector(Selector::SelectorType::Type, u"Background"_qs));
+        selectors = {
+            Selector(Selector::SelectorType::Id, u"id"_qs),
+            Selector(Selector::SelectorType::Type, u"Type"_qs),
+        };
+        QTest::addRow("skip last") << selectors << false;
 
-        QTest::addRow("0") << selectors << elements << true;
+        selectors = {
+            Selector(Selector::SelectorType::Id, u"id"_qs),
+        };
+        QTest::addRow("id only") << selectors << false;
 
-        selectors.clear();
-        selectors.append(Selector(Selector::SelectorType::Id, u"window-contents"_qs));
-        selectors.append(Selector(Selector::SelectorType::Type, u"Background"_qs));
+        selectors = {
+            Selector(Selector::SelectorType::Type, u"Type"_qs),
+        };
+        QTest::addRow("type only") << selectors << false;
 
-        QTest::addRow("1") << selectors << elements << true;
-
-        selectors.clear();
-        selectors.append(Selector(Selector::SelectorType::Id, u"window-contents"_qs));
-
-        QTest::addRow("2") << selectors << elements << false;
+        selectors = {
+            Selector(Selector::SelectorType::State, u"state"_qs),
+        };
+        QTest::addRow("state only") << selectors << true;
     }
 
-    void testSelectorListMatches()
+    void testSimpleStructureMatches()
     {
-        // SelectorList selectors;
-        // selectors.append(Selector(Selector::SelectorType::Type, u"Button"_qs));
-        // selectors.append(Selector(Selector::SelectorType::Type, u"Background"_qs));
-        //
-        // QList<Element::Ptr> elements;
-        // auto element = Element::create();
-        // element->setId(u"window-contents"_qs);
-        // elements.append(element);
-        //
-        // element = Element::create();
-        // element->setType(u"Button"_qs);
-        // elements.append(element);
-        //
-        // element = Element::create();
-        // element->setType(u"Background"_qs);
-        // elements.append(element);
+        ElementList elements;
+        auto element = Element::create();
+        element->setId(u"id"_qs);
+        elements.append(element);
+
+        element = Element::create();
+        element->setType(u"Type"_qs);
+        elements.append(element);
+
+        element = Element::create();
+        element->setStates({u"state"_qs});
+        elements.append(element);
+
         QFETCH(SelectorList, selectors);
-        QFETCH(ElementList, elements);
         QFETCH(bool, expected);
 
         QCOMPARE(selectorListMatches(selectors, elements), expected);
