@@ -451,6 +451,15 @@ std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, Load
     }
 
     auto size = renderer->transformForElement(element).map(renderer->boundsOnElement(element)).boundingRect().size();
+
+    if (node.has_child("invert")) {
+        bool invert;
+        node["invert"] >> invert;
+        if (invert) {
+            size = QSizeF(-size.width(), -size.height());
+        }
+    }
+
     return size;
 }
 
