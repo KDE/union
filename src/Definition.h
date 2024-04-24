@@ -34,10 +34,17 @@ Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 struct ImageDefinition {
     QImage imageData;
     ImageFlags flags = ImageFlag::StretchBoth;
-    qreal xOffset;
-    qreal yOffset;
-    qreal width;
-    qreal height;
+    qreal xOffset = 0.0;
+    qreal yOffset = 0.0;
+    qreal width = 0.0;
+    qreal height = 0.0;
+};
+
+struct SizeDefinition {
+    qreal left = 0.0;
+    qreal right = 0.0;
+    qreal top = 0.0;
+    qreal bottom = 0.0;
 };
 
 struct AreaDefinition {
@@ -53,9 +60,16 @@ struct LineDefinition {
         Dashed,
     };
 
-    QColor color;
-    qreal size;
-    LineStyle style;
+    QColor color = Qt::transparent;
+    qreal size = 0.0;
+    LineStyle style = LineStyle::Solid;
+    std::optional<ImageDefinition> image;
+};
+
+struct CornerDefinition {
+    qreal radius = 0.0;
+    qreal width = 0.0;
+    qreal height = 0.0;
     std::optional<ImageDefinition> image;
 };
 
@@ -82,27 +96,12 @@ struct ShadowDefinition {
     std::optional<ShadowEdgeDefinition> right;
 };
 
-struct CornerDefinition {
-    qreal radius;
-    qreal width;
-    qreal height;
-    std::optional<ImageDefinition> image;
-};
-
 struct CornersDefinition {
     std::optional<CornerDefinition> topLeft;
     std::optional<CornerDefinition> topRight;
     std::optional<CornerDefinition> bottomLeft;
     std::optional<CornerDefinition> bottomRight;
 };
-
-struct SizeDefinition {
-    qreal top;
-    qreal bottom;
-    qreal left;
-    qreal right;
-};
-
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::ImageFlags)
