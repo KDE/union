@@ -70,7 +70,6 @@ struct AreaDefinition {
     QSizeF size;
     QColor color = Qt::transparent;
     std::optional<ImageDefinition> image;
-    std::optional<QGradient> gradient;
 };
 
 struct LineDefinition {
