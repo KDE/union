@@ -114,20 +114,18 @@ struct BorderDefinition {
     std::optional<LineDefinition> right;
 };
 
-struct ShadowEdgeDefinition {
-    QColor color;
-    qreal width;
-    std::optional<ImageDefinition> image;
-};
-
 struct ShadowDefinition {
-    qreal xOffset;
-    qreal yOffset;
+    std::optional<SizeDefinition> offsets;
 
-    std::optional<ShadowEdgeDefinition> top;
-    std::optional<ShadowEdgeDefinition> bottom;
-    std::optional<ShadowEdgeDefinition> left;
-    std::optional<ShadowEdgeDefinition> right;
+    std::optional<LineDefinition> top;
+    std::optional<LineDefinition> bottom;
+    std::optional<LineDefinition> left;
+    std::optional<LineDefinition> right;
+
+    std::optional<CornerDefinition> topLeft;
+    std::optional<CornerDefinition> topRight;
+    std::optional<CornerDefinition> bottomLeft;
+    std::optional<CornerDefinition> bottomRight;
 };
 
 struct CornersDefinition {
