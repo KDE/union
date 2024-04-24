@@ -59,7 +59,7 @@ class BordersGroup : public QObject
     QML_ANONYMOUS
 
 public:
-    BordersGroup(QuickElement *parent);
+    BordersGroup();
 
     Q_PROPERTY(Sizes sizes READ sizes NOTIFY sizesChanged BINDABLE bindableSizes)
     Sizes sizes() const;
@@ -68,8 +68,6 @@ public:
 
 private:
     void onUpdated();
-
-    QuickElement *m_parent;
 
     Q_OBJECT_BINDABLE_PROPERTY(BordersGroup, Sizes, m_sizes, &BordersGroup::sizesChanged)
 };
@@ -80,7 +78,7 @@ class StatesGroup : public QObject
     QML_ANONYMOUS
 
 public:
-    StatesGroup(QuickElement *parent);
+    StatesGroup();
 
     Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged BINDABLE bindableHovered)
     bool hovered() const;
@@ -118,8 +116,6 @@ public:
     Q_SIGNAL void activeStatesChanged();
 
 private:
-    QuickElement *m_parent = nullptr;
-
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_hovered, &StatesGroup::hoveredChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_focus, &StatesGroup::focusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)

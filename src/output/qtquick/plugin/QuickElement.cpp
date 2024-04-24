@@ -77,11 +77,9 @@ bool Sizes::isValid() const
     return !m_margins.isNull();
 }
 
-BordersGroup::BordersGroup(QuickElement *parent)
+BordersGroup::BordersGroup()
     : QObject()
-    , m_parent(parent)
 {
-    connect(m_parent, &QuickElement::updated, this, &BordersGroup::onUpdated);
 }
 
 Sizes BordersGroup::sizes() const
@@ -100,9 +98,7 @@ void BordersGroup::onUpdated()
     // m_sizes = s;
 }
 
-StatesGroup::StatesGroup(QuickElement *parent)
-    : QObject()
-    , m_parent(parent)
+StatesGroup::StatesGroup()
 {
     m_activeStates.setBinding([this]() {
         QStringList result;
