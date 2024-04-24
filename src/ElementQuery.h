@@ -23,7 +23,7 @@ class Theme;
 class UNION_EXPORT ElementQuery : public StyleInterface
 {
 public:
-    ElementQuery(std::shared_ptr<Theme> theme);
+    ElementQuery(std::shared_ptr<Theme> theme = nullptr);
     ~ElementQuery() override;
 
     QList<Element::Ptr> elements();
