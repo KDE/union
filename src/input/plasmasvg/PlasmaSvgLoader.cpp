@@ -392,102 +392,100 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
     auto cleanup = context.pushFromNode(node);
 
     if (name == "element-size") {
-        return elementSize(nodeToString(node["path"]), nodeToString(node["element"]));
+        return elementSize(node, context).value_or(QSizeF{});
     }
 
     if (name == "element-width") {
-        return elementWidth(nodeToString(node["path"]), nodeToString(node["element"]));
+        auto size = elementSize(node, context);
+        return size.has_value() ? size->width() : 0.0;
     }
 
     if (name == "element-height") {
-        return elementHeight(nodeToString(node["path"]), nodeToString(node["element"]));
+        auto size = elementSize(node, context);
+        return size.has_value() ? size->height() : 0.0;
     }
 
     if (name == "element-image") {
-        return elementImage(nodeToString(node["path"]), nodeToString(node["element"]));
+        return elementImage(node, context);
     }
 
     if (name == "element-image-blend") {
-        return elementImageBlend(nodeToString(node["path"]), node["elements"]);
+        return elementImageBlend(node, context);
     }
 
     return QVariant{};
 }
 
-QSizeF PlasmaSvgLoader::elementSize(QAnyStringView path, QAnyStringView element)
+std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    auto renderer = rendererForPath(path);
+    auto renderer = rendererForPath(context.paths.top());
     if (!renderer) {
-        return QSizeF{};
+        return std::nullopt;
     }
 
-    const auto elementString = element.toString();
-    if (!renderer->elementExists(elementString)) {
-        return QSizeF{};
+    const auto element = context.prefixedElementName();
+    if (!renderer->elementExists(element)) {
+        qCDebug(UNION_PLASMASVG) << "Could not find element" << element;
+        return std::nullopt;
     }
 
-    return renderer->transformForElement(elementString).map(renderer->boundsOnElement(elementString)).boundingRect().size();
+    auto size = renderer->transformForElement(element).map(renderer->boundsOnElement(element)).boundingRect().size();
+    return size;
 }
 
-qreal PlasmaSvgLoader::elementWidth(QAnyStringView path, QAnyStringView element)
+QImage PlasmaSvgLoader::elementImage(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    const auto size = elementSize(path, element);
-    if (size.isValid()) {
-        return size.width();
-    }
-    return 0.0;
-}
+    Q_UNUSED(node)
 
-qreal PlasmaSvgLoader::elementHeight(QAnyStringView path, QAnyStringView element)
-{
-    const auto size = elementSize(path, element);
-    if (size.isValid()) {
-        return size.height();
-    }
-    return 0.0;
-}
-
-QImage PlasmaSvgLoader::elementImage(QAnyStringView path, QAnyStringView element)
-{
-    auto renderer = rendererForPath(path);
+    auto renderer = rendererForPath(context.paths.top());
     if (!renderer) {
         return QImage{};
     }
 
-    const auto elementString = element.toString();
-    if (!renderer->elementExists(elementString)) {
+    const auto element = context.prefixedElementName();
+    if (!renderer->elementExists(element)) {
+        qCDebug(UNION_PLASMASVG) << "Could not find element" << element;
         return QImage{};
     }
 
-    auto size = elementSize(path, element);
+    auto size = renderer->transformForElement(element).map(renderer->boundsOnElement(element)).boundingRect().size();
 
     QImage image(size.toSize(), QImage::Format_ARGB32);
     image.fill(Qt::transparent);
     QPainter painter(&image);
-    renderer->render(&painter, elementString);
+    renderer->render(&painter, element);
 
     return image;
 }
 
-QImage PlasmaSvgLoader::elementImageBlend(QAnyStringView path, ryml::ConstNodeRef elements)
+QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    if (!elements.is_seq()) {
+    if (!node.has_child("elements")) {
         return QImage{};
     }
 
     QList<QImage> images;
     int maxWidth = 0;
     int maxHeight = 0;
-    for (auto child : elements.children()) {
-        auto image = elementImage(path, nodeToString(child));
+    for (auto child : node["elements"].children()) {
+        context.elementNames.push(nodeToString(child));
+        auto image = elementImage(node, context);
+        context.elementNames.pop();
+
         images.append(image);
         maxWidth = std::max(maxWidth, image.width());
         maxHeight = std::max(maxHeight, image.height());
     }
 
-    QRect geometry(0, 0, maxWidth, maxHeight);
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
+
+    auto itr = context.prefixes.rbegin();
+    auto prefix = *itr;
+    while (prefix.isEmpty()) {
+        itr++;
+        prefix = *itr;
+    }
 
     QPainter painter(&result);
     for (const auto &image : images) {
