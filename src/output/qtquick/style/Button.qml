@@ -31,16 +31,14 @@ T.Button {
     // font: elementInfo.font
 
     contentItem: Text {
-        Union.Element.type: "ContentItem"
 
         text: control.text
     }
 
     background: Union.Background {
-        implicitWidth: Union.Element.implicitWidth
-        implicitHeight: Union.Element.implicitHeight
-
-        Union.Element.type: "Background"
+        implicitWidth: control.Union.Element.implicitWidth
+        implicitHeight: control.Union.Element.implicitHeight
+        element: control.Union.Element
     }
 
     Union.Element.type: "Button"
