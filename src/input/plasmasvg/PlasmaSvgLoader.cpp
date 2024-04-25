@@ -208,22 +208,25 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     auto style = Style::create();
 
     if (node.has_child("type")) {
-        selectors.append(Selector(Selector::SelectorType::Type, nodeToString(node["type"])));
+        selectors.append(Selector::create<SelectorType::Type>(nodeToString(node["type"])));
     }
 
     if (node.has_child("id")) {
-        selectors.append(Selector(Selector::SelectorType::Id, nodeToString(node["id"])));
+        selectors.append(Selector::create<SelectorType::Id>(nodeToString(node["id"])));
     }
 
     if (node.has_child("state")) {
-        selectors.append(Selector(Selector::SelectorType::State, nodeToString(node["state"])));
+        auto stateEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
+        auto stateString = nodeToString(node["state"]);
+        stateString[0] = stateString[0].toUpper();
+        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(stateString.toUtf8().data()))));
     }
 
     SelectorList currentSelectors = context.selectors.isEmpty() ? SelectorList() : context.selectors.top();
     if (selectors.size() == 1) {
         currentSelectors.append(selectors.first());
     } else {
-        currentSelectors.append(Selector(Selector::SelectorType::AllOf, QVariant::fromValue(selectors)));
+        currentSelectors.append(Selector::create<SelectorType::AllOf>(selectors));
     }
 
     style->setSelectors(currentSelectors);

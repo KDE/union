@@ -21,42 +21,42 @@ private Q_SLOTS:
         QTest::addColumn<bool>("expected");
 
         SelectorList selectors = {
-            Selector(Selector::SelectorType::Id, u"id"_qs),
-            Selector(Selector::SelectorType::Type, u"Type"_qs),
-            Selector(Selector::SelectorType::State, u"state"_qs),
+            Selector::create<SelectorType::Id>(u"id"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("exact") << selectors << true;
 
         selectors = {
-            Selector(Selector::SelectorType::Type, u"Type"_qs),
-            Selector(Selector::SelectorType::State, u"state"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("skip first") << selectors << true;
 
         selectors = {
-            Selector(Selector::SelectorType::Id, u"id"_qs),
-            Selector(Selector::SelectorType::State, u"state"_qs),
+            Selector::create<SelectorType::Id>(u"id"_qs),
+            Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("skip middle") << selectors << true;
 
         selectors = {
-            Selector(Selector::SelectorType::Id, u"id"_qs),
-            Selector(Selector::SelectorType::Type, u"Type"_qs),
+            Selector::create<SelectorType::Id>(u"id"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_qs),
         };
         QTest::addRow("skip last") << selectors << false;
 
         selectors = {
-            Selector(Selector::SelectorType::Id, u"id"_qs),
+            Selector::create<SelectorType::Id>(u"id"_qs),
         };
         QTest::addRow("id only") << selectors << false;
 
         selectors = {
-            Selector(Selector::SelectorType::Type, u"Type"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_qs),
         };
         QTest::addRow("type only") << selectors << false;
 
         selectors = {
-            Selector(Selector::SelectorType::State, u"state"_qs),
+            Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("state only") << selectors << true;
     }
@@ -73,7 +73,7 @@ private Q_SLOTS:
         elements.append(element);
 
         element = Element::create();
-        element->setStates({u"state"_qs});
+        element->setStates(Element::State::Hovered);
         elements.append(element);
 
         QFETCH(SelectorList, selectors);
@@ -96,12 +96,12 @@ private Q_SLOTS:
         elements.append(element);
 
         element = Element::create();
-        element->setStates({u"state"_qs});
+        element->setStates(Element::State::Hovered);
         elements.append(element);
 
         SelectorList selectors = {
-            Selector(Selector::SelectorType::Type, u"type"_qs),
-            Selector(Selector::SelectorType::State, u"state"_qs),
+            Selector::create<SelectorType::Type>(u"type"_qs),
+            Selector::create<SelectorType::State>(Element::State::Hovered),
         };
 
         QVERIFY(selectorListMatches(selectors, elements));
