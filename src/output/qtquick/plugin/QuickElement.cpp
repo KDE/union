@@ -118,23 +118,29 @@ void BordersGroup::update(const std::optional<Union::BorderDefinition> &borders)
 StatesGroup::StatesGroup()
 {
     m_activeStates.setBinding([this]() {
-        QStringList result;
-        if (m_pressed.value()) {
-            result << u"pressed"_qs;
-        }
-        if (m_activeFocus.value()) {
-            result << u"activeFocus"_qs;
+        Union::Element::States states;
+        if (m_hovered.value()) {
+            states |= Union::Element::State::Hovered;
         }
         if (m_focus.value()) {
-            result << u"focus"_qs;
+            states |= Union::Element::State::Focus;
         }
-        if (m_hovered.value()) {
-            result << u"hovered"_qs;
+        if (m_activeFocus.value()) {
+            states |= Union::Element::State::ActiveFocus;
+        }
+        if (m_visualFocus.value()) {
+            states |= Union::Element::State::VisualFocus;
+        }
+        if (m_pressed.value()) {
+            states |= Union::Element::State::Pressed;
         }
         if (!m_enabled.value()) {
-            result << u"disabled"_qs;
+            states |= Union::Element::State::Disabled;
         }
-        return result;
+        if (m_highlighted.value()) {
+            states |= Union::Element::State::Highlighted;
+        }
+        return states;
     });
 }
 
@@ -183,6 +189,21 @@ QBindable<bool> StatesGroup::bindableActiveFocus()
     return QBindable<bool>(&m_activeFocus);
 }
 
+bool StatesGroup::visualFocus() const
+{
+    return m_visualFocus;
+}
+
+void StatesGroup::setVisualFocus(bool newVisualFocus)
+{
+    m_visualFocus = newVisualFocus;
+}
+
+QBindable<bool> StatesGroup::bindableVisualFocus()
+{
+    return QBindable<bool>(&m_visualFocus);
+}
+
 bool StatesGroup::pressed() const
 {
     return m_pressed;
@@ -228,14 +249,14 @@ QBindable<bool> StatesGroup::bindableHighlighted()
     return QBindable<bool>(&m_highlighted);
 }
 
-QStringList StatesGroup::activeStates() const
+Union::Element::States StatesGroup::activeStates() const
 {
     return m_activeStates;
 }
 
-QBindable<QStringList> StatesGroup::bindableActiveStates()
+QBindable<Union::Element::States> StatesGroup::bindableActiveStates()
 {
-    return QBindable<QStringList>(&m_activeStates);
+    return QBindable<Union::Element::States>(&m_activeStates);
 }
 
 QuickElement::QuickElement(QObject *parent)

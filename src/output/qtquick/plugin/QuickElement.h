@@ -99,6 +99,12 @@ public:
     QBindable<bool> bindableActiveFocus();
     Q_SIGNAL void activeFocusChanged();
 
+    Q_PROPERTY(bool visualFocus READ visualFocus WRITE setVisualFocus NOTIFY visualFocusChanged BINDABLE bindableVisualFocus)
+    bool visualFocus() const;
+    void setVisualFocus(bool newActiveFocus);
+    QBindable<bool> bindableVisualFocus();
+    Q_SIGNAL void visualFocusChanged();
+
     Q_PROPERTY(bool pressed READ pressed WRITE setPressed NOTIFY pressedChanged BINDABLE bindablePressed)
     bool pressed() const;
     void setPressed(bool newPressed);
@@ -117,19 +123,20 @@ public:
     QBindable<bool> bindableHighlighted();
     Q_SIGNAL void highlightedChanged();
 
-    Q_PROPERTY(QStringList activeStates READ activeStates NOTIFY activeStatesChanged BINDABLE bindableActiveStates)
-    QStringList activeStates() const;
-    QBindable<QStringList> bindableActiveStates();
+    Q_PROPERTY(Union::Element::States activeStates READ activeStates NOTIFY activeStatesChanged BINDABLE bindableActiveStates)
+    Union::Element::States activeStates() const;
+    QBindable<Union::Element::States> bindableActiveStates();
     Q_SIGNAL void activeStatesChanged();
 
 private:
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_hovered, &StatesGroup::hoveredChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_focus, &StatesGroup::focusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_visualFocus, &StatesGroup::visualFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_pressed, &StatesGroup::pressedChanged)
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(StatesGroup, bool, m_enabled, true, &StatesGroup::enabledChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_highlighted, &StatesGroup::highlightedChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, QStringList, m_activeStates, &StatesGroup::activeStatesChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, Union::Element::States, m_activeStates, &StatesGroup::activeStatesChanged)
 };
 
 class QuickElement : public QQuickAttachedPropertyPropagator

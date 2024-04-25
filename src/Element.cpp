@@ -8,6 +8,7 @@
 
 #include <QDebug>
 #include <QProperty>
+#include <QVariant>
 
 using namespace Union;
 
@@ -16,7 +17,7 @@ class Union::ElementPrivate
 public:
     QProperty<QString> type;
     QProperty<QString> id;
-    QProperty<QStringList> states;
+    QProperty<Element::States> states;
     QProperty<QStringList> hints;
     QProperty<QVariantMap> attributes;
 
@@ -76,19 +77,19 @@ QBindable<QString> Element::bindableId()
     return QBindable<QString>(&d->id);
 }
 
-QStringList Element::states() const
+Element::States Element::states() const
 {
     return d->states;
 }
 
-void Element::setStates(const QStringList &newStates)
+void Element::setStates(States newStates)
 {
     d->states = newStates;
 }
 
-QBindable<QStringList> Element::bindableStates()
+QBindable<Element::States> Union::Element::bindableStates()
 {
-    return QBindable<QStringList>(&d->states);
+    return QBindable<States>(&d->states);
 }
 
 QStringList Element::hints() const
@@ -143,11 +144,10 @@ QDebug operator<<(QDebug debug, Union::Element::Ptr element)
     static const auto emptyString = u"(empty)"_qs;
     const auto type = element->type().isEmpty() ? emptyString : element->type();
     const auto id = element->id().isEmpty() ? emptyString : element->id();
-    const auto states = element->states().isEmpty() ? emptyString : element->states().join(u", ");
     const auto hints = element->hints().isEmpty() ? emptyString : element->hints().join(u", ");
     debug << "type:" << qPrintable(type);
     debug << "id:" << qPrintable(id);
-    debug << "states:" << qPrintable(states);
+    debug << "states:" << element->states();
     debug << "hints:" << qPrintable(hints);
     debug << ")";
     return debug;

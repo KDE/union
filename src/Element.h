@@ -11,8 +11,6 @@
 #include <QDebug>
 #include <QObject>
 
-#include "Selector.h"
-
 #include "union_export.h"
 
 namespace Union
@@ -24,6 +22,19 @@ class UNION_EXPORT Element : public QObject, public std::enable_shared_from_this
 {
     Q_OBJECT
 public:
+    enum class State {
+        None,
+        Hovered = 1 << 0,
+        Focus = 1 << 1,
+        ActiveFocus = 1 << 2,
+        VisualFocus = 1 << 3,
+        Pressed = 1 << 4,
+        Disabled = 1 << 5,
+        Highlighted = 1 << 6,
+    };
+    Q_DECLARE_FLAGS(States, State)
+    Q_FLAG(States)
+
     using Ptr = std::shared_ptr<Element>;
 
     Element(std::unique_ptr<ElementPrivate> &&dd);
@@ -41,10 +52,10 @@ public:
     QBindable<QString> bindableId();
     Q_SIGNAL void idChanged();
 
-    Q_PROPERTY(QStringList states READ states WRITE setStates BINDABLE bindableStates NOTIFY statesChanged)
-    QStringList states() const;
-    void setStates(const QStringList &newStates);
-    QBindable<QStringList> bindableStates();
+    Q_PROPERTY(States states READ states WRITE setStates BINDABLE bindableStates NOTIFY statesChanged)
+    States states() const;
+    void setStates(States newStates);
+    QBindable<States> bindableStates();
     Q_SIGNAL void statesChanged();
 
     Q_PROPERTY(QStringList hints READ hints WRITE setHints BINDABLE bindableHints NOTIFY hintsChanged)
@@ -72,4 +83,6 @@ using ElementList = QList<Element::Ptr>;
 
 }
 
-UNION_EXPORT QDebug operator<<(QDebug debug, Union::Element::Ptr &element);
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Element::States)
+
+UNION_EXPORT QDebug operator<<(QDebug debug, Union::Element::Ptr element);
