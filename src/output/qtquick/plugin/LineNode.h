@@ -16,7 +16,6 @@ public:
 
     Union::LineDefinition line;
     QRectF rect;
-    QMarginsF margins;
     Qt::Orientation orientation = Qt::Horizontal;
     Qt::Alignment alignment;
 
