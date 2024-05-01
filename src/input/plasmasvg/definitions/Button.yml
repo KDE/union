@@ -167,7 +167,7 @@ button: &button
 button-hovered:
     <<: *button
 
-    state: hovered
+    state: Hovered
 
     border:
         left:
@@ -251,7 +251,7 @@ button-hovered:
 button-focus:
     <<: *button
 
-    state: focus
+    state: VisualFocus
 
     margins:
         prefix: focus
@@ -382,7 +382,7 @@ button-focus:
 button-pressed:
     <<: *button
 
-    state: pressed
+    state: Pressed
 
     padding:
         <<: *button-padding

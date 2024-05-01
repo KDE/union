@@ -217,9 +217,7 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
 
     if (node.has_child("state")) {
         auto stateEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
-        auto stateString = nodeToString(node["state"]);
-        stateString[0] = stateString[0].toUpper();
-        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(stateString.toUtf8().data()))));
+        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeToString(node["state"]).toUtf8().data()))));
     }
 
     SelectorList currentSelectors = context.selectors.isEmpty() ? SelectorList() : context.selectors.top();
