@@ -37,47 +37,24 @@ Background::Background(QQuickItem *parent)
     setFlag(QQuickItem::ItemHasContents);
 }
 
-QuickElement *Background::element() const
-{
-    return m_element;
-}
-
-void Background::setElement(QuickElement *element)
-{
-    if (element == m_element) {
-        return;
-    }
-
-    if (m_element) {
-        disconnect(m_element, &QuickElement::updated, this, &Background::update);
-    }
-
-    m_element = element;
-
-    if (m_element) {
-        connect(m_element, &QuickElement::updated, this, &Background::update);
-    }
-
-    Q_EMIT elementChanged();
-    update();
-}
-
 void Background::componentComplete()
 {
     QQuickItem::componentComplete();
 
-    if (!m_element) {
-        setElement(qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(this, true)));
+    if (!m_style) {
+        m_style = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true));
+        // TODO: Make this some kind of watcher construction rather than needing a connection.
+        connect(m_style, &QuickStyle::updated, this, &Background::update);
     }
 }
 
 QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData * /*data*/)
 {
-    if (!m_element) {
+    if (!m_style) {
         return nullptr;
     }
 
-    auto query = m_element->query();
+    auto query = m_style->query();
     if (!query.result()) {
         return nullptr;
     }
