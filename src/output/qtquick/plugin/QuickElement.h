@@ -15,27 +15,6 @@
 #include <ElementQuery.h>
 #include <Selector.h>
 
-class QuickElement;
-
-class BordersGroup : public QObject
-{
-    Q_OBJECT
-    QML_ANONYMOUS
-
-public:
-    BordersGroup();
-
-    Q_PROPERTY(Sizes sizes READ sizes NOTIFY sizesChanged BINDABLE bindableSizes)
-    Sizes sizes() const;
-    QBindable<Sizes> bindableSizes();
-    Q_SIGNAL void sizesChanged();
-
-    void update(const std::optional<Union::BorderDefinition> &borders);
-
-private:
-    Q_OBJECT_BINDABLE_PROPERTY(BordersGroup, Sizes, m_sizes, &BordersGroup::sizesChanged)
-};
-
 class StatesGroup : public QObject
 {
     Q_OBJECT
@@ -144,36 +123,6 @@ public:
     QBindable<QVariantMap> bindableAttributes();
     Q_SIGNAL void attributesChanged();
 
-    Q_PROPERTY(qreal implicitWidth READ implicitWidth NOTIFY implicitWidthChanged BINDABLE bindableImplicitWidth)
-    qreal implicitWidth() const;
-    QBindable<qreal> bindableImplicitWidth();
-    Q_SIGNAL void implicitWidthChanged();
-
-    Q_PROPERTY(qreal implicitHeight READ implicitHeight NOTIFY implicitHeightChanged BINDABLE bindableImplicitHeight)
-    qreal implicitHeight() const;
-    QBindable<qreal> bindableImplicitHeight();
-    Q_SIGNAL void implicitHeightChanged();
-
-    Q_PROPERTY(Sizes padding READ padding NOTIFY paddingChanged BINDABLE bindablePadding)
-    Sizes padding() const;
-    QBindable<Sizes> bindablePadding();
-    Q_SIGNAL void paddingChanged();
-
-    Q_PROPERTY(Sizes margins READ margins NOTIFY marginsChanged BINDABLE bindableMargins)
-    Sizes margins() const;
-    QBindable<Sizes> bindableMargins();
-    Q_SIGNAL void marginsChanged();
-
-    Q_PROPERTY(BordersGroup *borders READ borders CONSTANT)
-    BordersGroup *borders() const;
-    //
-    // Q_PROPERTY(ShadowGroup * shadow READ shadow CONSTANT)
-    // ShadowGroup * shadow() const;
-    //
-    //
-    // Q_PROPERTY(BackgroundGroup* background READ background CONSTANT)
-    // BackgroundGroup* background() const;
-
     Union::ElementQuery query() const;
 
     Q_SIGNAL void updated();
@@ -188,13 +137,7 @@ private:
 
     void update();
 
-    Q_OBJECT_BINDABLE_PROPERTY(QuickElement, qreal, m_implicitWidth, &QuickElement::implicitWidthChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(QuickElement, qreal, m_implicitHeight, &QuickElement::implicitHeightChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(QuickElement, Sizes, m_padding, &QuickElement::paddingChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(QuickElement, Sizes, m_margins, &QuickElement::marginsChanged)
-
     std::shared_ptr<Union::Element> m_element;
-    std::unique_ptr<BordersGroup> m_bordersGroup;
     std::unique_ptr<StatesGroup> m_statesGroup;
 
     Union::ElementQuery m_query;

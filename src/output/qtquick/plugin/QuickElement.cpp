@@ -12,37 +12,6 @@
 
 using namespace Union;
 
-BordersGroup::BordersGroup()
-    : QObject()
-{
-}
-
-Sizes BordersGroup::sizes() const
-{
-    return m_sizes;
-}
-
-QBindable<Sizes> BordersGroup::bindableSizes()
-{
-    return QBindable<Sizes>(&m_sizes);
-}
-
-void BordersGroup::update(const std::optional<Union::BorderDefinition> &borders)
-{
-    if (!borders.has_value()) {
-        m_sizes = Sizes();
-        return;
-    }
-
-    auto value = borders.value();
-    Sizes newSizes;
-    newSizes.setLeft(value.left.value_or(LineDefinition()).size);
-    newSizes.setRight(value.right.value_or(LineDefinition()).size);
-    newSizes.setTop(value.top.value_or(LineDefinition()).size);
-    newSizes.setBottom(value.bottom.value_or(LineDefinition()).size);
-    m_sizes = newSizes;
-}
-
 StatesGroup::StatesGroup()
 {
     m_activeStates.setBinding([this]() {
@@ -192,7 +161,6 @@ QuickElement::QuickElement(QObject *parent)
 {
     m_element = Element::create();
 
-    m_bordersGroup = std::make_unique<BordersGroup>();
     m_statesGroup = std::make_unique<StatesGroup>();
 
     m_element->bindableStates().setBinding([this]() {
@@ -281,54 +249,9 @@ QBindable<QVariantMap> QuickElement::bindableAttributes()
     return m_element->bindableAttributes();
 }
 
-Sizes QuickElement::padding() const
-{
-    return m_padding;
-}
-
-QBindable<Sizes> QuickElement::bindablePadding()
-{
-    return QBindable<Sizes>(&m_padding);
-}
-
-Sizes QuickElement::margins() const
-{
-    return m_margins;
-}
-
-QBindable<Sizes> QuickElement::bindableMargins()
-{
-    return QBindable<Sizes>(&m_margins);
-}
-
 StatesGroup *QuickElement::states() const
 {
     return m_statesGroup.get();
-}
-
-BordersGroup *QuickElement::borders() const
-{
-    return m_bordersGroup.get();
-}
-
-qreal QuickElement::implicitWidth() const
-{
-    return m_implicitWidth;
-}
-
-QBindable<qreal> QuickElement::bindableImplicitWidth()
-{
-    return QBindable<qreal>(&m_implicitWidth);
-}
-
-qreal QuickElement::implicitHeight() const
-{
-    return m_implicitHeight;
-}
-
-QBindable<qreal> QuickElement::bindableImplicitHeight()
-{
-    return QBindable<qreal>(&m_implicitHeight);
 }
 
 Union::ElementQuery QuickElement::query() const
@@ -361,16 +284,6 @@ void QuickElement::update()
 
     m_query.setElements(elements);
     m_query.execute();
-
-    auto rect = m_query.boundingRect();
-
-    m_implicitWidth = rect.width();
-    m_implicitHeight = rect.height();
-
-    m_margins = Sizes(m_query.margins());
-    m_padding = Sizes(m_query.padding());
-
-    m_bordersGroup->update(m_query.border());
 
     Q_EMIT updated();
 
