@@ -1,5 +1,6 @@
 button: &button
     type: Button
+    colorSet: Button
 
     path: widgets/button
     prefix: normal
@@ -18,9 +19,6 @@ button: &button
             property: element-height
             element: hint-bottom-margin
 
-    # children: &button-children
-    #     background: &button-background
-    #         type: Background
     border: &button-border
         left: &button-border-left
             element: left
