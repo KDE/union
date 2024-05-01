@@ -266,7 +266,10 @@ QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
 
 void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *)
 {
-    update();
+    // The attached parent may not yet have been fully initialized when this is
+    // called, so delay the update momentarily so the parent can be updated
+    // first.
+    QMetaObject::invokeMethod(this, &QuickElement::update, Qt::QueuedConnection);
 }
 
 void QuickElement::update()
