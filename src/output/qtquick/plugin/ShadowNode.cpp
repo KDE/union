@@ -33,6 +33,14 @@ ShadowNode::ShadowNode()
 
 void ShadowNode::update(QQuickWindow *window)
 {
+    if (shadow.isEmpty()) {
+        while (childCount() > 0) {
+            auto child = firstChild();
+            removeChildNode(child);
+            delete child;
+        }
+    }
+
     if (childCount() < int(Element::ElementCount)) {
         for (auto element [[maybe_unused]] : {Element::Left, Element::Right, Element::Top, Element::Bottom}) {
             appendChildNode(new LineNode());

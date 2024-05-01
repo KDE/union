@@ -128,6 +128,12 @@ struct ShadowDefinition {
     std::optional<CornerDefinition> topRight;
     std::optional<CornerDefinition> bottomLeft;
     std::optional<CornerDefinition> bottomRight;
+
+    bool isEmpty()
+    {
+        return !(left.has_value() && right.has_value() && top.has_value() && !bottom.has_value() //
+                 && topLeft.has_value() && topRight.has_value() && bottomLeft.has_value() && bottomRight.has_value());
+    }
 };
 
 struct CornersDefinition {
