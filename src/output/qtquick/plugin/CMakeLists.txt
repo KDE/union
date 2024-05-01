@@ -4,13 +4,21 @@ ecm_add_qml_module(UnionQuickImpl URI "org.kde.union.impl" NO_PLUGIN_OPTIONAL)
 
 target_sources(UnionQuickImpl PRIVATE
     QuickElement.cpp
+    QuickElement.h
     QuickStyle.cpp
+    QuickStyle.h
     Background.cpp
+    Background.h
     UnionNode.cpp
+    UnionNode.h
     AreaNode.cpp
+    AreaNode.h
     LineNode.cpp
+    LineNode.h
     CornerNode.cpp
+    CornerNode.h
     ShadowNode.cpp
+    ShadowNode.h
     Types.h
     Types.cpp
 )

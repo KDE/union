@@ -3,7 +3,9 @@ add_library(union-plasmasvg MODULE)
 
 target_sources(union-plasmasvg PRIVATE
     PlasmaSvgLoader.cpp
+    PlasmaSvgLoader.h
     PlasmaSvgPlugin.cpp
+    PlasmaSvgPlugin.h
     PlasmaSvgRenderer.cpp
     PlasmaSvgRenderer.h
     PlasmaSvgPlugin.qrc
