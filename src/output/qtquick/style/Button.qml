@@ -47,6 +47,7 @@ T.Button {
     }
 
     Union.Element.type: "Button"
+    Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
         hovered: control.hovered
         focus: control.focus

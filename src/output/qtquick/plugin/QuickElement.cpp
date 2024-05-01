@@ -308,6 +308,21 @@ QBindable<QString> QuickElement::bindableElementId()
     return m_element->bindableId();
 }
 
+Union::Element::ColorSet QuickElement::colorSet() const
+{
+    return m_element->colorSet();
+}
+
+void QuickElement::setColorSet(Union::Element::ColorSet newColorSet)
+{
+    m_element->setColorSet(Element::ColorSet(newColorSet));
+}
+
+QBindable<Union::Element::ColorSet> QuickElement::bindableColorSet()
+{
+    return m_element->bindableColorSet();
+}
+
 QStringList QuickElement::hints() const
 {
     return m_element->hints();

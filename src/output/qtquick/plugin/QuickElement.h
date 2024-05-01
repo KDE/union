@@ -163,6 +163,12 @@ public:
     Q_PROPERTY(StatesGroup *states READ states CONSTANT)
     StatesGroup *states() const;
 
+    Q_PROPERTY(Union::Element::ColorSet colorSet READ colorSet WRITE setColorSet BINDABLE bindableColorSet NOTIFY colorSetChanged)
+    Union::Element::ColorSet colorSet() const;
+    void setColorSet(Union::Element::ColorSet newColorSet);
+    QBindable<Union::Element::ColorSet> bindableColorSet();
+    Q_SIGNAL void colorSetChanged();
+
     Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged BINDABLE bindableHints)
     QStringList hints() const;
     void setHints(const QStringList &newHints);
