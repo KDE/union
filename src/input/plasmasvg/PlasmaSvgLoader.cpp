@@ -40,6 +40,39 @@ QString nodeToString(ryml::ConstNodeRef node)
     return QString::fromStdString(tmp);
 }
 
+Qt::Alignment nodeToAlignment(ryml::ConstNodeRef node)
+{
+    Qt::Alignment align;
+
+    if (!node.is_map()) {
+        return align;
+    }
+
+    if (node.has_child("horizontal")) {
+        auto alignHorizontal = nodeToString(node["horizontal"]);
+        if (alignHorizontal == u"left") {
+            align |= Qt::AlignLeft;
+        } else if (alignHorizontal == u"center") {
+            align |= Qt::AlignHCenter;
+        } else if (alignHorizontal == u"right") {
+            align |= Qt::AlignRight;
+        }
+    }
+
+    if (node.has_child("vertical")) {
+        auto alignVertical = nodeToString(node["vertical"]);
+        if (alignVertical == u"top") {
+            align |= Qt::AlignTop;
+        } else if (alignVertical == u"center") {
+            align |= Qt::AlignVCenter;
+        } else if (alignVertical == u"bottom") {
+            align |= Qt::AlignBottom;
+        }
+    }
+
+    return align;
+}
+
 template<typename I, typename O, typename F>
 void forEachEntry(const std::initializer_list<I> &input, const std::initializer_list<O *> output, ryml::ConstNodeRef &node, F callback)
 {
@@ -587,25 +620,9 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
         maxHeight = std::max(maxHeight, image.height());
     }
 
-    auto align = 0;
+    Qt::Alignment align;
     if (node.has_child("align")) {
-        auto alignHorizontal = nodeToString(node["align"]["horizontal"]);
-        if (alignHorizontal == u"left") {
-            align |= Qt::AlignLeft;
-        } else if (alignHorizontal == u"center") {
-            align |= Qt::AlignHCenter;
-        } else if (alignHorizontal == u"right") {
-            align |= Qt::AlignRight;
-        }
-
-        auto alignVertical = nodeToString(node["align"]["vertical"]);
-        if (alignVertical == u"top") {
-            align |= Qt::AlignTop;
-        } else if (alignVertical == u"center") {
-            align |= Qt::AlignVCenter;
-        } else if (alignVertical == u"bottom") {
-            align |= Qt::AlignBottom;
-        }
+        align = nodeToAlignment(node["align"]);
     }
 
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
