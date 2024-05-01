@@ -77,6 +77,9 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
 
     Q_ASSERT(node->childCount() == int(NodeElement::ElementCount));
 
+    auto implicitSize = query.boundingRect().size();
+    setImplicitSize(implicitSize.width(), implicitSize.height());
+
     auto win = window();
     auto margins = query.margins().value_or(SizeDefinition{}).toMargins();
     auto bounds = boundingRect();
