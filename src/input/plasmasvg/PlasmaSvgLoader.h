@@ -19,6 +19,7 @@
 #include "StyleLoader.h"
 
 class QSvgRenderer;
+class PlasmaSvgRenderer;
 
 namespace Union
 {
@@ -28,6 +29,17 @@ struct ImageDefinition;
 }
 
 struct LoadingContext;
+
+struct RendererId {
+    QString path;
+    QPalette::ColorGroup colorGroup;
+    Union::Element::ColorSet colorSet;
+
+    inline bool operator==(const RendererId &other) const
+    {
+        return path == other.path && colorGroup == other.colorGroup && colorSet == other.colorSet;
+    }
+};
 
 class PlasmaSvgLoader : public Union::StyleLoader
 {
@@ -58,8 +70,10 @@ private:
     QImage elementImage(ryml::ConstNodeRef node, LoadingContext &context);
     QImage elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
 
-    std::shared_ptr<QSvgRenderer> rendererForPath(QAnyStringView path);
+    std::shared_ptr<PlasmaSvgRenderer> rendererForPath(QAnyStringView path, QPalette::ColorGroup colorGroup, Union::Element::ColorSet colorSet);
 
     Plasma::Theme m_theme;
-    QHash<QString, std::shared_ptr<QSvgRenderer>> m_renderers;
+    QHash<RendererId, std::shared_ptr<PlasmaSvgRenderer>> m_renderers;
 };
+
+std::size_t qHash(const RendererId &renderer, std::size_t seed = 0);

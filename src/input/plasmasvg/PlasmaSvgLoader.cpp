@@ -12,13 +12,14 @@
 #include <QFile>
 #include <QPainter>
 #include <QStack>
-#include <QSvgRenderer>
 
 #include <Plasma/Theme>
 
 #include <Definition.h>
 #include <Style.h>
 #include <Theme.h>
+
+#include "PlasmaSvgRenderer.h"
 
 #include "plasmasvg_logging.h"
 
@@ -49,6 +50,11 @@ void forEachEntry(const std::initializer_list<I> &input, const std::initializer_
     for (; inputItr != input.end() && outputItr != output.end(); ++inputItr, ++outputItr) {
         *(*outputItr) = callback(node[ryml::to_csubstr(*inputItr)]);
     }
+}
+
+std::size_t qHash(const RendererId &renderer, std::size_t seed)
+{
+    return qHashMulti(seed, renderer.path, renderer.colorGroup, renderer.colorSet);
 }
 
 struct ContextData {
@@ -513,7 +519,7 @@ QVariant PlasmaSvgLoader::constantValue(ryml::ConstNodeRef node, LoadingContext 
 
 std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    auto renderer = rendererForPath(context.path());
+    auto renderer = rendererForPath(context.path(), QPalette::Normal, context.colorSet());
     if (!renderer) {
         return std::nullopt;
     }
@@ -524,7 +530,7 @@ std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, Load
         return std::nullopt;
     }
 
-    auto size = renderer->transformForElement(element).map(renderer->boundsOnElement(element)).boundingRect().size();
+    auto size = renderer->elementRect(element).size();
 
     if (node.has_child("invert")) {
         bool invert;
@@ -541,7 +547,7 @@ QImage PlasmaSvgLoader::elementImage(ryml::ConstNodeRef node, LoadingContext &co
 {
     Q_UNUSED(node)
 
-    auto renderer = rendererForPath(context.path());
+    auto renderer = rendererForPath(context.path(), QPalette::Normal, context.colorSet());
     if (!renderer) {
         return QImage{};
     }
@@ -552,7 +558,7 @@ QImage PlasmaSvgLoader::elementImage(ryml::ConstNodeRef node, LoadingContext &co
         return QImage{};
     }
 
-    auto size = renderer->transformForElement(element).map(renderer->boundsOnElement(element)).boundingRect().size();
+    auto size = renderer->elementRect(element).size();
 
     QImage image(size.toSize(), QImage::Format_ARGB32);
     image.fill(Qt::transparent);
@@ -637,11 +643,14 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     return result;
 }
 
-std::shared_ptr<QSvgRenderer> PlasmaSvgLoader::rendererForPath(QAnyStringView path)
+std::shared_ptr<PlasmaSvgRenderer> PlasmaSvgLoader::rendererForPath(QAnyStringView path, QPalette::ColorGroup colorGroup, Element::ColorSet colorSet)
 {
     auto pathString = path.toString();
-    if (m_renderers.contains(pathString)) {
-        return m_renderers.value(pathString);
+
+    RendererId id{pathString, colorGroup, colorSet};
+
+    if (m_renderers.contains(id)) {
+        return m_renderers.value(id);
     }
 
     const auto fileName = m_theme.imagePath(pathString);
@@ -649,7 +658,15 @@ std::shared_ptr<QSvgRenderer> PlasmaSvgLoader::rendererForPath(QAnyStringView pa
         return nullptr;
     }
 
-    auto renderer = std::make_shared<QSvgRenderer>(fileName);
-    m_renderers.insert(pathString, renderer);
+    auto renderer = std::make_shared<PlasmaSvgRenderer>();
+    renderer->setPath(fileName);
+    renderer->setColorGroup(colorGroup);
+    renderer->setColorSet(static_cast<KColorScheme::ColorSet>(static_cast<int>(colorSet) - 1));
+
+    if (!renderer->load()) {
+        return nullptr;
+    }
+
+    m_renderers.insert(id, renderer);
     return renderer;
 }
