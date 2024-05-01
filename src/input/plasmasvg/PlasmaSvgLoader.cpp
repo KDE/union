@@ -56,6 +56,7 @@ struct ContextData {
     QStack<QString> paths;
     QStack<QString> prefixes;
     QStack<QString> elementNames;
+    QStack<Element::ColorSet> colorSets;
 };
 
 struct ContextCleanup {
@@ -64,6 +65,7 @@ struct ContextCleanup {
         Path = 1 << 1,
         Prefix = 1 << 2,
         ElementName = 1 << 3,
+        ColorSet = 1 << 4,
     };
     Q_DECLARE_FLAGS(CleanupFlags, CleanupFlag)
 
@@ -88,6 +90,10 @@ struct ContextCleanup {
 
         if (flags & CleanupFlag::ElementName && !data.elementNames.isEmpty()) {
             data.elementNames.pop();
+        }
+
+        if (flags & CleanupFlag::ColorSet && !data.colorSets.isEmpty()) {
+            data.colorSets.pop();
         }
     }
 
@@ -126,6 +132,11 @@ struct LoadingContext {
             cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
         }
 
+        if (node.has_child("colorSet")) {
+            auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
+            data.colorSets.push(Element::ColorSet(colorSetEnum.keyToValue(nodeToString(node["colorSet"]).toUtf8().data())));
+        }
+
         return cleanup;
     }
 
@@ -150,6 +161,7 @@ struct LoadingContext {
 
         return element;
     }
+
     QString path() const
     {
         return data.paths.isEmpty() ? QString{} : data.paths.top();
@@ -238,6 +250,11 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     if (node.has_child("state")) {
         auto stateEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
         selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeToString(node["state"]).toUtf8().data()))));
+    }
+
+    if (node.has_child("colorSet")) {
+        auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
+        selectors.append(Selector::create<SelectorType::ColorSet>(Element::ColorSet(colorSetEnum.keyToValue(nodeToString(node["colorSet"]).toUtf8().data()))));
     }
 
     SelectorList currentSelectors = context.selectors();
