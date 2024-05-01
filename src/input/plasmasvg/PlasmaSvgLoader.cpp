@@ -82,7 +82,10 @@ void forEachEntry(const std::initializer_list<I> &input, const std::initializer_
     auto inputItr = input.begin();
     auto outputItr = output.begin();
     for (; inputItr != input.end() && outputItr != output.end(); ++inputItr, ++outputItr) {
-        *(*outputItr) = callback(node[ryml::to_csubstr(*inputItr)]);
+        auto name = ryml::to_csubstr(*inputItr);
+        if (node.has_child(name)) {
+            *(*outputItr) = callback(node[name]);
+        }
     }
 }
 
