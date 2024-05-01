@@ -110,19 +110,19 @@ struct CornerDefinition {
 };
 
 struct BorderDefinition {
-    std::optional<LineDefinition> top;
-    std::optional<LineDefinition> bottom;
     std::optional<LineDefinition> left;
     std::optional<LineDefinition> right;
+    std::optional<LineDefinition> top;
+    std::optional<LineDefinition> bottom;
 };
 
 struct ShadowDefinition {
     std::optional<SizeDefinition> offsets;
 
-    std::optional<LineDefinition> top;
-    std::optional<LineDefinition> bottom;
     std::optional<LineDefinition> left;
     std::optional<LineDefinition> right;
+    std::optional<LineDefinition> top;
+    std::optional<LineDefinition> bottom;
 
     std::optional<CornerDefinition> topLeft;
     std::optional<CornerDefinition> topRight;
