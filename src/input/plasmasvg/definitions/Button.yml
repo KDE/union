@@ -154,6 +154,8 @@ button: &button
             horizontal: center
             vertical: center
 
+        font: system-normal
+
         # contentItem: &button-content
         #     type: ContentItem
         #     children: &button-content-children

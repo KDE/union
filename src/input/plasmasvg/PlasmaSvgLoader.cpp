@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QStack>
 
+#include <KConfigGroup>
 #include <Plasma/Theme>
 
 #include <Definition.h>
@@ -334,6 +335,10 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
         style->setShadow(createShadowDefinition(node["shadow"], context));
     }
 
+    if (node.has_child("text")) {
+        style->setText(createTextDefinition(node["text"], context));
+    }
+
     if (node.has_child("children")) {
         createStyles(node["children"], context);
     }
@@ -489,6 +494,47 @@ std::optional<Union::ShadowDefinition> PlasmaSvgLoader::createShadowDefinition(r
                  });
 
     return shadow;
+}
+
+std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    Union::TextDefinition text;
+
+    if (node.has_child("align")) {
+        text.alignment = nodeToAlignment(node["align"]);
+    }
+
+    if (node.has_child("font")) {
+        if (node.is_val() || node.is_keyval()) {
+            auto fontName = nodeToString(node["font"]);
+
+            auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
+            auto group = config->group(u"General"_s);
+            QFont font;
+
+            if (fontName == u"system-normal") {
+                text.font = group.readEntry("font", QFont());
+            } else if (fontName == u"system-fixed") {
+                text.font = group.readEntry("fixed", QFont());
+            } else if (fontName == u"system-small") {
+                text.font = group.readEntry("smallestReadableFont", QFont());
+            } else if (fontName == u"system-toolbar") {
+                text.font = group.readEntry("toolBarFont", QFont());
+            } else if (fontName == u"system-menu") {
+                text.font = group.readEntry("menuFont", QFont());
+            } else if (fontName == u"system-window") {
+                text.font = group.readEntry("activeFont", QFont());
+            }
+        }
+    }
+
+    return text;
 }
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
