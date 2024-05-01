@@ -32,7 +32,7 @@ set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprec
 option(WITH_PLASMASVG_INPUT "Enable Plasma SVG input plugin" ON)
 if (WITH_PLASMASVG_INPUT)
     find_package(Qt6Svg ${REQUIRED_QT_VERSION} REQUIRED CONFIG)
-    find_package(KF6Config REQUIRED)
+    find_package(KF6 COMPONENTS Archive ColorScheme Config REQUIRED)
     find_package(Plasma REQUIRED)
     find_package(ryml REQUIRED)
 endif()

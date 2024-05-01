@@ -4,10 +4,19 @@ add_library(union-plasmasvg MODULE)
 target_sources(union-plasmasvg PRIVATE
     PlasmaSvgLoader.cpp
     PlasmaSvgPlugin.cpp
+    PlasmaSvgRenderer.cpp
+    PlasmaSvgRenderer.h
     PlasmaSvgPlugin.qrc
 )
 
-target_link_libraries(union-plasmasvg PRIVATE Union Qt6::Svg Plasma::Plasma ryml::ryml)
+target_link_libraries(union-plasmasvg PRIVATE
+    Union
+    Qt6::Svg
+    KF6::Archive
+    KF6::ColorScheme
+    Plasma::Plasma
+    ryml::ryml
+)
 
 ecm_qt_declare_logging_category(union-plasmasvg
     HEADER plasmasvg_logging.h
