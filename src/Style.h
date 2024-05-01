@@ -40,6 +40,7 @@ public:
     virtual std::optional<BorderDefinition> outset() const = 0;
     virtual std::optional<SizeDefinition> margins() const = 0;
     virtual std::optional<SizeDefinition> padding() const = 0;
+    virtual std::optional<TextDefinition> text() const = 0;
 };
 
 class UNION_EXPORT Style : public QObject, public StyleInterface, public std::enable_shared_from_this<Style>
@@ -82,6 +83,9 @@ public:
 
     std::optional<SizeDefinition> padding() const override;
     void setPadding(const std::optional<SizeDefinition> &newPadding);
+
+    std::optional<TextDefinition> text() const override;
+    void setText(const std::optional<TextDefinition> &newText);
 
     static Style::Ptr create();
 

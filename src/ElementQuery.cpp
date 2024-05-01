@@ -71,6 +71,10 @@ void ElementQuery::execute()
         if (style->padding().has_value() && !m_combined->padding().has_value()) {
             m_combined->setPadding(style->padding());
         }
+
+        if (style->text().has_value() && !m_combined->text().has_value()) {
+            m_combined->setText(style->text());
+        }
     }
 }
 
@@ -132,4 +136,9 @@ std::optional<SizeDefinition> ElementQuery::margins() const
 std::optional<SizeDefinition> ElementQuery::padding() const
 {
     return m_combined->padding();
+}
+
+std::optional<TextDefinition> ElementQuery::text() const
+{
+    return m_combined->text();
 }

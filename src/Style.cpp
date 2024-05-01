@@ -16,6 +16,7 @@ public:
     SelectorList selectors;
 
     std::optional<AreaDefinition> foreground;
+    std::optional<TextDefinition> text;
     std::optional<AreaDefinition> background;
     std::optional<BorderDefinition> border;
     std::optional<ShadowDefinition> shadow;
@@ -163,6 +164,16 @@ std::optional<CornersDefinition> Style::corners() const
 void Style::setCorners(const std::optional<CornersDefinition> &newCorners)
 {
     d->corners = newCorners;
+}
+
+std::optional<TextDefinition> Union::Style::text() const
+{
+    return d->text;
+}
+
+void Union::Style::setText(const std::optional<TextDefinition> &newText)
+{
+    d->text = newText;
 }
 
 Style::Ptr Style::create()

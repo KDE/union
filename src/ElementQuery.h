@@ -44,6 +44,7 @@ public:
     std::optional<BorderDefinition> outset() const override;
     std::optional<SizeDefinition> margins() const override;
     std::optional<SizeDefinition> padding() const override;
+    std::optional<TextDefinition> text() const override;
 
 private:
     std::shared_ptr<Theme> m_theme;

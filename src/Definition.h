@@ -11,6 +11,7 @@
 
 #include <QColor>
 #include <QDebug>
+#include <QFont>
 #include <QGradient>
 #include <QImage>
 #include <QMarginsF>
@@ -135,6 +136,12 @@ struct CornersDefinition {
     std::optional<CornerDefinition> bottomLeft;
     std::optional<CornerDefinition> bottomRight;
 };
+
+struct TextDefinition {
+    Qt::Alignment alignment = Qt::AlignLeft | Qt::AlignTop;
+    QFont font;
+};
+//
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::ImageFlags)
