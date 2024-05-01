@@ -11,6 +11,7 @@ target_sources(UnionQuickImpl PRIVATE
     CornerNode.cpp
     ShadowNode.cpp
     Types.h
+    Types.cpp
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
