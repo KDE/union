@@ -59,6 +59,14 @@ struct ContextData {
 };
 
 struct ContextCleanup {
+    enum class CleanupFlag {
+        Selector = 1 << 0,
+        Path = 1 << 1,
+        Prefix = 1 << 2,
+        ElementName = 1 << 3,
+    };
+    Q_DECLARE_FLAGS(CleanupFlags, CleanupFlag)
+
     ContextCleanup(ContextData &_data)
         : data(_data)
     {
@@ -66,40 +74,38 @@ struct ContextCleanup {
 
     ~ContextCleanup()
     {
-        if (popSelectors) {
+        if (flags & CleanupFlag::Selector && !data.selectors.isEmpty()) {
             data.selectors.pop();
         }
 
-        if (popPaths) {
+        if (flags & CleanupFlag::Path && !data.paths.isEmpty()) {
             data.paths.pop();
         }
 
-        if (popPrefixes) {
+        if (flags & CleanupFlag::Prefix && !data.prefixes.isEmpty()) {
             data.prefixes.pop();
         }
 
-        if (popElementNames) {
+        if (flags & CleanupFlag::ElementName && !data.elementNames.isEmpty()) {
             data.elementNames.pop();
         }
     }
 
     ContextData &data;
-    bool popSelectors : 1 = false;
-    bool popPaths : 1 = false;
-    bool popPrefixes : 1 = false;
-    bool popElementNames : 1 = false;
+    CleanupFlags flags;
 };
 
 struct LoadingContext {
     ContextData data;
-    QStack<SelectorList> &selectors = data.selectors;
-    QStack<QString> &paths = data.paths;
-    QStack<QString> &prefixes = data.prefixes;
-    QStack<QString> &elementNames = data.elementNames;
 
-    ContextCleanup pushFromNode(ryml::ConstNodeRef node)
+    ContextCleanup pushFromNode(ryml::ConstNodeRef node, const SelectorList &selectorsToPush = SelectorList{})
     {
         ContextCleanup cleanup(data);
+
+        if (!selectorsToPush.isEmpty()) {
+            data.selectors.push(selectorsToPush);
+            cleanup.flags |= ContextCleanup::CleanupFlag::Selector;
+        }
 
         if (!node.is_map()) {
             return cleanup;
@@ -107,20 +113,25 @@ struct LoadingContext {
 
         if (node.has_child("path")) {
             data.paths.push(nodeToString(node["path"]));
-            cleanup.popPaths = true;
+            cleanup.flags |= ContextCleanup::CleanupFlag::Path;
         }
 
         if (node.has_child("prefix")) {
             data.prefixes.push(nodeToString(node["prefix"]));
-            cleanup.popPrefixes = true;
+            cleanup.flags |= ContextCleanup::CleanupFlag::Prefix;
         }
 
         if (node.has_child("element")) {
             data.elementNames.push(nodeToString(node["element"]));
-            cleanup.popElementNames = true;
+            cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
         }
 
         return cleanup;
+    }
+
+    SelectorList selectors()
+    {
+        return data.selectors.isEmpty() ? SelectorList() : data.selectors.top();
     }
 
     QString prefixedElementName()
@@ -138,6 +149,15 @@ struct LoadingContext {
         }
 
         return element;
+    }
+    QString path() const
+    {
+        return data.paths.isEmpty() ? QString{} : data.paths.top();
+    }
+
+    Element::ColorSet colorSet() const
+    {
+        return data.colorSets.isEmpty() ? Element::ColorSet::None : data.colorSets.top();
     }
 };
 
@@ -220,7 +240,7 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
         selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeToString(node["state"]).toUtf8().data()))));
     }
 
-    SelectorList currentSelectors = context.selectors.isEmpty() ? SelectorList() : context.selectors.top();
+    SelectorList currentSelectors = context.selectors();
     if (selectors.size() == 1) {
         currentSelectors.append(selectors.first());
     } else {
@@ -228,10 +248,8 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     }
 
     style->setSelectors(currentSelectors);
-    context.selectors.push(currentSelectors);
 
-    auto cleanup = context.pushFromNode(node);
-    cleanup.popSelectors = true;
+    auto cleanup = context.pushFromNode(node, selectors);
 
     // element->addAttribute(u"plugin"_qs, QString::fromUtf16(PluginName));
     // element->addAttribute(u"themeName"_qs, m_theme.themeName());
@@ -478,7 +496,7 @@ QVariant PlasmaSvgLoader::constantValue(ryml::ConstNodeRef node, LoadingContext 
 
 std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    auto renderer = rendererForPath(context.paths.top());
+    auto renderer = rendererForPath(context.path());
     if (!renderer) {
         return std::nullopt;
     }
@@ -506,7 +524,7 @@ QImage PlasmaSvgLoader::elementImage(ryml::ConstNodeRef node, LoadingContext &co
 {
     Q_UNUSED(node)
 
-    auto renderer = rendererForPath(context.paths.top());
+    auto renderer = rendererForPath(context.path());
     if (!renderer) {
         return QImage{};
     }
@@ -537,9 +555,9 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     int maxWidth = 0;
     int maxHeight = 0;
     for (auto child : node["elements"].children()) {
-        context.elementNames.push(nodeToString(child));
+        context.data.elementNames.push(nodeToString(child));
         auto image = elementImage(node, context);
-        context.elementNames.pop();
+        context.data.elementNames.pop();
 
         images.append(image);
         maxWidth = std::max(maxWidth, image.width());
@@ -570,7 +588,7 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 
-    auto itr = context.prefixes.rbegin();
+    auto itr = context.data.prefixes.rbegin();
     auto prefix = *itr;
     while (prefix.isEmpty()) {
         itr++;
