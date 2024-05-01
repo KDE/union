@@ -5,9 +5,8 @@ import QtTest
 
 import org.kde.union
 
-// TestCase {
-//
-// }
+import org.kde.plasma.components as PC
+
 ApplicationWindow {
     width: 800
     height: 600
@@ -26,20 +25,34 @@ ApplicationWindow {
         }
     }
 
-    Column {
+    GridLayout {
         Element.elementId: "window-contents"
 
         anchors.centerIn: parent
-        spacing: Element.spacing
+
+        columns: 2
 
         Button {
-            width: 200
-            height: 50
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
             text: "Test"
         }
+
+        PC.Button {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            text: "Test"
+        }
+
         Button {
-            width: 200
-            height: 50
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            text: "Test 2"
+        }
+
+        PC.Button {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
             text: "Test 2"
         }
     }
@@ -52,3 +65,4 @@ ApplicationWindow {
         }
     }
 }
+
