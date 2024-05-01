@@ -7,6 +7,7 @@
 #pragma once
 
 #include <QMetaEnum>
+#include <QPalette>
 
 #include <Plasma/Theme>
 
