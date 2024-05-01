@@ -18,10 +18,11 @@ public:
     QProperty<QString> type;
     QProperty<QString> id;
     QProperty<Element::States> states;
+    QProperty<Element::ColorSet> colorSet;
     QProperty<QStringList> hints;
     QProperty<QVariantMap> attributes;
 
-    std::array<QPropertyNotifier, 5> propertyNotifiers;
+    std::array<QPropertyNotifier, 6> propertyNotifiers;
 };
 
 Element::Element(std::unique_ptr<ElementPrivate> &&dd)
@@ -42,6 +43,9 @@ Element::Element(std::unique_ptr<ElementPrivate> &&dd)
     });
     d->propertyNotifiers[4] = d->attributes.addNotifier([this]() {
         Q_EMIT attributesChanged();
+    });
+    d->propertyNotifiers[5] = d->colorSet.addNotifier([this]() {
+        Q_EMIT colorSetChanged();
     });
 }
 
@@ -90,6 +94,21 @@ void Element::setStates(States newStates)
 QBindable<Element::States> Union::Element::bindableStates()
 {
     return QBindable<States>(&d->states);
+}
+
+Element::ColorSet Element::colorSet() const
+{
+    return d->colorSet;
+}
+
+void Element::setColorSet(ColorSet newColorSet)
+{
+    d->colorSet = newColorSet;
+}
+
+QBindable<Element::ColorSet> Element::bindableColorSet()
+{
+    return QBindable<ColorSet>(&d->colorSet);
 }
 
 QStringList Element::hints() const

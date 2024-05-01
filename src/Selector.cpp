@@ -64,6 +64,23 @@ QString Selector::SelectorPrivateImpl<SelectorType::State, Element::State>::toSt
 }
 
 template<>
+bool Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
+{
+    if (data == Element::ColorSet::None) {
+        return false;
+    }
+
+    return element->colorSet() == data;
+}
+
+template<>
+QString Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::toString() const
+{
+    auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
+    return u"ColorSet(%1)"_qs.arg(QString::fromUtf8(e.valueToKeys(int(data))));
+}
+
+template<>
 bool Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {

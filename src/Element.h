@@ -35,6 +35,18 @@ public:
     Q_DECLARE_FLAGS(States, State)
     Q_FLAG(States)
 
+    enum class ColorSet {
+        None,
+        View,
+        Window,
+        Button,
+        Selection,
+        Tooltip,
+        Complementary,
+        Header,
+    };
+    Q_ENUM(ColorSet)
+
     using Ptr = std::shared_ptr<Element>;
 
     Element(std::unique_ptr<ElementPrivate> &&dd);
@@ -57,6 +69,12 @@ public:
     void setStates(States newStates);
     QBindable<States> bindableStates();
     Q_SIGNAL void statesChanged();
+
+    Q_PROPERTY(ColorSet colorSet READ colorSet WRITE setColorSet BINDABLE bindableColorSet NOTIFY colorSetChanged)
+    ColorSet colorSet() const;
+    void setColorSet(ColorSet newColorSet);
+    QBindable<ColorSet> bindableColorSet();
+    Q_SIGNAL void colorSetChanged();
 
     Q_PROPERTY(QStringList hints READ hints WRITE setHints BINDABLE bindableHints NOTIFY hintsChanged)
     QStringList hints() const;
