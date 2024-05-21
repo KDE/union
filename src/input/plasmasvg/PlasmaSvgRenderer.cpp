@@ -14,7 +14,7 @@
 
 #include <KCompressionDevice>
 
-#include "plasmassvg_logging.h"
+#include "plasmasvg_logging.h"
 
 using namespace Qt::StringLiterals;
 
