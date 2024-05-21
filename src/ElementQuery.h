@@ -20,6 +20,18 @@ namespace Union
 class Style;
 class Theme;
 
+/**
+ * A class encapsulating lookup of style properties based on a list of elements.
+ *
+ * This class will try find which style rules match a certain list of elements.
+ * The list of elements is expected to represent a chain of elements from the
+ * root of the application to a specific element.
+ *
+ * Lookup is done for individual properties, so requesting for example the
+ * background color would result in checking if the first matched rule has the
+ * background color set and if so, return that. If not the second rule would be
+ * checked and so on.
+ */
 class UNION_EXPORT ElementQuery : public StyleInterface
 {
 public:

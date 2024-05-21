@@ -15,6 +15,12 @@
 namespace Union
 {
 
+/**
+ * Abstract base class for plugins providing input data.
+ *
+ * This class defines the interface input plugins should implement. Input
+ * plugins are plugins providing style rules to the themeing system.
+ */
 class UNION_EXPORT InputPlugin : public QObject
 {
     Q_OBJECT

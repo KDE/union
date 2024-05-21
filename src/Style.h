@@ -43,6 +43,12 @@ public:
     virtual std::optional<TextDefinition> text() const = 0;
 };
 
+/**
+ * A set of style properties that should be applied to a certain set of elements.
+ *
+ * This class defines a set of properties to apply to an element, along with a
+ * list of selectors that should match for this style to apply.
+ */
 class UNION_EXPORT Style : public QObject, public StyleInterface, public std::enable_shared_from_this<Style>
 {
     Q_OBJECT
