@@ -11,9 +11,12 @@
 
 #include "QuickStyle.h"
 
-namespace Union
-{
-
+/**
+ * An item used to render a background based on style properties.
+ *
+ * This will render a background for an element based on the properties exposed
+ * to QuickStyle.
+ */
 class Background : public QQuickItem
 {
     Q_OBJECT
@@ -30,5 +33,3 @@ protected:
 private:
     QuickStyle *m_style = nullptr;
 };
-
-}

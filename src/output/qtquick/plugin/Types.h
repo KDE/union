@@ -18,6 +18,9 @@ QML_ELEMENT
 QML_FOREIGN_NAMESPACE(Union::Element)
 }
 
+/**
+ * A helper type that wraps and exposes a QMarginsF to QML.
+ */
 class Sizes
 {
     Q_GADGET

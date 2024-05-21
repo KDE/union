@@ -20,6 +20,9 @@
 
 class QuickElement;
 
+/**
+ * A grouped property for style properties related to borders.
+ */
 class BordersGroup : public QObject
 {
     Q_OBJECT
@@ -28,6 +31,9 @@ class BordersGroup : public QObject
 public:
     BordersGroup();
 
+    /**
+     * The sizes of the borders.
+     */
     Q_PROPERTY(Sizes sizes READ sizes BINDABLE bindableSizes NOTIFY sizesChanged)
     Sizes sizes() const;
     QBindable<Sizes> bindableSizes();
@@ -39,6 +45,9 @@ private:
     Q_OBJECT_BINDABLE_PROPERTY(BordersGroup, Sizes, m_sizes, &BordersGroup::sizesChanged)
 };
 
+/**
+ * A grouped property for style properties related to text.
+ */
 class TextGroup : public QObject
 {
     Q_OBJECT
@@ -47,16 +56,25 @@ class TextGroup : public QObject
 public:
     TextGroup();
 
+    /**
+     * Horizontal alignment for text.
+     */
     Q_PROPERTY(Qt::Alignment horizontalAlignment READ horizontalAlignment BINDABLE bindableHorizontalAlignment NOTIFY horizontalAlignmentChanged)
     Qt::Alignment horizontalAlignment() const;
     QBindable<Qt::Alignment> bindableHorizontalAlignment();
     Q_SIGNAL void horizontalAlignmentChanged();
 
+    /**
+     * Vertical alignment for text.
+     */
     Q_PROPERTY(Qt::Alignment verticalAlignment READ verticalAlignment BINDABLE bindableVerticalAlignment NOTIFY verticalAlignmentChanged)
     Qt::Alignment verticalAlignment() const;
     QBindable<Qt::Alignment> bindableVerticalAlignment();
     Q_SIGNAL void verticalAlignmentChanged();
 
+    /**
+     * The font to use for text.
+     */
     Q_PROPERTY(QFont font READ font BINDABLE bindableFont NOTIFY fontChanged)
     QFont font() const;
     QBindable<QFont> bindableFont();
@@ -70,6 +88,14 @@ private:
     Q_OBJECT_BINDABLE_PROPERTY(TextGroup, QFont, m_font, &TextGroup::fontChanged)
 };
 
+/**
+ * An attached property that exposes style properties.
+ *
+ * This can be used to access style properties relevant to the current element
+ * or child. It will try to find the closest QuickElement instance, either the
+ * one attached to the same Item as this class is attached to, or to any parent
+ * Item.
+ */
 class QuickStyle : public QQuickAttachedPropertyPropagator
 {
     Q_OBJECT
@@ -79,29 +105,53 @@ class QuickStyle : public QQuickAttachedPropertyPropagator
 public:
     QuickStyle(QObject *parent = nullptr);
 
+    /**
+     * The implicit width from the style.
+     *
+     * This exposes the width of the bounding box from the style rules. See
+     * Union::Style::boundingBox() for how that is calculated.
+     */
     Q_PROPERTY(qreal implicitWidth READ implicitWidth NOTIFY implicitWidthChanged BINDABLE bindableImplicitWidth)
     qreal implicitWidth() const;
     QBindable<qreal> bindableImplicitWidth();
     Q_SIGNAL void implicitWidthChanged();
 
+    /**
+     * The implicit height from the style.
+     *
+     * This exposes the height of the bounding box from the style rules. See
+     * Union::Style::boundingBox() for how that is calculated.
+     */
     Q_PROPERTY(qreal implicitHeight READ implicitHeight NOTIFY implicitHeightChanged BINDABLE bindableImplicitHeight)
     qreal implicitHeight() const;
     QBindable<qreal> bindableImplicitHeight();
     Q_SIGNAL void implicitHeightChanged();
 
+    /**
+     * The padding values from the style.
+     */
     Q_PROPERTY(Sizes padding READ padding NOTIFY paddingChanged BINDABLE bindablePadding)
     Sizes padding() const;
     QBindable<Sizes> bindablePadding();
     Q_SIGNAL void paddingChanged();
 
+    /**
+     * The margin values from the style.
+     */
     Q_PROPERTY(Sizes margins READ margins NOTIFY marginsChanged BINDABLE bindableMargins)
     Sizes margins() const;
     QBindable<Sizes> bindableMargins();
     Q_SIGNAL void marginsChanged();
 
+    /**
+     * A grouped property to access border properties.
+     */
     Q_PROPERTY(BordersGroup *borders READ borders CONSTANT)
     BordersGroup *borders() const;
 
+    /**
+     * A grouped property to access text properties.
+     */
     Q_PROPERTY(TextGroup *text READ text CONSTANT)
     TextGroup *text() const;
 
@@ -111,8 +161,20 @@ public:
     // Q_PROPERTY(BackgroundGroup* background READ background CONSTANT)
     // BackgroundGroup* background() const;
 
+    /**
+     * The ElementQuery associated with this instance.
+     *
+     * This exposes the query from the QuickElement that this style is linked
+     * to.
+     */
     Union::ElementQuery query() const;
 
+    /**
+     * Emitted whenever something in the underlying style rule selection changes.
+     *
+     * Most importantly, this will be emitted when the matched style rules
+     * change due to a change in elements.
+     */
     Q_SIGNAL void updated();
 
     static QuickStyle *qmlAttachedProperties(QObject *parent);
