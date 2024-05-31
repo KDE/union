@@ -1,0 +1,72 @@
+toolbar: &toolbar
+    type: ToolBar
+    path: widgets/toolbar
+    padding: &toolbar-padding
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+    border: &toolbar-border
+        left: &toolbar-border-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &toolbar-border-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top: &toolbar-border-top
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom: &toolbar-border-bottom
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+    corners: &toolbar-corners
+        top-left: &toolbar-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right: &toolbar-corner-top-right
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left: &toolbar-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right: &toolbar-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
+    background: &toolbar-background
+        element: center
+        size:
+            property: element-size
+        image:
+            property: element-image
