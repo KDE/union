@@ -1,0 +1,409 @@
+toolbutton: &toolbutton
+    type: ToolButton
+    path: widgets/button
+    prefix: toolbutton-hover
+    padding: &toolbutton-padding
+        prefix: toolbutton-hover
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+    border: &toolbutton-border
+        left: &toolbutton-border-left
+            element: left
+            size:
+                property: element-width
+        right: &toolbutton-border-right
+            element: right
+            size:
+                property: element-width
+        top: &toolbutton-border-top
+            element: top
+            size:
+                property: element-height
+        bottom: &toolbutton-border-bottom
+            element: bottom
+            size:
+                property: element-height
+    corners: &toolbutton-corners
+        top-left: &toolbutton-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+        top-right: &toolbutton-corner-top-right
+            element: topright
+            size:
+                property: element-size
+        bottom-left: &toolbutton-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+        bottom-right: &toolbutton-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+    background: &toolbutton-background
+        element: center
+        size:
+            property: element-size
+    text:
+        align:
+            horizontal: center
+            vertical: center
+        font: system-normal
+
+toolbutton-hovered: &toolbutton-hovered
+    <<: *toolbutton
+    state: [Hovered]
+    prefix: toolbutton-hover
+    border: &toolbutton-hover-border
+        left:
+            <<: *toolbutton-border-left
+            image:
+                property: element-image
+        right:
+            <<: *toolbutton-border-right
+            image:
+                property: element-image
+        top:
+            <<: *toolbutton-border-top
+            image:
+                property: element-image
+        bottom:
+            <<: *toolbutton-border-bottom
+            image:
+                property: element-image
+    corners: &toolbutton-hover-corners
+        top-left:
+            <<: *toolbutton-corner-top-left
+            image:
+                property: element-image
+        top-right:
+            <<: *toolbutton-corner-top-right
+            image:
+                property: element-image
+        bottom-left:
+            <<: *toolbutton-corner-bottom-left
+            image:
+                property: element-image
+        bottom-right:
+            <<: *toolbutton-corner-bottom-right
+            image:
+                property: element-image
+    background: &toolbutton-hover-background
+        <<: *toolbutton-background
+        image:
+            property: element-image
+
+toolbutton-focused: &toolbutton-focused
+    <<: *toolbutton-hovered
+    state: [VisualFocus]
+    prefix: toolbutton-focus
+    margins: &toolbutton-focused-margins
+        prefix: toolbutton-focus
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+
+toolbutton-pressed: &toolbutton-pressed
+    <<: *toolbutton-hovered
+    state: [Pressed]
+    prefix: toolbutton-pressed
+    padding: &toolbutton-pressed-padding
+        <<: *toolbutton-padding
+        prefix: toolbutton-pressed
+
+toolbutton-checked: &toolbutton-checked
+    <<: *toolbutton-pressed
+    state: [Checked]
+
+hovered-focused:
+    <<: *toolbutton-hovered
+    state: [Hovered, VisualFocus]
+    margins:
+        <<: *toolbutton-focused-margins
+    border:
+        left:
+            <<: *toolbutton-border-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-left, toolbutton-hover-left]
+        right:
+            <<: *toolbutton-border-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-right, toolbutton-hover-right]
+        top:
+            <<: *toolbutton-border-top
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-top, toolbutton-hover-top]
+        bottom:
+            <<: *toolbutton-border-bottom
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottom, toolbutton-hover-bottom]
+    corners:
+        top-left:
+            <<: *toolbutton-corner-top-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topleft, toolbutton-hover-topleft]
+        top-right:
+            <<: *toolbutton-corner-top-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topright, toolbutton-hover-topright]
+        bottom-left:
+            <<: *toolbutton-corner-bottom-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomleft, toolbutton-hover-bottomleft]
+        bottom-right:
+            <<: *toolbutton-corner-bottom-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomright, toolbutton-hover-bottomright]
+    background:
+        <<: *toolbutton-background
+        image:
+            prefix: ""
+            property: element-image-blend
+            elements: [toolbutton-focus-center, toolbutton-hover-center]
+
+pressed-hovered: &pressed-hovered
+    <<: *toolbutton-pressed
+    state: [Pressed, Hovered]
+    border:
+        left:
+            <<: *toolbutton-border-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-left, toolbutton-pressed-left]
+        right:
+            <<: *toolbutton-border-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-right, toolbutton-pressed-right]
+        top:
+            <<: *toolbutton-border-top
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-top, toolbutton-pressed-top]
+        bottom:
+            <<: *toolbutton-border-bottom
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottom, toolbutton-pressed-bottom]
+    corners:
+        top-left:
+            <<: *toolbutton-corner-top-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-topleft, toolbutton-pressed-topleft]
+        top-right:
+            <<: *toolbutton-corner-top-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-topright, toolbutton-pressed-topright]
+        bottom-left:
+            <<: *toolbutton-corner-bottom-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottomleft, toolbutton-pressed-bottomleft]
+        bottom-right:
+            <<: *toolbutton-corner-bottom-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottomright, toolbutton-pressed-bottomright]
+    background:
+        <<: *toolbutton-background
+        image:
+            prefix: ""
+            property: element-image-blend
+            elements: [toolbutton-hover-center, toolbutton-pressed-center]
+
+pressed-focused: &pressed-focused
+    <<: *toolbutton-pressed
+    state: [Pressed, VisualFocus]
+    margins:
+        <<: *toolbutton-focused-margins
+    border:
+        left:
+            <<: *toolbutton-border-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-left, toolbutton-pressed-left]
+        right:
+            <<: *toolbutton-border-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-right, toolbutton-pressed-right]
+        top:
+            <<: *toolbutton-border-top
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-top, toolbutton-pressed-top]
+        bottom:
+            <<: *toolbutton-border-bottom
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottom, toolbutton-pressed-bottom]
+    corners:
+        top-left:
+            <<: *toolbutton-corner-top-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topleft, toolbutton-pressed-topleft]
+        top-right:
+            <<: *toolbutton-corner-top-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topright, toolbutton-pressed-topright]
+        bottom-left:
+            <<: *toolbutton-corner-bottom-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomleft, toolbutton-pressed-bottomleft]
+        bottom-right:
+            <<: *toolbutton-corner-bottom-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomright, toolbutton-pressed-bottomright]
+    background:
+        <<: *toolbutton-background
+        image:
+            prefix: ""
+            property: element-image-blend
+            elements: [toolbutton-focus-center, toolbutton-pressed-center]
+
+pressed-hovered-focused: &pressed-hovered-focused
+    <<: *toolbutton-pressed
+    state: [Pressed, Hovered, VisualFocus]
+    margins:
+        <<: *toolbutton-focused-margins
+    border:
+        left:
+            <<: *toolbutton-border-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-left, toolbutton-hover-left, toolbutton-pressed-left]
+        right:
+            <<: *toolbutton-border-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-right, toolbutton-hover-right, toolbutton-pressed-right]
+        top:
+            <<: *toolbutton-border-top
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-top, toolbutton-hover-top, toolbutton-pressed-top]
+        bottom:
+            <<: *toolbutton-border-bottom
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottom, toolbutton-hover-bottom, toolbutton-pressed-bottom]
+    corners:
+        top-left:
+            <<: *toolbutton-corner-top-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topleft, toolbutton-hover-topleft, toolbutton-pressed-topleft]
+        top-right:
+            <<: *toolbutton-corner-top-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-topright, toolbutton-hover-topright, toolbutton-pressed-topright]
+        bottom-left:
+            <<: *toolbutton-corner-bottom-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomleft, toolbutton-hover-bottomleft, toolbutton-pressed-bottomleft]
+        bottom-right:
+            <<: *toolbutton-corner-bottom-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-focus-bottomright, toolbutton-hover-bottomright, toolbutton-pressed-bottomright]
+    background:
+        <<: *toolbutton-background
+        image:
+            prefix: ""
+            property: element-image-blend
+            elements: [toolbutton-focus-center, toolbutton-hover-center, toolbutton-pressed-center]
+
+checked-focused:
+    <<: *pressed-focused
+    state: [Checked, VisualFocus]
+
+checked-hovered:
+    <<: *pressed-hovered
+    state: [Checked, Hovered]
+
+checked-hovered-focused:
+    <<: *pressed-hovered-focused
+    state: [Checked, Hovered, VisualFocus]
+
+pressed-checked-hovered:
+    <<: *pressed-hovered
+    state: [Pressed, Checked, Hovered]
+
+pressed-checked-focused:
+    <<: *pressed-focused
+    state: [Pressed, Checked, VisualFocus]
+
+pressed-checked-hovered-focused:
+    <<: *pressed-hovered-focused
+    state: [Pressed, Checked, Hovered, VisualFocus]
