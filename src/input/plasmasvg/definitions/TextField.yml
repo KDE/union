@@ -1,0 +1,408 @@
+textfield: &textfield
+    type: TextField
+    colorSet: View
+    path: widgets/lineedit
+    prefix: base
+    padding: &textfield-padding
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+    border: &textfield-border
+        left: &textfield-border-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &textfield-border-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top: &textfield-border-top
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom: &textfield-border-bottom
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+    corners: &textfield-corners
+        top-left: &textfield-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right: &textfield-corner-top-right
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left: &textfield-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right: &textfield-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
+    background: &textfield-background
+        element: center
+        size:
+            property: element-size
+        image:
+            property: element-image
+    text:
+        align:
+            horizontal: left
+            vertical: center
+        font: system-normal
+
+textfield-hovered:
+    <<: *textfield
+    state: Hovered
+    border:
+        left:
+            <<: *textfield-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-left
+                -   hover-left
+        right:
+            <<: *textfield-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-right
+                -   hover-right
+
+        top:
+            <<: *textfield-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-top
+                -   hover-top
+
+        bottom:
+            <<: *textfield-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottom
+                -   hover-bottom
+
+    corners:
+        top-left:
+            <<: *textfield-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topleft
+                -   hover-topleft
+        top-right:
+            <<: *textfield-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topright
+                -   hover-topright
+        bottom-left:
+            <<: *textfield-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomleft
+                -   hover-bottomleft
+        bottom-right:
+            <<: *textfield-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomright
+                -   hover-bottomright
+    background:
+        <<: *textfield-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   hover-center
+
+textfield-activefocus:
+    <<: *textfield
+    state: ActiveFocus
+    margins:
+        prefix: focus
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+    border:
+        left:
+            <<: *textfield-border-left
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: center
+                elements:
+                -   base-left
+                -   focus-left
+        right:
+            <<: *textfield-border-right
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: center
+                elements:
+                -   base-right
+                -   focus-right
+        top:
+            <<: *textfield-border-top
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: bottom
+                elements:
+                -   base-top
+                -   focus-top
+        bottom:
+            <<: *textfield-border-bottom
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: top
+                elements:
+                -   base-bottom
+                -   focus-bottom
+    corners:
+        top-left:
+            <<: *textfield-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: bottom
+                elements:
+                -   base-topleft
+                -   focus-topleft
+        top-right:
+            <<: *textfield-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: bottom
+                elements:
+                -   base-topright
+                -   focus-topright
+        bottom-left:
+            <<: *textfield-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: top
+                elements:
+                -   base-bottomleft
+                -   focus-bottomleft
+        bottom-right:
+            <<: *textfield-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: top
+                elements:
+                -   base-bottomright
+                -   focus-bottomright
+    background:
+        <<: *textfield-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   focus-center
+
+textfield-visualfocus:
+    <<: *textfield
+    state: VisualFocus
+    margins:
+        prefix: focusframe
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+    border:
+        left:
+            <<: *textfield-border-left
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: center
+                elements:
+                -   base-left
+                -   focusframe-left
+        right:
+            <<: *textfield-border-right
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: center
+                elements:
+                -   base-right
+                -   focusframe-right
+        top:
+            <<: *textfield-border-top
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: bottom
+                elements:
+                -   base-top
+                -   focusframe-top
+        bottom:
+            <<: *textfield-border-bottom
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: top
+                elements:
+                -   base-bottom
+                -   focusframe-bottom
+    corners:
+        top-left:
+            <<: *textfield-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: bottom
+                elements:
+                -   base-topleft
+                -   focusframe-topleft
+        top-right:
+            <<: *textfield-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: bottom
+                elements:
+                -   base-topright
+                -   focusframe-topright
+        bottom-left:
+            <<: *textfield-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: top
+                elements:
+                -   base-bottomleft
+                -   focusframe-bottomleft
+        bottom-right:
+            <<: *textfield-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: top
+                elements:
+                -   base-bottomright
+                -   focusframe-bottomright
+    background:
+        <<: *textfield-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   focusframe-center
