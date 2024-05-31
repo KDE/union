@@ -18,9 +18,11 @@ ApplicationWindow {
         RowLayout {
             ToolButton {
                 text: "Header ToolButton 1"
+                icon.name: "document-save"
             }
             ToolButton {
                 text: "Header ToolButton 2"
+                icon.name: "document-save"
             }
         }
     }
@@ -36,24 +38,28 @@ ApplicationWindow {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test"
+            icon.name: "document-save"
         }
 
         PC.Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test"
+            icon.name: "document-save"
         }
 
         Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test 2"
+            icon.name: "document-save"
         }
 
         PC.Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test 2"
+            icon.name: "document-save"
         }
     }
 
