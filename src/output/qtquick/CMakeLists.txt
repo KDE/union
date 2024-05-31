@@ -18,6 +18,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/TextField.qml
     style/ToolBar.qml
     style/ToolButton.qml
+    style/ToolTip.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)
