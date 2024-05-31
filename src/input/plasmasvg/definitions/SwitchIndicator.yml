@@ -1,0 +1,23 @@
+switch: &switch
+    type: Button
+    path: widgets/switch
+    prefix: "inactive"
+    border: &switch-border
+        left: &switch-border-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &switch-border-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+    background: &switch-background
+        element: center
+        size:
+            property: element-size
+        image:
+            property: element-image
