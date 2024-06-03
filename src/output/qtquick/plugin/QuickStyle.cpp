@@ -76,11 +76,13 @@ void QuickStyle::update()
     }
 
     setElement(element);
+
     if (!element) {
         return;
     }
 
     auto query = element->query();
+
     if (!query || !query->hasMatches()) {
         return;
     }
