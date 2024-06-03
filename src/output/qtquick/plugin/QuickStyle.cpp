@@ -76,7 +76,6 @@ void QuickStyle::update()
     }
 
     setElement(element);
-
     if (!element) {
         return;
     }

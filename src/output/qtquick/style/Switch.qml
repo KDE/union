@@ -23,8 +23,10 @@ T.Switch {
     baselineOffset: contentItem.y + contentItem.baselineOffset
     hoverEnabled: true
 
-   // spacing: Kirigami.Units.smallSpacing
+    //TODO Union.Style.spacing?
+    spacing: Union.Style.padding.left
 
+    //TODO should icon sizes be defined also there?
    // icon.width: Kirigami.Units.iconSizes.sizeForLabels
    // icon.height: Kirigami.Units.iconSizes.sizeForLabels
 
@@ -33,8 +35,7 @@ T.Switch {
             ? (control.mirrored ? control.width - width - control.rightPadding : control.leftPadding)
             : control.leftPadding + Math.round((control.availableWidth - width) / 2)
         y: control.topPadding + Math.round((control.availableHeight - height) / 2)
-width: 50
-height: 50
+
         Union.Element.type: "SwitchIndicator"
         Union.Element.colorSet: Union.ColorSet.Button
         Union.Element.states {
@@ -44,10 +45,35 @@ height: 50
             visualFocus: control.visualFocus
             pressed: control.pressed
             enabled: control.enabled
+            highlighted: control.checked
         }
+        Union.Background {
+            // FIXME: binding on x sometimes gets randomly broken
+            x: Math.max(0, Math.min(parent.width - width, control.visualPosition * parent.width - (width / 2)))
+            anchors.verticalCenter: parent.verticalCenter
+            Union.Element.type: "Handle"
+            Union.Element.colorSet: Union.ColorSet.Button
+            Union.Element.states {
+                hovered: control.hovered
+                focus: control.focus
+                activeFocus: control.activeFocus
+                visualFocus: control.visualFocus
+                pressed: control.pressed
+                enabled: control.enabled
+                highlighted: control.checked
+            }
+        }
+        //TODO: remove, we need a way to size background elements as the size of a third hint element called hint-bar-size
+        width: 30
     }
 
     contentItem: T.Label {
+        readonly property int effectiveIndicatorWidth: control.indicator && control.indicator.visible && control.indicator.width > 0
+            ? control.indicator.width + control.spacing : 0
+
+        leftPadding: !control.mirrored ? effectiveIndicatorWidth : 0
+        rightPadding: control.mirrored ? effectiveIndicatorWidth : 0
+
         text: control.text
         font: control.font
         horizontalAlignment: Union.Style.text.horizontalAlignment

@@ -1,23 +1,112 @@
 switch: &switch
-    type: Button
+    type: SwitchIndicator
     path: widgets/switch
     prefix: "inactive"
     border: &switch-border
-        left: &switch-border-left
+        left:
             element: left
             size:
                 property: element-width
             image:
                 property: element-image
-        right: &switch-border-right
+        top:
+            element: top
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right:
             element: right
             size:
                 property: element-width
             image:
                 property: element-image
-    background: &switch-background
+        bottom:
+            element: bottom
+            size:
+                property: element-width
+            image:
+                property: element-image
+    background:
         element: center
         size:
             property: element-size
         image:
             property: element-image
+
+    children:
+        handle: &handle
+            type: Handle
+            path: widgets/switch
+            prefix: ""
+            background: &handle-background
+                element: "handle"
+                size:
+                    property: element-size
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: center
+                    elements:
+                    -   handle-shadow
+                    -   handle
+        handle-hover:
+            <<: *handle
+            state: Hovered
+            background:
+                element: "handle-hover"
+                size:
+                    property: element-size
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: center
+                    elements:
+                    -   handle-shadow
+                    -   handle-hover
+        handle-pressed:
+            <<: *handle
+            state: Pressed
+            background:
+                element: "handle-pressed"
+                size:
+                    property: element-size
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: center
+                    elements:
+                    -   handle-shadow
+                    -   handle-pressed
+        handle-focus:
+            <<: *handle
+            state: VisualFocus
+            background:
+                element: "handle-focus"
+                size:
+                    property: element-size
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: center
+                    elements:
+                    -   handle-shadow
+                    -   handle
+                    -   handle-focus
+
+# TODO: this should probably be a child as it needs to be rendered with a size depending from the handle position
+switch-checked:
+    <<: *switch
+
+    state: Highlighted
+    prefix: "active"
+
+
