@@ -7,6 +7,7 @@
 */
 
 import QtQuick
+import QtQuick.Controls.impl as QCCImpl
 import QtQuick.Templates as T
 
 // import org.kde.kirigami 2.12 as Kirigami
@@ -47,11 +48,19 @@ T.Button {
 
     font: Union.Style.text.font
 
-    contentItem: Text {
+    spacing: 6
+    icon.width: 16
+    icon.height: 16
+
+    contentItem: QCCImpl.IconLabel {
+        spacing: control.spacing
+        mirrored: control.mirrored
+        display: control.display
+        icon: control.icon
         text: control.text
         font: control.font
-        horizontalAlignment: Union.Style.text.horizontalAlignment
-        verticalAlignment: Union.Style.text.verticalAlignment
+        color: control.palette.buttonText
+        alignment: Union.Style.text.horizontalAlignment | Union.Style.text.verticalAlignment
     }
 
     background: Union.Background {
