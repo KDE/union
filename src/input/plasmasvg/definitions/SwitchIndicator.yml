@@ -64,6 +64,7 @@ switch: &switch
             type: Handle
             path: widgets/switch
             prefix: ""
+            colorSet: Button
             background: &handle-background
                 element: "handle"
                 size:
