@@ -63,7 +63,7 @@ T.Switch {
                 highlighted: control.checked
             }
         }
-        //TODO: remove, we need a way to size background elements as the size of a third hint element called hint-bar-size
+        //TODO: We need a way to size background elements as the size of a third hint element called hint-bar-size
         width: 30
     }
 

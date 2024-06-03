@@ -27,6 +27,31 @@ switch: &switch
                 property: element-width
             image:
                 property: element-image
+    corners:
+        top-left:
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right:
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left:
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right:
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
     background:
         element: center
         size:
