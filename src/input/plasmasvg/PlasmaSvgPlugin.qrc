@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/org/kde/union/input/plasmasvg">
         <file alias="Button.yml">definitions/Button.yml</file>
+        <file alias="TabBar.yml">definitions/TabBar.yml</file>
         <file alias="TabButton.yml">definitions/TabButton.yml</file>
         <file alias="TextField.yml">definitions/TextField.yml</file>
         <file alias="ToolButton.yml">definitions/ToolButton.yml</file>

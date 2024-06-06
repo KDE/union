@@ -1,6 +1,17 @@
-tabbutton: &tabbutton
-    type: TabButton
+tabbar: &tabbar
+    type: TabBar
     path: widgets/tabbar
+    text:
+        align:
+            horizontal: center
+            vertical: center
+        font: system-normal
+
+tabbar-highlight-north: &tabbar-highlight-north
+    <<: *tabbar
+    state: Highlighted
+    hints: [itemview-highlight]
+    attributes: {tab-position: north}
     prefix: north-active-tab
     padding:
         left:
@@ -15,18 +26,6 @@ tabbutton: &tabbutton
         bottom:
             property: element-height
             element: hint-bottom-margin
-    text:
-        align:
-            horizontal: center
-            vertical: center
-        font: system-normal
-
-tabbutton-north: &tabbutton-north
-    <<: *tabbutton
-    state: Checked
-    attributes: {tab-position: north}
-    hints:
-    prefix: north-active-tab
     border:
         left:
             element: left
@@ -84,17 +83,17 @@ tabbutton-north: &tabbutton-north
         image:
             property: element-image
 
-tabbutton-south:
-    <<: *tabbutton-north
-    prefix: south-active-tab
+tabbar-south:
+    <<: *tabbar-highlight-north
     attributes: {tab-position: south}
+    prefix: south-active-tab
 
-tabbutton-east:
-    <<: *tabbutton-north
-    prefix: east-active-tab
+tabbar-east:
+    <<: *tabbar-highlight-north
     attributes: {tab-position: east}
+    prefix: east-active-tab
 
-tabbutton-west:
-    <<: *tabbutton-north
-    prefix: west-active-tab
+tabbar-west:
+    <<: *tabbar-highlight-north
     attributes: {tab-position: west}
+    prefix: west-active-tab
