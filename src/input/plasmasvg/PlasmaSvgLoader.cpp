@@ -418,8 +418,12 @@ std::optional<Union::AreaDefinition> PlasmaSvgLoader::createAreaDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::AreaDefinition area;
-    area.size = elementProperty(node["size"], context).toSizeF();
-    area.image = createImageDefinition(node["image"], context);
+    if (node.has_child("size")) {
+        area.size = elementProperty(node["size"], context).toSizeF();
+    }
+    if (node.has_child("image")) {
+        area.image = createImageDefinition(node["image"], context);
+    }
     return area;
 }
 
