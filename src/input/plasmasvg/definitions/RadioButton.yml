@@ -1,0 +1,7 @@
+radiobutton: &radiobutton
+    type: RadioButton
+    text:
+        align:
+            horizontal: left
+            vertical: center
+        font: system-normal

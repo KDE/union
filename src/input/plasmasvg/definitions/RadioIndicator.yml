@@ -1,0 +1,146 @@
+unchecked: &unchecked
+    type: RadioIndicator
+    path: widgets/radiobutton
+    background: &unchecked-background
+        element: hint-size
+        size:
+            property: element-size
+        image:
+            property: element-image-blend
+            elements: [shadow, normal]
+
+unchecked-pressed:
+    <<: *unchecked
+    state: [Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked]
+
+unchecked-focused:
+    <<: *unchecked
+    state: [VisualFocus]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, focus]
+
+unchecked-focused-pressed:
+    <<: *unchecked
+    state: [VisualFocus, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, focus]
+
+unchecked-hovered:
+    <<: *unchecked
+    state: [Hovered]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, hover]
+
+unchecked-hovered-pressed:
+    <<: *unchecked
+    state: [Hovered, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, hover]
+
+unchecked-hovered-focused:
+    <<: *unchecked
+    state: [Hovered, VisualFocus]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, focus, hover]
+
+unchecked-hovered-focused-pressed:
+    <<: *unchecked
+    state: [Hovered, VisualFocus, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, focus, hover]
+
+checked: &checked
+    type: RadioIndicator
+    path: widgets/radiobutton
+    state: [Checked]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, checked, symbol]
+
+checked-pressed:
+    <<: *checked
+    state: [Pressed, Checked]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, symbol]
+
+checked-focused:
+    <<: *checked
+    state: [VisualFocus, Checked]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, focus, symbol]
+
+checked-focused-pressed:
+    <<: *checked
+    state: [Checked, VisualFocus, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, focus, symbol]
+
+checked-hovered:
+    <<: *checked
+    state: [Hovered, Checked]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, checked, hover, symbol]
+
+checked-hovered-pressed:
+    <<: *checked
+    state: [Checked, Hovered, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, checked, hover, symbol]
+
+checked-hovered-focused:
+    <<: *checked
+    state: [Checked, Hovered, VisualFocus]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [shadow, normal, checked, focus, hover, symbol]
+
+checked-hovered-focused-pressed:
+    <<: *checked
+    state: [Checked, Hovered, VisualFocus, Pressed]
+    background:
+        <<: *unchecked-background
+        image:
+            property: element-image-blend
+            elements: [normal, checked, checked, focus, hover, symbol]
