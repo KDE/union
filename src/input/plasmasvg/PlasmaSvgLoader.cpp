@@ -681,13 +681,6 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 
-    auto itr = context.data.prefixes.rbegin();
-    auto prefix = *itr;
-    while (prefix.isEmpty()) {
-        itr++;
-        prefix = *itr;
-    }
-
     QPainter painter(&result);
     for (const auto &image : images) {
         QPoint position;
