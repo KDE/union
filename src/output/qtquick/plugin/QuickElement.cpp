@@ -28,6 +28,9 @@ StatesGroup::StatesGroup()
         if (m_pressed.value()) {
             states |= Union::Element::State::Pressed;
         }
+        if (m_checked.value()) {
+            states |= Union::Element::State::Checked;
+        }
         if (!m_enabled.value()) {
             states |= Union::Element::State::Disabled;
         }
@@ -96,6 +99,21 @@ void StatesGroup::setPressed(bool newPressed)
 QBindable<bool> StatesGroup::bindablePressed()
 {
     return QBindable<bool>(&m_pressed);
+}
+
+bool StatesGroup::checked() const
+{
+    return m_checked;
+}
+
+void StatesGroup::setChecked(bool newChecked)
+{
+    m_checked = newChecked;
+}
+
+QBindable<bool> StatesGroup::bindableChecked()
+{
+    return QBindable<bool>(&m_checked);
 }
 
 bool StatesGroup::enabled() const

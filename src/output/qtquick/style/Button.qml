@@ -30,6 +30,7 @@ T.Button {
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         pressed: control.pressed
+        checked: control.checked
         enabled: control.enabled
         highlighted: control.highlighted
     }
