@@ -19,9 +19,6 @@ StatesGroup::StatesGroup()
         if (m_hovered.value()) {
             states |= Union::Element::State::Hovered;
         }
-        if (m_focus.value()) {
-            states |= Union::Element::State::Focus;
-        }
         if (m_activeFocus.value()) {
             states |= Union::Element::State::ActiveFocus;
         }
@@ -54,21 +51,6 @@ void StatesGroup::setHovered(bool newHovered)
 QBindable<bool> StatesGroup::bindableHovered()
 {
     return QBindable<bool>(&m_hovered);
-}
-
-bool StatesGroup::focus() const
-{
-    return m_focus;
-}
-
-void StatesGroup::setFocus(bool newFocus)
-{
-    m_focus = newFocus;
-}
-
-QBindable<bool> StatesGroup::bindableFocus()
-{
-    return QBindable<bool>(&m_focus);
 }
 
 bool StatesGroup::activeFocus() const

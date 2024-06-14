@@ -42,18 +42,6 @@ public:
     Q_SIGNAL void hoveredChanged();
 
     /**
-     * Does the element have any sort of focus?
-     *
-     * This sets the `Element::State::Focus` state on the element if set to
-     * `true`.
-     */
-    Q_PROPERTY(bool focus READ focus WRITE setFocus NOTIFY focusChanged BINDABLE bindableFocus)
-    bool focus() const;
-    void setFocus(bool newFocus);
-    QBindable<bool> bindableFocus();
-    Q_SIGNAL void focusChanged();
-
-    /**
      * Does the element have active focus?
      *
      * This sets the `Element::State::ActiveFocus` state on the element if set
@@ -129,7 +117,6 @@ public:
 
 private:
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_hovered, &StatesGroup::hoveredChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_focus, &StatesGroup::focusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_visualFocus, &StatesGroup::visualFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_pressed, &StatesGroup::pressedChanged)
