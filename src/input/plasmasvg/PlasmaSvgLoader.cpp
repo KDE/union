@@ -418,8 +418,12 @@ std::optional<Union::AreaDefinition> PlasmaSvgLoader::createAreaDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::AreaDefinition area;
-    area.size = elementProperty(node["size"], context).toSizeF();
-    area.image = createImageDefinition(node["image"], context);
+    if (node.has_child("size")) {
+        area.size = elementProperty(node["size"], context).toSizeF();
+    }
+    if (node.has_child("image")) {
+        area.image = createImageDefinition(node["image"], context);
+    }
     return area;
 }
 
@@ -676,13 +680,6 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
 
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
-
-    auto itr = context.data.prefixes.rbegin();
-    auto prefix = *itr;
-    while (prefix.isEmpty()) {
-        itr++;
-        prefix = *itr;
-    }
 
     QPainter painter(&result);
     for (const auto &image : images) {
