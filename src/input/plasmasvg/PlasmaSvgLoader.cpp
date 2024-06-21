@@ -558,7 +558,7 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
         return constantValue(node, context);
     }
 
-    if (!node.is_map()) {
+    if (!node.is_map() || !node.has_child("property")) {
         return QVariant{};
     }
 
