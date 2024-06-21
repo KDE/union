@@ -78,6 +78,18 @@ public:
     Q_SIGNAL void pressedChanged();
 
     /**
+     * Is the element checked?
+     *
+     * This sets the `Element::State::Checked` state on the element if set to
+     * `true`.
+     */
+    Q_PROPERTY(bool checked READ checked WRITE setChecked NOTIFY checkedChanged BINDABLE bindableChecked)
+    bool checked() const;
+    void setChecked(bool newChecked);
+    QBindable<bool> bindableChecked();
+    Q_SIGNAL void checkedChanged();
+
+    /**
      * Is the element enabled?
      *
      * This sets the `Element::State::Disabled` state on the element if set
@@ -120,6 +132,7 @@ private:
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_visualFocus, &StatesGroup::visualFocusChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_pressed, &StatesGroup::pressedChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_checked, &StatesGroup::checkedChanged)
     Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(StatesGroup, bool, m_enabled, true, &StatesGroup::enabledChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_highlighted, &StatesGroup::highlightedChanged)
     Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, Union::Element::States, m_activeStates, &StatesGroup::activeStatesChanged)
