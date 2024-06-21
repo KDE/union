@@ -436,8 +436,12 @@ std::optional<Union::LineDefinition> PlasmaSvgLoader::createLineDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::LineDefinition line;
-    line.size = elementProperty(node["size"], context).toReal();
-    line.image = createImageDefinition(node["image"], context);
+    if (node.has_child("size")) {
+        line.size = elementProperty(node["size"], context).toReal();
+    }
+    if (node.has_child("image")) {
+        line.image = createImageDefinition(node["image"], context);
+    }
     return line;
 }
 
