@@ -436,8 +436,12 @@ std::optional<Union::LineDefinition> PlasmaSvgLoader::createLineDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::LineDefinition line;
-    line.size = elementProperty(node["size"], context).toReal();
-    line.image = createImageDefinition(node["image"], context);
+    if (node.has_child("size")) {
+        line.size = elementProperty(node["size"], context).toReal();
+    }
+    if (node.has_child("image")) {
+        line.image = createImageDefinition(node["image"], context);
+    }
     return line;
 }
 
@@ -450,10 +454,14 @@ std::optional<Union::CornerDefinition> PlasmaSvgLoader::createCornerDefinition(r
     auto cleanup = context.pushFromNode(node);
 
     Union::CornerDefinition corner;
-    corner.image = createImageDefinition(node["image"], context);
-    auto size = elementProperty(node["size"], context).toSize();
-    corner.width = size.width();
-    corner.height = size.height();
+    if (node.has_child("image")) {
+        corner.image = createImageDefinition(node["image"], context);
+    }
+    if (node.has_child("size")) {
+        auto size = elementProperty(node["size"], context).toSize();
+        corner.width = size.width();
+        corner.height = size.height();
+    }
     return corner;
 }
 
@@ -550,7 +558,7 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
         return constantValue(node, context);
     }
 
-    if (!node.is_map()) {
+    if (!node.is_map() || !node.has_child("property")) {
         return QVariant{};
     }
 
