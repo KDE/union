@@ -27,7 +27,6 @@ T.Button {
     Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
         hovered: control.hovered
-        focus: control.focus
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         pressed: control.pressed

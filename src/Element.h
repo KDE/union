@@ -25,12 +25,11 @@ public:
     enum class State {
         None,
         Hovered = 1 << 0,
-        Focus = 1 << 1,
-        ActiveFocus = 1 << 2,
-        VisualFocus = 1 << 3,
-        Pressed = 1 << 4,
-        Disabled = 1 << 5,
-        Highlighted = 1 << 6,
+        ActiveFocus = 1 << 1,
+        VisualFocus = 1 << 2,
+        Pressed = 1 << 3,
+        Disabled = 1 << 4,
+        Highlighted = 1 << 5,
     };
     Q_DECLARE_FLAGS(States, State)
     Q_FLAG(States)
