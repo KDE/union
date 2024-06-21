@@ -454,10 +454,14 @@ std::optional<Union::CornerDefinition> PlasmaSvgLoader::createCornerDefinition(r
     auto cleanup = context.pushFromNode(node);
 
     Union::CornerDefinition corner;
-    corner.image = createImageDefinition(node["image"], context);
-    auto size = elementProperty(node["size"], context).toSize();
-    corner.width = size.width();
-    corner.height = size.height();
+    if (node.has_child("image")) {
+        corner.image = createImageDefinition(node["image"], context);
+    }
+    if (node.has_child("size")) {
+        auto size = elementProperty(node["size"], context).toSize();
+        corner.width = size.width();
+        corner.height = size.height();
+    }
     return corner;
 }
 
