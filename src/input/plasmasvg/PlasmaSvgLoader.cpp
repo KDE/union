@@ -5,6 +5,7 @@
  */
 
 #include "PlasmaSvgLoader.h"
+#include "RYMLHelpers.h"
 
 #include <unordered_set>
 
@@ -29,65 +30,6 @@ using namespace Qt::StringLiterals;
 using namespace std::string_literals;
 
 constexpr char16_t PluginName[] = u"plasmasvg";
-
-QString nodeToString(ryml::ConstNodeRef node)
-{
-    if (!node.has_val()) {
-        return QString{};
-    }
-
-    std::string tmp;
-    node >> tmp;
-    return QString::fromStdString(tmp);
-}
-
-Qt::Alignment nodeToAlignment(ryml::ConstNodeRef node)
-{
-    Qt::Alignment align;
-
-    if (!node.is_map()) {
-        return align;
-    }
-
-    if (node.has_child("horizontal")) {
-        auto alignHorizontal = nodeToString(node["horizontal"]);
-        if (alignHorizontal == u"left") {
-            align |= Qt::AlignLeft;
-        } else if (alignHorizontal == u"center") {
-            align |= Qt::AlignHCenter;
-        } else if (alignHorizontal == u"right") {
-            align |= Qt::AlignRight;
-        }
-    }
-
-    if (node.has_child("vertical")) {
-        auto alignVertical = nodeToString(node["vertical"]);
-        if (alignVertical == u"top") {
-            align |= Qt::AlignTop;
-        } else if (alignVertical == u"center") {
-            align |= Qt::AlignVCenter;
-        } else if (alignVertical == u"bottom") {
-            align |= Qt::AlignBottom;
-        }
-    }
-
-    return align;
-}
-
-template<typename I, typename O, typename F>
-void forEachEntry(const std::initializer_list<I> &input, const std::initializer_list<O *> output, ryml::ConstNodeRef &node, F callback)
-{
-    Q_ASSERT(input.size() == output.size());
-
-    auto inputItr = input.begin();
-    auto outputItr = output.begin();
-    for (; inputItr != input.end() && outputItr != output.end(); ++inputItr, ++outputItr) {
-        auto name = ryml::to_csubstr(*inputItr);
-        if (node.has_child(name)) {
-            *(*outputItr) = callback(node[name]);
-        }
-    }
-}
 
 std::size_t qHash(const RendererId &renderer, std::size_t seed)
 {
@@ -161,23 +103,23 @@ struct LoadingContext {
         }
 
         if (node.has_child("path")) {
-            data.paths.push(nodeToString(node["path"]));
+            data.paths.push(nodeValue<QString>(node["path"]));
             cleanup.flags |= ContextCleanup::CleanupFlag::Path;
         }
 
         if (node.has_child("prefix")) {
-            data.prefixes.push(nodeToString(node["prefix"]));
+            data.prefixes.push(nodeValue<QString>(node["prefix"]));
             cleanup.flags |= ContextCleanup::CleanupFlag::Prefix;
         }
 
         if (node.has_child("element")) {
-            data.elementNames.push(nodeToString(node["element"]));
+            data.elementNames.push(nodeValue<QString>(node["element"]));
             cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
         }
 
         if (node.has_child("colorSet")) {
             auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-            data.colorSets.push(Element::ColorSet(colorSetEnum.keyToValue(nodeToString(node["colorSet"]).toUtf8().data())));
+            data.colorSets.push(Element::ColorSet(colorSetEnum.keyToValue(nodeValue<CStringWrapper>(node["colorSet"]))));
         }
 
         return cleanup;
@@ -283,21 +225,21 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     auto style = Style::create();
 
     if (node.has_child("type")) {
-        selectors.append(Selector::create<SelectorType::Type>(nodeToString(node["type"])));
+        selectors.append(Selector::create<SelectorType::Type>(nodeValue<QString>(node["type"])));
     }
 
     if (node.has_child("id")) {
-        selectors.append(Selector::create<SelectorType::Id>(nodeToString(node["id"])));
+        selectors.append(Selector::create<SelectorType::Id>(nodeValue<QString>(node["id"])));
     }
 
     if (node.has_child("state")) {
         auto stateEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
-        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeToString(node["state"]).toUtf8().data()))));
+        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeValue<CStringWrapper>(node["state"])))));
     }
 
     if (node.has_child("colorSet")) {
         auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-        selectors.append(Selector::create<SelectorType::ColorSet>(Element::ColorSet(colorSetEnum.keyToValue(nodeToString(node["colorSet"]).toUtf8().data()))));
+        selectors.append(Selector::create<SelectorType::ColorSet>(Element::ColorSet(colorSetEnum.keyToValue(nodeValue<CStringWrapper>(node["colorSet"])))));
     }
 
     SelectorList currentSelectors = context.selectors();
@@ -522,28 +464,28 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
     Union::TextDefinition text;
 
     if (node.has_child("align")) {
-        text.alignment = nodeToAlignment(node["align"]);
+        text.alignment = nodeValue<Qt::Alignment>(node["align"]);
     }
 
     if (node.has_child("font")) {
         if (node.has_val()) {
-            auto fontName = nodeToString(node["font"]);
+            auto fontName = node["font"].val();
 
             auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
             auto group = config->group(u"General"_s);
             QFont font;
 
-            if (fontName == u"system-normal") {
+            if (fontName == "system-normal") {
                 text.font = group.readEntry("font", QFont());
-            } else if (fontName == u"system-fixed") {
+            } else if (fontName == "system-fixed") {
                 text.font = group.readEntry("fixed", QFont());
-            } else if (fontName == u"system-small") {
+            } else if (fontName == "system-small") {
                 text.font = group.readEntry("smallestReadableFont", QFont());
-            } else if (fontName == u"system-toolbar") {
+            } else if (fontName == "system-toolbar") {
                 text.font = group.readEntry("toolBarFont", QFont());
-            } else if (fontName == u"system-menu") {
+            } else if (fontName == "system-menu") {
                 text.font = group.readEntry("menuFont", QFont());
-            } else if (fontName == u"system-window") {
+            } else if (fontName == "system-window") {
                 text.font = group.readEntry("activeFont", QFont());
             }
         }
@@ -672,7 +614,7 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     int maxWidth = 0;
     int maxHeight = 0;
     for (auto child : node["elements"].children()) {
-        context.data.elementNames.push(nodeToString(child));
+        context.data.elementNames.push(nodeValue<QString>(child));
         auto image = elementImage(node, context);
         context.data.elementNames.pop();
 
@@ -683,7 +625,7 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
 
     Qt::Alignment align;
     if (node.has_child("align")) {
-        align = nodeToAlignment(node["align"]);
+        align = nodeValue<Qt::Alignment>(node["align"]);
     }
 
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
