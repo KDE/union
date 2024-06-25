@@ -32,7 +32,7 @@ constexpr char16_t PluginName[] = u"plasmasvg";
 
 QString nodeToString(ryml::ConstNodeRef node)
 {
-    if (!node.is_val() && !node.is_keyval()) {
+    if (!node.has_val()) {
         return QString{};
     }
 
@@ -526,7 +526,7 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
     }
 
     if (node.has_child("font")) {
-        if (node.is_val() || node.is_keyval()) {
+        if (node.has_val()) {
             auto fontName = nodeToString(node["font"]);
 
             auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
@@ -554,7 +554,7 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    if (node.is_val() || node.is_keyval()) {
+    if (node.has_val()) {
         return constantValue(node, context);
     }
 
