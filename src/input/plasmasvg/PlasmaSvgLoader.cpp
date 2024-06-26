@@ -218,10 +218,9 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
     }
 }
 
-Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext &context)
+SelectorList createSelectors(ryml::ConstNodeRef node)
 {
     SelectorList selectors;
-    auto style = Style::create();
 
     with_child(node, "type", [&](auto node){
         selectors.append(Selector::create<SelectorType::Type>(value<QString>(node)));
@@ -231,42 +230,43 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
         selectors.append(Selector::create<SelectorType::Id>(value<QString>(node)));
     });
 
-    if (auto stateNode = node.find_child("state"); stateNode.valid()) {
+    with_child(node, "state", [&](auto node){
+        selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
         // Support value or list
-        if (stateNode.has_val()) {
-            selectors.append(Selector::create<SelectorType::State>(nodeQEnumValue(Element, State, stateNode)));
-        } else if (stateNode.is_seq() && stateNode.has_children()) {
+        if (node.has_val()) {
+            selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
+        } else if (node.is_seq() && node.has_children()) {
             SelectorList allOfList;
-            for (auto child : stateNode.children()) {
+            for (auto child : node.children()) {
                 if (!child.has_val()) {
                     continue;
                 }
-                allOfList.append(Selector::create<SelectorType::State>(nodeQEnumValue(Element, State, stateNode)));
+                allOfList.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, child)));
             }
             selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
         }
-    }
+    });
 
-    if (auto hintsNode = node.find_child("hints"); hintsNode.valid()) {
+    with_child(node, "hints", [&](auto node){
         // Support value or list
-        if (hintsNode.has_val()) {
-            selectors.append(Selector::create<SelectorType::Hint>(nodeValue<QString>(hintsNode)));
-        } else if (hintsNode.is_seq() && hintsNode.has_children()) {
+        if (node.has_val()) {
+            selectors.append(Selector::create<SelectorType::Hint>(value<QString>(node)));
+        } else if (node.is_seq() && node.has_children()) {
             SelectorList allOfList;
-            for (auto child : hintsNode.children()) {
+            for (auto child : node.children()) {
                 if (!child.has_val()) {
                     continue;
                 }
-                allOfList.append(Selector::create<SelectorType::Hint>(nodeValue<QString>(child)));
+                allOfList.append(Selector::create<SelectorType::Hint>(value<QString>(child)));
             }
             selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
         }
-    }
+    });
 
-    if (auto attributesNode = node.find_child("attributes"); attributesNode.valid()) {
-        if (attributesNode.has_children()) {
+    with_child(node, "attributes", [&](auto node){
+        if (node.has_children()) {
             SelectorList allOfList;
-            for (auto child : attributesNode.children()) {
+            for (auto child : node.children()) {
                 if (!child.is_keyval()) {
                     continue;
                 }
@@ -279,26 +279,33 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
             }
             selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
         }
-    }
+    });
 
-    if (auto colorSetNode = node.find_child("colorSet"); colorSetNode.valid()) {
+    with_child(node, "colorSet", [&](auto node){
         // Support value or list
-        if (colorSetNode.has_val()) {
-            selectors.append(Selector::create<SelectorType::ColorSet>(nodeQEnumValue(Element, ColorSet, colorSetNode)));
-        } else if (colorSetNode.is_seq() && colorSetNode.has_children()) {
+        if (node.has_val()) {
+            selectors.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, node)));
+        } else if (node.is_seq() && node.has_children()) {
             // You can't display multiple color sets at once,
             // but you could show the same appearance for multiple color sets.
             SelectorList anyOfList;
-            for (auto child : colorSetNode.children()) {
+            for (auto child : node.children()) {
                 if (!child.has_val()) {
                     continue;
                 }
-                anyOfList.append(Selector::create<SelectorType::ColorSet>(nodeQEnumValue(Element, ColorSet, colorSetNode)));
+                anyOfList.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, child)));
             }
             selectors.append(Selector::create<SelectorType::AnyOf>(anyOfList));
         }
-    }
+    });
 
+    return selectors;
+}
+
+Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto style = Style::create();
+    SelectorList selectors = createSelectors(node);
     SelectorList currentSelectors = context.selectors();
     if (selectors.size() == 1) {
         currentSelectors.append(selectors.first());
