@@ -119,14 +119,10 @@ switch: &switch
                     property: element-size
                 image:
                     property: element-image-blend
-                    prefix: ""
+                    elements: [handle-shadow, handle, handle-focus]
                     align:
                         horizontal: center
                         vertical: center
-                    elements:
-                    -   handle-shadow
-                    -   handle
-                    -   handle-focus
 
 # TODO: this should probably be a child as it needs to be rendered with a size depending from the handle position
 switch-checked:
