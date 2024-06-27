@@ -30,7 +30,7 @@ inline ReturnType with_child(ryml::ConstNodeRef node, c4::csubstr name, F callba
 
 // The actual default implementation tries to create types using operator>>.
 template<typename T>
-inline T nodeValue(ryml::ConstNodeRef node)
+inline T value(ryml::ConstNodeRef node)
 {
     T result;
     node >> result;
@@ -41,21 +41,21 @@ inline T nodeValue(ryml::ConstNodeRef node)
 // position where the string view is supposed to end. It cannot be used directly
 // with APIs that expect a C-style string without specifying a string length.
 template<>
-inline QByteArrayView nodeValue<QByteArrayView>(ryml::ConstNodeRef node)
+inline QByteArrayView value<QByteArrayView>(ryml::ConstNodeRef node)
 {
     return node.val();
 }
 
 template<>
-inline QByteArray nodeValue<QByteArray>(ryml::ConstNodeRef node)
+inline QByteArray value<QByteArray>(ryml::ConstNodeRef node)
 {
-    return nodeValue<QByteArrayView>(node).toByteArray();
+    return value<QByteArrayView>(node).toByteArray();
 }
 
 template<>
-inline QString nodeValue<QString>(ryml::ConstNodeRef node)
+inline QString value<QString>(ryml::ConstNodeRef node)
 {
-    return QString::fromLatin1(nodeValue<QByteArrayView>(node));
+    return QString::fromLatin1(value<QByteArrayView>(node));
 }
 
 // Makes it possible to get a C-style string from a QByteArray without calling
@@ -78,9 +78,9 @@ struct CStringWrapper : public QByteArray {
 };
 
 template<>
-inline CStringWrapper nodeValue<CStringWrapper>(ryml::ConstNodeRef node)
+inline CStringWrapper value<CStringWrapper>(ryml::ConstNodeRef node)
 {
-    return nodeValue<QByteArray>(node);
+    return value<QByteArray>(node);
 }
 
 // QMetaEnum::fromType doesn't seem to be usable,
@@ -90,11 +90,11 @@ inline CStringWrapper nodeValue<CStringWrapper>(ryml::ConstNodeRef node)
     static_cast<ParentScope::Enum>(\
         ParentScope::staticMetaObject.enumerator(\
             ParentScope::staticMetaObject.indexOfEnumerator(#Enum))\
-                .keyToValue(nodeValue<CStringWrapper>(node)))
+                .keyToValue(value<CStringWrapper>(node)))
 // clang-format on
 
 template<>
-inline Qt::Alignment nodeValue<Qt::Alignment>(ryml::ConstNodeRef node)
+inline Qt::Alignment value<Qt::Alignment>(ryml::ConstNodeRef node)
 {
     Qt::Alignment align;
 

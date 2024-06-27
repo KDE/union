@@ -103,17 +103,17 @@ struct LoadingContext {
         }
 
         with_child(node, "path", [&](auto node){
-            data.paths.push(nodeValue<QString>(node));
+            data.paths.push(value<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::Path;
         });
 
         with_child(node, "prefix", [&](auto node){
-            data.prefixes.push(nodeValue<QString>(node));
+            data.prefixes.push(value<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::Prefix;
         });
 
         with_child(node, "element", [&](auto node){
-            data.elementNames.push(nodeValue<QString>(node));
+            data.elementNames.push(value<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
         });
 
@@ -224,11 +224,11 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     auto style = Style::create();
 
     with_child(node, "type", [&](auto node){
-        selectors.append(Selector::create<SelectorType::Type>(nodeValue<QString>(node)));
+        selectors.append(Selector::create<SelectorType::Type>(value<QString>(node)));
     });
 
     with_child(node, "id", [&](auto node){
-        selectors.append(Selector::create<SelectorType::Id>(nodeValue<QString>(node)));
+        selectors.append(Selector::create<SelectorType::Id>(value<QString>(node)));
     });
 
     with_child(node, "state", [&](auto node){
@@ -459,7 +459,7 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
 
     Union::TextDefinition text;
     with_child(node, "align", [&](auto node){
-        text.alignment = nodeValue<Qt::Alignment>(node);
+        text.alignment = value<Qt::Alignment>(node);
     });
     with_child(node, "font", [&](auto node){
         auto fontName = node.val();
@@ -491,7 +491,7 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (node.has_val()) {
-        return nodeValue<qreal>(node);
+        return value<qreal>(node);
     }
 
     auto propertyNode = node.find_child("property");
@@ -508,7 +508,7 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
 
     if (name == "constant") {
         auto valueNode =  node.find_child("value");
-        return valueNode.valid() ? nodeValue<qreal>(valueNode) : QVariant{};
+        return valueNode.valid() ? value<qreal>(valueNode) : QVariant{};
     }
 
     if (name == "element-size") {
@@ -551,7 +551,7 @@ std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, Load
 
     auto size = renderer->elementRect(element).size();
     with_child(node, "invert", [&](auto node){
-        if (nodeValue<bool>(node)) {
+        if (value<bool>(node)) {
             size = QSizeF(-size.width(), -size.height());
         }
     });
@@ -595,7 +595,7 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     int maxWidth = 0;
     int maxHeight = 0;
     for (auto child : elementsNode.children()) {
-        context.data.elementNames.push(nodeValue<QString>(child));
+        context.data.elementNames.push(value<QString>(child));
         auto image = elementImage(node, context);
         context.data.elementNames.pop();
 
@@ -606,7 +606,7 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
 
     Qt::Alignment align;
     with_child(node, "align", [&](auto node){
-        align = nodeValue<Qt::Alignment>(node);
+        align = value<Qt::Alignment>(node);
     });
 
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
