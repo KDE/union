@@ -462,10 +462,10 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
         text.alignment = nodeValue<Qt::Alignment>(node);
     });
     with_child(node, "font", [&](auto node){
-        if (!node.has_val()) {
+        auto fontName = node.val();
+        if (fontName.empty()) {
             return;
         }
-        auto fontName = node.val();
 
         auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
         auto group = config->group(u"General"_s);
