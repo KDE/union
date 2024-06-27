@@ -469,7 +469,6 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
 
         auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
         auto group = config->group(u"General"_s);
-        QFont font;
 
         if (fontName == "system-normal") {
             text.font = group.readEntry("font", QFont());
