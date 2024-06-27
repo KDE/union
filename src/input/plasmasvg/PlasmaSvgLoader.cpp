@@ -397,7 +397,7 @@ std::optional<Union::CornerDefinition> PlasmaSvgLoader::createCornerDefinition(r
         corner.image = createImageDefinition(node, context);
     });
     with_child(node, "size", [&](auto node){
-        auto size = elementProperty(node, context).toSize();
+        auto size = elementProperty(node, context).toSizeF();
         corner.width = size.width();
         corner.height = size.height();
     });
