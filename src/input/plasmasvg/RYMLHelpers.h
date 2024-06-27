@@ -15,6 +15,19 @@
 #include <ryml_std.hpp>
 #include <c4/enum.hpp>
 
+template <typename F, typename ReturnType = std::invoke_result_t<F, ryml::ConstNodeRef>>
+inline ReturnType with_child(ryml::ConstNodeRef node, c4::csubstr name, F callback)
+{
+    auto child = node.find_child(name);
+    if (child.valid()) {
+        return callback(child);
+    }
+
+    if constexpr (!std::is_void_v<ReturnType>) {
+        return ReturnType{};
+    }
+}
+
 // The actual default implementation tries to create types using operator>>.
 template<typename T>
 inline T nodeValue(ryml::ConstNodeRef node)

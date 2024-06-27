@@ -102,25 +102,24 @@ struct LoadingContext {
             return cleanup;
         }
 
-        if (node.has_child("path")) {
-            data.paths.push(nodeValue<QString>(node["path"]));
+        with_child(node, "path", [&](auto node){
+            data.paths.push(nodeValue<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::Path;
-        }
+        });
 
-        if (node.has_child("prefix")) {
-            data.prefixes.push(nodeValue<QString>(node["prefix"]));
+        with_child(node, "prefix", [&](auto node){
+            data.prefixes.push(nodeValue<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::Prefix;
-        }
+        });
 
-        if (node.has_child("element")) {
-            data.elementNames.push(nodeValue<QString>(node["element"]));
+        with_child(node, "element", [&](auto node){
+            data.elementNames.push(nodeValue<QString>(node));
             cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
-        }
+        });
 
-        if (node.has_child("colorSet")) {
-            auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-            data.colorSets.push(Element::ColorSet(colorSetEnum.keyToValue(nodeValue<CStringWrapper>(node["colorSet"]))));
-        }
+        with_child(node, "colorSet", [&](auto node){
+            data.colorSets.push(nodeQEnumValue(Element, ColorSet, node));
+        });
 
         return cleanup;
     }
@@ -224,23 +223,21 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     SelectorList selectors;
     auto style = Style::create();
 
-    if (node.has_child("type")) {
-        selectors.append(Selector::create<SelectorType::Type>(nodeValue<QString>(node["type"])));
-    }
+    with_child(node, "type", [&](auto node){
+        selectors.append(Selector::create<SelectorType::Type>(nodeValue<QString>(node)));
+    });
 
-    if (node.has_child("id")) {
-        selectors.append(Selector::create<SelectorType::Id>(nodeValue<QString>(node["id"])));
-    }
+    with_child(node, "id", [&](auto node){
+        selectors.append(Selector::create<SelectorType::Id>(nodeValue<QString>(node)));
+    });
 
-    if (node.has_child("state")) {
-        auto stateEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
-        selectors.append(Selector::create<SelectorType::State>(Element::State(stateEnum.keyToValue(nodeValue<CStringWrapper>(node["state"])))));
-    }
+    with_child(node, "state", [&](auto node){
+        selectors.append(Selector::create<SelectorType::State>(nodeQEnumValue(Element, State, node)));
+    });
 
-    if (node.has_child("colorSet")) {
-        auto colorSetEnum = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-        selectors.append(Selector::create<SelectorType::ColorSet>(Element::ColorSet(colorSetEnum.keyToValue(nodeValue<CStringWrapper>(node["colorSet"])))));
-    }
+    with_child(node, "colorSet", [&](auto node){
+        selectors.append(Selector::create<SelectorType::ColorSet>(nodeQEnumValue(Element, ColorSet, node)));
+    });
 
     SelectorList currentSelectors = context.selectors();
     if (selectors.size() == 1) {
@@ -256,37 +253,37 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     // element->addAttribute(u"plugin"_qs, QString::fromUtf16(PluginName));
     // element->addAttribute(u"themeName"_qs, m_theme.themeName());
 
-    if (node.has_child("margins")) {
-        style->setMargins(createSizeDefinition(node["margins"], context));
-    }
+    with_child(node, "margins", [&](auto node){
+        style->setMargins(createSizeDefinition(node, context));
+    });
 
-    if (node.has_child("padding")) {
-        style->setPadding(createSizeDefinition(node["padding"], context));
-    }
+    with_child(node, "padding", [&](auto node){
+        style->setPadding(createSizeDefinition(node, context));
+    });
 
-    if (node.has_child("border")) {
-        style->setBorder(createBorderDefinition(node["border"], context));
-    }
+    with_child(node, "border", [&](auto node){
+        style->setBorder(createBorderDefinition(node, context));
+    });
 
-    if (node.has_child("corners")) {
-        style->setCorners(createCornersDefinition(node["corners"], context));
-    }
+    with_child(node, "corners", [&](auto node){
+        style->setCorners(createCornersDefinition(node, context));
+    });
 
-    if (node.has_child("background")) {
-        style->setBackground(createAreaDefinition(node["background"], context));
-    }
+    with_child(node, "background", [&](auto node){
+        style->setBackground(createAreaDefinition(node, context));
+    });
 
-    if (node.has_child("shadow")) {
-        style->setShadow(createShadowDefinition(node["shadow"], context));
-    }
+    with_child(node, "shadow", [&](auto node){
+        style->setShadow(createShadowDefinition(node, context));
+    });
 
-    if (node.has_child("text")) {
-        style->setText(createTextDefinition(node["text"], context));
-    }
+    with_child(node, "text", [&](auto node){
+        style->setText(createTextDefinition(node, context));
+    });
 
-    if (node.has_child("children")) {
-        createStyles(node["children"], context);
-    }
+    with_child(node, "children", [&](auto node){
+        createStyles(node, context);
+    });
 
     return style;
 }
@@ -360,12 +357,12 @@ std::optional<Union::AreaDefinition> PlasmaSvgLoader::createAreaDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::AreaDefinition area;
-    if (node.has_child("size")) {
-        area.size = elementProperty(node["size"], context).toSizeF();
-    }
-    if (node.has_child("image")) {
-        area.image = createImageDefinition(node["image"], context);
-    }
+    with_child(node, "size", [&](auto node){
+        area.size = elementProperty(node, context).toSizeF();
+    });
+    with_child(node, "image", [&](auto node){
+        area.image = createImageDefinition(node, context);
+    });
     return area;
 }
 
@@ -378,12 +375,12 @@ std::optional<Union::LineDefinition> PlasmaSvgLoader::createLineDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::LineDefinition line;
-    if (node.has_child("size")) {
-        line.size = elementProperty(node["size"], context).toReal();
-    }
-    if (node.has_child("image")) {
-        line.image = createImageDefinition(node["image"], context);
-    }
+    with_child(node, "size", [&](auto node){
+        line.size = elementProperty(node, context).toReal();
+    });
+    with_child(node, "image", [&](auto node){
+        line.image = createImageDefinition(node, context);
+    });
     return line;
 }
 
@@ -396,14 +393,14 @@ std::optional<Union::CornerDefinition> PlasmaSvgLoader::createCornerDefinition(r
     auto cleanup = context.pushFromNode(node);
 
     Union::CornerDefinition corner;
-    if (node.has_child("image")) {
-        corner.image = createImageDefinition(node["image"], context);
-    }
-    if (node.has_child("size")) {
-        auto size = elementProperty(node["size"], context).toSize();
+    with_child(node, "image", [&](auto node){
+        corner.image = createImageDefinition(node, context);
+    });
+    with_child(node, "size", [&](auto node){
+        auto size = elementProperty(node, context).toSize();
         corner.width = size.width();
         corner.height = size.height();
-    }
+    });
     return corner;
 }
 
@@ -432,10 +429,9 @@ std::optional<Union::ShadowDefinition> PlasmaSvgLoader::createShadowDefinition(r
     auto cleanup = context.pushFromNode(node);
 
     Union::ShadowDefinition shadow;
-
-    if (node.has_child("offsets")) {
-        shadow.offsets = createSizeDefinition(node["offsets"], context);
-    }
+    with_child(node, "offsets", [&](auto node){
+        shadow.offsets = createSizeDefinition(node, context);
+    });
 
     forEachEntry({"left", "right", "top", "bottom"}, {&shadow.left, &shadow.right, &shadow.top, &shadow.bottom}, node, [this, &context](auto node) {
         context.pushFromNode(node);
@@ -462,34 +458,33 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
     auto cleanup = context.pushFromNode(node);
 
     Union::TextDefinition text;
-
-    if (node.has_child("align")) {
-        text.alignment = nodeValue<Qt::Alignment>(node["align"]);
-    }
-
-    if (node.has_child("font")) {
-        if (node.has_val()) {
-            auto fontName = node["font"].val();
-
-            auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
-            auto group = config->group(u"General"_s);
-            QFont font;
-
-            if (fontName == "system-normal") {
-                text.font = group.readEntry("font", QFont());
-            } else if (fontName == "system-fixed") {
-                text.font = group.readEntry("fixed", QFont());
-            } else if (fontName == "system-small") {
-                text.font = group.readEntry("smallestReadableFont", QFont());
-            } else if (fontName == "system-toolbar") {
-                text.font = group.readEntry("toolBarFont", QFont());
-            } else if (fontName == "system-menu") {
-                text.font = group.readEntry("menuFont", QFont());
-            } else if (fontName == "system-window") {
-                text.font = group.readEntry("activeFont", QFont());
-            }
+    with_child(node, "align", [&](auto node){
+        text.alignment = nodeValue<Qt::Alignment>(node);
+    });
+    with_child(node, "font", [&](auto node){
+        if (!node.has_val()) {
+            return;
         }
-    }
+        auto fontName = node.val();
+
+        auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
+        auto group = config->group(u"General"_s);
+        QFont font;
+
+        if (fontName == "system-normal") {
+            text.font = group.readEntry("font", QFont());
+        } else if (fontName == "system-fixed") {
+            text.font = group.readEntry("fixed", QFont());
+        } else if (fontName == "system-small") {
+            text.font = group.readEntry("smallestReadableFont", QFont());
+        } else if (fontName == "system-toolbar") {
+            text.font = group.readEntry("toolBarFont", QFont());
+        } else if (fontName == "system-menu") {
+            text.font = group.readEntry("menuFont", QFont());
+        } else if (fontName == "system-window") {
+            text.font = group.readEntry("activeFont", QFont());
+        }
+    });
 
     return text;
 }
@@ -500,11 +495,12 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
         return nodeValue<qreal>(node);
     }
 
-    if (!node.is_map() || !node.has_child("property")) {
+    auto propertyNode = node.find_child("property");
+    if (!propertyNode.valid()) {
         return QVariant{};
     }
 
-    auto name = node["property"].val();
+    auto name = propertyNode.val();
     if (name.empty()) {
         return QVariant{};
     }
@@ -555,14 +551,11 @@ std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, Load
     }
 
     auto size = renderer->elementRect(element).size();
-
-    if (node.has_child("invert")) {
-        bool invert;
-        node["invert"] >> invert;
-        if (invert) {
+    with_child(node, "invert", [&](auto node){
+        if (nodeValue<bool>(node)) {
             size = QSizeF(-size.width(), -size.height());
         }
-    }
+    });
 
     return size;
 }
@@ -594,14 +587,15 @@ QImage PlasmaSvgLoader::elementImage(ryml::ConstNodeRef node, LoadingContext &co
 
 QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    if (!node.has_child("elements")) {
+    auto elementsNode = node.find_child("elements");
+    if (!elementsNode.valid()) {
         return QImage{};
     }
 
     QList<QImage> images;
     int maxWidth = 0;
     int maxHeight = 0;
-    for (auto child : node["elements"].children()) {
+    for (auto child : elementsNode.children()) {
         context.data.elementNames.push(nodeValue<QString>(child));
         auto image = elementImage(node, context);
         context.data.elementNames.pop();
@@ -612,9 +606,9 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     }
 
     Qt::Alignment align;
-    if (node.has_child("align")) {
-        align = nodeValue<Qt::Alignment>(node["align"]);
-    }
+    with_child(node, "align", [&](auto node){
+        align = nodeValue<Qt::Alignment>(node);
+    });
 
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
