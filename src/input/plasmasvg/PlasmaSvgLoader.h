@@ -67,7 +67,6 @@ private:
 
     QVariant elementProperty(ryml::ConstNodeRef node, LoadingContext &context);
 
-    QVariant constantValue(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<QSizeF> elementSize(ryml::ConstNodeRef node, LoadingContext &context);
     QImage elementImage(ryml::ConstNodeRef node, LoadingContext &context);
     QImage elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);

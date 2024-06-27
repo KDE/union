@@ -497,7 +497,7 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (node.has_val()) {
-        return constantValue(node, context);
+        return nodeValue<qreal>(node);
     }
 
     if (!node.is_map() || !node.has_child("property")) {
@@ -512,7 +512,8 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
     auto cleanup = context.pushFromNode(node);
 
     if (name == "constant") {
-        return constantValue(node, context);
+        auto valueNode =  node.find_child("value");
+        return valueNode.valid() ? nodeValue<qreal>(valueNode) : QVariant{};
     }
 
     if (name == "element-size") {
@@ -538,19 +539,6 @@ QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContex
     }
 
     return QVariant{};
-}
-
-QVariant PlasmaSvgLoader::constantValue(ryml::ConstNodeRef node, LoadingContext &)
-{
-    auto value = node;
-    if (node.is_map() && node.has_child("value")) {
-        value = node["value"];
-    }
-
-    qreal result;
-    value >> result;
-
-    return result;
 }
 
 std::optional<QSizeF> PlasmaSvgLoader::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
