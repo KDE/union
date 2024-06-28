@@ -86,7 +86,7 @@ inline CStringWrapper value<CStringWrapper>(ryml::ConstNodeRef node)
 // QMetaEnum::fromType doesn't seem to be usable,
 // so we can't make a specialization of nodeValue() for Qt enums and flags.
 // clang-format off
-#define nodeQEnumValue(ParentScope, Enum, node)\
+#define NODE_Q_ENUM_VALUE(ParentScope, Enum, node)\
     static_cast<ParentScope::Enum>(\
         ParentScope::staticMetaObject.enumerator(\
             ParentScope::staticMetaObject.indexOfEnumerator(#Enum))\

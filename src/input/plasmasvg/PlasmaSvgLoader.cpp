@@ -118,7 +118,7 @@ struct LoadingContext {
         });
 
         with_child(node, "colorSet", [&](auto node){
-            data.colorSets.push(nodeQEnumValue(Element, ColorSet, node));
+            data.colorSets.push(NODE_Q_ENUM_VALUE(Element, ColorSet, node));
         });
 
         return cleanup;
@@ -232,11 +232,11 @@ Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext 
     });
 
     with_child(node, "state", [&](auto node){
-        selectors.append(Selector::create<SelectorType::State>(nodeQEnumValue(Element, State, node)));
+        selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
     });
 
     with_child(node, "colorSet", [&](auto node){
-        selectors.append(Selector::create<SelectorType::ColorSet>(nodeQEnumValue(Element, ColorSet, node)));
+        selectors.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, node)));
     });
 
     SelectorList currentSelectors = context.selectors();
