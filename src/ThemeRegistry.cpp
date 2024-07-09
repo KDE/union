@@ -122,8 +122,19 @@ public:
             return nullptr;
         }
 
-        // TODO Implement actual plugin loading
-        return nullptr;
+        auto theme = plugin->createTheme(themeName);
+        if (!theme) {
+            qCWarning(UNION_GENERAL) << "Requested theme" << themeName << "from plugin" << pluginName << "but the theme could not be found!";
+            return nullptr;
+        }
+
+        if (!theme->load()) {
+            qCWarning(UNION_GENERAL) << "Requested theme" << themeName << "from plugin" << pluginName << "but it failed to load!";
+            return nullptr;
+        }
+
+        themes.insert(themeId, theme);
+        return theme;
     }
 
     QHash<QString, InputPlugin *> inputPlugins;

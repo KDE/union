@@ -8,18 +8,18 @@
 
 #include <QObject>
 
-#include "StyleLoader.h"
-
 #include "union_export.h"
 
 namespace Union
 {
 
+class Theme;
 /**
  * Abstract base class for plugins providing input data.
  *
  * This class defines the interface input plugins should implement. Input
- * plugins are plugins providing style rules to the themeing system.
+ * plugins are plugins providing Theme instances and other themeing specific
+ * data to the system.
  */
 class UNION_EXPORT InputPlugin : public QObject
 {
@@ -28,7 +28,13 @@ class UNION_EXPORT InputPlugin : public QObject
 public:
     InputPlugin(QObject *parent = nullptr);
 
-    virtual std::unique_ptr<StyleLoader> createStyleLoader(std::shared_ptr<Theme> theme) const = 0;
+    /**
+     * Create an instance of a theme by name.
+     *
+     * This should be reimplemented by subclasses and create a new instance of
+     * Theme using an appropriate ThemeLoader and other input specific data.
+     */
+    virtual std::shared_ptr<Theme> createTheme(const QString &themeName) const = 0;
 };
 
 }
