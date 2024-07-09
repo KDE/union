@@ -10,14 +10,14 @@
 
 #include "Element.h"
 #include "Selector.h"
-#include "Style.h"
+#include "StyleRule.h"
 
 #include "union_export.h"
 
 namespace Union
 {
 
-class Style;
+class StyleRule;
 class Theme;
 
 /**
@@ -32,7 +32,7 @@ class Theme;
  * background color set and if so, return that. If not the second rule would be
  * checked and so on.
  */
-class UNION_EXPORT ElementQuery : public StyleInterface
+class UNION_EXPORT ElementQuery : public StyleRuleInterface
 {
 public:
     ElementQuery(std::shared_ptr<Theme> theme = nullptr);

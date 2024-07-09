@@ -6,17 +6,17 @@
 
 #include <QtTest>
 
-#include <Style.h>
+#include <StyleRule.h>
 
 using namespace Union;
 
-class TestStyle : public QObject
+class TestStyleRule : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
     void testContentSize()
     {
-        auto style = Style::create();
+        auto style = StyleRule::create();
 
         QCOMPARE(style->contentSize(), QSizeF());
 
@@ -40,7 +40,7 @@ private Q_SLOTS:
 
     void testBorderSizes()
     {
-        auto style = Style::create();
+        auto style = StyleRule::create();
 
         QCOMPARE(style->borderSizes(), QMarginsF());
 
@@ -62,7 +62,7 @@ private Q_SLOTS:
 
     void testBoundingRect()
     {
-        auto style = Style::create();
+        auto style = StyleRule::create();
 
         QCOMPARE(style->boundingRect(), QRectF());
 
@@ -83,6 +83,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_MAIN(TestStyle)
+QTEST_MAIN(TestStyleRule)
 
-#include "TestStyle.moc"
+#include "TestStyleRule.moc"

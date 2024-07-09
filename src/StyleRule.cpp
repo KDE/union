@@ -4,13 +4,13 @@
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  */
 
-#include "Style.h"
+#include "StyleRule.h"
 
 #include <QHash>
 
 using namespace Union;
 
-class Union::StylePrivate
+class Union::StyleRulePrivate
 {
 public:
     SelectorList selectors;
@@ -26,25 +26,25 @@ public:
     std::optional<CornersDefinition> corners;
 };
 
-Style::Style(std::unique_ptr<StylePrivate> &&d)
+StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)
     : QObject()
     , d(std::move(d))
 {
 }
 
-Style::~Style() = default;
+StyleRule::~StyleRule() = default;
 
-SelectorList Style::selectors() const
+SelectorList StyleRule::selectors() const
 {
     return d->selectors;
 }
 
-void Style::setSelectors(const SelectorList &selectors)
+void StyleRule::setSelectors(const SelectorList &selectors)
 {
     d->selectors = selectors;
 }
 
-QSizeF Style::contentSize() const
+QSizeF StyleRule::contentSize() const
 {
     const auto f = d->foreground.value_or(AreaDefinition{});
     const auto b = d->background.value_or(AreaDefinition{});
@@ -52,7 +52,7 @@ QSizeF Style::contentSize() const
     return QSizeF{std::max(f.size.width(), b.size.width()), std::max(f.size.height(), b.size.height())};
 }
 
-QMarginsF Style::borderSizes() const
+QMarginsF StyleRule::borderSizes() const
 {
     if (!border().has_value()) {
         return QMarginsF{};
@@ -69,7 +69,7 @@ QMarginsF Style::borderSizes() const
     return result;
 }
 
-QRectF Style::boundingRect() const
+QRectF StyleRule::boundingRect() const
 {
     QRectF result;
 
@@ -86,104 +86,104 @@ QRectF Style::boundingRect() const
     return result;
 }
 
-std::optional<AreaDefinition> Style::foreground() const
+std::optional<AreaDefinition> StyleRule::foreground() const
 {
     return d->foreground;
 }
 
-void Style::setForeground(const std::optional<AreaDefinition> &newForeground)
+void StyleRule::setForeground(const std::optional<AreaDefinition> &newForeground)
 {
     d->foreground = newForeground;
 }
 
-std::optional<AreaDefinition> Style::background() const
+std::optional<AreaDefinition> StyleRule::background() const
 {
     return d->background;
 }
 
-void Style::setBackground(const std::optional<AreaDefinition> &newBackground)
+void StyleRule::setBackground(const std::optional<AreaDefinition> &newBackground)
 {
     d->background = newBackground;
 }
 
-std::optional<BorderDefinition> Style::border() const
+std::optional<BorderDefinition> StyleRule::border() const
 {
     return d->border;
 }
 
-void Style::setBorder(const std::optional<BorderDefinition> &newBorder)
+void StyleRule::setBorder(const std::optional<BorderDefinition> &newBorder)
 {
     d->border = newBorder;
 }
 
-std::optional<ShadowDefinition> Style::shadow() const
+std::optional<ShadowDefinition> StyleRule::shadow() const
 {
     return d->shadow;
 }
 
-void Style::setShadow(const std::optional<ShadowDefinition> &newShadow)
+void StyleRule::setShadow(const std::optional<ShadowDefinition> &newShadow)
 {
     d->shadow = newShadow;
 }
 
-std::optional<SizeDefinition> Style::margins() const
+std::optional<SizeDefinition> StyleRule::margins() const
 {
     return d->margins;
 }
 
-void Style::setMargins(const std::optional<SizeDefinition> &newMargins)
+void StyleRule::setMargins(const std::optional<SizeDefinition> &newMargins)
 {
     d->margins = newMargins;
 }
 
-std::optional<SizeDefinition> Style::padding() const
+std::optional<SizeDefinition> StyleRule::padding() const
 {
     return d->padding;
 }
 
-void Style::setPadding(const std::optional<SizeDefinition> &newPadding)
+void StyleRule::setPadding(const std::optional<SizeDefinition> &newPadding)
 {
     d->padding = newPadding;
 }
 
-std::optional<BorderDefinition> Style::outset() const
+std::optional<BorderDefinition> StyleRule::outset() const
 {
     return d->outset;
 }
 
-void Style::setOutset(const std::optional<BorderDefinition> &newOutset)
+void StyleRule::setOutset(const std::optional<BorderDefinition> &newOutset)
 {
     d->outset = newOutset;
 }
 
-std::optional<CornersDefinition> Style::corners() const
+std::optional<CornersDefinition> StyleRule::corners() const
 {
     return d->corners;
 }
 
-void Style::setCorners(const std::optional<CornersDefinition> &newCorners)
+void StyleRule::setCorners(const std::optional<CornersDefinition> &newCorners)
 {
     d->corners = newCorners;
 }
 
-std::optional<TextDefinition> Union::Style::text() const
+std::optional<TextDefinition> Union::StyleRule::text() const
 {
     return d->text;
 }
 
-void Union::Style::setText(const std::optional<TextDefinition> &newText)
+void Union::StyleRule::setText(const std::optional<TextDefinition> &newText)
 {
     d->text = newText;
 }
 
-Style::Ptr Style::create()
+StyleRule::Ptr StyleRule::create()
 {
-    return std::make_shared<Style>(std::make_unique<StylePrivate>());
+    return std::make_shared<StyleRule>(std::make_unique<StyleRulePrivate>());
 }
 
-QDebug operator<<(QDebug debug, std::shared_ptr<Union::Style> style)
+QDebug operator<<(QDebug debug, std::shared_ptr<Union::StyleRule> style)
 {
     QDebugStateSaver saver(debug);
-    debug << "Style(" << style->selectors() << ")";
+    debug.nospace() << "StyleRule(" << style->selectors() << ")";
     return debug;
 }

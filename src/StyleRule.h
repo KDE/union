@@ -17,14 +17,15 @@
 
 #include "union_export.h"
 
-namespace Union {
+namespace Union
+{
 
-class StylePrivate;
+class StyleRulePrivate;
 
-class StyleInterface
+class StyleRuleInterface
 {
 public:
-    virtual ~StyleInterface()
+    virtual ~StyleRuleInterface()
     {
     }
 
@@ -49,15 +50,15 @@ public:
  * This class defines a set of properties to apply to an element, along with a
  * list of selectors that should match for this style to apply.
  */
-class UNION_EXPORT Style : public QObject, public StyleInterface, public std::enable_shared_from_this<Style>
+class UNION_EXPORT StyleRule : public QObject, public StyleRuleInterface, public std::enable_shared_from_this<StyleRule>
 {
     Q_OBJECT
 
 public:
-    using Ptr = std::shared_ptr<Style>;
+    using Ptr = std::shared_ptr<StyleRule>;
 
-    Style(std::unique_ptr<StylePrivate> &&d);
-    ~Style() override;
+    StyleRule(std::unique_ptr<StyleRulePrivate> &&d);
+    ~StyleRule() override;
 
     SelectorList selectors() const;
     void setSelectors(const SelectorList &selectors);
@@ -93,12 +94,12 @@ public:
     std::optional<TextDefinition> text() const override;
     void setText(const std::optional<TextDefinition> &newText);
 
-    static Style::Ptr create();
+    static Ptr create();
 
 private:
-    const std::unique_ptr<StylePrivate> d;
+    const std::unique_ptr<StyleRulePrivate> d;
 };
 
 }
 
-UNION_EXPORT QDebug operator<<(QDebug debug, std::shared_ptr<Union::Style> style);
+UNION_EXPORT QDebug operator<<(QDebug debug, std::shared_ptr<Union::StyleRule> style);
