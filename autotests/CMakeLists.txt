@@ -7,9 +7,14 @@ ecm_add_tests(
     TestStyleRule.cpp
     TestSelector.cpp
     TestTheme.cpp
+    TestThemeRegistry.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )
 
 # TestTheme requires properly working selectors for it to function
 set_tests_properties(TestSelector PROPERTIES FIXTURES_SETUP Selector)
 set_tests_properties(TestTheme PROPERTIES FIXTURES_REQUIRED Selector)
+
+# TestThemeRegistry requires properly working themes
+set_tests_properties(TestTheme PROPERTIES FIXTURES_SETUP Theme)
+set_tests_properties(TestThemeRegistry PROPERTIES FIXTURES_REQUIRED Theme)
