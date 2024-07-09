@@ -19,6 +19,7 @@ namespace Union
 
 class StyleRule;
 class Theme;
+class ElementQueryPrivate;
 
 /**
  * A class encapsulating lookup of style properties based on a list of elements.
@@ -59,13 +60,7 @@ public:
     std::optional<TextDefinition> text() const override;
 
 private:
-    std::shared_ptr<Theme> m_theme;
-    QList<Element::Ptr> m_elements;
-    QList<Style::Ptr> m_styles;
-
-    Style::Ptr m_combined;
-
-    bool m_result = false;
+    const std::unique_ptr<ElementQueryPrivate> d;
 };
 
 }

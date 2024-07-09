@@ -9,136 +9,151 @@
 
 using namespace Union;
 
-ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
-    : m_theme(theme)
+class Union::ElementQueryPrivate
 {
-    m_combined = Style::create();
+public:
+    std::shared_ptr<Theme> theme;
+    QList<Element::Ptr> elements;
+    QList<StyleRule::Ptr> styles;
+
+    StyleRule::Ptr combined;
+
+    bool result = false;
+};
+
+ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
+    : d(std::make_unique<ElementQueryPrivate>())
+{
+    d->theme = theme;
+    d->combined = StyleRule::create();
 }
 
 ElementQuery::~ElementQuery() noexcept = default;
 
 QList<Element::Ptr> ElementQuery::elements()
 {
-    return m_elements;
+    return d->elements;
 }
 
 void ElementQuery::setElements(const QList<Element::Ptr> &elements)
 {
-    m_elements = elements;
+    d->elements = elements;
 }
 
 void ElementQuery::execute()
 {
-    m_styles = m_theme->matches(m_elements);
-    if (m_styles.isEmpty()) {
-        m_combined = Style::create();
-        m_result = false;
+    d->styles = d->theme->matches(d->elements);
+    d->combined = StyleRule::create();
+
+    if (d->styles.isEmpty()) {
+        d->combined = StyleRule::create();
+        d->result = false;
         return;
     }
 
-    m_combined = Style::create();
-    m_result = true;
+    d->combined = StyleRule::create();
+    d->result = true;
 
-    for (auto style : std::as_const(m_styles)) {
-        if (style->foreground().has_value() && !m_combined->foreground().has_value()) {
-            m_combined->setForeground(style->foreground());
+    for (auto style : std::as_const(d->styles)) {
+        if (style->foreground().has_value() && !d->combined->foreground().has_value()) {
+            d->combined->setForeground(style->foreground());
         }
 
-        if (style->background().has_value() && !m_combined->background().has_value()) {
-            m_combined->setBackground(style->background());
+        if (style->background().has_value() && !d->combined->background().has_value()) {
+            d->combined->setBackground(style->background());
         }
 
-        if (style->border().has_value() && !m_combined->border().has_value()) {
-            m_combined->setBorder(style->border());
+        if (style->border().has_value() && !d->combined->border().has_value()) {
+            d->combined->setBorder(style->border());
         }
 
-        if (style->corners().has_value() && !m_combined->corners().has_value()) {
-            m_combined->setCorners(style->corners());
+        if (style->corners().has_value() && !d->combined->corners().has_value()) {
+            d->combined->setCorners(style->corners());
         }
 
-        if (style->shadow().has_value() && !m_combined->shadow().has_value()) {
-            m_combined->setShadow(style->shadow());
+        if (style->shadow().has_value() && !d->combined->shadow().has_value()) {
+            d->combined->setShadow(style->shadow());
         }
 
-        if (style->outset().has_value() && !m_combined->outset().has_value()) {
-            m_combined->setOutset(style->outset());
+        if (style->outset().has_value() && !d->combined->outset().has_value()) {
+            d->combined->setOutset(style->outset());
         }
 
-        if (style->margins().has_value() && !m_combined->margins().has_value()) {
-            m_combined->setMargins(style->margins());
+        if (style->margins().has_value() && !d->combined->margins().has_value()) {
+            d->combined->setMargins(style->margins());
         }
 
-        if (style->padding().has_value() && !m_combined->padding().has_value()) {
-            m_combined->setPadding(style->padding());
+        if (style->padding().has_value() && !d->combined->padding().has_value()) {
+            d->combined->setPadding(style->padding());
         }
 
-        if (style->text().has_value() && !m_combined->text().has_value()) {
-            m_combined->setText(style->text());
+        if (style->text().has_value() && !d->combined->text().has_value()) {
+            d->combined->setText(style->text());
         }
     }
 }
 
 bool ElementQuery::result() const
 {
-    return m_result;
+    return d->result;
 }
 
 QSizeF ElementQuery::contentSize() const
 {
-    return m_combined->contentSize();
+    return d->combined->contentSize();
 }
 
 QRectF ElementQuery::boundingRect() const
 {
-    return m_combined->boundingRect();
+    return d->combined->boundingRect();
 }
 
 QMarginsF ElementQuery::borderSizes() const
 {
-    return m_combined->borderSizes();
+    return d->combined->borderSizes();
 }
 
 std::optional<AreaDefinition> ElementQuery::foreground() const
 {
-    return m_combined->foreground();
+    return d->combined->foreground();
 }
 
 std::optional<AreaDefinition> ElementQuery::background() const
 {
-    return m_combined->background();
+    return d->combined->background();
 }
 
 std::optional<BorderDefinition> ElementQuery::border() const
 {
-    return m_combined->border();
+    return d->combined->border();
 }
 
 std::optional<CornersDefinition> ElementQuery::corners() const
 {
-    return m_combined->corners();
+    return d->combined->corners();
 }
 
 std::optional<ShadowDefinition> ElementQuery::shadow() const
 {
-    return m_combined->shadow();
+    return d->combined->shadow();
 }
 
 std::optional<BorderDefinition> ElementQuery::outset() const
 {
-    return m_combined->outset();
+    return d->combined->outset();
 }
 
 std::optional<SizeDefinition> ElementQuery::margins() const
 {
-    return m_combined->margins();
+    return d->combined->margins();
 }
 
 std::optional<SizeDefinition> ElementQuery::padding() const
 {
-    return m_combined->padding();
+    return d->combined->padding();
 }
 
 std::optional<TextDefinition> ElementQuery::text() const
 {
-    return m_combined->text();
+    return d->combined->text();
 }
