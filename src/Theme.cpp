@@ -17,7 +17,7 @@
 #include <QUrl>
 
 #include "InputPlugin.h"
-#include "StyleLoader.h"
+#include "ThemeLoader.h"
 
 #include "union_logging.h"
 
@@ -27,9 +27,19 @@ using namespace Qt::StringLiterals;
 class Union::ThemePrivate
 {
 public:
-    std::unordered_map<QString, std::unique_ptr<StyleLoader>> styleLoaders;
+    ThemePrivate(const QString &_pluginName, const QString &_themeName, std::unique_ptr<ThemeLoader> &&_loader)
+        : pluginName(_pluginName)
+        , themeName(_themeName)
+        , loader(std::move(_loader))
+    {
+    }
 
-    QList<Style::Ptr> styles;
+    QString pluginName;
+    QString themeName;
+
+    std::unique_ptr<ThemeLoader> loader;
+
+    QList<StyleRule::Ptr> styles;
 };
 
 Theme::Theme(std::unique_ptr<ThemePrivate> &&d)
@@ -40,48 +50,36 @@ Theme::Theme(std::unique_ptr<ThemePrivate> &&d)
 
 Theme::~Theme() = default;
 
-void Theme::load()
+QString Theme::name() const
 {
-    const auto pluginDirs = QCoreApplication::libraryPaths();
-    for (const auto &dir : pluginDirs) {
-        const auto path = std::filesystem::path(dir.toStdString()) / "union";
-
-        if (!std::filesystem::exists(path)) {
-            continue;
-        }
-
-        for (const auto &entry : std::filesystem::directory_iterator(path)) {
-            QPluginLoader loader(QString::fromStdString(entry.path()));
-            const auto metaData = loader.metaData().value(u"MetaData").toObject();
-            const auto name = metaData.value(u"union-pluginname").toString();
-
-            if (metaData.value(u"union-plugintype").toString() == u"input"_qs) {
-                auto inputPlugin = static_cast<InputPlugin *>(loader.instance());
-                if (inputPlugin) {
-                    qCDebug(UNION_GENERAL) << "Loaded input plugin" << name;
-                    auto loader = inputPlugin->createStyleLoader(instance());
-                    if (!loader || !loader->load()) {
-                        qCWarning(UNION_GENERAL) << "Style loader failed to load";
-                    } else {
-                        d->styleLoaders.insert(std::make_pair(name, std::move(loader)));
-                    }
-                } else {
-                    qCWarning(UNION_GENERAL) << "Failed loading plugin" << name << loader.errorString();
-                }
-            }
-        }
-    }
+    return d->themeName;
 }
 
-void Theme::insert(Style::Ptr style)
+QString Theme::pluginName() const
 {
-    qCDebug(UNION_GENERAL) << "Insert style" << style;
+    return d->pluginName;
+}
+
+bool Theme::load()
+{
+    Q_ASSERT_X(d->loader, "Union::Theme", "Theme requires a ThemeLoader instance to function");
+    return d->loader->load(shared_from_this());
+}
+
+void Theme::insert(StyleRule::Ptr style)
+{
+    qCDebug(UNION_GENERAL) << "Insert" << style;
     d->styles.append(style);
 }
 
-QList<Style::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
+QList<StyleRule::Ptr> Theme::rules()
 {
-    QList<Style::Ptr> result;
+    return d->styles;
+}
+
+QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
+{
+    QList<StyleRule::Ptr> result;
 
     for (auto style : d->styles) {
         if (selectorListMatches(style->selectors(), elements)) {
@@ -92,14 +90,7 @@ QList<Style::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
     return result;
 }
 
-std::shared_ptr<Theme> Theme::instance()
+std::shared_ptr<Theme> Theme::create(const QString &pluginName, const QString &themeName, std::unique_ptr<ThemeLoader> &&loader)
 {
-    static std::shared_ptr<Theme> inst;
-    if (!inst) {
-        if (QThread::currentThread() != QCoreApplication::instance()->thread()) {
-            qCFatal(UNION_GENERAL) << "Theme cannot be instantiated on a different thread than the main thread";
-        }
-        inst = std::make_shared<Theme>(std::make_unique<ThemePrivate>());
-    }
-    return inst;
+    return std::make_shared<Theme>(std::make_unique<ThemePrivate>(pluginName, themeName, std::move(loader)));
 }

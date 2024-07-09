@@ -11,32 +11,40 @@
 #include <QObject>
 
 #include "Element.h"
-#include "Style.h"
+#include "StyleRule.h"
 
 #include "union_export.h"
 
 namespace Union
 {
 
-class Element;
-class Style;
-
+class ThemeLoader;
 class ThemePrivate;
 
-class UNION_EXPORT Theme : public QObject
+class UNION_EXPORT Theme : public QObject, public std::enable_shared_from_this<Theme>
 {
     Q_OBJECT
 
 public:
+    using Ptr = std::shared_ptr<Theme>;
+
     Theme(std::unique_ptr<ThemePrivate> &&d);
     ~Theme() override;
 
-    void load();
+    Q_PROPERTY(QString name READ name CONSTANT)
+    QString name() const;
 
-    void insert(Style::Ptr style);
-    QList<Style::Ptr> matches(const QList<Element::Ptr> &elements);
+    Q_PROPERTY(QString pluginName READ pluginName CONSTANT)
+    QString pluginName() const;
 
-    static std::shared_ptr<Theme> instance();
+    bool load();
+
+    QList<StyleRule::Ptr> matches(const QList<Element::Ptr> &elements);
+
+    void insert(StyleRule::Ptr style);
+    QList<StyleRule::Ptr> rules();
+
+    static Ptr create(const QString &pluginName, const QString &themeName, std::unique_ptr<ThemeLoader> &&loader);
 
 private:
     const std::unique_ptr<ThemePrivate> d;
