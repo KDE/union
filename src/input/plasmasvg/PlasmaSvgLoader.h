@@ -16,8 +16,9 @@
 #include <ryml_std.hpp>
 
 #include <Element.h>
+#include <StyleRule.h>
 
-#include "StyleLoader.h"
+#include "ThemeLoader.h"
 
 class QSvgRenderer;
 class PlasmaSvgRenderer;
@@ -42,18 +43,15 @@ struct RendererId {
     }
 };
 
-class PlasmaSvgLoader : public Union::StyleLoader
+class PlasmaSvgLoader : public Union::ThemeLoader
 {
-    Q_OBJECT
-
 public:
-    PlasmaSvgLoader(std::shared_ptr<Union::Theme> theme, QObject *parent = nullptr);
-
-    bool load() override;
+    bool load(std::shared_ptr<Union::Theme> theme) override;
 
 private:
     void createStyles(ryml::ConstNodeRef node, LoadingContext &context);
-    Union::Style::Ptr createStyle(ryml::ConstNodeRef node, LoadingContext &context);
+    Union::StyleRule::Ptr createStyle(ryml::ConstNodeRef node, LoadingContext &context);
+    Union::Selector createSelector(ryml::ConstNodeRef node);
 
     std::optional<Union::SizeDefinition> createSizeDefinition(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::BorderDefinition> createBorderDefinition(ryml::ConstNodeRef node, LoadingContext &context);

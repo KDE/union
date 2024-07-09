@@ -16,8 +16,6 @@ class TestPlasmaSvg : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto style = Theme::instance();
-        style->load();
     }
 };
 

@@ -8,6 +8,11 @@
 
 #include <InputPlugin.h>
 
+namespace Union
+{
+class Theme;
+}
+
 class PlasmaSvgPlugin : public Union::InputPlugin
 {
     Q_OBJECT
@@ -16,5 +21,5 @@ class PlasmaSvgPlugin : public Union::InputPlugin
 public:
     PlasmaSvgPlugin(QObject *parent = nullptr);
 
-    std::unique_ptr<Union::StyleLoader> createStyleLoader(std::shared_ptr<Union::Theme> theme) const override;
+    std::shared_ptr<Union::Theme> createTheme(const QString &themeName) const override;
 };

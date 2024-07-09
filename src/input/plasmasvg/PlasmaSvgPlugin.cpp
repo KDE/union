@@ -6,14 +6,18 @@
 
 #include "PlasmaSvgPlugin.h"
 
+#include <Theme.h>
+
 #include "PlasmaSvgLoader.h"
+
+using namespace Qt::StringLiterals;
 
 PlasmaSvgPlugin::PlasmaSvgPlugin(QObject *parent)
     : Union::InputPlugin(parent)
 {
 }
 
-std::unique_ptr<Union::StyleLoader> PlasmaSvgPlugin::createStyleLoader(std::shared_ptr<Union::Theme> theme) const
+std::shared_ptr<Union::Theme> PlasmaSvgPlugin::createTheme(const QString &themeName) const
 {
-    return std::make_unique<PlasmaSvgLoader>(theme);
+    return Union::Theme::create(u"plasmasvg"_qs, themeName, std::make_unique<PlasmaSvgLoader>());
 }

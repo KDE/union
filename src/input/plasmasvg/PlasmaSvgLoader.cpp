@@ -18,7 +18,7 @@
 #include <Plasma/Theme>
 
 #include <Definition.h>
-#include <Style.h>
+#include <StyleRule.h>
 #include <Theme.h>
 
 #include "PlasmaSvgRenderer.h"
@@ -87,6 +87,12 @@ struct ContextCleanup {
 };
 
 struct LoadingContext {
+    LoadingContext(Theme::Ptr _theme)
+        : theme(_theme)
+    {
+    }
+
+    Theme::Ptr theme;
     ContextData data;
 
     ContextCleanup pushFromNode(ryml::ConstNodeRef node, const SelectorList &selectorsToPush = SelectorList{})
@@ -157,12 +163,7 @@ struct LoadingContext {
     }
 };
 
-PlasmaSvgLoader::PlasmaSvgLoader(std::shared_ptr<Theme> theme, QObject *parent)
-    : StyleLoader(theme, u"plasmasvg"_qs, parent)
-{
-}
-
-bool PlasmaSvgLoader::load()
+bool PlasmaSvgLoader::load(Theme::Ptr theme)
 {
     QDir dir(u":/org/kde/union/input/plasmasvg"_s);
     const auto entries = dir.entryList({u"*.yml"_s});
@@ -195,7 +196,7 @@ bool PlasmaSvgLoader::load()
             continue;
         }
 
-        LoadingContext context;
+        LoadingContext context(theme);
         createStyles(root, context);
     }
 
@@ -213,7 +214,7 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
 
         auto style = createStyle(child, context);
         if (style) {
-            theme()->insert(style);
+            context.theme->insert(style);
         }
     }
 }
@@ -302,9 +303,9 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
     return selectors;
 }
 
-Style::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext &context)
+StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    auto style = Style::create();
+    auto style = StyleRule::create();
     SelectorList selectors = createSelectors(node);
     SelectorList currentSelectors = context.selectors();
     if (selectors.size() == 1) {
