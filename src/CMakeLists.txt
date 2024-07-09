@@ -9,8 +9,7 @@ target_sources(Union PRIVATE
     Theme.h
     Style.cpp
     Style.h
-    StyleLoader.cpp
-    StyleLoader.h
+    ThemeLoader.h
     Element.cpp
     Element.h
     ElementQuery.cpp
