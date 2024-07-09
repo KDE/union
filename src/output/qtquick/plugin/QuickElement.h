@@ -263,7 +263,7 @@ public:
     /**
      * The query built from this element and its parents.
      */
-    Union::ElementQuery query() const;
+    Union::ElementQuery *query() const;
 
     /**
      * Emitted whenever the structure of elements changed.
@@ -291,7 +291,7 @@ private:
     std::shared_ptr<Union::Element> m_element;
     std::unique_ptr<StatesGroup> m_statesGroup;
 
-    Union::ElementQuery m_query;
+    std::unique_ptr<Union::ElementQuery> m_query;
 
     QPropertyNotifier m_activeStatesNotifier;
 };

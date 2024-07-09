@@ -167,7 +167,7 @@ public:
      * This exposes the query from the QuickElement that this style is linked
      * to.
      */
-    Union::ElementQuery query() const;
+    Union::ElementQuery *query() const;
 
     /**
      * Emitted whenever something in the underlying style rule selection changes.

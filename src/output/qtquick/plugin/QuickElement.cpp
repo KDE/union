@@ -7,8 +7,9 @@
 #include "QuickElement.h"
 
 #include "Element.h"
-#include "Style.h"
+#include "StyleRule.h"
 #include "Theme.h"
+#include "ThemeRegistry.h"
 
 using namespace Union;
 
@@ -254,9 +255,9 @@ StatesGroup *QuickElement::states() const
     return m_statesGroup.get();
 }
 
-Union::ElementQuery QuickElement::query() const
+Union::ElementQuery *QuickElement::query() const
 {
-    return m_query;
+    return m_query.get();
 }
 
 QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
@@ -274,7 +275,9 @@ void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQui
 
 void QuickElement::update()
 {
-    m_query = Union::ElementQuery(Union::Theme::instance());
+    auto theme = ThemeRegistry::instance()->defaultTheme();
+
+    m_query = std::make_unique<Union::ElementQuery>(theme);
 
     QList<Element::Ptr> elements;
     elements.append(m_element);
@@ -285,8 +288,8 @@ void QuickElement::update()
         parent = qobject_cast<QuickElement *>(parent->attachedParent());
     }
 
-    m_query.setElements(elements);
-    m_query.execute();
+    m_query->setElements(elements);
+    m_query->execute();
 
     Q_EMIT updated();
 

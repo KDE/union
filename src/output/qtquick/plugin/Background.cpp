@@ -13,7 +13,7 @@
 #include "Element.h"
 #include "LineNode.h"
 #include "ShadowNode.h"
-#include "Style.h"
+#include "StyleRule.h"
 
 using namespace Union;
 
@@ -55,7 +55,7 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
     }
 
     auto query = m_style->query();
-    if (!query.result()) {
+    if (!query || !query->result()) {
         return nullptr;
     }
 
@@ -77,26 +77,26 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
 
     Q_ASSERT(node->childCount() == int(NodeElement::ElementCount));
 
-    auto implicitSize = query.boundingRect().size();
+    auto implicitSize = query->boundingRect().size();
     setImplicitSize(implicitSize.width(), implicitSize.height());
 
     auto win = window();
-    auto margins = query.margins().value_or(SizeDefinition{}).toMargins();
+    auto margins = query->margins().value_or(SizeDefinition{}).toMargins();
     auto bounds = boundingRect();
-    auto borderSizes = query.borderSizes();
+    auto borderSizes = query->borderSizes();
 
     auto shadow = static_cast<ShadowNode *>(node->childAtIndex(int(NodeElement::Shadow)));
-    shadow->shadow = query.shadow().value_or(ShadowDefinition{});
+    shadow->shadow = query->shadow().value_or(ShadowDefinition{});
     shadow->rect = bounds + margins;
     shadow->update(win);
 
     auto center = static_cast<AreaNode *>(node->childAtIndex(int(NodeElement::Center)));
-    center->area = query.background().value_or(AreaDefinition());
+    center->area = query->background().value_or(AreaDefinition());
     center->rect = bounds - borderSizes;
     center->update(win);
 
-    if (query.border().has_value()) {
-        auto borders = query.border().value();
+    if (query->border().has_value()) {
+        auto borders = query->border().value();
 
         for (auto [position, definition] : std::initializer_list<std::pair<NodeElement, LineDefinition>>{
                  {NodeElement::Left, borders.left.value_or(LineDefinition{})},
@@ -134,8 +134,8 @@ QSGNode *Background::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeD
         }
     }
 
-    if (query.corners().has_value()) {
-        auto corners = query.corners().value();
+    if (query->corners().has_value()) {
+        auto corners = query->corners().value();
 
         for (auto [position, definition] : std::initializer_list<std::pair<NodeElement, CornerDefinition>>{
                  {NodeElement::TopLeft, corners.topLeft.value_or(CornerDefinition{})},

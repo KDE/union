@@ -9,7 +9,7 @@
 #include <QQmlEngine>
 
 #include <Element.h>
-#include <Style.h>
+#include <StyleRule.h>
 #include <Theme.h>
 
 #include "QuickElement.h"
@@ -152,13 +152,13 @@ QBindable<qreal> QuickStyle::bindableImplicitHeight()
     return QBindable<qreal>(&m_implicitHeight);
 }
 
-Union::ElementQuery QuickStyle::query() const
+Union::ElementQuery *QuickStyle::query() const
 {
     if (m_element) {
         return m_element->query();
     }
 
-    return ElementQuery{};
+    return nullptr;
 }
 
 QuickStyle *QuickStyle::qmlAttachedProperties(QObject *parent)
@@ -205,20 +205,20 @@ void QuickStyle::update()
     }
 
     auto query = element->query();
-    if (!query.result()) {
+    if (!query || !query->result()) {
         return;
     }
 
-    auto rect = query.boundingRect();
+    auto rect = query->boundingRect();
 
     m_implicitWidth = rect.width();
     m_implicitHeight = rect.height();
 
-    m_margins = Sizes(query.margins());
-    m_padding = Sizes(query.padding());
+    m_margins = Sizes(query->margins());
+    m_padding = Sizes(query->padding());
 
-    m_bordersGroup->update(query.border());
-    m_textGroup->update(query.text());
+    m_bordersGroup->update(query->border());
+    m_textGroup->update(query->text());
 
     Q_EMIT updated();
 
