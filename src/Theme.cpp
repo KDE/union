@@ -20,6 +20,7 @@
 #include "ThemeLoader.h"
 
 #include "union_logging.h"
+#include "union_query_logging.h"
 
 using namespace Union;
 using namespace Qt::StringLiterals;
@@ -81,9 +82,17 @@ QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
 {
     QList<StyleRule::Ptr> result;
 
+    if (d->styles.isEmpty()) {
+        qCDebug(UNION_QUERY) << "No style rules found for theme" << d->themeName << "so we will never match anything!";
+    }
+
     for (auto style : d->styles) {
-        if (selectorListMatches(style->selectors(), elements)) {
+        const auto selectors = style->selectors();
+        if (selectorListMatches(selectors, elements)) {
+            qCDebug(UNION_QUERY) << "Matches selector" << selectors;
             result.prepend(style);
+        } else {
+            qCDebug(UNION_QUERY) << "Does not match selectors" << selectors;
         }
     }
 

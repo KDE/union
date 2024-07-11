@@ -7,6 +7,8 @@
 
 #include "Theme.h"
 
+#include "union_query_logging.h"
+
 using namespace Union;
 
 class Union::ElementQueryPrivate
@@ -42,14 +44,20 @@ void ElementQuery::setElements(const QList<Element::Ptr> &elements)
 
 void ElementQuery::execute()
 {
+    qCDebug(UNION_QUERY) << "Trying to match" << d->elements;
+
     d->styles = d->theme->matches(d->elements);
     d->combined = StyleRule::create();
 
     if (d->styles.isEmpty()) {
+        qCDebug(UNION_QUERY) << "Did not match any style rules!";
         d->combined = StyleRule::create();
         d->result = false;
         return;
     }
+
+    qCDebug(UNION_QUERY) << "Matched style rules:";
+    qCDebug(UNION_QUERY) << d->styles;
 
     d->combined = StyleRule::create();
     d->result = true;

@@ -30,6 +30,15 @@ ecm_qt_declare_logging_category(Union
     EXPORT Union
 )
 
+ecm_qt_declare_logging_category(Union
+    HEADER union_query_logging.h
+    IDENTIFIER UNION_QUERY
+    CATEGORY_NAME union.query
+    DEFAULT_SEVERITY Warning
+    DESCRIPTION "Union - Query Debugging"
+    EXPORT Union
+)
+
 ecm_generate_export_header(Union
     BASE_NAME Union
     GROUP_BASE_NAME KF
