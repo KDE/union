@@ -164,10 +164,10 @@ QDebug operator<<(QDebug debug, Union::Element::Ptr element)
     const auto type = element->type().isEmpty() ? emptyString : element->type();
     const auto id = element->id().isEmpty() ? emptyString : element->id();
     const auto hints = element->hints().isEmpty() ? emptyString : element->hints().join(u", ");
-    debug << "type:" << qPrintable(type);
-    debug << "id:" << qPrintable(id);
-    debug << "states:" << element->states();
-    debug << "hints:" << qPrintable(hints);
+    debug << "type: " << qPrintable(type);
+    debug << " id: " << qPrintable(id);
+    debug << " states: " << element->states();
+    debug << " hints: " << qPrintable(hints);
     debug << ")";
     return debug;
 }
