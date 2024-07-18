@@ -1,6 +1,13 @@
 
 add_library(union-plasmasvg MODULE)
 
+add_custom_target(generate-definitions
+    COMMAND "${CMAKE_COMMAND}" -D OUTPUT_DIR="${CMAKE_CURRENT_BINARY_DIR}" -P GenerateDefinitionsResource.cmake
+    BYPRODUCTS ${CMAKE_CURRENT_BINARY_DIR}/PlasmaSvgDefinitions.qrc
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+)
+add_dependencies(union-plasmasvg generate-definitions)
+
 target_sources(union-plasmasvg PRIVATE
     PlasmaSvgLoader.cpp
     PlasmaSvgLoader.h
@@ -8,7 +15,7 @@ target_sources(union-plasmasvg PRIVATE
     PlasmaSvgPlugin.h
     PlasmaSvgRenderer.cpp
     PlasmaSvgRenderer.h
-    PlasmaSvgPlugin.qrc
+    ${CMAKE_CURRENT_BINARY_DIR}/PlasmaSvgDefinitions.qrc
 )
 
 target_link_libraries(union-plasmasvg PRIVATE
