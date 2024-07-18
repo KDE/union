@@ -1,0 +1,74 @@
+palette:
+    foreground: QColor
+    background: QColor
+    accent: QColor
+    # TODO: Add more QColors
+
+sizes:
+    width: qreal
+    height: qreal
+    spacing: qreal
+
+    padding: &size
+        left: qreal
+        right: qreal
+        top: qreal
+        bottom: qreal
+
+    margins: *size
+
+text:
+    alignment: Qt::Alignment
+    color: QColor
+    font: QFont
+
+indicator:
+    width: qreal
+    height: qreal
+    alignment: Qt::Alignment
+
+background:
+    color: QColor
+    image: &image
+        imageData: QImage
+        width: qreal
+        height: qreal
+        xOffset: qreal
+        yOffset: qreal
+        flags: Union::Properties::ImageFlags
+
+    border:
+        left: &border
+            size: qreal
+            color: QColor
+            style: Union::Properties::LineStyle
+            image: *image
+
+        right: *border
+        top: *border
+        bottom: *border
+
+    corners:
+        topLeft: &corner
+            radius: qreal
+            width: qreal
+            height: qreal
+            color: QColor
+            image: *image
+
+        topRight: *corner
+        bottomLeft: *corner
+        bottomRight: *corner
+
+    shadow:
+        offsets: *size
+
+        left: *border
+        right: *border
+        top: *border
+        bottom: *border
+
+        topLeft: *corner
+        topRight: *corner
+        bottomLeft: *corner
+        bottomRight: *corner
