@@ -1,7 +1,3 @@
-
-find_package(Qt6Test REQUIRED)
-find_package(Qt6QuickTest REQUIRED)
-
 ecm_add_tests(
     input/TestPlasmaSvg.cpp
     TestStyleRule.cpp
