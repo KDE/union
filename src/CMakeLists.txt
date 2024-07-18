@@ -62,6 +62,8 @@ target_include_directories(Union PUBLIC
     "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Union>"
 )
 
+add_subdirectory(properties)
+
 add_subdirectory(input)
 add_subdirectory(output)
 
