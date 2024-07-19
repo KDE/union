@@ -19,7 +19,6 @@ T.ToolBar {
     Union.Element.colorSet: Union.ColorSet.Window
     Union.Element.states {
         hovered: control.hovered
-        focus: control.focus
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         enabled: control.enabled
