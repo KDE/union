@@ -23,7 +23,6 @@ T.TextArea {
     Union.Element.colorSet: Union.ColorSet.View
     Union.Element.states {
         hovered: control.hovered
-        focus: control.focus
         activeFocus: control.activeFocus
         visualFocus: activeFocus
             && (control.focusReason === Qt.TabFocusReason
