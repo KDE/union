@@ -28,6 +28,6 @@ void CornerNode::update(QQuickWindow *window)
         textureNode->setSourceRect(sourceRect);
         textureNode->setRect(rect);
     } else {
-        ensureChildRemoved(0);
+        ensureChildRemoved(1);
     }
 }
