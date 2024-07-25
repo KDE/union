@@ -15,6 +15,51 @@
 #include <ryml_std.hpp>
 #include <c4/enum.hpp>
 
+namespace c4
+{
+
+template<typename C>
+inline QDebug& operator<<(QDebug& debug, basic_substring<C> s)
+{
+    debug << QByteArrayView{s};
+    return debug;
+}
+
+}
+
+inline QDebug operator<<(QDebug debug, const ryml::ConstNodeRef &node)
+{
+    QDebugStateSaver stateSaver(debug);
+    debug.nospace();
+    debug << "ConstNodeRef(";
+    debug << (const void *)&node;
+    debug << ", id=" << node.id();
+    debug << ", type_str=" << node.type_str();
+    if (node.has_children()) {
+        debug << ", num_children=" << node.num_children();
+    }
+    if (node.has_key()) {
+        debug << ", key=" << node.key();
+    }
+    if (node.has_val()) {
+        debug << ", val=" << node.val();
+    }
+    if (node.has_key_anchor()) {
+        debug << ", key_anchor=" << node.key_anchor();
+    }
+    if (node.has_val_anchor()) {
+        debug << ", val_anchor=" << node.val_anchor();
+    }
+    if (node.has_key_tag()) {
+        debug << ", key_tag=" << node.key_tag();
+    }
+    if (node.has_val_tag()) {
+        debug << ", val_tag=" << node.val_tag();
+    }
+    debug << ')';
+    return debug;
+}
+
 template <typename F, typename ReturnType = std::invoke_result_t<F, ryml::ConstNodeRef>>
 inline ReturnType with_child(ryml::ConstNodeRef node, c4::csubstr name, F callback)
 {
