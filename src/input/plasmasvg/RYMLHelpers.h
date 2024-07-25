@@ -29,6 +29,26 @@ inline QDebug& operator<<(QDebug& debug, basic_substring<C> s)
 
 // Overloading c4::from_chars allows ryml to work with more types
 
+inline bool from_chars(ryml::csubstr buf, QByteArray *v) noexcept
+{
+    QByteArrayView view{buf};
+    if (!view.isValidUtf8()) {
+        return false;
+    }
+    *v = view.toByteArray();
+    return true;
+}
+
+inline bool from_chars(ryml::csubstr buf, QString *v) noexcept
+{
+    QUtf8StringView view{buf};
+    if (!view.isValidUtf8()) {
+        return false;
+    }
+    *v = view.toString();
+    return true;
+}
+
 inline bool from_chars(ryml::csubstr buf, QUrl *v) noexcept
 {
     auto url = QUrl::fromUserInput(QUtf8StringView{buf}.toString());
@@ -116,6 +136,18 @@ inline QByteArrayView value<QByteArrayView>(ryml::ConstNodeRef node)
 }
 
 template<>
+inline QUtf8StringView value<QUtf8StringView>(ryml::ConstNodeRef node)
+{
+    return node.val();
+}
+
+template<>
+inline QAnyStringView value<QAnyStringView>(ryml::ConstNodeRef node)
+{
+    return node.val();
+}
+
+template<>
 inline QByteArray value<QByteArray>(ryml::ConstNodeRef node)
 {
     return value<QByteArrayView>(node).toByteArray();
@@ -124,7 +156,7 @@ inline QByteArray value<QByteArray>(ryml::ConstNodeRef node)
 template<>
 inline QString value<QString>(ryml::ConstNodeRef node)
 {
-    return QString::fromLatin1(value<QByteArrayView>(node));
+    return value<QUtf8StringView>(node).toString();
 }
 
 // Makes it possible to get a C-style string from a QByteArray without calling
