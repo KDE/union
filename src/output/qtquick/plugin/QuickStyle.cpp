@@ -93,11 +93,82 @@ void TextGroup::update(const std::optional<Union::TextDefinition> &text)
     m_font = text->font;
 }
 
+IconGroup::IconGroup()
+    : QObject()
+{
+}
+
+QColor IconGroup::color() const
+{
+    return m_color;
+}
+
+QBindable<QColor> IconGroup::bindableColor()
+{
+    return QBindable<QColor>(&m_color);
+}
+
+qreal IconGroup::width() const
+{
+    return m_width;
+}
+
+QBindable<qreal> IconGroup::bindableWidth()
+{
+    return QBindable<qreal>(&m_width);
+}
+
+qreal IconGroup::height() const
+{
+    return m_height;
+}
+
+QBindable<qreal> IconGroup::bindableHeight()
+{
+    return QBindable<qreal>(&m_height);
+}
+
+QString IconGroup::name() const
+{
+    return m_name;
+}
+
+QBindable<QString> IconGroup::bindableName()
+{
+    return QBindable<QString>(&m_name);
+}
+
+QUrl IconGroup::source() const
+{
+    return m_source;
+}
+
+QBindable<QUrl> IconGroup::bindableSource()
+{
+    return QBindable<QUrl>(&m_source);
+}
+
+void IconGroup::update(const std::optional<Union::IconDefinition> &icon)
+{
+    if (!icon.has_value()) {
+        return;
+    }
+
+    m_color = icon->color;
+    m_width = icon->size.width();
+    m_height = icon->size.height();
+    auto name = std::get_if<IconDefinition::NameSource>(&icon->source);
+    m_name = name ? *name : QString{};
+    auto source = std::get_if<IconDefinition::UrlSource>(&icon->source);
+    m_source = source ? *source : QUrl{};
+}
+
 QuickStyle::QuickStyle(QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
 {
     m_bordersGroup = std::make_unique<BordersGroup>();
     m_textGroup = std::make_unique<TextGroup>();
+    m_iconGroup = std::make_unique<IconGroup>();
 
     initialize();
 }
@@ -130,6 +201,11 @@ BordersGroup *QuickStyle::borders() const
 TextGroup *QuickStyle::text() const
 {
     return m_textGroup.get();
+}
+
+IconGroup *QuickStyle::icon() const
+{
+    return m_iconGroup.get();
 }
 
 qreal QuickStyle::implicitWidth() const
@@ -219,6 +295,7 @@ void QuickStyle::update()
 
     m_bordersGroup->update(query->border());
     m_textGroup->update(query->text());
+    m_iconGroup->update(query->icon());
 
     Q_EMIT updated();
 

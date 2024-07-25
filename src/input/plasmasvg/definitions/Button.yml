@@ -149,6 +149,8 @@ button: &button
             image:
                 property: element-image
 
+    icon:
+        size: small
     text:
         align:
             horizontal: center

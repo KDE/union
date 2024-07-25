@@ -98,6 +98,10 @@ void ElementQuery::execute()
         if (style->text().has_value() && !d->combined->text().has_value()) {
             d->combined->setText(style->text());
         }
+
+        if (style->icon().has_value() && !d->combined->icon().has_value()) {
+            d->combined->setIcon(style->icon());
+        }
     }
 }
 
@@ -164,4 +168,9 @@ std::optional<SizeDefinition> ElementQuery::padding() const
 std::optional<TextDefinition> ElementQuery::text() const
 {
     return d->combined->text();
+}
+
+std::optional<IconDefinition> ElementQuery::icon() const
+{
+    return d->combined->icon();
 }

@@ -59,6 +59,8 @@ toolbutton: &toolbutton
             horizontal: center
             vertical: center
         font: system-normal
+    icon:
+        size: small-medium
 
 toolbutton-hovered: &toolbutton-hovered
     <<: *toolbutton

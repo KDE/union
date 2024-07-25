@@ -89,6 +89,67 @@ private:
 };
 
 /**
+ * A grouped property for style properties related to icons.
+ */
+class IconGroup : public QObject
+{
+    Q_OBJECT
+    QML_ANONYMOUS
+
+public:
+    IconGroup();
+
+    /**
+     * Color for icon.
+     */
+    Q_PROPERTY(QColor color READ color BINDABLE bindableColor NOTIFY colorChanged)
+    QColor color() const;
+    QBindable<QColor> bindableColor();
+    Q_SIGNAL void colorChanged();
+
+    /**
+     * Width for icon.
+     */
+    Q_PROPERTY(qreal width READ width BINDABLE bindableWidth NOTIFY widthChanged)
+    qreal width() const;
+    QBindable<qreal> bindableWidth();
+    Q_SIGNAL void widthChanged();
+
+    /**
+     * Height for icon.
+     */
+    Q_PROPERTY(qreal height READ height BINDABLE bindableHeight NOTIFY heightChanged)
+    qreal height() const;
+    QBindable<qreal> bindableHeight();
+    Q_SIGNAL void heightChanged();
+
+    /**
+     * Icon name from an icon theme.
+     */
+    Q_PROPERTY(QString name READ name BINDABLE bindableName NOTIFY nameChanged)
+    QString name() const;
+    QBindable<QString> bindableName();
+    Q_SIGNAL void nameChanged();
+
+    /**
+     * Source URL for icon.
+     */
+    Q_PROPERTY(QUrl source READ source BINDABLE bindableSource NOTIFY sourceChanged)
+    QUrl source() const;
+    QBindable<QUrl> bindableSource();
+    Q_SIGNAL void sourceChanged();
+
+    void update(const std::optional<Union::IconDefinition> &icon);
+
+private:
+    Q_OBJECT_BINDABLE_PROPERTY(IconGroup, QColor, m_color, &IconGroup::colorChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(IconGroup, qreal, m_width, &IconGroup::widthChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(IconGroup, qreal, m_height, &IconGroup::heightChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(IconGroup, QString, m_name, &IconGroup::nameChanged)
+    Q_OBJECT_BINDABLE_PROPERTY(IconGroup, QUrl, m_source, &IconGroup::sourceChanged)
+};
+
+/**
  * An attached property that exposes style properties.
  *
  * This can be used to access style properties relevant to the current element
@@ -155,6 +216,12 @@ public:
     Q_PROPERTY(TextGroup *text READ text CONSTANT)
     TextGroup *text() const;
 
+    /**
+     * A grouped property to access text properties.
+     */
+    Q_PROPERTY(IconGroup *icon READ icon CONSTANT)
+    IconGroup *icon() const;
+
     // Q_PROPERTY(ShadowGroup * shadow READ shadow CONSTANT)
     // ShadowGroup * shadow() const;
 
@@ -193,6 +260,7 @@ private:
 
     std::unique_ptr<BordersGroup> m_bordersGroup;
     std::unique_ptr<TextGroup> m_textGroup;
+    std::unique_ptr<IconGroup> m_iconGroup;
 
     QuickElement *m_element = nullptr;
 };

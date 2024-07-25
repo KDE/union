@@ -47,8 +47,13 @@ T.ToolButton {
     font: Union.Style.text.font
 
     spacing: 6
-    icon.width: 22
-    icon.height: 22
+    icon {
+        color: Union.Style.icon.color
+        width: Union.Style.icon.width
+        height: Union.Style.icon.height
+        name: Union.Style.icon.name
+        source: Union.Style.icon.source
+    }
     flat: true
 
     contentItem: QCCImpl.IconLabel {

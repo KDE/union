@@ -62,6 +62,7 @@ private:
     std::optional<Union::ImageDefinition> createImageDefinition(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::ShadowDefinition> createShadowDefinition(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::TextDefinition> createTextDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::IconDefinition> createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context);
 
     QVariant elementProperty(ryml::ConstNodeRef node, LoadingContext &context);
 

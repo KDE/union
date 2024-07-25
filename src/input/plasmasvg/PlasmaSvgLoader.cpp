@@ -11,6 +11,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QIcon>
 #include <QPainter>
 #include <QStack>
 
@@ -349,6 +350,10 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingCont
         style->setText(createTextDefinition(node, context));
     });
 
+    with_child(node, "icon", [&](auto node){
+        style->setIcon(createIconDefinition(node, context));
+    });
+
     with_child(node, "children", [&](auto node){
         createStyles(node, context);
     });
@@ -554,6 +559,100 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
     });
 
     return text;
+}
+
+std::optional<Union::IconDefinition> PlasmaSvgLoader::createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map() || !node.has_children()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    Union::IconDefinition icon;
+    with_child(node, "color", [&](auto node){
+        icon.color = value<QColor>(node);
+    });
+    auto valueForIconSizeName = [](c4::csubstr val) -> qreal {
+        if (val == "small") {
+            return 16;
+        } else if (val == "small-medium") {
+            return 22;
+        } else if (val == "medium") {
+            return 32;
+        } else if (val == "large") {
+            return 48;
+        } else if (val == "huge") {
+            return 64;
+        } else if (val == "enormous") {
+            return 128;
+        }
+        return 0;
+    };
+    with_child(node, "size", [&](auto node){
+        if (node.has_val()) {
+            auto val = node.val();
+            if (val.empty() || ryml::read(node, &icon.size.rwidth())) {
+                icon.size.setHeight(icon.size.width());
+                return;
+            }
+            auto size = valueForIconSizeName(val);
+            icon.size = {size, size};
+            return;
+        }
+        with_child(node, "width", [&](auto node){
+            auto val = node.val();
+            if (val.empty() || ryml::read(node, &icon.size.rwidth())) {
+                return;
+            }
+            icon.size.setWidth(valueForIconSizeName(val));
+        });
+        with_child(node, "height", [&](auto node){
+            auto val = node.val();
+            if (val.empty() || ryml::read(node, &icon.size.rheight())) {
+                return;
+            }
+            icon.size.setHeight(valueForIconSizeName(val));
+        });
+    });
+    auto iconSource = [](auto node) -> IconDefinition::Source {
+        auto val = node.val();
+        if (val.empty()) {
+            return IconDefinition::NullSource{};
+        }
+        // Freedesktop icon names shouldn't contain spaces, colons, slashes or
+        // backslashes. If the string has those, it's a path or url.
+        // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html#guidelines
+        if (node.val().first_of(" :/\\") == c4::csubstr::npos) {
+            return value<IconDefinition::NameSource>(node);
+        }
+        return value<IconDefinition::UrlSource>(node);
+    };
+    with_child(node, "source", [&](auto node){
+        if (node.has_val()) {
+            icon.source = iconSource(node);
+        } else if (node.is_seq() && node.has_children()) {
+            for (auto child : node.children()) {
+                if (!child.has_val()) {
+                    continue;
+                }
+                IconDefinition::Source source = iconSource(child);
+                auto name = std::get_if<IconDefinition::NameSource>(&source);
+                if (name && !QIcon::hasThemeIcon(*name)) {
+                    continue;
+                }
+                auto url = std::get_if<IconDefinition::UrlSource>(&source);
+                if (url && (!url->isValid() || !url->isLocalFile()
+                    || QIcon::fromTheme(url->toLocalFile()).isNull())) {
+                    continue;
+                }
+                icon.source = std::move(source);
+                // Use the first valid source we find
+                break;
+            }
+        }
+    });
+    return icon;
 }
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
