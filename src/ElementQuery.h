@@ -59,6 +59,7 @@ public:
     std::optional<SizeDefinition> padding() const override;
     std::optional<TextDefinition> text() const override;
     std::optional<IconDefinition> icon() const override;
+    std::optional<LayoutDefinition> layout() const override;
 
 private:
     const std::unique_ptr<ElementQueryPrivate> d;

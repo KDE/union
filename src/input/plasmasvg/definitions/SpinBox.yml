@@ -1,0 +1,795 @@
+spinbox-editable: &spinbox-editable
+    type: SpinBox
+    attributes: {editable: true}
+    path: widgets/lineedit
+    prefix: base
+    padding: &spinbox-editable-padding
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+    border: &spinbox-editable-border
+        left: &spinbox-editable-border-left
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right: &spinbox-editable-border-right
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top: &spinbox-editable-border-top
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom: &spinbox-editable-border-bottom
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+    corners: &spinbox-editable-corners
+        top-left: &spinbox-editable-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        top-right: &spinbox-editable-corner-top-right
+            element: topright
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-left: &spinbox-editable-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+            image:
+                property: element-image
+        bottom-right: &spinbox-editable-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+            image:
+                property: element-image
+    background: &spinbox-editable-background
+        element: center
+        size:
+            property: element-size
+        image:
+            property: element-image
+    text:
+        align: {horizontal: center, vertical: center}
+        font: system-normal
+    layout:
+        spacing: medium
+
+spinbox-editable-hovered:
+    <<: *spinbox-editable
+    state: Hovered
+    border:
+        left:
+            <<: *spinbox-editable-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-left
+                -   hover-left
+        right:
+            <<: *spinbox-editable-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-right
+                -   hover-right
+        top:
+            <<: *spinbox-editable-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-top
+                -   hover-top
+        bottom:
+            <<: *spinbox-editable-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottom
+                -   hover-bottom
+    corners:
+        top-left:
+            <<: *spinbox-editable-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topleft
+                -   hover-topleft
+        top-right:
+            <<: *spinbox-editable-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topright
+                -   hover-topright
+        bottom-left:
+            <<: *spinbox-editable-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomleft
+                -   hover-bottomleft
+        bottom-right:
+            <<: *spinbox-editable-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomright
+                -   hover-bottomright
+    background:
+        <<: *spinbox-editable-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   hover-center
+
+spinbox-editable-activefocus:
+    <<: *spinbox-editable
+    state: ActiveFocus
+    margins:
+        prefix: focus
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+    border:
+        left:
+            <<: *spinbox-editable-border-left
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: center
+                elements:
+                -   base-left
+                -   focus-left
+        right:
+            <<: *spinbox-editable-border-right
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: center
+                elements:
+                -   base-right
+                -   focus-right
+        top:
+            <<: *spinbox-editable-border-top
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: bottom
+                elements:
+                -   base-top
+                -   focus-top
+        bottom:
+            <<: *spinbox-editable-border-bottom
+            prefix: focus
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: top
+                elements:
+                -   base-bottom
+                -   focus-bottom
+    corners:
+        top-left:
+            <<: *spinbox-editable-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: bottom
+                elements:
+                -   base-topleft
+                -   focus-topleft
+        top-right:
+            <<: *spinbox-editable-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: bottom
+                elements:
+                -   base-topright
+                -   focus-topright
+        bottom-left:
+            <<: *spinbox-editable-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: top
+                elements:
+                -   base-bottomleft
+                -   focus-bottomleft
+        bottom-right:
+            <<: *spinbox-editable-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: top
+                elements:
+                -   base-bottomright
+                -   focus-bottomright
+    background:
+        <<: *spinbox-editable-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   focus-center
+
+spinbox-editable-hovered-activefocus:
+    <<: *spinbox-editable
+    state: [Hovered, ActiveFocus]
+    border:
+        left:
+            <<: *spinbox-editable-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-left
+                -   hover-left
+                -   focus-left
+        right:
+            <<: *spinbox-editable-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-right
+                -   hover-right
+                -   focus-right
+        top:
+            <<: *spinbox-editable-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-top
+                -   hover-top
+                -   focus-top
+        bottom:
+            <<: *spinbox-editable-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottom
+                -   hover-bottom
+                -   focus-bottom
+    corners:
+        top-left:
+            <<: *spinbox-editable-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topleft
+                -   hover-topleft
+                -   focus-topleft
+        top-right:
+            <<: *spinbox-editable-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topright
+                -   hover-topright
+                -   focus-topright
+        bottom-left:
+            <<: *spinbox-editable-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomleft
+                -   hover-bottomleft
+                -   focus-bottomleft
+        bottom-right:
+            <<: *spinbox-editable-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomright
+                -   hover-bottomright
+                -   focus-bottomright
+    background:
+        <<: *spinbox-editable-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   hover-center
+            -   focus-center
+
+spinbox-editable-visualfocus:
+    <<: *spinbox-editable
+    state: VisualFocus
+    margins:
+        prefix: focusframe
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+    border:
+        left:
+            <<: *spinbox-editable-border-left
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: center
+                elements:
+                -   base-left
+                -   focusframe-left
+        right:
+            <<: *spinbox-editable-border-right
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: center
+                elements:
+                -   base-right
+                -   focusframe-right
+        top:
+            <<: *spinbox-editable-border-top
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: bottom
+                elements:
+                -   base-top
+                -   focusframe-top
+        bottom:
+            <<: *spinbox-editable-border-bottom
+            prefix: focusframe
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: center
+                    vertical: top
+                elements:
+                -   base-bottom
+                -   focusframe-bottom
+    corners:
+        top-left:
+            <<: *spinbox-editable-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: bottom
+                elements:
+                -   base-topleft
+                -   focusframe-topleft
+        top-right:
+            <<: *spinbox-editable-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: bottom
+                elements:
+                -   base-topright
+                -   focusframe-topright
+        bottom-left:
+            <<: *spinbox-editable-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: right
+                    vertical: top
+                elements:
+                -   base-bottomleft
+                -   focusframe-bottomleft
+        bottom-right:
+            <<: *spinbox-editable-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                align:
+                    horizontal: left
+                    vertical: top
+                elements:
+                -   base-bottomright
+                -   focusframe-bottomright
+    background:
+        <<: *spinbox-editable-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   focusframe-center
+
+spinbox-editable-hovered-visualfocus:
+    <<: *spinbox-editable
+    state: [Hovered, VisualFocus]
+    margins:
+        prefix: focusframe
+        left:
+            property: element-width
+            element: hint-left-margin
+            invert: true
+        right:
+            property: element-width
+            element: hint-right-margin
+            invert: true
+        top:
+            property: element-height
+            element: hint-top-margin
+            invert: true
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+            invert: true
+    border:
+        left:
+            <<: *spinbox-editable-border-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-left
+                -   hover-left
+                -   focusframe-left
+        right:
+            <<: *spinbox-editable-border-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-right
+                -   hover-right
+                -   focusframe-right
+        top:
+            <<: *spinbox-editable-border-top
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-top
+                -   hover-top
+                -   focusframe-top
+        bottom:
+            <<: *spinbox-editable-border-bottom
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottom
+                -   hover-bottom
+                -   focusframe-bottom
+    corners:
+        top-left:
+            <<: *spinbox-editable-corner-top-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topleft
+                -   hover-topleft
+                -   focusframe-topleft
+        top-right:
+            <<: *spinbox-editable-corner-top-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-topright
+                -   hover-topright
+                -   focusframe-topright
+        bottom-left:
+            <<: *spinbox-editable-corner-bottom-left
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomleft
+                -   hover-bottomleft
+                -   focusframe-bottomleft
+        bottom-right:
+            <<: *spinbox-editable-corner-bottom-right
+            image:
+                property: element-image-blend
+                prefix: ""
+                elements:
+                -   base-bottomright
+                -   hover-bottomright
+                -   focusframe-bottomright
+    background:
+        <<: *spinbox-editable-background
+        image:
+            property: element-image-blend
+            prefix: ""
+            elements:
+            -   base-center
+            -   hover-center
+            -   focusframe-center
+
+spinbox-up-button: &spinbox-up-button
+    type: SpinBox
+    hints: [up-button]
+    path: widgets/button
+    prefix: toolbutton-hover
+    padding: &spinbox-up-button-padding
+        prefix: toolbutton-hover
+        left:
+            property: element-width
+            element: hint-left-margin
+        right:
+            property: element-width
+            element: hint-right-margin
+        top:
+            property: element-height
+            element: hint-top-margin
+        bottom:
+            property: element-height
+            element: hint-bottom-margin
+    border: &spinbox-up-button-border
+        left: &spinbox-up-button-border-left
+            element: left
+            size:
+                property: element-width
+        right: &spinbox-up-button-border-right
+            element: right
+            size:
+                property: element-width
+        top: &spinbox-up-button-border-top
+            element: top
+            size:
+                property: element-height
+        bottom: &spinbox-up-button-border-bottom
+            element: bottom
+            size:
+                property: element-height
+    corners: &spinbox-up-button-corners
+        top-left: &spinbox-up-button-corner-top-left
+            element: topleft
+            size:
+                property: element-size
+        top-right: &spinbox-up-button-corner-top-right
+            element: topright
+            size:
+                property: element-size
+        bottom-left: &spinbox-up-button-corner-bottom-left
+            element: bottomleft
+            size:
+                property: element-size
+        bottom-right: &spinbox-up-button-corner-bottom-right
+            element: bottomright
+            size:
+                property: element-size
+    background: &spinbox-up-button-background
+        element: center
+        size:
+            property: element-size
+    text:
+        align:
+            horizontal: center
+            vertical: center
+        font: system-normal
+    icon:
+        size: small-medium
+    layout:
+        order: {x: 1}
+        align: {horizontal: right, vertical: center}
+
+spinbox-up-button-hovered: &spinbox-up-button-hovered
+    <<: *spinbox-up-button
+    state: [Hovered]
+    prefix: toolbutton-hover
+    border: &spinbox-up-button-hover-border
+        left:
+            <<: *spinbox-up-button-border-left
+            image:
+                property: element-image
+        right:
+            <<: *spinbox-up-button-border-right
+            image:
+                property: element-image
+        top:
+            <<: *spinbox-up-button-border-top
+            image:
+                property: element-image
+        bottom:
+            <<: *spinbox-up-button-border-bottom
+            image:
+                property: element-image
+    corners: &spinbox-up-button-hover-corners
+        top-left:
+            <<: *spinbox-up-button-corner-top-left
+            image:
+                property: element-image
+        top-right:
+            <<: *spinbox-up-button-corner-top-right
+            image:
+                property: element-image
+        bottom-left:
+            <<: *spinbox-up-button-corner-bottom-left
+            image:
+                property: element-image
+        bottom-right:
+            <<: *spinbox-up-button-corner-bottom-right
+            image:
+                property: element-image
+    background: &spinbox-up-button-hover-background
+        <<: *spinbox-up-button-background
+        image:
+            property: element-image
+
+spinbox-up-button-pressed: &spinbox-up-button-pressed
+    <<: *spinbox-up-button-hovered
+    state: [Pressed]
+    prefix: toolbutton-pressed
+    padding: &spinbox-up-button-pressed-padding
+        <<: *spinbox-up-button-padding
+        prefix: toolbutton-pressed
+
+spinbox-up-button-pressed-hovered: &spinbox-up-button-pressed-hovered
+    <<: *spinbox-up-button-pressed
+    state: [Pressed, Hovered]
+    border:
+        left:
+            <<: *spinbox-up-button-border-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-left, toolbutton-pressed-left]
+        right:
+            <<: *spinbox-up-button-border-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-right, toolbutton-pressed-right]
+        top:
+            <<: *spinbox-up-button-border-top
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-top, toolbutton-pressed-top]
+        bottom:
+            <<: *spinbox-up-button-border-bottom
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottom, toolbutton-pressed-bottom]
+    corners:
+        top-left:
+            <<: *spinbox-up-button-corner-top-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-topleft, toolbutton-pressed-topleft]
+        top-right:
+            <<: *spinbox-up-button-corner-top-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-topright, toolbutton-pressed-topright]
+        bottom-left:
+            <<: *spinbox-up-button-corner-bottom-left
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottomleft, toolbutton-pressed-bottomleft]
+        bottom-right:
+            <<: *spinbox-up-button-corner-bottom-right
+            image:
+                prefix: ""
+                property: element-image-blend
+                elements: [toolbutton-hover-bottomright, toolbutton-pressed-bottomright]
+    background:
+        <<: *spinbox-up-button-background
+        image:
+            prefix: ""
+            property: element-image-blend
+            elements: [toolbutton-hover-center, toolbutton-pressed-center]
+
+spinbox-down-button: &spinbox-down-button
+    <<: *spinbox-up-button
+    hints: [down-button]
+    layout:
+        order: {x: 0}
+        align: {horizontal: left, vertical: center}
+
+spinbox-down-button-hovered: &spinbox-down-button-hovered
+    <<: *spinbox-up-button-hovered
+    hints: [down-button]
+
+spinbox-down-button-pressed: &spinbox-down-button-pressed
+    <<: *spinbox-up-button-pressed
+    hints: [down-button]
+
+spinbox-down-button-pressed-hovered: &spinbox-down-button-pressed-hovered
+    <<: *spinbox-up-button-pressed-hovered
+    hints: [down-button]

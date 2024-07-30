@@ -25,6 +25,7 @@ public:
     std::optional<SizeDefinition> padding;
     std::optional<BorderDefinition> outset;
     std::optional<CornersDefinition> corners;
+    std::optional<LayoutDefinition> layout;
 };
 
 StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)

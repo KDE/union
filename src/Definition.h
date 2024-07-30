@@ -16,6 +16,7 @@
 #include <QImage>
 #include <QMarginsF>
 #include <QUrl>
+#include <QVector3D>
 
 #include "union_export.h"
 
@@ -158,6 +159,36 @@ struct IconDefinition {
     using UrlSource = QUrl;
     using Source = std::variant<NullSource, NameSource, UrlSource>;
     Source source;
+};
+
+struct LayoutDefinition {
+    enum class SizePolicy : uint8_t {
+        // When a size policy is not specified for a dimension,
+        // the default sizing will be used for that dimension.
+        DefaultSizing,
+        FillWidth,
+        FillHeight,
+        FillWidthAndHeight,
+        HeightBasedOnWidth,
+        WidthBasedOnHeight,
+    };
+
+
+    // Horizontal spacing for this layout.
+    qreal horizontalSpacing = 0;
+    // Vertical spacing for this layout.
+    qreal verticalSpacing = 0;
+
+    // Size within a layout cell in a parent.
+    SizePolicy sizePolicy = SizePolicy::DefaultSizing;
+    // Alignment within a layout cell in a parent.
+    Qt::Alignment alignment = Qt::AlignCenter;
+    // Placement and stacking order in a parent.
+    // Higher x or y values place after lower values.
+    // Higher z values stack over lower values.
+    QVector3D order;
+    // Margins between this item and another position in a parent.
+    QMarginsF margins;
 };
 //
 }

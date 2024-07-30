@@ -150,6 +150,22 @@ private:
 };
 
 /**
+ * A grouped property for style properties related to icons.
+ */
+class LayoutGroup : public QObject
+{
+    Q_OBJECT
+    QML_ANONYMOUS
+
+public:
+    LayoutGroup();
+
+    void update(const std::optional<Union::LayoutDefinition> &layout);
+
+private:
+};
+
+/**
  * An attached property that exposes style properties.
  *
  * This can be used to access style properties relevant to the current element
