@@ -1,0 +1,6 @@
+target_sources({{ target_name }} PRIVATE
+{% for type in types %}
+    {{ type.type_name }}{{ file_suffix }}.cpp
+    {{ type.type_name }}{{ file_suffix }}.h
+{% endfor %}
+)

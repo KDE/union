@@ -133,6 +133,12 @@ if __name__ == "__main__":
     )
     jinja_env.filters["ucfirst"] = ucfirst
 
+    shutil.rmtree(src_directory, ignore_errors = True)
+    shutil.rmtree(tests_directory, ignore_errors = True)
+
+    src_directory.mkdir(exist_ok = True)
+    tests_directory.mkdir(exist_ok = True)
+
     for type_name, type_definition in types.items():
         data = dataclasses.asdict(type_definition)
 
@@ -154,3 +160,10 @@ if __name__ == "__main__":
         template = jinja_env.get_template("CreateTestInstances.h.j2")
         f.write(template.render(data))
 
+    with open(src_directory / "CMakeLists.txt", "w") as f:
+        template = jinja_env.get_template("CMakeLists.txt.j2")
+        f.write(template.render({"target_name": "Union", "file_suffix": ""} | data))
+
+    with open(tests_directory / "CMakeLists.txt", "w") as f:
+        template = jinja_env.get_template("CMakeLists.tests.txt.j2")
+        f.write(template.render(data))
