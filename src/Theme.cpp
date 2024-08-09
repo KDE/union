@@ -61,6 +61,11 @@ QString Theme::pluginName() const
     return d->pluginName;
 }
 
+ThemeLoader *Theme::loader() const
+{
+    return d->loader.get();
+}
+
 bool Theme::load()
 {
     Q_ASSERT_X(d->loader, "Union::Theme", "Theme requires a ThemeLoader instance to function");

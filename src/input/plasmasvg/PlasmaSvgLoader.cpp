@@ -206,6 +206,11 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
     return true;
 }
 
+const Plasma::Theme *PlasmaSvgLoader::plasmaTheme() const
+{
+    return &m_plasmaTheme;
+}
+
 void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &context)
 {
     for (auto child : node.children()) {

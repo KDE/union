@@ -37,6 +37,7 @@ public:
     Q_PROPERTY(QString pluginName READ pluginName CONSTANT)
     QString pluginName() const;
 
+    ThemeLoader *loader() const;
     bool load();
 
     QList<StyleRule::Ptr> matches(const QList<Element::Ptr> &elements);
