@@ -19,6 +19,7 @@ target_sources(Union PRIVATE
     Selector.cpp
     Selector.h
     Definition.h
+    PropertiesTypes.h
 )
 
 ecm_qt_declare_logging_category(Union
