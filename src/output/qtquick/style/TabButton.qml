@@ -43,8 +43,13 @@ T.TabButton {
     font: Union.Style.text.font
 
     spacing: 6
-    icon.width: 16
-    icon.height: 16
+    icon {
+        color: Union.Style.icon.color
+        width: Union.Style.icon.width
+        height: Union.Style.icon.height
+        name: Union.Style.icon.name
+        source: Union.Style.icon.source
+    }
 
     contentItem: QCCImpl.IconLabel {
         spacing: control.spacing
