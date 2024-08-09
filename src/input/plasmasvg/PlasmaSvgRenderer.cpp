@@ -283,7 +283,10 @@ QString PlasmaSvgRenderer::createStylesheet()
             color = colorScheme.background(info.backgroundRole.value()).color();
         } else if (info.decorationRole.has_value()) {
             color = colorScheme.decoration(info.decorationRole.value()).color();
-        } else {
+        }
+
+        if (!color.isValid()) {
+            qCWarning(UNION_PLASMASVG) << "Got an invalid color for class" << info.name << "when creating a stylesheet, using Magenta as placeholder";
             color = Qt::magenta;
         }
 
