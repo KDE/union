@@ -32,9 +32,7 @@ using namespace std::string_literals;
 
 constexpr char16_t PluginName[] = u"plasmasvg";
 
-std::size_t qHash(const RendererId &renderer, std::size_t seed)
 {
-    return qHashMulti(seed, renderer.path, renderer.colorGroup, renderer.colorSet);
 }
 
 struct ContextData {
@@ -201,7 +199,7 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
         createStyles(root, context);
     }
 
-    m_renderers.clear();
+    PlasmaSvgRenderer::clearRenderers(theme);
 
     return true;
 }
@@ -793,32 +791,4 @@ QImage PlasmaSvgLoader::elementImageBlend(ryml::ConstNodeRef node, LoadingContex
     }
 
     return result;
-}
-
-std::shared_ptr<PlasmaSvgRenderer> PlasmaSvgLoader::rendererForPath(QAnyStringView path, QPalette::ColorGroup colorGroup, Element::ColorSet colorSet)
-{
-    auto pathString = path.toString();
-
-    RendererId id{pathString, colorGroup, colorSet};
-
-    if (m_renderers.contains(id)) {
-        return m_renderers.value(id);
-    }
-
-    const auto fileName = m_theme.imagePath(pathString);
-    if (fileName.isEmpty()) {
-        return nullptr;
-    }
-
-    auto renderer = std::make_shared<PlasmaSvgRenderer>();
-    renderer->setPath(fileName);
-    renderer->setColorGroup(colorGroup);
-    renderer->setColorSet(static_cast<KColorScheme::ColorSet>(static_cast<int>(colorSet) - 1));
-
-    if (!renderer->load()) {
-        return nullptr;
-    }
-
-    m_renderers.insert(id, renderer);
-    return renderer;
 }

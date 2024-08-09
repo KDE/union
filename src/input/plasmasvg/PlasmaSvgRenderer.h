@@ -13,9 +13,24 @@
 
 #include <KColorScheme>
 
+#include <Element.h>
+#include <Theme.h>
+
 class PlasmaSvgRenderer
 {
 public:
+    struct RendererId {
+        Union::Theme *theme;
+        QString path;
+        QPalette::ColorGroup colorGroup;
+        Union::Element::ColorSet colorSet;
+
+        inline bool operator==(const RendererId &other) const
+        {
+            return path == other.path && colorGroup == other.colorGroup && colorSet == other.colorSet;
+        }
+    };
+
     PlasmaSvgRenderer();
 
     QPalette::ColorGroup colorGroup() const;
@@ -33,6 +48,12 @@ public:
     QRectF elementRect(const QString &elementName);
     void render(QPainter *painter, const QString &elementName, const QRectF &bounds = QRectF{});
 
+    static std::shared_ptr<PlasmaSvgRenderer> rendererForPath(const std::shared_ptr<Union::Theme> &theme, //
+                                                              QAnyStringView path,
+                                                              QPalette::ColorGroup colorGroup,
+                                                              Union::Element::ColorSet colorSet);
+    static void clearRenderers(const std::shared_ptr<Union::Theme> &theme);
+
 private:
     QString createStylesheet();
 
@@ -40,4 +61,6 @@ private:
     KColorScheme::ColorSet m_colorSet = KColorScheme::ColorSet::Window;
     QString m_path;
     std::unique_ptr<QSvgRenderer> m_renderer;
+
+    inline static QHash<RendererId, std::shared_ptr<PlasmaSvgRenderer>> s_rendererCache;
 };

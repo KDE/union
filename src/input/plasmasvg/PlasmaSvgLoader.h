@@ -32,21 +32,12 @@ struct ImageDefinition;
 
 struct LoadingContext;
 
-struct RendererId {
-    QString path;
-    QPalette::ColorGroup colorGroup;
-    Union::Element::ColorSet colorSet;
-
-    inline bool operator==(const RendererId &other) const
-    {
-        return path == other.path && colorGroup == other.colorGroup && colorSet == other.colorSet;
-    }
-};
-
 class PlasmaSvgLoader : public Union::ThemeLoader
 {
 public:
     bool load(std::shared_ptr<Union::Theme> theme) override;
+
+    const Plasma::Theme *plasmaTheme() const;
 
 private:
     void createStyles(ryml::ConstNodeRef node, LoadingContext &context);
@@ -70,10 +61,5 @@ private:
     QImage elementImage(ryml::ConstNodeRef node, LoadingContext &context);
     QImage elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
 
-    std::shared_ptr<PlasmaSvgRenderer> rendererForPath(QAnyStringView path, QPalette::ColorGroup colorGroup, Union::Element::ColorSet colorSet);
-
-    Plasma::Theme m_theme;
-    QHash<RendererId, std::shared_ptr<PlasmaSvgRenderer>> m_renderers;
+    Plasma::Theme m_plasmaTheme;
 };
-
-std::size_t qHash(const RendererId &renderer, std::size_t seed = 0);

@@ -14,9 +14,16 @@
 
 #include <KCompressionDevice>
 
+#include "PlasmaSvgLoader.h"
+
 #include "plasmasvg_logging.h"
 
 using namespace Qt::StringLiterals;
+
+std::size_t qHash(const PlasmaSvgRenderer::RendererId &renderer, std::size_t seed)
+{
+    return qHashMulti(seed, renderer.theme, renderer.path, renderer.colorGroup, renderer.colorSet);
+}
 
 struct ColorInfo {
     QString name;
@@ -159,6 +166,50 @@ void PlasmaSvgRenderer::render(QPainter *painter, const QString &elementName, co
     }
 
     m_renderer->render(painter, elementName, bounds);
+}
+
+std::shared_ptr<PlasmaSvgRenderer> PlasmaSvgRenderer::rendererForPath(const std::shared_ptr<Union::Theme> &theme,
+                                                                      QAnyStringView path,
+                                                                      QPalette::ColorGroup colorGroup,
+                                                                      Union::Element::ColorSet colorSet)
+{
+    auto pathString = path.toString();
+
+    if (colorSet == Union::Element::ColorSet::None) {
+        colorSet = Union::Element::ColorSet::Window;
+    }
+
+    RendererId id{theme.get(), pathString, colorGroup, colorSet};
+
+    if (s_rendererCache.contains(id)) {
+        return s_rendererCache.value(id);
+    }
+
+    auto loader = static_cast<PlasmaSvgLoader *>(theme->loader());
+    const auto fileName = loader->plasmaTheme()->imagePath(pathString);
+    if (fileName.isEmpty()) {
+        return nullptr;
+    }
+
+    auto renderer = std::make_shared<PlasmaSvgRenderer>();
+    renderer->setPath(fileName);
+    renderer->setColorGroup(colorGroup);
+    renderer->setColorSet(static_cast<KColorScheme::ColorSet>(static_cast<int>(colorSet) - 1));
+
+    if (!renderer->load()) {
+        qCWarning(UNION_PLASMASVG) << "Renderer for path" << pathString << "failed to load";
+        return nullptr;
+    }
+
+    s_rendererCache.insert(id, renderer);
+    return renderer;
+}
+
+void PlasmaSvgRenderer::clearRenderers(const std::shared_ptr<Union::Theme> &theme)
+{
+    s_rendererCache.removeIf([&theme](auto itr) {
+        return itr.key().theme == theme.get();
+    });
 }
 
 QString PlasmaSvgRenderer::createStylesheet()
