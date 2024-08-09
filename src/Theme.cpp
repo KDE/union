@@ -74,7 +74,7 @@ bool Theme::load()
 
 void Theme::insert(StyleRule::Ptr style)
 {
-    qCDebug(UNION_GENERAL) << "Insert" << style;
+    qCDebug(UNION_QUERY) << "Insert" << style;
     d->styles.append(style);
 }
 
