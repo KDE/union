@@ -11,6 +11,7 @@ base_directory = Path(__file__).parent
 root_directory = base_directory.parent.parent
 src_directory = root_directory / "src" / "properties"
 tests_directory = root_directory / "autotests" / "properties"
+quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin" / "properties"
 
 include_patterns = [
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
@@ -135,9 +136,11 @@ if __name__ == "__main__":
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)
+    shutil.rmtree(quick_output_directory, ignore_errors = True)
 
     src_directory.mkdir(exist_ok = True)
     tests_directory.mkdir(exist_ok = True)
+    quick_output_directory.mkdir(exist_ok = True)
 
     for type_name, type_definition in types.items():
         data = dataclasses.asdict(type_definition)
@@ -154,6 +157,14 @@ if __name__ == "__main__":
             template = jinja_env.get_template("autotest.cpp.j2")
             f.write(template.render(data))
 
+        with open((quick_output_directory / (type_name + "Group")).with_suffix(".h"), "w") as f:
+            template = jinja_env.get_template("qml_group.h.j2")
+            f.write(template.render(data))
+
+        with open((quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), "w") as f:
+            template = jinja_env.get_template("qml_group.cpp.j2")
+            f.write(template.render(data))
+
     data = {"types": types.values()}
 
     with open(tests_directory / "CreateTestInstances.h", "w") as f:
@@ -167,3 +178,7 @@ if __name__ == "__main__":
     with open(tests_directory / "CMakeLists.txt", "w") as f:
         template = jinja_env.get_template("CMakeLists.tests.txt.j2")
         f.write(template.render(data))
+
+    with open(quick_output_directory / "CMakeLists.txt", "w") as f:
+        template = jinja_env.get_template("CMakeLists.txt.j2")
+        f.write(template.render({"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data))
