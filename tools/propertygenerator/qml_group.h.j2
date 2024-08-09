@@ -30,7 +30,6 @@ template but that clang format doesn't like, so disable format for that.
 #include "{{ value.type }}Group.h"
 {% endif %}
 {% endfor %}
-
 // clang-format on
 
 class {{ type_name }}Group : public QObject
