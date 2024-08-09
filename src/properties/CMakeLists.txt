@@ -1,9 +1,28 @@
-
-file(GLOB _sources *.cpp)
-file(GLOB _headers *.h)
-
-target_sources(Union PRIVATE ${_sources} PUBLIC ${_headers})
-
-if(BUILD_TESTING)
-    add_subdirectory(autotests)
-endif()
+target_sources(Union PRIVATE
+    StyleProperty.cpp
+    StyleProperty.h
+    PaletteProperty.cpp
+    PaletteProperty.h
+    LayoutProperty.cpp
+    LayoutProperty.h
+    SizeProperty.cpp
+    SizeProperty.h
+    TextProperty.cpp
+    TextProperty.h
+    IconProperty.cpp
+    IconProperty.h
+    BackgroundProperty.cpp
+    BackgroundProperty.h
+    ImageProperty.cpp
+    ImageProperty.h
+    BorderProperty.cpp
+    BorderProperty.h
+    LineProperty.cpp
+    LineProperty.h
+    CornersProperty.cpp
+    CornersProperty.h
+    CornerProperty.cpp
+    CornerProperty.h
+    ShadowProperty.cpp
+    ShadowProperty.h
+)

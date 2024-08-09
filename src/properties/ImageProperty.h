@@ -10,7 +10,7 @@
 
 #include <QImage>
 
-#include "Types.h"
+#include "../PropertiesTypes.h"
 
 #include "union_export.h"
 

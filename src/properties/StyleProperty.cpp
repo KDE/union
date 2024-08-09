@@ -11,9 +11,9 @@ class Union::Properties::StylePropertyPrivate
 {
 public:
     std::optional<PaletteProperty> palette;
-    std::optional<SizesProperty> sizes;
+    std::optional<LayoutProperty> layout;
     std::optional<TextProperty> text;
-    std::optional<IndicatorProperty> indicator;
+    std::optional<IconProperty> icon;
     std::optional<BackgroundProperty> background;
 };
 
@@ -26,9 +26,9 @@ StyleProperty::StyleProperty(const StyleProperty &other)
     : d(std::make_unique<StylePropertyPrivate>())
 {
     d->palette = other.d->palette;
-    d->sizes = other.d->sizes;
+    d->layout = other.d->layout;
     d->text = other.d->text;
-    d->indicator = other.d->indicator;
+    d->icon = other.d->icon;
     d->background = other.d->background;
 }
 
@@ -43,9 +43,9 @@ StyleProperty &StyleProperty::operator=(const StyleProperty &other)
 {
     if (this != &other) {
         d->palette = other.d->palette;
-        d->sizes = other.d->sizes;
+        d->layout = other.d->layout;
         d->text = other.d->text;
-        d->indicator = other.d->indicator;
+        d->icon = other.d->icon;
         d->background = other.d->background;
     }
     return *this;
@@ -70,18 +70,18 @@ void StyleProperty::setPalette(const std::optional<PaletteProperty> &newValue)
 
     d->palette = newValue;
 }
-std::optional<SizesProperty> StyleProperty::sizes() const
+std::optional<LayoutProperty> StyleProperty::layout() const
 {
-    return d->sizes;
+    return d->layout;
 }
 
-void StyleProperty::setSizes(const std::optional<SizesProperty> &newValue)
+void StyleProperty::setLayout(const std::optional<LayoutProperty> &newValue)
 {
-    if (newValue == d->sizes) {
+    if (newValue == d->layout) {
         return;
     }
 
-    d->sizes = newValue;
+    d->layout = newValue;
 }
 std::optional<TextProperty> StyleProperty::text() const
 {
@@ -96,18 +96,18 @@ void StyleProperty::setText(const std::optional<TextProperty> &newValue)
 
     d->text = newValue;
 }
-std::optional<IndicatorProperty> StyleProperty::indicator() const
+std::optional<IconProperty> StyleProperty::icon() const
 {
-    return d->indicator;
+    return d->icon;
 }
 
-void StyleProperty::setIndicator(const std::optional<IndicatorProperty> &newValue)
+void StyleProperty::setIcon(const std::optional<IconProperty> &newValue)
 {
-    if (newValue == d->indicator) {
+    if (newValue == d->icon) {
         return;
     }
 
-    d->indicator = newValue;
+    d->icon = newValue;
 }
 std::optional<BackgroundProperty> StyleProperty::background() const
 {
@@ -128,13 +128,13 @@ bool StyleProperty::hasAnyValue() const
     if (d->palette.has_value() && d->palette->hasAnyValue()) {
         return true;
     }
-    if (d->sizes.has_value() && d->sizes->hasAnyValue()) {
+    if (d->layout.has_value() && d->layout->hasAnyValue()) {
         return true;
     }
     if (d->text.has_value() && d->text->hasAnyValue()) {
         return true;
     }
-    if (d->indicator.has_value() && d->indicator->hasAnyValue()) {
+    if (d->icon.has_value() && d->icon->hasAnyValue()) {
         return true;
     }
     if (d->background.has_value() && d->background->hasAnyValue()) {
@@ -155,14 +155,14 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
             destination.d->palette = value;
         }
     }
-    if (source.d->sizes.has_value()) {
-        SizesProperty value;
-        if (destination.d->sizes.has_value()) {
-            value = destination.d->sizes.value();
+    if (source.d->layout.has_value()) {
+        LayoutProperty value;
+        if (destination.d->layout.has_value()) {
+            value = destination.d->layout.value();
         }
-        SizesProperty::resolveProperties(source.d->sizes.value(), value);
+        LayoutProperty::resolveProperties(source.d->layout.value(), value);
         if (value.hasAnyValue()) {
-            destination.d->sizes = value;
+            destination.d->layout = value;
         }
     }
     if (source.d->text.has_value()) {
@@ -175,14 +175,14 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
             destination.d->text = value;
         }
     }
-    if (source.d->indicator.has_value()) {
-        IndicatorProperty value;
-        if (destination.d->indicator.has_value()) {
-            value = destination.d->indicator.value();
+    if (source.d->icon.has_value()) {
+        IconProperty value;
+        if (destination.d->icon.has_value()) {
+            value = destination.d->icon.value();
         }
-        IndicatorProperty::resolveProperties(source.d->indicator.value(), value);
+        IconProperty::resolveProperties(source.d->icon.value(), value);
         if (value.hasAnyValue()) {
-            destination.d->indicator = value;
+            destination.d->icon = value;
         }
     }
     if (source.d->background.has_value()) {
@@ -202,13 +202,13 @@ bool Union::Properties::operator==(const StyleProperty &left, const StylePropert
     if (left.palette() != right.palette()) {
         return false;
     }
-    if (left.sizes() != right.sizes()) {
+    if (left.layout() != right.layout()) {
         return false;
     }
     if (left.text() != right.text()) {
         return false;
     }
-    if (left.indicator() != right.indicator()) {
+    if (left.icon() != right.icon()) {
         return false;
     }
     if (left.background() != right.background()) {
@@ -222,9 +222,9 @@ QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
     QDebugStateSaver saver(debug);
     debug << "StyleProperty(";
     debug << "  palette:" << type.palette();
-    debug << "  sizes:" << type.sizes();
+    debug << "  layout:" << type.layout();
     debug << "  text:" << type.text();
-    debug << "  indicator:" << type.indicator();
+    debug << "  icon:" << type.icon();
     debug << "  background:" << type.background();
     debug << ")";
     return debug;

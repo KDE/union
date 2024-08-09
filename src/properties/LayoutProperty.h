@@ -10,6 +10,7 @@
 
 #include <QtGlobal>
 
+#include "SizeProperty.h"
 
 #include "union_export.h"
 
@@ -20,18 +21,18 @@ namespace Union
 namespace Properties
 {
 
-class IndicatorPropertyPrivate;
+class LayoutPropertyPrivate;
 
-class UNION_EXPORT IndicatorProperty
+class UNION_EXPORT LayoutProperty
 {
 public:
-    IndicatorProperty();
-    IndicatorProperty(const IndicatorProperty &other);
-    IndicatorProperty(IndicatorProperty &&other);
-    ~IndicatorProperty();
+    LayoutProperty();
+    LayoutProperty(const LayoutProperty &other);
+    LayoutProperty(LayoutProperty &&other);
+    ~LayoutProperty();
 
-    IndicatorProperty &operator=(const IndicatorProperty &other);
-    IndicatorProperty &operator=(IndicatorProperty &&other);
+    LayoutProperty &operator=(const LayoutProperty &other);
+    LayoutProperty &operator=(LayoutProperty &&other);
 
     std::optional<qreal> width() const;
     void setWidth(const std::optional<qreal> &newValue);
@@ -39,8 +40,17 @@ public:
     std::optional<qreal> height() const;
     void setHeight(const std::optional<qreal> &newValue);
 
+    std::optional<qreal> spacing() const;
+    void setSpacing(const std::optional<qreal> &newValue);
+
     std::optional<Qt::Alignment> alignment() const;
     void setAlignment(const std::optional<Qt::Alignment> &newValue);
+
+    std::optional<SizeProperty> padding() const;
+    void setPadding(const std::optional<SizeProperty> &newValue);
+
+    std::optional<SizeProperty> margins() const;
+    void setMargins(const std::optional<SizeProperty> &newValue);
 
     /**
      * Check if this property has any value set.
@@ -58,14 +68,14 @@ public:
      * \param source The source property to copy from.
      * \param destination The destination property to copy to.
      */
-    static void resolveProperties(const IndicatorProperty &source, IndicatorProperty &destination);
+    static void resolveProperties(const LayoutProperty &source, LayoutProperty &destination);
 
 private:
-    std::unique_ptr<IndicatorPropertyPrivate> d;
+    std::unique_ptr<LayoutPropertyPrivate> d;
 };
 
-UNION_EXPORT bool operator==(const IndicatorProperty &left, const IndicatorProperty &right);
-UNION_EXPORT inline bool operator!=(const IndicatorProperty &left, const IndicatorProperty &right)
+UNION_EXPORT bool operator==(const LayoutProperty &left, const LayoutProperty &right);
+UNION_EXPORT inline bool operator!=(const LayoutProperty &left, const LayoutProperty &right)
 {
     return !(left == right);
 }
@@ -73,4 +83,4 @@ UNION_EXPORT inline bool operator!=(const IndicatorProperty &left, const Indicat
 }
 }
 
-UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::IndicatorProperty &type);
+UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::LayoutProperty &type);

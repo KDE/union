@@ -39,8 +39,8 @@ public:
     std::optional<QColor> background() const;
     void setBackground(const std::optional<QColor> &newValue);
 
-    std::optional<QColor> accent() const;
-    void setAccent(const std::optional<QColor> &newValue);
+    std::optional<QColor> decoration() const;
+    void setDecoration(const std::optional<QColor> &newValue);
 
     /**
      * Check if this property has any value set.

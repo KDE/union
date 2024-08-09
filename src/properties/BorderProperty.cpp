@@ -10,10 +10,10 @@ using namespace Qt::StringLiterals;
 class Union::Properties::BorderPropertyPrivate
 {
 public:
-    std::optional<qreal> size;
-    std::optional<QColor> color;
-    std::optional<Union::Properties::LineStyle> style;
-    std::optional<ImageProperty> image;
+    std::optional<LineProperty> left;
+    std::optional<LineProperty> right;
+    std::optional<LineProperty> top;
+    std::optional<LineProperty> bottom;
 };
 
 BorderProperty::BorderProperty()
@@ -24,10 +24,10 @@ BorderProperty::BorderProperty()
 BorderProperty::BorderProperty(const BorderProperty &other)
     : d(std::make_unique<BorderPropertyPrivate>())
 {
-    d->size = other.d->size;
-    d->color = other.d->color;
-    d->style = other.d->style;
-    d->image = other.d->image;
+    d->left = other.d->left;
+    d->right = other.d->right;
+    d->top = other.d->top;
+    d->bottom = other.d->bottom;
 }
 
 BorderProperty::BorderProperty(BorderProperty &&other)
@@ -40,10 +40,10 @@ BorderProperty::~BorderProperty() = default;
 BorderProperty &BorderProperty::operator=(const BorderProperty &other)
 {
     if (this != &other) {
-        d->size = other.d->size;
-        d->color = other.d->color;
-        d->style = other.d->style;
-        d->image = other.d->image;
+        d->left = other.d->left;
+        d->right = other.d->right;
+        d->top = other.d->top;
+        d->bottom = other.d->bottom;
     }
     return *this;
 }
@@ -54,71 +54,71 @@ BorderProperty &BorderProperty::operator=(BorderProperty &&other)
     return *this;
 }
 
-std::optional<qreal> BorderProperty::size() const
+std::optional<LineProperty> BorderProperty::left() const
 {
-    return d->size;
+    return d->left;
 }
 
-void BorderProperty::setSize(const std::optional<qreal> &newValue)
+void BorderProperty::setLeft(const std::optional<LineProperty> &newValue)
 {
-    if (newValue == d->size) {
+    if (newValue == d->left) {
         return;
     }
 
-    d->size = newValue;
+    d->left = newValue;
 }
-std::optional<QColor> BorderProperty::color() const
+std::optional<LineProperty> BorderProperty::right() const
 {
-    return d->color;
+    return d->right;
 }
 
-void BorderProperty::setColor(const std::optional<QColor> &newValue)
+void BorderProperty::setRight(const std::optional<LineProperty> &newValue)
 {
-    if (newValue == d->color) {
+    if (newValue == d->right) {
         return;
     }
 
-    d->color = newValue;
+    d->right = newValue;
 }
-std::optional<Union::Properties::LineStyle> BorderProperty::style() const
+std::optional<LineProperty> BorderProperty::top() const
 {
-    return d->style;
+    return d->top;
 }
 
-void BorderProperty::setStyle(const std::optional<Union::Properties::LineStyle> &newValue)
+void BorderProperty::setTop(const std::optional<LineProperty> &newValue)
 {
-    if (newValue == d->style) {
+    if (newValue == d->top) {
         return;
     }
 
-    d->style = newValue;
+    d->top = newValue;
 }
-std::optional<ImageProperty> BorderProperty::image() const
+std::optional<LineProperty> BorderProperty::bottom() const
 {
-    return d->image;
+    return d->bottom;
 }
 
-void BorderProperty::setImage(const std::optional<ImageProperty> &newValue)
+void BorderProperty::setBottom(const std::optional<LineProperty> &newValue)
 {
-    if (newValue == d->image) {
+    if (newValue == d->bottom) {
         return;
     }
 
-    d->image = newValue;
+    d->bottom = newValue;
 }
 
 bool BorderProperty::hasAnyValue() const
 {
-    if (d->size.has_value()) {
+    if (d->left.has_value() && d->left->hasAnyValue()) {
         return true;
     }
-    if (d->color.has_value()) {
+    if (d->right.has_value() && d->right->hasAnyValue()) {
         return true;
     }
-    if (d->style.has_value()) {
+    if (d->top.has_value() && d->top->hasAnyValue()) {
         return true;
     }
-    if (d->image.has_value() && d->image->hasAnyValue()) {
+    if (d->bottom.has_value() && d->bottom->hasAnyValue()) {
         return true;
     }
     return false;
@@ -126,39 +126,60 @@ bool BorderProperty::hasAnyValue() const
 
 void BorderProperty::resolveProperties(const BorderProperty &source, BorderProperty &destination)
 {
-    if (!destination.d->size.has_value()) {
-        destination.d->size = source.d->size;
-    }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
-    }
-    if (!destination.d->style.has_value()) {
-        destination.d->style = source.d->style;
-    }
-    if (source.d->image.has_value()) {
-        ImageProperty value;
-        if (destination.d->image.has_value()) {
-            value = destination.d->image.value();
+    if (source.d->left.has_value()) {
+        LineProperty value;
+        if (destination.d->left.has_value()) {
+            value = destination.d->left.value();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), value);
+        LineProperty::resolveProperties(source.d->left.value(), value);
         if (value.hasAnyValue()) {
-            destination.d->image = value;
+            destination.d->left = value;
+        }
+    }
+    if (source.d->right.has_value()) {
+        LineProperty value;
+        if (destination.d->right.has_value()) {
+            value = destination.d->right.value();
+        }
+        LineProperty::resolveProperties(source.d->right.value(), value);
+        if (value.hasAnyValue()) {
+            destination.d->right = value;
+        }
+    }
+    if (source.d->top.has_value()) {
+        LineProperty value;
+        if (destination.d->top.has_value()) {
+            value = destination.d->top.value();
+        }
+        LineProperty::resolveProperties(source.d->top.value(), value);
+        if (value.hasAnyValue()) {
+            destination.d->top = value;
+        }
+    }
+    if (source.d->bottom.has_value()) {
+        LineProperty value;
+        if (destination.d->bottom.has_value()) {
+            value = destination.d->bottom.value();
+        }
+        LineProperty::resolveProperties(source.d->bottom.value(), value);
+        if (value.hasAnyValue()) {
+            destination.d->bottom = value;
         }
     }
 }
 
 bool Union::Properties::operator==(const BorderProperty &left, const BorderProperty &right)
 {
-    if (left.size() != right.size()) {
+    if (left.left() != right.left()) {
         return false;
     }
-    if (left.color() != right.color()) {
+    if (left.right() != right.right()) {
         return false;
     }
-    if (left.style() != right.style()) {
+    if (left.top() != right.top()) {
         return false;
     }
-    if (left.image() != right.image()) {
+    if (left.bottom() != right.bottom()) {
         return false;
     }
     return true;
@@ -168,10 +189,10 @@ QDebug operator<<(QDebug debug, const Union::Properties::BorderProperty &type)
 {
     QDebugStateSaver saver(debug);
     debug << "BorderProperty(";
-    debug << "  size:" << type.size();
-    debug << "  color:" << type.color();
-    debug << "  style:" << type.style();
-    debug << "  image:" << type.image();
+    debug << "  left:" << type.left();
+    debug << "  right:" << type.right();
+    debug << "  top:" << type.top();
+    debug << "  bottom:" << type.bottom();
     debug << ")";
     return debug;
 }

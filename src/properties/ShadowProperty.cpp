@@ -11,10 +11,10 @@ class Union::Properties::ShadowPropertyPrivate
 {
 public:
     std::optional<SizeProperty> offsets;
-    std::optional<BorderProperty> left;
-    std::optional<BorderProperty> right;
-    std::optional<BorderProperty> top;
-    std::optional<BorderProperty> bottom;
+    std::optional<LineProperty> left;
+    std::optional<LineProperty> right;
+    std::optional<LineProperty> top;
+    std::optional<LineProperty> bottom;
     std::optional<CornerProperty> topLeft;
     std::optional<CornerProperty> topRight;
     std::optional<CornerProperty> bottomLeft;
@@ -82,12 +82,12 @@ void ShadowProperty::setOffsets(const std::optional<SizeProperty> &newValue)
 
     d->offsets = newValue;
 }
-std::optional<BorderProperty> ShadowProperty::left() const
+std::optional<LineProperty> ShadowProperty::left() const
 {
     return d->left;
 }
 
-void ShadowProperty::setLeft(const std::optional<BorderProperty> &newValue)
+void ShadowProperty::setLeft(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->left) {
         return;
@@ -95,12 +95,12 @@ void ShadowProperty::setLeft(const std::optional<BorderProperty> &newValue)
 
     d->left = newValue;
 }
-std::optional<BorderProperty> ShadowProperty::right() const
+std::optional<LineProperty> ShadowProperty::right() const
 {
     return d->right;
 }
 
-void ShadowProperty::setRight(const std::optional<BorderProperty> &newValue)
+void ShadowProperty::setRight(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->right) {
         return;
@@ -108,12 +108,12 @@ void ShadowProperty::setRight(const std::optional<BorderProperty> &newValue)
 
     d->right = newValue;
 }
-std::optional<BorderProperty> ShadowProperty::top() const
+std::optional<LineProperty> ShadowProperty::top() const
 {
     return d->top;
 }
 
-void ShadowProperty::setTop(const std::optional<BorderProperty> &newValue)
+void ShadowProperty::setTop(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->top) {
         return;
@@ -121,12 +121,12 @@ void ShadowProperty::setTop(const std::optional<BorderProperty> &newValue)
 
     d->top = newValue;
 }
-std::optional<BorderProperty> ShadowProperty::bottom() const
+std::optional<LineProperty> ShadowProperty::bottom() const
 {
     return d->bottom;
 }
 
-void ShadowProperty::setBottom(const std::optional<BorderProperty> &newValue)
+void ShadowProperty::setBottom(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->bottom) {
         return;
@@ -232,41 +232,41 @@ void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowPrope
         }
     }
     if (source.d->left.has_value()) {
-        BorderProperty value;
+        LineProperty value;
         if (destination.d->left.has_value()) {
             value = destination.d->left.value();
         }
-        BorderProperty::resolveProperties(source.d->left.value(), value);
+        LineProperty::resolveProperties(source.d->left.value(), value);
         if (value.hasAnyValue()) {
             destination.d->left = value;
         }
     }
     if (source.d->right.has_value()) {
-        BorderProperty value;
+        LineProperty value;
         if (destination.d->right.has_value()) {
             value = destination.d->right.value();
         }
-        BorderProperty::resolveProperties(source.d->right.value(), value);
+        LineProperty::resolveProperties(source.d->right.value(), value);
         if (value.hasAnyValue()) {
             destination.d->right = value;
         }
     }
     if (source.d->top.has_value()) {
-        BorderProperty value;
+        LineProperty value;
         if (destination.d->top.has_value()) {
             value = destination.d->top.value();
         }
-        BorderProperty::resolveProperties(source.d->top.value(), value);
+        LineProperty::resolveProperties(source.d->top.value(), value);
         if (value.hasAnyValue()) {
             destination.d->top = value;
         }
     }
     if (source.d->bottom.has_value()) {
-        BorderProperty value;
+        LineProperty value;
         if (destination.d->bottom.has_value()) {
             value = destination.d->bottom.value();
         }
-        BorderProperty::resolveProperties(source.d->bottom.value(), value);
+        LineProperty::resolveProperties(source.d->bottom.value(), value);
         if (value.hasAnyValue()) {
             destination.d->bottom = value;
         }

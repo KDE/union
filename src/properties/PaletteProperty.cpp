@@ -12,7 +12,7 @@ class Union::Properties::PalettePropertyPrivate
 public:
     std::optional<QColor> foreground;
     std::optional<QColor> background;
-    std::optional<QColor> accent;
+    std::optional<QColor> decoration;
 };
 
 PaletteProperty::PaletteProperty()
@@ -25,7 +25,7 @@ PaletteProperty::PaletteProperty(const PaletteProperty &other)
 {
     d->foreground = other.d->foreground;
     d->background = other.d->background;
-    d->accent = other.d->accent;
+    d->decoration = other.d->decoration;
 }
 
 PaletteProperty::PaletteProperty(PaletteProperty &&other)
@@ -40,7 +40,7 @@ PaletteProperty &PaletteProperty::operator=(const PaletteProperty &other)
     if (this != &other) {
         d->foreground = other.d->foreground;
         d->background = other.d->background;
-        d->accent = other.d->accent;
+        d->decoration = other.d->decoration;
     }
     return *this;
 }
@@ -77,18 +77,18 @@ void PaletteProperty::setBackground(const std::optional<QColor> &newValue)
 
     d->background = newValue;
 }
-std::optional<QColor> PaletteProperty::accent() const
+std::optional<QColor> PaletteProperty::decoration() const
 {
-    return d->accent;
+    return d->decoration;
 }
 
-void PaletteProperty::setAccent(const std::optional<QColor> &newValue)
+void PaletteProperty::setDecoration(const std::optional<QColor> &newValue)
 {
-    if (newValue == d->accent) {
+    if (newValue == d->decoration) {
         return;
     }
 
-    d->accent = newValue;
+    d->decoration = newValue;
 }
 
 bool PaletteProperty::hasAnyValue() const
@@ -99,7 +99,7 @@ bool PaletteProperty::hasAnyValue() const
     if (d->background.has_value()) {
         return true;
     }
-    if (d->accent.has_value()) {
+    if (d->decoration.has_value()) {
         return true;
     }
     return false;
@@ -113,8 +113,8 @@ void PaletteProperty::resolveProperties(const PaletteProperty &source, PalettePr
     if (!destination.d->background.has_value()) {
         destination.d->background = source.d->background;
     }
-    if (!destination.d->accent.has_value()) {
-        destination.d->accent = source.d->accent;
+    if (!destination.d->decoration.has_value()) {
+        destination.d->decoration = source.d->decoration;
     }
 }
 
@@ -126,7 +126,7 @@ bool Union::Properties::operator==(const PaletteProperty &left, const PalettePro
     if (left.background() != right.background()) {
         return false;
     }
-    if (left.accent() != right.accent()) {
+    if (left.decoration() != right.decoration()) {
         return false;
     }
     return true;
@@ -138,7 +138,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::PaletteProperty &type)
     debug << "PaletteProperty(";
     debug << "  foreground:" << type.foreground();
     debug << "  background:" << type.background();
-    debug << "  accent:" << type.accent();
+    debug << "  decoration:" << type.decoration();
     debug << ")";
     return debug;
 }

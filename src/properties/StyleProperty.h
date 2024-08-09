@@ -10,9 +10,9 @@
 
 
 #include "BackgroundProperty.h"
-#include "IndicatorProperty.h"
+#include "IconProperty.h"
+#include "LayoutProperty.h"
 #include "PaletteProperty.h"
-#include "SizesProperty.h"
 #include "TextProperty.h"
 
 #include "union_export.h"
@@ -40,14 +40,14 @@ public:
     std::optional<PaletteProperty> palette() const;
     void setPalette(const std::optional<PaletteProperty> &newValue);
 
-    std::optional<SizesProperty> sizes() const;
-    void setSizes(const std::optional<SizesProperty> &newValue);
+    std::optional<LayoutProperty> layout() const;
+    void setLayout(const std::optional<LayoutProperty> &newValue);
 
     std::optional<TextProperty> text() const;
     void setText(const std::optional<TextProperty> &newValue);
 
-    std::optional<IndicatorProperty> indicator() const;
-    void setIndicator(const std::optional<IndicatorProperty> &newValue);
+    std::optional<IconProperty> icon() const;
+    void setIcon(const std::optional<IconProperty> &newValue);
 
     std::optional<BackgroundProperty> background() const;
     void setBackground(const std::optional<BackgroundProperty> &newValue);

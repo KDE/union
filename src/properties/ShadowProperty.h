@@ -9,8 +9,8 @@
 #include <QDebug>
 
 
-#include "BorderProperty.h"
 #include "CornerProperty.h"
+#include "LineProperty.h"
 #include "SizeProperty.h"
 
 #include "union_export.h"
@@ -38,17 +38,17 @@ public:
     std::optional<SizeProperty> offsets() const;
     void setOffsets(const std::optional<SizeProperty> &newValue);
 
-    std::optional<BorderProperty> left() const;
-    void setLeft(const std::optional<BorderProperty> &newValue);
+    std::optional<LineProperty> left() const;
+    void setLeft(const std::optional<LineProperty> &newValue);
 
-    std::optional<BorderProperty> right() const;
-    void setRight(const std::optional<BorderProperty> &newValue);
+    std::optional<LineProperty> right() const;
+    void setRight(const std::optional<LineProperty> &newValue);
 
-    std::optional<BorderProperty> top() const;
-    void setTop(const std::optional<BorderProperty> &newValue);
+    std::optional<LineProperty> top() const;
+    void setTop(const std::optional<LineProperty> &newValue);
 
-    std::optional<BorderProperty> bottom() const;
-    void setBottom(const std::optional<BorderProperty> &newValue);
+    std::optional<LineProperty> bottom() const;
+    void setBottom(const std::optional<LineProperty> &newValue);
 
     std::optional<CornerProperty> topLeft() const;
     void setTopLeft(const std::optional<CornerProperty> &newValue);

@@ -8,10 +8,8 @@
 
 #include <QDebug>
 
-#include <QColor>
 
-#include "ImageProperty.h"
-#include "Types.h"
+#include "LineProperty.h"
 
 #include "union_export.h"
 
@@ -35,17 +33,17 @@ public:
     BorderProperty &operator=(const BorderProperty &other);
     BorderProperty &operator=(BorderProperty &&other);
 
-    std::optional<qreal> size() const;
-    void setSize(const std::optional<qreal> &newValue);
+    std::optional<LineProperty> left() const;
+    void setLeft(const std::optional<LineProperty> &newValue);
 
-    std::optional<QColor> color() const;
-    void setColor(const std::optional<QColor> &newValue);
+    std::optional<LineProperty> right() const;
+    void setRight(const std::optional<LineProperty> &newValue);
 
-    std::optional<Union::Properties::LineStyle> style() const;
-    void setStyle(const std::optional<Union::Properties::LineStyle> &newValue);
+    std::optional<LineProperty> top() const;
+    void setTop(const std::optional<LineProperty> &newValue);
 
-    std::optional<ImageProperty> image() const;
-    void setImage(const std::optional<ImageProperty> &newValue);
+    std::optional<LineProperty> bottom() const;
+    void setBottom(const std::optional<LineProperty> &newValue);
 
     /**
      * Check if this property has any value set.
