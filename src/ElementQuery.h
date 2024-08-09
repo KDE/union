@@ -59,6 +59,12 @@ public:
     std::optional<SizeDefinition> padding() const override;
     std::optional<TextDefinition> text() const override;
     std::optional<IconDefinition> icon() const override;
+    /**
+     * Retrieve the root of the combined matched set of properties.
+     *
+     * This will contain all the resolved properties of the matched style rules.
+     */
+    const Properties::StyleProperty &properties() const;
 
 private:
     const std::unique_ptr<ElementQueryPrivate> d;

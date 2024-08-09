@@ -17,10 +17,12 @@ public:
     std::shared_ptr<Theme> theme;
     QList<Element::Ptr> elements;
     QList<StyleRule::Ptr> styles;
+    std::optional<Properties::StyleProperty> properties = std::nullopt;
 
     StyleRule::Ptr combined;
 
     bool result = false;
+    inline static const Properties::StyleProperty emptyProperties;
 };
 
 ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
@@ -173,4 +175,9 @@ std::optional<TextDefinition> ElementQuery::text() const
 std::optional<IconDefinition> ElementQuery::icon() const
 {
     return d->combined->icon();
+}
+
+const Properties::StyleProperty &ElementQuery::properties() const
+{
+    return d->properties.has_value() ? d->properties.value() : d->emptyProperties;
 }

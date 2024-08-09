@@ -14,6 +14,7 @@
 
 #include "Definition.h"
 #include "Selector.h"
+#include "properties/StyleProperty.h"
 
 #include "union_export.h"
 
@@ -97,6 +98,9 @@ public:
 
     std::optional<IconDefinition> icon() const override;
     void setIcon(const std::optional<IconDefinition> &newIcon);
+
+    const Properties::StyleProperty &properties() const;
+    void setProperties(const Properties::StyleProperty &newProperties);
 
     static Ptr create();
 

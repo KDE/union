@@ -25,6 +25,7 @@ public:
     std::optional<SizeDefinition> padding;
     std::optional<BorderDefinition> outset;
     std::optional<CornersDefinition> corners;
+    Properties::StyleProperty properties;
 };
 
 StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)
@@ -185,6 +186,16 @@ std::optional<IconDefinition> Union::StyleRule::icon() const
 void Union::StyleRule::setIcon(const std::optional<IconDefinition> &newIcon)
 {
     d->icon = newIcon;
+}
+
+const Properties::StyleProperty &StyleRule::properties() const
+{
+    return d->properties;
+}
+
+void StyleRule::setProperties(const Properties::StyleProperty &newProperties)
+{
+    d->properties = newProperties;
 }
 
 StyleRule::Ptr StyleRule::create()
