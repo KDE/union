@@ -6,7 +6,9 @@
 #pragma once
 
 #include <QByteArray>
+#include <QColor>
 #include <QString>
+#include <QUrl>
 #include <QMetaType>
 #include <QMetaEnum>
 
@@ -23,6 +25,28 @@ inline QDebug& operator<<(QDebug& debug, basic_substring<C> s)
 {
     debug << QByteArrayView{s};
     return debug;
+}
+
+// Overloading c4::from_chars allows ryml to work with more types
+
+inline bool from_chars(ryml::csubstr buf, QUrl *v) noexcept
+{
+    auto url = QUrl::fromUserInput(QUtf8StringView{buf}.toString());
+    if (!url.isValid()) {
+        return false;
+    }
+    *v = std::move(url);
+    return true;
+}
+
+inline bool from_chars(ryml::csubstr buf, QColor *v) noexcept
+{
+    auto color = QColor::fromString(buf);
+    if (!color.isValid()) {
+        return false;
+    }
+    *v = std::move(color);
+    return true;
 }
 
 }

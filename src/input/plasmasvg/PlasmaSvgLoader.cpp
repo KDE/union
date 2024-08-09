@@ -11,6 +11,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QIcon>
 #include <QPainter>
 #include <QStack>
 
@@ -349,6 +350,10 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingCont
         style->setText(createTextDefinition(node, context));
     });
 
+    with_child(node, "icon", [&](auto node){
+        style->setIcon(createIconDefinition(node, context));
+    });
+
     with_child(node, "children", [&](auto node){
         createStyles(node, context);
     });
@@ -554,6 +559,86 @@ std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml:
     });
 
     return text;
+}
+
+std::optional<Union::IconDefinition> PlasmaSvgLoader::createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map() || !node.has_children()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    Union::IconDefinition icon;
+    with_child(node, "color", [&](auto node){
+        icon.color = value<QColor>(node);
+    });
+    auto valueForIconSizeName = [](c4::csubstr val) -> qreal {
+        if (val == "small") {
+            return 16;
+        } else if (val == "small-medium") {
+            return 22;
+        } else if (val == "medium") {
+            return 32;
+        } else if (val == "large") {
+            return 48;
+        } else if (val == "huge") {
+            return 64;
+        } else if (val == "enormous") {
+            return 128;
+        }
+        return 0;
+    };
+    with_child(node, "size", [&](auto node){
+        if (!node.has_val()) {
+            return;
+        }
+        auto val = node.val();
+        if (val.empty() || ryml::read(node, &icon.size.rwidth())) {
+            icon.size.setHeight(icon.size.width());
+            return;
+        }
+        auto size = valueForIconSizeName(val);
+        icon.size = {size, size};
+    });
+    auto setIconSource = [](auto &icon, auto node) {
+        auto val = node.val();
+        if (val.empty()) {
+            return;
+        }
+        // Freedesktop icon names shouldn't contain spaces, colons, slashes or
+        // backslashes. If the string has those, it's a path or url.
+        // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html#guidelines
+        if (node.val().first_of(" :/\\") == c4::csubstr::npos) {
+            icon.name = value<QString>(node);
+            return;
+        }
+        icon.url = value<QUrl>(node);
+    };
+    with_child(node, "source", [&](auto node){
+        if (node.has_val()) {
+            setIconSource(icon, node);
+        } else if (node.is_seq() && node.has_children()) {
+            for (auto child : node.children()) {
+                if (!child.has_val()) {
+                    continue;
+                }
+                setIconSource(icon, child);
+                if (!icon.name.isEmpty() && !QIcon::hasThemeIcon(icon.name)) {
+                    icon.name = QString{};
+                    continue;
+                }
+                if (!icon.url.isEmpty() && (!icon.url.isValid()
+                    || !icon.url.isLocalFile()
+                    || QIcon::fromTheme(icon.url.toLocalFile()).isNull())) {
+                    icon.url = QUrl{};
+                    continue;
+                }
+                break;
+            }
+        }
+    });
+    return icon;
 }
 
 QVariant PlasmaSvgLoader::elementProperty(ryml::ConstNodeRef node, LoadingContext &context)

@@ -20,6 +20,8 @@ tabbutton: &tabbutton
             horizontal: center
             vertical: center
         font: system-normal
+    icon:
+        size: small
 
 tabbutton-north: &tabbutton-north
     <<: *tabbutton
