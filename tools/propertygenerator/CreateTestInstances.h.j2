@@ -13,7 +13,7 @@
 #include <QtTest>
 
 {% for type in types | sort %}
-#include "../{{ type.type_name }}.h"
+#include <properties/{{ type.type_name }}.h>
 {% endfor %}
 
 using namespace Qt::StringLiterals;

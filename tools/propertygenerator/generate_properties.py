@@ -2,18 +2,21 @@
 
 import dataclasses
 from pathlib import Path
+import shutil
 
 import yaml
 import jinja2
 
 base_directory = Path(__file__).parent
-
+root_directory = base_directory.parent.parent
+src_directory = root_directory / "src" / "properties"
+tests_directory = root_directory / "autotests" / "properties"
 
 include_patterns = [
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "qreal", "use_include": None},
     {"pattern": "Q", "system_include": True},
-    {"pattern": "Union::Properties::", "use_include": "Types.h"},
+    {"pattern": "Union::Properties::", "use_include": "../PropertiesTypes.h"},
     {"pattern": "", },
 ]
 
@@ -133,18 +136,21 @@ if __name__ == "__main__":
     for type_name, type_definition in types.items():
         data = dataclasses.asdict(type_definition)
 
-        with open((base_directory.parent / type_name).with_suffix(".h"), "w") as f:
+        with open((src_directory / type_name).with_suffix(".h"), "w") as f:
             template = jinja_env.get_template("property.h.j2")
             f.write(template.render(data))
 
-        with open((base_directory.parent / type_name).with_suffix(".cpp"), "w") as f:
+        with open((src_directory / type_name).with_suffix(".cpp"), "w") as f:
             template = jinja_env.get_template("property.cpp.j2")
             f.write(template.render(data))
 
-        with open((base_directory.parent / "autotests" / ("Test" + type_name)).with_suffix(".cpp"), "w") as f:
+        with open((tests_directory / ("Test" + type_name)).with_suffix(".cpp"), "w") as f:
             template = jinja_env.get_template("autotest.cpp.j2")
             f.write(template.render(data))
 
-    with open(base_directory.parent / "autotests" / "CreateTestInstances.h", "w") as f:
+    data = {"types": types.values()}
+
+    with open(tests_directory / "CreateTestInstances.h", "w") as f:
         template = jinja_env.get_template("CreateTestInstances.h.j2")
-        f.write(template.render({"types": types.values()}))
+        f.write(template.render(data))
+

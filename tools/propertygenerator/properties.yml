@@ -1,13 +1,14 @@
 palette:
     foreground: QColor
     background: QColor
-    accent: QColor
+    decoration: QColor
     # TODO: Add more QColors
 
-sizes:
+layout:
     width: qreal
     height: qreal
     spacing: qreal
+    alignment: Qt::Alignment
 
     padding: &size
         left: qreal
@@ -22,11 +23,6 @@ text:
     color: QColor
     font: QFont
 
-indicator:
-    width: qreal
-    height: qreal
-    alignment: Qt::Alignment
-
 background:
     color: QColor
     image: &image
@@ -38,15 +34,15 @@ background:
         flags: Union::Properties::ImageFlags
 
     border:
-        left: &border
+        left: &line
             size: qreal
             color: QColor
             style: Union::Properties::LineStyle
             image: *image
 
-        right: *border
-        top: *border
-        bottom: *border
+        right: *line
+        top: *line
+        bottom: *line
 
     corners:
         topLeft: &corner
@@ -63,10 +59,10 @@ background:
     shadow:
         offsets: *size
 
-        left: *border
-        right: *border
-        top: *border
-        bottom: *border
+        left: *line
+        right: *line
+        top: *line
+        bottom: *line
 
         topLeft: *corner
         topRight: *corner

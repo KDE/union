@@ -62,6 +62,13 @@ public:
     bool hasAnyValue() const;
 
     /**
+     * Return a YAML-formatted string representation of this property.
+     *
+     * \param indentation The level of indentation to apply.
+     */
+    QString toYaml(int indentation = 0) const;
+
+    /**
      * Copy values from source to destination if destination does not have a value.
      *
      * This will recursively copy sub-values.
