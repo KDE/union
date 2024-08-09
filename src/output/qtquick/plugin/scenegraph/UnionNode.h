@@ -8,7 +8,7 @@
 #include <QQuickWindow>
 #include <QSGNode>
 
-#include <Definition.h>
+#include <properties/ImageProperty.h>
 
 /**
  * A convenience base class that contains some things that are useful for all node implementations.
@@ -16,6 +16,8 @@
 class UnionNode : public QSGNode
 {
 public:
+    QRectF rect;
+
     /**
      * Update the node, applying any pending changes.
      *
@@ -38,8 +40,16 @@ public:
     }
 
     void ensureChildRemoved(int index);
-    QSGTexture *createTextureForImageDefinition(QQuickWindow *window,
-                                                const std::optional<Union::ImageDefinition> &definition,
-                                                const QRectF &destinationRect,
-                                                QRectF &sourceRect);
+    QSGTexture *createTextureForImageProperty(QQuickWindow *window,
+                                              const std::optional<Union::Properties::ImageProperty> &property,
+                                              const QRectF &destinationRect,
+                                              QRectF &sourceRect);
+};
+
+/**
+ * A node that can be used as a placeholder when child indices need to be maintained.
+ */
+class PlaceholderNode : public QSGNode
+{
+    // This node intentionally does nothing.
 };
