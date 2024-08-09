@@ -17,6 +17,7 @@ public:
 
     std::optional<AreaDefinition> foreground;
     std::optional<TextDefinition> text;
+    std::optional<IconDefinition> icon;
     std::optional<AreaDefinition> background;
     std::optional<BorderDefinition> border;
     std::optional<ShadowDefinition> shadow;
@@ -174,6 +175,16 @@ std::optional<TextDefinition> Union::StyleRule::text() const
 void Union::StyleRule::setText(const std::optional<TextDefinition> &newText)
 {
     d->text = newText;
+}
+
+std::optional<IconDefinition> Union::StyleRule::icon() const
+{
+    return d->icon;
+}
+
+void Union::StyleRule::setIcon(const std::optional<IconDefinition> &newIcon)
+{
+    d->icon = newIcon;
 }
 
 StyleRule::Ptr StyleRule::create()

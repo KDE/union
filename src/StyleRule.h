@@ -42,6 +42,7 @@ public:
     virtual std::optional<SizeDefinition> margins() const = 0;
     virtual std::optional<SizeDefinition> padding() const = 0;
     virtual std::optional<TextDefinition> text() const = 0;
+    virtual std::optional<IconDefinition> icon() const = 0;
 };
 
 /**
@@ -93,6 +94,9 @@ public:
 
     std::optional<TextDefinition> text() const override;
     void setText(const std::optional<TextDefinition> &newText);
+
+    std::optional<IconDefinition> icon() const override;
+    void setIcon(const std::optional<IconDefinition> &newIcon);
 
     static Ptr create();
 

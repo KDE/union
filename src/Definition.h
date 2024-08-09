@@ -15,6 +15,7 @@
 #include <QGradient>
 #include <QImage>
 #include <QMarginsF>
+#include <QUrl>
 
 #include "union_export.h"
 
@@ -146,6 +147,13 @@ struct CornersDefinition {
 struct TextDefinition {
     Qt::Alignment alignment = Qt::AlignLeft | Qt::AlignTop;
     QFont font;
+};
+
+struct IconDefinition {
+    QColor color{QColor::Invalid};
+    QSizeF size{0, 0};
+    QString name;
+    QUrl url;
 };
 //
 }
