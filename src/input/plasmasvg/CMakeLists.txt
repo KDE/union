@@ -15,6 +15,8 @@ target_sources(union-plasmasvg PRIVATE
     PlasmaSvgPlugin.h
     PlasmaSvgRenderer.cpp
     PlasmaSvgRenderer.h
+    LoadingContext.cpp
+    LoadingContext.h
     ${CMAKE_CURRENT_BINARY_DIR}/PlasmaSvgDefinitions.qrc
 )
 

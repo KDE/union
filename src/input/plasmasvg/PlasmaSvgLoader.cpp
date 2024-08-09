@@ -22,6 +22,7 @@
 #include <StyleRule.h>
 #include <Theme.h>
 
+#include "LoadingContext.h"
 #include "PlasmaSvgRenderer.h"
 
 #include "plasmasvg_logging.h"
@@ -31,136 +32,6 @@ using namespace Qt::StringLiterals;
 using namespace std::string_literals;
 
 constexpr char16_t PluginName[] = u"plasmasvg";
-
-{
-}
-
-struct ContextData {
-    QStack<SelectorList> selectors;
-    QStack<QString> paths;
-    QStack<QString> prefixes;
-    QStack<QString> elementNames;
-    QStack<Element::ColorSet> colorSets;
-};
-
-struct ContextCleanup {
-    enum class CleanupFlag {
-        Selector = 1 << 0,
-        Path = 1 << 1,
-        Prefix = 1 << 2,
-        ElementName = 1 << 3,
-        ColorSet = 1 << 4,
-    };
-    Q_DECLARE_FLAGS(CleanupFlags, CleanupFlag)
-
-    ContextCleanup(ContextData &_data)
-        : data(_data)
-    {
-    }
-
-    ~ContextCleanup()
-    {
-        if (flags & CleanupFlag::Selector && !data.selectors.isEmpty()) {
-            data.selectors.pop();
-        }
-
-        if (flags & CleanupFlag::Path && !data.paths.isEmpty()) {
-            data.paths.pop();
-        }
-
-        if (flags & CleanupFlag::Prefix && !data.prefixes.isEmpty()) {
-            data.prefixes.pop();
-        }
-
-        if (flags & CleanupFlag::ElementName && !data.elementNames.isEmpty()) {
-            data.elementNames.pop();
-        }
-
-        if (flags & CleanupFlag::ColorSet && !data.colorSets.isEmpty()) {
-            data.colorSets.pop();
-        }
-    }
-
-    ContextData &data;
-    CleanupFlags flags;
-};
-
-struct LoadingContext {
-    LoadingContext(Theme::Ptr _theme)
-        : theme(_theme)
-    {
-    }
-
-    Theme::Ptr theme;
-    ContextData data;
-
-    ContextCleanup pushFromNode(ryml::ConstNodeRef node, const SelectorList &selectorsToPush = SelectorList{})
-    {
-        ContextCleanup cleanup(data);
-
-        if (!selectorsToPush.isEmpty()) {
-            data.selectors.push(selectorsToPush);
-            cleanup.flags |= ContextCleanup::CleanupFlag::Selector;
-        }
-
-        if (!node.is_map()) {
-            return cleanup;
-        }
-
-        with_child(node, "path", [&](auto node){
-            data.paths.push(value<QString>(node));
-            cleanup.flags |= ContextCleanup::CleanupFlag::Path;
-        });
-
-        with_child(node, "prefix", [&](auto node){
-            data.prefixes.push(value<QString>(node));
-            cleanup.flags |= ContextCleanup::CleanupFlag::Prefix;
-        });
-
-        with_child(node, "element", [&](auto node){
-            data.elementNames.push(value<QString>(node));
-            cleanup.flags |= ContextCleanup::CleanupFlag::ElementName;
-        });
-
-        with_child(node, "colorSet", [&](auto node){
-            data.colorSets.push(NODE_Q_ENUM_VALUE(Element, ColorSet, node));
-        });
-
-        return cleanup;
-    }
-
-    SelectorList selectors()
-    {
-        return data.selectors.isEmpty() ? SelectorList() : data.selectors.top();
-    }
-
-    QString prefixedElementName()
-    {
-        if (data.elementNames.isEmpty()) {
-            return QString{};
-        }
-
-        auto element = data.elementNames.top();
-        if (!data.prefixes.isEmpty()) {
-            auto prefix = data.prefixes.top();
-            if (!prefix.isEmpty()) {
-                element = prefix + u"-" + element;
-            }
-        }
-
-        return element;
-    }
-
-    QString path() const
-    {
-        return data.paths.isEmpty() ? QString{} : data.paths.top();
-    }
-
-    Element::ColorSet colorSet() const
-    {
-        return data.colorSets.isEmpty() ? Element::ColorSet::None : data.colorSets.top();
-    }
-};
 
 bool PlasmaSvgLoader::load(Theme::Ptr theme)
 {
