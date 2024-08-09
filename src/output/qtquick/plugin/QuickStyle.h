@@ -17,6 +17,7 @@
 #include <Selector.h>
 
 #include "Types.h"
+#include "properties/StylePropertyGroup.h"
 
 class QuickElement;
 
@@ -227,6 +228,8 @@ public:
 
     // Q_PROPERTY(BackgroundGroup* background READ background CONSTANT)
     // BackgroundGroup* background() const;
+    Q_PROPERTY(StylePropertyGroup *properties READ properties CONSTANT)
+    StylePropertyGroup *properties() const;
 
     /**
      * The ElementQuery associated with this instance.
@@ -261,6 +264,8 @@ private:
     std::unique_ptr<BordersGroup> m_bordersGroup;
     std::unique_ptr<TextGroup> m_textGroup;
     std::unique_ptr<IconGroup> m_iconGroup;
+
+    std::unique_ptr<StylePropertyGroup> m_properties;
 
     QuickElement *m_element = nullptr;
 };

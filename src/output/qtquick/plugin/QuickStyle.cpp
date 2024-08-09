@@ -167,6 +167,7 @@ QuickStyle::QuickStyle(QObject *parent)
     m_bordersGroup = std::make_unique<BordersGroup>();
     m_textGroup = std::make_unique<TextGroup>();
     m_iconGroup = std::make_unique<IconGroup>();
+    m_properties = std::make_unique<StylePropertyGroup>();
 
     initialize();
 }
@@ -224,6 +225,10 @@ qreal QuickStyle::implicitHeight() const
 QBindable<qreal> QuickStyle::bindableImplicitHeight()
 {
     return QBindable<qreal>(&m_implicitHeight);
+}
+StylePropertyGroup *QuickStyle::properties() const
+{
+    return m_properties.get();
 }
 
 Union::ElementQuery *QuickStyle::query() const
@@ -294,6 +299,8 @@ void QuickStyle::update()
     m_bordersGroup->update(query->border());
     m_textGroup->update(query->text());
     m_iconGroup->update(query->icon());
+
+    m_properties->update(query->properties());
 
     Q_EMIT updated();
 
