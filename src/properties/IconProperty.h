@@ -9,8 +9,9 @@
 #include <QDebug>
 
 #include <QColor>
+#include <QString>
+#include <QUrl>
 
-#include "ImageProperty.h"
 
 #include "union_export.h"
 
@@ -21,21 +22,18 @@ namespace Union
 namespace Properties
 {
 
-class CornerPropertyPrivate;
+class IconPropertyPrivate;
 
-class UNION_EXPORT CornerProperty
+class UNION_EXPORT IconProperty
 {
 public:
-    CornerProperty();
-    CornerProperty(const CornerProperty &other);
-    CornerProperty(CornerProperty &&other);
-    ~CornerProperty();
+    IconProperty();
+    IconProperty(const IconProperty &other);
+    IconProperty(IconProperty &&other);
+    ~IconProperty();
 
-    CornerProperty &operator=(const CornerProperty &other);
-    CornerProperty &operator=(CornerProperty &&other);
-
-    std::optional<qreal> radius() const;
-    void setRadius(const std::optional<qreal> &newValue);
+    IconProperty &operator=(const IconProperty &other);
+    IconProperty &operator=(IconProperty &&other);
 
     std::optional<qreal> width() const;
     void setWidth(const std::optional<qreal> &newValue);
@@ -46,8 +44,11 @@ public:
     std::optional<QColor> color() const;
     void setColor(const std::optional<QColor> &newValue);
 
-    std::optional<ImageProperty> image() const;
-    void setImage(const std::optional<ImageProperty> &newValue);
+    std::optional<QString> name() const;
+    void setName(const std::optional<QString> &newValue);
+
+    std::optional<QUrl> source() const;
+    void setSource(const std::optional<QUrl> &newValue);
 
     /**
      * Check if this property has any value set.
@@ -65,14 +66,14 @@ public:
      * \param source The source property to copy from.
      * \param destination The destination property to copy to.
      */
-    static void resolveProperties(const CornerProperty &source, CornerProperty &destination);
+    static void resolveProperties(const IconProperty &source, IconProperty &destination);
 
 private:
-    std::unique_ptr<CornerPropertyPrivate> d;
+    std::unique_ptr<IconPropertyPrivate> d;
 };
 
-UNION_EXPORT bool operator==(const CornerProperty &left, const CornerProperty &right);
-UNION_EXPORT inline bool operator!=(const CornerProperty &left, const CornerProperty &right)
+UNION_EXPORT bool operator==(const IconProperty &left, const IconProperty &right);
+UNION_EXPORT inline bool operator!=(const IconProperty &left, const IconProperty &right)
 {
     return !(left == right);
 }
@@ -80,4 +81,4 @@ UNION_EXPORT inline bool operator!=(const CornerProperty &left, const CornerProp
 }
 }
 
-UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::CornerProperty &type);
+UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::IconProperty &type);
