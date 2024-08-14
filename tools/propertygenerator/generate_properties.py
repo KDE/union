@@ -167,6 +167,10 @@ if __name__ == "__main__":
 
     data = {"types": types.values()}
 
+    with open(src_directory / "Formatter.h", "w") as f:
+        template = jinja_env.get_template("formatter.h.j2")
+        f.write(template.render(data))
+
     with open(tests_directory / "CreateTestInstances.h", "w") as f:
         template = jinja_env.get_template("CreateTestInstances.h.j2")
         f.write(template.render(data))
