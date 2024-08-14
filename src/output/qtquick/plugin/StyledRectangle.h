@@ -12,18 +12,18 @@
 #include "QuickStyle.h"
 
 /**
- * An item used to render a background based on style properties.
+ * An item used to render a rectangle based on style properties.
  *
- * This will render a background for an element based on the properties exposed
+ * This will render a rectangle for an element based on the properties exposed
  * to QuickStyle.
  */
-class Background : public QQuickItem
+class StyledRectangle : public QQuickItem
 {
     Q_OBJECT
     QML_ELEMENT
 
 public:
-    Background(QQuickItem *parent = nullptr);
+    StyledRectangle(QQuickItem *parent = nullptr);
 
     void componentComplete() override;
 
