@@ -1,77 +1,100 @@
 textarea: &textarea
     type: TextArea
     colorSet: View
+
     path: widgets/lineedit
     prefix: base
-    padding: &textarea-padding
-        left:
-            property: element-width
-            element: hint-left-margin
-        right:
-            property: element-width
-            element: hint-right-margin
-        top:
-            property: element-height
-            element: hint-top-margin
-        bottom:
-            property: element-height
-            element: hint-bottom-margin
-    border: &textarea-border
-        left: &textarea-border-left
-            element: left
-            size:
+
+    layout: &textarea-layout
+        width:
+            property: sum
+            function: element-width
+            elements:
+            -   hint-left-margin
+            -   center
+            -   hint-right-margin
+
+        height:
+            property: sum
+            function: element-height
+            elements:
+            -   hint-top-margin
+            -   center
+            -   hint-bottom-margin
+
+        padding: &textarea-padding
+            left:
                 property: element-width
-            image:
-                property: element-image
-        right: &textarea-border-right
-            element: right
-            size:
+                element: hint-left-margin
+            right:
                 property: element-width
-            image:
-                property: element-image
-        top: &textarea-border-top
-            element: top
-            size:
+                element: hint-right-margin
+            top:
                 property: element-height
-            image:
-                property: element-image
-        bottom: &textarea-border-bottom
-            element: bottom
-            size:
+                element: hint-top-margin
+            bottom:
                 property: element-height
-            image:
-                property: element-image
-    corners: &textarea-corners
-        top-left: &textarea-corner-top-left
-            element: topleft
-            size:
-                property: element-size
-            image:
-                property: element-image
-        top-right: &textarea-corner-top-right
-            element: topright
-            size:
-                property: element-size
-            image:
-                property: element-image
-        bottom-left: &textarea-corner-bottom-left
-            element: bottomleft
-            size:
-                property: element-size
-            image:
-                property: element-image
-        bottom-right: &textarea-corner-bottom-right
-            element: bottomright
-            size:
-                property: element-size
-            image:
-                property: element-image
-    background: &textarea-background
+                element: hint-bottom-margin
+
+    background:
+        background: &textarea-background
         element: center
         size:
             property: element-size
         image:
             property: element-image
+
+        border: &textarea-border
+            left: &textarea-border-left
+                element: left
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            right: &textarea-border-right
+                element: right
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            top: &textarea-border-top
+                element: top
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+            bottom: &textarea-border-bottom
+                element: bottom
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+        corners: &textarea-corners
+            top-left: &textarea-corner-top-left
+                element: topleft
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            top-right: &textarea-corner-top-right
+                element: topright
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            bottom-left: &textarea-corner-bottom-left
+                element: bottomleft
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            bottom-right: &textarea-corner-bottom-right
+                element: bottomright
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+
     text:
         align:
             horizontal: left
