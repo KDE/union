@@ -55,11 +55,5 @@ private:
     std::optional<Union::TextDefinition> createTextDefinition(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::IconDefinition> createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context);
 
-    QVariant elementProperty(ryml::ConstNodeRef node, LoadingContext &context);
-
-    std::optional<QSizeF> elementSize(ryml::ConstNodeRef node, LoadingContext &context);
-    QImage elementImage(ryml::ConstNodeRef node, LoadingContext &context);
-    QImage elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
-
     Plasma::Theme m_plasmaTheme;
 };
