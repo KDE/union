@@ -22,6 +22,7 @@ include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
 include(ECMQmlModule)
 
+option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
 
 set(REQUIRED_QT_VERSION 6.6.0)
@@ -43,6 +44,10 @@ if (WITH_PLASMASVG_INPUT)
 endif()
 
 add_subdirectory(src)
+
+if(BUILD_TOOLS)
+    add_subdirectory(tools)
+endif()
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
