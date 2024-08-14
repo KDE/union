@@ -37,29 +37,27 @@ ApplicationWindow {
         Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
-            text: "Test"
             icon.name: "document-save"
+            text: "Test"
         }
 
         PC.Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
-            text: "Test"
             icon.name: "document-save"
+            text: "Test"
         }
 
         Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test 2"
-            icon.name: "document-save"
         }
 
         PC.Button {
             Layout.preferredWidth: 200
             Layout.preferredHeight: 50
             text: "Test 2"
-            icon.name: "document-save"
         }
     }
 
