@@ -80,49 +80,38 @@ switch: &switch
                     -   handle
         handle-hover:
             <<: *handle
-            state: Hovered
+            state: [Hovered]
             background:
-                element: "handle-hover"
-                size:
-                    property: element-size
+                <<: *handle-background
                 image:
-                    property: element-image-blend
-                    prefix: ""
                     align:
                         horizontal: center
                         vertical: center
-                    elements:
-                    -   handle-shadow
-                    -   handle-hover
-        handle-pressed:
+                    property: element-image-blend
+                    elements: [handle-shadow, handle, handle-hover]
+
+        handle-hover:
             <<: *handle
-            state: Pressed
+            state: [Pressed]
             background:
-                element: "handle-pressed"
-                size:
-                    property: element-size
+                <<: *handle-background
                 image:
-                    property: element-image-blend
-                    prefix: ""
                     align:
                         horizontal: center
                         vertical: center
-                    elements:
-                    -   handle-shadow
-                    -   handle-pressed
+                    property: element-image-blend
+                    elements: [handle-shadow, handle, handle-pressed]
         handle-focus:
             <<: *handle
-            state: VisualFocus
+            state: [VisualFocus]
             background:
-                element: "handle-focus"
-                size:
-                    property: element-size
+                <<: *handle-background
                 image:
-                    property: element-image-blend
-                    elements: [handle-shadow, handle, handle-focus]
                     align:
                         horizontal: center
                         vertical: center
+                    property: element-image-blend
+                    elements: [handle-shadow, handle, handle-focus]
 
 # TODO: this should probably be a child as it needs to be rendered with a size depending from the handle position
 switch-checked:
