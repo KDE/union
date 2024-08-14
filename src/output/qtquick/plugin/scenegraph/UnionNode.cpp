@@ -49,3 +49,27 @@ QSGTexture *UnionNode::createTextureForImageProperty(QQuickWindow *window,
 
     return texture;
 }
+
+HierarchyNode::HierarchyNode()
+{
+}
+
+void HierarchyNode::ensureHierarchy()
+{
+    if (m_rebuildNodeHierarchy) {
+        auto node = firstChild();
+        while (node) {
+            auto nextNode = node->nextSibling();
+            delete node;
+            node = nextNode;
+        }
+        removeAllChildNodes();
+
+        buildNodeHierarchy();
+    }
+}
+
+void HierarchyNode::rebuildHierarchy()
+{
+    m_rebuildNodeHierarchy = true;
+}

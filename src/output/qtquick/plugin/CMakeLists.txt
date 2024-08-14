@@ -7,20 +7,21 @@ target_sources(UnionQuickImpl PRIVATE
     QuickElement.h
     QuickStyle.cpp
     QuickStyle.h
-    Background.cpp
-    Background.h
-    UnionNode.cpp
-    UnionNode.h
-    AreaNode.cpp
-    AreaNode.h
-    LineNode.cpp
-    LineNode.h
-    CornerNode.cpp
-    CornerNode.h
-    ShadowNode.cpp
-    ShadowNode.h
     Types.h
     Types.cpp
+    Background.cpp
+    Background.h
+
+    scenegraph/UnionNode.cpp
+    scenegraph/UnionNode.h
+    scenegraph/AreaNode.cpp
+    scenegraph/AreaNode.h
+    scenegraph/LineNode.cpp
+    scenegraph/LineNode.h
+    scenegraph/CornerNode.cpp
+    scenegraph/CornerNode.h
+    scenegraph/ShadowNode.cpp
+    scenegraph/ShadowNode.h
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
