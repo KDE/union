@@ -9,8 +9,8 @@ target_sources(UnionQuickImpl PRIVATE
     QuickStyle.h
     Types.h
     Types.cpp
-    Background.cpp
-    Background.h
+    StyledRectangle.cpp
+    StyledRectangle.h
 
     scenegraph/UnionNode.cpp
     scenegraph/UnionNode.h
@@ -22,12 +22,17 @@ target_sources(UnionQuickImpl PRIVATE
     scenegraph/CornerNode.h
     scenegraph/ShadowNode.cpp
     scenegraph/ShadowNode.h
+    scenegraph/RectangleNode.cpp
+    scenegraph/RectangleNode.h
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
     UnionPlugin.cpp
 )
 
+add_subdirectory(properties)
+
+target_include_directories(UnionQuickImpl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/properties)
 target_link_libraries(UnionQuickImpl PUBLIC Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2 Union::Union)
 
 set_target_properties(UnionQuickImpl PROPERTIES
