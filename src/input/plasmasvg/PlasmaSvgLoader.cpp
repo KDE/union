@@ -18,7 +18,6 @@
 #include <KConfigGroup>
 #include <Plasma/Theme>
 
-#include <Definition.h>
 #include <StyleRule.h>
 #include <Theme.h>
 
@@ -29,10 +28,43 @@
 #include "plasmasvg_logging.h"
 
 using namespace Union;
+using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 using namespace std::string_literals;
 
 constexpr char16_t PluginName[] = u"plasmasvg";
+
+QFont fontFromName(c4::csubstr name)
+{
+    auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
+    auto group = config->group(u"General"_s);
+
+    QFont font;
+
+    if (name == "system-normal") {
+        font = group.readEntry("font", QFont());
+    } else if (name == "system-fixed") {
+        font = group.readEntry("fixed", QFont());
+    } else if (name == "system-small") {
+        font = group.readEntry("smallestReadableFont", QFont());
+    } else if (name == "system-toolbar") {
+        font = group.readEntry("toolBarFont", QFont());
+    } else if (name == "system-menu") {
+        font = group.readEntry("menuFont", QFont());
+    } else if (name == "system-window") {
+        font = group.readEntry("activeFont", QFont());
+    } else {
+        font = QFont(QString::fromUtf8(name));
+    }
+
+    return font;
+}
+
+void logError(QByteArrayView property, QByteArrayView value, const PropertyFunctions::Error &error, const LoadingContext &context)
+{
+    qCWarning(UNION_PLASMASVG) << "Failed setting value" << value << "of property" << property << "of rule" << context.selectors() << ":"
+                               << qPrintable(error.message);
+}
 
 bool PlasmaSvgLoader::load(Theme::Ptr theme)
 {
@@ -99,15 +131,15 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
 {
     SelectorList selectors;
 
-    with_child(node, "type", [&](auto node){
+    with_child(node, "type", [&](auto node) {
         selectors.append(Selector::create<SelectorType::Type>(value<QString>(node)));
     });
 
-    with_child(node, "id", [&](auto node){
+    with_child(node, "id", [&](auto node) {
         selectors.append(Selector::create<SelectorType::Id>(value<QString>(node)));
     });
 
-    with_child(node, "state", [&](auto node){
+    with_child(node, "state", [&](auto node) {
         selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
         // Support value or list
         if (node.has_val()) {
@@ -124,7 +156,7 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
         }
     });
 
-    with_child(node, "hints", [&](auto node){
+    with_child(node, "hints", [&](auto node) {
         // Support value or list
         if (node.has_val()) {
             selectors.append(Selector::create<SelectorType::Hint>(value<QString>(node)));
@@ -140,7 +172,7 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
         }
     });
 
-    with_child(node, "attributes", [&](auto node){
+    with_child(node, "attributes", [&](auto node) {
         if (node.has_children()) {
             SelectorList allOfList;
             for (auto child : node.children()) {
@@ -158,7 +190,7 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
         }
     });
 
-    with_child(node, "colorSet", [&](auto node){
+    with_child(node, "colorSet", [&](auto node) {
         // Support value or list
         if (node.has_val()) {
             selectors.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, node)));
@@ -197,46 +229,32 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingCont
     // element->addAttribute(u"plugin"_qs, QString::fromUtf16(PluginName));
     // element->addAttribute(u"themeName"_qs, m_theme.themeName());
 
-    with_child(node, "margins", [&](auto node){
-        style->setMargins(createSizeDefinition(node, context));
+    StyleProperty properties;
+
+    with_child(node, "layout", [&](auto node) {
+        properties.setLayout(createLayoutProperty(node, context));
     });
 
-    with_child(node, "padding", [&](auto node){
-        style->setPadding(createSizeDefinition(node, context));
+    with_child(node, "text", [&](auto node) {
+        properties.setText(createTextProperty(node, context));
     });
 
-    with_child(node, "border", [&](auto node){
-        style->setBorder(createBorderDefinition(node, context));
+    with_child(node, "background", [&](auto node) {
+        properties.setBackground(createBackgroundProperty(node, context));
     });
 
-    with_child(node, "corners", [&](auto node){
-        style->setCorners(createCornersDefinition(node, context));
-    });
+    if (properties.hasAnyValue()) {
+        style->setProperties(properties);
+    }
 
-    with_child(node, "background", [&](auto node){
-        style->setBackground(createAreaDefinition(node, context));
-    });
-
-    with_child(node, "shadow", [&](auto node){
-        style->setShadow(createShadowDefinition(node, context));
-    });
-
-    with_child(node, "text", [&](auto node){
-        style->setText(createTextDefinition(node, context));
-    });
-
-    with_child(node, "icon", [&](auto node){
-        style->setIcon(createIconDefinition(node, context));
-    });
-
-    with_child(node, "children", [&](auto node){
+    with_child(node, "children", [&](auto node) {
         createStyles(node, context);
     });
 
     return style;
 }
 
-std::optional<Union::SizeDefinition> PlasmaSvgLoader::createSizeDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+std::optional<LayoutProperty> PlasmaSvgLoader::createLayoutProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
         return std::nullopt;
@@ -244,19 +262,46 @@ std::optional<Union::SizeDefinition> PlasmaSvgLoader::createSizeDefinition(ryml:
 
     auto cleanup = context.pushFromNode(node);
 
-    Union::SizeDefinition sizes;
-    forEachEntry({"left"s, "right"s, "top"s, "bottom"s},
-                 {&sizes.left, &sizes.right, &sizes.top, &sizes.bottom},
-                 node,
-                 [this, &context](ryml::ConstNodeRef node) {
-                     auto cleanup = context.pushFromNode(node);
-                     return elementProperty(node, context).toReal();
-                 });
+    LayoutProperty layout;
 
-    return sizes;
+    with_child(node, "width", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            layout.setWidth(value.value());
+        } else {
+            logError("layout", "width", value.error(), context);
+        }
+    });
+    with_child(node, "height", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            layout.setHeight(value.value());
+        } else {
+            logError("layout", "height", value.error(), context);
+        }
+    });
+    with_child(node, "spacing", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            layout.setSpacing(value.value());
+        } else {
+            logError("layout", "spacing", value.error(), context);
+        }
+    });
+    with_child(node, "alignment", [&](auto node) {
+        layout.setAlignment(value<Qt::Alignment>(node));
+    });
+    with_child(node, "padding", [&](auto node) {
+        layout.setPadding(createSizeProperty(node, context));
+    });
+    with_child(node, "margins", [&](auto node) {
+        layout.setMargins(createSizeProperty(node, context));
+    });
+
+    return layout;
 }
 
-std::optional<Union::BorderDefinition> PlasmaSvgLoader::createBorderDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+std::optional<TextProperty> PlasmaSvgLoader::createTextProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
         return std::nullopt;
@@ -264,254 +309,227 @@ std::optional<Union::BorderDefinition> PlasmaSvgLoader::createBorderDefinition(r
 
     auto cleanup = context.pushFromNode(node);
 
-    Union::BorderDefinition border;
-    forEachEntry({"left"s, "right"s, "top"s, "bottom"s},
-                 {&border.left, &border.right, &border.top, &border.bottom},
-                 node,
-                 [this, &context](ryml::ConstNodeRef node) {
-                     auto cleanup = context.pushFromNode(node);
-                     return createLineDefinition(node, context);
-                 });
-
-    return border;
-}
-
-std::optional<Union::CornersDefinition> PlasmaSvgLoader::createCornersDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::CornersDefinition corners;
-    forEachEntry({"top-left"s, "top-right"s, "bottom-left"s, "bottom-right"s},
-                 {&corners.topLeft, &corners.topRight, &corners.bottomLeft, &corners.bottomRight},
-                 node,
-                 [this, &context](ryml::ConstNodeRef node) {
-                     auto cleanup = context.pushFromNode(node);
-                     return createCornerDefinition(node, context);
-                 });
-
-    return corners;
-}
-
-std::optional<Union::AreaDefinition> PlasmaSvgLoader::createAreaDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::AreaDefinition area;
-    with_child(node, "size", [&](auto node){
-        area.size = elementProperty(node, context).toSizeF();
+    TextProperty text;
+    with_child(node, "alignment", [&](auto node) {
+        text.setAlignment(value<Qt::Alignment>(node));
     });
-    with_child(node, "image", [&](auto node){
-        area.image = createImageDefinition(node, context);
-    });
-    return area;
-}
-
-std::optional<Union::LineDefinition> PlasmaSvgLoader::createLineDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::LineDefinition line;
-    with_child(node, "size", [&](auto node){
-        line.size = elementProperty(node, context).toReal();
-    });
-    with_child(node, "image", [&](auto node){
-        line.image = createImageDefinition(node, context);
-    });
-    return line;
-}
-
-std::optional<Union::CornerDefinition> PlasmaSvgLoader::createCornerDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::CornerDefinition corner;
-    with_child(node, "image", [&](auto node){
-        corner.image = createImageDefinition(node, context);
-    });
-    with_child(node, "size", [&](auto node){
-        auto size = elementProperty(node, context).toSizeF();
-        corner.width = size.width();
-        corner.height = size.height();
-    });
-    return corner;
-}
-
-std::optional<Union::ImageDefinition> PlasmaSvgLoader::createImageDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::ImageDefinition image;
-    image.imageData = elementProperty(node, context).value<QImage>();
-    image.width = image.imageData.width();
-    image.height = image.imageData.height();
-    image.flags = Union::RepeatBoth;
-    return image;
-}
-
-std::optional<Union::ShadowDefinition> PlasmaSvgLoader::createShadowDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::ShadowDefinition shadow;
-    with_child(node, "offsets", [&](auto node){
-        shadow.offsets = createSizeDefinition(node, context);
-    });
-
-    forEachEntry({"left", "right", "top", "bottom"}, {&shadow.left, &shadow.right, &shadow.top, &shadow.bottom}, node, [this, &context](auto node) {
-        context.pushFromNode(node);
-        return createLineDefinition(node, context);
-    });
-
-    forEachEntry({"top-left", "top-right", "bottom-left", "bottom-right"},
-                 {&shadow.topLeft, &shadow.topRight, &shadow.bottomLeft, &shadow.bottomRight},
-                 node,
-                 [this, &context](auto node) {
-                     context.pushFromNode(node);
-                     return createCornerDefinition(node, context);
-                 });
-
-    return shadow;
-}
-
-std::optional<Union::TextDefinition> PlasmaSvgLoader::createTextDefinition(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    if (!node.is_map()) {
-        return std::nullopt;
-    }
-
-    auto cleanup = context.pushFromNode(node);
-
-    Union::TextDefinition text;
-    with_child(node, "align", [&](auto node){
-        text.alignment = value<Qt::Alignment>(node);
-    });
-    with_child(node, "font", [&](auto node){
+    with_child(node, "font", [&](auto node) {
         auto fontName = node.val();
         if (fontName.empty()) {
             return;
         }
 
-        auto config = KSharedConfig::openConfig(u"kdeglobals"_s);
-        auto group = config->group(u"General"_s);
-
-        if (fontName == "system-normal") {
-            text.font = group.readEntry("font", QFont());
-        } else if (fontName == "system-fixed") {
-            text.font = group.readEntry("fixed", QFont());
-        } else if (fontName == "system-small") {
-            text.font = group.readEntry("smallestReadableFont", QFont());
-        } else if (fontName == "system-toolbar") {
-            text.font = group.readEntry("toolBarFont", QFont());
-        } else if (fontName == "system-menu") {
-            text.font = group.readEntry("menuFont", QFont());
-        } else if (fontName == "system-window") {
-            text.font = group.readEntry("activeFont", QFont());
-        }
+        text.setFont(fontFromName(fontName));
     });
 
     return text;
 }
 
-std::optional<Union::IconDefinition> PlasmaSvgLoader::createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context)
+std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    if (!node.is_map() || !node.has_children()) {
+    if (!node.is_map()) {
         return std::nullopt;
     }
 
     auto cleanup = context.pushFromNode(node);
 
-    Union::IconDefinition icon;
-    with_child(node, "color", [&](auto node){
-        icon.color = value<QColor>(node);
-    });
-    auto valueForIconSizeName = [](c4::csubstr val) -> qreal {
-        if (val == "small") {
-            return 16;
-        } else if (val == "small-medium") {
-            return 22;
-        } else if (val == "medium") {
-            return 32;
-        } else if (val == "large") {
-            return 48;
-        } else if (val == "huge") {
-            return 64;
-        } else if (val == "enormous") {
-            return 128;
-        }
-        return 0;
-    };
-    with_child(node, "size", [&](auto node){
-        if (!node.has_val()) {
-            return;
-        }
-        auto val = node.val();
-        if (val.empty() || ryml::read(node, &icon.size.rwidth())) {
-            icon.size.setHeight(icon.size.width());
-            return;
-        }
-        auto size = valueForIconSizeName(val);
-        icon.size = {size, size};
-    });
-    auto setIconSource = [](auto &icon, auto node) {
-        auto val = node.val();
-        if (val.empty()) {
-            return;
-        }
-        // Freedesktop icon names shouldn't contain spaces, colons, slashes or
-        // backslashes. If the string has those, it's a path or url.
-        // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html#guidelines
-        if (node.val().first_of(" :/\\") == c4::csubstr::npos) {
-            icon.name = value<QString>(node);
-            return;
-        }
-        icon.url = value<QUrl>(node);
-    };
-    with_child(node, "source", [&](auto node){
-        if (node.has_val()) {
-            setIconSource(icon, node);
-        } else if (node.is_seq() && node.has_children()) {
-            for (auto child : node.children()) {
-                if (!child.has_val()) {
-                    continue;
-                }
-                setIconSource(icon, child);
-                if (!icon.name.isEmpty() && !QIcon::hasThemeIcon(icon.name)) {
-                    icon.name = QString{};
-                    continue;
-                }
-                if (!icon.url.isEmpty() && (!icon.url.isValid()
-                    || !icon.url.isLocalFile()
-                    || QIcon::fromTheme(icon.url.toLocalFile()).isNull())) {
-                    icon.url = QUrl{};
-                    continue;
-                }
-                break;
-            }
+    BackgroundProperty background;
+    with_child(node, "color", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<QColor>(node, context);
+        if (value.has_value()) {
+            background.setColor(value.value());
+        } else {
+            logError("background", "color", value.error(), context);
         }
     });
-    return icon;
+
+    with_child(node, "image", [&](auto node) {
+        background.setImage(createImageProperty(node, context));
+    });
+
+    with_child(node, "border", [&](auto node) {
+        background.setBorder(createBorderProperty(node, context));
+    });
+
+    with_child(node, "corners", [&](auto node) {
+        background.setCorners(createCornersProperty(node, context));
+    });
+
+    with_child(node, "shadow", [&](auto node) {
+        background.setShadow(createShadowProperty(node, context));
+    });
+
+    return background;
+}
+
+std::optional<SizeProperty> PlasmaSvgLoader::createSizeProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    SizeProperty sizes;
+    forEachEntry({"left"s, "right"s, "top"s, "bottom"s},
+                 sizes,
+                 {&SizeProperty::setLeft, &SizeProperty::setRight, &SizeProperty::setTop, &SizeProperty::setBottom},
+                 node,
+                 [&context](auto node) {
+                     auto cleanup = context.pushFromNode(node);
+                     auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+                     if (value.has_value()) {
+                         return value.value();
+                     } else {
+                         logError("size", node.key(), value.error(), context);
+                         return 0.0;
+                     }
+                 });
+
+    return sizes;
+}
+
+std::optional<BorderProperty> PlasmaSvgLoader::createBorderProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    BorderProperty border;
+    forEachEntry({"left"s, "right"s, "top"s, "bottom"s},
+                 border,
+                 {&BorderProperty::setLeft, &BorderProperty::setRight, &BorderProperty::setTop, &BorderProperty::setBottom},
+                 node,
+                 [this, &context](auto node) {
+                     auto cleanup = context.pushFromNode(node);
+                     return createLineProperty(node, context);
+                 });
+
+    return border;
+}
+
+std::optional<CornersProperty> PlasmaSvgLoader::createCornersProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    CornersProperty corners;
+    forEachEntry({"top-left"s, "top-right"s, "bottom-left"s, "bottom-right"s},
+                 corners,
+                 {&CornersProperty::setTopLeft, &CornersProperty::setTopRight, &CornersProperty::setBottomLeft, &CornersProperty::setBottomRight},
+                 node,
+                 [this, &context](auto node) {
+                     auto cleanup = context.pushFromNode(node);
+                     return createCornerProperty(node, context);
+                 });
+
+    return corners;
+}
+
+std::optional<LineProperty> PlasmaSvgLoader::createLineProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    LineProperty line;
+    with_child(node, "size", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            line.setSize(value.value());
+        } else {
+            logError("line", "size", value.error(), context);
+        }
+    });
+    with_child(node, "image", [&](auto node) {
+        line.setImage(createImageProperty(node, context));
+    });
+    return line;
+}
+
+std::optional<CornerProperty> PlasmaSvgLoader::createCornerProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    CornerProperty corner;
+    with_child(node, "image", [&](auto node) {
+        corner.setImage(createImageProperty(node, context));
+    });
+    with_child(node, "size", [&](auto node) {
+        auto size = PropertyFunctions::elementProperty<QSizeF>(node, context);
+        if (size.has_value()) {
+            corner.setWidth(size.value().width());
+            corner.setHeight(size.value().height());
+        } else {
+            logError("corner", "size", size.error(), context);
+        }
+    });
+    return corner;
+}
+
+std::optional<ImageProperty> PlasmaSvgLoader::createImageProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    auto data = PropertyFunctions::elementProperty<QImage>(node, context);
+    if (!data.has_value()) {
+        logError("image", "data", data.error(), context);
+        return std::nullopt;
+    }
+
+    ImageProperty image;
+    image.setImageData(data.value());
+    image.setWidth(data.value().width());
+    image.setHeight(data.value().height());
+    image.setFlags(Union::Properties::ImageFlag::RepeatBoth);
+    return image;
+}
+
+std::optional<ShadowProperty> PlasmaSvgLoader::createShadowProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    ShadowProperty shadow;
+    with_child(node, "offsets", [&](auto node) {
+        shadow.setOffsets(createSizeProperty(node, context));
+    });
+
+    forEachEntry({"left", "right", "top", "bottom"},
+                 shadow,
+                 {&ShadowProperty::setLeft, &ShadowProperty::setRight, &ShadowProperty::setTop, &ShadowProperty::setBottom},
+                 node,
+                 [this, &context](auto node) {
+                     auto cleanup = context.pushFromNode(node);
+                     return createLineProperty(node, context);
+                 });
+
+    forEachEntry({"top-left", "top-right", "bottom-left", "bottom-right"},
+                 shadow,
+                 {&ShadowProperty::setTopLeft, &ShadowProperty::setTopRight, &ShadowProperty::setBottomLeft, &ShadowProperty::setBottomRight},
+                 node,
+                 [this, &context](auto node) {
+                     auto cleanup = context.pushFromNode(node);
+                     return createCornerProperty(node, context);
+                 });
+
+    return shadow;
 }

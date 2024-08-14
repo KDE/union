@@ -44,16 +44,17 @@ private:
     Union::StyleRule::Ptr createStyle(ryml::ConstNodeRef node, LoadingContext &context);
     Union::Selector createSelector(ryml::ConstNodeRef node);
 
-    std::optional<Union::SizeDefinition> createSizeDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::BorderDefinition> createBorderDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::CornersDefinition> createCornersDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::AreaDefinition> createAreaDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::LineDefinition> createLineDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::CornerDefinition> createCornerDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::ImageDefinition> createImageDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::ShadowDefinition> createShadowDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::TextDefinition> createTextDefinition(ryml::ConstNodeRef node, LoadingContext &context);
-    std::optional<Union::IconDefinition> createIconDefinition(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::LayoutProperty> createLayoutProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::TextProperty> createTextProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::BackgroundProperty> createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context);
+
+    std::optional<Union::Properties::SizeProperty> createSizeProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::BorderProperty> createBorderProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::CornersProperty> createCornersProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::LineProperty> createLineProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::CornerProperty> createCornerProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::ImageProperty> createImageProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::ShadowProperty> createShadowProperty(ryml::ConstNodeRef node, LoadingContext &context);
 
     Plasma::Theme m_plasmaTheme;
 };

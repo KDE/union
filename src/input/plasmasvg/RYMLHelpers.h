@@ -196,17 +196,18 @@ inline Qt::Alignment value<Qt::Alignment>(ryml::ConstNodeRef node)
     return align;
 }
 
-template<typename I, typename O, typename F>
-inline void forEachEntry(const std::initializer_list<I> &input, const std::initializer_list<O *> output, ryml::ConstNodeRef &node, F callback)
+template<typename I, typename Output, typename Setter, typename F>
+inline void
+forEachEntry(const std::initializer_list<I> &input, Output &output, const std::initializer_list<Setter> setters, ryml::ConstNodeRef &node, F callback)
 {
-    Q_ASSERT(input.size() == output.size());
+    Q_ASSERT(input.size() == setters.size());
 
     auto inputItr = input.begin();
-    auto outputItr = output.begin();
-    for (; inputItr != input.end() && outputItr != output.end(); ++inputItr, ++outputItr) {
+    auto setterItr = setters.begin();
+    for (; inputItr != input.end() && setterItr != setters.end(); ++inputItr, ++setterItr) {
         auto name = ryml::to_csubstr(*inputItr);
         if (ryml::ConstNodeRef childNode = node.find_child(name); childNode.valid()) {
-            *(*outputItr) = callback(childNode);
+            (output.*(*setterItr))(callback(childNode));
         }
     }
 }
