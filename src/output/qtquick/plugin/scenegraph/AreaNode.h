@@ -5,8 +5,7 @@
 
 #pragma once
 
-#include <Definition.h>
-// #include <Size.h>
+#include <properties/ImageProperty.h>
 
 #include "UnionNode.h"
 
@@ -15,8 +14,8 @@ class AreaNode : public UnionNode
 public:
     AreaNode();
 
-    Union::AreaDefinition area;
-    QRectF rect;
+    QColor color;
+    std::optional<Union::Properties::ImageProperty> image;
 
     void update(QQuickWindow *window) override;
 };

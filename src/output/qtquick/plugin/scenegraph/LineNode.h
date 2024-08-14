@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <Definition.h>
+#include <properties/LineProperty.h>
 
 #include "UnionNode.h"
 
@@ -14,10 +14,7 @@ class LineNode : public UnionNode
 public:
     LineNode();
 
-    Union::LineDefinition line;
-    QRectF rect;
-    Qt::Orientation orientation = Qt::Horizontal;
-    Qt::Alignment alignment;
+    Union::Properties::LineProperty line;
 
     void update(QQuickWindow *window) override;
 };

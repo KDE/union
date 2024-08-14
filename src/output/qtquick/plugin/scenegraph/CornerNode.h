@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <Definition.h>
+#include <properties/CornerProperty.h>
 
 #include "UnionNode.h"
 
@@ -14,10 +14,7 @@ class CornerNode : public UnionNode
 public:
     CornerNode();
 
-    Union::CornerDefinition corner;
-    QRectF rect;
-    QPointF offset;
-    QColor color = Qt::transparent;
+    Union::Properties::CornerProperty corner;
 
     void update(QQuickWindow *window) override;
 };
