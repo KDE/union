@@ -239,6 +239,9 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingCont
         properties.setText(createTextProperty(node, context));
     });
 
+    with_child(node, "icon", [&](auto node) {
+        properties.setIcon(createIconProperty(node, context));
+    });
     with_child(node, "background", [&](auto node) {
         properties.setBackground(createBackgroundProperty(node, context));
     });
@@ -323,6 +326,59 @@ std::optional<TextProperty> PlasmaSvgLoader::createTextProperty(ryml::ConstNodeR
     });
 
     return text;
+}
+
+std::optional<Union::Properties::IconProperty> PlasmaSvgLoader::createIconProperty(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    if (!node.is_map()) {
+        return std::nullopt;
+    }
+
+    auto cleanup = context.pushFromNode(node);
+
+    IconProperty icon;
+    with_child(node, "width", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            icon.setWidth(value.value());
+        } else {
+            logError("icon", "width", value.error(), context);
+        }
+    });
+    with_child(node, "height", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
+        if (value.has_value()) {
+            icon.setHeight(value.value());
+        } else {
+            logError("icon", "height", value.error(), context);
+        }
+    });
+    with_child(node, "color", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<QColor>(node, context);
+        if (value.has_value()) {
+            icon.setColor(value.value());
+        } else {
+            logError("icon", "color", value.error(), context);
+        }
+    });
+    with_child(node, "name", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<QString>(node, context);
+        if (value.has_value()) {
+            icon.setName(value.value());
+        } else {
+            logError("icon", "name", value.error(), context);
+        }
+    });
+    with_child(node, "source", [&](auto node) {
+        auto value = PropertyFunctions::elementProperty<QUrl>(node, context);
+        if (value.has_value()) {
+            icon.setSource(value.value());
+        } else {
+            logError("icon", "source", value.error(), context);
+        }
+    });
+
+    return icon;
 }
 
 std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context)

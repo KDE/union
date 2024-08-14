@@ -123,6 +123,12 @@ inline QColor constantValue<QColor>(ryml::ConstNodeRef node)
     return value<QColor>(node);
 }
 
+template<>
+inline QUrl constantValue<QUrl>(ryml::ConstNodeRef node)
+{
+    return value<QUrl>(node);
+}
+
 template<typename T>
 Result<T> elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {

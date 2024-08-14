@@ -23,6 +23,14 @@ text:
     color: QColor
     font: QFont
 
+icon:
+    width: qreal
+    height: qreal
+    # alignment: Qt::Alignment
+    color: QColor
+    name: QString
+    source: QUrl
+
 background:
     color: QColor
     image: &image

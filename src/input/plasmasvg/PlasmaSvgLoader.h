@@ -46,6 +46,7 @@ private:
 
     std::optional<Union::Properties::LayoutProperty> createLayoutProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::TextProperty> createTextProperty(ryml::ConstNodeRef node, LoadingContext &context);
+    std::optional<Union::Properties::IconProperty> createIconProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::BackgroundProperty> createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context);
 
     std::optional<Union::Properties::SizeProperty> createSizeProperty(ryml::ConstNodeRef node, LoadingContext &context);
