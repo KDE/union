@@ -8,7 +8,6 @@
 #include <QMarginsF>
 #include <qqmlregistration.h>
 
-#include <Definition.h>
 #include <Element.h>
 
 namespace ColorSet
@@ -30,7 +29,6 @@ public:
     Sizes();
     Sizes(qreal left, qreal right, qreal top, qreal bottom);
     explicit Sizes(const QMarginsF &margins);
-    explicit Sizes(const std::optional<Union::SizeDefinition> &other);
 
     bool operator==(const Sizes &other);
 

@@ -18,7 +18,6 @@ target_sources(Union PRIVATE
     InputPlugin.h
     Selector.cpp
     Selector.h
-    Definition.h
     PropertiesTypes.h
 )
 

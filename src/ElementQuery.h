@@ -17,7 +17,6 @@
 namespace Union
 {
 
-class StyleRule;
 class Theme;
 class ElementQueryPrivate;
 
@@ -33,32 +32,46 @@ class ElementQueryPrivate;
  * background color set and if so, return that. If not the second rule would be
  * checked and so on.
  */
-class UNION_EXPORT ElementQuery : public StyleRuleInterface
+class UNION_EXPORT ElementQuery
 {
 public:
-    ElementQuery(std::shared_ptr<Theme> theme = nullptr);
-    ~ElementQuery() override;
+    explicit ElementQuery(std::shared_ptr<Theme> theme = nullptr);
+    ~ElementQuery() noexcept;
 
-    QList<Element::Ptr> elements();
+    /**
+     * The list of elements that should be matched against.
+     *
+     * This list is treated as a hierarchy, with the first element as the bottom
+     * most element and the last the top most.
+     */
+    QList<Element::Ptr> elements() const;
+    /**
+     * Set the list of elements to match against.
+     *
+     * \param elements The elements to match.
+     */
     void setElements(const QList<Element::Ptr> &elements);
 
-    void execute();
-    bool result() const;
+    /**
+     * The list of matched style rules for this query.
+     */
+    QList<StyleRule::Ptr> matchedRules() const;
 
-    QSizeF contentSize() const override;
-    QRectF boundingRect() const override;
-    QMarginsF borderSizes() const override;
+    /**
+     * Execute the query.
+     *
+     * This will perform matching of style rules from the query's theme against
+     * the list of elements in this query.
+     *
+     * \return True if the query was successful, false if nothing was matched.
+     */
+    bool execute();
 
-    std::optional<AreaDefinition> foreground() const override;
-    std::optional<AreaDefinition> background() const override;
-    std::optional<BorderDefinition> border() const override;
-    std::optional<CornersDefinition> corners() const override;
-    std::optional<ShadowDefinition> shadow() const override;
-    std::optional<BorderDefinition> outset() const override;
-    std::optional<SizeDefinition> margins() const override;
-    std::optional<SizeDefinition> padding() const override;
-    std::optional<TextDefinition> text() const override;
-    std::optional<IconDefinition> icon() const override;
+    /**
+     * Retrieve if the last call to execute() had any matches.
+     */
+    bool hasMatches() const;
+
     /**
      * Retrieve the root of the combined matched set of properties.
      *
