@@ -34,25 +34,25 @@ T.ToolButton {
         highlighted: control.highlighted
     }
 
-    leftPadding: Union.Style.padding.left
-    rightPadding: Union.Style.padding.right
-    topPadding: Union.Style.padding.top
-    bottomPadding: Union.Style.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.margins.left
-    rightInset: Union.Style.margins.right
-    topInset: Union.Style.margins.top
-    bottomInset: Union.Style.margins.bottom
+    leftInset: Union.Style.properties.layout.margins.left
+    rightInset: Union.Style.properties.layout.margins.right
+    topInset: Union.Style.properties.layout.margins.top
+    bottomInset: Union.Style.properties.layout.margins.bottom
 
-    font: Union.Style.text.font
+    font: Union.Style.properties.text.font
 
     spacing: 6
     icon {
-        color: Union.Style.icon.color
-        width: Union.Style.icon.width
-        height: Union.Style.icon.height
-        name: Union.Style.icon.name
-        source: Union.Style.icon.source
+        color: Union.Style.properties.icon.color
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: Union.Style.properties.icon.name
+        source: Union.Style.properties.icon.source
     }
     flat: true
 
@@ -64,8 +64,7 @@ T.ToolButton {
         text: control.text
         font: control.font
         color: control.palette.buttonText
-        alignment: Union.Style.text.horizontalAlignment | Union.Style.text.verticalAlignment
     }
 
-    background: Union.Background {}
+    background: Union.StyledRectangle {}
 }

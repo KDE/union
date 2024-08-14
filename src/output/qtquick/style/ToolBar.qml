@@ -24,17 +24,17 @@ T.ToolBar {
         enabled: control.enabled
     }
 
-    leftPadding: Union.Style.padding.left
-    rightPadding: Union.Style.padding.right
-    topPadding: Union.Style.padding.top
-    bottomPadding: Union.Style.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.margins.left
-    rightInset: Union.Style.margins.right
-    topInset: Union.Style.margins.top
-    bottomInset: Union.Style.margins.bottom
+    leftInset: Union.Style.properties.layout.margins.left
+    rightInset: Union.Style.properties.layout.margins.right
+    topInset: Union.Style.properties.layout.margins.top
+    bottomInset: Union.Style.properties.layout.margins.bottom
 
-    font: Union.Style.text.font
+    font: Union.Style.properties.text.font
 
-    background: Union.Background {}
+    background: Union.StyledRectangle { }
 }

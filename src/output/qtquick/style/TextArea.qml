@@ -67,5 +67,5 @@ T.TextArea {
         renderType: control.renderType
     }
 
-    background: Union.Background {}
+    background: Union.StyledRectangle {}
 }

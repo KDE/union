@@ -54,7 +54,7 @@ T.TabBar {
         preferredHighlightEnd: width - 40
         highlightResizeDuration: 0 // TODO: make styleable
         // Some styles use list view highlights, some don't
-        highlight: Union.Background {
+        highlight: Union.StyledRectangle {
             id: highlight
             Union.Element.type: "TabBar"
             Union.Element.states {
@@ -67,5 +67,5 @@ T.TabBar {
     }
 
     // Some styles use backgrounds, some don't
-    background: Union.Background {}
+    background: Union.StyledBackground {}
 }

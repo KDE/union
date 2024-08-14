@@ -62,5 +62,5 @@ T.TabButton {
         alignment: Union.Style.text.horizontalAlignment | Union.Style.text.verticalAlignment
     }
 
-    background: Union.Background {}
+    background: Union.StyledRectangle {}
 }
