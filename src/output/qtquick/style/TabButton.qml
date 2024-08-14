@@ -30,25 +30,25 @@ T.TabButton {
     Union.Element.attributes: control.T.TabBar.position === T.TabBar.Footer ?
         {"tab-position": "south"} : {"tab-position": "north"}
 
-    leftPadding: Union.Style.padding.left
-    rightPadding: Union.Style.padding.right
-    topPadding: Union.Style.padding.top
-    bottomPadding: Union.Style.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.margins.left
-    rightInset: Union.Style.margins.right
-    topInset: Union.Style.margins.top
-    bottomInset: Union.Style.margins.bottom
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.text.font
+    font: Union.Style.properties.text.font
 
     spacing: 6
     icon {
-        color: Union.Style.icon.color
-        width: Union.Style.icon.width
-        height: Union.Style.icon.height
-        name: Union.Style.icon.name
-        source: Union.Style.icon.source
+        color: Union.Style.properties.icon.color
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: Union.Style.properties.icon.name
+        source: Union.Style.properties.icon.source
     }
 
     contentItem: QCCImpl.IconLabel {
@@ -59,7 +59,7 @@ T.TabButton {
         text: control.text
         font: control.font
         color: control.palette.buttonText
-        alignment: Union.Style.text.horizontalAlignment | Union.Style.text.verticalAlignment
+        alignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal) | Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
 
     background: Union.StyledRectangle {}

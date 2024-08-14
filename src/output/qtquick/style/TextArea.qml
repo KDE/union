@@ -24,26 +24,26 @@ T.TextArea {
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
-        visualFocus: activeFocus
+        visualFocus: control.activeFocus
             && (control.focusReason === Qt.TabFocusReason
             || control.focusReason === Qt.BacktabFocusReason
             || control.focusReason === Qt.ShortcutFocusReason)
         enabled: control.enabled
     }
 
-    leftPadding: Union.Style.padding.left
-    rightPadding: Union.Style.padding.right
-    topPadding: Union.Style.padding.top
-    bottomPadding: Union.Style.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.margins.left
-    rightInset: Union.Style.margins.right
-    topInset: Union.Style.margins.top
-    bottomInset: Union.Style.margins.bottom
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.text.font
 
-    color: control.palette.text
+    color: Union.Style.properties.text.color
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
     placeholderTextColor: control.palette.placeholderText

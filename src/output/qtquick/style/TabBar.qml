@@ -24,19 +24,19 @@ T.TabBar {
     Union.Element.attributes: position === T.TabBar.Footer ?
         {"tab-position": "south"} : {"tab-position": "north"}
 
-    leftPadding: Union.Style.padding.left
-    rightPadding: Union.Style.padding.right
-    topPadding: Union.Style.padding.top
-    bottomPadding: Union.Style.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.margins.left
-    rightInset: Union.Style.margins.right
-    topInset: Union.Style.margins.top
-    bottomInset: Union.Style.margins.bottom
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.text.font
+    spacing: Union.Style.properties.layout.spacing
 
-    spacing: 0 // TODO: make styleable
+    font: Union.Style.properties.text.font
 
     contentItem: ListView {
         implicitWidth: contentWidth
