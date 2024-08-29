@@ -5,10 +5,15 @@ palette:
     # TODO: Add more QColors
 
 layout:
+    alignment: &alignment
+        container: Union::Properties::AlignmentContainer
+        horizontal: Union::Properties::Alignment
+        vertical: Union::Properties::Alignment
+        order: int
+
     width: qreal
     height: qreal
     spacing: qreal
-    alignment: Qt::Alignment
 
     padding: &size
         left: qreal
@@ -19,14 +24,14 @@ layout:
     margins: *size
 
 text:
-    alignment: Qt::Alignment
+    alignment: *alignment
     color: QColor
     font: QFont
 
 icon:
+    alignment: *alignment
     width: qreal
     height: qreal
-    # alignment: Qt::Alignment
     color: QColor
     name: QString
     source: QUrl

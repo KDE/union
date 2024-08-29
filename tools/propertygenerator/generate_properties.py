@@ -14,8 +14,9 @@ tests_directory = root_directory / "autotests" / "properties"
 quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin" / "properties"
 
 include_patterns = [
-    {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "qreal", "use_include": None},
+    {"pattern": "int", "use_include": None},
+    {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "Q", "system_include": True},
     {"pattern": "Union::Properties::", "use_include": "../PropertiesTypes.h"},
     {"pattern": "", },
