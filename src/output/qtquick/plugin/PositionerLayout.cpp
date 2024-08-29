@@ -1,0 +1,371 @@
+/*
+ * SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+ *
+ * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+ */
+
+#include "PositionerLayout.h"
+
+#include <QQuickWindow>
+
+#include "Positioner.h"
+#include "QuickStyle.h"
+
+#include "qtquick_logging.h"
+
+inline qreal spacedSize(const std::initializer_list<qreal> &sizes, qreal spacing)
+{
+    Q_ASSERT(sizes.size() > 0);
+
+    qreal result = *sizes.begin();
+    if (sizes.size() > 1) {
+        for (auto itr = sizes.begin() + 1; itr != sizes.end(); ++itr) {
+            if (!qFuzzyIsNull(*itr)) {
+                result += spacing;
+                result += *itr;
+            }
+        }
+    }
+    return result;
+}
+
+inline qreal spacedSize(qreal input, qreal spacing)
+{
+    if (!qFuzzyIsNull(input)) {
+        return input + spacing;
+    }
+    return input;
+}
+
+PositionerLayout::PositionerLayout(QQuickItem *parentItem)
+    : QQuickItem(parentItem)
+{
+    connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
+    connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
+    polish();
+}
+
+void PositionerLayout::markDirty()
+{
+    m_layoutDirty = true;
+    polish();
+}
+
+void PositionerLayout::addItem(QQuickItem *item)
+{
+    connect(item, &QQuickItem::implicitWidthChanged, this, &PositionerLayout::markDirty);
+    connect(item, &QQuickItem::implicitHeightChanged, this, &PositionerLayout::markDirty);
+    connect(item, &QQuickItem::visibleChanged, this, &PositionerLayout::markDirty);
+
+    m_items.insert(item);
+
+    markDirty();
+}
+
+void PositionerLayout::removeItem(QQuickItem *item)
+{
+    auto itr = std::find(m_items.begin(), m_items.end(), item);
+    if (itr == m_items.end()) {
+        return;
+    }
+
+    (*itr)->disconnect(this);
+    m_items.erase(itr);
+
+    markDirty();
+}
+
+qreal PositionerLayout::implicitWidth() const
+{
+    return m_implicitSize.width();
+}
+
+qreal PositionerLayout::implicitHeight() const
+{
+    return m_implicitSize.height();
+}
+
+Sizes PositionerLayout::padding() const
+{
+    return m_padding;
+}
+
+void PositionerLayout::updatePolish()
+{
+    if (!m_layoutDirty) {
+        return;
+    }
+
+    m_layoutDirty = false;
+
+    LayoutContainer itemRelative;
+    LayoutContainer contentRelative;
+    LayoutContainer backgroundRelative;
+
+    for (auto &item : m_items) {
+        auto source = PositionerSource::Source::Layout;
+
+        if (!item->isVisible()) {
+            continue;
+        }
+
+        auto positionedItemAttached = qobject_cast<PositionedItemAttached *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
+        if (positionedItemAttached) {
+            source = positionedItemAttached->source();
+        }
+
+        auto styleAttached = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(item, true));
+        if (!styleAttached->query()) {
+            // Apparently the item has not completed yet, abort layouting and
+            // try again the next frame.
+            polish();
+            break;
+        }
+
+        AlignmentPropertyGroup *alignment = nullptr;
+        switch (source) {
+        case PositionerSource::Source::Layout:
+            alignment = styleAttached->properties()->layout()->alignment();
+            break;
+        case PositionerSource::Source::Icon:
+            alignment = styleAttached->properties()->icon()->alignment();
+            break;
+        case PositionerSource::Source::Text:
+            alignment = styleAttached->properties()->text()->alignment();
+            break;
+        }
+
+        if (!alignment) {
+            continue;
+        }
+
+        auto horizontalAlignment = alignment->horizontal();
+        auto verticalAlignment = alignment->vertical();
+
+        if (positionedItemAttached) {
+            if (positionedItemAttached->horizontalAlignment() != Union::Properties::Alignment::Unspecified) {
+                horizontalAlignment = positionedItemAttached->horizontalAlignment();
+            }
+
+            if (positionedItemAttached->verticalAlignment() != Union::Properties::Alignment::Unspecified) {
+                verticalAlignment = positionedItemAttached->verticalAlignment();
+            }
+        }
+
+        LayoutItem layoutItem{
+            .implicitSize = QSizeF{item->implicitWidth(), item->implicitHeight()},
+            .verticalAlignment = verticalAlignment,
+            .order = alignment->order(),
+            .margins = QMarginsF{},
+            .item = item,
+        };
+
+        if (source == PositionerSource::Source::Layout) {
+            auto margins = styleAttached->properties()->layout()->margins();
+            layoutItem.margins = QMarginsF(margins->left(), margins->top(), margins->right(), margins->bottom());
+        }
+
+        LayoutContainer *container = &itemRelative;
+        switch (alignment->container()) {
+        case Union::Properties::AlignmentContainer::Content:
+            container = &contentRelative;
+            break;
+        case Union::Properties::AlignmentContainer::Background:
+            container = &backgroundRelative;
+            break;
+        case Union::Properties::AlignmentContainer::Item:
+            break;
+        }
+
+        bool stacked = verticalAlignment == Union::Properties::Alignment::Stack;
+
+        switch (horizontalAlignment) {
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::Stack:
+            qCWarning(UNION_QTQUICK) << "Alignment" << horizontalAlignment << "not supported for horizontal alignment, item" << item
+                                     << "will use Start alignment";
+            [[fallthrough]];
+        case Union::Properties::Alignment::Start:
+            container->start.items.append(layoutItem);
+            container->start.stacked = container->start.stacked || stacked;
+            break;
+        case Union::Properties::Alignment::Center:
+            container->center.items.append(layoutItem);
+            container->center.stacked = container->center.stacked || stacked;
+            break;
+        case Union::Properties::Alignment::End:
+            container->end.items.append(layoutItem);
+            container->end.stacked = container->end.stacked || stacked;
+            break;
+        case Union::Properties::Alignment::Fill:
+            container->fill.items.append(layoutItem);
+            container->fill.stacked = container->fill.stacked || stacked;
+            break;
+        }
+    }
+
+    const auto containerItem = parentItem();
+    const auto styleAttached = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(containerItem, true));
+    qreal spacing = styleAttached->properties()->layout()->spacing();
+
+    auto sort = [](auto &container) {
+        std::stable_sort(container.begin(), container.end(), [](auto first, auto second) {
+            return first.order < second.order;
+        });
+    };
+
+    for (auto container : {&itemRelative, &contentRelative, &backgroundRelative}) {
+        container->spacing = spacing;
+        container->start.spacing = spacing;
+        container->center.spacing = spacing;
+        container->end.spacing = spacing;
+        container->fill.spacing = spacing;
+
+        sort(container->start.items);
+        sort(container->center.items);
+        sort(container->end.items);
+        sort(container->fill.items);
+    }
+
+    itemRelative.size = QSizeF{containerItem->width(), containerItem->height()};
+    layoutContainer(itemRelative);
+
+    auto remainingPosition = QPointF{spacedSize(itemRelative.start.size.width(), spacing), 0.0};
+    auto remainingSize = itemRelative.size - QSizeF{spacedSize({itemRelative.start.size.width(), itemRelative.end.size.width()}, spacing), 0.0};
+
+    auto inset = styleAttached->properties()->layout()->inset();
+    backgroundRelative.position = remainingPosition + QPointF{inset->left(), inset->top()};
+    backgroundRelative.size = remainingSize - QSizeF{inset->left() + inset->right(), inset->top() + inset->bottom()};
+    layoutContainer(backgroundRelative);
+
+    auto padding = styleAttached->properties()->layout()->padding();
+    contentRelative.position = remainingPosition + QPointF{padding->left(), padding->top()};
+    contentRelative.size = remainingSize - QSizeF{padding->left() + padding->right(), padding->top() + padding->bottom()};
+    layoutContainer(contentRelative);
+
+    for (auto container : {&itemRelative, &backgroundRelative, &contentRelative}) {
+        for (auto bucket : {&container->start, &container->end, &container->center, &container->fill}) {
+            auto position = bucket->position;
+            for (auto item : bucket->items) {
+                auto itemPosition = position + item.position;
+                auto mapped = parentItem()->mapToItem(item.item->parentItem(), itemPosition);
+                item.item->setX(mapped.x());
+                item.item->setY(mapped.y());
+                item.item->setWidth(item.size.width());
+                item.item->setHeight(item.size.height());
+            }
+        }
+    }
+
+    auto implicitCenterWidth = std::max(backgroundRelative.implicitSize.width() + inset->left() + inset->right(),
+                                        contentRelative.implicitSize.width() + padding->left() + padding->right());
+    auto implicitWidth = spacedSize({itemRelative.start.implicitSize.width(), implicitCenterWidth, itemRelative.end.implicitSize.width()}, spacing);
+    auto implicitHeight = std::max({itemRelative.implicitSize.height(),
+                                    backgroundRelative.implicitSize.height() + inset->top() + inset->bottom(),
+                                    contentRelative.implicitSize.height() + padding->top() + padding->bottom()});
+    m_implicitSize = QSizeF{implicitWidth, implicitHeight};
+
+    auto bottomRight = itemRelative.size - contentRelative.size;
+    m_padding = Sizes(contentRelative.position.x(),
+                      contentRelative.position.y(),
+                      bottomRight.width() - contentRelative.position.x(),
+                      bottomRight.height() - contentRelative.position.y());
+
+    Q_EMIT layoutFinished();
+}
+
+void PositionerLayout::layoutContainer(LayoutContainer &container)
+{
+    for (auto bucket : {&container.start, &container.end, &container.center, &container.fill}) {
+        layoutBucket(*bucket);
+        bucket->size = QSizeF{bucket->implicitSize.width(), container.size.height()};
+    }
+
+    container.start.position = container.position;
+    container.end.position = QPointF{container.position.x() + container.size.width() - container.end.implicitSize.width(), container.position.y()};
+
+    QPointF remainingPosition = container.position + QPointF{spacedSize(container.start.implicitSize.width(), container.spacing), 0.0};
+    QSizeF remainingSize = container.size - QSizeF{spacedSize({container.start.size.width(), container.end.size.width()}, container.spacing), 0.0};
+
+    container.fill.position = remainingPosition;
+    container.fill.size = remainingSize;
+
+    container.center.position = remainingPosition + QPointF{(remainingSize.width() - container.center.size.width()) / 2, 0.0};
+
+    auto maxImplicitCenter = QSizeF{std::max(container.center.implicitSize.width(), container.fill.implicitSize.width()), //
+                                    std::max(container.center.implicitSize.height(), container.fill.implicitSize.height())};
+    container.implicitSize =
+        QSizeF{spacedSize({container.start.implicitSize.width(), maxImplicitCenter.width(), container.end.implicitSize.width()}, container.spacing),
+               std::max({container.start.implicitSize.height(), maxImplicitCenter.height(), container.end.implicitSize.height()})};
+
+    auto maxCenter = QSizeF{std::max(container.center.size.width(), container.fill.size.width()), //
+                            std::max(container.center.size.height(), container.fill.size.height())};
+    container.size = QSizeF{spacedSize({container.start.size.width(), maxCenter.width(), container.end.size.width()}, container.spacing),
+                            std::max({container.start.size.height(), maxCenter.height(), container.end.size.height()})};
+
+    for (auto bucket : {&container.start, &container.end, &container.center, &container.fill}) {
+        qreal stackedY = 0.0;
+        qreal stackedHeight = bucket->size.height() / bucket->items.count();
+        qreal fillX = 0.0;
+        qreal fillWidth = bucket->size.width() / bucket->items.count();
+        for (auto &item : bucket->items) {
+            item.size = item.implicitSize;
+
+            if (bucket == &container.fill) {
+                fillX += item.margins.left();
+                item.position.setX(fillX);
+                item.size.setWidth(fillWidth - item.margins.left() - item.margins.right() - bucket->spacing);
+                fillX += fillWidth;
+            }
+
+            switch (item.verticalAlignment) {
+            case Union::Properties::Alignment::Unspecified:
+            case Union::Properties::Alignment::Start:
+                item.position.setY(0.0);
+                break;
+            case Union::Properties::Alignment::Center:
+                item.position.setY(bucket->size.height() / 2 - item.implicitSize.height() / 2);
+                break;
+            case Union::Properties::Alignment::End:
+                item.position.setY(bucket->size.height() - item.implicitSize.height());
+                break;
+            case Union::Properties::Alignment::Fill:
+                item.position.setY(0);
+                item.size.setHeight(bucket->size.height());
+                break;
+            case Union::Properties::Alignment::Stack:
+                stackedY += item.margins.top();
+                item.position.setY(stackedY);
+                item.size.setWidth(bucket->size.width());
+                item.size.setHeight(stackedHeight - item.margins.top() - item.margins.bottom());
+                stackedY += stackedHeight + item.margins.bottom();
+                break;
+            }
+        }
+    }
+}
+
+void PositionerLayout::layoutBucket(LayoutBucket &bucket)
+{
+    qreal x = 0.0;
+    qreal maxWidth = 0.0;
+    qreal maxHeight = 0.0;
+    qreal totalHeight = 0.0;
+
+    for (auto &item : bucket.items) {
+        if (bucket.stacked) {
+            item.position.setX(0.0);
+            totalHeight += item.margins.top() + item.margins.bottom() + item.implicitSize.height();
+        } else {
+            x += item.margins.left();
+            item.position.setX(x);
+            x += item.implicitSize.width() + item.margins.right() + bucket.spacing;
+        }
+
+        maxWidth = std::max(maxWidth, item.margins.left() + item.implicitSize.width() + item.margins.right());
+        maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
+    }
+
+    bucket.implicitSize.setWidth(std::max(bucket.stacked ? maxWidth : x - bucket.spacing, 0.0));
+    bucket.implicitSize.setHeight(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0));
+}

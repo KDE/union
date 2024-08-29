@@ -11,6 +11,10 @@ target_sources(UnionQuickImpl PRIVATE
     Types.cpp
     StyledRectangle.cpp
     StyledRectangle.h
+    Positioner.h
+    Positioner.cpp
+    PositionerLayout.h
+    PositionerLayout.cpp
 
     scenegraph/UnionNode.cpp
     scenegraph/UnionNode.h
@@ -31,6 +35,15 @@ target_sources(UnionQuickImplplugin PRIVATE
 )
 
 add_subdirectory(properties)
+
+ecm_qt_declare_logging_category(UnionQuickImpl
+    HEADER qtquick_logging.h
+    IDENTIFIER UNION_QTQUICK
+    CATEGORY_NAME union.qtquick
+    DEFAULT_SEVERITY Debug
+    DESCRIPTION "Union - QtQuick Output Plugin"
+    EXPORT Union
+)
 
 target_include_directories(UnionQuickImpl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/properties)
 target_link_libraries(UnionQuickImpl PUBLIC Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2 Union::Union)
