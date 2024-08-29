@@ -49,6 +49,7 @@ private:
     std::optional<Union::Properties::IconProperty> createIconProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::BackgroundProperty> createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context);
 
+    std::optional<Union::Properties::AlignmentProperty> createAlignmentProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::SizeProperty> createSizeProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::BorderProperty> createBorderProperty(ryml::ConstNodeRef node, LoadingContext &context);
     std::optional<Union::Properties::CornersProperty> createCornersProperty(ryml::ConstNodeRef node, LoadingContext &context);

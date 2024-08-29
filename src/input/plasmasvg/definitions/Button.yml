@@ -37,16 +37,24 @@ button: &button
 
     text: &button-text
         alignment:
-            horizontal: center
-            vertical: center
+            container: Content
+            horizontal: Center
+            vertical: Center
+            order: 1
 
         color: palette-foreground
         font: system-normal
 
     icon: &button-icon
-        width: iconsize-small-medium
-        height: iconsize-small-medium
-        color: palette-foreground
+        alignment:
+            container: Content
+            horizontal: Center
+            vertical: Center
+            order: 0
+
+        width: 22
+        height: 22
+        # color: palette-foreground
 
     background: &button-background
         image:
@@ -179,10 +187,15 @@ button-with-icon:
 
     path: widgets/button
 
+    icon:
+        alignment:
+            horizontal: Start
+            vertical: Center
+
     text:
         alignment:
-            horizontal: left
-            vertical: center
+            horizontal: Start
+            vertical: Center
 
 button-hovered:
     type: Button
