@@ -82,7 +82,6 @@ void QuickStyle::update()
     }
 
     auto query = element->query();
-
     if (!query || !query->hasMatches()) {
         return;
     }
