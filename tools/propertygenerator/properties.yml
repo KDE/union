@@ -21,6 +21,8 @@ layout:
         top: qreal
         bottom: qreal
 
+    inset: *size
+
     margins: *size
 
 text:
