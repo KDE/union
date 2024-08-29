@@ -192,12 +192,12 @@ bool Union::Properties::operator==(const CornerProperty &left, const CornerPrope
 QDebug operator<<(QDebug debug, const Union::Properties::CornerProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "CornerProperty(";
-    debug << "  radius:" << type.radius();
-    debug << "  width:" << type.width();
-    debug << "  height:" << type.height();
-    debug << "  color:" << type.color();
-    debug << "  image:" << type.image();
-    debug << ")";
+    debug.nospace() << "CornerProperty(" //
+                    << "radius: " << type.radius() //
+                    << ", width: " << type.width() //
+                    << ", height: " << type.height() //
+                    << ", color: " << type.color() //
+                    << ", image: " << type.image() //
+                    << ")";
     return debug;
 }

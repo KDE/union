@@ -12,6 +12,7 @@
 #include <QString>
 #include <QUrl>
 
+#include "AlignmentProperty.h"
 
 #include "union_export.h"
 
@@ -34,6 +35,9 @@ public:
 
     IconProperty &operator=(const IconProperty &other);
     IconProperty &operator=(IconProperty &&other);
+
+    std::optional<AlignmentProperty> alignment() const;
+    void setAlignment(const std::optional<AlignmentProperty> &newValue);
 
     std::optional<qreal> width() const;
     void setWidth(const std::optional<qreal> &newValue);

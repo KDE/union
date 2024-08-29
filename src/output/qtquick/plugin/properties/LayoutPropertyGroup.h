@@ -9,10 +9,11 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QtGlobal>
 
 #include <properties/LayoutProperty.h>
 
+#include "AlignmentPropertyGroup.h"
+#include "SizePropertyGroup.h"
 #include "SizePropertyGroup.h"
 #include "SizePropertyGroup.h"
 // clang-format on
@@ -26,6 +27,9 @@ public:
     LayoutPropertyGroup();
 
     void update(const Union::Properties::LayoutProperty &newState);
+
+    Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
+    AlignmentPropertyGroup *alignment() const;
 
     Q_PROPERTY(qreal width READ width WRITE setWidth BINDABLE bindableWidth NOTIFY widthChanged)
     qreal width() const;
@@ -45,23 +49,21 @@ public:
     QBindable<qreal> bindableSpacing();
     Q_SIGNAL void spacingChanged();
 
-    Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment BINDABLE bindableAlignment NOTIFY alignmentChanged)
-    Qt::Alignment alignment() const;
-    void setAlignment(const Qt::Alignment &newValue);
-    QBindable<Qt::Alignment> bindableAlignment();
-    Q_SIGNAL void alignmentChanged();
-
     Q_PROPERTY(SizePropertyGroup *padding READ padding CONSTANT)
     SizePropertyGroup *padding() const;
+
+    Q_PROPERTY(SizePropertyGroup *inset READ inset CONSTANT)
+    SizePropertyGroup *inset() const;
 
     Q_PROPERTY(SizePropertyGroup *margins READ margins CONSTANT)
     SizePropertyGroup *margins() const;
 
 private:
+    std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_width, &LayoutPropertyGroup::widthChanged)
     Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_height, &LayoutPropertyGroup::heightChanged)
     Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_spacing, &LayoutPropertyGroup::spacingChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, Qt::Alignment, m_alignment, &LayoutPropertyGroup::alignmentChanged)
     std::unique_ptr<SizePropertyGroup> m_padding;
+    std::unique_ptr<SizePropertyGroup> m_inset;
     std::unique_ptr<SizePropertyGroup> m_margins;
 };

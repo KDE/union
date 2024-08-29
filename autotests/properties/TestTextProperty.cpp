@@ -33,9 +33,13 @@ private Q_SLOTS:
         QVERIFY(!property.hasAnyValue());
 
         {
-            Qt::Alignment value;
-            property.setAlignment(value);
+            // Assigning an empty property to a value should have no effect.
+            property.setAlignment(AlignmentProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setAlignment(testAlignmentPropertyInstance());
             QVERIFY(property.hasAnyValue());
+
             property.setAlignment(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
@@ -68,7 +72,7 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-        source.setAlignment(Qt::Alignment{});
+        source.setAlignment(testAlignmentPropertyInstance());
         source.setColor(QColor{});
         source.setFont(QFont{});
 

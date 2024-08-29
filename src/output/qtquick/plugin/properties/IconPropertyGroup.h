@@ -15,6 +15,7 @@
 
 #include <properties/IconProperty.h>
 
+#include "AlignmentPropertyGroup.h"
 // clang-format on
 
 class IconPropertyGroup : public QObject
@@ -26,6 +27,9 @@ public:
     IconPropertyGroup();
 
     void update(const Union::Properties::IconProperty &newState);
+
+    Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
+    AlignmentPropertyGroup *alignment() const;
 
     Q_PROPERTY(qreal width READ width WRITE setWidth BINDABLE bindableWidth NOTIFY widthChanged)
     qreal width() const;
@@ -58,6 +62,7 @@ public:
     Q_SIGNAL void sourceChanged();
 
 private:
+    std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, qreal, m_width, &IconPropertyGroup::widthChanged)
     Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, qreal, m_height, &IconPropertyGroup::heightChanged)
     Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, QColor, m_color, &IconPropertyGroup::colorChanged)

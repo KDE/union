@@ -213,12 +213,12 @@ bool Union::Properties::operator==(const BackgroundProperty &left, const Backgro
 QDebug operator<<(QDebug debug, const Union::Properties::BackgroundProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "BackgroundProperty(";
-    debug << "  color:" << type.color();
-    debug << "  image:" << type.image();
-    debug << "  border:" << type.border();
-    debug << "  corners:" << type.corners();
-    debug << "  shadow:" << type.shadow();
-    debug << ")";
+    debug.nospace() << "BackgroundProperty(" //
+                    << "color: " << type.color() //
+                    << ", image: " << type.image() //
+                    << ", border: " << type.border() //
+                    << ", corners: " << type.corners() //
+                    << ", shadow: " << type.shadow() //
+                    << ")";
     return debug;
 }

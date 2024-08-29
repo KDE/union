@@ -220,12 +220,12 @@ bool Union::Properties::operator==(const StyleProperty &left, const StylePropert
 QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "StyleProperty(";
-    debug << "  palette:" << type.palette();
-    debug << "  layout:" << type.layout();
-    debug << "  text:" << type.text();
-    debug << "  icon:" << type.icon();
-    debug << "  background:" << type.background();
-    debug << ")";
+    debug.nospace() << "StyleProperty(" //
+                    << "palette: " << type.palette() //
+                    << ", layout: " << type.layout() //
+                    << ", text: " << type.text() //
+                    << ", icon: " << type.icon() //
+                    << ", background: " << type.background() //
+                    << ")";
     return debug;
 }

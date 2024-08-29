@@ -167,11 +167,11 @@ bool Union::Properties::operator==(const LineProperty &left, const LineProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::LineProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "LineProperty(";
-    debug << "  size:" << type.size();
-    debug << "  color:" << type.color();
-    debug << "  style:" << type.style();
-    debug << "  image:" << type.image();
-    debug << ")";
+    debug.nospace() << "LineProperty(" //
+                    << "size: " << type.size() //
+                    << ", color: " << type.color() //
+                    << ", style: " << type.style() //
+                    << ", image: " << type.image() //
+                    << ")";
     return debug;
 }

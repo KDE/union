@@ -160,11 +160,11 @@ bool Union::Properties::operator==(const SizeProperty &left, const SizeProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::SizeProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "SizeProperty(";
-    debug << "  left:" << type.left();
-    debug << "  right:" << type.right();
-    debug << "  top:" << type.top();
-    debug << "  bottom:" << type.bottom();
-    debug << ")";
+    debug.nospace() << "SizeProperty(" //
+                    << "left: " << type.left() //
+                    << ", right: " << type.right() //
+                    << ", top: " << type.top() //
+                    << ", bottom: " << type.bottom() //
+                    << ")";
     return debug;
 }

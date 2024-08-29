@@ -8,8 +8,8 @@
 
 #include <QDebug>
 
-#include <QtGlobal>
 
+#include "AlignmentProperty.h"
 #include "SizeProperty.h"
 
 #include "union_export.h"
@@ -34,6 +34,9 @@ public:
     LayoutProperty &operator=(const LayoutProperty &other);
     LayoutProperty &operator=(LayoutProperty &&other);
 
+    std::optional<AlignmentProperty> alignment() const;
+    void setAlignment(const std::optional<AlignmentProperty> &newValue);
+
     std::optional<qreal> width() const;
     void setWidth(const std::optional<qreal> &newValue);
 
@@ -43,11 +46,11 @@ public:
     std::optional<qreal> spacing() const;
     void setSpacing(const std::optional<qreal> &newValue);
 
-    std::optional<Qt::Alignment> alignment() const;
-    void setAlignment(const std::optional<Qt::Alignment> &newValue);
-
     std::optional<SizeProperty> padding() const;
     void setPadding(const std::optional<SizeProperty> &newValue);
+
+    std::optional<SizeProperty> inset() const;
+    void setInset(const std::optional<SizeProperty> &newValue);
 
     std::optional<SizeProperty> margins() const;
     void setMargins(const std::optional<SizeProperty> &newValue);

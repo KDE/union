@@ -9,15 +9,22 @@ using namespace Qt::StringLiterals;
 
 IconPropertyGroup::IconPropertyGroup()
 {
+    m_alignment = std::make_unique<AlignmentPropertyGroup>();
 }
 
 void IconPropertyGroup::update(const IconProperty &newState)
 {
+    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
     m_width = newState.width().value_or(qreal{});
     m_height = newState.height().value_or(qreal{});
     m_color = newState.color().value_or(QColor{});
     m_name = newState.name().value_or(QString{});
     m_source = newState.source().value_or(QUrl{});
+}
+
+AlignmentPropertyGroup *IconPropertyGroup::alignment() const
+{
+    return m_alignment.get();
 }
 
 qreal IconPropertyGroup::width() const

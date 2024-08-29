@@ -188,11 +188,11 @@ bool Union::Properties::operator==(const CornersProperty &left, const CornersPro
 QDebug operator<<(QDebug debug, const Union::Properties::CornersProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "CornersProperty(";
-    debug << "  topLeft:" << type.topLeft();
-    debug << "  topRight:" << type.topRight();
-    debug << "  bottomLeft:" << type.bottomLeft();
-    debug << "  bottomRight:" << type.bottomRight();
-    debug << ")";
+    debug.nospace() << "CornersProperty(" //
+                    << "topLeft: " << type.topLeft() //
+                    << ", topRight: " << type.topRight() //
+                    << ", bottomLeft: " << type.bottomLeft() //
+                    << ", bottomRight: " << type.bottomRight() //
+                    << ")";
     return debug;
 }

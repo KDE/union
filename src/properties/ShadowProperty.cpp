@@ -348,16 +348,16 @@ bool Union::Properties::operator==(const ShadowProperty &left, const ShadowPrope
 QDebug operator<<(QDebug debug, const Union::Properties::ShadowProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "ShadowProperty(";
-    debug << "  offsets:" << type.offsets();
-    debug << "  left:" << type.left();
-    debug << "  right:" << type.right();
-    debug << "  top:" << type.top();
-    debug << "  bottom:" << type.bottom();
-    debug << "  topLeft:" << type.topLeft();
-    debug << "  topRight:" << type.topRight();
-    debug << "  bottomLeft:" << type.bottomLeft();
-    debug << "  bottomRight:" << type.bottomRight();
-    debug << ")";
+    debug.nospace() << "ShadowProperty(" //
+                    << "offsets: " << type.offsets() //
+                    << ", left: " << type.left() //
+                    << ", right: " << type.right() //
+                    << ", top: " << type.top() //
+                    << ", bottom: " << type.bottom() //
+                    << ", topLeft: " << type.topLeft() //
+                    << ", topRight: " << type.topRight() //
+                    << ", bottomLeft: " << type.bottomLeft() //
+                    << ", bottomRight: " << type.bottomRight() //
+                    << ")";
     return debug;
 }

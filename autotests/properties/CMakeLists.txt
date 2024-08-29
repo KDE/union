@@ -2,6 +2,7 @@ ecm_add_tests(
     TestStyleProperty.cpp
     TestPaletteProperty.cpp
     TestLayoutProperty.cpp
+    TestAlignmentProperty.cpp
     TestSizeProperty.cpp
     TestTextProperty.cpp
     TestIconProperty.cpp

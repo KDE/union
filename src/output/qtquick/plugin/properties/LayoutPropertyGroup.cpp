@@ -9,18 +9,26 @@ using namespace Qt::StringLiterals;
 
 LayoutPropertyGroup::LayoutPropertyGroup()
 {
+    m_alignment = std::make_unique<AlignmentPropertyGroup>();
     m_padding = std::make_unique<SizePropertyGroup>();
+    m_inset = std::make_unique<SizePropertyGroup>();
     m_margins = std::make_unique<SizePropertyGroup>();
 }
 
 void LayoutPropertyGroup::update(const LayoutProperty &newState)
 {
+    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
     m_width = newState.width().value_or(qreal{});
     m_height = newState.height().value_or(qreal{});
     m_spacing = newState.spacing().value_or(qreal{});
-    m_alignment = newState.alignment().value_or(Qt::Alignment{});
     m_padding->update(newState.padding().value_or(SizeProperty{}));
+    m_inset->update(newState.inset().value_or(SizeProperty{}));
     m_margins->update(newState.margins().value_or(SizeProperty{}));
+}
+
+AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
+{
+    return m_alignment.get();
 }
 
 qreal LayoutPropertyGroup::width() const
@@ -68,24 +76,14 @@ QBindable<qreal> LayoutPropertyGroup::bindableSpacing()
     return QBindable<qreal>(&m_spacing);
 }
 
-Qt::Alignment LayoutPropertyGroup::alignment() const
-{
-    return m_alignment;
-}
-
-void LayoutPropertyGroup::setAlignment(const Qt::Alignment &newValue)
-{
-    m_alignment = newValue;
-}
-
-QBindable<Qt::Alignment> LayoutPropertyGroup::bindableAlignment()
-{
-    return QBindable<Qt::Alignment>(&m_alignment);
-}
-
 SizePropertyGroup *LayoutPropertyGroup::padding() const
 {
     return m_padding.get();
+}
+
+SizePropertyGroup *LayoutPropertyGroup::inset() const
+{
+    return m_inset.get();
 }
 
 SizePropertyGroup *LayoutPropertyGroup::margins() const

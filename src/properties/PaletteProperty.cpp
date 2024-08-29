@@ -135,10 +135,10 @@ bool Union::Properties::operator==(const PaletteProperty &left, const PalettePro
 QDebug operator<<(QDebug debug, const Union::Properties::PaletteProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "PaletteProperty(";
-    debug << "  foreground:" << type.foreground();
-    debug << "  background:" << type.background();
-    debug << "  decoration:" << type.decoration();
-    debug << ")";
+    debug.nospace() << "PaletteProperty(" //
+                    << "foreground: " << type.foreground() //
+                    << ", background: " << type.background() //
+                    << ", decoration: " << type.decoration() //
+                    << ")";
     return debug;
 }

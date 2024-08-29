@@ -188,11 +188,11 @@ bool Union::Properties::operator==(const BorderProperty &left, const BorderPrope
 QDebug operator<<(QDebug debug, const Union::Properties::BorderProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "BorderProperty(";
-    debug << "  left:" << type.left();
-    debug << "  right:" << type.right();
-    debug << "  top:" << type.top();
-    debug << "  bottom:" << type.bottom();
-    debug << ")";
+    debug.nospace() << "BorderProperty(" //
+                    << "left: " << type.left() //
+                    << ", right: " << type.right() //
+                    << ", top: " << type.top() //
+                    << ", bottom: " << type.bottom() //
+                    << ")";
     return debug;
 }

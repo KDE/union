@@ -10,7 +10,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::TextPropertyPrivate
 {
 public:
-    std::optional<Qt::Alignment> alignment;
+    std::optional<AlignmentProperty> alignment;
     std::optional<QColor> color;
     std::optional<QFont> font;
 };
@@ -51,12 +51,12 @@ TextProperty &TextProperty::operator=(TextProperty &&other)
     return *this;
 }
 
-std::optional<Qt::Alignment> TextProperty::alignment() const
+std::optional<AlignmentProperty> TextProperty::alignment() const
 {
     return d->alignment;
 }
 
-void TextProperty::setAlignment(const std::optional<Qt::Alignment> &newValue)
+void TextProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
 {
     if (newValue == d->alignment) {
         return;
@@ -93,7 +93,7 @@ void TextProperty::setFont(const std::optional<QFont> &newValue)
 
 bool TextProperty::hasAnyValue() const
 {
-    if (d->alignment.has_value()) {
+    if (d->alignment.has_value() && d->alignment->hasAnyValue()) {
         return true;
     }
     if (d->color.has_value()) {
@@ -107,8 +107,15 @@ bool TextProperty::hasAnyValue() const
 
 void TextProperty::resolveProperties(const TextProperty &source, TextProperty &destination)
 {
-    if (!destination.d->alignment.has_value()) {
-        destination.d->alignment = source.d->alignment;
+    if (source.d->alignment.has_value()) {
+        AlignmentProperty value;
+        if (destination.d->alignment.has_value()) {
+            value = destination.d->alignment.value();
+        }
+        AlignmentProperty::resolveProperties(source.d->alignment.value(), value);
+        if (value.hasAnyValue()) {
+            destination.d->alignment = value;
+        }
     }
     if (!destination.d->color.has_value()) {
         destination.d->color = source.d->color;
@@ -135,10 +142,10 @@ bool Union::Properties::operator==(const TextProperty &left, const TextProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::TextProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "TextProperty(";
-    debug << "  alignment:" << type.alignment();
-    debug << "  color:" << type.color();
-    debug << "  font:" << type.font();
-    debug << ")";
+    debug.nospace() << "TextProperty(" //
+                    << "alignment: " << type.alignment() //
+                    << ", color: " << type.color() //
+                    << ", font: " << type.font() //
+                    << ")";
     return debug;
 }

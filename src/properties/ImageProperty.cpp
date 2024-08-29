@@ -210,13 +210,13 @@ bool Union::Properties::operator==(const ImageProperty &left, const ImagePropert
 QDebug operator<<(QDebug debug, const Union::Properties::ImageProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "ImageProperty(";
-    debug << "  imageData:" << type.imageData();
-    debug << "  width:" << type.width();
-    debug << "  height:" << type.height();
-    debug << "  xOffset:" << type.xOffset();
-    debug << "  yOffset:" << type.yOffset();
-    debug << "  flags:" << type.flags();
-    debug << ")";
+    debug.nospace() << "ImageProperty(" //
+                    << "imageData: " << type.imageData() //
+                    << ", width: " << type.width() //
+                    << ", height: " << type.height() //
+                    << ", xOffset: " << type.xOffset() //
+                    << ", yOffset: " << type.yOffset() //
+                    << ", flags: " << type.flags() //
+                    << ")";
     return debug;
 }

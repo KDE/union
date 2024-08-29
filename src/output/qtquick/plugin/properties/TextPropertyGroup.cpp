@@ -9,28 +9,19 @@ using namespace Qt::StringLiterals;
 
 TextPropertyGroup::TextPropertyGroup()
 {
+    m_alignment = std::make_unique<AlignmentPropertyGroup>();
 }
 
 void TextPropertyGroup::update(const TextProperty &newState)
 {
-    m_alignment = newState.alignment().value_or(Qt::Alignment{});
+    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
     m_color = newState.color().value_or(QColor{});
     m_font = newState.font().value_or(QFont{});
 }
 
-Qt::Alignment TextPropertyGroup::alignment() const
+AlignmentPropertyGroup *TextPropertyGroup::alignment() const
 {
-    return m_alignment;
-}
-
-void TextPropertyGroup::setAlignment(const Qt::Alignment &newValue)
-{
-    m_alignment = newValue;
-}
-
-QBindable<Qt::Alignment> TextPropertyGroup::bindableAlignment()
-{
-    return QBindable<Qt::Alignment>(&m_alignment);
+    return m_alignment.get();
 }
 
 QColor TextPropertyGroup::color() const

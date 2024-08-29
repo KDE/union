@@ -11,10 +11,10 @@
 
 #include <QColor>
 #include <QFont>
-#include <QtGlobal>
 
 #include <properties/TextProperty.h>
 
+#include "AlignmentPropertyGroup.h"
 // clang-format on
 
 class TextPropertyGroup : public QObject
@@ -27,11 +27,8 @@ public:
 
     void update(const Union::Properties::TextProperty &newState);
 
-    Q_PROPERTY(Qt::Alignment alignment READ alignment WRITE setAlignment BINDABLE bindableAlignment NOTIFY alignmentChanged)
-    Qt::Alignment alignment() const;
-    void setAlignment(const Qt::Alignment &newValue);
-    QBindable<Qt::Alignment> bindableAlignment();
-    Q_SIGNAL void alignmentChanged();
+    Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
+    AlignmentPropertyGroup *alignment() const;
 
     Q_PROPERTY(QColor color READ color WRITE setColor BINDABLE bindableColor NOTIFY colorChanged)
     QColor color() const;
@@ -46,7 +43,7 @@ public:
     Q_SIGNAL void fontChanged();
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(TextPropertyGroup, Qt::Alignment, m_alignment, &TextPropertyGroup::alignmentChanged)
+    std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     Q_OBJECT_BINDABLE_PROPERTY(TextPropertyGroup, QColor, m_color, &TextPropertyGroup::colorChanged)
     Q_OBJECT_BINDABLE_PROPERTY(TextPropertyGroup, QFont, m_font, &TextPropertyGroup::fontChanged)
 };

@@ -20,6 +20,7 @@ private Q_SLOTS:
         IconProperty property;
 
         // An empty instance should have no values set.
+        QVERIFY(!property.alignment().has_value());
         QVERIFY(!property.width().has_value());
         QVERIFY(!property.height().has_value());
         QVERIFY(!property.color().has_value());
@@ -34,6 +35,17 @@ private Q_SLOTS:
         // An empty instance should not have any values.
         QVERIFY(!property.hasAnyValue());
 
+        {
+            // Assigning an empty property to a value should have no effect.
+            property.setAlignment(AlignmentProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setAlignment(testAlignmentPropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setAlignment(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
         {
             qreal value;
             property.setWidth(value);
@@ -84,6 +96,7 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
+        source.setAlignment(testAlignmentPropertyInstance());
         source.setWidth(qreal{});
         source.setHeight(qreal{});
         source.setColor(QColor{});
@@ -97,6 +110,7 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
+        QCOMPARE(destination.alignment(), source.alignment());
         QCOMPARE(destination.width(), source.width());
         QCOMPARE(destination.height(), source.height());
         QCOMPARE(destination.color(), source.color());

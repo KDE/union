@@ -6,6 +6,7 @@
 
 #include <QtTest>
 
+#include <properties/AlignmentProperty.h>
 #include <properties/BackgroundProperty.h>
 #include <properties/BorderProperty.h>
 #include <properties/CornerProperty.h>
@@ -45,6 +46,7 @@ QFont testQFontInstance()
 StyleProperty testStylePropertyInstance();
 PaletteProperty testPalettePropertyInstance();
 LayoutProperty testLayoutPropertyInstance();
+AlignmentProperty testAlignmentPropertyInstance();
 SizeProperty testSizePropertyInstance();
 TextProperty testTextPropertyInstance();
 IconProperty testIconPropertyInstance();
@@ -84,12 +86,25 @@ LayoutProperty testLayoutPropertyInstance()
 {
     LayoutProperty instance;
 
+    instance.setAlignment(testAlignmentPropertyInstance());
     instance.setWidth(testQrealInstance());
     instance.setHeight(testQrealInstance());
     instance.setSpacing(testQrealInstance());
-    instance.setAlignment(Qt::Alignment{});
     instance.setPadding(testSizePropertyInstance());
+    instance.setInset(testSizePropertyInstance());
     instance.setMargins(testSizePropertyInstance());
+
+    return instance;
+}
+
+AlignmentProperty testAlignmentPropertyInstance()
+{
+    AlignmentProperty instance;
+
+    instance.setContainer(Union::Properties::AlignmentContainer{});
+    instance.setHorizontal(Union::Properties::Alignment{});
+    instance.setVertical(Union::Properties::Alignment{});
+    instance.setOrder(int{});
 
     return instance;
 }
@@ -110,7 +125,7 @@ TextProperty testTextPropertyInstance()
 {
     TextProperty instance;
 
-    instance.setAlignment(Qt::Alignment{});
+    instance.setAlignment(testAlignmentPropertyInstance());
     instance.setColor(testQColorInstance());
     instance.setFont(testQFontInstance());
 
@@ -121,6 +136,7 @@ IconProperty testIconPropertyInstance()
 {
     IconProperty instance;
 
+    instance.setAlignment(testAlignmentPropertyInstance());
     instance.setWidth(testQrealInstance());
     instance.setHeight(testQrealInstance());
     instance.setColor(testQColorInstance());

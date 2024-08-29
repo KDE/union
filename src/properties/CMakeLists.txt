@@ -5,6 +5,8 @@ target_sources(Union PRIVATE
     PaletteProperty.h
     LayoutProperty.cpp
     LayoutProperty.h
+    AlignmentProperty.cpp
+    AlignmentProperty.h
     SizeProperty.cpp
     SizeProperty.h
     TextProperty.cpp

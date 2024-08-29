@@ -10,8 +10,8 @@
 
 #include <QColor>
 #include <QFont>
-#include <QtGlobal>
 
+#include "AlignmentProperty.h"
 
 #include "union_export.h"
 
@@ -35,8 +35,8 @@ public:
     TextProperty &operator=(const TextProperty &other);
     TextProperty &operator=(TextProperty &&other);
 
-    std::optional<Qt::Alignment> alignment() const;
-    void setAlignment(const std::optional<Qt::Alignment> &newValue);
+    std::optional<AlignmentProperty> alignment() const;
+    void setAlignment(const std::optional<AlignmentProperty> &newValue);
 
     std::optional<QColor> color() const;
     void setColor(const std::optional<QColor> &newValue);

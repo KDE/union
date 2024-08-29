@@ -20,11 +20,12 @@ private Q_SLOTS:
         LayoutProperty property;
 
         // An empty instance should have no values set.
+        QVERIFY(!property.alignment().has_value());
         QVERIFY(!property.width().has_value());
         QVERIFY(!property.height().has_value());
         QVERIFY(!property.spacing().has_value());
-        QVERIFY(!property.alignment().has_value());
         QVERIFY(!property.padding().has_value());
+        QVERIFY(!property.inset().has_value());
         QVERIFY(!property.margins().has_value());
     }
 
@@ -35,6 +36,17 @@ private Q_SLOTS:
         // An empty instance should not have any values.
         QVERIFY(!property.hasAnyValue());
 
+        {
+            // Assigning an empty property to a value should have no effect.
+            property.setAlignment(AlignmentProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setAlignment(testAlignmentPropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setAlignment(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
         {
             qreal value;
             property.setWidth(value);
@@ -57,13 +69,6 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            Qt::Alignment value;
-            property.setAlignment(value);
-            QVERIFY(property.hasAnyValue());
-            property.setAlignment(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
-        }
-        {
             // Assigning an empty property to a value should have no effect.
             property.setPadding(SizeProperty{});
             QVERIFY(!property.hasAnyValue());
@@ -72,6 +77,17 @@ private Q_SLOTS:
             QVERIFY(property.hasAnyValue());
 
             property.setPadding(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            // Assigning an empty property to a value should have no effect.
+            property.setInset(SizeProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setInset(testSizePropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setInset(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
         {
@@ -100,11 +116,12 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
+        source.setAlignment(testAlignmentPropertyInstance());
         source.setWidth(qreal{});
         source.setHeight(qreal{});
         source.setSpacing(qreal{});
-        source.setAlignment(Qt::Alignment{});
         source.setPadding(testSizePropertyInstance());
+        source.setInset(testSizePropertyInstance());
         source.setMargins(testSizePropertyInstance());
 
         QVERIFY(source.hasAnyValue());
@@ -114,11 +131,12 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
+        QCOMPARE(destination.alignment(), source.alignment());
         QCOMPARE(destination.width(), source.width());
         QCOMPARE(destination.height(), source.height());
         QCOMPARE(destination.spacing(), source.spacing());
-        QCOMPARE(destination.alignment(), source.alignment());
         QCOMPARE(destination.padding(), source.padding());
+        QCOMPARE(destination.inset(), source.inset());
         QCOMPARE(destination.margins(), source.margins());
     }
 };
