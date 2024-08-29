@@ -88,7 +88,7 @@ template <typename F, typename ReturnType = std::invoke_result_t<F, ryml::ConstN
 inline ReturnType with_child(ryml::ConstNodeRef node, c4::csubstr name, F callback)
 {
     auto child = node.find_child(name);
-    if (child.valid()) {
+    if (child.readable()) {
         return callback(child);
     }
 
@@ -171,7 +171,7 @@ inline Qt::Alignment value<Qt::Alignment>(ryml::ConstNodeRef node)
         return align;
     }
 
-    if (auto horizontalNode = node.find_child("horizontal"); horizontalNode.valid()) {
+    if (auto horizontalNode = node.find_child("horizontal"); horizontalNode.readable()) {
         auto alignHorizontal = horizontalNode.val();
         if (alignHorizontal == "left") {
             align |= Qt::AlignLeft;
@@ -182,7 +182,7 @@ inline Qt::Alignment value<Qt::Alignment>(ryml::ConstNodeRef node)
         }
     }
 
-    if (auto verticalNode = node.find_child("vertical"); verticalNode.valid()) {
+    if (auto verticalNode = node.find_child("vertical"); verticalNode.readable()) {
         auto alignVertical = verticalNode.val();
         if (alignVertical == "top") {
             align |= Qt::AlignTop;
@@ -206,7 +206,7 @@ forEachEntry(const std::initializer_list<I> &input, Output &output, const std::i
     auto setterItr = setters.begin();
     for (; inputItr != input.end() && setterItr != setters.end(); ++inputItr, ++setterItr) {
         auto name = ryml::to_csubstr(*inputItr);
-        if (ryml::ConstNodeRef childNode = node.find_child(name); childNode.valid()) {
+        if (ryml::ConstNodeRef childNode = node.find_child(name); childNode.readable()) {
             (output.*(*setterItr))(callback(childNode));
         }
     }
