@@ -124,10 +124,14 @@ bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_na
 QDebug operator<<(QDebug debug, const Union::Properties::{{ type_name }} &type)
 {
     QDebugStateSaver saver(debug);
-    debug << "{{ type_name }}(";
+    debug.nospace() << "{{ type_name }}(" //
 {% for value in values %}
-    debug << "  {{value.name}}:" << type.{{ value.name }}();
+{% if value == values[0] %}
+                    << "{{value.name}}: " << type.{{ value.name }}() //
+{% else %}
+                    << ", {{value.name}}: " << type.{{ value.name }}() //
+{% endif %}
 {% endfor %}
-    debug << ")";
+                    << ")";
     return debug;
 }
