@@ -101,8 +101,8 @@ inline ReturnType with_child(ryml::ConstNodeRef node, c4::csubstr name, F callba
 template<typename T>
 inline T value(ryml::ConstNodeRef node)
 {
-    T result;
-    node >> result;
+    T result{};
+    ryml::read(node, &result);
     return result;
 }
 
