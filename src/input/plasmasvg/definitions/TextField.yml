@@ -1,19 +1,27 @@
-textfield: &textfield
+textfield:
     type: TextField
     colorSet: View
 
     path: widgets/lineedit
     prefix: base
 
-    layout: &textfield-layout
+    layout:
         width:
-            property: element-width
-            element: center
+            property: sum
+            function: element-width
+            elements:
+            -   hint-left-margin
+            -   center
+            -   hint-right-margin
         height:
-            property: element-height
-            element: center
+            property: sum
+            function: element-height
+            elements:
+            -   hint-top-margin
+            -   center
+            -   hint-bottom-margin
 
-        padding: &textfield-padding
+        padding:
             left:
                 property: element-width
                 element: hint-left-margin
@@ -27,63 +35,63 @@ textfield: &textfield
                 property: element-height
                 element: hint-bottom-margin
 
-    text: &textfield-text
-        align:
-            horizontal: left
-            vertical: center
+    text:
+        alignment:
+            horizontal: Start
+            vertical: Center
         font: system-normal
 
-    background: &textfield-background
+    background:
         image:
             property: element-image
             element: center
 
-        border: &textfield-border
-            left: &textfield-border-left
+        border:
+            left:
                 element: left
                 size:
                     property: element-width
                 image:
                     property: element-image
-            right: &textfield-border-right
+            right:
                 element: right
                 size:
                     property: element-width
                 image:
                     property: element-image
-            top: &textfield-border-top
+            top:
                 element: top
                 size:
                     property: element-height
                 image:
                     property: element-image
-            bottom: &textfield-border-bottom
+            bottom:
                 element: bottom
                 size:
                     property: element-height
                 image:
                     property: element-image
 
-        corners: &textfield-corners
-            top-left: &textfield-corner-top-left
+        corners:
+            top-left:
                 element: topleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            top-right: &textfield-corner-top-right
+            top-right:
                 element: topright
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-left: &textfield-corner-bottom-left
+            bottom-left:
                 element: bottomleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-right: &textfield-corner-bottom-right
+            bottom-right:
                 element: bottomright
                 size:
                     property: element-size
@@ -91,13 +99,33 @@ textfield: &textfield
                     property: element-image
 
 textfield-hovered:
-    <<: *textfield
-
+    type: TextField
+    colorSet: View
     state: Hovered
 
-    background:
-        <<: *textfield-background
+    path: widgets/lineedit
 
+    layout:
+        inset:
+            prefix: hover
+            left:
+                property: element-width
+                element: hint-left-margin
+                invert: true
+            right:
+                property: element-width
+                element: hint-right-margin
+                invert: true
+            top:
+                property: element-height
+                element: hint-top-margin
+                invert: true
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+                invert: true
+
+    background:
         image:
             property: element-image-blend
             prefix: ""
@@ -107,7 +135,6 @@ textfield-hovered:
 
         border:
             left:
-                <<: *textfield-border-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -115,7 +142,6 @@ textfield-hovered:
                     -   base-left
                     -   hover-left
             right:
-                <<: *textfield-border-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -124,7 +150,6 @@ textfield-hovered:
                     -   hover-right
 
             top:
-                <<: *textfield-border-top
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -133,7 +158,6 @@ textfield-hovered:
                     -   hover-top
 
             bottom:
-                <<: *textfield-border-bottom
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -143,7 +167,6 @@ textfield-hovered:
 
         corners:
             top-left:
-                <<: *textfield-corner-top-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -151,7 +174,6 @@ textfield-hovered:
                     -   base-topleft
                     -   hover-topleft
             top-right:
-                <<: *textfield-corner-top-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -159,7 +181,6 @@ textfield-hovered:
                     -   base-topright
                     -   hover-topright
             bottom-left:
-                <<: *textfield-corner-bottom-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -167,7 +188,6 @@ textfield-hovered:
                     -   base-bottomleft
                     -   hover-bottomleft
             bottom-right:
-                <<: *textfield-corner-bottom-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -176,14 +196,14 @@ textfield-hovered:
                     -   hover-bottomright
 
 textfield-activefocus:
-    <<: *textfield
-
+    type: TextField
+    colorSet: View
     state: ActiveFocus
 
-    layout:
-        <<: *textfield-layout
+    path: widgets/lineedit
 
-        margins:
+    layout:
+        inset:
             prefix: focus
             left:
                 property: element-width
@@ -212,8 +232,6 @@ textfield-activefocus:
 
         border:
             left:
-                <<: *textfield-border-left
-                prefix: focus
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -224,8 +242,6 @@ textfield-activefocus:
                     -   base-left
                     -   focus-left
             right:
-                <<: *textfield-border-right
-                prefix: focus
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -236,8 +252,6 @@ textfield-activefocus:
                     -   base-right
                     -   focus-right
             top:
-                <<: *textfield-border-top
-                prefix: focus
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -248,8 +262,6 @@ textfield-activefocus:
                     -   base-top
                     -   focus-top
             bottom:
-                <<: *textfield-border-bottom
-                prefix: focus
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -261,7 +273,6 @@ textfield-activefocus:
                     -   focus-bottom
         corners:
             top-left:
-                <<: *textfield-corner-top-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -272,7 +283,6 @@ textfield-activefocus:
                     -   base-topleft
                     -   focus-topleft
             top-right:
-                <<: *textfield-corner-top-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -283,7 +293,6 @@ textfield-activefocus:
                     -   base-topright
                     -   focus-topright
             bottom-left:
-                <<: *textfield-corner-bottom-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -294,7 +303,6 @@ textfield-activefocus:
                     -   base-bottomleft
                     -   focus-bottomleft
             bottom-right:
-                <<: *textfield-corner-bottom-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -306,14 +314,14 @@ textfield-activefocus:
                     -   focus-bottomright
 
 textfield-visualfocus:
-    <<: *textfield
-
+    type: TextField
+    colorSet: View
     state: VisualFocus
 
-    layout:
-        <<: *textfield-layout
+    path: widgets/lineedit
 
-        margins:
+    layout:
+        inset:
             prefix: focusframe
             left:
                 property: element-width
@@ -342,7 +350,6 @@ textfield-visualfocus:
 
         border:
             left:
-                <<: *textfield-border-left
                 prefix: focusframe
                 image:
                     property: element-image-blend
@@ -354,7 +361,6 @@ textfield-visualfocus:
                     -   base-left
                     -   focusframe-left
             right:
-                <<: *textfield-border-right
                 prefix: focusframe
                 image:
                     property: element-image-blend
@@ -366,7 +372,6 @@ textfield-visualfocus:
                     -   base-right
                     -   focusframe-right
             top:
-                <<: *textfield-border-top
                 prefix: focusframe
                 image:
                     property: element-image-blend
@@ -378,7 +383,6 @@ textfield-visualfocus:
                     -   base-top
                     -   focusframe-top
             bottom:
-                <<: *textfield-border-bottom
                 prefix: focusframe
                 image:
                     property: element-image-blend
@@ -391,7 +395,6 @@ textfield-visualfocus:
                     -   focusframe-bottom
         corners:
             top-left:
-                <<: *textfield-corner-top-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -402,7 +405,6 @@ textfield-visualfocus:
                     -   base-topleft
                     -   focusframe-topleft
             top-right:
-                <<: *textfield-corner-top-right
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -413,7 +415,6 @@ textfield-visualfocus:
                     -   base-topright
                     -   focusframe-topright
             bottom-left:
-                <<: *textfield-corner-bottom-left
                 image:
                     property: element-image-blend
                     prefix: ""
@@ -424,7 +425,6 @@ textfield-visualfocus:
                     -   base-bottomleft
                     -   focusframe-bottomleft
             bottom-right:
-                <<: *textfield-corner-bottom-right
                 image:
                     property: element-image-blend
                     prefix: ""
