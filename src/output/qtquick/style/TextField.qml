@@ -23,7 +23,7 @@ T.TextField {
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
-        visualFocus: activeFocus
+        visualFocus: control.activeFocus
             && (control.focusReason === Qt.TabFocusReason
             || control.focusReason === Qt.BacktabFocusReason
             || control.focusReason === Qt.ShortcutFocusReason)
@@ -35,10 +35,10 @@ T.TextField {
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.properties.layout.margins.left
-    rightInset: Union.Style.properties.layout.margins.right
-    topInset: Union.Style.properties.layout.margins.top
-    bottomInset: Union.Style.properties.layout.margins.bottom
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
 

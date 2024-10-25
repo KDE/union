@@ -259,7 +259,7 @@ button-focus:
     path: widgets/button
 
     layout:
-        margins:
+        inset:
             prefix: focus
             left:
                 property: element-width
@@ -427,7 +427,7 @@ button-pressed:
             <<: *button-padding
             prefix: pressed
 
-        margins:
+        inset:
             left: 0
             right: 0
             top: 0
