@@ -9,6 +9,7 @@
 #include <qqmlregistration.h>
 
 #include <Element.h>
+#include <PropertiesTypes.h>
 
 namespace ColorSet
 {
@@ -16,6 +17,29 @@ Q_NAMESPACE
 QML_ELEMENT
 QML_FOREIGN_NAMESPACE(Union::Element)
 }
+
+class Alignment : public QObject
+{
+    Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
+public:
+    using QObject::QObject;
+
+    enum AlignmentType {
+        Unspecified = int(Union::Properties::Alignment::Unspecified),
+        Start = int(Union::Properties::Alignment::Start),
+        Center = int(Union::Properties::Alignment::Center),
+        End = int(Union::Properties::Alignment::End),
+        Fill = int(Union::Properties::Alignment::Fill),
+        Stack = int(Union::Properties::Alignment::Stack),
+    };
+    Q_ENUM(AlignmentType)
+
+    Q_INVOKABLE Qt::Alignment toQtHorizontal(AlignmentType alignment);
+    Q_INVOKABLE Qt::Alignment toQtVertical(AlignmentType alignment);
+};
 
 /**
  * A helper type that wraps and exposes a QMarginsF to QML.

@@ -5,6 +5,41 @@
 
 #include "Types.h"
 
+Qt::Alignment Alignment::toQtHorizontal(AlignmentType alignment)
+{
+    switch (alignment) {
+    case Alignment::Unspecified:
+    case Alignment::Start:
+        return Qt::AlignLeft;
+    case Alignment::Center:
+        return Qt::AlignHCenter;
+    case Alignment::End:
+        return Qt::AlignRight;
+    case Alignment::Fill:
+    case Alignment::Stack:
+        return Qt::AlignJustify;
+    }
+
+    return Qt::AlignLeft;
+}
+
+Qt::Alignment Alignment::toQtVertical(AlignmentType alignment)
+{
+    switch (alignment) {
+    case Alignment::Start:
+        return Qt::AlignTop;
+    case Alignment::End:
+        return Qt::AlignBottom;
+    case Alignment::Unspecified:
+    case Alignment::Center:
+    case Alignment::Fill:
+    case Alignment::Stack:
+        return Qt::AlignVCenter;
+    }
+
+    return Qt::AlignVCenter;
+}
+
 Sizes::Sizes()
     : Sizes(0.0, 0.0, 0.0, 0.0)
 {
