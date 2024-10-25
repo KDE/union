@@ -31,5 +31,7 @@ protected:
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *data) override;
 
 private:
+    void updateImplicitSize();
+
     QuickStyle *m_style = nullptr;
 };

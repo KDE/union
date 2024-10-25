@@ -26,7 +26,8 @@ void StyledRectangle::componentComplete()
     if (!m_style) {
         m_style = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true));
         // TODO: Make this some kind of watcher construction rather than needing a connection.
-        connect(m_style, &QuickStyle::updated, this, &StyledRectangle::update);
+        connect(m_style, &QuickStyle::updated, this, &StyledRectangle::updateImplicitSize);
+        updateImplicitSize();
     }
 }
 
@@ -37,13 +38,12 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
     }
 
     auto query = m_style->query();
-    if (!query || !query->hasMatches() || !query->properties().background().has_value()) {
+    if (!query || !query->hasMatches()) {
         return nullptr;
     }
 
-    if (query->properties().layout().has_value()) {
-        auto layout = query->properties().layout().value();
-        setImplicitSize(layout.width().value_or(0.0), layout.height().value_or(0.0));
+    if (!query->properties().background().has_value()) {
+        return nullptr;
     }
 
     if (!node) {
@@ -56,4 +56,23 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
     rectangleNode->update(window());
 
     return rectangleNode;
+}
+
+void StyledRectangle::updateImplicitSize()
+{
+    if (!m_style) {
+        return;
+    }
+
+    auto query = m_style->query();
+    if (!query || !query->hasMatches()) {
+        return;
+    }
+
+    if (query->properties().layout().has_value()) {
+        auto layout = query->properties().layout().value();
+        setImplicitSize(layout.width().value_or(0.0), layout.height().value_or(0.0));
+    }
+
+    update();
 }
