@@ -6,10 +6,14 @@
 
 #include "QuickElement.h"
 
+#include <QQmlEngine>
+
 #include "Element.h"
 #include "StyleRule.h"
 #include "Theme.h"
 #include "ThemeRegistry.h"
+
+#include "QuickStyle.h"
 
 using namespace Union;
 
@@ -282,14 +286,21 @@ void QuickElement::update()
     QList<Element::Ptr> elements;
     elements.append(m_element);
 
-    auto parent = qobject_cast<QuickElement *>(attachedParent());
-    while (parent) {
-        elements.prepend(parent->m_element);
-        parent = qobject_cast<QuickElement *>(parent->attachedParent());
+    auto attached = qobject_cast<QuickElement *>(attachedParent());
+    while (attached) {
+        elements.prepend(attached->m_element);
+        attached = qobject_cast<QuickElement *>(attached->attachedParent());
     }
 
     m_query->setElements(elements);
     m_query->execute();
+
+    if (m_query->hasMatches()) {
+        // Force creation of a style attached object to ensure style properties
+        // are read from this element rather than something further up the
+        // hierarchy.
+        qmlAttachedPropertiesObject<QuickStyle>(parent(), true);
+    }
 
     Q_EMIT updated();
 
