@@ -138,18 +138,30 @@ void RectangleNode::update(QQuickWindow *window)
 
             QRectF cornerRect;
             switch (position) {
-            case SubNodeIndex::TopLeft:
-                cornerRect = QRectF{0.0, 0.0, borderSizes.left(), borderSizes.top()};
+            case SubNodeIndex::TopLeft: {
+                qreal width = property.width().value_or(borderSizes.left());
+                qreal height = property.height().value_or(borderSizes.top());
+                cornerRect = QRectF{0.0, 0.0, width, height};
                 break;
-            case SubNodeIndex::TopRight:
-                cornerRect = QRectF{rect.width() - borderSizes.right(), 0.0, borderSizes.right(), borderSizes.top()};
+            }
+            case SubNodeIndex::TopRight: {
+                qreal width = property.width().value_or(borderSizes.right());
+                qreal height = property.height().value_or(borderSizes.top());
+                cornerRect = QRectF{rect.width() - width, 0.0, width, height};
                 break;
-            case SubNodeIndex::BottomLeft:
-                cornerRect = QRectF{0.0, rect.height() - borderSizes.bottom(), borderSizes.left(), borderSizes.bottom()};
+            }
+            case SubNodeIndex::BottomLeft: {
+                qreal width = property.width().value_or(borderSizes.left());
+                qreal height = property.height().value_or(borderSizes.bottom());
+                cornerRect = QRectF{0.0, rect.height() - height, width, height};
                 break;
-            case SubNodeIndex::BottomRight:
-                cornerRect = QRectF{rect.width() - borderSizes.right(), rect.height() - borderSizes.bottom(), borderSizes.right(), borderSizes.bottom()};
+            }
+            case SubNodeIndex::BottomRight: {
+                qreal width = property.width().value_or(borderSizes.right());
+                qreal height = property.height().value_or(borderSizes.bottom());
+                cornerRect = QRectF{rect.width() - width, rect.height() - height, width, height};
                 break;
+            }
             default:
                 break;
             }
