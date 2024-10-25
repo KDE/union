@@ -66,6 +66,8 @@ void HierarchyNode::ensureHierarchy()
         removeAllChildNodes();
 
         buildNodeHierarchy();
+
+        m_rebuildNodeHierarchy = false;
     }
 }
 
