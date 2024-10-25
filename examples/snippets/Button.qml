@@ -59,6 +59,12 @@ ApplicationWindow {
             Layout.preferredHeight: 50
             text: "Test 2"
         }
+
+        SpinBox {
+        }
+
+        PC.SpinBox {
+        }
     }
 
     footer: ToolBar {
