@@ -10,9 +10,6 @@
 
 #include <QHash>
 
-#include <KConfigGroup>
-#include <KSharedConfig>
-
 #include <ryml.hpp>
 
 #include "LoadingContext.h"
@@ -85,7 +82,6 @@ struct PropertyFunctionResult : public Result<QVariant> {
 
 using PropertyFunction = PropertyFunctionResult (*)(ryml::ConstNodeRef, LoadingContext &);
 
-PropertyFunctionResult constantValue(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult elementSize(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult elementWidth(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult elementHeight(ryml::ConstNodeRef node, LoadingContext &context);
@@ -107,33 +103,25 @@ inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
 };
 
 template<typename T>
-inline T constantValue(ryml::ConstNodeRef)
+inline Result<T> constantValue(ryml::ConstNodeRef node)
 {
-    return T{};
+    try {
+        return value<T>(node);
+    } catch (RymlException &exception) {
+        return Error{"Reading constant value failed: " + exception.message};
+    }
 }
 
 template<>
-inline qreal constantValue<qreal>(ryml::ConstNodeRef node)
+inline Result<QImage> constantValue<QImage>(ryml::ConstNodeRef)
 {
-    return value<qreal>(node);
+    return Error{"Constant values for QImage not supported"};
 }
 
 template<>
-inline QString constantValue<QString>(ryml::ConstNodeRef node)
+inline Result<QSizeF> constantValue<QSizeF>(ryml::ConstNodeRef)
 {
-    return value<QString>(node);
-}
-
-template<>
-inline QColor constantValue<QColor>(ryml::ConstNodeRef node)
-{
-    return value<QColor>(node);
-}
-
-template<>
-inline QUrl constantValue<QUrl>(ryml::ConstNodeRef node)
-{
-    return value<QUrl>(node);
+    return Error{"Constant values for QSizeF not supported"};
 }
 
 template<typename T>
