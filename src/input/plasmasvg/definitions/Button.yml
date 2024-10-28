@@ -97,26 +97,18 @@ button:
         corners:
             top-left:
                 element: topleft
-                size:
-                    property: element-size
                 image:
                     property: element-image
             top-right:
                 element: topright
-                size:
-                    property: element-size
                 image:
                     property: element-image
             bottom-left:
                 element: bottomleft
-                size:
-                    property: element-size
                 image:
                     property: element-image
             bottom-right:
                 element: bottomright
-                size:
-                    property: element-size
                 image:
                     property: element-image
 
@@ -164,26 +156,18 @@ button:
 
             top-left:
                 element: topleft
-                size:
-                    property: element-size
                 image:
                     property: element-image
             top-right:
                 element: topright
-                size:
-                    property: element-size
                 image:
                     property: element-image
             bottom-left:
                 element: bottomleft
-                size:
-                    property: element-size
                 image:
                     property: element-image
             bottom-right:
                 element: bottomright
-                size:
-                    property: element-size
                 image:
                     property: element-image
 
