@@ -67,5 +67,5 @@ T.TabBar {
     }
 
     // Some styles use backgrounds, some don't
-    background: Union.StyledBackground {}
+    background: Union.StyledRectangle {}
 }
