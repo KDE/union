@@ -48,6 +48,18 @@ inline bool from_chars(ryml::csubstr buf, QColor *v) noexcept
     return true;
 }
 
+inline bool from_chars(ryml::csubstr buf, QFont *v) noexcept
+{
+    using namespace Qt::StringLiterals;
+
+    auto font = QFont(QString::fromUtf8(QByteArrayView{buf.data(), qsizetype(buf.size())}));
+    if (!font.exactMatch()) {
+        return false;
+    }
+
+    *v = std::move(font);
+    return true;
+}
 }
 
 struct RymlException {
