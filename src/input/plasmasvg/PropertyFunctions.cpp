@@ -180,3 +180,33 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
 
     return result;
 }
+
+PropertyFunctionResult PropertyFunctions::iconSizeFromName(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto cleanup = context.pushFromNode(node);
+
+    QByteArrayView name;
+    with_child(node, "name", [&](auto node) {
+        name = value<QByteArrayView>(node);
+    });
+
+    if (name.isEmpty()) {
+        return Error{"Could not find key 'name'"};
+    }
+
+    if (name == "small") {
+        return 16;
+    } else if (name == "small-medium") {
+        return 22;
+    } else if (name == "medium") {
+        return 32;
+    } else if (name == "large") {
+        return 48;
+    } else if (name == "huge") {
+        return 64;
+    } else if (name == "enormous") {
+        return 128;
+    } else {
+        return Error{"Invalid name given for icon size: " + name};
+    }
+}

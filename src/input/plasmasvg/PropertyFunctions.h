@@ -89,6 +89,7 @@ PropertyFunctionResult elementHeight(ryml::ConstNodeRef node, LoadingContext &co
 PropertyFunctionResult elementImage(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult sum(ryml::ConstNodeRef node, LoadingContext &context);
+PropertyFunctionResult iconSizeFromName(ryml::ConstNodeRef node, LoadingContext &context);
 
 inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
     {"element-size", elementSize},
@@ -97,6 +98,7 @@ inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
     {"element-image", elementImage},
     {"element-image-blend", elementImageBlend},
     {"sum", sum},
+    {"icon-size", iconSizeFromName},
 };
 
 template<typename T>
