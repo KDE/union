@@ -163,11 +163,14 @@ Result<T> elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
 
     auto cleanup = context.pushFromNode(node);
 
-    auto result = itr->second(node, context);
-    if (result.has_value()) {
-        return result.template value<T>();
-    } else {
-        return result.error();
+    try {
+        if (auto result = itr->second(node, context); result.has_value()) {
+            return result.template value<T>();
+        } else {
+            return result.error();
+        }
+    } catch (RymlException &exception) {
+        return Error("Reading property failed: " + exception.message);
     }
 }
 
