@@ -45,7 +45,9 @@ button: &button
             order: 1
 
         color: palette-foreground
-        font: system-normal
+        font:
+            property: font-name
+            name: system-normal
 
     icon: &button-icon
         alignment:

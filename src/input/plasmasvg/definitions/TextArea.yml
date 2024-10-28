@@ -99,7 +99,9 @@ textarea: &textarea
         align:
             horizontal: left
             vertical: top
-        font: system-normal
+        font:
+            property: font-name
+            name: system-normal
 
 textarea-hovered:
     <<: *textarea

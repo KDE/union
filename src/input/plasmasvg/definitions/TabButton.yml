@@ -19,7 +19,9 @@ tabbutton: &tabbutton
         align:
             horizontal: center
             vertical: center
-        font: system-normal
+        font:
+            property: font-name
+            name: system-normal
     icon:
         size: small
 

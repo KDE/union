@@ -10,6 +10,9 @@
 
 #include <QHash>
 
+#include <KConfigGroup>
+#include <KSharedConfig>
+
 #include <ryml.hpp>
 
 #include "LoadingContext.h"
@@ -89,6 +92,7 @@ PropertyFunctionResult elementHeight(ryml::ConstNodeRef node, LoadingContext &co
 PropertyFunctionResult elementImage(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult elementImageBlend(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult sum(ryml::ConstNodeRef node, LoadingContext &context);
+PropertyFunctionResult fontFromName(ryml::ConstNodeRef node, LoadingContext &context);
 PropertyFunctionResult iconSizeFromName(ryml::ConstNodeRef node, LoadingContext &context);
 
 inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
@@ -98,6 +102,7 @@ inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
     {"element-image", elementImage},
     {"element-image-blend", elementImageBlend},
     {"sum", sum},
+    {"font-name", fontFromName},
     {"icon-size", iconSizeFromName},
 };
 

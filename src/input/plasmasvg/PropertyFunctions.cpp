@@ -9,6 +9,9 @@
 #include <QPainter>
 #include <QVariant>
 
+#include <KConfigGroup>
+#include <KSharedConfig>
+
 #include "PlasmaSvgRenderer.h"
 
 #include "plasmasvg_logging.h"
@@ -179,6 +182,42 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
     }
 
     return result;
+}
+
+PropertyFunctionResult PropertyFunctions::fontFromName(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto cleanup = context.pushFromNode(node);
+
+    QByteArrayView name;
+    with_child(node, "name", [&](auto node) {
+        name = value<QByteArrayView>(node);
+    });
+
+    if (name.isEmpty()) {
+        return Error{"Could not find key 'name'"};
+    }
+
+    auto config = KSharedConfig::openConfig(QStringLiteral("kdeglobals"));
+    auto group = config->group(QStringLiteral("General"));
+
+    QFont font;
+    if (name == "system-normal") {
+        font = group.readEntry("font", QFont());
+    } else if (name == "system-fixed") {
+        font = group.readEntry("fixed", QFont());
+    } else if (name == "system-small") {
+        font = group.readEntry("smallestReadableFont", QFont());
+    } else if (name == "system-toolbar") {
+        font = group.readEntry("toolBarFont", QFont());
+    } else if (name == "system-menu") {
+        font = group.readEntry("menuFont", QFont());
+    } else if (name == "system-window") {
+        font = group.readEntry("activeFont", QFont());
+    } else {
+        return Error{"Unknown font name: " + name};
+    }
+
+    return font;
 }
 
 PropertyFunctionResult PropertyFunctions::iconSizeFromName(ryml::ConstNodeRef node, LoadingContext &context)

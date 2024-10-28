@@ -39,7 +39,9 @@ textfield:
         alignment:
             horizontal: Start
             vertical: Center
-        font: system-normal
+        font:
+            property: font-name
+            name: system-normal
 
     background:
         image:
