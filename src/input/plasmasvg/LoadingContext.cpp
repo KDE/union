@@ -36,6 +36,10 @@ ContextCleanup::~ContextCleanup() noexcept
     if (flags & CleanupFlag::ColorSet && !data.colorSets.isEmpty()) {
         data.colorSets.pop();
     }
+
+    if (flags & CleanupFlag::PropertyName && !data.propertyNames.isEmpty()) {
+        data.propertyNames.pop();
+    }
 }
 
 LoadingContext::LoadingContext(Theme::Ptr _theme)
@@ -43,14 +47,9 @@ LoadingContext::LoadingContext(Theme::Ptr _theme)
 {
 }
 
-ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node, const SelectorList &selectorsToPush)
+ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node)
 {
     ContextCleanup cleanup(data);
-
-    if (!selectorsToPush.isEmpty()) {
-        data.selectors.push(selectorsToPush);
-        cleanup.flags |= ContextCleanup::CleanupFlag::Selector;
-    }
 
     if (!node.is_map()) {
         return cleanup;
@@ -74,6 +73,30 @@ ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node, const Selec
     with_child(node, "colorSet", [&](auto node) {
         data.colorSets.push(value<Element::ColorSet>(node));
     });
+
+    return cleanup;
+}
+
+ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node, const SelectorList &selectorsToPush)
+{
+    auto cleanup = pushFromNode(node);
+
+    if (!selectorsToPush.isEmpty()) {
+        data.selectors.push(selectorsToPush);
+        cleanup.flags |= ContextCleanup::CleanupFlag::Selector;
+    }
+
+    return cleanup;
+}
+
+ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node, QByteArrayView propertyName)
+{
+    auto cleanup = pushFromNode(node);
+
+    if (!propertyName.isEmpty()) {
+        data.propertyNames.push(propertyName);
+        cleanup.flags |= ContextCleanup::CleanupFlag::PropertyName;
+    }
 
     return cleanup;
 }
@@ -108,4 +131,9 @@ QString LoadingContext::path() const
 Element::ColorSet LoadingContext::colorSet() const
 {
     return data.colorSets.isEmpty() ? Element::ColorSet::None : data.colorSets.top();
+}
+
+QByteArrayView LoadingContext::propertyName() const
+{
+    return data.propertyNames.isEmpty() ? QByteArrayView{} : data.propertyNames.top();
 }

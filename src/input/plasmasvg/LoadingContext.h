@@ -28,6 +28,7 @@ struct ContextData {
     QStack<QString> prefixes;
     QStack<QString> elementNames;
     QStack<Union::Element::ColorSet> colorSets;
+    QStack<QByteArrayView> propertyNames;
 };
 
 /**
@@ -40,6 +41,7 @@ struct ContextCleanup {
         Prefix = 1 << 2,
         ElementName = 1 << 3,
         ColorSet = 1 << 4,
+        PropertyName = 1 << 5,
     };
     Q_DECLARE_FLAGS(CleanupFlags, CleanupFlag)
 
@@ -56,10 +58,13 @@ struct LoadingContext {
     Union::Theme::Ptr theme;
     ContextData data;
 
-    [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node, const Union::SelectorList &selectorsToPush = Union::SelectorList{});
+    [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node);
+    [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node, const Union::SelectorList &selectorsToPush);
+    [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node, QByteArrayView propertyName);
 
     Union::SelectorList selectors() const;
     QString prefixedElementName() const;
     QString path() const;
     Union::Element::ColorSet colorSet() const;
+    QByteArrayView propertyName() const;
 };

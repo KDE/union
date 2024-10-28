@@ -40,6 +40,18 @@ void logError(QByteArrayView property, QByteArrayView value, const PropertyFunct
                                << qPrintable(error.message);
 }
 
+template<typename T>
+std::optional<T> readPropertyValue(QByteArrayView valueName, ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto value = PropertyFunctions::elementProperty<T>(node, context);
+    if (value.has_value()) {
+        return value.value();
+    } else {
+        logError(context.propertyName(), valueName, value.error(), context);
+        return std::nullopt;
+    }
+}
+
 bool PlasmaSvgLoader::load(Theme::Ptr theme)
 {
     QDir dir(u":/org/kde/union/input/plasmasvg"_s);
@@ -205,9 +217,6 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingCont
 
     auto cleanup = context.pushFromNode(node, selectors);
 
-    // element->addAttribute(u"plugin"_qs, QString::fromUtf16(PluginName));
-    // element->addAttribute(u"themeName"_qs, m_theme.themeName());
-
     StyleProperty properties;
 
     with_child(node, "layout", [&](auto node) {
@@ -242,33 +251,18 @@ std::optional<LayoutProperty> PlasmaSvgLoader::createLayoutProperty(ryml::ConstN
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "layout");
 
     LayoutProperty layout;
 
     with_child(node, "width", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            layout.setWidth(value.value());
-        } else {
-            logError("layout", "width", value.error(), context);
-        }
+        layout.setWidth(readPropertyValue<qreal>("width", node, context));
     });
     with_child(node, "height", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            layout.setHeight(value.value());
-        } else {
-            logError("layout", "height", value.error(), context);
-        }
+        layout.setHeight(readPropertyValue<qreal>("height", node, context));
     });
     with_child(node, "spacing", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            layout.setSpacing(value.value());
-        } else {
-            logError("layout", "spacing", value.error(), context);
-        }
+        layout.setSpacing(readPropertyValue<qreal>("spacing", node, context));
     });
     with_child(node, "alignment", [&](auto node) {
         layout.setAlignment(createAlignmentProperty(node, context));
@@ -292,19 +286,14 @@ std::optional<TextProperty> PlasmaSvgLoader::createTextProperty(ryml::ConstNodeR
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "text");
 
     TextProperty text;
     with_child(node, "alignment", [&](auto node) {
         text.setAlignment(createAlignmentProperty(node, context));
     });
     with_child(node, "font", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<QFont>(node, context);
-        if (value.has_value()) {
-            text.setFont(value.value());
-        } else {
-            logError("text", "font", value.error(), context);
-        }
+        text.setFont(readPropertyValue<QFont>("font", node, context));
     });
 
     return text;
@@ -316,51 +305,26 @@ std::optional<Union::Properties::IconProperty> PlasmaSvgLoader::createIconProper
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "icon");
 
     IconProperty icon;
     with_child(node, "alignment", [&](auto node) {
         icon.setAlignment(createAlignmentProperty(node, context));
     });
     with_child(node, "width", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            icon.setWidth(value.value());
-        } else {
-            logError("icon", "width", value.error(), context);
-        }
+        icon.setWidth(readPropertyValue<qreal>("width", node, context));
     });
     with_child(node, "height", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            icon.setHeight(value.value());
-        } else {
-            logError("icon", "height", value.error(), context);
-        }
+        icon.setHeight(readPropertyValue<qreal>("height", node, context));
     });
     with_child(node, "color", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<QColor>(node, context);
-        if (value.has_value()) {
-            icon.setColor(value.value());
-        } else {
-            logError("icon", "color", value.error(), context);
-        }
+        icon.setColor(readPropertyValue<QColor>("color", node, context));
     });
     with_child(node, "name", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<QString>(node, context);
-        if (value.has_value()) {
-            icon.setName(value.value());
-        } else {
-            logError("icon", "name", value.error(), context);
-        }
+        icon.setName(readPropertyValue<QString>("name", node, context));
     });
     with_child(node, "source", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<QUrl>(node, context);
-        if (value.has_value()) {
-            icon.setSource(value.value());
-        } else {
-            logError("icon", "source", value.error(), context);
-        }
+        icon.setSource(readPropertyValue<QUrl>("source", node, context));
     });
 
     return icon;
@@ -372,16 +336,11 @@ std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "background");
 
     BackgroundProperty background;
     with_child(node, "color", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<QColor>(node, context);
-        if (value.has_value()) {
-            background.setColor(value.value());
-        } else {
-            logError("background", "color", value.error(), context);
-        }
+        background.setColor(readPropertyValue<QColor>("color", node, context));
     });
 
     with_child(node, "image", [&](auto node) {
@@ -409,20 +368,20 @@ std::optional<Union::Properties::AlignmentProperty> PlasmaSvgLoader::createAlign
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "alignment");
 
     Union::Properties::AlignmentProperty alignment;
     with_child(node, "container", [&](auto node) {
-        alignment.setContainer(value<Union::Properties::AlignmentContainer>(node));
+        alignment.setContainer(readPropertyValue<Union::Properties::AlignmentContainer>("container", node, context));
     });
     with_child(node, "horizontal", [&](auto node) {
-        alignment.setHorizontal(value<Union::Properties::Alignment>(node));
+        alignment.setHorizontal(readPropertyValue<Union::Properties::Alignment>("horizontal", node, context));
     });
     with_child(node, "vertical", [&](auto node) {
-        alignment.setVertical(value<Union::Properties::Alignment>(node));
+        alignment.setVertical(readPropertyValue<Union::Properties::Alignment>("vertical", node, context));
     });
     with_child(node, "order", [&](auto node) {
-        alignment.setOrder(value<int>(node));
+        alignment.setOrder(readPropertyValue<int>("order", node, context));
     });
     return alignment;
 }
@@ -433,7 +392,7 @@ std::optional<SizeProperty> PlasmaSvgLoader::createSizeProperty(ryml::ConstNodeR
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "size");
 
     SizeProperty sizes;
     forEachEntry({"left"s, "right"s, "top"s, "bottom"s},
@@ -442,13 +401,7 @@ std::optional<SizeProperty> PlasmaSvgLoader::createSizeProperty(ryml::ConstNodeR
                  node,
                  [&context](auto node) {
                      auto cleanup = context.pushFromNode(node);
-                     auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-                     if (value.has_value()) {
-                         return value.value();
-                     } else {
-                         logError("size", node.key(), value.error(), context);
-                         return 0.0;
-                     }
+                     return readPropertyValue<qreal>(node.key(), node, context);
                  });
 
     return sizes;
@@ -502,16 +455,11 @@ std::optional<LineProperty> PlasmaSvgLoader::createLineProperty(ryml::ConstNodeR
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "line");
 
     LineProperty line;
     with_child(node, "size", [&](auto node) {
-        auto value = PropertyFunctions::elementProperty<qreal>(node, context);
-        if (value.has_value()) {
-            line.setSize(value.value());
-        } else {
-            logError("line", "size", value.error(), context);
-        }
+        line.setSize(readPropertyValue<qreal>("size", node, context));
     });
     with_child(node, "image", [&](auto node) {
         line.setImage(createImageProperty(node, context));
@@ -532,12 +480,10 @@ std::optional<CornerProperty> PlasmaSvgLoader::createCornerProperty(ryml::ConstN
         corner.setImage(createImageProperty(node, context));
     });
     with_child(node, "size", [&](auto node) {
-        auto size = PropertyFunctions::elementProperty<QSizeF>(node, context);
+        auto size = readPropertyValue<QSizeF>("size", node, context);
         if (size.has_value()) {
             corner.setWidth(size.value().width());
             corner.setHeight(size.value().height());
-        } else {
-            logError("corner", "size", size.error(), context);
         }
     });
     return corner;
@@ -549,11 +495,10 @@ std::optional<ImageProperty> PlasmaSvgLoader::createImageProperty(ryml::ConstNod
         return std::nullopt;
     }
 
-    auto cleanup = context.pushFromNode(node);
+    auto cleanup = context.pushFromNode(node, "image");
 
-    auto data = PropertyFunctions::elementProperty<QImage>(node, context);
+    auto data = readPropertyValue<QImage>("data", node, context);
     if (!data.has_value()) {
-        logError("image", "data", data.error(), context);
         return std::nullopt;
     }
 
