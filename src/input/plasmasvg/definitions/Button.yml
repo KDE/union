@@ -1,11 +1,11 @@
-button: &button
+button:
     type: Button
     colorSet: Button
 
     path: widgets/button
     prefix: normal
 
-    layout: &button-layout
+    layout:
         width:
             property: sum
             function: element-width
@@ -37,7 +37,7 @@ button: &button
                 property: element-height
                 element: hint-bottom-margin
 
-    text: &button-text
+    text:
         alignment:
             container: Content
             horizontal: Center
@@ -49,7 +49,7 @@ button: &button
             property: font-name
             name: system-normal
 
-    icon: &button-icon
+    icon:
         alignment:
             container: Content
             horizontal: Center
@@ -63,67 +63,67 @@ button: &button
             property: icon-size
             name: small
 
-    background: &button-background
+    background:
         image:
             property: element-image
             element: center
 
-        border: &button-border
-            left: &button-border-left
+        border:
+            left:
                 element: left
                 size:
                     property: element-width
                 image:
                     property: element-image
-            right: &button-border-right
+            right:
                 element: right
                 size:
                     property: element-width
                 image:
                     property: element-image
-            top: &button-border-top
+            top:
                 element: top
                 size:
                     property: element-height
                 image:
                     property: element-image
-            bottom: &button-border-bottom
+            bottom:
                 element: bottom
                 size:
                     property: element-height
                 image:
                     property: element-image
 
-        corners: &button-corners
-            top-left: &button-corner-top-left
+        corners:
+            top-left:
                 element: topleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            top-right: &button-corner-top-right
+            top-right:
                 element: topright
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-left: &button-corner-bottom-left
+            bottom-left:
                 element: bottomleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-right: &button-corner-bottom-right
+            bottom-right:
                 element: bottomright
                 size:
                     property: element-size
                 image:
                     property: element-image
 
-        shadow: &button-shadow
+        shadow:
             prefix: shadow
 
-            offsets: &button-shadow-offsets
+            offsets:
                 left:
                     property: element-width
                     element: hint-left-margin
@@ -137,50 +137,50 @@ button: &button
                     property: element-height
                     element: hint-bottom-margin
 
-            left: &button-shadow-left
+            left:
                 element: left
                 size:
                     property: element-width
                 image:
                     property: element-image
-            right: &button-shadow-right
+            right:
                 element: right
                 size:
                     property: element-width
                 image:
                     property: element-image
-            top: &button-shadow-top
+            top:
                 element: top
                 size:
                     property: element-height
                 image:
                     property: element-image
-            bottom: &button-shadow-bottom
+            bottom:
                 element: bottom
                 size:
                     property: element-height
                 image:
                     property: element-image
 
-            top-left: &button-shadow-top-left
+            top-left:
                 element: topleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            top-right: &button-shadow-top-right
+            top-right:
                 element: topright
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-left: &button-shadow-bottom-left
+            bottom-left:
                 element: bottomleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-right: &button-shadow-bottom-right
+            bottom-right:
                 element: bottomright
                 size:
                     property: element-size
