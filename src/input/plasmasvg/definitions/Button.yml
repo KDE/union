@@ -21,6 +21,8 @@ button: &button
             -   center
             -   hint-bottom-margin
 
+        spacing: 4
+
         padding: &button-padding
             left:
                 property: element-width
@@ -52,9 +54,12 @@ button: &button
             vertical: Center
             order: 0
 
-        width: 22
-        height: 22
-        # color: palette-foreground
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
 
     background: &button-background
         image:
