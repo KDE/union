@@ -77,7 +77,11 @@ PropertyFunctionResult PropertyFunctions::elementImageBlend(ryml::ConstNodeRef n
 {
     auto elementsNode = node.find_child("elements");
     if (!elementsNode.readable()) {
-        return QImage{};
+        return Error("Could not find key 'elements'");
+    }
+
+    if (!elementsNode.has_children()) {
+        return Error("Key 'elements' is empty");
     }
 
     QList<QImage> images;
