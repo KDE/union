@@ -141,7 +141,7 @@ Result<T> elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
         return Error{"Key 'property' not found"};
     }
 
-    auto name = value<QByteArray>(propertyNode);
+    auto name = value<QByteArrayView>(propertyNode);
     if (name.isEmpty()) {
         return Error{"Key 'property' is empty"};
     }
@@ -151,15 +151,19 @@ Result<T> elementProperty(ryml::ConstNodeRef node, LoadingContext &context)
         return valueNode.readable() ? Result{constantValue<T>(valueNode)} : Error{"Key 'value' not found"};
     }
 
-    if (!propertyFunctions.contains(name)) {
+    auto itr = std::find_if(propertyFunctions.keyValueBegin(), propertyFunctions.keyValueEnd(), [name](auto entry) {
+        return name == entry.first;
+    });
+
+    if (itr == propertyFunctions.keyValueEnd()) {
         return Error{"No property function named " + name + " could be found"};
     }
 
     auto cleanup = context.pushFromNode(node);
 
-    auto result = propertyFunctions.value(name)(node, context);
+    auto result = itr->second(node, context);
     if (result.has_value()) {
-        return result.value<T>();
+        return result.template value<T>();
     } else {
         return result.error();
     }
