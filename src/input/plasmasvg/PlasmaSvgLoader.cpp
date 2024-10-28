@@ -118,17 +118,18 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
     });
 
     with_child(node, "state", [&](auto node) {
-        selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
         // Support value or list
         if (node.has_val()) {
-            selectors.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, node)));
+            auto val = Element::State(value<Element::States>(node).toInt());
+            selectors.append(Selector::create<SelectorType::State>(val));
         } else if (node.is_seq() && node.has_children()) {
             SelectorList allOfList;
             for (auto child : node.children()) {
                 if (!child.has_val()) {
                     continue;
                 }
-                allOfList.append(Selector::create<SelectorType::State>(NODE_Q_ENUM_VALUE(Element, State, child)));
+                auto val = Element::State(value<Element::States>(child).toInt());
+                allOfList.append(Selector::create<SelectorType::State>(val));
             }
             selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
         }
@@ -171,7 +172,7 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
     with_child(node, "colorSet", [&](auto node) {
         // Support value or list
         if (node.has_val()) {
-            selectors.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, node)));
+            selectors.append(Selector::create<SelectorType::ColorSet>(value<Element::ColorSet>(node)));
         } else if (node.is_seq() && node.has_children()) {
             // You can't display multiple color sets at once,
             // but you could show the same appearance for multiple color sets.
@@ -180,7 +181,7 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
                 if (!child.has_val()) {
                     continue;
                 }
-                anyOfList.append(Selector::create<SelectorType::ColorSet>(NODE_Q_ENUM_VALUE(Element, ColorSet, child)));
+                anyOfList.append(Selector::create<SelectorType::ColorSet>(value<Element::ColorSet>(child)));
             }
             selectors.append(Selector::create<SelectorType::AnyOf>(anyOfList));
         }

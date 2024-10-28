@@ -60,6 +60,34 @@ inline bool from_chars(ryml::csubstr buf, QFont *v) noexcept
     *v = std::move(font);
     return true;
 }
+
+template<typename T>
+    requires std::is_enum_v<T>
+inline bool from_chars(ryml::csubstr buf, T *v) noexcept
+{
+    auto metaEnum = QMetaEnum::fromType<T>();
+    bool ok;
+    auto value = metaEnum.keyToValue(std::string(buf.begin(), buf.end()).data(), &ok);
+    if (!ok) {
+        return false;
+    }
+    *v = T(value);
+    return true;
+}
+
+template<typename T>
+    requires std::is_enum_v<T>
+inline bool from_chars(ryml::csubstr buf, QFlags<T> *v) noexcept
+{
+    auto metaEnum = QMetaEnum::fromType<T>();
+    bool ok;
+    auto value = metaEnum.keysToValue(std::string(buf.begin(), buf.end()).data(), &ok);
+    if (!ok) {
+        return false;
+    }
+    *v = T(value);
+    return true;
+}
 }
 
 struct RymlException {
@@ -173,15 +201,14 @@ inline CStringWrapper value<CStringWrapper>(ryml::ConstNodeRef node)
     return value<QByteArray>(node);
 }
 
-// QMetaEnum::fromType doesn't seem to be usable,
-// so we can't make a specialization of nodeValue() for Qt enums and flags.
-// clang-format off
-#define NODE_Q_ENUM_VALUE(ParentScope, Enum, node)\
-    static_cast<ParentScope::Enum>(\
-        ParentScope::staticMetaObject.enumerator(\
-            ParentScope::staticMetaObject.indexOfEnumerator(#Enum))\
-                .keyToValue(value<CStringWrapper>(node)))
-// clang-format on
+template<typename F>
+    requires std::is_same_v<F, QFlags<typename F::enum_type>>
+inline F value(ryml::ConstNodeRef node)
+{
+    auto metaEnum = QMetaEnum::fromType<F>();
+    auto nodeVal = value<QByteArray>(node);
+    return F{metaEnum.keysToValue(nodeVal.data())};
+}
 
 template<>
 inline Qt::Alignment value<Qt::Alignment>(ryml::ConstNodeRef node)

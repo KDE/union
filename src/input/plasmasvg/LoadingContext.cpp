@@ -72,7 +72,7 @@ ContextCleanup LoadingContext::pushFromNode(ryml::ConstNodeRef node, const Selec
     });
 
     with_child(node, "colorSet", [&](auto node) {
-        data.colorSets.push(NODE_Q_ENUM_VALUE(Element, ColorSet, node));
+        data.colorSets.push(value<Element::ColorSet>(node));
     });
 
     return cleanup;
