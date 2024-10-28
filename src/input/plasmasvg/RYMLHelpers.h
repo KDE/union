@@ -12,7 +12,6 @@
 #include <QMetaType>
 #include <QMetaEnum>
 
-#define RYML_DEFAULT_CALLBACK_USES_EXCEPTIONS
 #include <ryml.hpp>
 #include <ryml_std.hpp>
 #include <c4/enum.hpp>
@@ -49,6 +48,16 @@ inline bool from_chars(ryml::csubstr buf, QColor *v) noexcept
     return true;
 }
 
+}
+
+struct RymlException {
+    QByteArray message;
+    ryml::Location location;
+};
+
+inline void rymlError(const char *msg, size_t msg_len, ryml::Location location, void * /*user_data*/)
+{
+    throw RymlException{QByteArray{msg, qsizetype(msg_len)}, location};
 }
 
 inline QDebug operator<<(QDebug debug, const ryml::ConstNodeRef &node)

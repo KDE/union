@@ -49,6 +49,10 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
         return false;
     }
 
+    auto callbacks = ryml::get_callbacks();
+    callbacks.m_error = rymlError;
+    ryml::set_callbacks(callbacks);
+
     for (auto entry : entries) {
         QFile file(dir.absoluteFilePath(entry));
         if (!file.open(QFile::ReadOnly)) {
