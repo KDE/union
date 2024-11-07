@@ -39,6 +39,10 @@ ApplicationWindow {
             Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test"
+            ToolTip {
+                text: "Tooltip test 1"
+                visible: parent.hovered
+            }
         }
 
         PC.Button {
@@ -46,6 +50,10 @@ ApplicationWindow {
             Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test"
+            PC.ToolTip {
+                text: "Tooltip test 1"
+                visible: parent.hovered
+            }
         }
 
         Button {
