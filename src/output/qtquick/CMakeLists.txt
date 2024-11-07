@@ -13,6 +13,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Button.qml
     style/Page.qml
     style/Pane.qml
+    style/ItemDelegate.qml
     style/SpinBox.qml
     style/TabButton.qml
     style/TabBar.qml
