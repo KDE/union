@@ -109,6 +109,36 @@ ApplicationWindow {
 
         PC.SpinBox {
         }
+
+        ItemDelegate {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            icon.name: "document-save"
+            text: "Test 4"
+            onClicked: {
+                switch (display) {
+                    case Button.TextBesideIcon:
+                        display = Button.IconOnly
+                        break
+                    case Button.IconOnly:
+                        display = Button.TextOnly
+                        break;
+                    case Button.TextOnly:
+                        display = Button.TextUnderIcon
+                        break
+                    case Button.TextUnderIcon:
+                        display = Button.TextBesideIcon
+                        break
+                }
+            }
+        }
+
+        PC.ItemDelegate {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            icon.name: "document-save"
+            text: "Test 4"
+        }
     }
 
     footer: ToolBar {
