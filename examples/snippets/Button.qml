@@ -62,6 +62,11 @@ ApplicationWindow {
             text: "Test"
             checkable: true
             onClicked: cycleButtonDisplay(this)
+
+            ToolTip {
+                text: "Tooltip test 1"
+                visible: parent.hovered
+            }
         }
 
         PC.Button {
@@ -72,6 +77,11 @@ ApplicationWindow {
             text: "Test"
             checkable: true
             onClicked: cycleButtonDisplay(this)
+
+            PC.ToolTip {
+                text: "Tooltip test 1"
+                visible: parent.hovered
+            }
         }
 
         Button {
