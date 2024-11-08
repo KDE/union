@@ -11,6 +11,8 @@ ecm_add_qml_module(UnionQuickStyle
 ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ApplicationWindow.qml
     style/Button.qml
+    style/Page.qml
+    style/Pane.qml
     style/SpinBox.qml
     style/TabButton.qml
     style/TabBar.qml
