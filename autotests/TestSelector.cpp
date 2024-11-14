@@ -43,46 +43,47 @@ private Q_SLOTS:
     {
         QTest::addColumn<SelectorList>("selectors");
         QTest::addColumn<bool>("expected");
+        QTest::addColumn<int>("weight");
 
         SelectorList selectors = {
             Selector::create<SelectorType::Id>(u"id"_qs),
             Selector::create<SelectorType::Type>(u"Type"_qs),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
-        QTest::addRow("exact") << selectors << true;
+        QTest::addRow("exact") << selectors << true << 111;
 
         selectors = {
             Selector::create<SelectorType::Type>(u"Type"_qs),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
-        QTest::addRow("skip first") << selectors << true;
+        QTest::addRow("skip first") << selectors << true << 11;
 
         selectors = {
             Selector::create<SelectorType::Id>(u"id"_qs),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
-        QTest::addRow("skip middle") << selectors << true;
+        QTest::addRow("skip middle") << selectors << true << 110;
 
         selectors = {
             Selector::create<SelectorType::Id>(u"id"_qs),
             Selector::create<SelectorType::Type>(u"Type"_qs),
         };
-        QTest::addRow("skip last") << selectors << false;
+        QTest::addRow("skip last") << selectors << false << 101;
 
         selectors = {
             Selector::create<SelectorType::Id>(u"id"_qs),
         };
-        QTest::addRow("id only") << selectors << false;
+        QTest::addRow("id only") << selectors << false << 100;
 
         selectors = {
             Selector::create<SelectorType::Type>(u"Type"_qs),
         };
-        QTest::addRow("type only") << selectors << false;
+        QTest::addRow("type only") << selectors << false << 1;
 
         selectors = {
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
-        QTest::addRow("state only") << selectors << true;
+        QTest::addRow("state only") << selectors << true << 10;
     }
 
     void testSimpleStructureMatches()
