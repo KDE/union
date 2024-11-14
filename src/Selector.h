@@ -53,6 +53,7 @@ class UNION_EXPORT Selector
 {
 public:
     bool isValid() const;
+    int weight() const;
 
     bool matches(std::shared_ptr<Element> element) const;
     QString toString() const;
@@ -72,6 +73,7 @@ public:
 private:
     struct SelectorPrivate {
         virtual ~SelectorPrivate();
+        virtual int weight() const = 0;
         virtual bool matches(std::shared_ptr<Element> element) const = 0;
         virtual QString toString() const = 0;
     };
@@ -83,6 +85,7 @@ private:
         {
         }
 
+        int weight() const override;
         bool matches(std::shared_ptr<Element> element) const override;
         QString toString() const override;
 
@@ -100,6 +103,7 @@ class UNION_EXPORT SelectorList : public QList<Selector>
 public:
     using QList::QList;
 
+    int weight() const;
     bool matches(const QList<std::shared_ptr<Element>> &elements) const;
 
     void appendAnyOf(const SelectorList &selectors);

@@ -5,6 +5,8 @@
 
 #include "Selector.h"
 
+#include <ranges>
+
 #include <QMetaEnum>
 
 #include "Element.h"
@@ -13,6 +15,12 @@ using namespace Union;
 using namespace Qt::StringLiterals;
 
 Selector::SelectorPrivate::~SelectorPrivate() = default;
+
+template<>
+int Selector::SelectorPrivateImpl<SelectorType::Type, QString>::weight() const
+{
+    return 1;
+}
 
 template<>
 bool Selector::SelectorPrivateImpl<SelectorType::Type, QString>::matches(std::shared_ptr<Element> element) const
@@ -31,6 +39,12 @@ QString Selector::SelectorPrivateImpl<SelectorType::Type, QString>::toString() c
 }
 
 template<>
+int Selector::SelectorPrivateImpl<SelectorType::Id, QString>::weight() const
+{
+    return 100;
+}
+
+template<>
 bool Selector::SelectorPrivateImpl<SelectorType::Id, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
@@ -44,6 +58,12 @@ template<>
 QString Selector::SelectorPrivateImpl<SelectorType::Id, QString>::toString() const
 {
     return u"Id(%1)"_qs.arg(data);
+}
+
+template<>
+int Selector::SelectorPrivateImpl<SelectorType::State, Element::State>::weight() const
+{
+    return 10;
 }
 
 template<>
@@ -64,6 +84,12 @@ QString Selector::SelectorPrivateImpl<SelectorType::State, Element::State>::toSt
 }
 
 template<>
+int Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::weight() const
+{
+    return 10;
+}
+
+template<>
 bool Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
 {
     if (data == Element::ColorSet::None) {
@@ -81,6 +107,12 @@ QString Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>
 }
 
 template<>
+int Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::weight() const
+{
+    return 10;
+}
+
+template<>
 bool Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
@@ -93,6 +125,12 @@ template<>
 QString Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::toString() const
 {
     return u"Hint(%1)"_qs.arg(data);
+}
+
+template<>
+int Selector::SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
+{
+    return 10;
 }
 
 template<>
@@ -115,6 +153,15 @@ QString Selector::SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString
 }
 
 template<>
+int Selector::SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::weight() const
+{
+    auto weights = std::views::transform(data, [](auto selector) {
+        return selector.weight();
+    });
+    return *std::ranges::max_element(weights);
+}
+
+template<>
 bool Selector::SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
 {
     return std::any_of(data.cbegin(), data.cend(), [element](auto &selector) {
@@ -130,6 +177,15 @@ QString Selector::SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::toStri
         return selector.toString();
     });
     return u"AnyOf(%1)"_qs.arg(all.join(u","));
+}
+
+template<>
+int Selector::SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::weight() const
+{
+    auto weights = std::views::transform(data, [](auto selector) {
+        return selector.weight();
+    });
+    return std::accumulate(weights.begin(), weights.end(), 0);
 }
 
 template<>
@@ -153,6 +209,15 @@ QString Selector::SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::toStri
 bool Selector::isValid() const
 {
     return bool(d);
+}
+
+int Union::Selector::weight() const
+{
+    if (!d) {
+        return 0;
+    }
+
+    return d->weight();
 }
 
 bool Selector::matches(std::shared_ptr<Element> element) const
@@ -191,6 +256,15 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
     }
 
     return sitr == end() && eitr == elements.end();
+}
+
+int SelectorList::weight() const
+{
+    int result = 0;
+    for (auto selector : (*this)) {
+        result += selector.weight();
+    }
+    return result;
 }
 
 void SelectorList::appendAnyOf(const SelectorList &selectors)
