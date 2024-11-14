@@ -409,6 +409,8 @@ button-pressed:
     selectors:
     -   type: Button
         state: Pressed
+    -   type: Button
+        state: Checked
 
     path: widgets/button
     colorSet: Button
