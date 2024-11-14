@@ -1,5 +1,6 @@
-toolbar: &toolbar
-    type: ToolBar
+toolbar:
+    selectors:
+    -   type: ToolBar
 
     path: widgets/toolbar
 

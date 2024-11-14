@@ -1,5 +1,6 @@
 spinbox:
-    type: SpinBox
+    selectors:
+    -   type: SpinBox
 
     path: widgets/lineedit
     prefix: base
@@ -213,8 +214,9 @@ spinbox:
                     property: element-image
 
 spinbox-hovered:
-    type: SpinBox
-    state: Hovered
+    selectors:
+    -   type: SpinBox
+        state: Hovered
 
     background:
         path: widgets/lineedit

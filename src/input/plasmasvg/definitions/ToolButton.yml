@@ -1,5 +1,6 @@
 toolbutton:
-    type: ToolButton
+    selectors:
+    -   type: ToolButton
 
     path: widgets/button
     prefix: toolbutton-hover
@@ -87,8 +88,9 @@ toolbutton:
             name: small-medium
 
 toolbutton-hovered:
-    type: ToolButton
-    state: Hovered
+    selectors:
+    -   type: ToolButton
+        state: Hovered
 
     path: widgets/button
     prefix: toolbutton-hover
@@ -151,8 +153,9 @@ toolbutton-hovered:
                     property: element-image
 
 toolbutton-focused:
-    type: ToolButton
-    state: VisualFocus
+    selectors:
+    -   type: ToolButton
+        state: VisualFocus
 
     path: widgets/button
     prefix: toolbutton-focus

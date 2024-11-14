@@ -1,9 +1,10 @@
 button:
-    type: Button
-    colorSet: Button
+    selectors:
+    -   type: Button
 
     path: widgets/button
     prefix: normal
+    colorSet: Button
 
     layout:
         width:
@@ -171,29 +172,13 @@ button:
                 image:
                     property: element-image
 
-button-with-icon:
-    type: Button
-    colorSet: Button
-    hints: with-icon
-
-    path: widgets/button
-
-    icon:
-        alignment:
-            horizontal: Start
-            vertical: Center
-
-    text:
-        alignment:
-            horizontal: Start
-            vertical: Center
-
 button-hovered:
-    type: Button
-    colorSet: Button
-    state: Hovered
+    selectors:
+    -   type: Button
+        state: Hovered
 
     path: widgets/button
+    colorSet: Button
 
     background:
         image:
@@ -256,11 +241,12 @@ button-hovered:
                     -   hover-bottomright
 
 button-focus:
-    type: Button
-    colorSet: Button
-    state: VisualFocus
+    selectors:
+    -   type: Button
+        state: VisualFocus
 
     path: widgets/button
+    colorSet: Button
 
     layout:
         inset:
@@ -420,11 +406,12 @@ button-focus:
                         invert: true
 
 button-pressed:
-    type: Button
-    colorSet: Button
-    state: Pressed
+    selectors:
+    -   type: Button
+        state: Pressed
 
     path: widgets/button
+    colorSet: Button
 
     layout:
         padding:
@@ -531,3 +518,17 @@ button-pressed:
                 bottom:
                     size: 0
 
+button-with-icon:
+    selectors:
+    -   type: Button
+        hints: with-icon
+
+    icon:
+        alignment:
+            horizontal: Start
+            vertical: Center
+
+    text:
+        alignment:
+            horizontal: Start
+            vertical: Center

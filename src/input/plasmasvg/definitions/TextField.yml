@@ -1,9 +1,10 @@
 textfield:
-    type: TextField
-    colorSet: View
+    selectors:
+    -   type: TextField
 
     path: widgets/lineedit
     prefix: base
+    colorSet: View
 
     layout:
         width:
@@ -101,11 +102,12 @@ textfield:
                     property: element-image
 
 textfield-hovered:
-    type: TextField
-    colorSet: View
-    state: Hovered
+    selectors:
+    -   type: TextField
+        state: Hovered
 
     path: widgets/lineedit
+    colorSet: View
 
     layout:
         inset:
@@ -198,11 +200,12 @@ textfield-hovered:
                     -   hover-bottomright
 
 textfield-activefocus:
-    type: TextField
-    colorSet: View
-    state: ActiveFocus
+    selectors:
+    -   type: TextField
+        state: ActiveFocus
 
     path: widgets/lineedit
+    colorSet: View
 
     layout:
         inset:
@@ -316,11 +319,12 @@ textfield-activefocus:
                     -   focus-bottomright
 
 textfield-visualfocus:
-    type: TextField
-    colorSet: View
-    state: VisualFocus
+    selectors:
+    -   type: TextField
+        state: VisualFocus
 
     path: widgets/lineedit
+    colorSet: View
 
     layout:
         inset:
