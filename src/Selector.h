@@ -19,7 +19,7 @@ namespace Union
 {
 
 class Selector;
-using SelectorList = QList<Selector>;
+class SelectorList;
 
 enum class SelectorType {
     Empty,
