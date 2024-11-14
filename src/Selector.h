@@ -101,6 +101,10 @@ public:
     using QList::QList;
 
     bool matches(const QList<std::shared_ptr<Element>> &elements) const;
+
+    void appendAnyOf(const SelectorList &selectors);
+    void appendAllOf(const SelectorList &selectors);
+};
 }
 
 UNION_EXPORT QDebug

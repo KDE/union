@@ -193,6 +193,24 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
     return sitr == end() && eitr == elements.end();
 }
 
+void SelectorList::appendAnyOf(const SelectorList &selectors)
+{
+    if (selectors.size() == 1) {
+        append(selectors.first());
+    } else {
+        append(Selector::create<SelectorType::AnyOf>(selectors));
+    }
+}
+
+void SelectorList::appendAllOf(const SelectorList &selectors)
+{
+    if (selectors.size() == 1) {
+        append(selectors.first());
+    } else {
+        append(Selector::create<SelectorType::AllOf>(selectors));
+    }
+}
+
 QDebug operator<<(QDebug debug, const Union::Selector &selector)
 {
     QDebugStateSaver saver(debug);
