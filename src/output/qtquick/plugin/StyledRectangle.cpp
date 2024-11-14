@@ -25,10 +25,18 @@ void StyledRectangle::componentComplete()
 
     if (!m_style) {
         m_style = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true));
-        // TODO: Make this some kind of watcher construction rather than needing a connection.
-        connect(m_style, &QuickStyle::updated, this, &StyledRectangle::updateImplicitSize);
         updateImplicitSize();
     }
+}
+
+bool StyledRectangle::event(QEvent *event)
+{
+    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+        updateImplicitSize();
+        return true;
+    }
+
+    return QQuickItem::event(event);
 }
 
 QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData * /*data*/)

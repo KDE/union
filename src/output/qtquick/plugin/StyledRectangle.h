@@ -28,6 +28,7 @@ public:
     void componentComplete() override;
 
 protected:
+    bool event(QEvent *event) override;
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *data) override;
 
 private:
