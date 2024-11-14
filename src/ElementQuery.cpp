@@ -57,8 +57,12 @@ bool ElementQuery::execute()
         return false;
     }
 
-    qCDebug(UNION_QUERY) << "Matched style rules:";
-    qCDebug(UNION_QUERY) << d->styles;
+    if (UNION_QUERY().isDebugEnabled()) {
+        qCDebug(UNION_QUERY) << "Matched style rules:";
+        for (auto entry : std::as_const(d->styles)) {
+            qCDebug(UNION_QUERY) << entry;
+        }
+    }
 
     d->properties = Properties::StyleProperty();
 
