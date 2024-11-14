@@ -115,14 +115,32 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
             continue;
         }
 
-        auto style = createStyle(child, context);
-        if (style) {
-            context.theme->insert(style);
+        auto selectors = child.find_child("selectors");
+        if (!selectors.readable()) {
+            context.logLocation(child) << "Ignoring rule with no selectors declared";
+            continue;
+        }
+
+        if (!selectors.is_seq()) {
+            context.logLocation(selectors) << "Key 'selectors' should be a list";
+            continue;
+        }
+
+        for (auto entry : selectors.children()) {
+            auto selectors = createSelectors(entry);
+            if (selectors.isEmpty()) {
+                context.logLocation(entry) << "Ignoring empty selector";
+                continue;
+            }
+            auto style = createStyle(selectors, child, context);
+            if (style) {
+                context.theme->insert(style);
+            }
         }
     }
 }
 
-SelectorList createSelectors(ryml::ConstNodeRef node)
+SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
 {
     SelectorList selectors;
 
@@ -204,21 +222,33 @@ SelectorList createSelectors(ryml::ConstNodeRef node)
         }
     });
 
-    return selectors;
-}
+    SelectorList childSelectors;
+    with_child(node, "child", [&](auto node) {
+        if (!node.is_map()) {
+            return;
+        }
 
-StyleRule::Ptr PlasmaSvgLoader::createStyle(ryml::ConstNodeRef node, LoadingContext &context)
-{
-    auto style = StyleRule::create();
-    SelectorList selectors = createSelectors(node);
-    SelectorList currentSelectors = context.selectors();
+        childSelectors = createSelectors(node);
+    });
+
+    SelectorList result;
     if (selectors.size() == 1) {
-        currentSelectors.append(selectors.first());
+        result = {selectors.first()};
     } else {
-        currentSelectors.append(Selector::create<SelectorType::AllOf>(selectors));
+        result = {Selector::create<SelectorType::AllOf>(selectors)};
     }
 
-    style->setSelectors(currentSelectors);
+    if (!childSelectors.isEmpty()) {
+        result.append(childSelectors);
+    }
+
+    return result;
+}
+
+StyleRule::Ptr PlasmaSvgLoader::createStyle(const SelectorList &selectors, ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto style = StyleRule::create();
+    style->setSelectors(selectors);
 
     auto cleanup = context.pushFromNode(node, selectors);
 

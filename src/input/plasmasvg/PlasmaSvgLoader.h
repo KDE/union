@@ -41,7 +41,8 @@ public:
 
 private:
     void createStyles(ryml::ConstNodeRef node, LoadingContext &context);
-    Union::StyleRule::Ptr createStyle(ryml::ConstNodeRef node, LoadingContext &context);
+    Union::SelectorList createSelectors(ryml::ConstNodeRef node);
+    Union::StyleRule::Ptr createStyle(const Union::SelectorList &selectors, ryml::ConstNodeRef node, LoadingContext &context);
     Union::Selector createSelector(ryml::ConstNodeRef node);
 
     std::optional<Union::Properties::LayoutProperty> createLayoutProperty(ryml::ConstNodeRef node, LoadingContext &context);
