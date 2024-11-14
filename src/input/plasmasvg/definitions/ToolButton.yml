@@ -1,6 +1,9 @@
 toolbutton:
     selectors:
     -   type: ToolButton
+    -   type: SpinBox
+        child:
+            type: Indicator
 
     path: widgets/button
     prefix: toolbutton-hover
@@ -91,6 +94,10 @@ toolbutton-hovered:
     selectors:
     -   type: ToolButton
         state: Hovered
+    -   type: SpinBox
+        child:
+            type: Indicator
+            state: Hovered
 
     path: widgets/button
     prefix: toolbutton-hover
@@ -156,6 +163,10 @@ toolbutton-focused:
     selectors:
     -   type: ToolButton
         state: VisualFocus
+    -   type: SpinBox
+        child:
+            type: Indicator
+            state: VisualFocus
 
     path: widgets/button
     prefix: toolbutton-focus
@@ -185,6 +196,12 @@ toolbutton-pressed:
     selectors:
     -   type: ToolButton
         state: Pressed
+    -   type: ToolButton
+        state: Checked
+    -   type: SpinBox
+        child:
+            type: Indicator
+            state: Pressed
 
     path: widgets/button
     prefix: toolbutton-pressed

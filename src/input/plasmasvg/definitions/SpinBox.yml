@@ -40,114 +40,6 @@ spinbox:
                 property: element-height
                 element: hint-bottom-margin
 
-    children:
-        indicator:
-            type: Indicator
-
-            path: widgets/button
-            prefix: toolbutton-hover
-
-            layout:
-                width:
-                    property: sum
-                    function: element-width
-                    elements:
-                    -   hint-left-margin
-                    -   center
-                    -   hint-right-margin
-                height:
-                    property: sum
-                    function: element-height
-                    elements:
-                    -   hint-top-margin
-                    -   center
-                    -   hint-bottom-margin
-
-            icon:
-                width:
-                    property: icon-size
-                    name: small
-                height:
-                    property: icon-size
-                    name: small
-
-            background:
-                border:
-                    left:
-                        path: widgets/line
-                        prefix: ""
-                        size:
-                            property: element-width
-                            element: vertical-line
-                        image:
-                            property: element-image
-                            element: vertical-line
-
-                    right:
-                        path: widgets/line
-                        prefix: ""
-                        size:
-                            property: element-width
-                            element: vertical-line
-                        image:
-                            property: element-image
-                            element: vertical-line
-
-                    top:
-                        size:
-                            property: element-height
-                            element: top
-                    bottom:
-                        size:
-                            property: element-height
-                            element: bottom
-
-        indicator-hovered:
-            type: Indicator
-            state: Hovered
-
-            path: widgets/button
-            prefix: toolbutton-hover
-
-            # background:
-
-
-        increase:
-            type: Indicator
-            hints: increase
-
-            layout:
-                alignment:
-                    container: Item
-                    horizontal: End
-                    vertical: Fill
-
-            icon:
-                name: spinbox-increase
-
-            background:
-                border:
-                    right:
-                        size: 0
-
-        decrease:
-            type: Indicator
-            hints: decrease
-
-            layout:
-                alignment:
-                    container: Item
-                    horizontal: Start
-                    vertical: Fill
-
-            icon:
-                name: spinbox-decrease
-
-            background:
-                border:
-                    left:
-                        size: 0
-
     text:
         alignment:
             container: Content
@@ -291,3 +183,61 @@ spinbox-hovered:
                     -   base-bottomright
                     -   hover-bottomright
 
+# Note: Spinbox indicators are effectively toolbuttons, so most of their styling
+# comes from ToolButton.yml, these extra rules are to set icons and other
+# elements specific to SpinBox.
+spinbox-indicator-decrease:
+    selectors:
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: decrease
+
+    layout:
+        alignment:
+            container: Item
+            horizontal: Start
+            vertical: Fill
+
+    icon:
+        name: spinbox-decrease
+
+    background:
+        border:
+            right:
+                path: widgets/line
+                prefix: ""
+                size:
+                    property: element-width
+                    element: vertical-line
+                image:
+                    property: element-image
+                    element: vertical-line
+
+spinbox-indicator-increase:
+    selectors:
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: increase
+
+    layout:
+        alignment:
+            container: Item
+            horizontal: End
+            vertical: Fill
+
+    icon:
+        name: spinbox-increase
+
+    background:
+        border:
+            left:
+                path: widgets/line
+                prefix: ""
+                size:
+                    property: element-width
+                    element: vertical-line
+                image:
+                    property: element-image
+                    element: vertical-line
