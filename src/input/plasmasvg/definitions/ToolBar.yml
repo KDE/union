@@ -6,13 +6,21 @@ toolbar:
 
     layout:
         width:
-            property: element-width
-            element: center
+            property: sum
+            function: element-width
+            elements:
+            -   hint-left-margin
+            -   center
+            -   hint-right-margin
         height:
-            property: element-height
-            element: center
+            property: sum
+            function: element-height
+            elements:
+            -   hint-top-margin
+            -   center
+            -   hint-bottom-margin
 
-        padding: &toolbar-padding
+        padding:
             left:
                 property: element-width
                 element: hint-left-margin
@@ -31,52 +39,52 @@ toolbar:
             property: element-image
             element: center
 
-        border: &toolbar-border
-            left: &toolbar-border-left
+        border:
+            left:
                 element: left
                 size:
                     property: element-width
                 image:
                     property: element-image
-            right: &toolbar-border-right
+            right:
                 element: right
                 size:
                     property: element-width
                 image:
                     property: element-image
-            top: &toolbar-border-top
+            top:
                 element: top
                 size:
                     property: element-height
                 image:
                     property: element-image
-            bottom: &toolbar-border-bottom
+            bottom:
                 element: bottom
                 size:
                     property: element-height
                 image:
                     property: element-image
 
-        corners: &toolbar-corners
-            top-left: &toolbar-corner-top-left
+        corners:
+            top-left:
                 element: topleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            top-right: &toolbar-corner-top-right
+            top-right:
                 element: topright
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-left: &toolbar-corner-bottom-left
+            bottom-left:
                 element: bottomleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-right: &toolbar-corner-bottom-right
+            bottom-right:
                 element: bottomright
                 size:
                     property: element-size
