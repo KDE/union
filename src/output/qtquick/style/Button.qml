@@ -33,6 +33,24 @@ T.Button {
         highlighted: control.highlighted
     }
     Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
+    Union.Element.attributes: {
+        let result = {}
+        switch (display) {
+        case T.AbstractButton.IconOnly:
+            result.display = "icon-only"
+            break
+        case T.AbstractButton.TextOnly:
+            result.display = "text-only"
+            break
+        case T.AbstractButton.TextBesideIcon:
+            result.display = "text-beside-icon"
+            break
+        case T.AbstractButton.TextUnderIcon:
+            result.display = "text-under-icon"
+            break
+        }
+        return result
+    }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -63,12 +81,13 @@ T.Button {
 
         QQCImpl.IconImage {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-            width: control.icon.width
-            height: control.icon.height
 
             name: control.icon.name
             color: control.icon.color
-            visible: name.length > 0
+            visible: name.length > 0 && control.display != T.AbstractButton.TextOnly
+
+            sourceSize.width: control.icon.width
+            sourceSize.height: control.icon.height
         }
 
         Text {
@@ -78,7 +97,7 @@ T.Button {
             font: control.font
             color: Union.Style.properties.text.color
 
-            renderType: Text.NativeRendering
+            visible: control.display != T.AbstractButton.IconOnly
         }
     }
 
