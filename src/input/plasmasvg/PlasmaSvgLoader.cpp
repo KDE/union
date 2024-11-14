@@ -65,8 +65,14 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
     callbacks.m_error = rymlError;
     ryml::set_callbacks(callbacks);
 
+    ryml::ParserOptions options;
+    options.locations(true);
+    ryml::EventHandlerTree eventHandler;
+    ryml::Parser parser{&eventHandler, options};
+
     for (auto entry : entries) {
-        QFile file(dir.absoluteFilePath(entry));
+        auto path = dir.absoluteFilePath(entry).toStdString();
+        QFile file{QString::fromStdString(path)};
         if (!file.open(QFile::ReadOnly)) {
             qCWarning(UNION_PLASMASVG) << "Could not read file" << entry << file.errorString();
             continue;
@@ -75,7 +81,7 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
         auto data = file.readAll().toStdString();
         ryml::Tree parsed;
         try {
-            parsed = ryml::parse_in_place(ryml::to_substr(data));
+            parsed = ryml::parse_in_place(&parser, ryml::to_csubstr(path), ryml::to_substr(data));
         } catch (const std::runtime_error &e) {
             qCWarning(UNION_PLASMASVG) << "Could not parse" << entry << e.what();
             continue;
@@ -89,7 +95,7 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
             continue;
         }
 
-        LoadingContext context(theme);
+        LoadingContext context(theme, &parser);
         createStyles(root, context);
     }
 
