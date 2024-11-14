@@ -15,6 +15,8 @@
 #include <ElementQuery.h>
 #include <Selector.h>
 
+class QuickElement;
+
 /**
  * Different states an element can be in.
  *
@@ -27,7 +29,7 @@ class StatesGroup : public QObject
     QML_ANONYMOUS
 
 public:
-    StatesGroup();
+    StatesGroup(QuickElement *parent);
 
     /**
      * Is the element hovered?
@@ -35,10 +37,9 @@ public:
      * This sets the `Element::State::Hovered` state on the element if set to
      * `true`.
      */
-    Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged BINDABLE bindableHovered)
+    Q_PROPERTY(bool hovered READ hovered WRITE setHovered NOTIFY hoveredChanged)
     bool hovered() const;
     void setHovered(bool newHovered);
-    QBindable<bool> bindableHovered();
     Q_SIGNAL void hoveredChanged();
 
     /**
@@ -47,10 +48,9 @@ public:
      * This sets the `Element::State::ActiveFocus` state on the element if set
      * to `true`.
      */
-    Q_PROPERTY(bool activeFocus READ activeFocus WRITE setActiveFocus NOTIFY activeFocusChanged BINDABLE bindableActiveFocus)
+    Q_PROPERTY(bool activeFocus READ activeFocus WRITE setActiveFocus NOTIFY activeFocusChanged)
     bool activeFocus() const;
     void setActiveFocus(bool newActiveFocus);
-    QBindable<bool> bindableActiveFocus();
     Q_SIGNAL void activeFocusChanged();
 
     /**
@@ -59,10 +59,9 @@ public:
      * This sets the `Element::State::VisualFocus` state on the element if set
      * to `true`.
      */
-    Q_PROPERTY(bool visualFocus READ visualFocus WRITE setVisualFocus NOTIFY visualFocusChanged BINDABLE bindableVisualFocus)
+    Q_PROPERTY(bool visualFocus READ visualFocus WRITE setVisualFocus NOTIFY visualFocusChanged)
     bool visualFocus() const;
     void setVisualFocus(bool newActiveFocus);
-    QBindable<bool> bindableVisualFocus();
     Q_SIGNAL void visualFocusChanged();
 
     /**
@@ -71,10 +70,9 @@ public:
      * This sets the `Element::State::Pressed` state on the element if set to
      * `true`.
      */
-    Q_PROPERTY(bool pressed READ pressed WRITE setPressed NOTIFY pressedChanged BINDABLE bindablePressed)
+    Q_PROPERTY(bool pressed READ pressed WRITE setPressed NOTIFY pressedChanged)
     bool pressed() const;
     void setPressed(bool newPressed);
-    QBindable<bool> bindablePressed();
     Q_SIGNAL void pressedChanged();
 
     /**
@@ -83,10 +81,9 @@ public:
      * This sets the `Element::State::Checked` state on the element if set to
      * `true`.
      */
-    Q_PROPERTY(bool checked READ checked WRITE setChecked NOTIFY checkedChanged BINDABLE bindableChecked)
+    Q_PROPERTY(bool checked READ checked WRITE setChecked NOTIFY checkedChanged)
     bool checked() const;
     void setChecked(bool newChecked);
-    QBindable<bool> bindableChecked();
     Q_SIGNAL void checkedChanged();
 
     /**
@@ -98,10 +95,9 @@ public:
      * Note that this behavior is inverted from most other states here, as
      * "Enabled" is expected to be the default state of an element.
      */
-    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged BINDABLE bindableEnabled)
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged)
     bool enabled() const;
     void setEnabled(bool newEnabled);
-    QBindable<bool> bindableEnabled();
     Q_SIGNAL void enabledChanged();
 
     /**
@@ -110,10 +106,9 @@ public:
      * This sets the `Element::State::Highlighted` state on the element if set
      * to `true`.
      */
-    Q_PROPERTY(bool highlighted READ highlighted WRITE setHighlighted NOTIFY highlightedChanged BINDABLE bindableHighlighted)
+    Q_PROPERTY(bool highlighted READ highlighted WRITE setHighlighted NOTIFY highlightedChanged)
     bool highlighted() const;
     void setHighlighted(bool newHighlighted);
-    QBindable<bool> bindableHighlighted();
     Q_SIGNAL void highlightedChanged();
 
     /**
@@ -122,20 +117,15 @@ public:
      * This will contain all the states that are currently active, as set by the
      * other properties.
      */
-    Q_PROPERTY(Union::Element::States activeStates READ activeStates NOTIFY activeStatesChanged BINDABLE bindableActiveStates)
+    Q_PROPERTY(Union::Element::States activeStates READ activeStates NOTIFY activeStatesChanged)
     Union::Element::States activeStates() const;
-    QBindable<Union::Element::States> bindableActiveStates();
     Q_SIGNAL void activeStatesChanged();
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_hovered, &StatesGroup::hoveredChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_activeFocus, &StatesGroup::activeFocusChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_visualFocus, &StatesGroup::visualFocusChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_pressed, &StatesGroup::pressedChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_checked, &StatesGroup::checkedChanged)
-    Q_OBJECT_BINDABLE_PROPERTY_WITH_ARGS(StatesGroup, bool, m_enabled, true, &StatesGroup::enabledChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, bool, m_highlighted, &StatesGroup::highlightedChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(StatesGroup, Union::Element::States, m_activeStates, &StatesGroup::activeStatesChanged)
+    void setState(Union::Element::State state, bool set);
+
+    QuickElement *m_parent = nullptr;
+    Union::Element::States m_activeStates;
 };
 
 /**
@@ -197,10 +187,9 @@ public:
     /**
      * The type of element.
      */
-    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged BINDABLE bindableType)
+    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     QString type() const;
     void setType(const QString &newType);
-    QBindable<QString> bindableType();
     Q_SIGNAL void typeChanged();
 
     /**
@@ -209,10 +198,9 @@ public:
      * Note that this is expected to be unique across the entire application,
      * although this is not currently enforced.
      */
-    Q_PROPERTY(QString elementId READ elementId WRITE setElementId NOTIFY elementIdChanged BINDABLE bindableElementId)
+    Q_PROPERTY(QString elementId READ elementId WRITE setElementId NOTIFY elementIdChanged)
     QString elementId() const;
     void setElementId(const QString &newId);
-    QBindable<QString> bindableElementId();
     Q_SIGNAL void elementIdChanged();
 
     /**
@@ -229,10 +217,9 @@ public:
      *
      * \sa Union::Element::ColorSet
      */
-    Q_PROPERTY(Union::Element::ColorSet colorSet READ colorSet WRITE setColorSet BINDABLE bindableColorSet NOTIFY colorSetChanged)
+    Q_PROPERTY(Union::Element::ColorSet colorSet READ colorSet WRITE setColorSet NOTIFY colorSetChanged)
     Union::Element::ColorSet colorSet() const;
     void setColorSet(Union::Element::ColorSet newColorSet);
-    QBindable<Union::Element::ColorSet> bindableColorSet();
     Q_SIGNAL void colorSetChanged();
 
     /**
@@ -241,10 +228,9 @@ public:
      * These should be set if there are extra criteria to be used to style an
      * element, for example error/warning/information variants.
      */
-    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged BINDABLE bindableHints)
+    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged)
     QStringList hints() const;
     void setHints(const QStringList &newHints);
-    QBindable<QStringList> bindableHints();
     Q_SIGNAL void hintsChanged();
 
     /**
@@ -254,10 +240,9 @@ public:
      * element. They can be used to do things like select a specific theme to
      * use for an element.
      */
-    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes NOTIFY attributesChanged BINDABLE bindableAttributes)
+    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
     QVariantMap attributes() const;
     void setAttributes(const QVariantMap &newAttributes);
-    QBindable<QVariantMap> bindableAttributes();
     Q_SIGNAL void attributesChanged();
 
     /**
@@ -286,6 +271,7 @@ protected:
 private:
     friend class StatesGroup;
 
+    void setActiveStates(Union::Element::States newActiveStates);
     void update();
 
     std::shared_ptr<Union::Element> m_element;

@@ -75,10 +75,9 @@ public:
      * This can be any arbitrary string that can be used to describe an object
      * in a user interface, such as "Button".
      */
-    Q_PROPERTY(QString type READ type WRITE setType BINDABLE bindableType NOTIFY typeChanged)
+    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
     QString type() const;
     void setType(const QString &type);
-    QBindable<QString> bindableType();
     Q_SIGNAL void typeChanged();
 
     /**
@@ -88,10 +87,9 @@ public:
      * an application. These IDs should be unique to ensure style rules intended
      * to style a specific element aren't suddenly applied to other elements.
      */
-    Q_PROPERTY(QString id READ id WRITE setId BINDABLE bindableId NOTIFY idChanged)
+    Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
     QString id() const;
     void setId(const QString &newId);
-    QBindable<QString> bindableId();
     Q_SIGNAL void idChanged();
 
     /**
@@ -100,19 +98,17 @@ public:
      * These are things like "Hovered" and often change fairly often in an
      * application.
      */
-    Q_PROPERTY(States states READ states WRITE setStates BINDABLE bindableStates NOTIFY statesChanged)
+    Q_PROPERTY(States states READ states WRITE setStates NOTIFY statesChanged)
     States states() const;
     void setStates(States newStates);
-    QBindable<States> bindableStates();
     Q_SIGNAL void statesChanged();
 
     /**
      * The ColorSet to use to render this element.
      */
-    Q_PROPERTY(ColorSet colorSet READ colorSet WRITE setColorSet BINDABLE bindableColorSet NOTIFY colorSetChanged)
+    Q_PROPERTY(ColorSet colorSet READ colorSet WRITE setColorSet NOTIFY colorSetChanged)
     ColorSet colorSet() const;
     void setColorSet(ColorSet newColorSet);
-    QBindable<ColorSet> bindableColorSet();
     Q_SIGNAL void colorSetChanged();
 
     /**
@@ -125,10 +121,9 @@ public:
      * usually should not be used for state information, the `states` property
      * should cover most of those.
      */
-    Q_PROPERTY(QStringList hints READ hints WRITE setHints BINDABLE bindableHints NOTIFY hintsChanged)
+    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged)
     QStringList hints() const;
     void setHints(const QStringList &newHints);
-    QBindable<QStringList> bindableHints();
     Q_SIGNAL void hintsChanged();
 
     /**
@@ -137,11 +132,12 @@ public:
      * This can contain an arbitrary amount of key-value pairs that can be
      * useful for rule matching.
      */
-    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes BINDABLE bindableAttributes NOTIFY attributesChanged)
+    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
     QVariantMap attributes() const;
     void setAttributes(const QVariantMap &attributes);
-    QBindable<QVariantMap> bindableAttributes();
     Q_SIGNAL void attributesChanged();
+
+    Q_SIGNAL void updated();
 
     bool hasAttribute(const QString &name) const;
     QVariant attribute(const QString &name) const;

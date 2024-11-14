@@ -17,55 +17,36 @@ using namespace Qt::StringLiterals;
 class Union::ElementPrivate
 {
 public:
-    QProperty<QString> type;
-    QProperty<QString> id;
-    QProperty<Element::States> states;
-    QProperty<Element::ColorSet> colorSet;
-    QProperty<QStringList> hints;
-    QProperty<QVariantMap> attributes;
-
-    std::array<QPropertyNotifier, 6> propertyNotifiers;
+    QString type;
+    QString id;
+    Element::States states;
+    Element::ColorSet colorSet;
+    QStringList hints;
+    QVariantMap attributes;
 };
 
 Element::Element(std::unique_ptr<ElementPrivate> &&dd)
     : QObject(nullptr)
     , d(std::move(dd))
 {
-    d->propertyNotifiers[0] = d->type.addNotifier([this]() {
-        Q_EMIT typeChanged();
-    });
-    d->propertyNotifiers[1] = d->id.addNotifier([this]() {
-        Q_EMIT idChanged();
-    });
-    d->propertyNotifiers[2] = d->states.addNotifier([this]() {
-        Q_EMIT statesChanged();
-    });
-    d->propertyNotifiers[3] = d->hints.addNotifier([this]() {
-        Q_EMIT hintsChanged();
-    });
-    d->propertyNotifiers[4] = d->attributes.addNotifier([this]() {
-        Q_EMIT attributesChanged();
-    });
-    d->propertyNotifiers[5] = d->colorSet.addNotifier([this]() {
-        Q_EMIT colorSetChanged();
-    });
 }
 
 Element::~Element() = default;
 
 QString Element::type() const
 {
-    return d->type.value();
+    return d->type;
 }
 
 void Element::setType(const QString &type)
 {
-    d->type = type;
-}
+    if (d->type == type) {
+        return;
+    }
 
-QBindable<QString> Element::bindableType()
-{
-    return QBindable<QString>(&d->type);
+    d->type = type;
+    Q_EMIT typeChanged();
+    Q_EMIT updated();
 }
 
 QString Element::id() const
@@ -75,12 +56,13 @@ QString Element::id() const
 
 void Element::setId(const QString &newId)
 {
-    d->id = newId;
-}
+    if (d->id == newId) {
+        return;
+    }
 
-QBindable<QString> Element::bindableId()
-{
-    return QBindable<QString>(&d->id);
+    d->id = newId;
+    Q_EMIT idChanged();
+    Q_EMIT updated();
 }
 
 Element::States Element::states() const
@@ -90,12 +72,13 @@ Element::States Element::states() const
 
 void Element::setStates(States newStates)
 {
-    d->states = newStates;
-}
+    if (d->states == newStates) {
+        return;
+    }
 
-QBindable<Element::States> Union::Element::bindableStates()
-{
-    return QBindable<States>(&d->states);
+    d->states = newStates;
+    Q_EMIT statesChanged();
+    Q_EMIT updated();
 }
 
 Element::ColorSet Element::colorSet() const
@@ -105,12 +88,13 @@ Element::ColorSet Element::colorSet() const
 
 void Element::setColorSet(ColorSet newColorSet)
 {
-    d->colorSet = newColorSet;
-}
+    if (d->colorSet == newColorSet) {
+        return;
+    }
 
-QBindable<Element::ColorSet> Element::bindableColorSet()
-{
-    return QBindable<ColorSet>(&d->colorSet);
+    d->colorSet = newColorSet;
+    Q_EMIT colorSetChanged();
+    Q_EMIT updated();
 }
 
 QStringList Element::hints() const
@@ -120,12 +104,13 @@ QStringList Element::hints() const
 
 void Element::setHints(const QStringList &newHints)
 {
-    d->hints = newHints;
-}
+    if (d->hints == newHints) {
+        return;
+    }
 
-QBindable<QStringList> Element::bindableHints()
-{
-    return QBindable<QStringList>(&d->hints);
+    d->hints = newHints;
+    Q_EMIT hintsChanged();
+    Q_EMIT updated();
 }
 
 QVariantMap Element::attributes() const
@@ -135,22 +120,23 @@ QVariantMap Element::attributes() const
 
 void Element::setAttributes(const QVariantMap &attributes)
 {
-    d->attributes = attributes;
-}
+    if (d->attributes == attributes) {
+        return;
+    }
 
-QBindable<QVariantMap> Element::bindableAttributes()
-{
-    return QBindable<QVariantMap>(&d->attributes);
+    d->attributes = attributes;
+    Q_EMIT attributesChanged();
+    Q_EMIT updated();
 }
 
 bool Element::hasAttribute(const QString &name) const
 {
-    return (*d->attributes).contains(name);
+    return d->attributes.contains(name);
 }
 
 QVariant Element::attribute(const QString &name) const
 {
-    return (*d->attributes).value(name);
+    return d->attributes.value(name);
 }
 
 Element::Ptr Union::Element::create()

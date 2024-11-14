@@ -17,138 +17,79 @@
 
 using namespace Union;
 
-StatesGroup::StatesGroup()
+StatesGroup::StatesGroup(QuickElement *parent)
+    : m_parent(parent)
 {
-    m_activeStates.setBinding([this]() {
-        Union::Element::States states;
-        if (m_hovered.value()) {
-            states |= Union::Element::State::Hovered;
-        }
-        if (m_activeFocus.value()) {
-            states |= Union::Element::State::ActiveFocus;
-        }
-        if (m_visualFocus.value()) {
-            states |= Union::Element::State::VisualFocus;
-        }
-        if (m_pressed.value()) {
-            states |= Union::Element::State::Pressed;
-        }
-        if (m_checked.value()) {
-            states |= Union::Element::State::Checked;
-        }
-        if (!m_enabled.value()) {
-            states |= Union::Element::State::Disabled;
-        }
-        if (m_highlighted.value()) {
-            states |= Union::Element::State::Highlighted;
-        }
-        return states;
-    });
 }
 
 bool StatesGroup::hovered() const
 {
-    return m_hovered;
+    return m_activeStates.testFlag(Element::State::Hovered);
 }
 
 void StatesGroup::setHovered(bool newHovered)
 {
-    m_hovered = newHovered;
-}
-
-QBindable<bool> StatesGroup::bindableHovered()
-{
-    return QBindable<bool>(&m_hovered);
+    setState(Element::State::Hovered, newHovered);
 }
 
 bool StatesGroup::activeFocus() const
 {
-    return m_activeFocus;
+    return m_activeStates.testFlag(Element::State::ActiveFocus);
 }
 
 void StatesGroup::setActiveFocus(bool newActiveFocus)
 {
-    m_activeFocus = newActiveFocus;
-}
-
-QBindable<bool> StatesGroup::bindableActiveFocus()
-{
-    return QBindable<bool>(&m_activeFocus);
+    setState(Element::State::ActiveFocus, newActiveFocus);
 }
 
 bool StatesGroup::visualFocus() const
 {
-    return m_visualFocus;
+    return m_activeStates.testFlag(Element::State::VisualFocus);
 }
 
 void StatesGroup::setVisualFocus(bool newVisualFocus)
 {
-    m_visualFocus = newVisualFocus;
-}
-
-QBindable<bool> StatesGroup::bindableVisualFocus()
-{
-    return QBindable<bool>(&m_visualFocus);
+    setState(Element::State::VisualFocus, newVisualFocus);
 }
 
 bool StatesGroup::pressed() const
 {
-    return m_pressed;
+    return m_activeStates.testFlag(Element::State::Pressed);
 }
 
 void StatesGroup::setPressed(bool newPressed)
 {
-    m_pressed = newPressed;
-}
-
-QBindable<bool> StatesGroup::bindablePressed()
-{
-    return QBindable<bool>(&m_pressed);
+    setState(Element::State::Pressed, newPressed);
 }
 
 bool StatesGroup::checked() const
 {
-    return m_checked;
+    return m_activeStates.testFlag(Element::State::Checked);
 }
 
 void StatesGroup::setChecked(bool newChecked)
 {
-    m_checked = newChecked;
-}
-
-QBindable<bool> StatesGroup::bindableChecked()
-{
-    return QBindable<bool>(&m_checked);
+    setState(Element::State::Checked, newChecked);
 }
 
 bool StatesGroup::enabled() const
 {
-    return m_enabled;
+    return !m_activeStates.testFlag(Element::State::Disabled);
 }
 
 void StatesGroup::setEnabled(bool newEnabled)
 {
-    m_enabled = newEnabled;
-}
-
-QBindable<bool> StatesGroup::bindableEnabled()
-{
-    return QBindable<bool>(&m_enabled);
+    setState(Element::State::Disabled, !newEnabled);
 }
 
 bool StatesGroup::highlighted() const
 {
-    return m_highlighted;
+    return m_activeStates & Element::State::Highlighted;
 }
 
 void StatesGroup::setHighlighted(bool newHighlighted)
 {
-    m_highlighted = newHighlighted;
-}
-
-QBindable<bool> StatesGroup::bindableHighlighted()
-{
-    return QBindable<bool>(&m_highlighted);
+    setState(Element::State::Highlighted, newHighlighted);
 }
 
 Union::Element::States StatesGroup::activeStates() const
@@ -156,25 +97,33 @@ Union::Element::States StatesGroup::activeStates() const
     return m_activeStates;
 }
 
-QBindable<Union::Element::States> StatesGroup::bindableActiveStates()
+void StatesGroup::setState(Union::Element::State state, bool set)
 {
-    return QBindable<Union::Element::States>(&m_activeStates);
+    auto newStates = m_activeStates;
+    newStates.setFlag(state, set);
+
+    if (newStates == m_activeStates) {
+        return;
+    }
+
+    m_activeStates = newStates;
+    Q_EMIT highlightedChanged();
+    Q_EMIT activeStatesChanged();
+    m_parent->setActiveStates(m_activeStates);
 }
 
 QuickElement::QuickElement(QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
 {
     m_element = Element::create();
+    connect(m_element.get(), &Element::typeChanged, this, &QuickElement::typeChanged);
+    connect(m_element.get(), &Element::idChanged, this, &QuickElement::elementIdChanged);
+    connect(m_element.get(), &Element::colorSetChanged, this, &QuickElement::colorSetChanged);
+    connect(m_element.get(), &Element::hintsChanged, this, &QuickElement::hintsChanged);
+    connect(m_element.get(), &Element::attributesChanged, this, &QuickElement::attributesChanged);
+    connect(m_element.get(), &Element::updated, this, &QuickElement::update);
 
-    m_statesGroup = std::make_unique<StatesGroup>();
-
-    m_element->bindableStates().setBinding([this]() {
-        return m_statesGroup->bindableActiveStates().value();
-    });
-
-    m_activeStatesNotifier = m_statesGroup->bindableActiveStates().addNotifier([this]() {
-        update();
-    });
+    m_statesGroup = std::make_unique<StatesGroup>(this);
 
     initialize();
 }
@@ -189,11 +138,6 @@ void QuickElement::setType(const QString &newType)
     m_element->setType(newType);
 }
 
-QBindable<QString> QuickElement::bindableType()
-{
-    return m_element->bindableType();
-}
-
 QString QuickElement::elementId() const
 {
     return m_element->id();
@@ -202,11 +146,6 @@ QString QuickElement::elementId() const
 void QuickElement::setElementId(const QString &newId)
 {
     m_element->setId(newId);
-}
-
-QBindable<QString> QuickElement::bindableElementId()
-{
-    return m_element->bindableId();
 }
 
 Union::Element::ColorSet QuickElement::colorSet() const
@@ -219,11 +158,6 @@ void QuickElement::setColorSet(Union::Element::ColorSet newColorSet)
     m_element->setColorSet(Element::ColorSet(newColorSet));
 }
 
-QBindable<Union::Element::ColorSet> QuickElement::bindableColorSet()
-{
-    return m_element->bindableColorSet();
-}
-
 QStringList QuickElement::hints() const
 {
     return m_element->hints();
@@ -234,11 +168,6 @@ void QuickElement::setHints(const QStringList &newHints)
     m_element->setHints(newHints);
 }
 
-QBindable<QStringList> QuickElement::bindableHints()
-{
-    return m_element->bindableHints();
-}
-
 QVariantMap QuickElement::attributes() const
 {
     return m_element->attributes();
@@ -247,11 +176,6 @@ QVariantMap QuickElement::attributes() const
 void QuickElement::setAttributes(const QVariantMap &newAttributes)
 {
     m_element->setAttributes(newAttributes);
-}
-
-QBindable<QVariantMap> QuickElement::bindableAttributes()
-{
-    return m_element->bindableAttributes();
 }
 
 StatesGroup *QuickElement::states() const
@@ -275,6 +199,11 @@ void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQui
     // called, so delay the update momentarily so the parent can be updated
     // first.
     QMetaObject::invokeMethod(this, &QuickElement::update, Qt::QueuedConnection);
+}
+
+void QuickElement::setActiveStates(Union::Element::States newActiveStates)
+{
+    m_element->setStates(newActiveStates);
 }
 
 void QuickElement::update()
