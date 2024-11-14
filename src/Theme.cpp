@@ -93,7 +93,7 @@ QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
 
     for (auto style : d->styles) {
         const auto selectors = style->selectors();
-        if (selectorListMatches(selectors, elements)) {
+        if (selectors.matches(elements)) {
             qCDebug(UNION_QUERY) << "Matches selector" << selectors;
             result.prepend(style);
         } else {

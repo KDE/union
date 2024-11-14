@@ -95,9 +95,14 @@ private:
     std::shared_ptr<const SelectorPrivate> d;
 };
 
-UNION_EXPORT bool selectorListMatches(const SelectorList &selectors, const QList<std::shared_ptr<Element>> &elements);
+class UNION_EXPORT SelectorList : public QList<Selector>
+{
+public:
+    using QList::QList;
 
+    bool matches(const QList<std::shared_ptr<Element>> &elements) const;
 }
 
-UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Selector &selector);
+UNION_EXPORT QDebug
+operator<<(QDebug debug, const Union::Selector &selector);
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::SelectorList &selectors);

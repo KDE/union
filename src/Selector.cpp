@@ -178,20 +178,19 @@ Selector::Selector(std::shared_ptr<const SelectorPrivate> _d)
 {
 }
 
-bool Union::selectorListMatches(const SelectorList &selectors, const QList<Element::Ptr> &elements)
+bool SelectorList::matches(const QList<Element::Ptr> &elements) const
 {
-    auto sitr = selectors.begin();
+    auto sitr = begin();
     auto eitr = elements.begin();
 
-    while (sitr != selectors.end() && eitr != elements.end()) {
+    while (sitr != end() && eitr != elements.end()) {
         if (sitr->matches(*eitr)) {
             sitr++;
-        } else {
-            eitr++;
         }
+        eitr++;
     }
 
-    return sitr == selectors.end() && eitr == (elements.end() - 1);
+    return sitr == end() && eitr == elements.end();
 }
 
 QDebug operator<<(QDebug debug, const Union::Selector &selector)

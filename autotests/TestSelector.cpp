@@ -102,8 +102,10 @@ private Q_SLOTS:
 
         QFETCH(SelectorList, selectors);
         QFETCH(bool, expected);
+        QFETCH(int, weight);
 
-        QCOMPARE(selectorListMatches(selectors, elements), expected);
+        QCOMPARE(selectors.matches(elements), expected);
+        QCOMPARE(selectors.weight(), weight);
     }
 
     void testSkipEmpty()
@@ -128,7 +130,7 @@ private Q_SLOTS:
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
 
-        QVERIFY(selectorListMatches(selectors, elements));
+        QVERIFY(selectors.matches(elements));
     }
 };
 
