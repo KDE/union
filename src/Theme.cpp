@@ -101,6 +101,10 @@ QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
         }
     }
 
+    std::stable_sort(result.begin(), result.end(), [](auto first, auto second) {
+        return first->selectors().weight() > second->selectors().weight();
+    });
+
     return result;
 }
 
