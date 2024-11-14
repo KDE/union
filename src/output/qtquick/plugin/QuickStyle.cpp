@@ -6,6 +6,7 @@
 
 #include "QuickStyle.h"
 
+#include <QCoreApplication>
 #include <QQmlEngine>
 
 #include <Element.h>
@@ -48,6 +49,17 @@ void QuickStyle::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuick
     update();
 }
 
+bool QuickStyle::event(QEvent *event)
+{
+    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+        // Propagate to parent to also enable event filters on the parent to
+        // notify of changes.
+        QCoreApplication::sendEvent(parent(), event);
+    }
+
+    return QObject::event(event);
+}
+
 void QuickStyle::setElement(QuickElement *newElement)
 {
     if (newElement == m_element) {
@@ -88,10 +100,19 @@ void QuickStyle::update()
 
     m_properties->update(query->properties());
 
+    QuickStyleUpdatedEvent event;
+    // Send to self to allow event filtering on this instance to react to changes.
+    QCoreApplication::sendEvent(this, &event);
+
     Q_EMIT updated();
 
     const auto children = attachedChildren();
     for (auto child : children) {
         qobject_cast<QuickStyle *>(child)->update();
     }
+}
+
+QuickStyleUpdatedEvent::QuickStyleUpdatedEvent()
+    : QEvent(s_type)
+{
 }

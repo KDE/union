@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QEvent>
 #include <QMarginsF>
 #include <QObject>
 #include <QProperty>
@@ -61,6 +62,7 @@ public:
 
 protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
+    bool event(QEvent *event) override;
 
 private:
     void setElement(QuickElement *newElement);
@@ -69,4 +71,13 @@ private:
     std::unique_ptr<StylePropertyGroup> m_properties;
 
     QuickElement *m_element = nullptr;
+};
+
+class QuickStyleUpdatedEvent : public QEvent
+{
+public:
+    QuickStyleUpdatedEvent();
+
+    // Todo: Use registerEventType() instead of a hardcoded random offset
+    inline static QEvent::Type s_type = QEvent::Type(QEvent::User + 57423);
 };
