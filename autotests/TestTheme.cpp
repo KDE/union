@@ -16,7 +16,7 @@ struct TestLoader : public ThemeLoader {
     bool load(std::shared_ptr<Theme> theme) override
     {
         auto testRule = StyleRule::create();
-        testRule->setSelectors({Selector::create<SelectorType::Id>(u"test"_qs)});
+        testRule->setSelectors({Selector::create<SelectorType::Id>(u"test"_s)});
         theme->insert(testRule);
 
         return true;
@@ -45,7 +45,7 @@ private Q_SLOTS:
 
         QList<Element::Ptr> elements;
         auto element = Element::create();
-        element->setId(u"test"_qs);
+        element->setId(u"test"_s);
         elements.append(element);
 
         auto result = theme->matches(elements);
@@ -53,7 +53,7 @@ private Q_SLOTS:
 
         elements.clear();
         element = Element::create();
-        element->setType(u"test"_qs);
+        element->setType(u"test"_s);
         elements.append(element);
 
         result = theme->matches(elements);

@@ -10,6 +10,7 @@
 #include <Selector.h>
 
 using namespace Union;
+using namespace Qt::StringLiterals;
 
 class TestSelector : public QObject
 {
@@ -46,37 +47,37 @@ private Q_SLOTS:
         QTest::addColumn<int>("weight");
 
         SelectorList selectors = {
-            Selector::create<SelectorType::Id>(u"id"_qs),
-            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::Id>(u"id"_s),
+            Selector::create<SelectorType::Type>(u"Type"_s),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("exact") << selectors << true << 111;
 
         selectors = {
-            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_s),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("skip first") << selectors << true << 11;
 
         selectors = {
-            Selector::create<SelectorType::Id>(u"id"_qs),
+            Selector::create<SelectorType::Id>(u"id"_s),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("skip middle") << selectors << true << 110;
 
         selectors = {
-            Selector::create<SelectorType::Id>(u"id"_qs),
-            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::Id>(u"id"_s),
+            Selector::create<SelectorType::Type>(u"Type"_s),
         };
         QTest::addRow("skip last") << selectors << false << 101;
 
         selectors = {
-            Selector::create<SelectorType::Id>(u"id"_qs),
+            Selector::create<SelectorType::Id>(u"id"_s),
         };
         QTest::addRow("id only") << selectors << false << 100;
 
         selectors = {
-            Selector::create<SelectorType::Type>(u"Type"_qs),
+            Selector::create<SelectorType::Type>(u"Type"_s),
         };
         QTest::addRow("type only") << selectors << false << 1;
 
@@ -90,11 +91,11 @@ private Q_SLOTS:
     {
         ElementList elements;
         auto element = Element::create();
-        element->setId(u"id"_qs);
+        element->setId(u"id"_s);
         elements.append(element);
 
         element = Element::create();
-        element->setType(u"Type"_qs);
+        element->setType(u"Type"_s);
         elements.append(element);
 
         element = Element::create();
@@ -116,7 +117,7 @@ private Q_SLOTS:
         elements.append(element);
 
         element = Element::create();
-        element->setType(u"type"_qs);
+        element->setType(u"type"_s);
         elements.append(element);
 
         element = Element::create();
@@ -127,7 +128,7 @@ private Q_SLOTS:
         elements.append(element);
 
         SelectorList selectors = {
-            Selector::create<SelectorType::Type>(u"type"_qs),
+            Selector::create<SelectorType::Type>(u"type"_s),
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
 

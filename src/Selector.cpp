@@ -57,7 +57,7 @@ bool Selector::SelectorPrivateImpl<SelectorType::Id, QString>::matches(std::shar
 template<>
 QString Selector::SelectorPrivateImpl<SelectorType::Id, QString>::toString() const
 {
-    return u"Id(%1)"_qs.arg(data);
+    return u"Id(%1)"_s.arg(data);
 }
 
 template<>
@@ -80,7 +80,7 @@ template<>
 QString Selector::SelectorPrivateImpl<SelectorType::State, Element::State>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
-    return u"State(%1)"_qs.arg(QString::fromUtf8(e.valueToKeys(int(data))));
+    return u"State(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
@@ -103,7 +103,7 @@ template<>
 QString Selector::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-    return u"ColorSet(%1)"_qs.arg(QString::fromUtf8(e.valueToKeys(int(data))));
+    return u"ColorSet(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
@@ -124,7 +124,7 @@ bool Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::matches(std::sh
 template<>
 QString Selector::SelectorPrivateImpl<SelectorType::Hint, QString>::toString() const
 {
-    return u"Hint(%1)"_qs.arg(data);
+    return u"Hint(%1)"_s.arg(data);
 }
 
 template<>
@@ -149,7 +149,7 @@ bool Selector::SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, Q
 template<>
 QString Selector::SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
 {
-    return u"Attribute(key=%1, value=%2)"_qs.arg(data.first, data.second.toString());
+    return u"Attribute(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
 }
 
 template<>
@@ -176,7 +176,7 @@ QString Selector::SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::toStri
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
         return selector.toString();
     });
-    return u"AnyOf(%1)"_qs.arg(all.join(u","));
+    return u"AnyOf(%1)"_s.arg(all.join(u","));
 }
 
 template<>
@@ -203,7 +203,7 @@ QString Selector::SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::toStri
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
         return selector.toString();
     });
-    return u"AllOf(%1)"_qs.arg(all.join(u","));
+    return u"AllOf(%1)"_s.arg(all.join(u","));
 }
 
 bool Selector::isValid() const
@@ -232,7 +232,7 @@ bool Selector::matches(std::shared_ptr<Element> element) const
 QString Selector::toString() const
 {
     if (!d) {
-        return u"Selector(Invalid)"_qs;
+        return u"Selector(Invalid)"_s;
     }
 
     return d->toString();

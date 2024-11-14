@@ -19,5 +19,5 @@ PlasmaSvgPlugin::PlasmaSvgPlugin(QObject *parent)
 
 std::shared_ptr<Union::Theme> PlasmaSvgPlugin::createTheme(const QString &themeName) const
 {
-    return Union::Theme::create(u"plasmasvg"_qs, themeName, std::make_unique<PlasmaSvgLoader>());
+    return Union::Theme::create(u"plasmasvg"_s, themeName, std::make_unique<PlasmaSvgLoader>());
 }
