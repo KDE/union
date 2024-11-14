@@ -1,11 +1,12 @@
-textarea: &textarea
-    type: TextArea
-    colorSet: View
+textarea:
+    selectors:
+    -   type: TextArea
 
     path: widgets/lineedit
     prefix: base
+    colorSet: View
 
-    layout: &textarea-layout
+    layout:
         width:
             property: sum
             function: element-width
@@ -22,7 +23,7 @@ textarea: &textarea
             -   center
             -   hint-bottom-margin
 
-        padding: &textarea-padding
+        padding:
             left:
                 property: element-width
                 element: hint-left-margin
@@ -37,58 +38,58 @@ textarea: &textarea
                 element: hint-bottom-margin
 
     background:
-        background: &textarea-background
-        element: center
         size:
             property: element-size
+            element: center
         image:
             property: element-image
+            element: center
 
-        border: &textarea-border
-            left: &textarea-border-left
+        border:
+            left:
                 element: left
                 size:
                     property: element-width
                 image:
                     property: element-image
-            right: &textarea-border-right
+            right:
                 element: right
                 size:
                     property: element-width
                 image:
                     property: element-image
-            top: &textarea-border-top
+            top:
                 element: top
                 size:
                     property: element-height
                 image:
                     property: element-image
-            bottom: &textarea-border-bottom
+            bottom:
                 element: bottom
                 size:
                     property: element-height
                 image:
                     property: element-image
-        corners: &textarea-corners
-            top-left: &textarea-corner-top-left
+        corners:
+            top-left:
                 element: topleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            top-right: &textarea-corner-top-right
+            top-right:
                 element: topright
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-left: &textarea-corner-bottom-left
+            bottom-left:
                 element: bottomleft
                 size:
                     property: element-size
                 image:
                     property: element-image
-            bottom-right: &textarea-corner-bottom-right
+            bottom-right:
                 element: bottomright
                 size:
                     property: element-size
@@ -96,87 +97,23 @@ textarea: &textarea
                     property: element-image
 
     text:
-        align:
-            horizontal: left
-            vertical: top
+        alignment:
+            horizontal: Start
+            vertical: Start
         font:
             property: font-name
             name: system-normal
 
 textarea-hovered:
-    <<: *textarea
-    state: Hovered
-    border:
-        left:
-            <<: *textarea-border-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-left
-                -   hover-left
-        right:
-            <<: *textarea-border-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-right
-                -   hover-right
+    selectors:
+    -   type: TextArea
+        state: Hovered
 
-        top:
-            <<: *textarea-border-top
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-top
-                -   hover-top
+    path: widgets/lineedit
+    prefix: hover
+    colorSet: View
 
-        bottom:
-            <<: *textarea-border-bottom
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-bottom
-                -   hover-bottom
-
-    corners:
-        top-left:
-            <<: *textarea-corner-top-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-topleft
-                -   hover-topleft
-        top-right:
-            <<: *textarea-corner-top-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-topright
-                -   hover-topright
-        bottom-left:
-            <<: *textarea-corner-bottom-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-bottomleft
-                -   hover-bottomleft
-        bottom-right:
-            <<: *textarea-corner-bottom-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                elements:
-                -   base-bottomright
-                -   hover-bottomright
     background:
-        <<: *textarea-background
         image:
             property: element-image-blend
             prefix: ""
@@ -184,123 +121,97 @@ textarea-hovered:
             -   base-center
             -   hover-center
 
+        border:
+            left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-left
+                    -   hover-left
+            right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-right
+                    -   hover-right
+
+            top:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-top
+                    -   hover-top
+
+            bottom:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-bottom
+                    -   hover-bottom
+
+        corners:
+            top-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-topleft
+                    -   hover-topleft
+            top-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-topright
+                    -   hover-topright
+            bottom-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-bottomleft
+                    -   hover-bottomleft
+            bottom-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    elements:
+                    -   base-bottomright
+                    -   hover-bottomright
+
 textarea-activefocus:
-    <<: *textarea
-    state: ActiveFocus
-    margins:
-        prefix: focus
-        left:
-            property: element-width
-            element: hint-left-margin
-            invert: true
-        right:
-            property: element-width
-            element: hint-right-margin
-            invert: true
-        top:
-            property: element-height
-            element: hint-top-margin
-            invert: true
-        bottom:
-            property: element-height
-            element: hint-bottom-margin
-            invert: true
-    border:
-        left:
-            <<: *textarea-border-left
-            prefix: focus
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: center
-                elements:
-                -   base-left
-                -   focus-left
-        right:
-            <<: *textarea-border-right
-            prefix: focus
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: center
-                elements:
-                -   base-right
-                -   focus-right
-        top:
-            <<: *textarea-border-top
-            prefix: focus
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: center
-                    vertical: bottom
-                elements:
-                -   base-top
-                -   focus-top
-        bottom:
-            <<: *textarea-border-bottom
-            prefix: focus
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: center
-                    vertical: top
-                elements:
-                -   base-bottom
-                -   focus-bottom
-    corners:
-        top-left:
-            <<: *textarea-corner-top-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: bottom
-                elements:
-                -   base-topleft
-                -   focus-topleft
-        top-right:
-            <<: *textarea-corner-top-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: bottom
-                elements:
-                -   base-topright
-                -   focus-topright
-        bottom-left:
-            <<: *textarea-corner-bottom-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: top
-                elements:
-                -   base-bottomleft
-                -   focus-bottomleft
-        bottom-right:
-            <<: *textarea-corner-bottom-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: top
-                elements:
-                -   base-bottomright
-                -   focus-bottomright
+    selectors:
+    -   type: TextArea
+        state: ActiveFocus
+
+    path: widgets/lineedit
+    prefix: focus
+    colorSet: View
+
+    layout:
+        inset:
+            left:
+                property: element-width
+                element: hint-left-margin
+                invert: true
+            right:
+                property: element-width
+                element: hint-right-margin
+                invert: true
+            top:
+                property: element-height
+                element: hint-top-margin
+                invert: true
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+                invert: true
+
     background:
-        <<: *textarea-background
         image:
             property: element-image-blend
             prefix: ""
@@ -308,126 +219,209 @@ textarea-activefocus:
             -   base-center
             -   focus-center
 
+        border:
+            left:
+                prefix: focus
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: center
+                    elements:
+                    -   base-left
+                    -   focus-left
+            right:
+                prefix: focus
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: center
+                    elements:
+                    -   base-right
+                    -   focus-right
+            top:
+                prefix: focus
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: bottom
+                    elements:
+                    -   base-top
+                    -   focus-top
+            bottom:
+                prefix: focus
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: top
+                    elements:
+                    -   base-bottom
+                    -   focus-bottom
+        corners:
+            top-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: bottom
+                    elements:
+                    -   base-topleft
+                    -   focus-topleft
+            top-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: bottom
+                    elements:
+                    -   base-topright
+                    -   focus-topright
+            bottom-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: top
+                    elements:
+                    -   base-bottomleft
+                    -   focus-bottomleft
+            bottom-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: top
+                    elements:
+                    -   base-bottomright
+                    -   focus-bottomright
+
 textarea-visualfocus:
-    <<: *textarea
-    state: VisualFocus
-    margins:
-        prefix: focusframe
-        left:
-            property: element-width
-            element: hint-left-margin
-            invert: true
-        right:
-            property: element-width
-            element: hint-right-margin
-            invert: true
-        top:
-            property: element-height
-            element: hint-top-margin
-            invert: true
-        bottom:
-            property: element-height
-            element: hint-bottom-margin
-            invert: true
-    border:
-        left:
-            <<: *textarea-border-left
-            prefix: focusframe
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: center
-                elements:
-                -   base-left
-                -   focusframe-left
-        right:
-            <<: *textarea-border-right
-            prefix: focusframe
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: center
-                elements:
-                -   base-right
-                -   focusframe-right
-        top:
-            <<: *textarea-border-top
-            prefix: focusframe
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: center
-                    vertical: bottom
-                elements:
-                -   base-top
-                -   focusframe-top
-        bottom:
-            <<: *textarea-border-bottom
-            prefix: focusframe
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: center
-                    vertical: top
-                elements:
-                -   base-bottom
-                -   focusframe-bottom
-    corners:
-        top-left:
-            <<: *textarea-corner-top-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: bottom
-                elements:
-                -   base-topleft
-                -   focusframe-topleft
-        top-right:
-            <<: *textarea-corner-top-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: bottom
-                elements:
-                -   base-topright
-                -   focusframe-topright
-        bottom-left:
-            <<: *textarea-corner-bottom-left
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: right
-                    vertical: top
-                elements:
-                -   base-bottomleft
-                -   focusframe-bottomleft
-        bottom-right:
-            <<: *textarea-corner-bottom-right
-            image:
-                property: element-image-blend
-                prefix: ""
-                align:
-                    horizontal: left
-                    vertical: top
-                elements:
-                -   base-bottomright
-                -   focusframe-bottomright
+    selectors:
+    -   type: TextArea
+        state: VisualFocus
+
+    path: widgets/lineedit
+    prefix: focusframe
+    colorSet: View
+
+    layout:
+        inset:
+            left:
+                property: element-width
+                element: hint-left-margin
+                invert: true
+            right:
+                property: element-width
+                element: hint-right-margin
+                invert: true
+            top:
+                property: element-height
+                element: hint-top-margin
+                invert: true
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+                invert: true
+
     background:
-        <<: *textarea-background
         image:
             property: element-image-blend
             prefix: ""
             elements:
             -   base-center
             -   focusframe-center
+
+        border:
+            left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: center
+                    elements:
+                    -   base-left
+                    -   focusframe-left
+            right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: center
+                    elements:
+                    -   base-right
+                    -   focusframe-right
+            top:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: bottom
+                    elements:
+                    -   base-top
+                    -   focusframe-top
+            bottom:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: center
+                        vertical: top
+                    elements:
+                    -   base-bottom
+                    -   focusframe-bottom
+
+        corners:
+            top-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: bottom
+                    elements:
+                    -   base-topleft
+                    -   focusframe-topleft
+            top-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: bottom
+                    elements:
+                    -   base-topright
+                    -   focusframe-topright
+            bottom-left:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: right
+                        vertical: top
+                    elements:
+                    -   base-bottomleft
+                    -   focusframe-bottomleft
+            bottom-right:
+                image:
+                    property: element-image-blend
+                    prefix: ""
+                    align:
+                        horizontal: left
+                        vertical: top
+                    elements:
+                    -   base-bottomright
+                    -   focusframe-bottomright
