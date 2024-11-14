@@ -166,7 +166,7 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
                 auto val = Element::State(value<Element::States>(child).toInt());
                 allOfList.append(Selector::create<SelectorType::State>(val));
             }
-            selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
+            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -182,7 +182,7 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
                 }
                 allOfList.append(Selector::create<SelectorType::Hint>(value<QString>(child)));
             }
-            selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
+            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -193,14 +193,10 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
                 if (!child.is_keyval()) {
                     continue;
                 }
-                // clang-format off
-                allOfList.append(Selector::create<SelectorType::Attribute>(
-                    std::make_pair<QString, QVariant>(QString::fromLatin1(child.key()),
-                                                      QString::fromLatin1(child.val()))
-                ));
-                // clang-format on
+                auto pair = std::make_pair<QString, QVariant>(QString::fromLatin1(child.key()), QString::fromLatin1(child.val()));
+                allOfList.append(Selector::create<SelectorType::Attribute>(pair));
             }
-            selectors.append(Selector::create<SelectorType::AllOf>(allOfList));
+            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -218,7 +214,7 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
                 }
                 anyOfList.append(Selector::create<SelectorType::ColorSet>(value<Element::ColorSet>(child)));
             }
-            selectors.append(Selector::create<SelectorType::AnyOf>(anyOfList));
+            selectors.appendAnyOf(anyOfList);
         }
     });
 
@@ -232,11 +228,7 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
     });
 
     SelectorList result;
-    if (selectors.size() == 1) {
-        result = {selectors.first()};
-    } else {
-        result = {Selector::create<SelectorType::AllOf>(selectors)};
-    }
+    result.appendAllOf(selectors);
 
     if (!childSelectors.isEmpty()) {
         result.append(childSelectors);
