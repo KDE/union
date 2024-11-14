@@ -522,6 +522,8 @@ button-with-icon:
     selectors:
     -   type: Button
         hints: with-icon
+        attributes:
+            display: text-beside-icon
 
     icon:
         alignment:
@@ -532,3 +534,19 @@ button-with-icon:
         alignment:
             horizontal: Start
             vertical: Center
+
+button-display-textundericon:
+    selectors:
+    -   type: Button
+        attributes:
+            display: text-under-icon
+
+    icon:
+        alignment:
+            horizontal: Center
+            vertical: Stack
+
+    text:
+        alignment:
+            horizontal: Center
+            vertical: Stack
