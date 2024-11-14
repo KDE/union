@@ -14,6 +14,8 @@
 #include <Selector.h>
 #include <Theme.h>
 
+#include "plasmasvg_logging.h"
+
 /**
  * This file contains helpers that make it easier to work with contextual data
  * when loading a Plasma theme.
@@ -53,14 +55,21 @@ struct ContextCleanup {
 };
 
 struct LoadingContext {
-    LoadingContext(Union::Theme::Ptr _theme);
+    LoadingContext(Union::Theme::Ptr _theme, ryml::Parser *_parser);
 
     Union::Theme::Ptr theme;
+    ryml::Parser *parser;
     ContextData data;
 
     [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node);
     [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node, const Union::SelectorList &selectorsToPush);
     [[nodiscard]] ContextCleanup pushFromNode(ryml::ConstNodeRef node, QByteArrayView propertyName);
+
+    inline QDebug logLocation(ryml::ConstNodeRef node) const
+    {
+        auto loc = parser->location(node);
+        return (QMessageLogger(nullptr, 0, nullptr).warning(UNION_PLASMASVG).nospace().noquote() << loc.name.data() << "@" << loc.line << ":").space().quote();
+    }
 
     Union::SelectorList selectors() const;
     QString prefixedElementName() const;

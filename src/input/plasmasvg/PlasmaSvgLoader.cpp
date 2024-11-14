@@ -34,10 +34,9 @@ using namespace std::string_literals;
 
 constexpr char16_t PluginName[] = u"plasmasvg";
 
-void logError(QByteArrayView property, QByteArrayView value, const PropertyFunctions::Error &error, const LoadingContext &context)
+void logError(ryml::ConstNodeRef node, QByteArrayView property, QByteArrayView value, const PropertyFunctions::Error &error, const LoadingContext &context)
 {
-    qCWarning(UNION_PLASMASVG) << "Failed setting value" << value << "of property" << property << "of rule" << context.selectors() << ":"
-                               << qPrintable(error.message);
+    context.logLocation(node).nospace() << "Failed setting value " << value << " of property " << property << ": " << qPrintable(error.message);
 }
 
 template<typename T>
@@ -47,7 +46,7 @@ std::optional<T> readPropertyValue(QByteArrayView valueName, ryml::ConstNodeRef 
     if (value.has_value()) {
         return value.value();
     } else {
-        logError(context.propertyName(), valueName, value.error(), context);
+        logError(node, context.propertyName(), valueName, value.error(), context);
         return std::nullopt;
     }
 }

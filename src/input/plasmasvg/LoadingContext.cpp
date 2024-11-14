@@ -42,8 +42,9 @@ ContextCleanup::~ContextCleanup() noexcept
     }
 }
 
-LoadingContext::LoadingContext(Theme::Ptr _theme)
+LoadingContext::LoadingContext(Theme::Ptr _theme, ryml::Parser *_parser)
     : theme(_theme)
+    , parser(_parser)
 {
 }
 
