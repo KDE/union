@@ -1,83 +1,44 @@
-tabbar: &tabbar
-    type: TabBar
+tabbar:
+    selectors:
+    -   type: TabBar
+
     path: widgets/tabbar
+
     text:
-        align:
-            horizontal: center
-            vertical: center
+        alignment:
+            horizontal: Center
+            vertical: Center
         font:
             property: font-name
             name: system-normal
 
-tabbar-highlight-north: &tabbar-highlight-north
-    <<: *tabbar
-    state: Highlighted
-    hints: [itemview-highlight]
-    attributes: {tab-position: north}
+tabbar-highlight-north: &tabbar-highlight
+    selectors:
+    -   type: TabBar
+        state: Highlighted
+        hints:
+        -   itemview-highlight
+        attributes:
+            tab-position: north
+
+    path: widgets/tabbar
     prefix: north-active-tab
-    padding:
-        left:
-            property: element-width
-            element: hint-left-margin
-        right:
-            property: element-width
-            element: hint-right-margin
-        top:
-            property: element-height
-            element: hint-top-margin
-        bottom:
-            property: element-height
-            element: hint-bottom-margin
-    border:
-        left:
-            element: left
-            size:
+
+    layout:
+        padding:
+            left:
                 property: element-width
-            image:
-                property: element-image
-        right:
-            element: right
-            size:
+                element: hint-left-margin
+            right:
                 property: element-width
-            image:
-                property: element-image
-        top:
-            element: top
-            size:
+                element: hint-right-margin
+            top:
                 property: element-height
-            image:
-                property: element-image
-        bottom:
-            element: bottom
-            size:
+                element: hint-top-margin
+            bottom:
                 property: element-height
-            image:
-                property: element-image
-    corners:
-        top-left:
-            element: topleft
-            size:
-                property: element-size
-            image:
-                property: element-image
-        top-right:
-            element: topright
-            size:
-                property: element-size
-            image:
-                property: element-image
-        bottom-left:
-            element: bottomleft
-            size:
-                property: element-size
-            image:
-                property: element-image
-        bottom-right:
-            element: bottomright
-            size:
-                property: element-size
-            image:
-                property: element-image
+                element: hint-bottom-margin
+
     background:
         element: center
         size:
@@ -85,17 +46,92 @@ tabbar-highlight-north: &tabbar-highlight-north
         image:
             property: element-image
 
+        border:
+            left:
+                element: left
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            right:
+                element: right
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            top:
+                element: top
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+            bottom:
+                element: bottom
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+        corners:
+            top-left:
+                element: topleft
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            top-right:
+                element: topright
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            bottom-left:
+                element: bottomleft
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+            bottom-right:
+                element: bottomright
+                size:
+                    property: element-size
+                image:
+                    property: element-image
+
 tabbar-south:
-    <<: *tabbar-highlight-north
-    attributes: {tab-position: south}
+    <<: tabbar-highlight
+
+    selectors:
+    -   type: TabBar
+        state: Highlighted
+        hints:
+        -   itemview-highlight
+        attributes:
+            tab-position: south
+
     prefix: south-active-tab
 
 tabbar-east:
-    <<: *tabbar-highlight-north
-    attributes: {tab-position: east}
+    <<: *tabbar-highlight
+
+    selectors:
+    -   type: TabBar
+        state: Highlighted
+        hints:
+        -   itemview-highlight
+        attributes:
+            tab-position: east
+
     prefix: east-active-tab
 
 tabbar-west:
-    <<: *tabbar-highlight-north
-    attributes: {tab-position: west}
+    <<: *tabbar-highlight
+
+    selectors:
+    -   type: TabBar
+        state: Highlighted
+        hints:
+        -   itemview-highlight
+        attributes:
+            tab-position: west
+
     prefix: west-active-tab

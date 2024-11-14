@@ -1,36 +1,53 @@
-tabbutton: &tabbutton
-    type: TabButton
+tabbutton:
+    selectors:
+    -   type: TabButton
+
     path: widgets/tabbar
     prefix: north-active-tab
-    padding:
-        left:
-            property: element-width
-            element: hint-left-margin
-        right:
-            property: element-width
-            element: hint-right-margin
-        top:
-            property: element-height
-            element: hint-top-margin
-        bottom:
-            property: element-height
-            element: hint-bottom-margin
+
+    layout:
+        padding:
+            left:
+                property: element-width
+                element: hint-left-margin
+            right:
+                property: element-width
+                element: hint-right-margin
+            top:
+                property: element-height
+                element: hint-top-margin
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+
     text:
-        align:
-            horizontal: center
-            vertical: center
+        alignment:
+            horizontal: Center
+            vertical: Center
         font:
             property: font-name
             name: system-normal
     icon:
-        size: small
+        alignment:
+            horizontal: Center
+            vertical: Center
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
 
-tabbutton-north: &tabbutton-north
-    <<: *tabbutton
-    state: Checked
-    attributes: {tab-position: north}
-    hints:
+tabbutton-north: &tabbutton-checked
+    selectors:
+    -   type: TabButton
+        state: Checked
+        attributes:
+            tab-position: north
+
+    path: widgets/tabbar
     prefix: north-active-tab
+
     border:
         left:
             element: left
@@ -89,16 +106,34 @@ tabbutton-north: &tabbutton-north
             property: element-image
 
 tabbutton-south:
-    <<: *tabbutton-north
+    <<: *tabbutton-checked
+
+    selectors:
+    -   type: TabButton
+        state: Checked
+        attributes:
+            tab-position: south
+
     prefix: south-active-tab
-    attributes: {tab-position: south}
 
 tabbutton-east:
-    <<: *tabbutton-north
+    <<: *tabbutton-checked
+
+    selectors:
+    -   type: TabButton
+        state: Checked
+        attributes:
+            tab-position: east
+
     prefix: east-active-tab
-    attributes: {tab-position: east}
 
 tabbutton-west:
-    <<: *tabbutton-north
+    <<: *tabbutton-checked
+
+    selectors:
+    -   type: TabButton
+        state: Checked
+        attributes:
+            tab-position: west
+
     prefix: west-active-tab
-    attributes: {tab-position: west}
