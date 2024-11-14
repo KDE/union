@@ -42,6 +42,7 @@ PositionerLayout::PositionerLayout(QQuickItem *parentItem)
 {
     connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
     connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
+    parentItem->installEventFilter(this);
     polish();
 }
 
@@ -56,6 +57,7 @@ void PositionerLayout::addItem(QQuickItem *item)
     connect(item, &QQuickItem::implicitWidthChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::implicitHeightChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::visibleChanged, this, &PositionerLayout::markDirty);
+    item->installEventFilter(this);
 
     m_items.insert(item);
 
@@ -70,6 +72,7 @@ void PositionerLayout::removeItem(QQuickItem *item)
     }
 
     (*itr)->disconnect(this);
+    (*itr)->removeEventFilter(this);
     m_items.erase(itr);
 
     markDirty();
@@ -88,6 +91,15 @@ qreal PositionerLayout::implicitHeight() const
 Sizes PositionerLayout::padding() const
 {
     return m_padding;
+}
+
+bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
+{
+    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+        markDirty();
+    }
+
+    return QQuickItem::eventFilter(target, event);
 }
 
 void PositionerLayout::updatePolish()

@@ -96,6 +96,7 @@ public:
     Q_SIGNAL void layoutFinished();
 
 protected:
+    bool eventFilter(QObject *target, QEvent *event) override;
     void updatePolish() override;
 
 private:
