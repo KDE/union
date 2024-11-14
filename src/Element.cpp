@@ -7,10 +7,12 @@
 #include "Element.h"
 
 #include <QDebug>
+#include <QMetaEnum>
 #include <QProperty>
 #include <QVariant>
 
 using namespace Union;
+using namespace Qt::StringLiterals;
 
 class Union::ElementPrivate
 {
@@ -160,14 +162,44 @@ QDebug operator<<(QDebug debug, Union::Element::Ptr element)
 {
     QDebugStateSaver saver(debug);
     debug << "Element(";
-    static const auto emptyString = u"(empty)"_qs;
-    const auto type = element->type().isEmpty() ? emptyString : element->type();
-    const auto id = element->id().isEmpty() ? emptyString : element->id();
-    const auto hints = element->hints().isEmpty() ? emptyString : element->hints().join(u", ");
-    debug << "type: " << qPrintable(type);
-    debug << " id: " << qPrintable(id);
-    debug << " states: " << element->states();
-    debug << " hints: " << qPrintable(hints);
-    debug << ")";
+
+    QStringList properties;
+
+    if (!element->type().isEmpty()) {
+        properties << u"type: "_s + element->type();
+    }
+
+    if (!element->id().isEmpty()) {
+        properties << u"id: "_s + element->id();
+    }
+
+    if (element->states() != 0) {
+        auto flags = QMetaEnum::fromType<Element::States>();
+        properties << u"states: "_s + QString::fromUtf8(flags.valueToKeys(element->states()));
+    }
+
+    if (!element->hints().isEmpty()) {
+        properties << u"hints: "_s + element->hints().join(u", ");
+    }
+
+    QString attributes;
+    if (!element->attributes().isEmpty()) {
+        attributes = QString{};
+        for (auto [key, value] : element->attributes().asKeyValueRange()) {
+            if (!attributes.isEmpty()) {
+                attributes += u", ";
+            }
+            attributes += key;
+            attributes += u": ";
+            attributes += value.toString();
+        }
+        attributes = u"{" + attributes + u"}";
+    }
+
+    if (!attributes.isEmpty()) {
+        properties << u"attributes: "_s + attributes;
+    }
+
+    debug << qPrintable(properties.join(u", "_s)) << ")";
     return debug;
 }
