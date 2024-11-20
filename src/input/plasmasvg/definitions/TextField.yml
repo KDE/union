@@ -440,3 +440,56 @@ textfield-visualfocus:
                     elements:
                     -   base-bottomright
                     -   focusframe-bottomright
+
+textfield-disabled:
+    selectors:
+    -   type: TextField
+        state: Disabled
+    -   type: SpinBox
+        state: Disabled
+
+    path: widgets/lineedit
+    prefix: base
+    colorSet: View
+    colorGroup: Disabled
+
+    background:
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left:
+                image:
+                    property: element-image
+                    element: left
+            right:
+                image:
+                    property: element-image
+                    element: right
+            top:
+                image:
+                    property: element-image
+                    element: top
+            bottom:
+                image:
+                    property: element-image
+                    element: bottom
+
+        corners:
+            top-left:
+                image:
+                    property: element-image
+                    element: topleft
+            top-right:
+                image:
+                    property: element-image
+                    element: topright
+            bottom-left:
+                image:
+                    property: element-image
+                    element: bottomleft
+            bottom-right:
+                image:
+                    property: element-image
+                    element: bottomright

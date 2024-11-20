@@ -207,3 +207,14 @@ toolbutton-pressed:
     prefix: toolbutton-pressed
 
     background: *toolbutton-background-image
+
+toolbutton-disabled:
+    selectors:
+    -   type: ToolButton
+        state: Disabled
+
+    path: widgets/button
+
+    colorGroup: Disabled
+
+    background: empty
