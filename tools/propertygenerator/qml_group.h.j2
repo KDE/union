@@ -54,6 +54,10 @@ public:
 {% endif %}
 
 {% endfor %}
+{% if extra_code and "public" in extra_code %}
+{{ extra_code["public"] | render }}
+
+{% endif %}
 private:
 {% for value in values %}
 {% if value.is_property %}
@@ -62,4 +66,8 @@ private:
 {% endfor %}
     Union::Properties::{{ type_name }} m_state;
 
+{% if extra_code and "private" in extra_code %}
+{{ extra_code["private"] | render }}
+
+{% endif %}
 };

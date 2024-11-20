@@ -34,6 +34,10 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 {% endif %}
 {% endfor %}
 
+{% if extra_code and "update" in extra_code %}
+{{ extra_code["update"] | render }}
+{% endif %}
+
     Q_EMIT updated();
 }
 
@@ -52,4 +56,8 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 
 {% endif %}
 {% endfor %}
+{% if extra_code and "global" in extra_code %}
+{{ extra_code["global"] | render }}
+
+{% endif %}
 #include "moc_{{ type_name }}Group.cpp"

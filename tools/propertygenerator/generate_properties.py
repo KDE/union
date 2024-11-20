@@ -58,8 +58,9 @@ class ValueDescription:
 class PropertyDescription:
     type_name: str
     values: list[ValueDescription] = dataclasses.field(default_factory=list)
-    system_includes: set[str] = dataclasses.field(default_factory=set)
-    local_includes: set[str] = dataclasses.field(default_factory=set)
+    system_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
+    local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
+    extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
 
     def __lt__(self, other):
         return self.type_name < other.type_name
@@ -81,7 +82,27 @@ def process_node(node, type_name, memo):
     memo[type_name] = description
 
     for key_node, value_node in node.value:
+        if key_node.value == "_extra_code":
+            for template_name, extra_code in value_node.value:
+                if isinstance(extra_code, yaml.MappingNode):
+                    extra_code_data = {}
+                    for identifier, code in extra_code.value:
+                        extra_code_data[identifier.value] = code.value
+                    description.extra_code[template_name.value] = extra_code_data
+                else:
+                    description.extra_code[template_name.value] = extra_code.value
+            continue
+
+        if key_node.value == "_extra_system_includes":
+            for template_name, includes in value_node.value:
+                for include_name in includes.value:
+                    if template_name.value not in description.system_includes:
+                        description.system_includes[template_name.value] = set()
+                    description.system_includes[template_name.value].add(include_name.value)
+            continue
+
         value = ValueDescription(key_node.value)
+
         match type(value_node).__name__:
             case "MappingNode":
                 type_name = qualified_name(value_node.anchor) if value_node.anchor is not None else qualified_name(key_node.value)
@@ -110,15 +131,35 @@ def process_node(node, type_name, memo):
                 break
 
             if system:
-                description.system_includes.add(include)
+                if "property.h.j2" not in description.system_includes:
+                    description.system_includes["property.h.j2"] = set()
+                description.system_includes["property.h.j2"].add(include)
             else:
-                description.local_includes.add(include)
+                if "property.h.j2" not in description.local_includes:
+                    description.local_includes["property.h.j2"] = set()
+                description.local_includes["property.h.j2"].add(include)
 
             break
 
         description.values.append(value)
 
     return memo
+
+
+@jinja2.pass_context
+def render_template_filter(context, value):
+    return context.environment.from_string(value).render(context)
+
+
+def render_template(template_name: str, output_path: Path, env: jinja2.Environment, data: dict):
+    render_data = data.copy()
+    render_data["extra_code"] = data.get("extra_code", {}).get(template_name, "")
+    render_data["system_includes"] = data.get("system_includes", {}).get(template_name, [])
+    render_data["local_includes"] = data.get("local_includes", {}).get(template_name, [])
+
+    with open(output_path, "w") as f:
+        template = jinja_env.get_template(template_name, None)
+        f.write(template.render(render_data))
 
 
 if __name__ == "__main__":
@@ -134,6 +175,7 @@ if __name__ == "__main__":
         trim_blocks=True,
     )
     jinja_env.filters["ucfirst"] = ucfirst
+    jinja_env.filters["render"] = render_template_filter
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)
@@ -146,44 +188,18 @@ if __name__ == "__main__":
     for type_name, type_definition in types.items():
         data = dataclasses.asdict(type_definition)
 
-        with open((src_directory / type_name).with_suffix(".h"), "w") as f:
-            template = jinja_env.get_template("property.h.j2")
-            f.write(template.render(data))
+        render_template("property.h.j2", (src_directory / type_name).with_suffix(".h"), jinja_env, data)
+        render_template("property.cpp.j2", (src_directory / type_name).with_suffix(".cpp"), jinja_env, data)
 
-        with open((src_directory / type_name).with_suffix(".cpp"), "w") as f:
-            template = jinja_env.get_template("property.cpp.j2")
-            f.write(template.render(data))
+        render_template("autotest.cpp.j2", (tests_directory / ("Test" + type_name)).with_suffix(".cpp"), jinja_env, data)
 
-        with open((tests_directory / ("Test" + type_name)).with_suffix(".cpp"), "w") as f:
-            template = jinja_env.get_template("autotest.cpp.j2")
-            f.write(template.render(data))
-
-        with open((quick_output_directory / (type_name + "Group")).with_suffix(".h"), "w") as f:
-            template = jinja_env.get_template("qml_group.h.j2")
-            f.write(template.render(data))
-
-        with open((quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), "w") as f:
-            template = jinja_env.get_template("qml_group.cpp.j2")
-            f.write(template.render(data))
+        render_template("qml_group.h.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".h"), jinja_env, data)
+        render_template("qml_group.cpp.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), jinja_env, data)
 
     data = {"types": types.values()}
 
-    with open(src_directory / "Formatter.h", "w") as f:
-        template = jinja_env.get_template("formatter.h.j2")
-        f.write(template.render(data))
-
-    with open(tests_directory / "CreateTestInstances.h", "w") as f:
-        template = jinja_env.get_template("CreateTestInstances.h.j2")
-        f.write(template.render(data))
-
-    with open(src_directory / "CMakeLists.txt", "w") as f:
-        template = jinja_env.get_template("CMakeLists.txt.j2")
-        f.write(template.render({"target_name": "Union", "file_suffix": ""} | data))
-
-    with open(tests_directory / "CMakeLists.txt", "w") as f:
-        template = jinja_env.get_template("CMakeLists.tests.txt.j2")
-        f.write(template.render(data))
-
-    with open(quick_output_directory / "CMakeLists.txt", "w") as f:
-        template = jinja_env.get_template("CMakeLists.txt.j2")
-        f.write(template.render({"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data))
+    render_template("formatter.h.j2", src_directory / "Formatter.h", jinja_env, data)
+    render_template("CreateTestInstances.h.j2", tests_directory / "CreateTestInstances.h", jinja_env, data)
+    render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)
+    render_template("CMakeLists.tests.txt.j2", tests_directory / "CMakeLists.txt", jinja_env, data)
+    render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data)
