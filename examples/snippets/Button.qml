@@ -34,12 +34,15 @@ ApplicationWindow {
 
         RowLayout {
             ToolButton {
+                id: toolButton1
                 text: "Header ToolButton 1"
                 icon.name: "document-save"
+                checkable: true
             }
             ToolButton {
                 text: "Header ToolButton 2"
                 icon.name: "document-save"
+                enabled: !toolButton1.checked
             }
         }
     }
@@ -143,8 +146,12 @@ ApplicationWindow {
     footer: ToolBar {
         Element.elementId: "window-footer"
 
+        enabled: !toolButton1.checked
+
         TextField {
             anchors.fill: parent
+
+            placeholderText: "Placeholder Text"
         }
     }
 }
