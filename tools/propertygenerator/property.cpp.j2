@@ -10,6 +10,8 @@ This is the template that is used to generate property class implementations. It
 
 #include "{{ type_name }}.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -110,6 +112,22 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_n
 {% endif %}
 {% endfor %}
 }
+
+{{ type_name }} {{ type_name }}::empty()
+{
+    {{ type_name }} result;
+{% for value in values %}
+{% if value.is_property %}
+    result.d->{{ value.name }} = {{ value.type }}::empty();
+{% else %}
+    result.d->{{ value.name }} = emptyValue<{{ value.type }}>();
+{% endif %}
+{% endfor %}
+    return result;
+}
+{% if extra_code %}
+{{ extra_code | render }}
+{% endif %}
 
 bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_name}} &right)
 {

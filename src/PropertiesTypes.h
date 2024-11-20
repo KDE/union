@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QColor>
 #include <QMetaObject>
 
 #include "union_export.h"
@@ -58,6 +59,39 @@ enum class Alignment {
     Stack,
 };
 Q_ENUM_NS(Alignment)
+
+/*!
+ * A template method to get an empty value of a certain type.
+ *
+ * By default this will just default-construct the type but it allows us to use
+ * template specialization to specify what an empty value means for a specific
+ * type.
+ */
+template<typename T>
+inline T emptyValue()
+{
+    return T{};
+}
+
+template<>
+inline qreal emptyValue<qreal>()
+{
+    return 0.0;
+}
+
+template<>
+inline int emptyValue<int>()
+{
+    return 0;
+}
+
+// A default-constructed QColor is black, which is not actually empty.
+// So instead use transparent for an empty QColor.
+template<>
+inline QColor emptyValue<QColor>()
+{
+    return Qt::transparent;
+}
 }
 }
 

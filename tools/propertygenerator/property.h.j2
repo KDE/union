@@ -71,6 +71,16 @@ public:
      */
     static void resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination);
 
+    /**
+     * Create and return an empty {{ type_name }} instance.
+     *
+     * This will create an empty {{ type_name }} instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static {{ type_name }} empty();
+
 private:
     std::unique_ptr<{{ type_name }}Private> d;
 };
