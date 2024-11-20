@@ -47,10 +47,8 @@ public:
     Q_PROPERTY({{ value.type}}Group *{{ value.name }} READ {{ value.name }} CONSTANT)
     {{ value.type }}Group *{{ value.name }}() const;
 {% else %}
-    Q_PROPERTY({{ value.type }} {{ value.name }} READ {{ value.name }} WRITE set{{ value.name | ucfirst }} BINDABLE bindable{{ value.name | ucfirst }} NOTIFY {{ value.name }}Changed)
+    Q_PROPERTY({{ value.type }} {{ value.name }} READ {{ value.name }} NOTIFY {{ value.name }}Changed)
     {{ value.type }} {{ value.name }}() const;
-    void set{{ value.name | ucfirst }}(const {{ value.type }} &newValue);
-    QBindable<{{ value.type }}> bindable{{ value.name | ucfirst }}();
     Q_SIGNAL void {{ value.name }}Changed();
 {% endif %}
 
@@ -59,8 +57,8 @@ private:
 {% for value in values %}
 {% if value.is_property %}
     std::unique_ptr<{{ value.type }}Group> m_{{ value.name }};
-{% else %}
-    Q_OBJECT_BINDABLE_PROPERTY({{ type_name }}Group, {{ value.type }}, m_{{ value.name }}, &{{ type_name }}Group::{{ value.name }}Changed)
 {% endif %}
 {% endfor %}
+    Union::Properties::{{ type_name }} m_state;
+
 };

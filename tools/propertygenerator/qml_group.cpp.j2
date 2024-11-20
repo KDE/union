@@ -25,11 +25,12 @@ using namespace Qt::StringLiterals;
 
 void {{ group_name }}::update(const {{ type_name }} &newState)
 {
+    m_state = newState;
 {% for value in values %}
 {% if value.is_property %}
     m_{{ value.name }}->update(newState.{{ value.name }}().value_or({{ value.type }}{}));
 {% else %}
-    m_{{ value.name }} = newState.{{ value.name }}().value_or({{ value.type }}{});
+    Q_EMIT {{ value.name }}Changed();
 {% endif %}
 {% endfor %}
 }
@@ -44,17 +45,7 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 {% else %}
 {{ value.type }} {{ group_name }}::{{ value.name }}() const
 {
-    return m_{{ value.name }};
-}
-
-void {{ group_name }}::set{{ value.name | ucfirst }}(const {{ value.type }} &newValue)
-{
-    m_{{ value.name }} = newValue;
-}
-
-QBindable<{{ value.type }}> {{ group_name }}::bindable{{ value.name | ucfirst }}()
-{
-    return QBindable<{{ value.type }}>(&m_{{ value.name }});
+    return m_state.{{ value.name }}().value_or({{ value.type }}{});
 }
 
 {% endif %}
