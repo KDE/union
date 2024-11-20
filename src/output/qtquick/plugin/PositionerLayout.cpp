@@ -279,8 +279,8 @@ void PositionerLayout::updatePolish()
 
     auto bottomRight = itemRelative.size - contentRelative.size;
     m_padding = Sizes(contentRelative.position.x(),
-                      contentRelative.position.y(),
                       bottomRight.width() - contentRelative.position.x(),
+                      contentRelative.position.y(),
                       bottomRight.height() - contentRelative.position.y());
 
     Q_EMIT layoutFinished();
