@@ -1,3 +1,5 @@
+# Spinbox itself is mostly a text field with extra buttons. Most of the styling
+# comes from TextField.yml, with only the layout changed here.
 spinbox:
     selectors:
     -   type: SpinBox
@@ -6,182 +8,16 @@ spinbox:
     prefix: base
 
     layout:
-        width:
-            property: sum
-            function: element-width
-            elements:
-            -   hint-left-margin
-            -   center
-            -   hint-right-margin
-        height:
-            property: sum
-            function: element-height
-            elements:
-            -   hint-top-margin
-            -   center
-            -   hint-bottom-margin
-
         alignment:
             container: Content
             horizontal: Fill
             vertical: Fill
-
-        padding:
-            left:
-                property: element-width
-                element: hint-left-margin
-            right:
-                property: element-width
-                element: hint-right-margin
-            top:
-                property: element-height
-                element: hint-top-margin
-            bottom:
-                property: element-height
-                element: hint-bottom-margin
 
     text:
         alignment:
             container: Content
             horizontal: Center
             vertical: Center
-
-    background:
-        colorSet: View
-
-        image:
-            property: element-image
-            element: center
-
-        border:
-            left:
-                element: left
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            right:
-                element: right
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            top:
-                element: top
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-            bottom:
-                element: bottom
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-
-        corners:
-            top-left:
-                element: topleft
-                size:
-                    property: element-size
-                image:
-                    property: element-image
-            top-right:
-                element: topright
-                size:
-                    property: element-size
-                image:
-                    property: element-image
-            bottom-left:
-                element: bottomleft
-                size:
-                    property: element-size
-                image:
-                    property: element-image
-            bottom-right:
-                element: bottomright
-                size:
-                    property: element-size
-                image:
-                    property: element-image
-
-spinbox-hovered:
-    selectors:
-    -   type: SpinBox
-        state: Hovered
-
-    background:
-        path: widgets/lineedit
-        colorSet: View
-
-        image:
-            property: element-image-blend
-            prefix: ""
-            elements:
-            -   base-center
-            -   hover-center
-
-        border:
-            left:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-left
-                    -   hover-left
-            right:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-right
-                    -   hover-right
-
-            top:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-top
-                    -   hover-top
-
-            bottom:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-bottom
-                    -   hover-bottom
-
-        corners:
-            top-left:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-topleft
-                    -   hover-topleft
-            top-right:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-topright
-                    -   hover-topright
-            bottom-left:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-bottomleft
-                    -   hover-bottomleft
-            bottom-right:
-                image:
-                    property: element-image-blend
-                    prefix: ""
-                    elements:
-                    -   base-bottomright
-                    -   hover-bottomright
 
 # Note: Spinbox indicators are effectively toolbuttons, so most of their styling
 # comes from ToolButton.yml, these extra rules are to set icons and other

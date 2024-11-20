@@ -1,6 +1,7 @@
 textfield:
     selectors:
     -   type: TextField
+    -   type: SpinBox
 
     path: widgets/lineedit
     prefix: base
@@ -105,6 +106,8 @@ textfield-hovered:
     selectors:
     -   type: TextField
         state: Hovered
+    -   type: SpinBox
+        state: Hovered
 
     path: widgets/lineedit
     colorSet: View
@@ -202,6 +205,8 @@ textfield-hovered:
 textfield-activefocus:
     selectors:
     -   type: TextField
+        state: ActiveFocus
+    -   type: SpinBox
         state: ActiveFocus
 
     path: widgets/lineedit
@@ -321,6 +326,8 @@ textfield-activefocus:
 textfield-visualfocus:
     selectors:
     -   type: TextField
+        state: VisualFocus
+    -   type: SpinBox
         state: VisualFocus
 
     path: widgets/lineedit

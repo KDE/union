@@ -90,3 +90,14 @@ toolbar:
                     property: element-size
                 image:
                     property: element-image
+
+toolbar-applicationheader:
+    selectors:
+    -   type: ToolBar
+        attributes:
+            location: header
+
+    path: widgets/toolbar
+    colorSet: Header
+
+    background: *toolbar-background
