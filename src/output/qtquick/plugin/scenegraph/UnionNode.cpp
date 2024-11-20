@@ -28,6 +28,10 @@ QSGTexture *UnionNode::createTextureForImageProperty(QQuickWindow *window,
         return nullptr;
     }
 
+    if (property->width().value_or(0.0) <= 0 || property->height().value_or(0.0) <= 0.0) {
+        return nullptr;
+    }
+
     auto image = property.value();
     auto flags = image.flags().value_or(Union::Properties::ImageFlags{});
 
