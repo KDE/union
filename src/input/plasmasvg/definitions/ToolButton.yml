@@ -24,6 +24,8 @@ toolbutton:
             -   center
             -   hint-bottom-margin
 
+        spacing: 4
+
         padding:
             left:
                 property: element-width
@@ -76,13 +78,20 @@ toolbutton:
 
     text:
         alignment:
+            container: Content
             horizontal: Center
             vertical: Center
+            order: 1
         font:
             property: font-name
             name: system-normal
 
     icon:
+        alignment:
+            container: Content
+            horizontal: Center
+            vertical: Center
+            order: 0
         width:
             property: icon-size
             name: small-medium
