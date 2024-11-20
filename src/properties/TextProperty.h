@@ -8,7 +8,6 @@
 
 #include <QDebug>
 
-#include <QColor>
 #include <QFont>
 
 #include "AlignmentProperty.h"
@@ -38,9 +37,6 @@ public:
     std::optional<AlignmentProperty> alignment() const;
     void setAlignment(const std::optional<AlignmentProperty> &newValue);
 
-    std::optional<QColor> color() const;
-    void setColor(const std::optional<QColor> &newValue);
-
     std::optional<QFont> font() const;
     void setFont(const std::optional<QFont> &newValue);
 
@@ -61,6 +57,16 @@ public:
      * \param destination The destination property to copy to.
      */
     static void resolveProperties(const TextProperty &source, TextProperty &destination);
+
+    /**
+     * Create and return an empty TextProperty instance.
+     *
+     * This will create an empty TextProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static TextProperty empty();
 
 private:
     std::unique_ptr<TextPropertyPrivate> d;

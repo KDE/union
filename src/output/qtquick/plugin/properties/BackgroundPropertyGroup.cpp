@@ -17,26 +17,19 @@ BackgroundPropertyGroup::BackgroundPropertyGroup()
 
 void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
 {
-    m_color = newState.color().value_or(QColor{});
+    m_state = newState;
+    Q_EMIT colorChanged();
     m_image->update(newState.image().value_or(ImageProperty{}));
     m_border->update(newState.border().value_or(BorderProperty{}));
     m_corners->update(newState.corners().value_or(CornersProperty{}));
     m_shadow->update(newState.shadow().value_or(ShadowProperty{}));
+
+    Q_EMIT updated();
 }
 
 QColor BackgroundPropertyGroup::color() const
 {
-    return m_color;
-}
-
-void BackgroundPropertyGroup::setColor(const QColor &newValue)
-{
-    m_color = newValue;
-}
-
-QBindable<QColor> BackgroundPropertyGroup::bindableColor()
-{
-    return QBindable<QColor>(&m_color);
+    return m_state.color().value_or(QColor{});
 }
 
 ImagePropertyGroup *BackgroundPropertyGroup::image() const

@@ -4,6 +4,8 @@
 
 #include "ImageProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -182,6 +184,18 @@ void ImageProperty::resolveProperties(const ImageProperty &source, ImageProperty
     if (!destination.d->flags.has_value()) {
         destination.d->flags = source.d->flags;
     }
+}
+
+ImageProperty ImageProperty::empty()
+{
+    ImageProperty result;
+    result.d->imageData = emptyValue<QImage>();
+    result.d->width = emptyValue<qreal>();
+    result.d->height = emptyValue<qreal>();
+    result.d->xOffset = emptyValue<qreal>();
+    result.d->yOffset = emptyValue<qreal>();
+    result.d->flags = emptyValue<Union::Properties::ImageFlags>();
+    return result;
 }
 
 bool Union::Properties::operator==(const ImageProperty &left, const ImageProperty &right)

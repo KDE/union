@@ -4,6 +4,8 @@
 
 #include "BackgroundProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -188,6 +190,17 @@ void BackgroundProperty::resolveProperties(const BackgroundProperty &source, Bac
             destination.d->shadow = value;
         }
     }
+}
+
+BackgroundProperty BackgroundProperty::empty()
+{
+    BackgroundProperty result;
+    result.d->color = emptyValue<QColor>();
+    result.d->image = ImageProperty::empty();
+    result.d->border = BorderProperty::empty();
+    result.d->corners = CornersProperty::empty();
+    result.d->shadow = ShadowProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const BackgroundProperty &left, const BackgroundProperty &right)

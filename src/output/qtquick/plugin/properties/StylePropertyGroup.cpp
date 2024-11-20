@@ -18,11 +18,14 @@ StylePropertyGroup::StylePropertyGroup()
 
 void StylePropertyGroup::update(const StyleProperty &newState)
 {
+    m_state = newState;
     m_palette->update(newState.palette().value_or(PaletteProperty{}));
     m_layout->update(newState.layout().value_or(LayoutProperty{}));
     m_text->update(newState.text().value_or(TextProperty{}));
     m_icon->update(newState.icon().value_or(IconProperty{}));
     m_background->update(newState.background().value_or(BackgroundProperty{}));
+
+    Q_EMIT updated();
 }
 
 PalettePropertyGroup *StylePropertyGroup::palette() const

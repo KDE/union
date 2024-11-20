@@ -283,9 +283,9 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         std::ostringstream out;
 
         out << indent(indentation);
-        out << "foreground: ";
+        out << "accent: ";
         {
-            auto value = property.foreground();
+            auto value = property.accent();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -294,9 +294,9 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         }
 
         out << indent(indentation);
-        out << "background: ";
+        out << "alternateBase: ";
         {
-            auto value = property.background();
+            auto value = property.alternateBase();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -305,9 +305,240 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         }
 
         out << indent(indentation);
-        out << "decoration: ";
+        out << "base: ";
         {
-            auto value = property.decoration();
+            auto value = property.base();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "brightText: ";
+        {
+            auto value = property.brightText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "button: ";
+        {
+            auto value = property.button();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "buttonText: ";
+        {
+            auto value = property.buttonText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "dark: ";
+        {
+            auto value = property.dark();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "highlight: ";
+        {
+            auto value = property.highlight();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "highlightedText: ";
+        {
+            auto value = property.highlightedText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "light: ";
+        {
+            auto value = property.light();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "link: ";
+        {
+            auto value = property.link();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "linkVisited: ";
+        {
+            auto value = property.linkVisited();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "mid: ";
+        {
+            auto value = property.mid();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "midlight: ";
+        {
+            auto value = property.midlight();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "placeholderText: ";
+        {
+            auto value = property.placeholderText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "shadow: ";
+        {
+            auto value = property.shadow();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "text: ";
+        {
+            auto value = property.text();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "toolTipBase: ";
+        {
+            auto value = property.toolTipBase();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "toolTipText: ";
+        {
+            auto value = property.toolTipText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "window: ";
+        {
+            auto value = property.window();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "windowText: ";
+        {
+            auto value = property.windowText();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "positive: ";
+        {
+            auto value = property.positive();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "neutral: ";
+        {
+            auto value = property.neutral();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "negative: ";
+        {
+            auto value = property.negative();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -657,17 +888,6 @@ struct std::formatter<Union::Properties::TextProperty, char> {
         }
 
         out << indent(indentation);
-        out << "color: ";
-        {
-            auto value = property.color();
-            if (use_newlines) {
-                out << std::format("{}\n", value);
-            } else {
-                out << std::format("{} ", value);
-            }
-        }
-
-        out << indent(indentation);
         out << "font: ";
         {
             auto value = property.font();
@@ -744,17 +964,6 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << "height: ";
         {
             auto value = property.height();
-            if (use_newlines) {
-                out << std::format("{}\n", value);
-            } else {
-                out << std::format("{} ", value);
-            }
-        }
-
-        out << indent(indentation);
-        out << "color: ";
-        {
-            auto value = property.color();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {

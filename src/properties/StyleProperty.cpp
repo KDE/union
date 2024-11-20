@@ -4,6 +4,8 @@
 
 #include "StyleProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -195,6 +197,17 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
             destination.d->background = value;
         }
     }
+}
+
+StyleProperty StyleProperty::empty()
+{
+    StyleProperty result;
+    result.d->palette = PaletteProperty::empty();
+    result.d->layout = LayoutProperty::empty();
+    result.d->text = TextProperty::empty();
+    result.d->icon = IconProperty::empty();
+    result.d->background = BackgroundProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const StyleProperty &left, const StyleProperty &right)

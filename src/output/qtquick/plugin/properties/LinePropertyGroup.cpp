@@ -14,55 +14,28 @@ LinePropertyGroup::LinePropertyGroup()
 
 void LinePropertyGroup::update(const LineProperty &newState)
 {
-    m_size = newState.size().value_or(qreal{});
-    m_color = newState.color().value_or(QColor{});
-    m_style = newState.style().value_or(Union::Properties::LineStyle{});
+    m_state = newState;
+    Q_EMIT sizeChanged();
+    Q_EMIT colorChanged();
+    Q_EMIT styleChanged();
     m_image->update(newState.image().value_or(ImageProperty{}));
+
+    Q_EMIT updated();
 }
 
 qreal LinePropertyGroup::size() const
 {
-    return m_size;
-}
-
-void LinePropertyGroup::setSize(const qreal &newValue)
-{
-    m_size = newValue;
-}
-
-QBindable<qreal> LinePropertyGroup::bindableSize()
-{
-    return QBindable<qreal>(&m_size);
+    return m_state.size().value_or(qreal{});
 }
 
 QColor LinePropertyGroup::color() const
 {
-    return m_color;
-}
-
-void LinePropertyGroup::setColor(const QColor &newValue)
-{
-    m_color = newValue;
-}
-
-QBindable<QColor> LinePropertyGroup::bindableColor()
-{
-    return QBindable<QColor>(&m_color);
+    return m_state.color().value_or(QColor{});
 }
 
 Union::Properties::LineStyle LinePropertyGroup::style() const
 {
-    return m_style;
-}
-
-void LinePropertyGroup::setStyle(const Union::Properties::LineStyle &newValue)
-{
-    m_style = newValue;
-}
-
-QBindable<Union::Properties::LineStyle> LinePropertyGroup::bindableStyle()
-{
-    return QBindable<Union::Properties::LineStyle>(&m_style);
+    return m_state.style().value_or(Union::Properties::LineStyle{});
 }
 
 ImagePropertyGroup *LinePropertyGroup::image() const

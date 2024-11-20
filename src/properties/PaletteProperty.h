@@ -33,14 +33,77 @@ public:
     PaletteProperty &operator=(const PaletteProperty &other);
     PaletteProperty &operator=(PaletteProperty &&other);
 
-    std::optional<QColor> foreground() const;
-    void setForeground(const std::optional<QColor> &newValue);
+    std::optional<QColor> accent() const;
+    void setAccent(const std::optional<QColor> &newValue);
 
-    std::optional<QColor> background() const;
-    void setBackground(const std::optional<QColor> &newValue);
+    std::optional<QColor> alternateBase() const;
+    void setAlternateBase(const std::optional<QColor> &newValue);
 
-    std::optional<QColor> decoration() const;
-    void setDecoration(const std::optional<QColor> &newValue);
+    std::optional<QColor> base() const;
+    void setBase(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> brightText() const;
+    void setBrightText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> button() const;
+    void setButton(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> buttonText() const;
+    void setButtonText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> dark() const;
+    void setDark(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> highlight() const;
+    void setHighlight(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> highlightedText() const;
+    void setHighlightedText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> light() const;
+    void setLight(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> link() const;
+    void setLink(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> linkVisited() const;
+    void setLinkVisited(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> mid() const;
+    void setMid(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> midlight() const;
+    void setMidlight(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> placeholderText() const;
+    void setPlaceholderText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> shadow() const;
+    void setShadow(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> text() const;
+    void setText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> toolTipBase() const;
+    void setToolTipBase(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> toolTipText() const;
+    void setToolTipText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> window() const;
+    void setWindow(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> windowText() const;
+    void setWindowText(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> positive() const;
+    void setPositive(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> neutral() const;
+    void setNeutral(const std::optional<QColor> &newValue);
+
+    std::optional<QColor> negative() const;
+    void setNegative(const std::optional<QColor> &newValue);
 
     /**
      * Check if this property has any value set.
@@ -59,6 +122,16 @@ public:
      * \param destination The destination property to copy to.
      */
     static void resolveProperties(const PaletteProperty &source, PaletteProperty &destination);
+
+    /**
+     * Create and return an empty PaletteProperty instance.
+     *
+     * This will create an empty PaletteProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static PaletteProperty empty();
 
 private:
     std::unique_ptr<PalettePropertyPrivate> d;

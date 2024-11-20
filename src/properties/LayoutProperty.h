@@ -73,6 +73,16 @@ public:
      */
     static void resolveProperties(const LayoutProperty &source, LayoutProperty &destination);
 
+    /**
+     * Create and return an empty LayoutProperty instance.
+     *
+     * This will create an empty LayoutProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static LayoutProperty empty();
+
 private:
     std::unique_ptr<LayoutPropertyPrivate> d;
 };

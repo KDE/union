@@ -13,70 +13,33 @@ AlignmentPropertyGroup::AlignmentPropertyGroup()
 
 void AlignmentPropertyGroup::update(const AlignmentProperty &newState)
 {
-    m_container = newState.container().value_or(Union::Properties::AlignmentContainer{});
-    m_horizontal = newState.horizontal().value_or(Union::Properties::Alignment{});
-    m_vertical = newState.vertical().value_or(Union::Properties::Alignment{});
-    m_order = newState.order().value_or(int{});
+    m_state = newState;
+    Q_EMIT containerChanged();
+    Q_EMIT horizontalChanged();
+    Q_EMIT verticalChanged();
+    Q_EMIT orderChanged();
+
+    Q_EMIT updated();
 }
 
 Union::Properties::AlignmentContainer AlignmentPropertyGroup::container() const
 {
-    return m_container;
-}
-
-void AlignmentPropertyGroup::setContainer(const Union::Properties::AlignmentContainer &newValue)
-{
-    m_container = newValue;
-}
-
-QBindable<Union::Properties::AlignmentContainer> AlignmentPropertyGroup::bindableContainer()
-{
-    return QBindable<Union::Properties::AlignmentContainer>(&m_container);
+    return m_state.container().value_or(Union::Properties::AlignmentContainer{});
 }
 
 Union::Properties::Alignment AlignmentPropertyGroup::horizontal() const
 {
-    return m_horizontal;
-}
-
-void AlignmentPropertyGroup::setHorizontal(const Union::Properties::Alignment &newValue)
-{
-    m_horizontal = newValue;
-}
-
-QBindable<Union::Properties::Alignment> AlignmentPropertyGroup::bindableHorizontal()
-{
-    return QBindable<Union::Properties::Alignment>(&m_horizontal);
+    return m_state.horizontal().value_or(Union::Properties::Alignment{});
 }
 
 Union::Properties::Alignment AlignmentPropertyGroup::vertical() const
 {
-    return m_vertical;
-}
-
-void AlignmentPropertyGroup::setVertical(const Union::Properties::Alignment &newValue)
-{
-    m_vertical = newValue;
-}
-
-QBindable<Union::Properties::Alignment> AlignmentPropertyGroup::bindableVertical()
-{
-    return QBindable<Union::Properties::Alignment>(&m_vertical);
+    return m_state.vertical().value_or(Union::Properties::Alignment{});
 }
 
 int AlignmentPropertyGroup::order() const
 {
-    return m_order;
-}
-
-void AlignmentPropertyGroup::setOrder(const int &newValue)
-{
-    m_order = newValue;
-}
-
-QBindable<int> AlignmentPropertyGroup::bindableOrder()
-{
-    return QBindable<int>(&m_order);
+    return m_state.order().value_or(int{});
 }
 
 #include "moc_AlignmentPropertyGroup.cpp"

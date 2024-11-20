@@ -9,7 +9,6 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QColor>
 
 #include <properties/BackgroundProperty.h>
 
@@ -28,11 +27,10 @@ public:
     BackgroundPropertyGroup();
 
     void update(const Union::Properties::BackgroundProperty &newState);
+    Q_SIGNAL void updated();
 
-    Q_PROPERTY(QColor color READ color WRITE setColor BINDABLE bindableColor NOTIFY colorChanged)
+    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
     QColor color() const;
-    void setColor(const QColor &newValue);
-    QBindable<QColor> bindableColor();
     Q_SIGNAL void colorChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
@@ -48,9 +46,9 @@ public:
     ShadowPropertyGroup *shadow() const;
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(BackgroundPropertyGroup, QColor, m_color, &BackgroundPropertyGroup::colorChanged)
     std::unique_ptr<ImagePropertyGroup> m_image;
     std::unique_ptr<BorderPropertyGroup> m_border;
     std::unique_ptr<CornersPropertyGroup> m_corners;
     std::unique_ptr<ShadowPropertyGroup> m_shadow;
+    Union::Properties::BackgroundProperty m_state;
 };

@@ -27,6 +27,7 @@ public:
     CornersPropertyGroup();
 
     void update(const Union::Properties::CornersProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(CornerPropertyGroup *topLeft READ topLeft CONSTANT)
     CornerPropertyGroup *topLeft() const;
@@ -45,4 +46,5 @@ private:
     std::unique_ptr<CornerPropertyGroup> m_topRight;
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;
     std::unique_ptr<CornerPropertyGroup> m_bottomRight;
+    Union::Properties::CornersProperty m_state;
 };

@@ -13,70 +13,33 @@ SizePropertyGroup::SizePropertyGroup()
 
 void SizePropertyGroup::update(const SizeProperty &newState)
 {
-    m_left = newState.left().value_or(qreal{});
-    m_right = newState.right().value_or(qreal{});
-    m_top = newState.top().value_or(qreal{});
-    m_bottom = newState.bottom().value_or(qreal{});
+    m_state = newState;
+    Q_EMIT leftChanged();
+    Q_EMIT rightChanged();
+    Q_EMIT topChanged();
+    Q_EMIT bottomChanged();
+
+    Q_EMIT updated();
 }
 
 qreal SizePropertyGroup::left() const
 {
-    return m_left;
-}
-
-void SizePropertyGroup::setLeft(const qreal &newValue)
-{
-    m_left = newValue;
-}
-
-QBindable<qreal> SizePropertyGroup::bindableLeft()
-{
-    return QBindable<qreal>(&m_left);
+    return m_state.left().value_or(qreal{});
 }
 
 qreal SizePropertyGroup::right() const
 {
-    return m_right;
-}
-
-void SizePropertyGroup::setRight(const qreal &newValue)
-{
-    m_right = newValue;
-}
-
-QBindable<qreal> SizePropertyGroup::bindableRight()
-{
-    return QBindable<qreal>(&m_right);
+    return m_state.right().value_or(qreal{});
 }
 
 qreal SizePropertyGroup::top() const
 {
-    return m_top;
-}
-
-void SizePropertyGroup::setTop(const qreal &newValue)
-{
-    m_top = newValue;
-}
-
-QBindable<qreal> SizePropertyGroup::bindableTop()
-{
-    return QBindable<qreal>(&m_top);
+    return m_state.top().value_or(qreal{});
 }
 
 qreal SizePropertyGroup::bottom() const
 {
-    return m_bottom;
-}
-
-void SizePropertyGroup::setBottom(const qreal &newValue)
-{
-    m_bottom = newValue;
-}
-
-QBindable<qreal> SizePropertyGroup::bindableBottom()
-{
-    return QBindable<qreal>(&m_bottom);
+    return m_state.bottom().value_or(qreal{});
 }
 
 #include "moc_SizePropertyGroup.cpp"

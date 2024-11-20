@@ -17,13 +17,16 @@ LayoutPropertyGroup::LayoutPropertyGroup()
 
 void LayoutPropertyGroup::update(const LayoutProperty &newState)
 {
+    m_state = newState;
     m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
-    m_width = newState.width().value_or(qreal{});
-    m_height = newState.height().value_or(qreal{});
-    m_spacing = newState.spacing().value_or(qreal{});
+    Q_EMIT widthChanged();
+    Q_EMIT heightChanged();
+    Q_EMIT spacingChanged();
     m_padding->update(newState.padding().value_or(SizeProperty{}));
     m_inset->update(newState.inset().value_or(SizeProperty{}));
     m_margins->update(newState.margins().value_or(SizeProperty{}));
+
+    Q_EMIT updated();
 }
 
 AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
@@ -33,47 +36,17 @@ AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
 
 qreal LayoutPropertyGroup::width() const
 {
-    return m_width;
-}
-
-void LayoutPropertyGroup::setWidth(const qreal &newValue)
-{
-    m_width = newValue;
-}
-
-QBindable<qreal> LayoutPropertyGroup::bindableWidth()
-{
-    return QBindable<qreal>(&m_width);
+    return m_state.width().value_or(qreal{});
 }
 
 qreal LayoutPropertyGroup::height() const
 {
-    return m_height;
-}
-
-void LayoutPropertyGroup::setHeight(const qreal &newValue)
-{
-    m_height = newValue;
-}
-
-QBindable<qreal> LayoutPropertyGroup::bindableHeight()
-{
-    return QBindable<qreal>(&m_height);
+    return m_state.height().value_or(qreal{});
 }
 
 qreal LayoutPropertyGroup::spacing() const
 {
-    return m_spacing;
-}
-
-void LayoutPropertyGroup::setSpacing(const qreal &newValue)
-{
-    m_spacing = newValue;
-}
-
-QBindable<qreal> LayoutPropertyGroup::bindableSpacing()
-{
-    return QBindable<qreal>(&m_spacing);
+    return m_state.spacing().value_or(qreal{});
 }
 
 SizePropertyGroup *LayoutPropertyGroup::padding() const

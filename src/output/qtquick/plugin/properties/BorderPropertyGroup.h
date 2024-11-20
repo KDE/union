@@ -27,6 +27,7 @@ public:
     BorderPropertyGroup();
 
     void update(const Union::Properties::BorderProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(LinePropertyGroup *left READ left CONSTANT)
     LinePropertyGroup *left() const;
@@ -45,4 +46,5 @@ private:
     std::unique_ptr<LinePropertyGroup> m_right;
     std::unique_ptr<LinePropertyGroup> m_top;
     std::unique_ptr<LinePropertyGroup> m_bottom;
+    Union::Properties::BorderProperty m_state;
 };

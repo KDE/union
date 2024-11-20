@@ -4,6 +4,8 @@
 
 #include "SizeProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -138,6 +140,16 @@ void SizeProperty::resolveProperties(const SizeProperty &source, SizeProperty &d
     if (!destination.d->bottom.has_value()) {
         destination.d->bottom = source.d->bottom;
     }
+}
+
+SizeProperty SizeProperty::empty()
+{
+    SizeProperty result;
+    result.d->left = emptyValue<qreal>();
+    result.d->right = emptyValue<qreal>();
+    result.d->top = emptyValue<qreal>();
+    result.d->bottom = emptyValue<qreal>();
+    return result;
 }
 
 bool Union::Properties::operator==(const SizeProperty &left, const SizeProperty &right)

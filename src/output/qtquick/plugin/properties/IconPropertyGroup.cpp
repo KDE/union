@@ -14,12 +14,14 @@ IconPropertyGroup::IconPropertyGroup()
 
 void IconPropertyGroup::update(const IconProperty &newState)
 {
+    m_state = newState;
     m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
-    m_width = newState.width().value_or(qreal{});
-    m_height = newState.height().value_or(qreal{});
-    m_color = newState.color().value_or(QColor{});
-    m_name = newState.name().value_or(QString{});
-    m_source = newState.source().value_or(QUrl{});
+    Q_EMIT widthChanged();
+    Q_EMIT heightChanged();
+    Q_EMIT nameChanged();
+    Q_EMIT sourceChanged();
+
+    Q_EMIT updated();
 }
 
 AlignmentPropertyGroup *IconPropertyGroup::alignment() const
@@ -29,77 +31,22 @@ AlignmentPropertyGroup *IconPropertyGroup::alignment() const
 
 qreal IconPropertyGroup::width() const
 {
-    return m_width;
-}
-
-void IconPropertyGroup::setWidth(const qreal &newValue)
-{
-    m_width = newValue;
-}
-
-QBindable<qreal> IconPropertyGroup::bindableWidth()
-{
-    return QBindable<qreal>(&m_width);
+    return m_state.width().value_or(qreal{});
 }
 
 qreal IconPropertyGroup::height() const
 {
-    return m_height;
-}
-
-void IconPropertyGroup::setHeight(const qreal &newValue)
-{
-    m_height = newValue;
-}
-
-QBindable<qreal> IconPropertyGroup::bindableHeight()
-{
-    return QBindable<qreal>(&m_height);
-}
-
-QColor IconPropertyGroup::color() const
-{
-    return m_color;
-}
-
-void IconPropertyGroup::setColor(const QColor &newValue)
-{
-    m_color = newValue;
-}
-
-QBindable<QColor> IconPropertyGroup::bindableColor()
-{
-    return QBindable<QColor>(&m_color);
+    return m_state.height().value_or(qreal{});
 }
 
 QString IconPropertyGroup::name() const
 {
-    return m_name;
-}
-
-void IconPropertyGroup::setName(const QString &newValue)
-{
-    m_name = newValue;
-}
-
-QBindable<QString> IconPropertyGroup::bindableName()
-{
-    return QBindable<QString>(&m_name);
+    return m_state.name().value_or(QString{});
 }
 
 QUrl IconPropertyGroup::source() const
 {
-    return m_source;
-}
-
-void IconPropertyGroup::setSource(const QUrl &newValue)
-{
-    m_source = newValue;
-}
-
-QBindable<QUrl> IconPropertyGroup::bindableSource()
-{
-    return QBindable<QUrl>(&m_source);
+    return m_state.source().value_or(QUrl{});
 }
 
 #include "moc_IconPropertyGroup.cpp"

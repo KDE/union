@@ -13,54 +13,254 @@ PalettePropertyGroup::PalettePropertyGroup()
 
 void PalettePropertyGroup::update(const PaletteProperty &newState)
 {
-    m_foreground = newState.foreground().value_or(QColor{});
-    m_background = newState.background().value_or(QColor{});
-    m_decoration = newState.decoration().value_or(QColor{});
+    m_state = newState;
+    Q_EMIT accentChanged();
+    Q_EMIT alternateBaseChanged();
+    Q_EMIT baseChanged();
+    Q_EMIT brightTextChanged();
+    Q_EMIT buttonChanged();
+    Q_EMIT buttonTextChanged();
+    Q_EMIT darkChanged();
+    Q_EMIT highlightChanged();
+    Q_EMIT highlightedTextChanged();
+    Q_EMIT lightChanged();
+    Q_EMIT linkChanged();
+    Q_EMIT linkVisitedChanged();
+    Q_EMIT midChanged();
+    Q_EMIT midlightChanged();
+    Q_EMIT placeholderTextChanged();
+    Q_EMIT shadowChanged();
+    Q_EMIT textChanged();
+    Q_EMIT toolTipBaseChanged();
+    Q_EMIT toolTipTextChanged();
+    Q_EMIT windowChanged();
+    Q_EMIT windowTextChanged();
+    Q_EMIT positiveChanged();
+    Q_EMIT neutralChanged();
+    Q_EMIT negativeChanged();
+
+    if (!m_component) {
+        // Dirty hack to get at the main QML engine.
+        m_component = new QQmlComponent(qmlEngine(qGuiApp->allWindows().first()));
+        m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
+    }
+
+    if (m_palette) {
+        delete m_palette;
+    }
+
+    m_palette = m_component->create();
+
+    if (m_state.accent()) {
+        m_palette->setProperty("accent", QVariant::fromValue(m_state.accent().value()));
+    }
+
+    if (m_state.alternateBase()) {
+        m_palette->setProperty("alternateBase", QVariant::fromValue(m_state.alternateBase().value()));
+    }
+
+    if (m_state.base()) {
+        m_palette->setProperty("base", QVariant::fromValue(m_state.base().value()));
+    }
+
+    if (m_state.brightText()) {
+        m_palette->setProperty("brightText", QVariant::fromValue(m_state.brightText().value()));
+    }
+
+    if (m_state.button()) {
+        m_palette->setProperty("button", QVariant::fromValue(m_state.button().value()));
+    }
+
+    if (m_state.buttonText()) {
+        m_palette->setProperty("buttonText", QVariant::fromValue(m_state.buttonText().value()));
+    }
+
+    if (m_state.dark()) {
+        m_palette->setProperty("dark", QVariant::fromValue(m_state.dark().value()));
+    }
+
+    if (m_state.highlight()) {
+        m_palette->setProperty("highlight", QVariant::fromValue(m_state.highlight().value()));
+    }
+
+    if (m_state.highlightedText()) {
+        m_palette->setProperty("highlightedText", QVariant::fromValue(m_state.highlightedText().value()));
+    }
+
+    if (m_state.light()) {
+        m_palette->setProperty("light", QVariant::fromValue(m_state.light().value()));
+    }
+
+    if (m_state.link()) {
+        m_palette->setProperty("link", QVariant::fromValue(m_state.link().value()));
+    }
+
+    if (m_state.linkVisited()) {
+        m_palette->setProperty("linkVisited", QVariant::fromValue(m_state.linkVisited().value()));
+    }
+
+    if (m_state.mid()) {
+        m_palette->setProperty("mid", QVariant::fromValue(m_state.mid().value()));
+    }
+
+    if (m_state.midlight()) {
+        m_palette->setProperty("midlight", QVariant::fromValue(m_state.midlight().value()));
+    }
+
+    if (m_state.placeholderText()) {
+        m_palette->setProperty("placeholderText", QVariant::fromValue(m_state.placeholderText().value()));
+    }
+
+    if (m_state.shadow()) {
+        m_palette->setProperty("shadow", QVariant::fromValue(m_state.shadow().value()));
+    }
+
+    if (m_state.text()) {
+        m_palette->setProperty("text", QVariant::fromValue(m_state.text().value()));
+    }
+
+    if (m_state.toolTipBase()) {
+        m_palette->setProperty("toolTipBase", QVariant::fromValue(m_state.toolTipBase().value()));
+    }
+
+    if (m_state.toolTipText()) {
+        m_palette->setProperty("toolTipText", QVariant::fromValue(m_state.toolTipText().value()));
+    }
+
+    if (m_state.window()) {
+        m_palette->setProperty("window", QVariant::fromValue(m_state.window().value()));
+    }
+
+    if (m_state.windowText()) {
+        m_palette->setProperty("windowText", QVariant::fromValue(m_state.windowText().value()));
+    }
+
+    Q_EMIT updated();
 }
 
-QColor PalettePropertyGroup::foreground() const
+QColor PalettePropertyGroup::accent() const
 {
-    return m_foreground;
+    return m_state.accent().value_or(QColor{});
 }
 
-void PalettePropertyGroup::setForeground(const QColor &newValue)
+QColor PalettePropertyGroup::alternateBase() const
 {
-    m_foreground = newValue;
+    return m_state.alternateBase().value_or(QColor{});
 }
 
-QBindable<QColor> PalettePropertyGroup::bindableForeground()
+QColor PalettePropertyGroup::base() const
 {
-    return QBindable<QColor>(&m_foreground);
+    return m_state.base().value_or(QColor{});
 }
 
-QColor PalettePropertyGroup::background() const
+QColor PalettePropertyGroup::brightText() const
 {
-    return m_background;
+    return m_state.brightText().value_or(QColor{});
 }
 
-void PalettePropertyGroup::setBackground(const QColor &newValue)
+QColor PalettePropertyGroup::button() const
 {
-    m_background = newValue;
+    return m_state.button().value_or(QColor{});
 }
 
-QBindable<QColor> PalettePropertyGroup::bindableBackground()
+QColor PalettePropertyGroup::buttonText() const
 {
-    return QBindable<QColor>(&m_background);
+    return m_state.buttonText().value_or(QColor{});
 }
 
-QColor PalettePropertyGroup::decoration() const
+QColor PalettePropertyGroup::dark() const
 {
-    return m_decoration;
+    return m_state.dark().value_or(QColor{});
 }
 
-void PalettePropertyGroup::setDecoration(const QColor &newValue)
+QColor PalettePropertyGroup::highlight() const
 {
-    m_decoration = newValue;
+    return m_state.highlight().value_or(QColor{});
 }
 
-QBindable<QColor> PalettePropertyGroup::bindableDecoration()
+QColor PalettePropertyGroup::highlightedText() const
 {
-    return QBindable<QColor>(&m_decoration);
+    return m_state.highlightedText().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::light() const
+{
+    return m_state.light().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::link() const
+{
+    return m_state.link().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::linkVisited() const
+{
+    return m_state.linkVisited().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::mid() const
+{
+    return m_state.mid().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::midlight() const
+{
+    return m_state.midlight().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::placeholderText() const
+{
+    return m_state.placeholderText().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::shadow() const
+{
+    return m_state.shadow().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::text() const
+{
+    return m_state.text().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::toolTipBase() const
+{
+    return m_state.toolTipBase().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::toolTipText() const
+{
+    return m_state.toolTipText().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::window() const
+{
+    return m_state.window().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::windowText() const
+{
+    return m_state.windowText().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::positive() const
+{
+    return m_state.positive().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::neutral() const
+{
+    return m_state.neutral().value_or(QColor{});
+}
+
+QColor PalettePropertyGroup::negative() const
+{
+    return m_state.negative().value_or(QColor{});
+}
+
+QObject *PalettePropertyGroup::quickPalette() const
+{
+    return m_palette;
 }
 
 #include "moc_PalettePropertyGroup.cpp"

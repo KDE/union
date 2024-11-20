@@ -63,6 +63,16 @@ public:
      */
     static void resolveProperties(const AlignmentProperty &source, AlignmentProperty &destination);
 
+    /**
+     * Create and return an empty AlignmentProperty instance.
+     *
+     * This will create an empty AlignmentProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static AlignmentProperty empty();
+
 private:
     std::unique_ptr<AlignmentPropertyPrivate> d;
 };

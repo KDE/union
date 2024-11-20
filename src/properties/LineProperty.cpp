@@ -4,6 +4,8 @@
 
 #include "LineProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -145,6 +147,16 @@ void LineProperty::resolveProperties(const LineProperty &source, LineProperty &d
             destination.d->image = value;
         }
     }
+}
+
+LineProperty LineProperty::empty()
+{
+    LineProperty result;
+    result.d->size = emptyValue<qreal>();
+    result.d->color = emptyValue<QColor>();
+    result.d->style = emptyValue<Union::Properties::LineStyle>();
+    result.d->image = ImageProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const LineProperty &left, const LineProperty &right)

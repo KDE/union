@@ -9,7 +9,6 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QColor>
 
 #include <properties/LineProperty.h>
 
@@ -25,31 +24,24 @@ public:
     LinePropertyGroup();
 
     void update(const Union::Properties::LineProperty &newState);
+    Q_SIGNAL void updated();
 
-    Q_PROPERTY(qreal size READ size WRITE setSize BINDABLE bindableSize NOTIFY sizeChanged)
+    Q_PROPERTY(qreal size READ size NOTIFY sizeChanged)
     qreal size() const;
-    void setSize(const qreal &newValue);
-    QBindable<qreal> bindableSize();
     Q_SIGNAL void sizeChanged();
 
-    Q_PROPERTY(QColor color READ color WRITE setColor BINDABLE bindableColor NOTIFY colorChanged)
+    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
     QColor color() const;
-    void setColor(const QColor &newValue);
-    QBindable<QColor> bindableColor();
     Q_SIGNAL void colorChanged();
 
-    Q_PROPERTY(Union::Properties::LineStyle style READ style WRITE setStyle BINDABLE bindableStyle NOTIFY styleChanged)
+    Q_PROPERTY(Union::Properties::LineStyle style READ style NOTIFY styleChanged)
     Union::Properties::LineStyle style() const;
-    void setStyle(const Union::Properties::LineStyle &newValue);
-    QBindable<Union::Properties::LineStyle> bindableStyle();
     Q_SIGNAL void styleChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(LinePropertyGroup, qreal, m_size, &LinePropertyGroup::sizeChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(LinePropertyGroup, QColor, m_color, &LinePropertyGroup::colorChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(LinePropertyGroup, Union::Properties::LineStyle, m_style, &LinePropertyGroup::styleChanged)
     std::unique_ptr<ImagePropertyGroup> m_image;
+    Union::Properties::LineProperty m_state;
 };

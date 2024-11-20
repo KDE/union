@@ -13,102 +13,45 @@ ImagePropertyGroup::ImagePropertyGroup()
 
 void ImagePropertyGroup::update(const ImageProperty &newState)
 {
-    m_imageData = newState.imageData().value_or(QImage{});
-    m_width = newState.width().value_or(qreal{});
-    m_height = newState.height().value_or(qreal{});
-    m_xOffset = newState.xOffset().value_or(qreal{});
-    m_yOffset = newState.yOffset().value_or(qreal{});
-    m_flags = newState.flags().value_or(Union::Properties::ImageFlags{});
+    m_state = newState;
+    Q_EMIT imageDataChanged();
+    Q_EMIT widthChanged();
+    Q_EMIT heightChanged();
+    Q_EMIT xOffsetChanged();
+    Q_EMIT yOffsetChanged();
+    Q_EMIT flagsChanged();
+
+    Q_EMIT updated();
 }
 
 QImage ImagePropertyGroup::imageData() const
 {
-    return m_imageData;
-}
-
-void ImagePropertyGroup::setImageData(const QImage &newValue)
-{
-    m_imageData = newValue;
-}
-
-QBindable<QImage> ImagePropertyGroup::bindableImageData()
-{
-    return QBindable<QImage>(&m_imageData);
+    return m_state.imageData().value_or(QImage{});
 }
 
 qreal ImagePropertyGroup::width() const
 {
-    return m_width;
-}
-
-void ImagePropertyGroup::setWidth(const qreal &newValue)
-{
-    m_width = newValue;
-}
-
-QBindable<qreal> ImagePropertyGroup::bindableWidth()
-{
-    return QBindable<qreal>(&m_width);
+    return m_state.width().value_or(qreal{});
 }
 
 qreal ImagePropertyGroup::height() const
 {
-    return m_height;
-}
-
-void ImagePropertyGroup::setHeight(const qreal &newValue)
-{
-    m_height = newValue;
-}
-
-QBindable<qreal> ImagePropertyGroup::bindableHeight()
-{
-    return QBindable<qreal>(&m_height);
+    return m_state.height().value_or(qreal{});
 }
 
 qreal ImagePropertyGroup::xOffset() const
 {
-    return m_xOffset;
-}
-
-void ImagePropertyGroup::setXOffset(const qreal &newValue)
-{
-    m_xOffset = newValue;
-}
-
-QBindable<qreal> ImagePropertyGroup::bindableXOffset()
-{
-    return QBindable<qreal>(&m_xOffset);
+    return m_state.xOffset().value_or(qreal{});
 }
 
 qreal ImagePropertyGroup::yOffset() const
 {
-    return m_yOffset;
-}
-
-void ImagePropertyGroup::setYOffset(const qreal &newValue)
-{
-    m_yOffset = newValue;
-}
-
-QBindable<qreal> ImagePropertyGroup::bindableYOffset()
-{
-    return QBindable<qreal>(&m_yOffset);
+    return m_state.yOffset().value_or(qreal{});
 }
 
 Union::Properties::ImageFlags ImagePropertyGroup::flags() const
 {
-    return m_flags;
-}
-
-void ImagePropertyGroup::setFlags(const Union::Properties::ImageFlags &newValue)
-{
-    m_flags = newValue;
-}
-
-QBindable<Union::Properties::ImageFlags> ImagePropertyGroup::bindableFlags()
-{
-    return QBindable<Union::Properties::ImageFlags>(&m_flags);
+    return m_state.flags().value_or(Union::Properties::ImageFlags{});
 }
 
 #include "moc_ImagePropertyGroup.cpp"

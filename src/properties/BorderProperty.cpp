@@ -4,6 +4,8 @@
 
 #include "BorderProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -166,6 +168,16 @@ void BorderProperty::resolveProperties(const BorderProperty &source, BorderPrope
             destination.d->bottom = value;
         }
     }
+}
+
+BorderProperty BorderProperty::empty()
+{
+    BorderProperty result;
+    result.d->left = LineProperty::empty();
+    result.d->right = LineProperty::empty();
+    result.d->top = LineProperty::empty();
+    result.d->bottom = LineProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const BorderProperty &left, const BorderProperty &right)

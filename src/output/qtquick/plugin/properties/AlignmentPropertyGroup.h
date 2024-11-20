@@ -23,34 +23,24 @@ public:
     AlignmentPropertyGroup();
 
     void update(const Union::Properties::AlignmentProperty &newState);
+    Q_SIGNAL void updated();
 
-    Q_PROPERTY(Union::Properties::AlignmentContainer container READ container WRITE setContainer BINDABLE bindableContainer NOTIFY containerChanged)
+    Q_PROPERTY(Union::Properties::AlignmentContainer container READ container NOTIFY containerChanged)
     Union::Properties::AlignmentContainer container() const;
-    void setContainer(const Union::Properties::AlignmentContainer &newValue);
-    QBindable<Union::Properties::AlignmentContainer> bindableContainer();
     Q_SIGNAL void containerChanged();
 
-    Q_PROPERTY(Union::Properties::Alignment horizontal READ horizontal WRITE setHorizontal BINDABLE bindableHorizontal NOTIFY horizontalChanged)
+    Q_PROPERTY(Union::Properties::Alignment horizontal READ horizontal NOTIFY horizontalChanged)
     Union::Properties::Alignment horizontal() const;
-    void setHorizontal(const Union::Properties::Alignment &newValue);
-    QBindable<Union::Properties::Alignment> bindableHorizontal();
     Q_SIGNAL void horizontalChanged();
 
-    Q_PROPERTY(Union::Properties::Alignment vertical READ vertical WRITE setVertical BINDABLE bindableVertical NOTIFY verticalChanged)
+    Q_PROPERTY(Union::Properties::Alignment vertical READ vertical NOTIFY verticalChanged)
     Union::Properties::Alignment vertical() const;
-    void setVertical(const Union::Properties::Alignment &newValue);
-    QBindable<Union::Properties::Alignment> bindableVertical();
     Q_SIGNAL void verticalChanged();
 
-    Q_PROPERTY(int order READ order WRITE setOrder BINDABLE bindableOrder NOTIFY orderChanged)
+    Q_PROPERTY(int order READ order NOTIFY orderChanged)
     int order() const;
-    void setOrder(const int &newValue);
-    QBindable<int> bindableOrder();
     Q_SIGNAL void orderChanged();
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(AlignmentPropertyGroup, Union::Properties::AlignmentContainer, m_container, &AlignmentPropertyGroup::containerChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(AlignmentPropertyGroup, Union::Properties::Alignment, m_horizontal, &AlignmentPropertyGroup::horizontalChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(AlignmentPropertyGroup, Union::Properties::Alignment, m_vertical, &AlignmentPropertyGroup::verticalChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(AlignmentPropertyGroup, int, m_order, &AlignmentPropertyGroup::orderChanged)
+    Union::Properties::AlignmentProperty m_state;
 };

@@ -80,6 +80,16 @@ public:
      */
     static void resolveProperties(const ShadowProperty &source, ShadowProperty &destination);
 
+    /**
+     * Create and return an empty ShadowProperty instance.
+     *
+     * This will create an empty ShadowProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static ShadowProperty empty();
+
 private:
     std::unique_ptr<ShadowPropertyPrivate> d;
 };

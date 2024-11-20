@@ -8,7 +8,6 @@
 
 #include <QDebug>
 
-#include <QColor>
 #include <QString>
 #include <QUrl>
 
@@ -45,9 +44,6 @@ public:
     std::optional<qreal> height() const;
     void setHeight(const std::optional<qreal> &newValue);
 
-    std::optional<QColor> color() const;
-    void setColor(const std::optional<QColor> &newValue);
-
     std::optional<QString> name() const;
     void setName(const std::optional<QString> &newValue);
 
@@ -71,6 +67,16 @@ public:
      * \param destination The destination property to copy to.
      */
     static void resolveProperties(const IconProperty &source, IconProperty &destination);
+
+    /**
+     * Create and return an empty IconProperty instance.
+     *
+     * This will create an empty IconProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static IconProperty empty();
 
 private:
     std::unique_ptr<IconPropertyPrivate> d;

@@ -22,6 +22,7 @@ ShadowPropertyGroup::ShadowPropertyGroup()
 
 void ShadowPropertyGroup::update(const ShadowProperty &newState)
 {
+    m_state = newState;
     m_offsets->update(newState.offsets().value_or(SizeProperty{}));
     m_left->update(newState.left().value_or(LineProperty{}));
     m_right->update(newState.right().value_or(LineProperty{}));
@@ -31,6 +32,8 @@ void ShadowPropertyGroup::update(const ShadowProperty &newState)
     m_topRight->update(newState.topRight().value_or(CornerProperty{}));
     m_bottomLeft->update(newState.bottomLeft().value_or(CornerProperty{}));
     m_bottomRight->update(newState.bottomRight().value_or(CornerProperty{}));
+
+    Q_EMIT updated();
 }
 
 SizePropertyGroup *ShadowPropertyGroup::offsets() const

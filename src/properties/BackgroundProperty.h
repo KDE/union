@@ -70,6 +70,16 @@ public:
      */
     static void resolveProperties(const BackgroundProperty &source, BackgroundProperty &destination);
 
+    /**
+     * Create and return an empty BackgroundProperty instance.
+     *
+     * This will create an empty BackgroundProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static BackgroundProperty empty();
+
 private:
     std::unique_ptr<BackgroundPropertyPrivate> d;
 };

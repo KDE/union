@@ -62,6 +62,16 @@ public:
      */
     static void resolveProperties(const SizeProperty &source, SizeProperty &destination);
 
+    /**
+     * Create and return an empty SizeProperty instance.
+     *
+     * This will create an empty SizeProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static SizeProperty empty();
+
 private:
     std::unique_ptr<SizePropertyPrivate> d;
 };

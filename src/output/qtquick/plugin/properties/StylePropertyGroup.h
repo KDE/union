@@ -28,6 +28,7 @@ public:
     StylePropertyGroup();
 
     void update(const Union::Properties::StyleProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(PalettePropertyGroup *palette READ palette CONSTANT)
     PalettePropertyGroup *palette() const;
@@ -50,4 +51,5 @@ private:
     std::unique_ptr<TextPropertyGroup> m_text;
     std::unique_ptr<IconPropertyGroup> m_icon;
     std::unique_ptr<BackgroundPropertyGroup> m_background;
+    Union::Properties::StyleProperty m_state;
 };

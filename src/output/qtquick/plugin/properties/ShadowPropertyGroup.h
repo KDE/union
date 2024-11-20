@@ -32,6 +32,7 @@ public:
     ShadowPropertyGroup();
 
     void update(const Union::Properties::ShadowProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(SizePropertyGroup *offsets READ offsets CONSTANT)
     SizePropertyGroup *offsets() const;
@@ -70,4 +71,5 @@ private:
     std::unique_ptr<CornerPropertyGroup> m_topRight;
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;
     std::unique_ptr<CornerPropertyGroup> m_bottomRight;
+    Union::Properties::ShadowProperty m_state;
 };

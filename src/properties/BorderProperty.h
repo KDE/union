@@ -63,6 +63,16 @@ public:
      */
     static void resolveProperties(const BorderProperty &source, BorderProperty &destination);
 
+    /**
+     * Create and return an empty BorderProperty instance.
+     *
+     * This will create an empty BorderProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static BorderProperty empty();
+
 private:
     std::unique_ptr<BorderPropertyPrivate> d;
 };

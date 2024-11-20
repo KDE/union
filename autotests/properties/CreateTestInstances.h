@@ -75,9 +75,30 @@ PaletteProperty testPalettePropertyInstance()
 {
     PaletteProperty instance;
 
-    instance.setForeground(testQColorInstance());
-    instance.setBackground(testQColorInstance());
-    instance.setDecoration(testQColorInstance());
+    instance.setAccent(testQColorInstance());
+    instance.setAlternateBase(testQColorInstance());
+    instance.setBase(testQColorInstance());
+    instance.setBrightText(testQColorInstance());
+    instance.setButton(testQColorInstance());
+    instance.setButtonText(testQColorInstance());
+    instance.setDark(testQColorInstance());
+    instance.setHighlight(testQColorInstance());
+    instance.setHighlightedText(testQColorInstance());
+    instance.setLight(testQColorInstance());
+    instance.setLink(testQColorInstance());
+    instance.setLinkVisited(testQColorInstance());
+    instance.setMid(testQColorInstance());
+    instance.setMidlight(testQColorInstance());
+    instance.setPlaceholderText(testQColorInstance());
+    instance.setShadow(testQColorInstance());
+    instance.setText(testQColorInstance());
+    instance.setToolTipBase(testQColorInstance());
+    instance.setToolTipText(testQColorInstance());
+    instance.setWindow(testQColorInstance());
+    instance.setWindowText(testQColorInstance());
+    instance.setPositive(testQColorInstance());
+    instance.setNeutral(testQColorInstance());
+    instance.setNegative(testQColorInstance());
 
     return instance;
 }
@@ -126,7 +147,6 @@ TextProperty testTextPropertyInstance()
     TextProperty instance;
 
     instance.setAlignment(testAlignmentPropertyInstance());
-    instance.setColor(testQColorInstance());
     instance.setFont(testQFontInstance());
 
     return instance;
@@ -139,7 +159,6 @@ IconProperty testIconPropertyInstance()
     instance.setAlignment(testAlignmentPropertyInstance());
     instance.setWidth(testQrealInstance());
     instance.setHeight(testQrealInstance());
-    instance.setColor(testQColorInstance());
     instance.setName(QString{});
     instance.setSource(QUrl{});
 

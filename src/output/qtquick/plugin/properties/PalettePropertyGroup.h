@@ -9,7 +9,10 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QColor>
+#include <QGuiApplication>
+#include <QQmlComponent>
+#include <QVariant>
+#include <QWindow>
 
 #include <properties/PaletteProperty.h>
 
@@ -24,27 +27,109 @@ public:
     PalettePropertyGroup();
 
     void update(const Union::Properties::PaletteProperty &newState);
+    Q_SIGNAL void updated();
 
-    Q_PROPERTY(QColor foreground READ foreground WRITE setForeground BINDABLE bindableForeground NOTIFY foregroundChanged)
-    QColor foreground() const;
-    void setForeground(const QColor &newValue);
-    QBindable<QColor> bindableForeground();
-    Q_SIGNAL void foregroundChanged();
+    Q_PROPERTY(QColor accent READ accent NOTIFY accentChanged)
+    QColor accent() const;
+    Q_SIGNAL void accentChanged();
 
-    Q_PROPERTY(QColor background READ background WRITE setBackground BINDABLE bindableBackground NOTIFY backgroundChanged)
-    QColor background() const;
-    void setBackground(const QColor &newValue);
-    QBindable<QColor> bindableBackground();
-    Q_SIGNAL void backgroundChanged();
+    Q_PROPERTY(QColor alternateBase READ alternateBase NOTIFY alternateBaseChanged)
+    QColor alternateBase() const;
+    Q_SIGNAL void alternateBaseChanged();
 
-    Q_PROPERTY(QColor decoration READ decoration WRITE setDecoration BINDABLE bindableDecoration NOTIFY decorationChanged)
-    QColor decoration() const;
-    void setDecoration(const QColor &newValue);
-    QBindable<QColor> bindableDecoration();
-    Q_SIGNAL void decorationChanged();
+    Q_PROPERTY(QColor base READ base NOTIFY baseChanged)
+    QColor base() const;
+    Q_SIGNAL void baseChanged();
+
+    Q_PROPERTY(QColor brightText READ brightText NOTIFY brightTextChanged)
+    QColor brightText() const;
+    Q_SIGNAL void brightTextChanged();
+
+    Q_PROPERTY(QColor button READ button NOTIFY buttonChanged)
+    QColor button() const;
+    Q_SIGNAL void buttonChanged();
+
+    Q_PROPERTY(QColor buttonText READ buttonText NOTIFY buttonTextChanged)
+    QColor buttonText() const;
+    Q_SIGNAL void buttonTextChanged();
+
+    Q_PROPERTY(QColor dark READ dark NOTIFY darkChanged)
+    QColor dark() const;
+    Q_SIGNAL void darkChanged();
+
+    Q_PROPERTY(QColor highlight READ highlight NOTIFY highlightChanged)
+    QColor highlight() const;
+    Q_SIGNAL void highlightChanged();
+
+    Q_PROPERTY(QColor highlightedText READ highlightedText NOTIFY highlightedTextChanged)
+    QColor highlightedText() const;
+    Q_SIGNAL void highlightedTextChanged();
+
+    Q_PROPERTY(QColor light READ light NOTIFY lightChanged)
+    QColor light() const;
+    Q_SIGNAL void lightChanged();
+
+    Q_PROPERTY(QColor link READ link NOTIFY linkChanged)
+    QColor link() const;
+    Q_SIGNAL void linkChanged();
+
+    Q_PROPERTY(QColor linkVisited READ linkVisited NOTIFY linkVisitedChanged)
+    QColor linkVisited() const;
+    Q_SIGNAL void linkVisitedChanged();
+
+    Q_PROPERTY(QColor mid READ mid NOTIFY midChanged)
+    QColor mid() const;
+    Q_SIGNAL void midChanged();
+
+    Q_PROPERTY(QColor midlight READ midlight NOTIFY midlightChanged)
+    QColor midlight() const;
+    Q_SIGNAL void midlightChanged();
+
+    Q_PROPERTY(QColor placeholderText READ placeholderText NOTIFY placeholderTextChanged)
+    QColor placeholderText() const;
+    Q_SIGNAL void placeholderTextChanged();
+
+    Q_PROPERTY(QColor shadow READ shadow NOTIFY shadowChanged)
+    QColor shadow() const;
+    Q_SIGNAL void shadowChanged();
+
+    Q_PROPERTY(QColor text READ text NOTIFY textChanged)
+    QColor text() const;
+    Q_SIGNAL void textChanged();
+
+    Q_PROPERTY(QColor toolTipBase READ toolTipBase NOTIFY toolTipBaseChanged)
+    QColor toolTipBase() const;
+    Q_SIGNAL void toolTipBaseChanged();
+
+    Q_PROPERTY(QColor toolTipText READ toolTipText NOTIFY toolTipTextChanged)
+    QColor toolTipText() const;
+    Q_SIGNAL void toolTipTextChanged();
+
+    Q_PROPERTY(QColor window READ window NOTIFY windowChanged)
+    QColor window() const;
+    Q_SIGNAL void windowChanged();
+
+    Q_PROPERTY(QColor windowText READ windowText NOTIFY windowTextChanged)
+    QColor windowText() const;
+    Q_SIGNAL void windowTextChanged();
+
+    Q_PROPERTY(QColor positive READ positive NOTIFY positiveChanged)
+    QColor positive() const;
+    Q_SIGNAL void positiveChanged();
+
+    Q_PROPERTY(QColor neutral READ neutral NOTIFY neutralChanged)
+    QColor neutral() const;
+    Q_SIGNAL void neutralChanged();
+
+    Q_PROPERTY(QColor negative READ negative NOTIFY negativeChanged)
+    QColor negative() const;
+    Q_SIGNAL void negativeChanged();
+
+    Q_PROPERTY(QObject *quickPalette READ quickPalette NOTIFY updated)
+    QObject *quickPalette() const;
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(PalettePropertyGroup, QColor, m_foreground, &PalettePropertyGroup::foregroundChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(PalettePropertyGroup, QColor, m_background, &PalettePropertyGroup::backgroundChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(PalettePropertyGroup, QColor, m_decoration, &PalettePropertyGroup::decorationChanged)
+    Union::Properties::PaletteProperty m_state;
+    QObject *m_palette = nullptr;
+    QQmlComponent *m_component = nullptr;
 };

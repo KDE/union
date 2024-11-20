@@ -27,26 +27,21 @@ public:
     LayoutPropertyGroup();
 
     void update(const Union::Properties::LayoutProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
-    Q_PROPERTY(qreal width READ width WRITE setWidth BINDABLE bindableWidth NOTIFY widthChanged)
+    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
     qreal width() const;
-    void setWidth(const qreal &newValue);
-    QBindable<qreal> bindableWidth();
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height WRITE setHeight BINDABLE bindableHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
     qreal height() const;
-    void setHeight(const qreal &newValue);
-    QBindable<qreal> bindableHeight();
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(qreal spacing READ spacing WRITE setSpacing BINDABLE bindableSpacing NOTIFY spacingChanged)
+    Q_PROPERTY(qreal spacing READ spacing NOTIFY spacingChanged)
     qreal spacing() const;
-    void setSpacing(const qreal &newValue);
-    QBindable<qreal> bindableSpacing();
     Q_SIGNAL void spacingChanged();
 
     Q_PROPERTY(SizePropertyGroup *padding READ padding CONSTANT)
@@ -60,10 +55,8 @@ public:
 
 private:
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
-    Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_width, &LayoutPropertyGroup::widthChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_height, &LayoutPropertyGroup::heightChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(LayoutPropertyGroup, qreal, m_spacing, &LayoutPropertyGroup::spacingChanged)
     std::unique_ptr<SizePropertyGroup> m_padding;
     std::unique_ptr<SizePropertyGroup> m_inset;
     std::unique_ptr<SizePropertyGroup> m_margins;
+    Union::Properties::LayoutProperty m_state;
 };

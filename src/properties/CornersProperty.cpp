@@ -4,6 +4,8 @@
 
 #include "CornersProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -166,6 +168,16 @@ void CornersProperty::resolveProperties(const CornersProperty &source, CornersPr
             destination.d->bottomRight = value;
         }
     }
+}
+
+CornersProperty CornersProperty::empty()
+{
+    CornersProperty result;
+    result.d->topLeft = CornerProperty::empty();
+    result.d->topRight = CornerProperty::empty();
+    result.d->bottomLeft = CornerProperty::empty();
+    result.d->bottomRight = CornerProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const CornersProperty &left, const CornersProperty &right)

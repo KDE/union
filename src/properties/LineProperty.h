@@ -65,6 +65,16 @@ public:
      */
     static void resolveProperties(const LineProperty &source, LineProperty &destination);
 
+    /**
+     * Create and return an empty LineProperty instance.
+     *
+     * This will create an empty LineProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static LineProperty empty();
+
 private:
     std::unique_ptr<LinePropertyPrivate> d;
 };

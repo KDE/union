@@ -14,71 +14,34 @@ CornerPropertyGroup::CornerPropertyGroup()
 
 void CornerPropertyGroup::update(const CornerProperty &newState)
 {
-    m_radius = newState.radius().value_or(qreal{});
-    m_width = newState.width().value_or(qreal{});
-    m_height = newState.height().value_or(qreal{});
-    m_color = newState.color().value_or(QColor{});
+    m_state = newState;
+    Q_EMIT radiusChanged();
+    Q_EMIT widthChanged();
+    Q_EMIT heightChanged();
+    Q_EMIT colorChanged();
     m_image->update(newState.image().value_or(ImageProperty{}));
+
+    Q_EMIT updated();
 }
 
 qreal CornerPropertyGroup::radius() const
 {
-    return m_radius;
-}
-
-void CornerPropertyGroup::setRadius(const qreal &newValue)
-{
-    m_radius = newValue;
-}
-
-QBindable<qreal> CornerPropertyGroup::bindableRadius()
-{
-    return QBindable<qreal>(&m_radius);
+    return m_state.radius().value_or(qreal{});
 }
 
 qreal CornerPropertyGroup::width() const
 {
-    return m_width;
-}
-
-void CornerPropertyGroup::setWidth(const qreal &newValue)
-{
-    m_width = newValue;
-}
-
-QBindable<qreal> CornerPropertyGroup::bindableWidth()
-{
-    return QBindable<qreal>(&m_width);
+    return m_state.width().value_or(qreal{});
 }
 
 qreal CornerPropertyGroup::height() const
 {
-    return m_height;
-}
-
-void CornerPropertyGroup::setHeight(const qreal &newValue)
-{
-    m_height = newValue;
-}
-
-QBindable<qreal> CornerPropertyGroup::bindableHeight()
-{
-    return QBindable<qreal>(&m_height);
+    return m_state.height().value_or(qreal{});
 }
 
 QColor CornerPropertyGroup::color() const
 {
-    return m_color;
-}
-
-void CornerPropertyGroup::setColor(const QColor &newValue)
-{
-    m_color = newValue;
-}
-
-QBindable<QColor> CornerPropertyGroup::bindableColor()
-{
-    return QBindable<QColor>(&m_color);
+    return m_state.color().value_or(QColor{});
 }
 
 ImagePropertyGroup *CornerPropertyGroup::image() const

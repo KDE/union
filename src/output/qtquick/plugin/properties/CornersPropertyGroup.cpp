@@ -17,10 +17,13 @@ CornersPropertyGroup::CornersPropertyGroup()
 
 void CornersPropertyGroup::update(const CornersProperty &newState)
 {
+    m_state = newState;
     m_topLeft->update(newState.topLeft().value_or(CornerProperty{}));
     m_topRight->update(newState.topRight().value_or(CornerProperty{}));
     m_bottomLeft->update(newState.bottomLeft().value_or(CornerProperty{}));
     m_bottomRight->update(newState.bottomRight().value_or(CornerProperty{}));
+
+    Q_EMIT updated();
 }
 
 CornerPropertyGroup *CornersPropertyGroup::topLeft() const

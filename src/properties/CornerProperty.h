@@ -67,6 +67,16 @@ public:
      */
     static void resolveProperties(const CornerProperty &source, CornerProperty &destination);
 
+    /**
+     * Create and return an empty CornerProperty instance.
+     *
+     * This will create an empty CornerProperty instance, which is defined as
+     * an instance with all of its values default-constructed. Note that this is
+     * different from a default-constructed instance which will have all its
+     * values unset.
+     */
+    static CornerProperty empty();
+
 private:
     std::unique_ptr<CornerPropertyPrivate> d;
 };

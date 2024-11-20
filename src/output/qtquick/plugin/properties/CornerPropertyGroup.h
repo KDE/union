@@ -9,7 +9,6 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QColor>
 
 #include <properties/CornerProperty.h>
 
@@ -25,38 +24,28 @@ public:
     CornerPropertyGroup();
 
     void update(const Union::Properties::CornerProperty &newState);
+    Q_SIGNAL void updated();
 
-    Q_PROPERTY(qreal radius READ radius WRITE setRadius BINDABLE bindableRadius NOTIFY radiusChanged)
+    Q_PROPERTY(qreal radius READ radius NOTIFY radiusChanged)
     qreal radius() const;
-    void setRadius(const qreal &newValue);
-    QBindable<qreal> bindableRadius();
     Q_SIGNAL void radiusChanged();
 
-    Q_PROPERTY(qreal width READ width WRITE setWidth BINDABLE bindableWidth NOTIFY widthChanged)
+    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
     qreal width() const;
-    void setWidth(const qreal &newValue);
-    QBindable<qreal> bindableWidth();
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height WRITE setHeight BINDABLE bindableHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
     qreal height() const;
-    void setHeight(const qreal &newValue);
-    QBindable<qreal> bindableHeight();
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(QColor color READ color WRITE setColor BINDABLE bindableColor NOTIFY colorChanged)
+    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
     QColor color() const;
-    void setColor(const QColor &newValue);
-    QBindable<QColor> bindableColor();
     Q_SIGNAL void colorChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
 private:
-    Q_OBJECT_BINDABLE_PROPERTY(CornerPropertyGroup, qreal, m_radius, &CornerPropertyGroup::radiusChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(CornerPropertyGroup, qreal, m_width, &CornerPropertyGroup::widthChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(CornerPropertyGroup, qreal, m_height, &CornerPropertyGroup::heightChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(CornerPropertyGroup, QColor, m_color, &CornerPropertyGroup::colorChanged)
     std::unique_ptr<ImagePropertyGroup> m_image;
+    Union::Properties::CornerProperty m_state;
 };

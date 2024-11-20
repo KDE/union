@@ -4,6 +4,8 @@
 
 #include "LayoutProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -232,6 +234,19 @@ void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutPrope
             destination.d->margins = value;
         }
     }
+}
+
+LayoutProperty LayoutProperty::empty()
+{
+    LayoutProperty result;
+    result.d->alignment = AlignmentProperty::empty();
+    result.d->width = emptyValue<qreal>();
+    result.d->height = emptyValue<qreal>();
+    result.d->spacing = emptyValue<qreal>();
+    result.d->padding = SizeProperty::empty();
+    result.d->inset = SizeProperty::empty();
+    result.d->margins = SizeProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const LayoutProperty &left, const LayoutProperty &right)

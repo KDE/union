@@ -17,10 +17,13 @@ BorderPropertyGroup::BorderPropertyGroup()
 
 void BorderPropertyGroup::update(const BorderProperty &newState)
 {
+    m_state = newState;
     m_left->update(newState.left().value_or(LineProperty{}));
     m_right->update(newState.right().value_or(LineProperty{}));
     m_top->update(newState.top().value_or(LineProperty{}));
     m_bottom->update(newState.bottom().value_or(LineProperty{}));
+
+    Q_EMIT updated();
 }
 
 LinePropertyGroup *BorderPropertyGroup::left() const

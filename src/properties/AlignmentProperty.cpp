@@ -4,6 +4,8 @@
 
 #include "AlignmentProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -138,6 +140,16 @@ void AlignmentProperty::resolveProperties(const AlignmentProperty &source, Align
     if (!destination.d->order.has_value()) {
         destination.d->order = source.d->order;
     }
+}
+
+AlignmentProperty AlignmentProperty::empty()
+{
+    AlignmentProperty result;
+    result.d->container = emptyValue<Union::Properties::AlignmentContainer>();
+    result.d->horizontal = emptyValue<Union::Properties::Alignment>();
+    result.d->vertical = emptyValue<Union::Properties::Alignment>();
+    result.d->order = emptyValue<int>();
+    return result;
 }
 
 bool Union::Properties::operator==(const AlignmentProperty &left, const AlignmentProperty &right)

@@ -9,9 +9,6 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QColor>
-#include <QString>
-#include <QUrl>
 
 #include <properties/IconProperty.h>
 
@@ -27,45 +24,28 @@ public:
     IconPropertyGroup();
 
     void update(const Union::Properties::IconProperty &newState);
+    Q_SIGNAL void updated();
 
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
-    Q_PROPERTY(qreal width READ width WRITE setWidth BINDABLE bindableWidth NOTIFY widthChanged)
+    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
     qreal width() const;
-    void setWidth(const qreal &newValue);
-    QBindable<qreal> bindableWidth();
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height WRITE setHeight BINDABLE bindableHeight NOTIFY heightChanged)
+    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
     qreal height() const;
-    void setHeight(const qreal &newValue);
-    QBindable<qreal> bindableHeight();
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(QColor color READ color WRITE setColor BINDABLE bindableColor NOTIFY colorChanged)
-    QColor color() const;
-    void setColor(const QColor &newValue);
-    QBindable<QColor> bindableColor();
-    Q_SIGNAL void colorChanged();
-
-    Q_PROPERTY(QString name READ name WRITE setName BINDABLE bindableName NOTIFY nameChanged)
+    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
     QString name() const;
-    void setName(const QString &newValue);
-    QBindable<QString> bindableName();
     Q_SIGNAL void nameChanged();
 
-    Q_PROPERTY(QUrl source READ source WRITE setSource BINDABLE bindableSource NOTIFY sourceChanged)
+    Q_PROPERTY(QUrl source READ source NOTIFY sourceChanged)
     QUrl source() const;
-    void setSource(const QUrl &newValue);
-    QBindable<QUrl> bindableSource();
     Q_SIGNAL void sourceChanged();
 
 private:
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
-    Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, qreal, m_width, &IconPropertyGroup::widthChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, qreal, m_height, &IconPropertyGroup::heightChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, QColor, m_color, &IconPropertyGroup::colorChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, QString, m_name, &IconPropertyGroup::nameChanged)
-    Q_OBJECT_BINDABLE_PROPERTY(IconPropertyGroup, QUrl, m_source, &IconPropertyGroup::sourceChanged)
+    Union::Properties::IconProperty m_state;
 };

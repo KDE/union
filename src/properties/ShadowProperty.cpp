@@ -4,6 +4,8 @@
 
 #include "ShadowProperty.h"
 
+#include "PropertiesTypes.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
@@ -311,6 +313,21 @@ void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowPrope
             destination.d->bottomRight = value;
         }
     }
+}
+
+ShadowProperty ShadowProperty::empty()
+{
+    ShadowProperty result;
+    result.d->offsets = SizeProperty::empty();
+    result.d->left = LineProperty::empty();
+    result.d->right = LineProperty::empty();
+    result.d->top = LineProperty::empty();
+    result.d->bottom = LineProperty::empty();
+    result.d->topLeft = CornerProperty::empty();
+    result.d->topRight = CornerProperty::empty();
+    result.d->bottomLeft = CornerProperty::empty();
+    result.d->bottomRight = CornerProperty::empty();
+    return result;
 }
 
 bool Union::Properties::operator==(const ShadowProperty &left, const ShadowProperty &right)

@@ -20,9 +20,30 @@ private Q_SLOTS:
         PaletteProperty property;
 
         // An empty instance should have no values set.
-        QVERIFY(!property.foreground().has_value());
-        QVERIFY(!property.background().has_value());
-        QVERIFY(!property.decoration().has_value());
+        QVERIFY(!property.accent().has_value());
+        QVERIFY(!property.alternateBase().has_value());
+        QVERIFY(!property.base().has_value());
+        QVERIFY(!property.brightText().has_value());
+        QVERIFY(!property.button().has_value());
+        QVERIFY(!property.buttonText().has_value());
+        QVERIFY(!property.dark().has_value());
+        QVERIFY(!property.highlight().has_value());
+        QVERIFY(!property.highlightedText().has_value());
+        QVERIFY(!property.light().has_value());
+        QVERIFY(!property.link().has_value());
+        QVERIFY(!property.linkVisited().has_value());
+        QVERIFY(!property.mid().has_value());
+        QVERIFY(!property.midlight().has_value());
+        QVERIFY(!property.placeholderText().has_value());
+        QVERIFY(!property.shadow().has_value());
+        QVERIFY(!property.text().has_value());
+        QVERIFY(!property.toolTipBase().has_value());
+        QVERIFY(!property.toolTipText().has_value());
+        QVERIFY(!property.window().has_value());
+        QVERIFY(!property.windowText().has_value());
+        QVERIFY(!property.positive().has_value());
+        QVERIFY(!property.neutral().has_value());
+        QVERIFY(!property.negative().has_value());
     }
 
     void testHasAnyValue()
@@ -34,23 +55,170 @@ private Q_SLOTS:
 
         {
             QColor value;
-            property.setForeground(value);
+            property.setAccent(value);
             QVERIFY(property.hasAnyValue());
-            property.setForeground(std::nullopt);
+            property.setAccent(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
         {
             QColor value;
-            property.setBackground(value);
+            property.setAlternateBase(value);
             QVERIFY(property.hasAnyValue());
-            property.setBackground(std::nullopt);
+            property.setAlternateBase(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
         {
             QColor value;
-            property.setDecoration(value);
+            property.setBase(value);
             QVERIFY(property.hasAnyValue());
-            property.setDecoration(std::nullopt);
+            property.setBase(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setBrightText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setBrightText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setButton(value);
+            QVERIFY(property.hasAnyValue());
+            property.setButton(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setButtonText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setButtonText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setDark(value);
+            QVERIFY(property.hasAnyValue());
+            property.setDark(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setHighlight(value);
+            QVERIFY(property.hasAnyValue());
+            property.setHighlight(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setHighlightedText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setHighlightedText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setLight(value);
+            QVERIFY(property.hasAnyValue());
+            property.setLight(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setLink(value);
+            QVERIFY(property.hasAnyValue());
+            property.setLink(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setLinkVisited(value);
+            QVERIFY(property.hasAnyValue());
+            property.setLinkVisited(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setMid(value);
+            QVERIFY(property.hasAnyValue());
+            property.setMid(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setMidlight(value);
+            QVERIFY(property.hasAnyValue());
+            property.setMidlight(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setPlaceholderText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setPlaceholderText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setShadow(value);
+            QVERIFY(property.hasAnyValue());
+            property.setShadow(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setToolTipBase(value);
+            QVERIFY(property.hasAnyValue());
+            property.setToolTipBase(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setToolTipText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setToolTipText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setWindow(value);
+            QVERIFY(property.hasAnyValue());
+            property.setWindow(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setWindowText(value);
+            QVERIFY(property.hasAnyValue());
+            property.setWindowText(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setPositive(value);
+            QVERIFY(property.hasAnyValue());
+            property.setPositive(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setNeutral(value);
+            QVERIFY(property.hasAnyValue());
+            property.setNeutral(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setNegative(value);
+            QVERIFY(property.hasAnyValue());
+            property.setNegative(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
     }
@@ -68,9 +236,30 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-        source.setForeground(QColor{});
-        source.setBackground(QColor{});
-        source.setDecoration(QColor{});
+        source.setAccent(QColor{});
+        source.setAlternateBase(QColor{});
+        source.setBase(QColor{});
+        source.setBrightText(QColor{});
+        source.setButton(QColor{});
+        source.setButtonText(QColor{});
+        source.setDark(QColor{});
+        source.setHighlight(QColor{});
+        source.setHighlightedText(QColor{});
+        source.setLight(QColor{});
+        source.setLink(QColor{});
+        source.setLinkVisited(QColor{});
+        source.setMid(QColor{});
+        source.setMidlight(QColor{});
+        source.setPlaceholderText(QColor{});
+        source.setShadow(QColor{});
+        source.setText(QColor{});
+        source.setToolTipBase(QColor{});
+        source.setToolTipText(QColor{});
+        source.setWindow(QColor{});
+        source.setWindowText(QColor{});
+        source.setPositive(QColor{});
+        source.setNeutral(QColor{});
+        source.setNegative(QColor{});
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());
@@ -79,9 +268,30 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
-        QCOMPARE(destination.foreground(), source.foreground());
-        QCOMPARE(destination.background(), source.background());
-        QCOMPARE(destination.decoration(), source.decoration());
+        QCOMPARE(destination.accent(), source.accent());
+        QCOMPARE(destination.alternateBase(), source.alternateBase());
+        QCOMPARE(destination.base(), source.base());
+        QCOMPARE(destination.brightText(), source.brightText());
+        QCOMPARE(destination.button(), source.button());
+        QCOMPARE(destination.buttonText(), source.buttonText());
+        QCOMPARE(destination.dark(), source.dark());
+        QCOMPARE(destination.highlight(), source.highlight());
+        QCOMPARE(destination.highlightedText(), source.highlightedText());
+        QCOMPARE(destination.light(), source.light());
+        QCOMPARE(destination.link(), source.link());
+        QCOMPARE(destination.linkVisited(), source.linkVisited());
+        QCOMPARE(destination.mid(), source.mid());
+        QCOMPARE(destination.midlight(), source.midlight());
+        QCOMPARE(destination.placeholderText(), source.placeholderText());
+        QCOMPARE(destination.shadow(), source.shadow());
+        QCOMPARE(destination.text(), source.text());
+        QCOMPARE(destination.toolTipBase(), source.toolTipBase());
+        QCOMPARE(destination.toolTipText(), source.toolTipText());
+        QCOMPARE(destination.window(), source.window());
+        QCOMPARE(destination.windowText(), source.windowText());
+        QCOMPARE(destination.positive(), source.positive());
+        QCOMPARE(destination.neutral(), source.neutral());
+        QCOMPARE(destination.negative(), source.negative());
     }
 };
 

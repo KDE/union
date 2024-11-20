@@ -14,9 +14,11 @@ TextPropertyGroup::TextPropertyGroup()
 
 void TextPropertyGroup::update(const TextProperty &newState)
 {
+    m_state = newState;
     m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
-    m_color = newState.color().value_or(QColor{});
-    m_font = newState.font().value_or(QFont{});
+    Q_EMIT fontChanged();
+
+    Q_EMIT updated();
 }
 
 AlignmentPropertyGroup *TextPropertyGroup::alignment() const
@@ -24,34 +26,9 @@ AlignmentPropertyGroup *TextPropertyGroup::alignment() const
     return m_alignment.get();
 }
 
-QColor TextPropertyGroup::color() const
-{
-    return m_color;
-}
-
-void TextPropertyGroup::setColor(const QColor &newValue)
-{
-    m_color = newValue;
-}
-
-QBindable<QColor> TextPropertyGroup::bindableColor()
-{
-    return QBindable<QColor>(&m_color);
-}
-
 QFont TextPropertyGroup::font() const
 {
-    return m_font;
-}
-
-void TextPropertyGroup::setFont(const QFont &newValue)
-{
-    m_font = newValue;
-}
-
-QBindable<QFont> TextPropertyGroup::bindableFont()
-{
-    return QBindable<QFont>(&m_font);
+    return m_state.font().value_or(QFont{});
 }
 
 #include "moc_TextPropertyGroup.cpp"
