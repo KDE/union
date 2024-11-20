@@ -257,9 +257,12 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(const SelectorList &selectors, ryml:
     with_child(node, "icon", [&](auto node) {
         properties.setIcon(createIconProperty(node, context));
     });
+
     with_child(node, "background", [&](auto node) {
         properties.setBackground(createBackgroundProperty(node, context));
     });
+
+    properties.setPalette(createPaletteProperty(context));
 
     if (properties.hasAnyValue()) {
         style->setProperties(properties);
@@ -384,6 +387,36 @@ std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml
     });
 
     return background;
+}
+
+std::optional<Union::Properties::PaletteProperty> PlasmaSvgLoader::createPaletteProperty(LoadingContext &context)
+{
+    if (context.data.colorGroups.isEmpty() && context.data.colorSets.isEmpty()) {
+        return std::nullopt;
+    }
+
+    Union::Properties::PaletteProperty palette;
+
+    auto colorSet = context.colorSet();
+    if (colorSet == Union::Element::ColorSet::None) {
+        colorSet = Union::Element::ColorSet::Window;
+    }
+
+    KColorScheme colorScheme{context.colorGroup(), static_cast<KColorScheme::ColorSet>(static_cast<int>(colorSet) - 1)};
+    palette.setAccent(colorScheme.decoration(KColorScheme::HoverColor).color());
+    palette.setAlternateBase(colorScheme.background(KColorScheme::AlternateBackground).color());
+    palette.setBase(colorScheme.background(KColorScheme::NormalBackground).color());
+    palette.setBrightText(colorScheme.foreground(KColorScheme::ActiveText).color());
+    palette.setButton(colorScheme.background(KColorScheme::NormalBackground).color());
+    palette.setButtonText(colorScheme.foreground(KColorScheme::NormalText).color());
+    palette.setHighlight(colorScheme.background(KColorScheme::ActiveBackground).color());
+    palette.setHighlightedText(colorScheme.foreground(KColorScheme::ActiveText).color());
+    palette.setLink(colorScheme.foreground(KColorScheme::LinkText).color());
+    palette.setText(colorScheme.foreground(KColorScheme::NormalText).color());
+    palette.setWindow(colorScheme.background(KColorScheme::NormalBackground).color());
+    palette.setWindowText(colorScheme.foreground(KColorScheme::NormalText).color());
+
+    return palette;
 }
 
 std::optional<Union::Properties::AlignmentProperty> PlasmaSvgLoader::createAlignmentProperty(ryml::ConstNodeRef node, LoadingContext &context)
