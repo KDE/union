@@ -37,6 +37,12 @@ spinbox-indicator-decrease:
 
     icon:
         name: spinbox-decrease
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
 
     background:
         border:
@@ -65,6 +71,12 @@ spinbox-indicator-increase:
 
     icon:
         name: spinbox-increase
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
 
     background:
         border:
