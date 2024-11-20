@@ -37,7 +37,6 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 {% if extra_code and "update" in extra_code %}
 {{ extra_code["update"] | render }}
 {% endif %}
-
     Q_EMIT updated();
 }
 

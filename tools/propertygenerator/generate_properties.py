@@ -173,6 +173,7 @@ if __name__ == "__main__":
         loader=jinja2.FileSystemLoader(base_directory),
         autoescape=False,
         trim_blocks=True,
+        lstrip_blocks=True,
     )
     jinja_env.filters["ucfirst"] = ucfirst
     jinja_env.filters["render"] = render_template_filter
