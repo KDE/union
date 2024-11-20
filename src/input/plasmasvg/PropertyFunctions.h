@@ -105,6 +105,10 @@ inline static QHash<QByteArray, PropertyFunction> propertyFunctions{
 template<typename T>
 inline Result<T> constantValue(ryml::ConstNodeRef node)
 {
+    if (value<QByteArrayView>(node) == "empty") {
+        return Union::Properties::emptyValue<T>();
+    }
+
     try {
         return value<T>(node);
     } catch (RymlException &exception) {

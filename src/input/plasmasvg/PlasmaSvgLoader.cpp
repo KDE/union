@@ -51,6 +51,16 @@ std::optional<T> readPropertyValue(QByteArrayView valueName, ryml::ConstNodeRef 
     }
 }
 
+template<typename T>
+std::optional<T> emptyOrNull(ryml::ConstNodeRef node)
+{
+    if (value<QByteArrayView>(node) == "empty") {
+        return T::empty();
+    }
+
+    return std::nullopt;
+}
+
 bool PlasmaSvgLoader::load(Theme::Ptr theme)
 {
     QDir dir(u":/org/kde/union/input/plasmasvg"_s);
@@ -313,7 +323,7 @@ std::optional<LayoutProperty> PlasmaSvgLoader::createLayoutProperty(ryml::ConstN
 std::optional<TextProperty> PlasmaSvgLoader::createTextProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<TextProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "text");
@@ -329,10 +339,10 @@ std::optional<TextProperty> PlasmaSvgLoader::createTextProperty(ryml::ConstNodeR
     return text;
 }
 
-std::optional<Union::Properties::IconProperty> PlasmaSvgLoader::createIconProperty(ryml::ConstNodeRef node, LoadingContext &context)
+std::optional<IconProperty> PlasmaSvgLoader::createIconProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<IconProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "icon");
@@ -360,7 +370,7 @@ std::optional<Union::Properties::IconProperty> PlasmaSvgLoader::createIconProper
 std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<BackgroundProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "background");
@@ -419,10 +429,10 @@ std::optional<Union::Properties::PaletteProperty> PlasmaSvgLoader::createPalette
     return palette;
 }
 
-std::optional<Union::Properties::AlignmentProperty> PlasmaSvgLoader::createAlignmentProperty(ryml::ConstNodeRef node, LoadingContext &context)
+std::optional<AlignmentProperty> PlasmaSvgLoader::createAlignmentProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<AlignmentProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "alignment");
@@ -446,7 +456,7 @@ std::optional<Union::Properties::AlignmentProperty> PlasmaSvgLoader::createAlign
 std::optional<SizeProperty> PlasmaSvgLoader::createSizeProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<SizeProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "size");
@@ -467,7 +477,7 @@ std::optional<SizeProperty> PlasmaSvgLoader::createSizeProperty(ryml::ConstNodeR
 std::optional<BorderProperty> PlasmaSvgLoader::createBorderProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<BorderProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node);
@@ -488,7 +498,7 @@ std::optional<BorderProperty> PlasmaSvgLoader::createBorderProperty(ryml::ConstN
 std::optional<CornersProperty> PlasmaSvgLoader::createCornersProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<CornersProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node);
@@ -509,7 +519,7 @@ std::optional<CornersProperty> PlasmaSvgLoader::createCornersProperty(ryml::Cons
 std::optional<LineProperty> PlasmaSvgLoader::createLineProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<LineProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "line");
@@ -527,7 +537,7 @@ std::optional<LineProperty> PlasmaSvgLoader::createLineProperty(ryml::ConstNodeR
 std::optional<CornerProperty> PlasmaSvgLoader::createCornerProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<CornerProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node);
@@ -549,12 +559,12 @@ std::optional<CornerProperty> PlasmaSvgLoader::createCornerProperty(ryml::ConstN
 std::optional<ImageProperty> PlasmaSvgLoader::createImageProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<ImageProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node, "image");
 
-    auto data = readPropertyValue<QImage>("data", node, context);
+    auto data = readPropertyValue<QImage>("imageData", node, context);
     if (!data.has_value()) {
         return std::nullopt;
     }
@@ -570,7 +580,7 @@ std::optional<ImageProperty> PlasmaSvgLoader::createImageProperty(ryml::ConstNod
 std::optional<ShadowProperty> PlasmaSvgLoader::createShadowProperty(ryml::ConstNodeRef node, LoadingContext &context)
 {
     if (!node.is_map()) {
-        return std::nullopt;
+        return emptyOrNull<ShadowProperty>(node);
     }
 
     auto cleanup = context.pushFromNode(node);
