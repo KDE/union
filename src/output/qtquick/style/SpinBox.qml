@@ -35,6 +35,7 @@ T.SpinBox {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
     editable: true
     wheelEnabled: true
@@ -75,6 +76,7 @@ T.SpinBox {
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
+            enabled: control.up?.enabled ?? true
         }
 
         QQCImpl.IconImage {
@@ -82,7 +84,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
+            color: palette.buttonText
         }
     }
 
@@ -93,6 +95,7 @@ T.SpinBox {
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
+            enabled: control.down?.enabled ?? true
         }
 
         QQCImpl.IconImage {
@@ -100,7 +103,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
+            color: palette.buttonText
         }
     }
 

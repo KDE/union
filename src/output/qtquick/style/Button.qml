@@ -63,11 +63,12 @@ T.Button {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
     spacing: Union.Style.properties.layout.spacing
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: palette.buttonText
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -95,7 +96,7 @@ T.Button {
 
             text: control.text
             font: control.font
-            color: Union.Style.properties.text.color
+            color: control.palette.buttonText
 
             visible: control.display != T.AbstractButton.IconOnly
         }

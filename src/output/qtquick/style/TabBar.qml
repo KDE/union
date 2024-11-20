@@ -37,6 +37,7 @@ T.TabBar {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
     contentItem: ListView {
         implicitWidth: contentWidth

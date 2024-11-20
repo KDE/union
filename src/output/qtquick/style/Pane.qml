@@ -32,5 +32,7 @@ T.Pane {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
+    palette: Union.Style.properties.palette.quickPalette
+
     background: Union.StyledRectangle {}
 }
