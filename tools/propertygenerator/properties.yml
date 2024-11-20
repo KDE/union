@@ -47,14 +47,12 @@ layout:
 
 text:
     alignment: *alignment
-    color: QColor
     font: QFont
 
 icon:
     alignment: *alignment
     width: qreal
     height: qreal
-    color: QColor
     name: QString
     source: QUrl
 

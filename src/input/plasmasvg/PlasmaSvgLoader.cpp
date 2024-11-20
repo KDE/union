@@ -344,9 +344,6 @@ std::optional<Union::Properties::IconProperty> PlasmaSvgLoader::createIconProper
     with_child(node, "height", [&](auto node) {
         icon.setHeight(readPropertyValue<qreal>("height", node, context));
     });
-    with_child(node, "color", [&](auto node) {
-        icon.setColor(readPropertyValue<QColor>("color", node, context));
-    });
     with_child(node, "name", [&](auto node) {
         icon.setName(readPropertyValue<QString>("name", node, context));
     });
