@@ -47,20 +47,20 @@ QList<StyleRule::Ptr> ElementQuery::matchedRules() const
 
 bool ElementQuery::execute()
 {
-    qCDebug(UNION_QUERY) << "Trying to match" << d->elements;
+    qCInfo(UNION_QUERY) << "Trying to match" << d->elements;
 
     d->styles = d->theme->matches(d->elements);
 
     if (d->styles.isEmpty()) {
-        qCDebug(UNION_QUERY) << "Did not match any style rules!";
+        qCInfo(UNION_QUERY) << "Did not match any style rules!";
         d->properties = std::nullopt;
         return false;
     }
 
-    if (UNION_QUERY().isDebugEnabled()) {
-        qCDebug(UNION_QUERY) << "Matched style rules:";
+    if (UNION_QUERY().isInfoEnabled()) {
+        qCInfo(UNION_QUERY) << "Matched style rules:";
         for (auto entry : std::as_const(d->styles)) {
-            qCDebug(UNION_QUERY) << entry;
+            qCInfo(UNION_QUERY) << entry;
         }
     }
 

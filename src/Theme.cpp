@@ -74,7 +74,7 @@ bool Theme::load()
 
 void Theme::insert(StyleRule::Ptr style)
 {
-    qCDebug(UNION_QUERY) << "Insert" << style;
+    qCInfo(UNION_QUERY) << "Insert" << style;
     d->styles.append(style);
 }
 
@@ -88,7 +88,7 @@ QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
     QList<StyleRule::Ptr> result;
 
     if (d->styles.isEmpty()) {
-        qCDebug(UNION_QUERY) << "No style rules found for theme" << d->themeName << "so we will never match anything!";
+        qCInfo(UNION_QUERY) << "No style rules found for theme" << d->themeName << "so we will never match anything!";
     }
 
     for (auto style : d->styles) {
