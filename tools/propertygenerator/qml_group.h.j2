@@ -41,6 +41,7 @@ public:
     {{ type_name }}Group();
 
     void update(const Union::Properties::{{ type_name }} &newState);
+    Q_SIGNAL void updated();
 
 {% for value in values %}
 {% if value.is_property %}
