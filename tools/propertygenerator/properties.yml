@@ -1,8 +1,28 @@
 palette:
-    foreground: QColor
-    background: QColor
-    decoration: QColor
-    # TODO: Add more QColors
+    accent: QColor
+    alternateBase: QColor
+    base: QColor
+    brightText: QColor
+    button: QColor
+    buttonText: QColor
+    dark: QColor
+    highlight: QColor
+    highlightedText: QColor
+    light: QColor
+    link: QColor
+    linkVisited: QColor
+    mid: QColor
+    midlight: QColor
+    placeholderText: QColor
+    shadow: QColor
+    text: QColor
+    toolTipBase: QColor
+    toolTipText: QColor
+    window: QColor
+    windowText: QColor
+    positive: QColor
+    neutral: QColor
+    negative: QColor
 
 layout:
     alignment: &alignment
