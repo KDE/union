@@ -24,6 +24,50 @@ palette:
     neutral: QColor
     negative: QColor
 
+    _extra_system_includes:
+        "qml_group.h.j2":
+        -   "QVariant"
+        -   "QQmlComponent"
+        -   "QGuiApplication"
+        -   "QWindow"
+    _extra_code:
+        "qml_group.h.j2":
+            public: |4
+                    Q_PROPERTY(QObject *quickPalette READ quickPalette NOTIFY updated)
+                    QObject *quickPalette() const;
+
+            private: |4
+                    QObject *m_palette = nullptr;
+                    QQmlComponent *m_component = nullptr;
+
+        "qml_group.cpp.j2":
+            update: |4
+                    if (!m_component) {
+                        // Dirty hack to get at the main QML engine.
+                        m_component = new QQmlComponent(qmlEngine(qGuiApp->allWindows().first()));
+                        m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
+                    }
+
+                    if (m_palette) {
+                        delete m_palette;
+                    }
+
+                    m_palette = m_component->create();
+                    {% for value in values %}
+                    {% if value.name not in ["positive", "neutral", "negative"] %}
+
+                    if (m_state.{{ value.name }}()) {
+                        m_palette->setProperty("{{ value.name }}", QVariant::fromValue(m_state.{{ value.name }}().value()));
+                    }
+                    {% endif %}
+                    {% endfor %}
+
+            global: |
+                QObject *{{ type_name }}Group::quickPalette() const
+                {
+                    return m_palette;
+                }
+
 layout:
     alignment: &alignment
         container: Union::Properties::AlignmentContainer
