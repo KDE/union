@@ -8,7 +8,7 @@
 */
 
 import QtQuick
-import QtQuick.Controls.impl as QCCImpl
+import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
@@ -16,9 +16,9 @@ T.ToolButton {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
+                            Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
+                             Union.Positioner.implicitHeight)
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -33,11 +33,29 @@ T.ToolButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.attributes: {
+        let result = {}
+        switch (display) {
+            case T.AbstractButton.IconOnly:
+                result.display = "icon-only"
+                break
+            case T.AbstractButton.TextOnly:
+                result.display = "text-only"
+                break
+            case T.AbstractButton.TextBesideIcon:
+                result.display = "text-beside-icon"
+                break
+            case T.AbstractButton.TextUnderIcon:
+                result.display = "text-under-icon"
+                break
+        }
+        return result
+    }
 
-    leftPadding: Union.Style.properties.layout.padding.left
-    rightPadding: Union.Style.properties.layout.padding.right
-    topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: Union.Style.properties.layout.padding.bottom
+    leftPadding: Union.Positioner.padding.left
+    rightPadding: Union.Positioner.padding.right
+    topPadding: Union.Positioner.padding.top
+    bottomPadding:  Union.Positioner.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
@@ -47,9 +65,10 @@ T.ToolButton {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: palette.buttonText
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -57,14 +76,31 @@ T.ToolButton {
     }
     flat: true
 
-    contentItem: QCCImpl.IconLabel {
-        spacing: control.spacing
-        mirrored: control.mirrored
-        display: control.display
-        icon: control.icon
-        text: control.text
-        font: control.font
-        color: control.palette.buttonText
+    Union.Positioner.positionItems: [contentItem]
+
+    contentItem: Item {
+        Union.PositionedItem.positionChildren: true
+
+        QQCImpl.IconImage {
+            Union.PositionedItem.source: Union.PositionerSource.Icon
+
+            name: control.icon.name
+            color: control.icon.color
+            visible: name.length > 0 && control.display != T.AbstractButton.TextOnly
+
+            sourceSize.width: control.icon.width
+            sourceSize.height: control.icon.height
+        }
+
+        Text {
+            Union.PositionedItem.source: Union.PositionerSource.Text
+
+            text: control.text
+            font: control.font
+            color: control.palette.buttonText
+
+            visible: control.display != T.AbstractButton.IconOnly
+        }
     }
 
     background: Union.StyledRectangle {}
