@@ -20,7 +20,7 @@ using namespace PropertyFunctions;
 
 PropertyFunctionResult PropertyFunctions::elementSize(ryml::ConstNodeRef node, LoadingContext &context)
 {
-    auto renderer = PlasmaSvgRenderer::rendererForPath(context.theme, context.path(), QPalette::Normal, context.colorSet());
+    auto renderer = PlasmaSvgRenderer::rendererForPath(context.theme, context.path(), context.colorGroup(), context.colorSet());
     if (!renderer) {
         return Error{"Could not find renderer"};
     }
@@ -57,7 +57,7 @@ PropertyFunctionResult PropertyFunctions::elementImage(ryml::ConstNodeRef node, 
     Q_UNUSED(node)
     const auto element = context.prefixedElementName();
 
-    auto renderer = PlasmaSvgRenderer::rendererForPath(context.theme, context.path(), QPalette::Normal, context.colorSet());
+    auto renderer = PlasmaSvgRenderer::rendererForPath(context.theme, context.path(), context.colorGroup(), context.colorSet());
     if (!renderer) {
         return Error{"Could not find renderer"};
     }

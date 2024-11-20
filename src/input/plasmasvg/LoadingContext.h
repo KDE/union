@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <QPalette>
 #include <QStack>
 
 #include <ryml.hpp>
@@ -30,6 +31,7 @@ struct ContextData {
     QStack<QString> prefixes;
     QStack<QString> elementNames;
     QStack<Union::Element::ColorSet> colorSets;
+    QStack<QPalette::ColorGroup> colorGroups;
     QStack<QByteArrayView> propertyNames;
 };
 
@@ -44,6 +46,7 @@ struct ContextCleanup {
         ElementName = 1 << 3,
         ColorSet = 1 << 4,
         PropertyName = 1 << 5,
+        ColorGroup = 1 << 6,
     };
     Q_DECLARE_FLAGS(CleanupFlags, CleanupFlag)
 
@@ -75,5 +78,6 @@ struct LoadingContext {
     QString prefixedElementName() const;
     QString path() const;
     Union::Element::ColorSet colorSet() const;
+    QPalette::ColorGroup colorGroup() const;
     QByteArrayView propertyName() const;
 };
