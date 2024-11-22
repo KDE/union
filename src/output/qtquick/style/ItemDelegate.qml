@@ -27,7 +27,7 @@ T.ItemDelegate {
         hovered: control.hovered
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
-        pressed: control.pressed
+        pressed: control.down
         checked: control.checked
         enabled: control.enabled
         highlighted: control.highlighted
