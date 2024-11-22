@@ -8,7 +8,7 @@
 */
 
 import QtQuick
-import QtQuick.Controls.impl as QCCImpl
+import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
@@ -78,7 +78,7 @@ T.ItemDelegate {
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
-        QCCImpl.IconImage {
+        QQCImpl.IconImage {
             Union.PositionedItem.source: Union.PositionerSource.Icon
             sourceSize.width: control.icon.width
             sourceSize.height: control.icon.height
