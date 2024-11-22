@@ -4,12 +4,18 @@
 
 #include "TextPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-TextPropertyGroup::TextPropertyGroup()
+TextPropertyGroup::TextPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_alignment = std::make_unique<AlignmentPropertyGroup>();
+    m_alignment = std::make_unique<AlignmentPropertyGroup>(m_style);
 }
 
 void TextPropertyGroup::update(const TextProperty &newState)
@@ -26,9 +32,14 @@ AlignmentPropertyGroup *TextPropertyGroup::alignment() const
     return m_alignment.get();
 }
 
-QFont TextPropertyGroup::font() const
+QJSValue TextPropertyGroup::font() const
 {
-    return m_state.font().value_or(QFont{});
+    auto value = m_state.font();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 #include "moc_TextPropertyGroup.cpp"

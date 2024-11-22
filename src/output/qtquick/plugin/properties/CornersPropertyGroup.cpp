@@ -4,15 +4,21 @@
 
 #include "CornersPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-CornersPropertyGroup::CornersPropertyGroup()
+CornersPropertyGroup::CornersPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_topLeft = std::make_unique<CornerPropertyGroup>();
-    m_topRight = std::make_unique<CornerPropertyGroup>();
-    m_bottomLeft = std::make_unique<CornerPropertyGroup>();
-    m_bottomRight = std::make_unique<CornerPropertyGroup>();
+    m_topLeft = std::make_unique<CornerPropertyGroup>(m_style);
+    m_topRight = std::make_unique<CornerPropertyGroup>(m_style);
+    m_bottomLeft = std::make_unique<CornerPropertyGroup>(m_style);
+    m_bottomRight = std::make_unique<CornerPropertyGroup>(m_style);
 }
 
 void CornersPropertyGroup::update(const CornersProperty &newState)

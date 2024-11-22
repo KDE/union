@@ -4,15 +4,21 @@
 
 #include "BackgroundPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-BackgroundPropertyGroup::BackgroundPropertyGroup()
+BackgroundPropertyGroup::BackgroundPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_image = std::make_unique<ImagePropertyGroup>();
-    m_border = std::make_unique<BorderPropertyGroup>();
-    m_corners = std::make_unique<CornersPropertyGroup>();
-    m_shadow = std::make_unique<ShadowPropertyGroup>();
+    m_image = std::make_unique<ImagePropertyGroup>(m_style);
+    m_border = std::make_unique<BorderPropertyGroup>(m_style);
+    m_corners = std::make_unique<CornersPropertyGroup>(m_style);
+    m_shadow = std::make_unique<ShadowPropertyGroup>(m_style);
 }
 
 void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
@@ -27,9 +33,14 @@ void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
     Q_EMIT updated();
 }
 
-QColor BackgroundPropertyGroup::color() const
+QJSValue BackgroundPropertyGroup::color() const
 {
-    return m_state.color().value_or(QColor{});
+    auto value = m_state.color();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 ImagePropertyGroup *BackgroundPropertyGroup::image() const

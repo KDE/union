@@ -4,20 +4,26 @@
 
 #include "ShadowPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-ShadowPropertyGroup::ShadowPropertyGroup()
+ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_offsets = std::make_unique<SizePropertyGroup>();
-    m_left = std::make_unique<LinePropertyGroup>();
-    m_right = std::make_unique<LinePropertyGroup>();
-    m_top = std::make_unique<LinePropertyGroup>();
-    m_bottom = std::make_unique<LinePropertyGroup>();
-    m_topLeft = std::make_unique<CornerPropertyGroup>();
-    m_topRight = std::make_unique<CornerPropertyGroup>();
-    m_bottomLeft = std::make_unique<CornerPropertyGroup>();
-    m_bottomRight = std::make_unique<CornerPropertyGroup>();
+    m_offsets = std::make_unique<SizePropertyGroup>(m_style);
+    m_left = std::make_unique<LinePropertyGroup>(m_style);
+    m_right = std::make_unique<LinePropertyGroup>(m_style);
+    m_top = std::make_unique<LinePropertyGroup>(m_style);
+    m_bottom = std::make_unique<LinePropertyGroup>(m_style);
+    m_topLeft = std::make_unique<CornerPropertyGroup>(m_style);
+    m_topRight = std::make_unique<CornerPropertyGroup>(m_style);
+    m_bottomLeft = std::make_unique<CornerPropertyGroup>(m_style);
+    m_bottomRight = std::make_unique<CornerPropertyGroup>(m_style);
 }
 
 void ShadowPropertyGroup::update(const ShadowProperty &newState)

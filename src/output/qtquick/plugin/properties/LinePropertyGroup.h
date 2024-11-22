@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -15,33 +16,36 @@
 #include "ImagePropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class LinePropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    LinePropertyGroup();
+    explicit LinePropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::LineProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(qreal size READ size NOTIFY sizeChanged)
-    qreal size() const;
+    Q_PROPERTY(QJSValue size READ size NOTIFY sizeChanged)
+    QJSValue size() const;
     Q_SIGNAL void sizeChanged();
 
-    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
-    QColor color() const;
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
     Q_SIGNAL void colorChanged();
 
-    Q_PROPERTY(Union::Properties::LineStyle style READ style NOTIFY styleChanged)
-    Union::Properties::LineStyle style() const;
+    Q_PROPERTY(QJSValue style READ style NOTIFY styleChanged)
+    QJSValue style() const;
     Q_SIGNAL void styleChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
     Union::Properties::LineProperty m_state;
 };

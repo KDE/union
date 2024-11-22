@@ -4,16 +4,22 @@
 
 #include "StylePropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-StylePropertyGroup::StylePropertyGroup()
+StylePropertyGroup::StylePropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_palette = std::make_unique<PalettePropertyGroup>();
-    m_layout = std::make_unique<LayoutPropertyGroup>();
-    m_text = std::make_unique<TextPropertyGroup>();
-    m_icon = std::make_unique<IconPropertyGroup>();
-    m_background = std::make_unique<BackgroundPropertyGroup>();
+    m_palette = std::make_unique<PalettePropertyGroup>(m_style);
+    m_layout = std::make_unique<LayoutPropertyGroup>(m_style);
+    m_text = std::make_unique<TextPropertyGroup>(m_style);
+    m_icon = std::make_unique<IconPropertyGroup>(m_style);
+    m_background = std::make_unique<BackgroundPropertyGroup>(m_style);
 }
 
 void StylePropertyGroup::update(const StyleProperty &newState)

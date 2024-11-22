@@ -4,10 +4,16 @@
 
 #include "SizePropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-SizePropertyGroup::SizePropertyGroup()
+SizePropertyGroup::SizePropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
 }
 
@@ -22,24 +28,44 @@ void SizePropertyGroup::update(const SizeProperty &newState)
     Q_EMIT updated();
 }
 
-qreal SizePropertyGroup::left() const
+QJSValue SizePropertyGroup::left() const
 {
-    return m_state.left().value_or(qreal{});
+    auto value = m_state.left();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal SizePropertyGroup::right() const
+QJSValue SizePropertyGroup::right() const
 {
-    return m_state.right().value_or(qreal{});
+    auto value = m_state.right();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal SizePropertyGroup::top() const
+QJSValue SizePropertyGroup::top() const
 {
-    return m_state.top().value_or(qreal{});
+    auto value = m_state.top();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal SizePropertyGroup::bottom() const
+QJSValue SizePropertyGroup::bottom() const
 {
-    return m_state.bottom().value_or(qreal{});
+    auto value = m_state.bottom();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 #include "moc_SizePropertyGroup.cpp"

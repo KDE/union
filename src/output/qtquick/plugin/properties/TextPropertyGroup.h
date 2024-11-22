@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -15,13 +16,15 @@
 #include "AlignmentPropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class TextPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    TextPropertyGroup();
+    explicit TextPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::TextProperty &newState);
     Q_SIGNAL void updated();
@@ -29,11 +32,12 @@ public:
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
-    Q_PROPERTY(QFont font READ font NOTIFY fontChanged)
-    QFont font() const;
+    Q_PROPERTY(QJSValue font READ font NOTIFY fontChanged)
+    QJSValue font() const;
     Q_SIGNAL void fontChanged();
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     Union::Properties::TextProperty m_state;
 };

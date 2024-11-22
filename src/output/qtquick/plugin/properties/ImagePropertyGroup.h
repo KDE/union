@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -14,41 +15,44 @@
 
 // clang-format on
 
+class QuickStyle;
+
 class ImagePropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    ImagePropertyGroup();
+    explicit ImagePropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::ImageProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(QImage imageData READ imageData NOTIFY imageDataChanged)
-    QImage imageData() const;
+    Q_PROPERTY(QJSValue imageData READ imageData NOTIFY imageDataChanged)
+    QJSValue imageData() const;
     Q_SIGNAL void imageDataChanged();
 
-    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
-    qreal width() const;
+    Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
+    QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
-    qreal height() const;
+    Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
+    QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(qreal xOffset READ xOffset NOTIFY xOffsetChanged)
-    qreal xOffset() const;
+    Q_PROPERTY(QJSValue xOffset READ xOffset NOTIFY xOffsetChanged)
+    QJSValue xOffset() const;
     Q_SIGNAL void xOffsetChanged();
 
-    Q_PROPERTY(qreal yOffset READ yOffset NOTIFY yOffsetChanged)
-    qreal yOffset() const;
+    Q_PROPERTY(QJSValue yOffset READ yOffset NOTIFY yOffsetChanged)
+    QJSValue yOffset() const;
     Q_SIGNAL void yOffsetChanged();
 
-    Q_PROPERTY(Union::Properties::ImageFlags flags READ flags NOTIFY flagsChanged)
-    Union::Properties::ImageFlags flags() const;
+    Q_PROPERTY(QJSValue flags READ flags NOTIFY flagsChanged)
+    QJSValue flags() const;
     Q_SIGNAL void flagsChanged();
 
 private:
+    QuickStyle *m_style = nullptr;
     Union::Properties::ImageProperty m_state;
 };

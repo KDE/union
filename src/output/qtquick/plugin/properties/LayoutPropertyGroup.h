@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -18,13 +19,15 @@
 #include "SizePropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class LayoutPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    LayoutPropertyGroup();
+    explicit LayoutPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::LayoutProperty &newState);
     Q_SIGNAL void updated();
@@ -32,16 +35,16 @@ public:
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
-    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
-    qreal width() const;
+    Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
+    QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
-    qreal height() const;
+    Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
+    QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(qreal spacing READ spacing NOTIFY spacingChanged)
-    qreal spacing() const;
+    Q_PROPERTY(QJSValue spacing READ spacing NOTIFY spacingChanged)
+    QJSValue spacing() const;
     Q_SIGNAL void spacingChanged();
 
     Q_PROPERTY(SizePropertyGroup *padding READ padding CONSTANT)
@@ -54,6 +57,7 @@ public:
     SizePropertyGroup *margins() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     std::unique_ptr<SizePropertyGroup> m_padding;
     std::unique_ptr<SizePropertyGroup> m_inset;

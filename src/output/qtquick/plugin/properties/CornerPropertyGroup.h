@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -15,37 +16,40 @@
 #include "ImagePropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class CornerPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    CornerPropertyGroup();
+    explicit CornerPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::CornerProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(qreal radius READ radius NOTIFY radiusChanged)
-    qreal radius() const;
+    Q_PROPERTY(QJSValue radius READ radius NOTIFY radiusChanged)
+    QJSValue radius() const;
     Q_SIGNAL void radiusChanged();
 
-    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
-    qreal width() const;
+    Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
+    QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
-    qreal height() const;
+    Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
+    QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
-    QColor color() const;
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
     Q_SIGNAL void colorChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
     Union::Properties::CornerProperty m_state;
 };

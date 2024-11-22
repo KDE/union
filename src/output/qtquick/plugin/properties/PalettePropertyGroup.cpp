@@ -4,10 +4,16 @@
 
 #include "PalettePropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-PalettePropertyGroup::PalettePropertyGroup()
+PalettePropertyGroup::PalettePropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
 }
 
@@ -40,8 +46,10 @@ void PalettePropertyGroup::update(const PaletteProperty &newState)
     Q_EMIT negativeChanged();
 
     if (!m_component) {
-        // Dirty hack to get at the main QML engine.
-        m_component = new QQmlComponent(qmlEngine(qGuiApp->allWindows().first()));
+        // We need a QML engine to create a QQmlComponent. Try to determine it
+        // based on the style we're part of.
+        Q_ASSERT(m_style);
+        m_component = new QQmlComponent(m_style->engine());
         m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
     }
 
@@ -138,124 +146,244 @@ void PalettePropertyGroup::update(const PaletteProperty &newState)
     Q_EMIT updated();
 }
 
-QColor PalettePropertyGroup::accent() const
+QJSValue PalettePropertyGroup::accent() const
 {
-    return m_state.accent().value_or(QColor{});
+    auto value = m_state.accent();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::alternateBase() const
+QJSValue PalettePropertyGroup::alternateBase() const
 {
-    return m_state.alternateBase().value_or(QColor{});
+    auto value = m_state.alternateBase();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::base() const
+QJSValue PalettePropertyGroup::base() const
 {
-    return m_state.base().value_or(QColor{});
+    auto value = m_state.base();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::brightText() const
+QJSValue PalettePropertyGroup::brightText() const
 {
-    return m_state.brightText().value_or(QColor{});
+    auto value = m_state.brightText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::button() const
+QJSValue PalettePropertyGroup::button() const
 {
-    return m_state.button().value_or(QColor{});
+    auto value = m_state.button();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::buttonText() const
+QJSValue PalettePropertyGroup::buttonText() const
 {
-    return m_state.buttonText().value_or(QColor{});
+    auto value = m_state.buttonText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::dark() const
+QJSValue PalettePropertyGroup::dark() const
 {
-    return m_state.dark().value_or(QColor{});
+    auto value = m_state.dark();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::highlight() const
+QJSValue PalettePropertyGroup::highlight() const
 {
-    return m_state.highlight().value_or(QColor{});
+    auto value = m_state.highlight();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::highlightedText() const
+QJSValue PalettePropertyGroup::highlightedText() const
 {
-    return m_state.highlightedText().value_or(QColor{});
+    auto value = m_state.highlightedText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::light() const
+QJSValue PalettePropertyGroup::light() const
 {
-    return m_state.light().value_or(QColor{});
+    auto value = m_state.light();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::link() const
+QJSValue PalettePropertyGroup::link() const
 {
-    return m_state.link().value_or(QColor{});
+    auto value = m_state.link();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::linkVisited() const
+QJSValue PalettePropertyGroup::linkVisited() const
 {
-    return m_state.linkVisited().value_or(QColor{});
+    auto value = m_state.linkVisited();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::mid() const
+QJSValue PalettePropertyGroup::mid() const
 {
-    return m_state.mid().value_or(QColor{});
+    auto value = m_state.mid();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::midlight() const
+QJSValue PalettePropertyGroup::midlight() const
 {
-    return m_state.midlight().value_or(QColor{});
+    auto value = m_state.midlight();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::placeholderText() const
+QJSValue PalettePropertyGroup::placeholderText() const
 {
-    return m_state.placeholderText().value_or(QColor{});
+    auto value = m_state.placeholderText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::shadow() const
+QJSValue PalettePropertyGroup::shadow() const
 {
-    return m_state.shadow().value_or(QColor{});
+    auto value = m_state.shadow();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::text() const
+QJSValue PalettePropertyGroup::text() const
 {
-    return m_state.text().value_or(QColor{});
+    auto value = m_state.text();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::toolTipBase() const
+QJSValue PalettePropertyGroup::toolTipBase() const
 {
-    return m_state.toolTipBase().value_or(QColor{});
+    auto value = m_state.toolTipBase();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::toolTipText() const
+QJSValue PalettePropertyGroup::toolTipText() const
 {
-    return m_state.toolTipText().value_or(QColor{});
+    auto value = m_state.toolTipText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::window() const
+QJSValue PalettePropertyGroup::window() const
 {
-    return m_state.window().value_or(QColor{});
+    auto value = m_state.window();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::windowText() const
+QJSValue PalettePropertyGroup::windowText() const
 {
-    return m_state.windowText().value_or(QColor{});
+    auto value = m_state.windowText();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::positive() const
+QJSValue PalettePropertyGroup::positive() const
 {
-    return m_state.positive().value_or(QColor{});
+    auto value = m_state.positive();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::neutral() const
+QJSValue PalettePropertyGroup::neutral() const
 {
-    return m_state.neutral().value_or(QColor{});
+    auto value = m_state.neutral();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor PalettePropertyGroup::negative() const
+QJSValue PalettePropertyGroup::negative() const
 {
-    return m_state.negative().value_or(QColor{});
+    auto value = m_state.negative();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 QObject *PalettePropertyGroup::quickPalette() const

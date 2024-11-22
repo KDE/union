@@ -4,12 +4,18 @@
 
 #include "IconPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-IconPropertyGroup::IconPropertyGroup()
+IconPropertyGroup::IconPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_alignment = std::make_unique<AlignmentPropertyGroup>();
+    m_alignment = std::make_unique<AlignmentPropertyGroup>(m_style);
 }
 
 void IconPropertyGroup::update(const IconProperty &newState)
@@ -29,24 +35,44 @@ AlignmentPropertyGroup *IconPropertyGroup::alignment() const
     return m_alignment.get();
 }
 
-qreal IconPropertyGroup::width() const
+QJSValue IconPropertyGroup::width() const
 {
-    return m_state.width().value_or(qreal{});
+    auto value = m_state.width();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal IconPropertyGroup::height() const
+QJSValue IconPropertyGroup::height() const
 {
-    return m_state.height().value_or(qreal{});
+    auto value = m_state.height();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QString IconPropertyGroup::name() const
+QJSValue IconPropertyGroup::name() const
 {
-    return m_state.name().value_or(QString{});
+    auto value = m_state.name();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QUrl IconPropertyGroup::source() const
+QJSValue IconPropertyGroup::source() const
 {
-    return m_state.source().value_or(QUrl{});
+    auto value = m_state.source();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 #include "moc_IconPropertyGroup.cpp"

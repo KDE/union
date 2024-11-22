@@ -4,10 +4,16 @@
 
 #include "ImagePropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-ImagePropertyGroup::ImagePropertyGroup()
+ImagePropertyGroup::ImagePropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
 }
 
@@ -24,34 +30,64 @@ void ImagePropertyGroup::update(const ImageProperty &newState)
     Q_EMIT updated();
 }
 
-QImage ImagePropertyGroup::imageData() const
+QJSValue ImagePropertyGroup::imageData() const
 {
-    return m_state.imageData().value_or(QImage{});
+    auto value = m_state.imageData();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal ImagePropertyGroup::width() const
+QJSValue ImagePropertyGroup::width() const
 {
-    return m_state.width().value_or(qreal{});
+    auto value = m_state.width();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal ImagePropertyGroup::height() const
+QJSValue ImagePropertyGroup::height() const
 {
-    return m_state.height().value_or(qreal{});
+    auto value = m_state.height();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal ImagePropertyGroup::xOffset() const
+QJSValue ImagePropertyGroup::xOffset() const
 {
-    return m_state.xOffset().value_or(qreal{});
+    auto value = m_state.xOffset();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal ImagePropertyGroup::yOffset() const
+QJSValue ImagePropertyGroup::yOffset() const
 {
-    return m_state.yOffset().value_or(qreal{});
+    auto value = m_state.yOffset();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-Union::Properties::ImageFlags ImagePropertyGroup::flags() const
+QJSValue ImagePropertyGroup::flags() const
 {
-    return m_state.flags().value_or(Union::Properties::ImageFlags{});
+    auto value = m_state.flags();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 #include "moc_ImagePropertyGroup.cpp"

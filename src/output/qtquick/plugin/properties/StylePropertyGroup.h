@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -19,13 +20,15 @@
 #include "BackgroundPropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class StylePropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    StylePropertyGroup();
+    explicit StylePropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::StyleProperty &newState);
     Q_SIGNAL void updated();
@@ -46,6 +49,7 @@ public:
     BackgroundPropertyGroup *background() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<PalettePropertyGroup> m_palette;
     std::unique_ptr<LayoutPropertyGroup> m_layout;
     std::unique_ptr<TextPropertyGroup> m_text;

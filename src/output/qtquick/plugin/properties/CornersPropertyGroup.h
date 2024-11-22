@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -18,13 +19,15 @@
 #include "CornerPropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class CornersPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    CornersPropertyGroup();
+    explicit CornersPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::CornersProperty &newState);
     Q_SIGNAL void updated();
@@ -42,6 +45,7 @@ public:
     CornerPropertyGroup *bottomRight() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<CornerPropertyGroup> m_topLeft;
     std::unique_ptr<CornerPropertyGroup> m_topRight;
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;

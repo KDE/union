@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -15,13 +16,15 @@
 #include "AlignmentPropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class IconPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    IconPropertyGroup();
+    explicit IconPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::IconProperty &newState);
     Q_SIGNAL void updated();
@@ -29,23 +32,24 @@ public:
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
-    Q_PROPERTY(qreal width READ width NOTIFY widthChanged)
-    qreal width() const;
+    Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
+    QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
-    Q_PROPERTY(qreal height READ height NOTIFY heightChanged)
-    qreal height() const;
+    Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
+    QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
-    Q_PROPERTY(QString name READ name NOTIFY nameChanged)
-    QString name() const;
+    Q_PROPERTY(QJSValue name READ name NOTIFY nameChanged)
+    QJSValue name() const;
     Q_SIGNAL void nameChanged();
 
-    Q_PROPERTY(QUrl source READ source NOTIFY sourceChanged)
-    QUrl source() const;
+    Q_PROPERTY(QJSValue source READ source NOTIFY sourceChanged)
+    QJSValue source() const;
     Q_SIGNAL void sourceChanged();
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
     Union::Properties::IconProperty m_state;
 };

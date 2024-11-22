@@ -4,10 +4,16 @@
 
 #include "AlignmentPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-AlignmentPropertyGroup::AlignmentPropertyGroup()
+AlignmentPropertyGroup::AlignmentPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
 }
 
@@ -22,24 +28,44 @@ void AlignmentPropertyGroup::update(const AlignmentProperty &newState)
     Q_EMIT updated();
 }
 
-Union::Properties::AlignmentContainer AlignmentPropertyGroup::container() const
+QJSValue AlignmentPropertyGroup::container() const
 {
-    return m_state.container().value_or(Union::Properties::AlignmentContainer{});
+    auto value = m_state.container();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-Union::Properties::Alignment AlignmentPropertyGroup::horizontal() const
+QJSValue AlignmentPropertyGroup::horizontal() const
 {
-    return m_state.horizontal().value_or(Union::Properties::Alignment{});
+    auto value = m_state.horizontal();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-Union::Properties::Alignment AlignmentPropertyGroup::vertical() const
+QJSValue AlignmentPropertyGroup::vertical() const
 {
-    return m_state.vertical().value_or(Union::Properties::Alignment{});
+    auto value = m_state.vertical();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-int AlignmentPropertyGroup::order() const
+QJSValue AlignmentPropertyGroup::order() const
 {
-    return m_state.order().value_or(int{});
+    auto value = m_state.order();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 #include "moc_AlignmentPropertyGroup.cpp"

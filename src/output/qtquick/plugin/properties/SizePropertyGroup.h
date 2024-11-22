@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -14,33 +15,36 @@
 
 // clang-format on
 
+class QuickStyle;
+
 class SizePropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    SizePropertyGroup();
+    explicit SizePropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::SizeProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(qreal left READ left NOTIFY leftChanged)
-    qreal left() const;
+    Q_PROPERTY(QJSValue left READ left NOTIFY leftChanged)
+    QJSValue left() const;
     Q_SIGNAL void leftChanged();
 
-    Q_PROPERTY(qreal right READ right NOTIFY rightChanged)
-    qreal right() const;
+    Q_PROPERTY(QJSValue right READ right NOTIFY rightChanged)
+    QJSValue right() const;
     Q_SIGNAL void rightChanged();
 
-    Q_PROPERTY(qreal top READ top NOTIFY topChanged)
-    qreal top() const;
+    Q_PROPERTY(QJSValue top READ top NOTIFY topChanged)
+    QJSValue top() const;
     Q_SIGNAL void topChanged();
 
-    Q_PROPERTY(qreal bottom READ bottom NOTIFY bottomChanged)
-    qreal bottom() const;
+    Q_PROPERTY(QJSValue bottom READ bottom NOTIFY bottomChanged)
+    QJSValue bottom() const;
     Q_SIGNAL void bottomChanged();
 
 private:
+    QuickStyle *m_style = nullptr;
     Union::Properties::SizeProperty m_state;
 };

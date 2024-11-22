@@ -4,12 +4,18 @@
 
 #include "CornerPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-CornerPropertyGroup::CornerPropertyGroup()
+CornerPropertyGroup::CornerPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_image = std::make_unique<ImagePropertyGroup>();
+    m_image = std::make_unique<ImagePropertyGroup>(m_style);
 }
 
 void CornerPropertyGroup::update(const CornerProperty &newState)
@@ -24,24 +30,44 @@ void CornerPropertyGroup::update(const CornerProperty &newState)
     Q_EMIT updated();
 }
 
-qreal CornerPropertyGroup::radius() const
+QJSValue CornerPropertyGroup::radius() const
 {
-    return m_state.radius().value_or(qreal{});
+    auto value = m_state.radius();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal CornerPropertyGroup::width() const
+QJSValue CornerPropertyGroup::width() const
 {
-    return m_state.width().value_or(qreal{});
+    auto value = m_state.width();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal CornerPropertyGroup::height() const
+QJSValue CornerPropertyGroup::height() const
 {
-    return m_state.height().value_or(qreal{});
+    auto value = m_state.height();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor CornerPropertyGroup::color() const
+QJSValue CornerPropertyGroup::color() const
 {
-    return m_state.color().value_or(QColor{});
+    auto value = m_state.color();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 ImagePropertyGroup *CornerPropertyGroup::image() const

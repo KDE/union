@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -18,19 +19,21 @@
 #include "ShadowPropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class BackgroundPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    BackgroundPropertyGroup();
+    explicit BackgroundPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::BackgroundProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(QColor color READ color NOTIFY colorChanged)
-    QColor color() const;
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
     Q_SIGNAL void colorChanged();
 
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
@@ -46,6 +49,7 @@ public:
     ShadowPropertyGroup *shadow() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
     std::unique_ptr<BorderPropertyGroup> m_border;
     std::unique_ptr<CornersPropertyGroup> m_corners;

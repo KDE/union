@@ -4,15 +4,21 @@
 
 #include "BorderPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-BorderPropertyGroup::BorderPropertyGroup()
+BorderPropertyGroup::BorderPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_left = std::make_unique<LinePropertyGroup>();
-    m_right = std::make_unique<LinePropertyGroup>();
-    m_top = std::make_unique<LinePropertyGroup>();
-    m_bottom = std::make_unique<LinePropertyGroup>();
+    m_left = std::make_unique<LinePropertyGroup>(m_style);
+    m_right = std::make_unique<LinePropertyGroup>(m_style);
+    m_top = std::make_unique<LinePropertyGroup>(m_style);
+    m_bottom = std::make_unique<LinePropertyGroup>(m_style);
 }
 
 void BorderPropertyGroup::update(const BorderProperty &newState)

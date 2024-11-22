@@ -4,15 +4,21 @@
 
 #include "LayoutPropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-LayoutPropertyGroup::LayoutPropertyGroup()
+LayoutPropertyGroup::LayoutPropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_alignment = std::make_unique<AlignmentPropertyGroup>();
-    m_padding = std::make_unique<SizePropertyGroup>();
-    m_inset = std::make_unique<SizePropertyGroup>();
-    m_margins = std::make_unique<SizePropertyGroup>();
+    m_alignment = std::make_unique<AlignmentPropertyGroup>(m_style);
+    m_padding = std::make_unique<SizePropertyGroup>(m_style);
+    m_inset = std::make_unique<SizePropertyGroup>(m_style);
+    m_margins = std::make_unique<SizePropertyGroup>(m_style);
 }
 
 void LayoutPropertyGroup::update(const LayoutProperty &newState)
@@ -34,19 +40,34 @@ AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
     return m_alignment.get();
 }
 
-qreal LayoutPropertyGroup::width() const
+QJSValue LayoutPropertyGroup::width() const
 {
-    return m_state.width().value_or(qreal{});
+    auto value = m_state.width();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal LayoutPropertyGroup::height() const
+QJSValue LayoutPropertyGroup::height() const
 {
-    return m_state.height().value_or(qreal{});
+    auto value = m_state.height();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-qreal LayoutPropertyGroup::spacing() const
+QJSValue LayoutPropertyGroup::spacing() const
 {
-    return m_state.spacing().value_or(qreal{});
+    auto value = m_state.spacing();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 SizePropertyGroup *LayoutPropertyGroup::padding() const

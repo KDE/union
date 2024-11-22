@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -18,13 +19,15 @@
 #include "LinePropertyGroup.h"
 // clang-format on
 
+class QuickStyle;
+
 class BorderPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    BorderPropertyGroup();
+    explicit BorderPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::BorderProperty &newState);
     Q_SIGNAL void updated();
@@ -42,6 +45,7 @@ public:
     LinePropertyGroup *bottom() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     std::unique_ptr<LinePropertyGroup> m_left;
     std::unique_ptr<LinePropertyGroup> m_right;
     std::unique_ptr<LinePropertyGroup> m_top;

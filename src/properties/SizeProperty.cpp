@@ -152,6 +152,11 @@ SizeProperty SizeProperty::empty()
     return result;
 }
 
+QMarginsF SizeProperty::toMargins() const
+{
+    return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
+}
+
 bool Union::Properties::operator==(const SizeProperty &left, const SizeProperty &right)
 {
     if (left.left() != right.left()) {

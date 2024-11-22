@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -18,117 +19,120 @@
 
 // clang-format on
 
+class QuickStyle;
+
 class PalettePropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    PalettePropertyGroup();
+    explicit PalettePropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::PaletteProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(QColor accent READ accent NOTIFY accentChanged)
-    QColor accent() const;
+    Q_PROPERTY(QJSValue accent READ accent NOTIFY accentChanged)
+    QJSValue accent() const;
     Q_SIGNAL void accentChanged();
 
-    Q_PROPERTY(QColor alternateBase READ alternateBase NOTIFY alternateBaseChanged)
-    QColor alternateBase() const;
+    Q_PROPERTY(QJSValue alternateBase READ alternateBase NOTIFY alternateBaseChanged)
+    QJSValue alternateBase() const;
     Q_SIGNAL void alternateBaseChanged();
 
-    Q_PROPERTY(QColor base READ base NOTIFY baseChanged)
-    QColor base() const;
+    Q_PROPERTY(QJSValue base READ base NOTIFY baseChanged)
+    QJSValue base() const;
     Q_SIGNAL void baseChanged();
 
-    Q_PROPERTY(QColor brightText READ brightText NOTIFY brightTextChanged)
-    QColor brightText() const;
+    Q_PROPERTY(QJSValue brightText READ brightText NOTIFY brightTextChanged)
+    QJSValue brightText() const;
     Q_SIGNAL void brightTextChanged();
 
-    Q_PROPERTY(QColor button READ button NOTIFY buttonChanged)
-    QColor button() const;
+    Q_PROPERTY(QJSValue button READ button NOTIFY buttonChanged)
+    QJSValue button() const;
     Q_SIGNAL void buttonChanged();
 
-    Q_PROPERTY(QColor buttonText READ buttonText NOTIFY buttonTextChanged)
-    QColor buttonText() const;
+    Q_PROPERTY(QJSValue buttonText READ buttonText NOTIFY buttonTextChanged)
+    QJSValue buttonText() const;
     Q_SIGNAL void buttonTextChanged();
 
-    Q_PROPERTY(QColor dark READ dark NOTIFY darkChanged)
-    QColor dark() const;
+    Q_PROPERTY(QJSValue dark READ dark NOTIFY darkChanged)
+    QJSValue dark() const;
     Q_SIGNAL void darkChanged();
 
-    Q_PROPERTY(QColor highlight READ highlight NOTIFY highlightChanged)
-    QColor highlight() const;
+    Q_PROPERTY(QJSValue highlight READ highlight NOTIFY highlightChanged)
+    QJSValue highlight() const;
     Q_SIGNAL void highlightChanged();
 
-    Q_PROPERTY(QColor highlightedText READ highlightedText NOTIFY highlightedTextChanged)
-    QColor highlightedText() const;
+    Q_PROPERTY(QJSValue highlightedText READ highlightedText NOTIFY highlightedTextChanged)
+    QJSValue highlightedText() const;
     Q_SIGNAL void highlightedTextChanged();
 
-    Q_PROPERTY(QColor light READ light NOTIFY lightChanged)
-    QColor light() const;
+    Q_PROPERTY(QJSValue light READ light NOTIFY lightChanged)
+    QJSValue light() const;
     Q_SIGNAL void lightChanged();
 
-    Q_PROPERTY(QColor link READ link NOTIFY linkChanged)
-    QColor link() const;
+    Q_PROPERTY(QJSValue link READ link NOTIFY linkChanged)
+    QJSValue link() const;
     Q_SIGNAL void linkChanged();
 
-    Q_PROPERTY(QColor linkVisited READ linkVisited NOTIFY linkVisitedChanged)
-    QColor linkVisited() const;
+    Q_PROPERTY(QJSValue linkVisited READ linkVisited NOTIFY linkVisitedChanged)
+    QJSValue linkVisited() const;
     Q_SIGNAL void linkVisitedChanged();
 
-    Q_PROPERTY(QColor mid READ mid NOTIFY midChanged)
-    QColor mid() const;
+    Q_PROPERTY(QJSValue mid READ mid NOTIFY midChanged)
+    QJSValue mid() const;
     Q_SIGNAL void midChanged();
 
-    Q_PROPERTY(QColor midlight READ midlight NOTIFY midlightChanged)
-    QColor midlight() const;
+    Q_PROPERTY(QJSValue midlight READ midlight NOTIFY midlightChanged)
+    QJSValue midlight() const;
     Q_SIGNAL void midlightChanged();
 
-    Q_PROPERTY(QColor placeholderText READ placeholderText NOTIFY placeholderTextChanged)
-    QColor placeholderText() const;
+    Q_PROPERTY(QJSValue placeholderText READ placeholderText NOTIFY placeholderTextChanged)
+    QJSValue placeholderText() const;
     Q_SIGNAL void placeholderTextChanged();
 
-    Q_PROPERTY(QColor shadow READ shadow NOTIFY shadowChanged)
-    QColor shadow() const;
+    Q_PROPERTY(QJSValue shadow READ shadow NOTIFY shadowChanged)
+    QJSValue shadow() const;
     Q_SIGNAL void shadowChanged();
 
-    Q_PROPERTY(QColor text READ text NOTIFY textChanged)
-    QColor text() const;
+    Q_PROPERTY(QJSValue text READ text NOTIFY textChanged)
+    QJSValue text() const;
     Q_SIGNAL void textChanged();
 
-    Q_PROPERTY(QColor toolTipBase READ toolTipBase NOTIFY toolTipBaseChanged)
-    QColor toolTipBase() const;
+    Q_PROPERTY(QJSValue toolTipBase READ toolTipBase NOTIFY toolTipBaseChanged)
+    QJSValue toolTipBase() const;
     Q_SIGNAL void toolTipBaseChanged();
 
-    Q_PROPERTY(QColor toolTipText READ toolTipText NOTIFY toolTipTextChanged)
-    QColor toolTipText() const;
+    Q_PROPERTY(QJSValue toolTipText READ toolTipText NOTIFY toolTipTextChanged)
+    QJSValue toolTipText() const;
     Q_SIGNAL void toolTipTextChanged();
 
-    Q_PROPERTY(QColor window READ window NOTIFY windowChanged)
-    QColor window() const;
+    Q_PROPERTY(QJSValue window READ window NOTIFY windowChanged)
+    QJSValue window() const;
     Q_SIGNAL void windowChanged();
 
-    Q_PROPERTY(QColor windowText READ windowText NOTIFY windowTextChanged)
-    QColor windowText() const;
+    Q_PROPERTY(QJSValue windowText READ windowText NOTIFY windowTextChanged)
+    QJSValue windowText() const;
     Q_SIGNAL void windowTextChanged();
 
-    Q_PROPERTY(QColor positive READ positive NOTIFY positiveChanged)
-    QColor positive() const;
+    Q_PROPERTY(QJSValue positive READ positive NOTIFY positiveChanged)
+    QJSValue positive() const;
     Q_SIGNAL void positiveChanged();
 
-    Q_PROPERTY(QColor neutral READ neutral NOTIFY neutralChanged)
-    QColor neutral() const;
+    Q_PROPERTY(QJSValue neutral READ neutral NOTIFY neutralChanged)
+    QJSValue neutral() const;
     Q_SIGNAL void neutralChanged();
 
-    Q_PROPERTY(QColor negative READ negative NOTIFY negativeChanged)
-    QColor negative() const;
+    Q_PROPERTY(QJSValue negative READ negative NOTIFY negativeChanged)
+    QJSValue negative() const;
     Q_SIGNAL void negativeChanged();
 
     Q_PROPERTY(QObject *quickPalette READ quickPalette NOTIFY updated)
     QObject *quickPalette() const;
 
 private:
+    QuickStyle *m_style = nullptr;
     Union::Properties::PaletteProperty m_state;
     QObject *m_palette = nullptr;
     QQmlComponent *m_component = nullptr;

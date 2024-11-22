@@ -5,6 +5,7 @@
 #pragma once
 
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -14,33 +15,36 @@
 
 // clang-format on
 
+class QuickStyle;
+
 class AlignmentPropertyGroup : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    AlignmentPropertyGroup();
+    explicit AlignmentPropertyGroup(QuickStyle *style);
 
     void update(const Union::Properties::AlignmentProperty &newState);
     Q_SIGNAL void updated();
 
-    Q_PROPERTY(Union::Properties::AlignmentContainer container READ container NOTIFY containerChanged)
-    Union::Properties::AlignmentContainer container() const;
+    Q_PROPERTY(QJSValue container READ container NOTIFY containerChanged)
+    QJSValue container() const;
     Q_SIGNAL void containerChanged();
 
-    Q_PROPERTY(Union::Properties::Alignment horizontal READ horizontal NOTIFY horizontalChanged)
-    Union::Properties::Alignment horizontal() const;
+    Q_PROPERTY(QJSValue horizontal READ horizontal NOTIFY horizontalChanged)
+    QJSValue horizontal() const;
     Q_SIGNAL void horizontalChanged();
 
-    Q_PROPERTY(Union::Properties::Alignment vertical READ vertical NOTIFY verticalChanged)
-    Union::Properties::Alignment vertical() const;
+    Q_PROPERTY(QJSValue vertical READ vertical NOTIFY verticalChanged)
+    QJSValue vertical() const;
     Q_SIGNAL void verticalChanged();
 
-    Q_PROPERTY(int order READ order NOTIFY orderChanged)
-    int order() const;
+    Q_PROPERTY(QJSValue order READ order NOTIFY orderChanged)
+    QJSValue order() const;
     Q_SIGNAL void orderChanged();
 
 private:
+    QuickStyle *m_style = nullptr;
     Union::Properties::AlignmentProperty m_state;
 };

@@ -8,6 +8,7 @@
 
 #include <QDebug>
 
+#include <QMarginsF>
 
 
 #include "union_export.h"
@@ -71,6 +72,13 @@ public:
      * values unset.
      */
     static SizeProperty empty();
+
+    /*!
+       Convert a Size property to QMarginsF.
+
+       If any values are not set, they will use 0.0.
+     */
+    QMarginsF toMargins() const;
 
 private:
     std::unique_ptr<SizePropertyPrivate> d;

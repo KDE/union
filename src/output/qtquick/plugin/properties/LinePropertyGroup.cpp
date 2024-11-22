@@ -4,12 +4,18 @@
 
 #include "LinePropertyGroup.h"
 
+#include <QQmlEngine>
+
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-LinePropertyGroup::LinePropertyGroup()
+LinePropertyGroup::LinePropertyGroup(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
-    m_image = std::make_unique<ImagePropertyGroup>();
+    m_image = std::make_unique<ImagePropertyGroup>(m_style);
 }
 
 void LinePropertyGroup::update(const LineProperty &newState)
@@ -23,19 +29,34 @@ void LinePropertyGroup::update(const LineProperty &newState)
     Q_EMIT updated();
 }
 
-qreal LinePropertyGroup::size() const
+QJSValue LinePropertyGroup::size() const
 {
-    return m_state.size().value_or(qreal{});
+    auto value = m_state.size();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-QColor LinePropertyGroup::color() const
+QJSValue LinePropertyGroup::color() const
 {
-    return m_state.color().value_or(QColor{});
+    auto value = m_state.color();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
-Union::Properties::LineStyle LinePropertyGroup::style() const
+QJSValue LinePropertyGroup::style() const
 {
-    return m_state.style().value_or(Union::Properties::LineStyle{});
+    auto value = m_state.style();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 ImagePropertyGroup *LinePropertyGroup::image() const
