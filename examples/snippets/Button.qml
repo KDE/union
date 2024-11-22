@@ -110,6 +110,34 @@ ApplicationWindow {
             text: "Test 4"
             onClicked: cycleButtonDisplay(this)
         }
+
+        CheckBox {
+            icon.name: "document-save"
+            text: "Test 5"
+            onClicked: cycleButtonDisplay(this)
+        }
+
+        PC.CheckBox {
+            icon.name: "document-save"
+            text: "Test 5"
+            onClicked: cycleButtonDisplay(this)
+        }
+
+        CheckDelegate {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            icon.name: "document-save"
+            text: "Test 5"
+            onClicked: cycleButtonDisplay(this)
+        }
+
+        PC.CheckDelegate {
+            Layout.preferredWidth: 200
+            Layout.preferredHeight: 50
+            icon.name: "document-save"
+            text: "Test 5"
+            onClicked: cycleButtonDisplay(this)
+        }
     }
 
     footer: ToolBar {
