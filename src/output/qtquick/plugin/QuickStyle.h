@@ -37,7 +37,7 @@ class QuickStyle : public QQuickAttachedPropertyPropagator
     QML_ATTACHED(QuickStyle)
 
 public:
-    QuickStyle(QObject *parent = nullptr);
+    QuickStyle(QQmlEngine *engine, QObject *parent = nullptr);
 
     Q_PROPERTY(StylePropertyGroup *properties READ properties CONSTANT)
     StylePropertyGroup *properties() const;
@@ -57,6 +57,14 @@ public:
      * change due to a change in elements.
      */
     Q_SIGNAL void updated();
+    /**
+     * The QML engine associated with this instance.
+     *
+     * Unfortunately, due to some internal workings of the QML engine,
+     * `qmlEngine()` of an attached property returns nullptr. So instead, we
+     * have to manually handle it.
+     */
+    QQmlEngine *engine() const;
 
     static QuickStyle *qmlAttachedProperties(QObject *parent);
 
@@ -69,8 +77,8 @@ private:
     void update();
 
     std::unique_ptr<StylePropertyGroup> m_properties;
-
     QuickElement *m_element = nullptr;
+    QQmlEngine *m_engine = nullptr;
 };
 
 class QuickStyleUpdatedEvent : public QEvent

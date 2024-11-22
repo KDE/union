@@ -17,10 +17,11 @@
 
 using namespace Union;
 
-QuickStyle::QuickStyle(QObject *parent)
+QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
+    , m_engine(engine)
 {
-    m_properties = std::make_unique<StylePropertyGroup>();
+    m_properties = std::make_unique<StylePropertyGroup>(this);
 
     initialize();
 }
@@ -39,9 +40,14 @@ Union::ElementQuery *QuickStyle::query() const
     return nullptr;
 }
 
+QQmlEngine *QuickStyle::engine() const
+{
+    return m_engine;
+}
+
 QuickStyle *QuickStyle::qmlAttachedProperties(QObject *parent)
 {
-    return new QuickStyle(parent);
+    return new QuickStyle(qmlEngine(parent), parent);
 }
 
 void QuickStyle::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *)
