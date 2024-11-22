@@ -21,6 +21,9 @@ public:
 {% for value in values %}
     std::optional<{{ value.type }}> {{ value.name }};
 {% endfor %}
+{% if extra_code and "private" in extra_code %}
+{{ extra_code["private"] | render }}
+{% endif %}
 };
 
 {{ type_name }}::{{ type_name }}()
@@ -125,8 +128,9 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_n
 {% endfor %}
     return result;
 }
-{% if extra_code %}
-{{ extra_code | render }}
+{% if extra_code and "global" in extra_code %}
+
+{{ extra_code["global"] | render }}
 {% endif %}
 
 bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_name}} &right)

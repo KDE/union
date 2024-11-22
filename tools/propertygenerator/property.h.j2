@@ -81,8 +81,15 @@ public:
      */
     static {{ type_name }} empty();
 
+{% if extra_code and "public" in extra_code %}
+{{ extra_code["public"] | render }}
+
+{% endif %}
 private:
     std::unique_ptr<{{ type_name }}Private> d;
+{% if extra_code and "private" in extra_code %}
+{{ extra_code["private"] | render }}
+{% endif %}
 };
 
 UNION_EXPORT bool operator==(const {{ type_name }} &left, const {{ type_name}} &right);
