@@ -13,6 +13,8 @@
 
 #include "qtquick_logging.h"
 
+using namespace Union::Properties;
+
 inline qreal spacedSize(const std::initializer_list<qreal> &sizes, qreal spacing)
 {
     Q_ASSERT(sizes.size() > 0);
@@ -130,24 +132,24 @@ void PositionerLayout::updatePolish()
             source = positionedItemAttached->source();
         }
 
-        auto styleAttached = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(item, true));
-        if (!styleAttached->query()) {
+        auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(item, true))->query();
+        if (!query) {
             // Apparently the item has not completed yet, abort layouting and
             // try again the next frame.
             polish();
             break;
         }
 
-        AlignmentPropertyGroup *alignment = nullptr;
+        std::optional<Union::Properties::AlignmentProperty> alignment;
         switch (source) {
         case PositionerSource::Source::Layout:
-            alignment = styleAttached->properties()->layout()->alignment();
+            alignment = query->properties().layout().value_or(LayoutProperty{}).alignment();
             break;
         case PositionerSource::Source::Icon:
-            alignment = styleAttached->properties()->icon()->alignment();
+            alignment = query->properties().icon().value_or(IconProperty{}).alignment();
             break;
         case PositionerSource::Source::Text:
-            alignment = styleAttached->properties()->text()->alignment();
+            alignment = query->properties().text().value_or(TextProperty{}).alignment();
             break;
         }
 
@@ -155,8 +157,8 @@ void PositionerLayout::updatePolish()
             continue;
         }
 
-        auto horizontalAlignment = alignment->horizontal();
-        auto verticalAlignment = alignment->vertical();
+        auto horizontalAlignment = alignment->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+        auto verticalAlignment = alignment->vertical().value_or(Union::Properties::Alignment::Unspecified);
 
         if (positionedItemAttached) {
             if (positionedItemAttached->horizontalAlignment() != Union::Properties::Alignment::Unspecified) {
@@ -171,25 +173,26 @@ void PositionerLayout::updatePolish()
         LayoutItem layoutItem{
             .implicitSize = QSizeF{item->implicitWidth(), item->implicitHeight()},
             .verticalAlignment = verticalAlignment,
-            .order = alignment->order(),
+            .order = alignment->order().value_or(0),
             .margins = QMarginsF{},
             .item = item,
         };
 
         if (source == PositionerSource::Source::Layout) {
-            auto margins = styleAttached->properties()->layout()->margins();
-            layoutItem.margins = QMarginsF(margins->left(), margins->top(), margins->right(), margins->bottom());
+            auto margins = query->properties().layout().value_or(LayoutProperty{}).margins().value_or(SizeProperty{});
+            layoutItem.margins =
+                QMarginsF(margins.left().value_or(0.0), margins.top().value_or(0.0), margins.right().value_or(0.0), margins.bottom().value_or(0.0));
         }
 
         LayoutContainer *container = &itemRelative;
-        switch (alignment->container()) {
-        case Union::Properties::AlignmentContainer::Content:
+        switch (alignment->container().value_or(AlignmentContainer::Item)) {
+        case AlignmentContainer::Content:
             container = &contentRelative;
             break;
-        case Union::Properties::AlignmentContainer::Background:
+        case AlignmentContainer::Background:
             container = &backgroundRelative;
             break;
-        case Union::Properties::AlignmentContainer::Item:
+        case AlignmentContainer::Item:
             break;
         }
 
@@ -221,8 +224,8 @@ void PositionerLayout::updatePolish()
     }
 
     const auto containerItem = parentItem();
-    const auto styleAttached = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(containerItem, true));
-    qreal spacing = styleAttached->properties()->layout()->spacing();
+    const auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(containerItem, true))->query();
+    qreal spacing = query->properties().layout().value_or(LayoutProperty{}).spacing().value_or(0.0);
 
     auto sort = [](auto &container) {
         std::stable_sort(container.begin(), container.end(), [](auto first, auto second) {
@@ -249,14 +252,14 @@ void PositionerLayout::updatePolish()
     auto remainingPosition = QPointF{spacedSize(itemRelative.start.size.width(), spacing), 0.0};
     auto remainingSize = itemRelative.size - QSizeF{spacedSize({itemRelative.start.size.width(), itemRelative.end.size.width()}, spacing), 0.0};
 
-    auto inset = styleAttached->properties()->layout()->inset();
-    backgroundRelative.position = remainingPosition + QPointF{inset->left(), inset->top()};
-    backgroundRelative.size = remainingSize - QSizeF{inset->left() + inset->right(), inset->top() + inset->bottom()};
+    auto inset = query->properties().layout().value_or(LayoutProperty{}).inset().value_or(SizeProperty{}).toMargins();
+    backgroundRelative.position = remainingPosition + QPointF{inset.left(), inset.top()};
+    backgroundRelative.size = remainingSize - QSizeF{inset.left() + inset.right(), inset.top() + inset.bottom()};
     layoutContainer(backgroundRelative);
 
-    auto padding = styleAttached->properties()->layout()->padding();
-    contentRelative.position = remainingPosition + QPointF{padding->left(), padding->top()};
-    contentRelative.size = remainingSize - QSizeF{padding->left() + padding->right(), padding->top() + padding->bottom()};
+    auto padding = query->properties().layout().value_or(LayoutProperty{}).padding().value_or(SizeProperty{}).toMargins();
+    contentRelative.position = remainingPosition + QPointF{padding.left(), padding.top()};
+    contentRelative.size = remainingSize - QSizeF{padding.left() + padding.right(), padding.top() + padding.bottom()};
     layoutContainer(contentRelative);
 
     for (auto container : {&itemRelative, &backgroundRelative, &contentRelative}) {
@@ -273,12 +276,12 @@ void PositionerLayout::updatePolish()
         }
     }
 
-    auto implicitCenterWidth = std::max(backgroundRelative.implicitSize.width() + inset->left() + inset->right(),
-                                        contentRelative.implicitSize.width() + padding->left() + padding->right());
+    auto implicitCenterWidth = std::max(backgroundRelative.implicitSize.width() + inset.left() + inset.right(),
+                                        contentRelative.implicitSize.width() + padding.left() + padding.right());
     auto implicitWidth = spacedSize({itemRelative.start.implicitSize.width(), implicitCenterWidth, itemRelative.end.implicitSize.width()}, spacing);
     auto implicitHeight = std::max({itemRelative.implicitSize.height(),
-                                    backgroundRelative.implicitSize.height() + inset->top() + inset->bottom(),
-                                    contentRelative.implicitSize.height() + padding->top() + padding->bottom()});
+                                    backgroundRelative.implicitSize.height() + inset.top() + inset.bottom(),
+                                    contentRelative.implicitSize.height() + padding.top() + padding.bottom()});
     m_implicitSize = QSizeF{implicitWidth, implicitHeight};
 
     auto bottomRight = itemRelative.size - contentRelative.size;
