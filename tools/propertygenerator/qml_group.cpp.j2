@@ -11,6 +11,8 @@ This is the template that is used to generate grouped property implementations f
 {% set group_name = type_name + "Group" %}
 #include "{{ group_name }}.h"
 
+#include <QQmlEngine>
+
 #include "QuickStyle.h"
 
 using namespace Union::Properties;
@@ -52,9 +54,14 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 }
 
 {% else %}
-{{ value.type }} {{ group_name }}::{{ value.name }}() const
+QJSValue {{ group_name }}::{{ value.name }}() const
 {
-    return m_state.{{ value.name }}().value_or({{ value.type }}{});
+    auto value = m_state.{{ value.name }}();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 {% endif %}

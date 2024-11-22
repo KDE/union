@@ -15,6 +15,7 @@ The include list may contain extra newlines that are hard to get rid of with the
 template but that clang format doesn't like, so disable format for that.
 #}
 // clang-format off
+#include <QJSValue>
 #include <QObject>
 #include <QProperty>
 #include <qqmlregistration.h>
@@ -50,8 +51,14 @@ public:
     Q_PROPERTY({{ value.type}}Group *{{ value.name }} READ {{ value.name }} CONSTANT)
     {{ value.type }}Group *{{ value.name }}() const;
 {% else %}
-    Q_PROPERTY({{ value.type }} {{ value.name }} READ {{ value.name }} NOTIFY {{ value.name }}Changed)
-    {{ value.type }} {{ value.name }}() const;
+{#
+    We use QJSValue here to be able to communicate the "undefined" state to the
+    QML engine. This ensures that if a value is not provided by the style, we
+    also don't provide a value to QML and instead allow its default handling to
+    take over.
+#}
+    Q_PROPERTY(QJSValue {{ value.name }} READ {{ value.name }} NOTIFY {{ value.name }}Changed)
+    QJSValue {{ value.name }}() const;
     Q_SIGNAL void {{ value.name }}Changed();
 {% endif %}
 
