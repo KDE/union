@@ -41,6 +41,12 @@ itemdelegate:
             -   hint-top-margin
             -   center
             -   hint-bottom-margin
+
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+
         spacing: 4
         padding:
             left:
