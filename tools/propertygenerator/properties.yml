@@ -87,6 +87,25 @@ layout:
         top: qreal
         bottom: qreal
 
+        _extra_system_includes:
+            "property.h.j2":
+            -   "QMarginsF"
+        _extra_code:
+            "property.h.j2":
+                public: |4
+                        /*!
+                           Convert a Size property to QMarginsF.
+
+                           If any values are not set, they will use 0.0.
+                         */
+                        QMarginsF toMargins() const;
+            "property.cpp.j2":
+                global: |4
+                    QMarginsF {{ type_name }}::toMargins() const
+                    {
+                        return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
+                    }
+
     inset: *size
 
     margins: *size
