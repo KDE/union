@@ -108,6 +108,10 @@ void PositionerLayout::updatePolish()
         return;
     }
 
+    if (!parentItem()->isVisible()) {
+        return;
+    }
+
     m_layoutDirty = false;
 
     LayoutContainer itemRelative;
