@@ -132,9 +132,9 @@ itemdelegate-with-icon:
             horizontal: Start
             vertical: Center
 
-button-display-textundericon:
+itemdelegate-display-textundericon:
     selectors:
-    -   type: Button
+    -   type: ItemDelegate
         attributes:
             display: text-under-icon
     icon:
