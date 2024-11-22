@@ -1,0 +1,112 @@
+checkbox:
+    selectors:
+    -   type: CheckBox
+    icon:
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+            order: 0
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+    text:
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+            order: 1
+        font:
+            property: font-name
+            name: system-normal
+        color: palette-foreground
+    layout:
+        spacing: 4
+
+checkbox-display-textundericon:
+    selectors:
+    -   type: CheckBox
+        attributes:
+            display: text-under-icon
+    icon:
+        alignment:
+            horizontal: Start
+            vertical: Stack
+    text:
+        alignment:
+            horizontal: Start
+            vertical: Stack
+checkbox-indicator:
+    selectors:
+    -   type: CheckBox
+        child:
+            type: Indicator
+
+    layout:
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+checkbox-indicator-checked:
+    selectors:
+    -   type: CheckBox
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        child:
+            type: Indicator
+    layout:
+        alignment:
+            container: Item
+            horizontal: Start
+            vertical: Center
+
+checkbox-indicator-checked:
+    selectors:
+    -   type: CheckBox
+        state: Checked
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Checked
+        child:
+            type: Indicator
+    layout:
+        alignment:
+            container: Item
+            horizontal: Start
+            vertical: Center
+    background:
+        path: widgets/checkmarks
+        image:
+            property: element-image
+            element: checkbox
+        
+        border:
+            left:
+                size: 0
+            right:
+                size: 0
+            top:
+                size: 0
+            bottom:
+                size: 0
+
+        corners:
+            top-left:
+                width: 0
+                height: 0
+            top-right:
+                width: 0
+                height: 0
+            bottom-left:
+                width: 0
+                height: 0
+            bottom-right:
+                width: 0
+                height: 0
