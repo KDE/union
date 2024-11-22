@@ -1,6 +1,12 @@
 button:
     selectors:
     -   type: Button
+    -   type: CheckBox
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        child:
+            type: Indicator
 
     path: widgets/button
     prefix: normal
@@ -176,6 +182,14 @@ button-hovered:
     selectors:
     -   type: Button
         state: Hovered
+    -   type: CheckBox
+        state: Hovered
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Hovered
+        child:
+            type: Indicator
 
     path: widgets/button
     colorSet: Button
@@ -244,6 +258,14 @@ button-focus:
     selectors:
     -   type: Button
         state: VisualFocus
+    -   type: CheckBox
+        state: VisualFocus
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: VisualFocus
+        child:
+            type: Indicator
 
     path: widgets/button
     colorSet: Button
@@ -411,6 +433,14 @@ button-pressed:
         state: Pressed
     -   type: Button
         state: Checked
+    -   type: CheckBox
+        state: Checked
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Checked
+        child:
+            type: Indicator
 
     path: widgets/button
     colorSet: Button
