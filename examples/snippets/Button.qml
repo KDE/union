@@ -12,6 +12,23 @@ ApplicationWindow {
     height: 600
     visible: true
 
+    function cycleButtonDisplay(button) {
+        switch (button.display) {
+            case Button.TextBesideIcon:
+                button.display = Button.IconOnly
+                break
+            case Button.IconOnly:
+                button.display = Button.TextOnly
+                break;
+            case Button.TextOnly:
+                button.display = Button.TextUnderIcon
+                break
+            case Button.TextUnderIcon:
+                button.display = Button.TextBesideIcon
+                break
+        }
+    }
+
     header: ToolBar {
         Element.elementId: "window-header"
 
@@ -41,6 +58,7 @@ ApplicationWindow {
             icon.name: "document-save"
             text: "Test"
             checkable: true
+            onClicked: cycleButtonDisplay(this)
         }
 
         PC.Button {
@@ -50,6 +68,7 @@ ApplicationWindow {
             icon.name: "document-save"
             text: "Test"
             checkable: true
+            onClicked: cycleButtonDisplay(this)
         }
 
         Button {
@@ -58,25 +77,7 @@ ApplicationWindow {
             text: "Test 2"
             icon.name: "document-save"
             enabled: !button1.checked
-
-            display: Button.TextUnderIcon
-
-            onClicked: {
-                switch (display) {
-                    case Button.TextBesideIcon:
-                        display = Button.IconOnly
-                        break
-                    case Button.IconOnly:
-                        display = Button.TextOnly
-                        break;
-                    case Button.TextOnly:
-                        display = Button.TextUnderIcon
-                        break
-                    case Button.TextUnderIcon:
-                        display = Button.TextBesideIcon
-                        break
-                }
-            }
+            onClicked: cycleButtonDisplay(this)
         }
 
         PC.Button {
@@ -85,23 +86,7 @@ ApplicationWindow {
             text: "Test 2"
             icon.name: "document-save"
             enabled: !pcButton1.checked
-
-            onClicked: {
-                switch (display) {
-                    case Button.TextBesideIcon:
-                        display = Button.IconOnly
-                        break
-                    case Button.IconOnly:
-                        display = Button.TextOnly
-                        break;
-                    case Button.TextOnly:
-                        display = Button.TextUnderIcon
-                        break
-                    case Button.TextUnderIcon:
-                        display = Button.TextBesideIcon
-                        break
-                }
-            }
+            onClicked: cycleButtonDisplay(this)
         }
 
         SpinBox {
@@ -115,22 +100,7 @@ ApplicationWindow {
             Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test 4"
-            onClicked: {
-                switch (display) {
-                    case Button.TextBesideIcon:
-                        display = Button.IconOnly
-                        break
-                    case Button.IconOnly:
-                        display = Button.TextOnly
-                        break;
-                    case Button.TextOnly:
-                        display = Button.TextUnderIcon
-                        break
-                    case Button.TextUnderIcon:
-                        display = Button.TextBesideIcon
-                        break
-                }
-            }
+            onClicked: cycleButtonDisplay(this)
         }
 
         PC.ItemDelegate {
@@ -138,6 +108,7 @@ ApplicationWindow {
             Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test 4"
+            onClicked: cycleButtonDisplay(this)
         }
     }
 
