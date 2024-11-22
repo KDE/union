@@ -1,6 +1,7 @@
 itemdelegate:
     selectors:
     -   type: ItemDelegate
+    -   type: CheckDelegate
     path: widgets/listitem
     prefix: normal
     icon:
@@ -105,6 +106,8 @@ itemdelegate-hovered:
     selectors:
     -   type: ItemDelegate
         state: Hovered
+    -   type: CheckDelegate
+        state: Hovered
     path: widgets/listitem
     prefix: hover
     background: *itemdelegate-background
@@ -113,6 +116,8 @@ itemdelegate-pressed:
     selectors:
     -   type: ItemDelegate
         state: Pressed
+    -   type: CheckDelegate
+        state: Pressed
     path: widgets/listitem
     prefix: pressed
     background: *itemdelegate-background
@@ -120,6 +125,10 @@ itemdelegate-pressed:
 itemdelegate-with-icon:
     selectors:
     -   type: ItemDelegate
+        hints: with-icon
+        attributes:
+            display: text-beside-icon
+    -   type: CheckDelegate
         hints: with-icon
         attributes:
             display: text-beside-icon
@@ -135,6 +144,9 @@ itemdelegate-with-icon:
 itemdelegate-display-textundericon:
     selectors:
     -   type: ItemDelegate
+        attributes:
+            display: text-under-icon
+    -   type: CheckDelegate
         attributes:
             display: text-under-icon
     icon:
