@@ -43,8 +43,10 @@ palette:
         "qml_group.cpp.j2":
             update: |4
                     if (!m_component) {
-                        // Dirty hack to get at the main QML engine.
-                        m_component = new QQmlComponent(qmlEngine(qGuiApp->allWindows().first()));
+                        // We need a QML engine to create a QQmlComponent. Try to determine it
+                        // based on the style we're part of.
+                        Q_ASSERT(m_style);
+                        m_component = new QQmlComponent(m_style->engine());
                         m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
                     }
 

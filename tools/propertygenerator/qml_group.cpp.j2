@@ -11,14 +11,18 @@ This is the template that is used to generate grouped property implementations f
 {% set group_name = type_name + "Group" %}
 #include "{{ group_name }}.h"
 
+#include "QuickStyle.h"
+
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-{{ group_name }}::{{ group_name }}()
+{{ group_name }}::{{ group_name }}(QuickStyle *style)
+    : QObject()
+    , m_style(style)
 {
 {% for value in values %}
 {% if value.is_property %}
-    m_{{ value.name }} = std::make_unique<{{ value.type }}Group>();
+    m_{{ value.name }} = std::make_unique<{{ value.type }}Group>(m_style);
 {% endif %}
 {% endfor %}
 }

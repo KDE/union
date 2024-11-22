@@ -32,13 +32,15 @@ template but that clang format doesn't like, so disable format for that.
 {% endfor %}
 // clang-format on
 
+class QuickStyle;
+
 class {{ type_name }}Group : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    {{ type_name }}Group();
+    explicit {{ type_name }}Group(QuickStyle *style);
 
     void update(const Union::Properties::{{ type_name }} &newState);
     Q_SIGNAL void updated();
@@ -59,6 +61,7 @@ public:
 
 {% endif %}
 private:
+    QuickStyle *m_style = nullptr;
 {% for value in values %}
 {% if value.is_property %}
     std::unique_ptr<{{ value.type }}Group> m_{{ value.name }};
