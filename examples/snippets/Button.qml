@@ -75,8 +75,6 @@ ApplicationWindow {
         }
 
         Button {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
             text: "Test 2"
             icon.name: "document-save"
             enabled: !button1.checked
@@ -84,8 +82,6 @@ ApplicationWindow {
         }
 
         PC.Button {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
             text: "Test 2"
             icon.name: "document-save"
             enabled: !pcButton1.checked
@@ -99,16 +95,12 @@ ApplicationWindow {
         }
 
         ItemDelegate {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test 4"
             onClicked: cycleButtonDisplay(this)
         }
 
         PC.ItemDelegate {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
             icon.name: "document-save"
             text: "Test 4"
             onClicked: cycleButtonDisplay(this)
