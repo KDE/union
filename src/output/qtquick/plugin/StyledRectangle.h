@@ -33,6 +33,7 @@ protected:
 
 private:
     void updateImplicitSize();
+    QSizeF minimumBackgroundSize(const Union::Properties::BackgroundProperty &background);
 
     QuickStyle *m_style = nullptr;
 };
