@@ -1,0 +1,95 @@
+progressbar:
+    selectors:
+    -   type: ProgressBar
+
+    path: widgets/bar_meter_horizontal
+    prefix: bar-inactive
+
+    layout:
+        width: 144
+        height:
+            property: element-height
+            prefix: ""
+            element: "hint-bar-size"
+
+    background: &progressbar-background
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left:
+                element: left
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            right:
+                element: right
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            top:
+                element: top
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+            bottom:
+                element: bottom
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+
+        corners:
+            top-left:
+                element: topleft
+                image:
+                    property: element-image
+            top-right:
+                element: topright
+                image:
+                    property: element-image
+            bottom-left:
+                element: bottomleft
+                image:
+                    property: element-image
+            bottom-right:
+                element: bottomright
+                image:
+                    property: element-image
+
+progrssbar-disabled:
+    selectors:
+    -   type: ProgressBar
+        state: Disabled
+
+    path: widgets/bar_meter_horizontal
+    prefix: bar-inactive
+    colorGroup: Disabled
+
+    background: *progressbar-background
+
+progressbar-track:
+    selectors:
+    -   type: ProgressBar
+        child:
+            type: Track
+
+    path: widgets/bar_meter_horizontal
+    prefix: bar-active
+
+    background: *progressbar-background
+
+progressbar-indeterminate-disabled-track:
+    selectors:
+    -   type: ProgressBar
+        state: Disabled
+        hints:
+        -   indeterminate
+        child:
+            type: Track
+
+    background: empty
