@@ -387,6 +387,6 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
         maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
     }
 
-    bucket.implicitSize.setWidth(std::max(bucket.stacked ? maxWidth : x - bucket.spacing, 0.0));
-    bucket.implicitSize.setHeight(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0));
+    bucket.implicitSize.setWidth(std::round(std::max(bucket.stacked ? maxWidth : x - bucket.spacing, 0.0)));
+    bucket.implicitSize.setHeight(std::round(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
 }
