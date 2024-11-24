@@ -23,7 +23,9 @@ inline qreal spacedSize(const std::initializer_list<qreal> &sizes, qreal spacing
     if (sizes.size() > 1) {
         for (auto itr = sizes.begin() + 1; itr != sizes.end(); ++itr) {
             if (!qFuzzyIsNull(*itr)) {
-                result += spacing;
+                if (result > 0) {
+                    result += spacing;
+                }
                 result += *itr;
             }
         }
