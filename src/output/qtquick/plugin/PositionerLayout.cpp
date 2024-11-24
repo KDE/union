@@ -345,7 +345,7 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
                 item.position.setY(0.0);
                 break;
             case Union::Properties::Alignment::Center:
-                item.position.setY(bucket->size.height() / 2 - item.implicitSize.height() / 2);
+                item.position.setY(std::round(bucket->size.height() / 2 - item.implicitSize.height() / 2));
                 break;
             case Union::Properties::Alignment::End:
                 item.position.setY(bucket->size.height() - item.implicitSize.height());
