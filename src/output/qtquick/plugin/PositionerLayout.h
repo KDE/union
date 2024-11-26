@@ -104,7 +104,11 @@ private:
     void layoutBucket(LayoutBucket &bucket);
 
     bool m_layoutDirty = true;
+    bool m_layouting = false;
     QSet<QQuickItem *> m_items;
     QSizeF m_implicitSize;
     Sizes m_padding;
+
+    qreal lastWidth = 0.0;
+    qreal lastHeight = 0.0;
 };

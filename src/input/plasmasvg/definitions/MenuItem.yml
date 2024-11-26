@@ -1,0 +1,210 @@
+menuitem:
+    selectors:
+    -   type: MenuItem
+
+    path: widgets/viewitem
+    prefix: normal
+
+    layout:
+        width:
+            property: sum
+            function: element-width
+            elements:
+            -   left
+            -   center
+            -   right
+        height:
+            property: sum
+            function: element-height
+            elements:
+            -   top
+            -   bottom
+
+        spacing: 4
+
+        padding:
+            left:
+                property: element-width
+                element: left
+            right:
+                property: element-width
+                element: right
+            top:
+                property: element-height
+                element: top
+            bottom:
+                property: element-height
+                element: bottom
+
+    text:
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+            order: 1
+
+        font:
+            property: font-name
+            name: system-normal
+
+    icon:
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+            order: 0
+
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+
+    background:
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left:
+                element: left
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            right:
+                element: right
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            top:
+                element: top
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+            bottom:
+                element: bottom
+                size:
+                    property: element-height
+                image:
+                    property: element-image
+
+        corners:
+            top-left:
+                element: topleft
+                image:
+                    property: element-image
+            top-right:
+                element: topright
+                image:
+                    property: element-image
+            bottom-left:
+                element: bottomleft
+                image:
+                    property: element-image
+            bottom-right:
+                element: bottomright
+                image:
+                    property: element-image
+
+menuitem-hover:
+    selectors:
+    -   type: MenuItem
+        state: Hovered
+    -   type: MenuItem
+        state: Pressed
+    -   type: MenuItem
+        state: Highlighted
+
+    path: widgets/viewitem
+    prefix: hover
+
+    background:
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left:
+                element: left
+                image:
+                    property: element-image
+            right:
+                element: right
+                image:
+                    property: element-image
+            top:
+                element: top
+                image:
+                    property: element-image
+            bottom:
+                element: bottom
+                image:
+                    property: element-image
+
+        corners:
+            top-left:
+                element: topleft
+                image:
+                    property: element-image
+            top-right:
+                element: topright
+                image:
+                    property: element-image
+            bottom-left:
+                element: bottomleft
+                image:
+                    property: element-image
+            bottom-right:
+                element: bottomright
+                image:
+                    property: element-image
+
+menuitem-indicator:
+    selectors:
+    -   type: MenuItem
+        child:
+            type: Indicator
+
+    layout:
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+
+        alignment:
+            container: Item
+            horizontal: Start
+            vertical: Center
+
+        margins:
+            left:
+                property: named-value
+                name: small-spacing
+
+menuitem-arrow:
+    selectors:
+    -   type: MenuItem
+        child:
+            type: Arrow
+
+    layout:
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+
+        alignment:
+            container: Item
+            horizontal: End
+            vertical: Center
+
+    icon:
+        name: arrow-right-symbolic

@@ -44,8 +44,18 @@ inline qreal spacedSize(qreal input, qreal spacing)
 PositionerLayout::PositionerLayout(QQuickItem *parentItem)
     : QQuickItem(parentItem)
 {
-    connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
-    connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
+    connect(parentItem, &QQuickItem::widthChanged, this, [this, parentItem]() {
+        if (parentItem->width() != lastWidth) {
+            lastWidth = parentItem->width();
+            markDirty();
+        }
+    }); // &PositionerLayout::markDirty);
+    connect(parentItem, &QQuickItem::heightChanged, this, [this, parentItem]() {
+        if (parentItem->height() != lastHeight) {
+            lastHeight = parentItem->height();
+            markDirty();
+        }
+    }); //&PositionerLayout::markDirty);
     parentItem->installEventFilter(this);
     polish();
 }
@@ -53,7 +63,9 @@ PositionerLayout::PositionerLayout(QQuickItem *parentItem)
 void PositionerLayout::markDirty()
 {
     m_layoutDirty = true;
-    polish();
+    if (!m_layouting) {
+        polish();
+    }
 }
 
 void PositionerLayout::addItem(QQuickItem *item)
@@ -116,7 +128,10 @@ void PositionerLayout::updatePolish()
         return;
     }
 
+    // qDebug() << "begin layout";
+
     m_layoutDirty = false;
+    m_layouting = true;
 
     LayoutContainer itemRelative;
     LayoutContainer contentRelative;
@@ -250,6 +265,7 @@ void PositionerLayout::updatePolish()
 
     itemRelative.size = QSizeF{containerItem->width(), containerItem->height()};
     layoutContainer(itemRelative);
+    // qDebug() << containerItem << "container" << itemRelative.size;
 
     auto remainingPosition = QPointF{spacedSize(itemRelative.start.size.width(), spacing), 0.0};
     auto remainingSize = itemRelative.size - QSizeF{spacedSize({itemRelative.start.size.width(), itemRelative.end.size.width()}, spacing), 0.0};
@@ -284,7 +300,8 @@ void PositionerLayout::updatePolish()
     auto implicitHeight = std::max({itemRelative.implicitSize.height(),
                                     backgroundRelative.implicitSize.height() + inset.top() + inset.bottom(),
                                     contentRelative.implicitSize.height() + padding.top() + padding.bottom()});
-    m_implicitSize = QSizeF{implicitWidth, implicitHeight};
+    m_implicitSize = QSizeF{std::round(implicitWidth), std::round(implicitHeight)};
+    // qDebug() << "implicit" << m_implicitSize;
 
     auto bottomRight = itemRelative.size - contentRelative.size;
     m_padding = Sizes(contentRelative.position.x(),
@@ -292,7 +309,10 @@ void PositionerLayout::updatePolish()
                       contentRelative.position.y(),
                       bottomRight.height() - contentRelative.position.y());
 
+    m_layouting = false;
     Q_EMIT layoutFinished();
+
+    // qDebug() << "end layout";
 }
 
 void PositionerLayout::layoutContainer(LayoutContainer &container)

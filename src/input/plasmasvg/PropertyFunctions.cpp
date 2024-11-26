@@ -170,6 +170,8 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
                     return value.error();
                 }
                 context.data.elementNames.pop();
+            } else {
+                return Error{"Function not found"};
             }
         } else if (child.is_map()) {
             auto value = elementProperty<qreal>(child, context);
@@ -248,4 +250,38 @@ PropertyFunctionResult PropertyFunctions::iconSizeFromName(ryml::ConstNodeRef no
     } else {
         return Error{"Invalid name given for icon size: " + name};
     }
+}
+
+PropertyFunctionResult PropertyFunctions::valueFromName(ryml::ConstNodeRef node, LoadingContext &context)
+{
+    auto cleanup = context.pushFromNode(node);
+
+    QByteArrayView name;
+    with_child(node, "name", [&](auto node) {
+        name = value<QByteArrayView>(node);
+    });
+
+    if (name.isEmpty()) {
+        return Error{"Could not find key 'name'"};
+    }
+
+    qreal multiplier = 1.0;
+    with_child(node, "multiplier", [&](auto node) {
+        multiplier = value<qreal>(node);
+    });
+
+    qreal value = 0.0;
+    if (name == "small-spacing") {
+        value = 4.0;
+    } else if (name == "medium-spacing") {
+        value = 6.0;
+    } else if (name == "large-spacing") {
+        value = 8.0;
+    } else if (name == "grid-unit") {
+        value = 18.0;
+    } else {
+        return Error("Invalid name given for named value: " + name);
+    }
+
+    return value * multiplier;
 }

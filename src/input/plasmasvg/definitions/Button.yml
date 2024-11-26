@@ -5,6 +5,7 @@ button:
         child:
             type: Indicator
     -   type: CheckDelegate
+    -   type: MenuItem
         child:
             type: Indicator
 
@@ -28,7 +29,9 @@ button:
             -   center
             -   hint-bottom-margin
 
-        spacing: 4
+        spacing:
+            property: named-value
+            name: small-spacing
 
         padding: &button-padding
             left:
@@ -187,6 +190,7 @@ button-hovered:
         child:
             type: Indicator
     -   type: CheckDelegate
+    -   type: MenuItem
         state: Hovered
         child:
             type: Indicator
@@ -263,6 +267,7 @@ button-focus:
         child:
             type: Indicator
     -   type: CheckDelegate
+    -   type: MenuItem
         state: VisualFocus
         child:
             type: Indicator
@@ -441,6 +446,14 @@ button-pressed:
         state: Checked
         child:
             type: Indicator
+    -   type: MenuItem
+        state: Pressed
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state: Checked
+        child:
+            type: Indicator
 
     path: widgets/button
     colorSet: Button
@@ -450,11 +463,7 @@ button-pressed:
             <<: *button-padding
             prefix: pressed
 
-        inset:
-            left: 0
-            right: 0
-            top: 0
-            bottom: 0
+        inset: empty
 
     background:
         image:
@@ -533,27 +542,24 @@ button-pressed:
                     -   normal-bottomright
                     -   pressed-bottomright
 
-        shadow:
-            offsets:
-                left: 0
-                right: 0
-                top: 0
-                bottom: 0
-
-            border:
-                left:
-                    size: 0
-                right:
-                    size: 0
-                top:
-                    size: 0
-                bottom:
-                    size: 0
+        shadow: empty
 
 button-disabled:
     selectors:
     -   type: Button
         state: Disabled
+    -   type: CheckBox
+        state: Disabled
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Disabled
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state: Disabled
+        child:
+            type: Indicator
 
     path: widgets/button
     prefix: normal
@@ -609,22 +615,7 @@ button-disabled:
                 image:
                     property: element-image
 
-        shadow:
-            offsets:
-                left: 0
-                right: 0
-                top: 0
-                bottom: 0
-
-            border:
-                left:
-                    size: 0
-                right:
-                    size: 0
-                top:
-                    size: 0
-                bottom:
-                    size: 0
+        shadow: empty
 
 button-with-icon:
     selectors:

@@ -30,9 +30,11 @@ ApplicationWindow {
     }
 
     header: ToolBar {
-        Element.elementId: "window-header"
+        Element.elementId: "application-header"
 
         RowLayout {
+            anchors.fill: parent
+
             ToolButton {
                 id: toolButton1
                 text: "Header ToolButton 1"
@@ -43,6 +45,74 @@ ApplicationWindow {
                 text: "Header ToolButton 2"
                 icon.name: "document-save"
                 enabled: !toolButton1.checked
+            }
+
+            ToolSeparator { }
+
+            PC.ToolButton {
+                text: "PC3 ToolButton"
+                icon.name: "document-save"
+
+                onClicked: pc3menu.popup(this, 0, height)
+
+                PC.Menu {
+                    id: pc3menu
+
+                    PC.MenuItem { text: "Example item" }
+                    PC.Menu {
+                        title: "Example Submenu"
+
+                        PC.MenuItem { text: "Example Submenu Item 1" }
+                        PC.MenuItem { text: "Example Submenu Item 2" }
+                    }
+                    PC.MenuItem {
+                        text: "Checkable Item";
+                        checkable: true;
+                    }
+                    PC.MenuSeparator { }
+                    PC.MenuItem {
+                        text: "Quit";
+                        icon.name: "application-exit-symbolic"
+                        onClicked: Qt.quit()
+                    }
+                }
+            }
+
+            Item {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            ToolButton {
+                display: ToolButton.IconOnly
+                icon.name: "application-menu-symbolic"
+
+                checkable: true
+                checked: menu.opened
+
+                onClicked: menu.popup(this, 0, height)
+
+                Menu {
+                    id: menu
+
+                    MenuItem { text: "Example item" }
+                    Menu {
+                        title: "Example Submenu"
+
+                        MenuItem { text: "Example Submenu Item 1" }
+                        MenuItem { text: "Example Submenu Item 2" }
+                    }
+                    MenuItem {
+                        text: "Checkable Item";
+                        checkable: true
+                    }
+                    MenuSeparator { }
+                    MenuItem {
+                        text: "Quit";
+                        icon.name: "application-exit-symbolic"
+                        onClicked: Qt.quit()
+                    }
+                }
             }
         }
     }
@@ -132,6 +202,11 @@ ApplicationWindow {
             icon.name: "document-save"
             text: "Test 5"
             onClicked: cycleButtonDisplay(this)
+        }
+
+        MenuItem {
+            text: "Menu Item"
+            icon.name: "application-exit-symbolic"
         }
     }
 

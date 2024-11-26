@@ -16,7 +16,12 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Page.qml
     style/Pane.qml
     style/ItemDelegate.qml
+    style/Menu.qml
+    style/MenuItem.qml
+    style/MenuSeparator.qml
     style/ProgressBar.qml
+    style/ScrollIndicator.qml
+    # style/ScrollView.qml
     style/SpinBox.qml
     style/TabButton.qml
     style/TabBar.qml
@@ -24,6 +29,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/TextField.qml
     style/ToolBar.qml
     style/ToolButton.qml
+    style/ToolSeparator.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)

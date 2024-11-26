@@ -137,7 +137,7 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
         }
 
         for (auto entry : selectors.children()) {
-            auto selectors = createSelectors(entry);
+            auto selectors = createSelectors(entry, context);
             if (selectors.isEmpty()) {
                 context.logLocation(entry) << "Ignoring empty selector";
                 continue;
@@ -150,7 +150,7 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
     }
 }
 
-SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
+SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingContext &context)
 {
     SelectorList selectors;
 
@@ -231,10 +231,11 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node)
     SelectorList childSelectors;
     with_child(node, "child", [&](auto node) {
         if (!node.is_map()) {
+            context.logLocation(node) << "Child selector specified but child is not a map, ignoring";
             return;
         }
 
-        childSelectors = createSelectors(node);
+        childSelectors = createSelectors(node, context);
     });
 
     SelectorList result;
@@ -273,6 +274,12 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(const SelectorList &selectors, ryml:
     });
 
     properties.setPalette(createPaletteProperty(context));
+
+    with_child(node, "debug", [&](auto node) {
+        if (value<bool>(node)) {
+            qCDebug(UNION_PLASMASVG) << properties;
+        }
+    });
 
     if (properties.hasAnyValue()) {
         style->setProperties(properties);

@@ -48,8 +48,8 @@ T.TextArea {
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
     placeholderTextColor: control.palette.placeholderText
-    horizontalAlignment: Union.Style.text.horizontalAlignment
-    verticalAlignment: Union.Style.text.verticalAlignment
+    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.text.alignment.horizontal)
+    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.text.alignment.vertical)
 
     PlaceholderText {
         id: placeholder
