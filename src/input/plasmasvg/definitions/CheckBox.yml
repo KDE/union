@@ -1,6 +1,7 @@
 checkbox:
     selectors:
     -   type: CheckBox
+
     icon:
         alignment:
             container: Content
@@ -13,6 +14,7 @@ checkbox:
         height:
             property: icon-size
             name: small
+
     text:
         alignment:
             container: Content
@@ -41,6 +43,7 @@ checkbox-display-textundericon:
         alignment:
             horizontal: Start
             vertical: Stack
+
 checkbox-indicator:
     selectors:
     -   type: CheckBox
@@ -48,67 +51,7 @@ checkbox-indicator:
             type: Indicator
 
     layout:
-        width:
-            property: icon-size
-            name: small
-        height:
-            property: icon-size
-            name: small
-checkbox-indicator-checked:
-    selectors:
-    -   type: CheckBox
-        child:
-            type: Indicator
-    -   type: CheckDelegate
-        child:
-            type: Indicator
-    layout:
         alignment:
             container: Item
             horizontal: Start
             vertical: Center
-
-checkbox-indicator-checked:
-    selectors:
-    -   type: CheckBox
-        state: Checked
-        child:
-            type: Indicator
-    -   type: CheckDelegate
-        state: Checked
-        child:
-            type: Indicator
-    layout:
-        alignment:
-            container: Item
-            horizontal: Start
-            vertical: Center
-    background:
-        path: widgets/checkmarks
-        image:
-            property: element-image
-            element: checkbox
-        
-        border:
-            left:
-                size: 0
-            right:
-                size: 0
-            top:
-                size: 0
-            bottom:
-                size: 0
-
-        corners:
-            top-left:
-                width: 0
-                height: 0
-            top-right:
-                width: 0
-                height: 0
-            bottom-left:
-                width: 0
-                height: 0
-            bottom-right:
-                width: 0
-                height: 0
