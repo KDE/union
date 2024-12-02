@@ -340,7 +340,7 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
             if (bucket == &container.fill) {
                 fillX += item.margins.left();
                 item.position.setX(fillX);
-                item.size.setWidth(fillWidth - item.margins.left() - item.margins.right() - bucket->spacing);
+                item.size.setWidth(fillWidth - item.margins.left() - item.margins.right());
                 fillX += fillWidth;
             }
 
