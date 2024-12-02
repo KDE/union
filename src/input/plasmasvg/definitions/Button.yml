@@ -28,7 +28,9 @@ button:
             -   center
             -   hint-bottom-margin
 
-        spacing: 4
+        spacing:
+            property: named-value
+            name: small-spacing
 
         padding: &button-padding
             left:

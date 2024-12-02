@@ -56,6 +56,16 @@ spinbox-indicator-decrease:
                     property: element-image
                     element: vertical-line
 
+            top:
+                size:
+                    property: named-value
+                    name: small-spacing
+
+            bottom:
+                size:
+                    property: named-value
+                    name: small-spacing
+
 spinbox-indicator-increase:
     selectors:
     -   type: SpinBox
@@ -89,3 +99,13 @@ spinbox-indicator-increase:
                 image:
                     property: element-image
                     element: vertical-line
+
+            top:
+                size:
+                    property: named-value
+                    name: small-spacing
+
+            bottom:
+                size:
+                    property: named-value
+                    name: small-spacing

@@ -22,9 +22,11 @@ checkbox:
         font:
             property: font-name
             name: system-normal
-        color: palette-foreground
+
     layout:
-        spacing: 4
+        spacing:
+            property: named-value
+            name: small-spacing
 
 checkbox-display-textundericon:
     selectors:
