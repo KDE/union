@@ -197,6 +197,8 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
                     return value.error();
                 }
                 context.data.elementNames.pop();
+            } else {
+                return Error{"Function not found"};
             }
         } else if (child.is_map()) {
             auto value = elementProperty<qreal>(child, context);
