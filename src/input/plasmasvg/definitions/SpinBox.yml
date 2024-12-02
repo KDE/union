@@ -28,6 +28,11 @@ spinbox-indicator-decrease:
         child:
             type: Indicator
             hints: decrease
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: decrease
+            state: Disabled
 
     layout:
         alignment:
@@ -72,6 +77,11 @@ spinbox-indicator-increase:
         child:
             type: Indicator
             hints: increase
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: increase
+            state: Disabled
 
     layout:
         alignment:

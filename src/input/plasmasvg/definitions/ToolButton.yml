@@ -221,6 +221,10 @@ toolbutton-disabled:
     selectors:
     -   type: ToolButton
         state: Disabled
+    -   type: SpinBox
+        child:
+            type: Indicator
+            state: Disabled
 
     path: widgets/button
 
