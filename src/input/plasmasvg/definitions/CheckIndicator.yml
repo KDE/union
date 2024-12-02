@@ -6,6 +6,9 @@ check-indicator:
     -   type: CheckDelegate
         child:
             type: Indicator
+    -   type: MenuItem
+        child:
+            type: Indicator
 
     layout:
         width:
@@ -15,6 +18,24 @@ check-indicator:
             property: icon-size
             name: small
 
+check-indicator-pressed:
+    selectors:
+    -   type: CheckBox
+        state: Pressed
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Pressed
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state: Pressed
+        child:
+            type: Indicator
+
+    background:
+        shadow: empty
+
 check-indicator-checked:
     selectors:
     -   type: CheckBox
@@ -22,6 +43,10 @@ check-indicator-checked:
         child:
             type: Indicator
     -   type: CheckDelegate
+        state: Checked
+        child:
+            type: Indicator
+    -   type: MenuItem
         state: Checked
         child:
             type: Indicator
@@ -44,6 +69,12 @@ check-indicator-checked-disabled:
         child:
             type: Indicator
     -   type: CheckDelegate
+        state:
+        -   Checked
+        -   Disabled
+        child:
+            type: Indicator
+    -   type: MenuItem
         state:
         -   Checked
         -   Disabled
