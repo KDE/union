@@ -91,17 +91,29 @@ PropertyFunctionResult PropertyFunctions::elementImageBlend(ryml::ConstNodeRef n
     int maxWidth = 0;
     int maxHeight = 0;
     for (auto child : elementsNode.children()) {
-        context.data.elementNames.push(value<QString>(child));
-        auto image = elementImage(node, context);
-        context.data.elementNames.pop();
+        if (child.has_val()) {
+            context.data.elementNames.push(value<QString>(child));
+            auto image = elementImage(node, context);
+            context.data.elementNames.pop();
 
-        if (image.has_value()) {
-            auto imageValue = image.value<QImage>();
-            images.append(imageValue);
-            maxWidth = std::max(maxWidth, imageValue.width());
-            maxHeight = std::max(maxHeight, imageValue.height());
-        } else {
-            return image.error();
+            if (image.has_value()) {
+                auto imageValue = image.value<QImage>();
+                images.append(imageValue);
+                maxWidth = std::max(maxWidth, imageValue.width());
+                maxHeight = std::max(maxHeight, imageValue.height());
+            } else {
+                return image.error();
+            }
+        } else if (child.is_map()) {
+            auto value = elementProperty<QImage>(child, context);
+            if (value.has_value()) {
+                auto imageValue = value.value();
+                images.append(imageValue);
+                maxWidth = std::max(maxWidth, imageValue.width());
+                maxHeight = std::max(maxHeight, imageValue.height());
+            } else {
+                return value.error();
+            }
         }
     }
 
