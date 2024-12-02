@@ -79,7 +79,17 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
     ryml::EventHandlerTree eventHandler;
     ryml::Parser parser{&eventHandler, options};
 
+    std::string globalData;
+    QFile globalDefinitions(dir.absoluteFilePath(u"global.inc.yml"_s));
+    if (globalDefinitions.open(QFile::ReadOnly)) {
+        globalData = globalDefinitions.readAll().toStdString();
+    }
+
     for (auto entry : entries) {
+        if (entry == u"global.inc.yml") {
+            continue;
+        }
+
         auto path = dir.absoluteFilePath(entry).toStdString();
         QFile file{QString::fromStdString(path)};
         if (!file.open(QFile::ReadOnly)) {
@@ -87,7 +97,7 @@ bool PlasmaSvgLoader::load(Theme::Ptr theme)
             continue;
         }
 
-        auto data = file.readAll().toStdString();
+        auto data = globalData + file.readAll().toStdString();
         ryml::Tree parsed;
         try {
             parsed = ryml::parse_in_place(&parser, ryml::to_csubstr(path), ryml::to_substr(data));
@@ -127,7 +137,9 @@ void PlasmaSvgLoader::createStyles(ryml::ConstNodeRef node, LoadingContext &cont
 
         auto selectors = child.find_child("selectors");
         if (!selectors.readable()) {
-            context.logLocation(child) << "Ignoring rule with no selectors declared";
+            if (!child.key().begins_with("_")) {
+                context.logLocation(child) << "Ignoring rule with no selectors declared";
+            }
             continue;
         }
 
