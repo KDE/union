@@ -84,14 +84,9 @@ void PositionerLayout::removeItem(QQuickItem *item)
     markDirty();
 }
 
-qreal PositionerLayout::implicitWidth() const
+QSizeF PositionerLayout::implicitSize() const
 {
-    return m_implicitSize.width();
-}
-
-qreal PositionerLayout::implicitHeight() const
-{
-    return m_implicitSize.height();
+    return m_implicitSize;
 }
 
 Sizes PositionerLayout::padding() const
@@ -286,13 +281,21 @@ void PositionerLayout::updatePolish()
     auto implicitHeight = std::max({itemRelative.implicitSize.height(),
                                     backgroundRelative.implicitSize.height() + inset.top() + inset.bottom(),
                                     contentRelative.implicitSize.height() + padding.top() + padding.bottom()});
-    m_implicitSize = QSizeF{implicitWidth, implicitHeight};
+    auto newImplicitSize = QSizeF{std::round(implicitWidth), std::round(implicitHeight)};
+    if (newImplicitSize != m_implicitSize) {
+        m_implicitSize = newImplicitSize;
+        Q_EMIT implicitSizeChanged();
+    }
 
     auto bottomRight = itemRelative.size - contentRelative.size;
-    m_padding = Sizes(contentRelative.position.x(),
-                      bottomRight.width() - contentRelative.position.x(),
-                      contentRelative.position.y(),
-                      bottomRight.height() - contentRelative.position.y());
+    auto newPadding = Sizes(contentRelative.position.x(),
+                            bottomRight.width() - contentRelative.position.x(),
+                            contentRelative.position.y(),
+                            bottomRight.height() - contentRelative.position.y());
+    if (m_padding != newPadding) {
+        m_padding = newPadding;
+        Q_EMIT paddingChanged();
+    }
 
     Q_EMIT layoutFinished();
 }

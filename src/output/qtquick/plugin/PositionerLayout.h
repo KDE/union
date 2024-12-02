@@ -88,10 +88,11 @@ public:
     void addItem(QQuickItem *item);
     void removeItem(QQuickItem *item);
 
-    qreal implicitWidth() const;
-    qreal implicitHeight() const;
+    QSizeF implicitSize() const;
+    Q_SIGNAL void implicitSizeChanged();
 
     Sizes padding() const;
+    Q_SIGNAL void paddingChanged();
 
     Q_SIGNAL void layoutFinished();
 
