@@ -45,8 +45,8 @@ PositionerLayout::PositionerLayout(QQuickItem *parentItem)
     : QQuickItem(parentItem)
 {
     if (parentItem) {
-        connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
-        connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
+        connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::onParentSizeChanged);
+        connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::onParentSizeChanged);
         parentItem->installEventFilter(this);
     }
     polish();
@@ -391,4 +391,15 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
 
     bucket.implicitSize.setWidth(std::round(std::max(bucket.stacked ? maxWidth : x - bucket.spacing, 0.0)));
     bucket.implicitSize.setHeight(std::round(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
+}
+
+void PositionerLayout::onParentSizeChanged()
+{
+    auto newSize = parentItem()->boundingRect().size();
+    if (newSize == m_parentSize) {
+        return;
+    }
+
+    m_parentSize = newSize;
+    markDirty();
 }

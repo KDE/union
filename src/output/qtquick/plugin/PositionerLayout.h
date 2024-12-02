@@ -103,8 +103,11 @@ private:
     void layoutContainer(LayoutContainer &container);
     void layoutBucket(LayoutBucket &bucket);
 
+    void onParentSizeChanged();
+
     bool m_layoutDirty = true;
     QSet<QQuickItem *> m_items;
     QSizeF m_implicitSize;
     Sizes m_padding;
+    QSizeF m_parentSize;
 };
