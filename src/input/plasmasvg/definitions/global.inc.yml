@@ -1,0 +1,55 @@
+# This file is included for each definition and contains a number of standard
+# definitions that are often the same and which can be re-used for more specific
+# definitions.
+
+# Standard background definition as a 9-patch from the elements center, left,
+# right, top, bottom, topleft, topright, bottomleft, bottomright. This can be
+# used with prefixes by setting the right prefix before inclusion.
+_standard_background: &standard-background
+    image:
+        property: element-image
+        element: center
+
+    border: &standard-border
+        left:
+            element: left
+            size:
+                property: element-width
+            image:
+                property: element-image
+        right:
+            element: right
+            size:
+                property: element-width
+            image:
+                property: element-image
+        top:
+            element: top
+            size:
+                property: element-height
+            image:
+                property: element-image
+        bottom:
+            element: bottom
+            size:
+                property: element-height
+            image:
+                property: element-image
+
+    corners: &standard-corners
+        top-left:
+            element: topleft
+            image:
+                property: element-image
+        top-right:
+            element: topright
+            image:
+                property: element-image
+        bottom-left:
+            element: bottomleft
+            image:
+                property: element-image
+        bottom-right:
+            element: bottomright
+            image:
+                property: element-image
