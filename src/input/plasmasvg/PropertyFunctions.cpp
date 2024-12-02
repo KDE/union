@@ -110,12 +110,18 @@ PropertyFunctionResult PropertyFunctions::elementImageBlend(ryml::ConstNodeRef n
         align = value<Qt::Alignment>(node);
     });
 
+    Qt::Orientations stretch;
+    with_child(node, "stretch", [&](auto node) {
+        stretch = value<Qt::Orientations>(node);
+    });
+
     QImage result(maxWidth, maxHeight, QImage::Format_ARGB32);
     result.fill(Qt::transparent);
 
     QPainter painter(&result);
     for (const auto &image : images) {
         QPoint position;
+        QSize size = image.size();
         if (align & Qt::AlignLeft) {
             position.setX(0);
         } else if (align & Qt::AlignHCenter) {
@@ -132,7 +138,16 @@ PropertyFunctionResult PropertyFunctions::elementImageBlend(ryml::ConstNodeRef n
             position.setY(maxHeight - image.height());
         }
 
-        painter.drawImage(position, image);
+        if (stretch & Qt::Horizontal) {
+            position.setX(0);
+            size.setWidth(maxWidth);
+        }
+        if (stretch & Qt::Vertical) {
+            position.setY(0);
+            size.setHeight(maxHeight);
+        }
+
+        painter.drawImage(QRect(position, size), image);
     }
 
     return result;
