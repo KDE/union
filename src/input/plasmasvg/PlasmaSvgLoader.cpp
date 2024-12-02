@@ -275,6 +275,12 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(const SelectorList &selectors, ryml:
 
     properties.setPalette(createPaletteProperty(context));
 
+    with_child(node, "debug", [&](auto node) {
+        if (value<bool>(node)) {
+            qCDebug(UNION_PLASMASVG) << properties;
+        }
+    });
+
     if (properties.hasAnyValue()) {
         style->setProperties(properties);
     }
