@@ -1,35 +1,15 @@
-checkdelegate-indicator-checked:
+checkdelegate-indicator:
     selectors:
     -   type: CheckDelegate
         child:
             type: Indicator
+
     layout:
-        width:
-            property: icon-size
-            name: small
-        height:
-            property: icon-size
-            name: small
         alignment:
             container: Item
             horizontal: End
             vertical: Center
         margins:
-            right: 6
-
-checkdelegate-indicator-checked:
-    selectors:
-    -   type: CheckDelegate
-        state: Checked
-        child:
-            type: Indicator
-    layout:
-        alignment:
-            container: Item
-            horizontal: End
-            vertical: Center
-    background:
-        path: widgets/checkmarks
-        image:
-            property: element-image
-            element: checkbox
+            right:
+                property: named-value
+                name: medium-spacing

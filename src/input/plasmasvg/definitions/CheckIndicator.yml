@@ -1,0 +1,90 @@
+check-indicator:
+    selectors:
+    -   type: CheckBox
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        child:
+            type: Indicator
+    -   type: MenuItem
+        child:
+            type: Indicator
+
+    layout:
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+
+check-indicator-pressed:
+    selectors:
+    -   type: CheckBox
+        state: Pressed
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Pressed
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state: Pressed
+        child:
+            type: Indicator
+
+    background:
+        shadow: empty
+
+check-indicator-checked:
+    selectors:
+    -   type: CheckBox
+        state: Checked
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state: Checked
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state: Checked
+        child:
+            type: Indicator
+
+    background:
+        path: widgets/checkmarks
+        image:
+            property: element-image
+            element: checkbox
+
+        border: empty
+        corners: empty
+
+check-indicator-checked-disabled:
+    selectors:
+    -   type: CheckBox
+        state:
+        -   Checked
+        -   Disabled
+        child:
+            type: Indicator
+    -   type: CheckDelegate
+        state:
+        -   Checked
+        -   Disabled
+        child:
+            type: Indicator
+    -   type: MenuItem
+        state:
+        -   Checked
+        -   Disabled
+        child:
+            type: Indicator
+
+    colorGroup: Disabled
+
+    background:
+        path: widgets/checkmarks
+        image:
+            property: element-image
+            element: checkbox

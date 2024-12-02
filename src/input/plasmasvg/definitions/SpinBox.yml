@@ -28,6 +28,11 @@ spinbox-indicator-decrease:
         child:
             type: Indicator
             hints: decrease
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: decrease
+            state: Disabled
 
     layout:
         alignment:
@@ -56,12 +61,27 @@ spinbox-indicator-decrease:
                     property: element-image
                     element: vertical-line
 
+            top:
+                size:
+                    property: named-value
+                    name: small-spacing
+
+            bottom:
+                size:
+                    property: named-value
+                    name: small-spacing
+
 spinbox-indicator-increase:
     selectors:
     -   type: SpinBox
         child:
             type: Indicator
             hints: increase
+    -   type: SpinBox
+        child:
+            type: Indicator
+            hints: increase
+            state: Disabled
 
     layout:
         alignment:
@@ -89,3 +109,13 @@ spinbox-indicator-increase:
                 image:
                     property: element-image
                     element: vertical-line
+
+            top:
+                size:
+                    property: named-value
+                    name: small-spacing
+
+            bottom:
+                size:
+                    property: named-value
+                    name: small-spacing

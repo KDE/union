@@ -86,7 +86,7 @@ T.ItemDelegate {
             name: control.icon.name
             source: control.icon.source
             color: control.icon.color
-            visible: control.display !== T.AbstractButton.TextOnly && status === Image.Ready
+            visible: control.display !== T.AbstractButton.TextOnly
         }
         Text {
             Union.PositionedItem.source: Union.PositionerSource.Text
@@ -96,7 +96,7 @@ T.ItemDelegate {
             horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
             verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             renderType: Text.NativeRendering
-            visible: control.display !== T.AbstractButton.IconOnly && text.length > 0
+            visible: control.display !== T.AbstractButton.IconOnly
         }
     }
 

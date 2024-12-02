@@ -20,8 +20,9 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/MenuItem.qml
     style/MenuSeparator.qml
     style/ProgressBar.qml
+    style/ScrollBar.qml
     style/ScrollIndicator.qml
-    # style/ScrollView.qml
+    style/ScrollView.qml
     style/SpinBox.qml
     style/TabButton.qml
     style/TabBar.qml

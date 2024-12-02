@@ -58,9 +58,10 @@ T.CheckBox {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: palette.text
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -88,9 +89,7 @@ T.CheckBox {
             Union.PositionedItem.source: Union.PositionerSource.Text
             text: control.text
             font: control.font
-            color: Union.Style.properties.text.color
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            color: control.palette.text
             renderType: Text.NativeRendering
             visible: control.display !== T.AbstractButton.IconOnly && text.length > 0
         }

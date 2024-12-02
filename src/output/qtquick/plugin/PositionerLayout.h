@@ -88,10 +88,11 @@ public:
     void addItem(QQuickItem *item);
     void removeItem(QQuickItem *item);
 
-    qreal implicitWidth() const;
-    qreal implicitHeight() const;
+    QSizeF implicitSize() const;
+    Q_SIGNAL void implicitSizeChanged();
 
     Sizes padding() const;
+    Q_SIGNAL void paddingChanged();
 
     Q_SIGNAL void layoutFinished();
 
@@ -103,12 +104,12 @@ private:
     void layoutContainer(LayoutContainer &container);
     void layoutBucket(LayoutBucket &bucket);
 
+    void onParentSizeChanged();
+
     bool m_layoutDirty = true;
     bool m_layouting = false;
     QSet<QQuickItem *> m_items;
     QSizeF m_implicitSize;
     Sizes m_padding;
-
-    qreal lastWidth = 0.0;
-    qreal lastHeight = 0.0;
+    QSizeF m_parentSize;
 };

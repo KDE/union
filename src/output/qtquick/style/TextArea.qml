@@ -41,15 +41,15 @@ T.TextArea {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.text.font
+    font: Union.Style.properties.text.font
     palette: Union.Style.properties.palette.quickPalette
 
     color: control.palette.text
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
     placeholderTextColor: control.palette.placeholderText
-    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.text.alignment.horizontal)
-    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.text.alignment.vertical)
+    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
 
     PlaceholderText {
         id: placeholder

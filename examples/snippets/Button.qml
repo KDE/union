@@ -4,8 +4,9 @@ import QtQuick.Layouts
 import QtTest
 
 import org.kde.union
-
 import org.kde.plasma.components as PC
+
+import org.kde.kirigami as Kirigami
 
 ApplicationWindow {
     width: 800
@@ -105,6 +106,7 @@ ApplicationWindow {
                     MenuItem {
                         text: "Checkable Item";
                         checkable: true
+                        onClicked: checked = !checked
                     }
                     MenuSeparator { }
                     MenuItem {
@@ -117,96 +119,114 @@ ApplicationWindow {
         }
     }
 
-    GridLayout {
-        Element.elementId: "window-contents"
-
+    ScrollView {
         anchors.centerIn: parent
 
-        columns: 2
+        width: 200
+        height: 200
 
-        Button {
-            id: button1
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
-            icon.name: "document-save"
-            text: "Test"
-            checkable: true
-            onClicked: cycleButtonDisplay(this)
-        }
+        // contentWidth: layout.implicitWidth
+        // contentHeight: layout.implicitHeight
 
-        PC.Button {
-            id: pcButton1
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
-            icon.name: "document-save"
-            text: "Test"
-            checkable: true
-            onClicked: cycleButtonDisplay(this)
-        }
+        GridLayout {
+            id: layout
+            Element.elementId: "window-contents"
 
-        Button {
-            text: "Test 2"
-            icon.name: "document-save"
-            enabled: !button1.checked
-            onClicked: cycleButtonDisplay(this)
-        }
+            columns: 2
 
-        PC.Button {
-            text: "Test 2"
-            icon.name: "document-save"
-            enabled: !pcButton1.checked
-            onClicked: cycleButtonDisplay(this)
-        }
+            Button {
+                id: button1
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 50
+                icon.name: "document-save"
+                text: "Test"
+                checkable: true
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        SpinBox {
-        }
+            PC.Button {
+                id: pcButton1
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 50
+                icon.name: "document-save"
+                text: "Test"
+                checkable: true
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        PC.SpinBox {
-        }
+            Button {
+                text: "Test 2"
+                icon.name: "document-save"
+                enabled: !button1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        ItemDelegate {
-            icon.name: "document-save"
-            text: "Test 4"
-            onClicked: cycleButtonDisplay(this)
-        }
+            PC.Button {
+                text: "Test 2"
+                icon.name: "document-save"
+                enabled: !pcButton1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        PC.ItemDelegate {
-            icon.name: "document-save"
-            text: "Test 4"
-            onClicked: cycleButtonDisplay(this)
-        }
+            SpinBox {
+                enabled: !button1.checked
+            }
 
-        CheckBox {
-            icon.name: "document-save"
-            text: "Test 5"
-            onClicked: cycleButtonDisplay(this)
-        }
+            PC.SpinBox {
+                enabled: !pcButton1.checked
+            }
 
-        PC.CheckBox {
-            icon.name: "document-save"
-            text: "Test 5"
-            onClicked: cycleButtonDisplay(this)
-        }
+            ItemDelegate {
+                icon.name: "document-save"
+                text: "Test 4"
+                enabled: !button1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        CheckDelegate {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
-            icon.name: "document-save"
-            text: "Test 5"
-            onClicked: cycleButtonDisplay(this)
-        }
+            PC.ItemDelegate {
+                icon.name: "document-save"
+                text: "Test 4"
+                enabled: !pcButton1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        PC.CheckDelegate {
-            Layout.preferredWidth: 200
-            Layout.preferredHeight: 50
-            icon.name: "document-save"
-            text: "Test 5"
-            onClicked: cycleButtonDisplay(this)
-        }
+            CheckBox {
+                icon.name: "document-save"
+                text: "Test 5"
+                enabled: !button1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
 
-        MenuItem {
-            text: "Menu Item"
-            icon.name: "application-exit-symbolic"
+            PC.CheckBox {
+                icon.name: "document-save"
+                text: "Test 5"
+                enabled: !pcButton1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
+
+            CheckDelegate {
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 50
+                icon.name: "document-save"
+                text: "Test 5"
+                enabled: !button1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
+
+            PC.CheckDelegate {
+                Layout.preferredWidth: 200
+                Layout.preferredHeight: 50
+                icon.name: "document-save"
+                text: "Test 5"
+                enabled: !pcButton1.checked
+                onClicked: cycleButtonDisplay(this)
+            }
+
+            MenuItem {
+                text: "Menu Item"
+                enabled: !button1.checked
+                icon.name: "application-exit-symbolic"
+            }
         }
     }
 

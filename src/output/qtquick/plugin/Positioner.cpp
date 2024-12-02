@@ -17,9 +17,9 @@ PositionerAttached::PositionerAttached(QObject *parent)
     : QObject(parent)
 {
     m_layout = new PositionerLayout(qobject_cast<QQuickItem *>(parent));
-    connect(m_layout, &PositionerLayout::layoutFinished, this, &PositionerAttached::implicitWidthChanged);
-    connect(m_layout, &PositionerLayout::layoutFinished, this, &PositionerAttached::implicitHeightChanged);
-    connect(m_layout, &PositionerLayout::layoutFinished, this, &PositionerAttached::paddingChanged);
+    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &PositionerAttached::implicitWidthChanged);
+    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &PositionerAttached::implicitHeightChanged);
+    connect(m_layout, &PositionerLayout::paddingChanged, this, &PositionerAttached::paddingChanged);
 }
 
 PositionerAttached::~PositionerAttached() = default;
@@ -96,12 +96,12 @@ void PositionerAttached::setPositionItems(const ItemList &newItems)
 
 qreal PositionerAttached::implicitWidth() const
 {
-    return m_layout->implicitWidth();
+    return m_layout->implicitSize().width();
 }
 
 qreal PositionerAttached::implicitHeight() const
 {
-    return m_layout->implicitHeight();
+    return m_layout->implicitSize().height();
 }
 
 Sizes PositionerAttached::padding() const

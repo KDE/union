@@ -58,6 +58,7 @@ T.SpinBox {
 
         text: control.displayText
         font: control.font
+        color: control.palette.text
 
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
@@ -76,7 +77,7 @@ T.SpinBox {
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
-            enabled: control.up?.enabled ?? true
+            enabled: enabled
         }
 
         QQCImpl.IconImage {
@@ -84,6 +85,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
+            palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
     }
@@ -95,7 +97,7 @@ T.SpinBox {
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
-            enabled: control.down?.enabled ?? true
+            enabled: enabled
         }
 
         QQCImpl.IconImage {
@@ -103,6 +105,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
+            palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
     }

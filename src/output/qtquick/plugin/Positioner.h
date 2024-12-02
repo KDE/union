@@ -91,6 +91,8 @@ public:
     Q_SIGNAL void paddingChanged();
 
 private:
+    void onLayoutFinished();
+
     std::pair<ItemList, ItemList> findPositionedItemChanges(const ItemList &currentItems, const ItemList &newItems);
 
     struct ChildrenWatcher {

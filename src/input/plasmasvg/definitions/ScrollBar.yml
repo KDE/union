@@ -1,0 +1,180 @@
+scrollbar:
+    selectors:
+    -   type: ScrollBar
+
+    path: widgets/scrollbar
+
+    layout:
+        width:
+            property: element-width
+            element: hint-scrollbar-size
+        height:
+            property: element-height
+            element: hint-scrollbar-size
+        padding:
+            prefix: slider-hint
+            left:
+                property: element-width
+                element: left-inset
+            right:
+                property: element-width
+                element: right-inset
+            top:
+                property: element-height
+                element: top-inset
+            bottom:
+                property: element-height
+                element: bottom-inset
+
+scrollbar-horizontal:
+    selectors:
+    -   type: ScrollBar
+        attributes:
+            orientation: horizontal
+
+    path: widgets/scrollbar
+
+    # layout
+    background:
+        <<: *standard-background
+
+        prefix: background-horizontal
+
+        border:
+            <<: *standard-border
+
+            top:
+                size:
+                    property: element-height
+                    element: top
+                image:
+                    property: element-image-blend
+                    stretch: Horizontal
+                    elements:
+                    -   property: element-image
+                        element: top
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: horizontal-line
+
+        corners:
+            <<: *standard-corners
+
+            top-left:
+                image:
+                    property: element-image-blend
+                    stretch: Horizontal
+                    elements:
+                    -   property: element-image
+                        element: topleft
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: horizontal-line
+            top-right:
+                image:
+                    property: element-image-blend
+                    stretch: Horizontal
+                    elements:
+                    -   property: element-image
+                        element: topright
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: horizontal-line
+
+scrollbar-vertical:
+    selectors:
+    -   type: ScrollBar
+        attributes:
+            orientation: vertical
+
+    path: widgets/scrollbar
+
+    # layout
+    background:
+        <<: *standard-background
+
+        prefix: background-vertical
+
+        border:
+            <<: *standard-border
+
+            left:
+                size:
+                    property: element-width
+                    element: left
+                image:
+                    property: element-image-blend
+                    stretch: Vertical
+                    elements:
+                    -   property: element-image
+                        element: left
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: vertical-line
+
+        corners:
+            <<: *standard-corners
+
+            top-left:
+                image:
+                    property: element-image-blend
+                    stretch: Vertical
+                    elements:
+                    -   property: element-image
+                        element: topleft
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: vertical-line
+            bottom-left:
+                image:
+                    property: element-image-blend
+                    stretch: Vertical
+                    elements:
+                    -   property: element-image
+                        element: bottomleft
+                    -   property: element-image
+                        path: widgets/line
+                        prefix: ""
+                        element: vertical-line
+
+scrollbar-handle:
+    selectors:
+    -   type: ScrollBar
+        child:
+            type: Handle
+
+    path: widgets/scrollbar
+    prefix: slider
+
+    layout:
+        width:
+            property: element-width
+            prefix: ""
+            element: hint-scrollbar-size
+        height:
+            property: element-height
+            prefix: ""
+            element: hint-scrollbar-size
+
+    background: *standard-background
+
+scrollbar-handle-hovered:
+    selectors:
+    -   type: ScrollBar
+        child:
+            type: Handle
+            state: Hovered
+    -   type: ScrollBar
+        child:
+            type: Handle
+            state: Pressed
+
+    path: widgets/scrollbar
+    prefix: mouseover-slider
+
+    background: *standard-background
