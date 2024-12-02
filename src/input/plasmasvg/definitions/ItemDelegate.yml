@@ -2,8 +2,10 @@ itemdelegate:
     selectors:
     -   type: ItemDelegate
     -   type: CheckDelegate
+
     path: widgets/listitem
     prefix: normal
+
     icon:
         alignment:
             container: Content
@@ -61,52 +63,8 @@ itemdelegate:
             bottom:
                 property: element-height
                 element: hint-bottom-margin
-    background: &itemdelegate-background
-        image:
-            property: element-image
-            element: center
-        border:
-            left:
-                element: left
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            right:
-                element: right
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            top:
-                element: top
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-            bottom:
-                element: bottom
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-        corners:
-            top-left:
-                element: topleft
-                image:
-                    property: element-image
-            top-right:
-                element: topright
-                image:
-                    property: element-image
-            bottom-left:
-                element: bottomleft
-                image:
-                    property: element-image
-            bottom-right:
-                element: bottomright
-                image:
-                    property: element-image
+
+    background: *standard-background
 
 itemdelegate-hovered:
     selectors:
@@ -114,9 +72,11 @@ itemdelegate-hovered:
         state: Hovered
     -   type: CheckDelegate
         state: Hovered
+
     path: widgets/listitem
     prefix: hover
-    background: *itemdelegate-background
+
+    background: *standard-background
 
 itemdelegate-pressed:
     selectors:
@@ -124,9 +84,11 @@ itemdelegate-pressed:
         state: Pressed
     -   type: CheckDelegate
         state: Pressed
+
     path: widgets/listitem
     prefix: pressed
-    background: *itemdelegate-background
+
+    background: *standard-background
 
 itemdelegate-with-icon:
     selectors:

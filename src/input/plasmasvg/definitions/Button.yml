@@ -73,53 +73,7 @@ button:
             name: small
 
     background:
-        image:
-            property: element-image
-            element: center
-
-        border:
-            left:
-                element: left
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            right:
-                element: right
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            top:
-                element: top
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-            bottom:
-                element: bottom
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-
-        corners:
-            top-left:
-                element: topleft
-                image:
-                    property: element-image
-            top-right:
-                element: topright
-                image:
-                    property: element-image
-            bottom-left:
-                element: bottomleft
-                image:
-                    property: element-image
-            bottom-right:
-                element: bottomright
-                image:
-                    property: element-image
+        <<: *standard-background
 
         shadow:
             prefix: shadow
@@ -435,14 +389,6 @@ button-pressed:
         state: Pressed
     -   type: Button
         state: Checked
-    -   type: CheckBox
-        state: Checked
-        child:
-            type: Indicator
-    -   type: CheckDelegate
-        state: Checked
-        child:
-            type: Indicator
 
     path: widgets/button
     colorSet: Button
@@ -452,11 +398,7 @@ button-pressed:
             <<: *button-padding
             prefix: pressed
 
-        inset:
-            left: 0
-            right: 0
-            top: 0
-            bottom: 0
+        inset: empty
 
     background:
         image:
@@ -535,22 +477,7 @@ button-pressed:
                     -   normal-bottomright
                     -   pressed-bottomright
 
-        shadow:
-            offsets:
-                left: 0
-                right: 0
-                top: 0
-                bottom: 0
-
-            border:
-                left:
-                    size: 0
-                right:
-                    size: 0
-                top:
-                    size: 0
-                bottom:
-                    size: 0
+        shadow: empty
 
 button-disabled:
     selectors:
@@ -563,70 +490,9 @@ button-disabled:
     colorGroup: Disabled
 
     background:
-        image:
-            property: element-image
-            element: center
+        <<: *standard-background
 
-        border:
-            left:
-                element: left
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            right:
-                element: right
-                size:
-                    property: element-width
-                image:
-                    property: element-image
-            top:
-                element: top
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-            bottom:
-                element: bottom
-                size:
-                    property: element-height
-                image:
-                    property: element-image
-
-        corners:
-            top-left:
-                element: topleft
-                image:
-                    property: element-image
-            top-right:
-                element: topright
-                image:
-                    property: element-image
-            bottom-left:
-                element: bottomleft
-                image:
-                    property: element-image
-            bottom-right:
-                element: bottomright
-                image:
-                    property: element-image
-
-        shadow:
-            offsets:
-                left: 0
-                right: 0
-                top: 0
-                bottom: 0
-
-            border:
-                left:
-                    size: 0
-                right:
-                    size: 0
-                top:
-                    size: 0
-                bottom:
-                    size: 0
+        shadow: empty
 
 button-with-icon:
     selectors:
