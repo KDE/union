@@ -24,6 +24,8 @@ QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     m_properties = std::make_unique<StylePropertyGroup>(this);
 
     initialize();
+
+    update();
 }
 
 StylePropertyGroup *QuickStyle::properties() const
@@ -94,7 +96,6 @@ void QuickStyle::update()
     }
 
     setElement(element);
-
     if (!element) {
         return;
     }
