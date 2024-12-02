@@ -42,9 +42,11 @@ inline qreal spacedSize(qreal input, qreal spacing)
 PositionerLayout::PositionerLayout(QQuickItem *parentItem)
     : QQuickItem(parentItem)
 {
-    connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
-    connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
-    parentItem->installEventFilter(this);
+    if (parentItem) {
+        connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::markDirty);
+        connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::markDirty);
+        parentItem->installEventFilter(this);
+    }
     polish();
 }
 
