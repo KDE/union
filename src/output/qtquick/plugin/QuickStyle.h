@@ -77,7 +77,7 @@ private:
     void update();
 
     std::unique_ptr<StylePropertyGroup> m_properties;
-    QuickElement *m_element = nullptr;
+    QPointer<QuickElement> m_element = nullptr;
     QQmlEngine *m_engine = nullptr;
 };
 
