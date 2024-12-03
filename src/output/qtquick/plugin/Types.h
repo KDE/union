@@ -54,8 +54,6 @@ public:
     Sizes(qreal left, qreal right, qreal top, qreal bottom);
     explicit Sizes(const QMarginsF &margins);
 
-    bool operator==(const Sizes &other);
-
     Q_PROPERTY(qreal left READ left WRITE setLeft)
     qreal left() const;
     void setLeft(qreal newLeft);
@@ -78,5 +76,8 @@ public:
     QMarginsF toMargins() const;
 
 private:
+    friend bool operator==(const Sizes &, const Sizes &);
     QMarginsF m_margins;
 };
+
+bool operator==(const Sizes &first, const Sizes &second);

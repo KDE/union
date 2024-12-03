@@ -55,11 +55,6 @@ Sizes::Sizes(const QMarginsF &margins)
 {
 }
 
-bool Sizes::operator==(const Sizes &other)
-{
-    return m_margins == other.m_margins;
-}
-
 qreal Sizes::left() const
 {
     return m_margins.left();
@@ -108,4 +103,9 @@ bool Sizes::isValid() const
 QMarginsF Sizes::toMargins() const
 {
     return m_margins;
+}
+
+bool operator==(const Sizes &first, const Sizes &second)
+{
+    return first.m_margins == second.m_margins;
 }
