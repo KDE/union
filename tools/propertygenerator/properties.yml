@@ -28,8 +28,6 @@ palette:
         "qml_group.h.j2":
         -   "QVariant"
         -   "QQmlComponent"
-        -   "QGuiApplication"
-        -   "QWindow"
     _extra_code:
         "qml_group.h.j2":
             public: |4
