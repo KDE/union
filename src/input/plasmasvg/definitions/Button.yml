@@ -7,6 +7,9 @@ button:
     -   type: CheckDelegate
         child:
             type: Indicator
+    -   type: MenuItem
+        child:
+            type: Indicator
 
     path: widgets/button
     prefix: normal
@@ -146,6 +149,10 @@ button-hovered:
         state: Hovered
         child:
             type: Indicator
+    -   type: MenuItem
+        state: Hovered
+        child:
+            type: Indicator
 
     path: widgets/button
     colorSet: Button
@@ -219,6 +226,10 @@ button-focus:
         child:
             type: Indicator
     -   type: CheckDelegate
+        state: VisualFocus
+        child:
+            type: Indicator
+    -   type: MenuItem
         state: VisualFocus
         child:
             type: Indicator
@@ -488,6 +499,10 @@ button-disabled:
         child:
             type: Indicator
     -   type: CheckDelegate
+        state: Disabled
+        child:
+            type: Indicator
+    -   type: MenuItem
         state: Disabled
         child:
             type: Indicator
