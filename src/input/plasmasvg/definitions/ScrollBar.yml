@@ -1,6 +1,7 @@
 scrollbar:
     selectors:
     -   type: ScrollBar
+    -   type: ScrollIndicator
 
     path: widgets/scrollbar
 
@@ -34,7 +35,6 @@ scrollbar-horizontal:
 
     path: widgets/scrollbar
 
-    # layout
     background:
         <<: *standard-background
 
@@ -92,7 +92,6 @@ scrollbar-vertical:
 
     path: widgets/scrollbar
 
-    # layout
     background:
         <<: *standard-background
 
@@ -147,6 +146,9 @@ scrollbar-handle:
     -   type: ScrollBar
         child:
             type: Handle
+    -   type: ScrollIndicator
+        child:
+            type: Handle
 
     path: widgets/scrollbar
     prefix: slider
@@ -170,6 +172,14 @@ scrollbar-handle-hovered:
             type: Handle
             state: Hovered
     -   type: ScrollBar
+        child:
+            type: Handle
+            state: Pressed
+    -   type: ScrollIndicator
+        child:
+            type: Handle
+            state: Hovered
+    -   type: ScrollIndicator
         child:
             type: Handle
             state: Pressed
