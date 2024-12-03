@@ -18,16 +18,18 @@ itemdelegate:
         height:
             property: icon-size
             name: small
+
     text:
         alignment:
             container: Content
-            horizontal: Start
+            horizontal: Fill
             vertical: Center
             order: 1
         font:
             property: font-name
             name: system-normal
         color: palette-foreground
+
     layout:
         width:
             property: sum
@@ -46,7 +48,7 @@ itemdelegate:
 
         alignment:
             container: Content
-            horizontal: Start
+            horizontal: Fill
             vertical: Center
 
         spacing: 4
