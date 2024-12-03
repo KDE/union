@@ -34,7 +34,7 @@ toolbar:
                 property: element-height
                 element: hint-bottom-margin
 
-    background: &toolbar-background
+    background:
         image:
             property: element-image
             element: center
@@ -94,10 +94,29 @@ toolbar:
 toolbar-applicationheader:
     selectors:
     -   type: ToolBar
-        attributes:
-            location: header
+        id: application-header
 
     path: widgets/toolbar
     colorSet: Header
 
-    background: *toolbar-background
+    background:
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left: empty
+            right: empty
+            top: empty
+
+            bottom:
+                path: widgets/line
+                prefix: ""
+                size:
+                    property: element-height
+                    element: horizontal-line
+                image:
+                    property: element-image
+                    element: horizontal-line
+
+        corners: empty
