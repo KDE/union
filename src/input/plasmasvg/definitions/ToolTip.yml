@@ -5,8 +5,6 @@ tooltip:
     path: widgets/tooltip
     colorSet: Tooltip
 
-    debug: true
-
     layout:
         width:
             property: sum
