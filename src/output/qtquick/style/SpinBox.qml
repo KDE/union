@@ -58,6 +58,7 @@ T.SpinBox {
 
         text: control.displayText
         font: control.font
+        color: control.palette.text
 
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
@@ -84,6 +85,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
+            palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
     }
@@ -103,6 +105,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
+            palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
     }
