@@ -2,8 +2,9 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
+
+import org.kde.union.impl as Union
 
 T.ToolSeparator {
     id: control
@@ -13,12 +14,23 @@ T.ToolSeparator {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    padding: vertical ? 6 : 2
-    verticalPadding: vertical ? 2 : 6
-
-    contentItem: Rectangle {
-        implicitWidth: control.vertical ? 1 : 30
-        implicitHeight: control.vertical ? 30 : 1
-        color: control.palette.mid
+    Union.Element.type: "ToolSeparator"
+    Union.Element.states {
+        enabled: control.enabled
     }
+    Union.Element.attributes: {
+        "orientation": horizontal ? "horizontal" : "vertical"
+    }
+
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
+
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
+
+    contentItem: Union.StyledRectangle { }
 }
