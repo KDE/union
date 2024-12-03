@@ -1,0 +1,68 @@
+separator-horizontal:
+    selectors:
+    -   type: MenuSeparator
+    -   type: ToolSeparator
+        attributes:
+            orientation: horizontal
+
+    layout:
+        width:
+            property: named-value
+            name: grid-unit
+            multiplier: 8
+        height: 1
+
+        padding:
+            left: 0
+            right: 0
+            top:
+                property: named-value
+                name: small-spacing
+                multiplier: 0.5
+            bottom:
+                property: named-value
+                name: small-spacing
+                multiplier: 0.5
+
+    background:
+        image:
+            property: element-image
+            path: widgets/line
+            element: horizontal-line
+
+separator-vertical:
+    selectors:
+    -   type: ToolSeparator
+        attributes:
+            orientation: vertical
+
+    layout:
+        # Read these values from toolbar to match its height
+        path: widgets/toolbar
+
+        width: 1
+        height:
+            property: element-height
+            element: center
+
+        padding:
+            left:
+                property: named-value
+                name: small-spacing
+                multiplier: 0.5
+            right:
+                property: named-value
+                name: small-spacing
+                multiplier: 0.5
+            top:
+                property: element-height
+                element: hint-top-margin
+            bottom:
+                property: element-height
+                element: hint-bottom-margin
+
+    background:
+        image:
+            property: element-image
+            path: widgets/line
+            element: vertical-line
