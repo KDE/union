@@ -24,6 +24,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ScrollIndicator.qml
     style/ScrollView.qml
     style/SpinBox.qml
+    style/Switch.qml
     style/TabButton.qml
     style/TabBar.qml
     style/TextArea.qml
