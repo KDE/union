@@ -183,6 +183,11 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
         function = value<QByteArray>(node);
     });
 
+    qreal multiplier = 1.0;
+    with_child(node, "multiplier", [&](auto node) {
+        multiplier = value<qreal>(node);
+    });
+
     auto func = propertyFunctions.value(function);
 
     qreal result = 0.0;
@@ -210,7 +215,7 @@ PropertyFunctionResult PropertyFunctions::sum(ryml::ConstNodeRef node, LoadingCo
         }
     }
 
-    return result;
+    return result * multiplier;
 }
 
 PropertyFunctionResult PropertyFunctions::fontFromName(ryml::ConstNodeRef node, LoadingContext &context)
