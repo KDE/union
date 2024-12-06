@@ -1,0 +1,233 @@
+switch:
+    selectors:
+    -   type: Switch
+
+    path: widgets/switch
+
+switch-indicator:
+    selectors:
+    -   type: Switch
+        child:
+            type: Indicator
+
+    path: widgets/switch
+
+    layout:
+        width:
+            property: element-width
+            element: hint-bar-size
+        height:
+            property: element-height
+            element: hint-bar-size
+
+        spacing:
+            property: named-value
+            name: small-spacing
+
+    icon:
+        width:
+            property: icon-size
+            name: small
+        height:
+            property: icon-size
+            name: small
+
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+
+    text:
+        alignment:
+            container: Content
+            horizontal: Start
+            vertical: Center
+
+switch-indicator:
+    selectors:
+    -   type: Switch
+        child:
+            type: Indicator
+
+    path: widgets/switch
+    colorSet: Button
+
+    layout:
+        width:
+            property: element-width
+            element: hint-bar-size
+        height:
+            property: element-height
+            element: hint-bar-size
+
+        alignment:
+            container: Item
+            horizontal: Start
+            vertical: Center
+
+    background: &switch-background
+        prefix: inactive
+        image:
+            property: element-image
+            element: center
+
+        border:
+            left:
+                element: left
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+            right:
+                element: right
+                size:
+                    property: element-width
+                image:
+                    property: element-image
+
+switch-indicator-checked:
+    selectors:
+    -   type: Switch
+        state: Checked
+        child:
+            type: Indicator
+
+    path: widgets/switch
+    colorSet: Button
+
+    background:
+        <<: *switch-background
+
+        prefix: active
+
+
+switch-indicator-handle:
+    selectors:
+    -   type: Switch
+        child:
+            type: Indicator
+            child:
+                type: Handle
+
+    path: widgets/switch
+    colorSet: Button
+
+    layout:
+        width:
+            property: element-width
+            element: handle-shadow
+        height:
+            property: element-height
+            element: handle-shadow
+
+        margins:
+            left: &handle-horizontal-margin
+                property: sum
+                multiplier: -0.5
+                elements:
+                -   property: element-width
+                    element: handle-shadow
+                -   property: element-width
+                    element: handle
+                    invert: true
+            right: *handle-horizontal-margin
+
+    background:
+        image:
+            property: element-image-blend
+            align:
+                horizontal: center
+                vertical: center
+            elements:
+            -   handle-shadow
+            -   handle
+
+switch-indicator-handle-hovered:
+    selectors:
+    -   type: Switch
+        state: Hovered
+        child:
+            type: Indicator
+            child:
+                type: Handle
+
+    path: widgets/switch
+    colorSet: Button
+
+    background:
+        image:
+            property: element-image-blend
+            align:
+                horizontal: center
+                vertical: center
+            elements:
+            -   handle-shadow
+            -   handle-hover
+
+switch-indicator-handle-visualfocus:
+    selectors:
+    -   type: Switch
+        state: VisualFocus
+        child:
+            type: Indicator
+            child:
+                type: Handle
+
+    path: widgets/switch
+    colorSet: Button
+
+    layout:
+        margins:
+            left: &handle-focus-horizontal-inset
+                property: sum
+                multiplier: -0.5
+                elements:
+                -   property: element-width
+                    element: handle-focus
+                -   property: element-width
+                    element: handle-hover
+                    invert: true
+            right: *handle-focus-horizontal-inset
+
+        width:
+            property: element-width
+            element: handle-focus
+        height:
+            property: element-height
+            element: handle-focus
+
+    background:
+        image:
+            property: element-image-blend
+            align:
+                horizontal: center
+                vertical: center
+            elements:
+            -   handle-focus
+            -   handle-hover
+
+switch-indicator-handle-pressed:
+    selectors:
+    -   type: Switch
+        state: Pressed
+        child:
+            type: Indicator
+            child:
+                type: Handle
+
+    path: widgets/switch
+    colorSet: Button
+    element: handle-pressed
+
+    layout:
+        margins:
+            left: 0
+            right: 0
+        width:
+            property: element-width
+        height:
+            property: element-height
+
+    background:
+        image:
+            property: element-image
