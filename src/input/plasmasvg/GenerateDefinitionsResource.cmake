@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+#
 # This generates a QRC file for the definitions by listing all yml files in the definitions directory.
 # This avoids having to maintain our own QRC file and related merge conflicts.
 file(GLOB _definitions definitions/*.yml)

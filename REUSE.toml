@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: None
+
+version = 1
+
+[[annotations]]
+path = "**/README.md"
+SPDX-License-Identifier = "BSD-2-Clause"
+SPDX-FileCopyrightText = "2024 Arjen Hiemstra <ahiemstra@heimr.nl>"

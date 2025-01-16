@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+# SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
+
 # Spinbox itself is mostly a text field with extra buttons. Most of the styling
 # comes from TextField.yml, with only the layout changed here.
 spinbox:
