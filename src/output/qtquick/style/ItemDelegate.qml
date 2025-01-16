@@ -1,11 +1,8 @@
-/*
-    SPDX-FileCopyrightText: 2017 Marco Martin <mart@kde.org>
-    SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
-    SPDX-FileCopyrightText: 2022 Arjen Hiemstra <ahiemstra@heimr.nl>
-    SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
-
-    SPDX-License-Identifier: LGPL-3.0-only OR GPL-2.0-or-later
-*/
+// SPDX-License-Identifier: LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+// SPDX-FileCopyrightText: 2017 Marco Martin <mart@kde.org>
+// SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+// SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
 
 import QtQuick
 import QtQuick.Controls.impl as QQCImpl
