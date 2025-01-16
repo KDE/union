@@ -5,12 +5,9 @@ Dependencies:
 - 'on': ['@all']
   'require':
     'frameworks/extra-cmake-modules': '@latest-kf6'
-    'frameworks/karchive': '@latest-kf6'
-    'frameworks/kcolorscheme': '@latest-kf6'
-    'frameworks/kconfig': '@latest-kf6'
-    'plasma/libplasma': '@latest-kf6'
-    # TODO: add ryml dependency when it becomes available
 
 Options:
   test-before-installing: True
   require-passing-tests-on: [ 'Linux' ]
+  # Disable PlasmaSVG for now so we do not need RYML in the CI image yet.
+  cmake-options: "-DWITH_PLASMASVG_INPUT=OFF"
