@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\module plasmasvg
+\title Plasma SVG Input C++ Classes
+\ingroup modules
+
+*/
+
+/*!
+
+\page plasmasvg-index.html
+\title Plasma SVG Input
+
+The Plasma SVG input plugin uses Plasma's SVG styling as an input format, along
+with a set of rule definitions defined in YAML files. These rule defintions are
+used to define which exact rules are created and how these make use of the SVGs
+from the Plasma style.
+
+\section1 Articles
+
+\list
+    \li \l{plasmasvg-ruledefinitions.html}{Rule Definitions}
+    \li \l{plasmasvg-propertyfunctions.html}{Property Functions}
+\endlist
+
+*/

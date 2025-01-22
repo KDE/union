@@ -1,0 +1,81 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page plasmasvg-ruledefinitions.html
+\title Rule Definitions
+
+Rule definitions for the Plasma SVG input are YAML files that describe how the
+SVGs from the Plasma style relate to Union style rules. Most importantly, they
+define what \l[CPP]{Union::Selector}{Selectors} are used and what properties are
+set for the rules.
+
+Rule definition files are located in the \c{src/input/plasmasvg/definitions}
+directory. They are bundled into the Plasma SVG input plugin at build time. Each
+definition file should contain a mapping defining a set of style rules. The keys
+of this top-level mapping are not used but help with identifying separate rules
+when reading the files.
+
+Each style rule is a mapping containing a key \c{selectors} which contains a
+list of selectors for this style rule. It should also contain several property
+keys that define what value these properties have.
+
+For example, the following defines two style rules, \c{button} and
+\c{button-hovered}. The first applies to any element that has a \e{type} of
+\c{Button}. The second applies to any element that has a \e{type} of \c{Button}
+and has the \e{state} \c{Hovered} set. The \c{button} rule sets the properties
+\c{width} and \c{height} of the \c{layout} group to \c{50}. It also sets the
+background color to \c{green}. The \c{button-hovered} only sets the background
+color to \c{blue}. Note that, at runtime, when hovering over a button, \e{both}
+rules will apply to the button. The end result will be that the button will be
+50 by 50 pixels in size with a blue background color.
+
+\badcode
+button:
+    selectors:
+    -   type: Button
+
+    layout:
+        width: 50
+        height: 50
+
+    background:
+        color: "green"
+
+button-hovered:
+    selectors:
+    -   type: Button
+        state: Hovered
+
+    background:
+        color: "blue"
+\endcode
+
+\section1 Selectors
+
+Selectors are defined as a list, with each element being a mapping. Each entry
+in this list creates a separate style rule. Each mapping in the list should
+contain keys that match certain element properties, such as \c{type}. All the
+keys in the mapping must match an element for the rule to match.
+
+The following keys are recognised:
+\list
+    \li \a type A string that will match an element's type.
+    \li \a id A string that will match an element's ID.
+    \li \a state Either a string or a list of strings. Each string should be the
+                 name of a state in the
+                 \l[CPP]{Union::Element::State}{State enum} that will be matched
+                 to the state of an element. If multiple states are defined they
+                 all need to match.
+    \li \a attributes A mapping containing key-value pairs that are matched to
+                      attributes of an element. If multiple pairs are defined
+                      they all need to match.
+    \li \a child A mapping containing another rule definition mapping. The rule
+                 will only match elements that have a child that matches the
+                 child block of this selector.
+\endlist
+
+\section1 Properties
+
+*/

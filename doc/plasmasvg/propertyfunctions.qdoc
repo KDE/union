@@ -1,0 +1,206 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page plasmasvg-propertyfunctions.html
+\title Property Functions
+
+Property functions are used to retrieve the value of certain properties of
+an SVG. These can then be used directly as values for properties of the Union
+data model or used by other elements of the Plasma SVG input plugin.
+
+\section1 Function Call Blocks
+
+Any rule definition can call property functions for properties. Whenever you
+would normally use a value for a property you can instead use a function call
+block. These are mappings that contain the key \c{function} to identify which
+function to call. Any other entries in this mapping will be passed as arguments
+to the called function. What exact arguments these functions accept depends on
+the function and is described below.
+
+For example, the following function call block would call the function
+\c{element-image} and return an image for the element \c{example-element} in the
+SVG \c{example}:
+
+\badcode
+image:
+    function: element-image
+    path: "example"
+    element: "example-element"
+\endcode
+
+\section1 Contextual Arguments
+
+Some functions can accept contextual arguments. These arguments can be set at
+any level in a rule definition. When the property function is called it will use
+the last declared value for such an argument. For example, if you have the
+following rule definition:
+
+\badcode
+example:
+    path: "example"
+    layout:
+        prefix: "example"
+        width:
+            function: element-width
+            element: "width-element"
+        height:
+            function: element-height
+            element: "height-element"
+\endcode
+
+The function \c{element-width} will look up the element named \c{width-element},
+prefixed with \c{example} from the layout block that is it's parent. It will look
+for this element inside the \c{example} SVG that is declared as path at the top
+level. The function \c{element-height} will instead look for the element
+\c{height-element}, but still prefixed with the same \c{example} in the same
+\c{example} SVG.
+
+\section1 Available Functions
+
+\section3 element-size
+
+Returns the size of an SVG element.
+
+\b{Contextual Arguments}
+\list
+  \li \a path The path of the SVG to use. Relative to the theme root path.
+  \li \a prefix A prefix that will be prepended to any element name,
+                using "-" as separator.
+  \li \a element The name of an SVG element to use.
+\endlist
+
+\section3 element-width
+
+Returns the width of an SVG element.
+
+\b{Contextual Arguments}
+\list
+  \li \a path The path of the SVG to use. Relative to the theme root path.
+  \li \a prefix A prefix that will be prepended to any element name,
+                using "-" as separator.
+  \li \a element The name of an SVG element to use.
+\endlist
+
+\section3 element-height
+
+Returns the height of an SVG element.
+
+\b{Contextual Arguments}
+\list
+  \li \a path The path of the SVG to use. Relative to the theme root path.
+  \li \a prefix A prefix that will be prepended to any element name,
+                using "-" as separator.
+  \li \a element The name of an SVG element to use.
+\endlist
+
+\section3 element-image
+
+Returns a rendered image of an SVG element. It will use the current color set
+and color group for rendering if the SVG supports recoloring.
+
+\b{Contextual Arguments}
+\list
+  \li \a path The path of the SVG to use. Relative to the theme root path.
+  \li \a prefix A prefix that will be prepended to any element name,
+                using "-" as separator.
+  \li \a element The name of an SVG element to use.
+  \li \a colorSet The color set to use when rendering an image of an element.
+  \li \a colorGroup The color group to use when rendering an image of an
+                    element.
+\endlist
+
+\section3 element-image-blend
+
+Renders several elements to images, blends them together using alpha blending
+and returns the result. The resulting image will use the largest width and
+height of the elements as width and height.
+
+\b Arguments
+\list
+  \li \a elements A list that contains either plain element names or function
+                  call blocks. Note that the function call needs to return an
+                  image. If using plain element names, this function will call
+                  \c{element-image} for each element name.
+  \li \a align A Qt::Alignment value that indicates how images should be aligned
+               if their sizes are different.
+  \li \a stretch A Qt::Orientation value that indicates if images that are
+                 smaller than the maximum should be stretched and in which
+                 direction.
+\endlist
+
+\b{Contextual Arguments}
+
+When \a elements is a list of element names, these element names will override
+the \a element contextual argument before \c{element-image} is called.
+
+\section3 sum
+
+Returns the sum of several values.
+
+\b Arguments
+\list
+  \li \a elements A list that contains either plain element names or function
+                  call blocks.
+  \li \a function The function to call for each element when \c{elements}
+                  contains plain element names.
+  \li \a multiplier A multiplier to multiply the result by.
+\endlist
+
+\b{Contextual Arguments}
+
+When \a elements is a list of element names, these element names will override
+the \a element contextual argument before \a function is called.
+
+\section3 font-name
+
+Return a font by name.
+
+\b Arguments
+\list
+  \li \a name The name of a font. The following names are recognised:
+              \list
+                \li \c{system-normal} The default system font.
+                \li \c{system-fixed} The default system fixed-width font.
+                \li \c{system-small} The system's small font.
+                \li \c{system-toolbar} The system's toolbar font.
+                \li \c{system-menu} The system's menu font.
+                \li \c{system-window} The system's window font.
+              \endlist
+\endlist
+
+\section3 icon-size
+
+Return an icon size by name.
+
+\b Arguments
+\list
+  \li \a name The name of the icon size. The following names are recognised:
+              \list
+                \li \c{small}
+                \li \c{small-medium}
+                \li \c{medium}
+                \li \c{large}
+                \li \c{huge}
+                \li \c{enormous}
+              \endlist
+\endlist
+
+\section3 named-value
+
+Return a specific named value.
+
+\b Arguments
+\list
+  \li \a name The name of the value. The following names are recognised:
+              \list
+                  \li \c{small-spacing}
+                  \li \c{medium-spacing}
+                  \li \c{large-spacing}
+                  \li \c{grid-unit}
+              \endlist
+  \li \a multiplier A multiplier to apply to the value.
+\endlist
+
+*/
