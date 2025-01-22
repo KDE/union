@@ -1,7 +1,13 @@
 # SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>*
 
+# \brief The root property group for all elements.
+#
+# This class contains all the properties that are used to style an element.
+
 palette:
+    # \brief A collection of colors to be used for coloring an element.
+
     accent: QColor
     alternateBase: QColor
     base: QColor
@@ -72,7 +78,11 @@ palette:
                 }
 
 layout:
+    # \brief A property group containing properties related to the layout of an element.
+
     alignment: &alignment
+        # \brief A property group with properties related to alignment.
+
         container: Union::Properties::AlignmentContainer
         horizontal: Union::Properties::Alignment
         vertical: Union::Properties::Alignment
@@ -83,6 +93,8 @@ layout:
     spacing: qreal
 
     padding: &size
+        # \brief A property group representing a set of sizes for cardinal directions.
+
         left: qreal
         right: qreal
         top: qreal
@@ -112,10 +124,14 @@ layout:
     margins: *size
 
 text:
+    # \brief A property group containing properties related to the text of an element.
+
     alignment: *alignment
     font: QFont
 
 icon:
+    # \brief A property group containing properties related to an element's icon.
+
     alignment: *alignment
     width: qreal
     height: qreal
@@ -123,8 +139,12 @@ icon:
     source: QUrl
 
 background:
+    # \brief A property group containing properties related to an element's background.
+
     color: QColor
     image: &image
+        # \brief A property group describing properties of an image.
+
         imageData: QImage
         width: qreal
         height: qreal
@@ -133,7 +153,11 @@ background:
         flags: Union::Properties::ImageFlags
 
     border:
+        # \brief A property group containing properties of a background's border.
+
         left: &line
+            # \brief A property group containing the properties of a line.
+
             size: qreal
             color: QColor
             style: Union::Properties::LineStyle
@@ -144,7 +168,11 @@ background:
         bottom: *line
 
     corners:
+        # \brief A property group containing properties of a background's corners.
+
         topLeft: &corner
+            # \brief A property group containing the properties of a corner.
+
             radius: qreal
             width: qreal
             height: qreal
@@ -156,6 +184,8 @@ background:
         bottomRight: *corner
 
     shadow:
+        # \brief A property group containing properties relating to an element's shadow.
+
         offsets: *size
 
         left: *line
