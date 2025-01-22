@@ -135,11 +135,6 @@ private:
  * Equality comparison for {{ type_name }}.
  */
 UNION_EXPORT bool operator==(const {{ type_name }} &left, const {{ type_name}} &right);
-UNION_EXPORT inline bool operator!=(const {{ type_name }} &left, const {{ type_name}} &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
