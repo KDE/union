@@ -1,0 +1,61 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page overview.html
+\title Overview
+
+Union is a style engine designed to take a description of a style in some input
+format, convert it into an abstraction representation of how to style elements
+and then feed that to an output that uses that information to perform the actual
+styling.
+
+\section1 Style Rules, Elements and Selectors
+
+At the core of Union are a collection of \l[CPP]{Union::Theme}{Styles} that each
+contain a set pf \l[CPP]{Union::StyleRule}{StyleRules}. Style rules define what
+properties should be applied to what \l[CPP]{Union::Element}{Elements}. Each
+style rule has a list of \l[CPP]{Union::Selector}{Selectors} that try to match
+against an element's properties. This matching is done using an
+\l[CPP]{Union::}{ElementQuery} which will go through all style rules in a style
+and try to match them to its list of elements.
+
+If multiple style rules match, they are sorted by the weight of the selectors
+and then combined. This results in a set of properties where each property has
+the value of the style rule with the highest weight that defines a value for
+that property. Properties are grouped together in a set of PropertyGroup
+classes. These are all part of the \l[CPP]{Union::Properties} namespace.
+
+\section1 Input Plugins
+
+Styles and the rules they contain are defined by
+\l[CPP]{Union::InputPlugin}{InputPlugins}. An input plugin is responsible for
+converting some kind of input format into a set of style rules that can be
+matched and then used to style elements. An input plugin creates instances of
+styles along with the appropriate \l[CPP]{Union::ThemeLoader}{StyleLoader}. The
+StyleLoader is used to create the actual instances of style rules as appropriate
+for the input format.
+
+\section1 Output Plugins
+
+All the information contained within the style rules needs to be transformed to
+actual rendering commands. This is handled by specific output plugins. These are
+not really plugins for Union itself but plugins that make use of Union to style
+different things. They are implementations of things like a QtQuick Controls
+style or QtWidgets QStyle.
+
+Output plugins are responsible for creating instances of Element for each
+element that should be styled, adding the right information to these elements
+and then providing these elements to an ElementQuery to find out which style
+rules match the elements. They should then use the properties provided by the
+query to render the styling for the element.
+
+\section1 Platform Integration
+
+Certain details of Union, such as what the default style is, are dependant on
+the platform that is being used. To provide these values for a new platform,
+create a new \l[CPP]{Union::PlatformPlugin}{PlatformPlugin}.
+
+*/
+
