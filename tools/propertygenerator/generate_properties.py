@@ -7,7 +7,7 @@ import dataclasses
 from pathlib import Path
 import shutil
 
-import yaml
+import ruamel.yaml as yaml
 import jinja2
 
 base_directory = Path(__file__).parent
@@ -30,16 +30,13 @@ class AliasNode(yaml.Node):
     id = "anchor"
 
 
-class PreserveAliasesLoader(yaml.SafeLoader):
-    def __init__(self, stream):
-        super().__init__(stream)
-
+class PreserveAliasesComposer(yaml.composer.Composer):
     def compose_node(self, parent, index):
-        if self.check_event(yaml.AliasEvent):
-            event = self.get_event()
+        if self.parser.check_event(yaml.AliasEvent):
+            event = self.parser.get_event()
             return AliasNode("", event.anchor, event.start_mark, event.end_mark)
 
-        event = self.peek_event()
+        event = self.parser.peek_event()
         result = super().compose_node(parent, index)
 
         if event.anchor is not None:
@@ -167,8 +164,12 @@ def render_template(template_name: str, output_path: Path, env: jinja2.Environme
 
 if __name__ == "__main__":
     structure = None
+
+    parser = yaml.YAML()
+    parser.Composer = PreserveAliasesComposer
+
     with open(base_directory / "properties.yml") as f:
-        structure = yaml.compose(f, PreserveAliasesLoader)
+        structure = parser.compose(f)
 
     types = process_node(structure, "StyleProperty", {})
 
