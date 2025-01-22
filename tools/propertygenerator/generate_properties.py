@@ -51,16 +51,16 @@ class PreserveAliasesLoader(yaml.SafeLoader):
 
 
 @dataclasses.dataclass
-class ValueDescription:
+class PropertyDescription:
     name: str
     type: str = ""
-    is_property: bool = False
+    is_group: bool = False
 
 
 @dataclasses.dataclass
-class PropertyDescription:
+class GroupDescription:
     type_name: str
-    values: list[ValueDescription] = dataclasses.field(default_factory=list)
+    properties: list[PropertyDescription] = dataclasses.field(default_factory=list)
     system_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
@@ -81,7 +81,7 @@ def process_node(node, type_name, memo):
     if not isinstance(node, yaml.MappingNode):
         raise RuntimeError(f"Node {node} is not a mapping node!")
 
-    description = PropertyDescription(type_name)
+    description = GroupDescription(type_name)
     memo[type_name] = description
 
     for key_node, value_node in node.value:
@@ -104,31 +104,31 @@ def process_node(node, type_name, memo):
                     description.system_includes[template_name.value].add(include_name.value)
             continue
 
-        value = ValueDescription(key_node.value)
+        prop = PropertyDescription(key_node.value)
 
         match type(value_node).__name__:
             case "MappingNode":
                 type_name = qualified_name(value_node.anchor) if value_node.anchor is not None else qualified_name(key_node.value)
                 memo = memo | process_node(value_node, type_name, memo)
 
-                value.type = type_name
-                value.is_property = True
+                prop.type = type_name
+                prop.is_group = True
 
             case "AliasNode":
-                sub_property = memo[qualified_name(value_node.value)]
+                group = memo[qualified_name(value_node.value)]
 
-                value.type = sub_property.type_name
-                value.is_property = True
+                prop.type = group.type_name
+                prop.is_group = True
 
             case "ScalarNode":
-                value.type = value_node.value
+                prop.type = value_node.value
 
         for entry in include_patterns:
-            if not value.type.startswith(entry["pattern"]):
+            if not prop.type.startswith(entry["pattern"]):
                 continue
 
             system = entry.get("system_include", False)
-            include = entry.get("use_include", value.type if system else value.type + ".h")
+            include = entry.get("use_include", prop.type if system else prop.type + ".h")
 
             if include is None:
                 break
@@ -144,7 +144,7 @@ def process_node(node, type_name, memo):
 
             break
 
-        description.values.append(value)
+        description.properties.append(prop)
 
     return memo
 

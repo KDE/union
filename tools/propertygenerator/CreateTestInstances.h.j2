@@ -52,17 +52,17 @@ QFont testQFontInstance()
 {
     {{ type.type_name }} instance;
 
-{% for value in type.values %}
-{% if value.is_property %}
-    instance.set{{ value.name | ucfirst }}(test{{ value.type }}Instance());
-{% elif value.type == "QColor" %}
-    instance.set{{ value.name | ucfirst }}(testQColorInstance());
-{% elif value.type == "qreal" %}
-    instance.set{{ value.name | ucfirst }}(testQrealInstance());
-{% elif value.type == "QFont" %}
-    instance.set{{ value.name | ucfirst }}(testQFontInstance());
+{% for property in type.properties %}
+{% if property.is_group %}
+    instance.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
+{% elif property.type == "QColor" %}
+    instance.set{{ property.name | ucfirst }}(testQColorInstance());
+{% elif property.type == "qreal" %}
+    instance.set{{ property.name | ucfirst }}(testQrealInstance());
+{% elif property.type == "QFont" %}
+    instance.set{{ property.name | ucfirst }}(testQFontInstance());
 {% else %}
-    instance.set{{ value.name | ucfirst }}({{ value.type }}{});
+    instance.set{{ property.name | ucfirst }}({{ property.type }}{});
 {% endif %}
 {% endfor %}
 

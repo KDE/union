@@ -31,9 +31,9 @@ template but that clang format doesn't like, so disable format for that.
 
 #include <properties/{{ type_name }}.h>
 
-{% for value in values %}
-{% if value.is_property %}
-#include "{{ value.type }}Group.h"
+{% for property in properties %}
+{% if property.is_group %}
+#include "{{ property.type }}Group.h"
 {% endif %}
 {% endfor %}
 // clang-format on
@@ -51,20 +51,20 @@ public:
     void update(const Union::Properties::{{ type_name }} &newState);
     Q_SIGNAL void updated();
 
-{% for value in values %}
-{% if value.is_property %}
-    Q_PROPERTY({{ value.type}}Group *{{ value.name }} READ {{ value.name }} CONSTANT)
-    {{ value.type }}Group *{{ value.name }}() const;
+{% for property in properties %}
+{% if property.is_group %}
+    Q_PROPERTY({{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
+    {{ property.type }}Group *{{ property.name }}() const;
 {% else %}
 {#
     We use QJSValue here to be able to communicate the "undefined" state to the
-    QML engine. This ensures that if a value is not provided by the style, we
-    also don't provide a value to QML and instead allow its default handling to
-    take over.
+    QML engine. This ensures that if a property is not provided by the style, we
+    also don't provide a property to QML and instead allow its default handling
+    to take over.
 #}
-    Q_PROPERTY(QJSValue {{ value.name }} READ {{ value.name }} NOTIFY {{ value.name }}Changed)
-    QJSValue {{ value.name }}() const;
-    Q_SIGNAL void {{ value.name }}Changed();
+    Q_PROPERTY(QJSValue {{ property.name }} READ {{ property.name }} NOTIFY {{ property.name }}Changed)
+    QJSValue {{ property.name }}() const;
+    Q_SIGNAL void {{ property.name }}Changed();
 {% endif %}
 
 {% endfor %}
@@ -74,9 +74,9 @@ public:
 {% endif %}
 private:
     QuickStyle *m_style = nullptr;
-{% for value in values %}
-{% if value.is_property %}
-    std::unique_ptr<{{ value.type }}Group> m_{{ value.name }};
+{% for property in properties %}
+{% if property.is_group %}
+    std::unique_ptr<{{ property.type }}Group> m_{{ property.name }};
 {% endif %}
 {% endfor %}
     Union::Properties::{{ type_name }} m_state;

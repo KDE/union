@@ -164,17 +164,17 @@ struct std::formatter<Union::Properties::{{ type.type_name }}, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::{{ type.type_name }} &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::{{ type.type_name }} &group, FormatContext &context) const
     {
         std::ostringstream out;
 
-{% for value in type.values %}
+{% for property in type.properties %}
         out << indent(indentation);
-        out << "{{ value.name }}: ";
+        out << "{{ property.name }}: ";
         {
-            auto value = property.{{ value.name }}();
+            auto value = group.{{ property.name }}();
             if (use_newlines) {
-{% if value.is_property %}
+{% if property.is_group %}
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
                     out << std::vformat(format_string, std::make_format_args(value));

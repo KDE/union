@@ -23,8 +23,8 @@ using namespace Qt::StringLiterals;
 class Union::Properties::{{ type_name }}Private
 {
 public:
-{% for value in values %}
-    std::optional<{{ value.type }}> {{ value.name }};
+{% for property in properties %}
+    std::optional<{{ property.type }}> {{ property.name }};
 {% endfor %}
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
@@ -39,8 +39,8 @@ public:
 {{ type_name }}::{{ type_name }}(const {{ type_name }} &other)
     : d(std::make_unique<{{ type_name }}Private>())
 {
-{% for value in values %}
-    d->{{ value.name }} = other.d->{{ value.name }};
+{% for property in properties %}
+    d->{{ property.name }} = other.d->{{ property.name }};
 {% endfor %}
 }
 
@@ -54,8 +54,8 @@ public:
 {{ type_name }} &{{ type_name }}::operator=(const {{ type_name }} &other)
 {
     if (this != &other) {
-{% for value in values %}
-        d->{{ value.name }} = other.d->{{ value.name }};
+{% for property in properties %}
+        d->{{ property.name }} = other.d->{{ property.name }};
 {% endfor %}
     }
     return *this;
@@ -67,31 +67,31 @@ public:
     return *this;
 }
 
-{% for value in values %}
-std::optional<{{ value.type }}> {{ type_name }}::{{ value.name }}() const
+{% for property in properties %}
+std::optional<{{ property.type }}> {{ type_name }}::{{ property.name }}() const
 {
-    return d->{{ value.name }};
+    return d->{{ property.name }};
 }
 
-void {{ type_name }}::set{{ value.name | ucfirst }}(const std::optional<{{ value.type }}> &newValue)
+void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
 {
-    if (newValue == d->{{ value.name }}) {
+    if (newValue == d->{{ property.name }}) {
         return;
     }
 
-    d->{{ value.name }} = newValue;
+    d->{{ property.name }} = newValue;
 }
 {% endfor %}
 
 bool {{ type_name }}::hasAnyValue() const
 {
-{% for value in values %}
-{% if value.is_property %}
-    if (d->{{ value.name }}.has_value() && d->{{ value.name }}->hasAnyValue()) {
+{% for property in properties %}
+{% if property.is_group %}
+    if (d->{{ property.name }}.has_value() && d->{{ property.name }}->hasAnyValue()) {
         return true;
     }
 {% else %}
-    if (d->{{ value.name }}.has_value()) {
+    if (d->{{ property.name }}.has_value()) {
         return true;
     }
 {% endif %}
@@ -101,21 +101,21 @@ bool {{ type_name }}::hasAnyValue() const
 
 void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination)
 {
-{% for value in values %}
-{% if value.is_property %}
-    if (source.d->{{ value.name }}.has_value()) {
-        {{ value.type }} value;
-        if (destination.d->{{ value.name }}.has_value()) {
-            value = destination.d->{{ value.name }}.value();
+{% for property in properties %}
+{% if property.is_group %}
+    if (source.d->{{ property.name }}.has_value()) {
+        {{ property.type }} property;
+        if (destination.d->{{ property.name }}.has_value()) {
+            property = destination.d->{{ property.name }}.value();
         }
-        {{ value.type }}::resolveProperties(source.d->{{ value.name }}.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->{{ value.name }} = value;
+        {{ property.type }}::resolveProperties(source.d->{{ property.name }}.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->{{ property.name }} = property;
         }
     }
 {% else %}
-    if (!destination.d->{{ value.name }}.has_value()) {
-        destination.d->{{ value.name }} = source.d->{{ value.name }};
+    if (!destination.d->{{ property.name }}.has_value()) {
+        destination.d->{{ property.name }} = source.d->{{ property.name }};
     }
 {% endif %}
 {% endfor %}
@@ -124,11 +124,11 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_n
 {{ type_name }} {{ type_name }}::empty()
 {
     {{ type_name }} result;
-{% for value in values %}
-{% if value.is_property %}
-    result.d->{{ value.name }} = {{ value.type }}::empty();
+{% for property in properties %}
+{% if property.is_property %}
+    result.d->{{ property.name }} = {{ property.type }}::empty();
 {% else %}
-    result.d->{{ value.name }} = emptyValue<{{ value.type }}>();
+    result.d->{{ property.name }} = emptyValue<{{ property.type }}>();
 {% endif %}
 {% endfor %}
     return result;
@@ -140,8 +140,8 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_n
 
 bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_name}} &right)
 {
-{% for value in values %}
-    if (left.{{ value.name }}() != right.{{ value.name }}()) {
+{% for property in properties %}
+    if (left.{{ property.name }}() != right.{{ property.name }}()) {
         return false;
     }
 {% endfor %}
@@ -152,11 +152,11 @@ QDebug operator<<(QDebug debug, const Union::Properties::{{ type_name }} &type)
 {
     QDebugStateSaver saver(debug);
     debug.nospace() << "{{ type_name }}(" //
-{% for value in values %}
-{% if value == values[0] %}
-                    << "{{value.name}}: " << type.{{ value.name }}() //
+{% for property in properties %}
+{% if property == properties[0] %}
+                    << "{{property.name}}: " << type.{{ property.name }}() //
 {% else %}
-                    << ", {{value.name}}: " << type.{{ value.name }}() //
+                    << ", {{property.name}}: " << type.{{ property.name }}() //
 {% endif %}
 {% endfor %}
                     << ")";

@@ -53,9 +53,9 @@ public:
     {{ type_name }} &operator=(const {{ type_name }} &other);
     {{ type_name }} &operator=({{ type_name }} &&other);
 
-{% for value in values %}
-    std::optional<{{ value.type }}> {{ value.name }}() const;
-    void set{{ value.name | ucfirst }}(const std::optional<{{ value.type }}> &newValue);
+{% for property in properties %}
+    std::optional<{{ property.type }}> {{ property.name }}() const;
+    void set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue);
 
 {% endfor %}
     /**

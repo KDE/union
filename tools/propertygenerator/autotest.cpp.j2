@@ -30,9 +30,9 @@ private Q_SLOTS:
     {
         {{ type_name }} property;
 
-        // An empty instance should have no values set.
-{% for value in values %}
-        QVERIFY(!property.{{ value.name }}().has_value());
+        // An empty instance should not have any values for its properties.
+{% for property in properties %}
+        QVERIFY(!property.{{ property.name }}().has_value());
 {% endfor %}
     }
 
@@ -40,28 +40,28 @@ private Q_SLOTS:
     {
         {{ type_name }} property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
-{% for value in values %}
-{% if not value.is_property %}
+{% for property in properties %}
+{% if not property.is_group %}
         {
-            {{ value.type }} value;
-            property.set{{ value.name | ucfirst }}(value);
+            {{ property.type }} value;
+            property.set{{ property.name | ucfirst }}(value);
             QVERIFY(property.hasAnyValue());
-            property.set{{ value.name | ucfirst }}(std::nullopt);
+            property.set{{ property.name | ucfirst }}(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
 {% else %}
         {
-            // Assigning an empty property to a value should have no effect.
-            property.set{{ value.name | ucfirst }}({{ value.type }}{});
+            // Assigning an empty value to a property should have no effect.
+            property.set{{ property.name | ucfirst }}({{ property.type }}{});
             QVERIFY(!property.hasAnyValue());
 
-            property.set{{ value.name | ucfirst }}(test{{ value.type }}Instance());
+            property.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
             QVERIFY(property.hasAnyValue());
 
-            property.set{{ value.name | ucfirst }}(std::nullopt);
+            property.set{{ property.name | ucfirst }}(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
 {% endif %}
@@ -81,11 +81,11 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-{% for value in values %}
-{% if not value.is_property %}
-        source.set{{ value.name | ucfirst }}({{ value.type }}{});
+{% for property in properties %}
+{% if not property.is_group %}
+        source.set{{ property.name | ucfirst }}({{ property.type }}{});
 {% else %}
-        source.set{{ value.name | ucfirst }}(test{{ value.type }}Instance());
+        source.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
 {% endif %}
 {% endfor %}
 
@@ -96,8 +96,8 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
-{% for value in values %}
-        QCOMPARE(destination.{{ value.name }}(), source.{{ value.name }}());
+{% for property in properties %}
+        QCOMPARE(destination.{{ property.name }}(), source.{{ property.name }}());
 {% endfor %}
     }
 };

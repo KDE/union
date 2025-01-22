@@ -27,9 +27,9 @@ using namespace Qt::StringLiterals;
     : QObject()
     , m_style(style)
 {
-{% for value in values %}
-{% if value.is_property %}
-    m_{{ value.name }} = std::make_unique<{{ value.type }}Group>(m_style);
+{% for property in properties %}
+{% if property.is_group %}
+    m_{{ property.name }} = std::make_unique<{{ property.type }}Group>(m_style);
 {% endif %}
 {% endfor %}
 }
@@ -37,11 +37,11 @@ using namespace Qt::StringLiterals;
 void {{ group_name }}::update(const {{ type_name }} &newState)
 {
     m_state = newState;
-{% for value in values %}
-{% if value.is_property %}
-    m_{{ value.name }}->update(newState.{{ value.name }}().value_or({{ value.type }}{}));
+{% for property in properties %}
+{% if property.is_group %}
+    m_{{ property.name }}->update(newState.{{ property.name }}().value_or({{ property.type }}{}));
 {% else %}
-    Q_EMIT {{ value.name }}Changed();
+    Q_EMIT {{ property.name }}Changed();
 {% endif %}
 {% endfor %}
 
@@ -51,17 +51,17 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
     Q_EMIT updated();
 }
 
-{% for value in values %}
-{% if value.is_property %}
-{{ value.type }}Group *{{ group_name }}::{{ value.name }}() const
+{% for property in properties %}
+{% if property.is_group %}
+{{ property.type }}Group *{{ group_name }}::{{ property.name }}() const
 {
-    return m_{{ value.name }}.get();
+    return m_{{ property.name }}.get();
 }
 
 {% else %}
-QJSValue {{ group_name }}::{{ value.name }}() const
+QJSValue {{ group_name }}::{{ property.name }}() const
 {
-    auto value = m_state.{{ value.name }}();
+    auto value = m_state.{{ property.name }}();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
