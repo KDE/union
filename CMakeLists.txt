@@ -27,6 +27,11 @@ include(ECMQmlModule)
 
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
+option(GENERATE_DOC "Generate documentation" OFF)
+
+if(GENERATE_DOC)
+    include(ECMGenerateQDoc)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 

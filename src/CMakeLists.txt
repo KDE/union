@@ -71,4 +71,8 @@ add_subdirectory(output)
 
 ecm_qt_install_logging_categories(EXPORT Union DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
+if(GENERATE_DOC)
+    ecm_generate_qdoc(Union ../doc/union.qdocconf)
+endif()
+
 install(TARGETS Union DESTINATION ${KDE_INSTALL_LIBDIR})
