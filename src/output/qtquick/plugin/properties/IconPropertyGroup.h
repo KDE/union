@@ -20,6 +20,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype IconPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of IconProperty to QML.
+ */
 class IconPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -31,21 +38,46 @@ public:
     void update(const Union::Properties::IconProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty AlignmentPropertyGroup IconPropertyGroup::alignment
+     *
+     * Exposes IconProperty::AlignmentProperty to QML.
+     */
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
+    /*!
+     * \qmlproperty qreal IconPropertyGroup::width
+     *
+     * Exposes IconProperty::width to QML.
+     */
     Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
     QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
+    /*!
+     * \qmlproperty qreal IconPropertyGroup::height
+     *
+     * Exposes IconProperty::height to QML.
+     */
     Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
     QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
+    /*!
+     * \qmlproperty QString IconPropertyGroup::name
+     *
+     * Exposes IconProperty::name to QML.
+     */
     Q_PROPERTY(QJSValue name READ name NOTIFY nameChanged)
     QJSValue name() const;
     Q_SIGNAL void nameChanged();
 
+    /*!
+     * \qmlproperty QUrl IconPropertyGroup::source
+     *
+     * Exposes IconProperty::source to QML.
+     */
     Q_PROPERTY(QJSValue source READ source NOTIFY sourceChanged)
     QJSValue source() const;
     Q_SIGNAL void sourceChanged();

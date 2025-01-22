@@ -23,6 +23,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype BorderPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of BorderProperty to QML.
+ */
 class BorderPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -34,15 +41,35 @@ public:
     void update(const Union::Properties::BorderProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty LinePropertyGroup BorderPropertyGroup::left
+     *
+     * Exposes BorderProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *left READ left CONSTANT)
     LinePropertyGroup *left() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup BorderPropertyGroup::right
+     *
+     * Exposes BorderProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *right READ right CONSTANT)
     LinePropertyGroup *right() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup BorderPropertyGroup::top
+     *
+     * Exposes BorderProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *top READ top CONSTANT)
     LinePropertyGroup *top() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup BorderPropertyGroup::bottom
+     *
+     * Exposes BorderProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *bottom READ bottom CONSTANT)
     LinePropertyGroup *bottom() const;
 

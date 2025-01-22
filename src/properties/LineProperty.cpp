@@ -140,13 +140,13 @@ void LineProperty::resolveProperties(const LineProperty &source, LineProperty &d
         destination.d->style = source.d->style;
     }
     if (source.d->image.has_value()) {
-        ImageProperty value;
+        ImageProperty property;
         if (destination.d->image.has_value()) {
-            value = destination.d->image.value();
+            property = destination.d->image.value();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->image = value;
+        ImageProperty::resolveProperties(source.d->image.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->image = property;
         }
     }
 }
@@ -157,7 +157,7 @@ LineProperty LineProperty::empty()
     result.d->size = emptyValue<qreal>();
     result.d->color = emptyValue<QColor>();
     result.d->style = emptyValue<Union::Properties::LineStyle>();
-    result.d->image = ImageProperty::empty();
+    result.d->image = emptyValue<ImageProperty>();
     return result;
 }
 

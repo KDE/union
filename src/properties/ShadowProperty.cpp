@@ -226,93 +226,93 @@ bool ShadowProperty::hasAnyValue() const
 void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowProperty &destination)
 {
     if (source.d->offsets.has_value()) {
-        SizeProperty value;
+        SizeProperty property;
         if (destination.d->offsets.has_value()) {
-            value = destination.d->offsets.value();
+            property = destination.d->offsets.value();
         }
-        SizeProperty::resolveProperties(source.d->offsets.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->offsets = value;
+        SizeProperty::resolveProperties(source.d->offsets.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->offsets = property;
         }
     }
     if (source.d->left.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->left.has_value()) {
-            value = destination.d->left.value();
+            property = destination.d->left.value();
         }
-        LineProperty::resolveProperties(source.d->left.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->left = value;
+        LineProperty::resolveProperties(source.d->left.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->left = property;
         }
     }
     if (source.d->right.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->right.has_value()) {
-            value = destination.d->right.value();
+            property = destination.d->right.value();
         }
-        LineProperty::resolveProperties(source.d->right.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->right = value;
+        LineProperty::resolveProperties(source.d->right.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->right = property;
         }
     }
     if (source.d->top.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->top.has_value()) {
-            value = destination.d->top.value();
+            property = destination.d->top.value();
         }
-        LineProperty::resolveProperties(source.d->top.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->top = value;
+        LineProperty::resolveProperties(source.d->top.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->top = property;
         }
     }
     if (source.d->bottom.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->bottom.has_value()) {
-            value = destination.d->bottom.value();
+            property = destination.d->bottom.value();
         }
-        LineProperty::resolveProperties(source.d->bottom.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottom = value;
+        LineProperty::resolveProperties(source.d->bottom.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottom = property;
         }
     }
     if (source.d->topLeft.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->topLeft.has_value()) {
-            value = destination.d->topLeft.value();
+            property = destination.d->topLeft.value();
         }
-        CornerProperty::resolveProperties(source.d->topLeft.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->topLeft = value;
+        CornerProperty::resolveProperties(source.d->topLeft.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->topLeft = property;
         }
     }
     if (source.d->topRight.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->topRight.has_value()) {
-            value = destination.d->topRight.value();
+            property = destination.d->topRight.value();
         }
-        CornerProperty::resolveProperties(source.d->topRight.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->topRight = value;
+        CornerProperty::resolveProperties(source.d->topRight.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->topRight = property;
         }
     }
     if (source.d->bottomLeft.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->bottomLeft.has_value()) {
-            value = destination.d->bottomLeft.value();
+            property = destination.d->bottomLeft.value();
         }
-        CornerProperty::resolveProperties(source.d->bottomLeft.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottomLeft = value;
+        CornerProperty::resolveProperties(source.d->bottomLeft.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottomLeft = property;
         }
     }
     if (source.d->bottomRight.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->bottomRight.has_value()) {
-            value = destination.d->bottomRight.value();
+            property = destination.d->bottomRight.value();
         }
-        CornerProperty::resolveProperties(source.d->bottomRight.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottomRight = value;
+        CornerProperty::resolveProperties(source.d->bottomRight.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottomRight = property;
         }
     }
 }
@@ -320,15 +320,15 @@ void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowPrope
 ShadowProperty ShadowProperty::empty()
 {
     ShadowProperty result;
-    result.d->offsets = SizeProperty::empty();
-    result.d->left = LineProperty::empty();
-    result.d->right = LineProperty::empty();
-    result.d->top = LineProperty::empty();
-    result.d->bottom = LineProperty::empty();
-    result.d->topLeft = CornerProperty::empty();
-    result.d->topRight = CornerProperty::empty();
-    result.d->bottomLeft = CornerProperty::empty();
-    result.d->bottomRight = CornerProperty::empty();
+    result.d->offsets = emptyValue<SizeProperty>();
+    result.d->left = emptyValue<LineProperty>();
+    result.d->right = emptyValue<LineProperty>();
+    result.d->top = emptyValue<LineProperty>();
+    result.d->bottom = emptyValue<LineProperty>();
+    result.d->topLeft = emptyValue<CornerProperty>();
+    result.d->topRight = emptyValue<CornerProperty>();
+    result.d->bottomLeft = emptyValue<CornerProperty>();
+    result.d->bottomRight = emptyValue<CornerProperty>();
     return result;
 }
 

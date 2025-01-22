@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         SizeProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.left().has_value());
         QVERIFY(!property.right().has_value());
         QVERIFY(!property.top().has_value());
@@ -32,7 +32,7 @@ private Q_SLOTS:
     {
         SizeProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {

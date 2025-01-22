@@ -28,51 +28,117 @@ namespace Properties
 
 class BackgroundPropertyPrivate;
 
+/*!
+\class Union::Properties::BackgroundProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group containing properties related to an element's background.
+
+*/
 class UNION_EXPORT BackgroundProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     BackgroundProperty();
+    /*!
+     * Copy constructor.
+     */
     BackgroundProperty(const BackgroundProperty &other);
+    /*!
+     * Move constructor.
+     */
     BackgroundProperty(BackgroundProperty &&other);
     ~BackgroundProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     BackgroundProperty &operator=(const BackgroundProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     BackgroundProperty &operator=(BackgroundProperty &&other);
 
+    /*!
+     * Returns the value of color.
+     */
     std::optional<QColor> color() const;
+    /*!
+     * Set the value of color.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setColor(const std::optional<QColor> &newValue);
 
+    /*!
+     * Returns the value of image.
+     */
     std::optional<ImageProperty> image() const;
+    /*!
+     * Set the value of image.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setImage(const std::optional<ImageProperty> &newValue);
 
+    /*!
+     * Returns the value of border.
+     */
     std::optional<BorderProperty> border() const;
+    /*!
+     * Set the value of border.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setBorder(const std::optional<BorderProperty> &newValue);
 
+    /*!
+     * Returns the value of corners.
+     */
     std::optional<CornersProperty> corners() const;
+    /*!
+     * Set the value of corners.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setCorners(const std::optional<CornersProperty> &newValue);
 
+    /*!
+     * Returns the value of shadow.
+     */
     std::optional<ShadowProperty> shadow() const;
+    /*!
+     * Set the value of shadow.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setShadow(const std::optional<ShadowProperty> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const BackgroundProperty &source, BackgroundProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty BackgroundProperty instance.
      *
      * This will create an empty BackgroundProperty instance, which is defined as
@@ -86,13 +152,16 @@ private:
     std::unique_ptr<BackgroundPropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::BackgroundProperty
+ * Equality comparison for BackgroundProperty.
+ */
 UNION_EXPORT bool operator==(const BackgroundProperty &left, const BackgroundProperty &right);
-UNION_EXPORT inline bool operator!=(const BackgroundProperty &left, const BackgroundProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::BackgroundProperty
+ * QDebug support for BackgroundProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::BackgroundProperty &type);

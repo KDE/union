@@ -165,14 +165,14 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::StyleProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::StyleProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "palette: ";
         {
-            auto value = property.palette();
+            auto value = group.palette();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -188,7 +188,7 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
         out << indent(indentation);
         out << "layout: ";
         {
-            auto value = property.layout();
+            auto value = group.layout();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -204,7 +204,7 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
         out << indent(indentation);
         out << "text: ";
         {
-            auto value = property.text();
+            auto value = group.text();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -220,7 +220,7 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
         out << indent(indentation);
         out << "icon: ";
         {
-            auto value = property.icon();
+            auto value = group.icon();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -236,7 +236,7 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
         out << indent(indentation);
         out << "background: ";
         {
-            auto value = property.background();
+            auto value = group.background();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -280,14 +280,14 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::PaletteProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::PaletteProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "accent: ";
         {
-            auto value = property.accent();
+            auto value = group.accent();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -298,7 +298,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "alternateBase: ";
         {
-            auto value = property.alternateBase();
+            auto value = group.alternateBase();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -309,7 +309,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "base: ";
         {
-            auto value = property.base();
+            auto value = group.base();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -320,7 +320,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "brightText: ";
         {
-            auto value = property.brightText();
+            auto value = group.brightText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -331,7 +331,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "button: ";
         {
-            auto value = property.button();
+            auto value = group.button();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -342,7 +342,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "buttonText: ";
         {
-            auto value = property.buttonText();
+            auto value = group.buttonText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -353,7 +353,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "dark: ";
         {
-            auto value = property.dark();
+            auto value = group.dark();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -364,7 +364,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "highlight: ";
         {
-            auto value = property.highlight();
+            auto value = group.highlight();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -375,7 +375,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "highlightedText: ";
         {
-            auto value = property.highlightedText();
+            auto value = group.highlightedText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -386,7 +386,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "light: ";
         {
-            auto value = property.light();
+            auto value = group.light();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -397,7 +397,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "link: ";
         {
-            auto value = property.link();
+            auto value = group.link();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -408,7 +408,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "linkVisited: ";
         {
-            auto value = property.linkVisited();
+            auto value = group.linkVisited();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -419,7 +419,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "mid: ";
         {
-            auto value = property.mid();
+            auto value = group.mid();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -430,7 +430,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "midlight: ";
         {
-            auto value = property.midlight();
+            auto value = group.midlight();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -441,7 +441,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "placeholderText: ";
         {
-            auto value = property.placeholderText();
+            auto value = group.placeholderText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -452,7 +452,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "shadow: ";
         {
-            auto value = property.shadow();
+            auto value = group.shadow();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -463,7 +463,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "text: ";
         {
-            auto value = property.text();
+            auto value = group.text();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -474,7 +474,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "toolTipBase: ";
         {
-            auto value = property.toolTipBase();
+            auto value = group.toolTipBase();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -485,7 +485,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "toolTipText: ";
         {
-            auto value = property.toolTipText();
+            auto value = group.toolTipText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -496,7 +496,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "window: ";
         {
-            auto value = property.window();
+            auto value = group.window();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -507,7 +507,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "windowText: ";
         {
-            auto value = property.windowText();
+            auto value = group.windowText();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -518,7 +518,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "positive: ";
         {
-            auto value = property.positive();
+            auto value = group.positive();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -529,7 +529,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "neutral: ";
         {
-            auto value = property.neutral();
+            auto value = group.neutral();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -540,7 +540,7 @@ struct std::formatter<Union::Properties::PaletteProperty, char> {
         out << indent(indentation);
         out << "negative: ";
         {
-            auto value = property.negative();
+            auto value = group.negative();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -579,14 +579,14 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::LayoutProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::LayoutProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "alignment: ";
         {
-            auto value = property.alignment();
+            auto value = group.alignment();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -602,7 +602,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "width: ";
         {
-            auto value = property.width();
+            auto value = group.width();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -613,7 +613,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "height: ";
         {
-            auto value = property.height();
+            auto value = group.height();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -624,7 +624,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "spacing: ";
         {
-            auto value = property.spacing();
+            auto value = group.spacing();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -635,7 +635,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "padding: ";
         {
-            auto value = property.padding();
+            auto value = group.padding();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -651,7 +651,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "inset: ";
         {
-            auto value = property.inset();
+            auto value = group.inset();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -667,7 +667,7 @@ struct std::formatter<Union::Properties::LayoutProperty, char> {
         out << indent(indentation);
         out << "margins: ";
         {
-            auto value = property.margins();
+            auto value = group.margins();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -711,14 +711,14 @@ struct std::formatter<Union::Properties::AlignmentProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::AlignmentProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::AlignmentProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "container: ";
         {
-            auto value = property.container();
+            auto value = group.container();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -729,7 +729,7 @@ struct std::formatter<Union::Properties::AlignmentProperty, char> {
         out << indent(indentation);
         out << "horizontal: ";
         {
-            auto value = property.horizontal();
+            auto value = group.horizontal();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -740,7 +740,7 @@ struct std::formatter<Union::Properties::AlignmentProperty, char> {
         out << indent(indentation);
         out << "vertical: ";
         {
-            auto value = property.vertical();
+            auto value = group.vertical();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -751,7 +751,7 @@ struct std::formatter<Union::Properties::AlignmentProperty, char> {
         out << indent(indentation);
         out << "order: ";
         {
-            auto value = property.order();
+            auto value = group.order();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -790,14 +790,14 @@ struct std::formatter<Union::Properties::SizeProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::SizeProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::SizeProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "left: ";
         {
-            auto value = property.left();
+            auto value = group.left();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -808,7 +808,7 @@ struct std::formatter<Union::Properties::SizeProperty, char> {
         out << indent(indentation);
         out << "right: ";
         {
-            auto value = property.right();
+            auto value = group.right();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -819,7 +819,7 @@ struct std::formatter<Union::Properties::SizeProperty, char> {
         out << indent(indentation);
         out << "top: ";
         {
-            auto value = property.top();
+            auto value = group.top();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -830,7 +830,7 @@ struct std::formatter<Union::Properties::SizeProperty, char> {
         out << indent(indentation);
         out << "bottom: ";
         {
-            auto value = property.bottom();
+            auto value = group.bottom();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -869,14 +869,14 @@ struct std::formatter<Union::Properties::TextProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::TextProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::TextProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "alignment: ";
         {
-            auto value = property.alignment();
+            auto value = group.alignment();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -892,7 +892,7 @@ struct std::formatter<Union::Properties::TextProperty, char> {
         out << indent(indentation);
         out << "font: ";
         {
-            auto value = property.font();
+            auto value = group.font();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -931,14 +931,14 @@ struct std::formatter<Union::Properties::IconProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::IconProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::IconProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "alignment: ";
         {
-            auto value = property.alignment();
+            auto value = group.alignment();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -954,7 +954,7 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << indent(indentation);
         out << "width: ";
         {
-            auto value = property.width();
+            auto value = group.width();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -965,7 +965,7 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << indent(indentation);
         out << "height: ";
         {
-            auto value = property.height();
+            auto value = group.height();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -976,7 +976,7 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << indent(indentation);
         out << "name: ";
         {
-            auto value = property.name();
+            auto value = group.name();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -987,7 +987,7 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << indent(indentation);
         out << "source: ";
         {
-            auto value = property.source();
+            auto value = group.source();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1026,14 +1026,14 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::BackgroundProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::BackgroundProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "color: ";
         {
-            auto value = property.color();
+            auto value = group.color();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1044,7 +1044,7 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
         out << indent(indentation);
         out << "image: ";
         {
-            auto value = property.image();
+            auto value = group.image();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1060,7 +1060,7 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
         out << indent(indentation);
         out << "border: ";
         {
-            auto value = property.border();
+            auto value = group.border();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1076,7 +1076,7 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
         out << indent(indentation);
         out << "corners: ";
         {
-            auto value = property.corners();
+            auto value = group.corners();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1092,7 +1092,7 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
         out << indent(indentation);
         out << "shadow: ";
         {
-            auto value = property.shadow();
+            auto value = group.shadow();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1136,14 +1136,14 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::ImageProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::ImageProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "imageData: ";
         {
-            auto value = property.imageData();
+            auto value = group.imageData();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1154,7 +1154,7 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
         out << indent(indentation);
         out << "width: ";
         {
-            auto value = property.width();
+            auto value = group.width();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1165,7 +1165,7 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
         out << indent(indentation);
         out << "height: ";
         {
-            auto value = property.height();
+            auto value = group.height();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1176,7 +1176,7 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
         out << indent(indentation);
         out << "xOffset: ";
         {
-            auto value = property.xOffset();
+            auto value = group.xOffset();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1187,7 +1187,7 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
         out << indent(indentation);
         out << "yOffset: ";
         {
-            auto value = property.yOffset();
+            auto value = group.yOffset();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1198,7 +1198,7 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
         out << indent(indentation);
         out << "flags: ";
         {
-            auto value = property.flags();
+            auto value = group.flags();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1237,14 +1237,14 @@ struct std::formatter<Union::Properties::BorderProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::BorderProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::BorderProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "left: ";
         {
-            auto value = property.left();
+            auto value = group.left();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1260,7 +1260,7 @@ struct std::formatter<Union::Properties::BorderProperty, char> {
         out << indent(indentation);
         out << "right: ";
         {
-            auto value = property.right();
+            auto value = group.right();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1276,7 +1276,7 @@ struct std::formatter<Union::Properties::BorderProperty, char> {
         out << indent(indentation);
         out << "top: ";
         {
-            auto value = property.top();
+            auto value = group.top();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1292,7 +1292,7 @@ struct std::formatter<Union::Properties::BorderProperty, char> {
         out << indent(indentation);
         out << "bottom: ";
         {
-            auto value = property.bottom();
+            auto value = group.bottom();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1336,14 +1336,14 @@ struct std::formatter<Union::Properties::LineProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::LineProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::LineProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "size: ";
         {
-            auto value = property.size();
+            auto value = group.size();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1354,7 +1354,7 @@ struct std::formatter<Union::Properties::LineProperty, char> {
         out << indent(indentation);
         out << "color: ";
         {
-            auto value = property.color();
+            auto value = group.color();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1365,7 +1365,7 @@ struct std::formatter<Union::Properties::LineProperty, char> {
         out << indent(indentation);
         out << "style: ";
         {
-            auto value = property.style();
+            auto value = group.style();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1376,7 +1376,7 @@ struct std::formatter<Union::Properties::LineProperty, char> {
         out << indent(indentation);
         out << "image: ";
         {
-            auto value = property.image();
+            auto value = group.image();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1420,14 +1420,14 @@ struct std::formatter<Union::Properties::CornersProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::CornersProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::CornersProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "topLeft: ";
         {
-            auto value = property.topLeft();
+            auto value = group.topLeft();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1443,7 +1443,7 @@ struct std::formatter<Union::Properties::CornersProperty, char> {
         out << indent(indentation);
         out << "topRight: ";
         {
-            auto value = property.topRight();
+            auto value = group.topRight();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1459,7 +1459,7 @@ struct std::formatter<Union::Properties::CornersProperty, char> {
         out << indent(indentation);
         out << "bottomLeft: ";
         {
-            auto value = property.bottomLeft();
+            auto value = group.bottomLeft();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1475,7 +1475,7 @@ struct std::formatter<Union::Properties::CornersProperty, char> {
         out << indent(indentation);
         out << "bottomRight: ";
         {
-            auto value = property.bottomRight();
+            auto value = group.bottomRight();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1519,14 +1519,14 @@ struct std::formatter<Union::Properties::CornerProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::CornerProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::CornerProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "radius: ";
         {
-            auto value = property.radius();
+            auto value = group.radius();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1537,7 +1537,7 @@ struct std::formatter<Union::Properties::CornerProperty, char> {
         out << indent(indentation);
         out << "width: ";
         {
-            auto value = property.width();
+            auto value = group.width();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1548,7 +1548,7 @@ struct std::formatter<Union::Properties::CornerProperty, char> {
         out << indent(indentation);
         out << "height: ";
         {
-            auto value = property.height();
+            auto value = group.height();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1559,7 +1559,7 @@ struct std::formatter<Union::Properties::CornerProperty, char> {
         out << indent(indentation);
         out << "color: ";
         {
-            auto value = property.color();
+            auto value = group.color();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {
@@ -1570,7 +1570,7 @@ struct std::formatter<Union::Properties::CornerProperty, char> {
         out << indent(indentation);
         out << "image: ";
         {
-            auto value = property.image();
+            auto value = group.image();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1614,14 +1614,14 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::ShadowProperty &property, FormatContext &context) const
+    FormatContext::iterator format(const Union::Properties::ShadowProperty &group, FormatContext &context) const
     {
         std::ostringstream out;
 
         out << indent(indentation);
         out << "offsets: ";
         {
-            auto value = property.offsets();
+            auto value = group.offsets();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1637,7 +1637,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "left: ";
         {
-            auto value = property.left();
+            auto value = group.left();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1653,7 +1653,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "right: ";
         {
-            auto value = property.right();
+            auto value = group.right();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1669,7 +1669,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "top: ";
         {
-            auto value = property.top();
+            auto value = group.top();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1685,7 +1685,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "bottom: ";
         {
-            auto value = property.bottom();
+            auto value = group.bottom();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1701,7 +1701,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "topLeft: ";
         {
-            auto value = property.topLeft();
+            auto value = group.topLeft();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1717,7 +1717,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "topRight: ";
         {
-            auto value = property.topRight();
+            auto value = group.topRight();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1733,7 +1733,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "bottomLeft: ";
         {
-            auto value = property.bottomLeft();
+            auto value = group.bottomLeft();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1749,7 +1749,7 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         out << indent(indentation);
         out << "bottomRight: ";
         {
-            auto value = property.bottomRight();
+            auto value = group.bottomRight();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";

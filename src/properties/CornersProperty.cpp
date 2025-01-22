@@ -131,43 +131,43 @@ bool CornersProperty::hasAnyValue() const
 void CornersProperty::resolveProperties(const CornersProperty &source, CornersProperty &destination)
 {
     if (source.d->topLeft.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->topLeft.has_value()) {
-            value = destination.d->topLeft.value();
+            property = destination.d->topLeft.value();
         }
-        CornerProperty::resolveProperties(source.d->topLeft.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->topLeft = value;
+        CornerProperty::resolveProperties(source.d->topLeft.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->topLeft = property;
         }
     }
     if (source.d->topRight.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->topRight.has_value()) {
-            value = destination.d->topRight.value();
+            property = destination.d->topRight.value();
         }
-        CornerProperty::resolveProperties(source.d->topRight.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->topRight = value;
+        CornerProperty::resolveProperties(source.d->topRight.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->topRight = property;
         }
     }
     if (source.d->bottomLeft.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->bottomLeft.has_value()) {
-            value = destination.d->bottomLeft.value();
+            property = destination.d->bottomLeft.value();
         }
-        CornerProperty::resolveProperties(source.d->bottomLeft.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottomLeft = value;
+        CornerProperty::resolveProperties(source.d->bottomLeft.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottomLeft = property;
         }
     }
     if (source.d->bottomRight.has_value()) {
-        CornerProperty value;
+        CornerProperty property;
         if (destination.d->bottomRight.has_value()) {
-            value = destination.d->bottomRight.value();
+            property = destination.d->bottomRight.value();
         }
-        CornerProperty::resolveProperties(source.d->bottomRight.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottomRight = value;
+        CornerProperty::resolveProperties(source.d->bottomRight.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottomRight = property;
         }
     }
 }
@@ -175,10 +175,10 @@ void CornersProperty::resolveProperties(const CornersProperty &source, CornersPr
 CornersProperty CornersProperty::empty()
 {
     CornersProperty result;
-    result.d->topLeft = CornerProperty::empty();
-    result.d->topRight = CornerProperty::empty();
-    result.d->bottomLeft = CornerProperty::empty();
-    result.d->bottomRight = CornerProperty::empty();
+    result.d->topLeft = emptyValue<CornerProperty>();
+    result.d->topRight = emptyValue<CornerProperty>();
+    result.d->bottomLeft = emptyValue<CornerProperty>();
+    result.d->bottomRight = emptyValue<CornerProperty>();
     return result;
 }
 

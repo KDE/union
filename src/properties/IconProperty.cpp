@@ -150,13 +150,13 @@ bool IconProperty::hasAnyValue() const
 void IconProperty::resolveProperties(const IconProperty &source, IconProperty &destination)
 {
     if (source.d->alignment.has_value()) {
-        AlignmentProperty value;
+        AlignmentProperty property;
         if (destination.d->alignment.has_value()) {
-            value = destination.d->alignment.value();
+            property = destination.d->alignment.value();
         }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->alignment = value;
+        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->alignment = property;
         }
     }
     if (!destination.d->width.has_value()) {
@@ -176,7 +176,7 @@ void IconProperty::resolveProperties(const IconProperty &source, IconProperty &d
 IconProperty IconProperty::empty()
 {
     IconProperty result;
-    result.d->alignment = AlignmentProperty::empty();
+    result.d->alignment = emptyValue<AlignmentProperty>();
     result.d->width = emptyValue<qreal>();
     result.d->height = emptyValue<qreal>();
     result.d->name = emptyValue<QString>();

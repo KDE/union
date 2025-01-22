@@ -26,48 +26,106 @@ namespace Properties
 
 class LinePropertyPrivate;
 
+/*!
+\class Union::Properties::LineProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group containing the properties of a line.
+
+*/
 class UNION_EXPORT LineProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     LineProperty();
+    /*!
+     * Copy constructor.
+     */
     LineProperty(const LineProperty &other);
+    /*!
+     * Move constructor.
+     */
     LineProperty(LineProperty &&other);
     ~LineProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     LineProperty &operator=(const LineProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     LineProperty &operator=(LineProperty &&other);
 
+    /*!
+     * Returns the value of size.
+     */
     std::optional<qreal> size() const;
+    /*!
+     * Set the value of size.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setSize(const std::optional<qreal> &newValue);
 
+    /*!
+     * Returns the value of color.
+     */
     std::optional<QColor> color() const;
+    /*!
+     * Set the value of color.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setColor(const std::optional<QColor> &newValue);
 
+    /*!
+     * Returns the value of style.
+     */
     std::optional<Union::Properties::LineStyle> style() const;
+    /*!
+     * Set the value of style.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setStyle(const std::optional<Union::Properties::LineStyle> &newValue);
 
+    /*!
+     * Returns the value of image.
+     */
     std::optional<ImageProperty> image() const;
+    /*!
+     * Set the value of image.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setImage(const std::optional<ImageProperty> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const LineProperty &source, LineProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty LineProperty instance.
      *
      * This will create an empty LineProperty instance, which is defined as
@@ -81,13 +139,16 @@ private:
     std::unique_ptr<LinePropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::LineProperty
+ * Equality comparison for LineProperty.
+ */
 UNION_EXPORT bool operator==(const LineProperty &left, const LineProperty &right);
-UNION_EXPORT inline bool operator!=(const LineProperty &left, const LineProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::LineProperty
+ * QDebug support for LineProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::LineProperty &type);

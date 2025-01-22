@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         StyleProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.palette().has_value());
         QVERIFY(!property.layout().has_value());
         QVERIFY(!property.text().has_value());
@@ -33,11 +33,11 @@ private Q_SLOTS:
     {
         StyleProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setPalette(PaletteProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -48,7 +48,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setLayout(LayoutProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -59,7 +59,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setText(TextProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -70,7 +70,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setIcon(IconProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -81,7 +81,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setBackground(BackgroundProperty{});
             QVERIFY(!property.hasAnyValue());
 

@@ -25,54 +25,128 @@ namespace Properties
 
 class ImagePropertyPrivate;
 
+/*!
+\class Union::Properties::ImageProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group describing properties of an image.
+
+*/
 class UNION_EXPORT ImageProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     ImageProperty();
+    /*!
+     * Copy constructor.
+     */
     ImageProperty(const ImageProperty &other);
+    /*!
+     * Move constructor.
+     */
     ImageProperty(ImageProperty &&other);
     ~ImageProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     ImageProperty &operator=(const ImageProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     ImageProperty &operator=(ImageProperty &&other);
 
+    /*!
+     * Returns the value of imageData.
+     */
     std::optional<QImage> imageData() const;
+    /*!
+     * Set the value of imageData.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setImageData(const std::optional<QImage> &newValue);
 
+    /*!
+     * Returns the value of width.
+     */
     std::optional<qreal> width() const;
+    /*!
+     * Set the value of width.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setWidth(const std::optional<qreal> &newValue);
 
+    /*!
+     * Returns the value of height.
+     */
     std::optional<qreal> height() const;
+    /*!
+     * Set the value of height.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setHeight(const std::optional<qreal> &newValue);
 
+    /*!
+     * Returns the value of xOffset.
+     */
     std::optional<qreal> xOffset() const;
+    /*!
+     * Set the value of xOffset.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setXOffset(const std::optional<qreal> &newValue);
 
+    /*!
+     * Returns the value of yOffset.
+     */
     std::optional<qreal> yOffset() const;
+    /*!
+     * Set the value of yOffset.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setYOffset(const std::optional<qreal> &newValue);
 
+    /*!
+     * Returns the value of flags.
+     */
     std::optional<Union::Properties::ImageFlags> flags() const;
+    /*!
+     * Set the value of flags.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setFlags(const std::optional<Union::Properties::ImageFlags> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const ImageProperty &source, ImageProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty ImageProperty instance.
      *
      * This will create an empty ImageProperty instance, which is defined as
@@ -86,13 +160,16 @@ private:
     std::unique_ptr<ImagePropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::ImageProperty
+ * Equality comparison for ImageProperty.
+ */
 UNION_EXPORT bool operator==(const ImageProperty &left, const ImageProperty &right);
-UNION_EXPORT inline bool operator!=(const ImageProperty &left, const ImageProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::ImageProperty
+ * QDebug support for ImageProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::ImageProperty &type);

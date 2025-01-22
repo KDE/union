@@ -12,10 +12,8 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QGuiApplication>
 #include <QQmlComponent>
 #include <QVariant>
-#include <QWindow>
 
 #include <properties/PaletteProperty.h>
 
@@ -23,6 +21,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype PalettePropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of PaletteProperty to QML.
+ */
 class PalettePropertyGroup : public QObject
 {
     Q_OBJECT
@@ -34,98 +39,218 @@ public:
     void update(const Union::Properties::PaletteProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::accent
+     *
+     * Exposes PaletteProperty::accent to QML.
+     */
     Q_PROPERTY(QJSValue accent READ accent NOTIFY accentChanged)
     QJSValue accent() const;
     Q_SIGNAL void accentChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::alternateBase
+     *
+     * Exposes PaletteProperty::alternateBase to QML.
+     */
     Q_PROPERTY(QJSValue alternateBase READ alternateBase NOTIFY alternateBaseChanged)
     QJSValue alternateBase() const;
     Q_SIGNAL void alternateBaseChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::base
+     *
+     * Exposes PaletteProperty::base to QML.
+     */
     Q_PROPERTY(QJSValue base READ base NOTIFY baseChanged)
     QJSValue base() const;
     Q_SIGNAL void baseChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::brightText
+     *
+     * Exposes PaletteProperty::brightText to QML.
+     */
     Q_PROPERTY(QJSValue brightText READ brightText NOTIFY brightTextChanged)
     QJSValue brightText() const;
     Q_SIGNAL void brightTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::button
+     *
+     * Exposes PaletteProperty::button to QML.
+     */
     Q_PROPERTY(QJSValue button READ button NOTIFY buttonChanged)
     QJSValue button() const;
     Q_SIGNAL void buttonChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::buttonText
+     *
+     * Exposes PaletteProperty::buttonText to QML.
+     */
     Q_PROPERTY(QJSValue buttonText READ buttonText NOTIFY buttonTextChanged)
     QJSValue buttonText() const;
     Q_SIGNAL void buttonTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::dark
+     *
+     * Exposes PaletteProperty::dark to QML.
+     */
     Q_PROPERTY(QJSValue dark READ dark NOTIFY darkChanged)
     QJSValue dark() const;
     Q_SIGNAL void darkChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::highlight
+     *
+     * Exposes PaletteProperty::highlight to QML.
+     */
     Q_PROPERTY(QJSValue highlight READ highlight NOTIFY highlightChanged)
     QJSValue highlight() const;
     Q_SIGNAL void highlightChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::highlightedText
+     *
+     * Exposes PaletteProperty::highlightedText to QML.
+     */
     Q_PROPERTY(QJSValue highlightedText READ highlightedText NOTIFY highlightedTextChanged)
     QJSValue highlightedText() const;
     Q_SIGNAL void highlightedTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::light
+     *
+     * Exposes PaletteProperty::light to QML.
+     */
     Q_PROPERTY(QJSValue light READ light NOTIFY lightChanged)
     QJSValue light() const;
     Q_SIGNAL void lightChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::link
+     *
+     * Exposes PaletteProperty::link to QML.
+     */
     Q_PROPERTY(QJSValue link READ link NOTIFY linkChanged)
     QJSValue link() const;
     Q_SIGNAL void linkChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::linkVisited
+     *
+     * Exposes PaletteProperty::linkVisited to QML.
+     */
     Q_PROPERTY(QJSValue linkVisited READ linkVisited NOTIFY linkVisitedChanged)
     QJSValue linkVisited() const;
     Q_SIGNAL void linkVisitedChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::mid
+     *
+     * Exposes PaletteProperty::mid to QML.
+     */
     Q_PROPERTY(QJSValue mid READ mid NOTIFY midChanged)
     QJSValue mid() const;
     Q_SIGNAL void midChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::midlight
+     *
+     * Exposes PaletteProperty::midlight to QML.
+     */
     Q_PROPERTY(QJSValue midlight READ midlight NOTIFY midlightChanged)
     QJSValue midlight() const;
     Q_SIGNAL void midlightChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::placeholderText
+     *
+     * Exposes PaletteProperty::placeholderText to QML.
+     */
     Q_PROPERTY(QJSValue placeholderText READ placeholderText NOTIFY placeholderTextChanged)
     QJSValue placeholderText() const;
     Q_SIGNAL void placeholderTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::shadow
+     *
+     * Exposes PaletteProperty::shadow to QML.
+     */
     Q_PROPERTY(QJSValue shadow READ shadow NOTIFY shadowChanged)
     QJSValue shadow() const;
     Q_SIGNAL void shadowChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::text
+     *
+     * Exposes PaletteProperty::text to QML.
+     */
     Q_PROPERTY(QJSValue text READ text NOTIFY textChanged)
     QJSValue text() const;
     Q_SIGNAL void textChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::toolTipBase
+     *
+     * Exposes PaletteProperty::toolTipBase to QML.
+     */
     Q_PROPERTY(QJSValue toolTipBase READ toolTipBase NOTIFY toolTipBaseChanged)
     QJSValue toolTipBase() const;
     Q_SIGNAL void toolTipBaseChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::toolTipText
+     *
+     * Exposes PaletteProperty::toolTipText to QML.
+     */
     Q_PROPERTY(QJSValue toolTipText READ toolTipText NOTIFY toolTipTextChanged)
     QJSValue toolTipText() const;
     Q_SIGNAL void toolTipTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::window
+     *
+     * Exposes PaletteProperty::window to QML.
+     */
     Q_PROPERTY(QJSValue window READ window NOTIFY windowChanged)
     QJSValue window() const;
     Q_SIGNAL void windowChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::windowText
+     *
+     * Exposes PaletteProperty::windowText to QML.
+     */
     Q_PROPERTY(QJSValue windowText READ windowText NOTIFY windowTextChanged)
     QJSValue windowText() const;
     Q_SIGNAL void windowTextChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::positive
+     *
+     * Exposes PaletteProperty::positive to QML.
+     */
     Q_PROPERTY(QJSValue positive READ positive NOTIFY positiveChanged)
     QJSValue positive() const;
     Q_SIGNAL void positiveChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::neutral
+     *
+     * Exposes PaletteProperty::neutral to QML.
+     */
     Q_PROPERTY(QJSValue neutral READ neutral NOTIFY neutralChanged)
     QJSValue neutral() const;
     Q_SIGNAL void neutralChanged();
 
+    /*!
+     * \qmlproperty QColor PalettePropertyGroup::negative
+     *
+     * Exposes PaletteProperty::negative to QML.
+     */
     Q_PROPERTY(QJSValue negative READ negative NOTIFY negativeChanged)
     QJSValue negative() const;
     Q_SIGNAL void negativeChanged();

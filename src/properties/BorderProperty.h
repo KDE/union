@@ -24,48 +24,106 @@ namespace Properties
 
 class BorderPropertyPrivate;
 
+/*!
+\class Union::Properties::BorderProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group containing properties of a background's border.
+
+*/
 class UNION_EXPORT BorderProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     BorderProperty();
+    /*!
+     * Copy constructor.
+     */
     BorderProperty(const BorderProperty &other);
+    /*!
+     * Move constructor.
+     */
     BorderProperty(BorderProperty &&other);
     ~BorderProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     BorderProperty &operator=(const BorderProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     BorderProperty &operator=(BorderProperty &&other);
 
+    /*!
+     * Returns the value of left.
+     */
     std::optional<LineProperty> left() const;
+    /*!
+     * Set the value of left.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setLeft(const std::optional<LineProperty> &newValue);
 
+    /*!
+     * Returns the value of right.
+     */
     std::optional<LineProperty> right() const;
+    /*!
+     * Set the value of right.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setRight(const std::optional<LineProperty> &newValue);
 
+    /*!
+     * Returns the value of top.
+     */
     std::optional<LineProperty> top() const;
+    /*!
+     * Set the value of top.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setTop(const std::optional<LineProperty> &newValue);
 
+    /*!
+     * Returns the value of bottom.
+     */
     std::optional<LineProperty> bottom() const;
+    /*!
+     * Set the value of bottom.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setBottom(const std::optional<LineProperty> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const BorderProperty &source, BorderProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty BorderProperty instance.
      *
      * This will create an empty BorderProperty instance, which is defined as
@@ -79,13 +137,16 @@ private:
     std::unique_ptr<BorderPropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::BorderProperty
+ * Equality comparison for BorderProperty.
+ */
 UNION_EXPORT bool operator==(const BorderProperty &left, const BorderProperty &right);
-UNION_EXPORT inline bool operator!=(const BorderProperty &left, const BorderProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::BorderProperty
+ * QDebug support for BorderProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::BorderProperty &type);

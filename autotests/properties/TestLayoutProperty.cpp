@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         LayoutProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.alignment().has_value());
         QVERIFY(!property.width().has_value());
         QVERIFY(!property.height().has_value());
@@ -35,11 +35,11 @@ private Q_SLOTS:
     {
         LayoutProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setAlignment(AlignmentProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -71,7 +71,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setPadding(SizeProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -82,7 +82,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setInset(SizeProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -93,7 +93,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setMargins(SizeProperty{});
             QVERIFY(!property.hasAnyValue());
 

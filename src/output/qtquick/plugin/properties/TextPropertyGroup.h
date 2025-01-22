@@ -20,6 +20,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype TextPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of TextProperty to QML.
+ */
 class TextPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -31,9 +38,19 @@ public:
     void update(const Union::Properties::TextProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty AlignmentPropertyGroup TextPropertyGroup::alignment
+     *
+     * Exposes TextProperty::AlignmentProperty to QML.
+     */
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
+    /*!
+     * \qmlproperty QFont TextPropertyGroup::font
+     *
+     * Exposes TextProperty::font to QML.
+     */
     Q_PROPERTY(QJSValue font READ font NOTIFY fontChanged)
     QJSValue font() const;
     Q_SIGNAL void fontChanged();

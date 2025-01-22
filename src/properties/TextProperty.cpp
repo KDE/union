@@ -93,13 +93,13 @@ bool TextProperty::hasAnyValue() const
 void TextProperty::resolveProperties(const TextProperty &source, TextProperty &destination)
 {
     if (source.d->alignment.has_value()) {
-        AlignmentProperty value;
+        AlignmentProperty property;
         if (destination.d->alignment.has_value()) {
-            value = destination.d->alignment.value();
+            property = destination.d->alignment.value();
         }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->alignment = value;
+        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->alignment = property;
         }
     }
     if (!destination.d->font.has_value()) {
@@ -110,7 +110,7 @@ void TextProperty::resolveProperties(const TextProperty &source, TextProperty &d
 TextProperty TextProperty::empty()
 {
     TextProperty result;
-    result.d->alignment = AlignmentProperty::empty();
+    result.d->alignment = emptyValue<AlignmentProperty>();
     result.d->font = emptyValue<QFont>();
     return result;
 }

@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         ShadowProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.offsets().has_value());
         QVERIFY(!property.left().has_value());
         QVERIFY(!property.right().has_value());
@@ -37,11 +37,11 @@ private Q_SLOTS:
     {
         ShadowProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setOffsets(SizeProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -52,7 +52,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setLeft(LineProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -63,7 +63,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setRight(LineProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -74,7 +74,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setTop(LineProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -85,7 +85,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setBottom(LineProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -96,7 +96,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setTopLeft(CornerProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -107,7 +107,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setTopRight(CornerProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -118,7 +118,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setBottomLeft(CornerProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -129,7 +129,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setBottomRight(CornerProperty{});
             QVERIFY(!property.hasAnyValue());
 

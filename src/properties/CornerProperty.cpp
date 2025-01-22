@@ -162,13 +162,13 @@ void CornerProperty::resolveProperties(const CornerProperty &source, CornerPrope
         destination.d->color = source.d->color;
     }
     if (source.d->image.has_value()) {
-        ImageProperty value;
+        ImageProperty property;
         if (destination.d->image.has_value()) {
-            value = destination.d->image.value();
+            property = destination.d->image.value();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->image = value;
+        ImageProperty::resolveProperties(source.d->image.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->image = property;
         }
     }
 }
@@ -180,7 +180,7 @@ CornerProperty CornerProperty::empty()
     result.d->width = emptyValue<qreal>();
     result.d->height = emptyValue<qreal>();
     result.d->color = emptyValue<QColor>();
-    result.d->image = ImageProperty::empty();
+    result.d->image = emptyValue<ImageProperty>();
     return result;
 }
 

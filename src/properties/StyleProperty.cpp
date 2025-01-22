@@ -150,53 +150,53 @@ bool StyleProperty::hasAnyValue() const
 void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty &destination)
 {
     if (source.d->palette.has_value()) {
-        PaletteProperty value;
+        PaletteProperty property;
         if (destination.d->palette.has_value()) {
-            value = destination.d->palette.value();
+            property = destination.d->palette.value();
         }
-        PaletteProperty::resolveProperties(source.d->palette.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->palette = value;
+        PaletteProperty::resolveProperties(source.d->palette.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->palette = property;
         }
     }
     if (source.d->layout.has_value()) {
-        LayoutProperty value;
+        LayoutProperty property;
         if (destination.d->layout.has_value()) {
-            value = destination.d->layout.value();
+            property = destination.d->layout.value();
         }
-        LayoutProperty::resolveProperties(source.d->layout.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->layout = value;
+        LayoutProperty::resolveProperties(source.d->layout.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->layout = property;
         }
     }
     if (source.d->text.has_value()) {
-        TextProperty value;
+        TextProperty property;
         if (destination.d->text.has_value()) {
-            value = destination.d->text.value();
+            property = destination.d->text.value();
         }
-        TextProperty::resolveProperties(source.d->text.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->text = value;
+        TextProperty::resolveProperties(source.d->text.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->text = property;
         }
     }
     if (source.d->icon.has_value()) {
-        IconProperty value;
+        IconProperty property;
         if (destination.d->icon.has_value()) {
-            value = destination.d->icon.value();
+            property = destination.d->icon.value();
         }
-        IconProperty::resolveProperties(source.d->icon.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->icon = value;
+        IconProperty::resolveProperties(source.d->icon.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->icon = property;
         }
     }
     if (source.d->background.has_value()) {
-        BackgroundProperty value;
+        BackgroundProperty property;
         if (destination.d->background.has_value()) {
-            value = destination.d->background.value();
+            property = destination.d->background.value();
         }
-        BackgroundProperty::resolveProperties(source.d->background.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->background = value;
+        BackgroundProperty::resolveProperties(source.d->background.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->background = property;
         }
     }
 }
@@ -204,11 +204,11 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
 StyleProperty StyleProperty::empty()
 {
     StyleProperty result;
-    result.d->palette = PaletteProperty::empty();
-    result.d->layout = LayoutProperty::empty();
-    result.d->text = TextProperty::empty();
-    result.d->icon = IconProperty::empty();
-    result.d->background = BackgroundProperty::empty();
+    result.d->palette = emptyValue<PaletteProperty>();
+    result.d->layout = emptyValue<LayoutProperty>();
+    result.d->text = emptyValue<TextProperty>();
+    result.d->icon = emptyValue<IconProperty>();
+    result.d->background = emptyValue<BackgroundProperty>();
     return result;
 }
 

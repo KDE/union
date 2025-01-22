@@ -23,6 +23,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype BackgroundPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of BackgroundProperty to QML.
+ */
 class BackgroundPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -34,19 +41,44 @@ public:
     void update(const Union::Properties::BackgroundProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty QColor BackgroundPropertyGroup::color
+     *
+     * Exposes BackgroundProperty::color to QML.
+     */
     Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
     QJSValue color() const;
     Q_SIGNAL void colorChanged();
 
+    /*!
+     * \qmlproperty ImagePropertyGroup BackgroundPropertyGroup::image
+     *
+     * Exposes BackgroundProperty::ImageProperty to QML.
+     */
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
+    /*!
+     * \qmlproperty BorderPropertyGroup BackgroundPropertyGroup::border
+     *
+     * Exposes BackgroundProperty::BorderProperty to QML.
+     */
     Q_PROPERTY(BorderPropertyGroup *border READ border CONSTANT)
     BorderPropertyGroup *border() const;
 
+    /*!
+     * \qmlproperty CornersPropertyGroup BackgroundPropertyGroup::corners
+     *
+     * Exposes BackgroundProperty::CornersProperty to QML.
+     */
     Q_PROPERTY(CornersPropertyGroup *corners READ corners CONSTANT)
     CornersPropertyGroup *corners() const;
 
+    /*!
+     * \qmlproperty ShadowPropertyGroup BackgroundPropertyGroup::shadow
+     *
+     * Exposes BackgroundProperty::ShadowProperty to QML.
+     */
     Q_PROPERTY(ShadowPropertyGroup *shadow READ shadow CONSTANT)
     ShadowPropertyGroup *shadow() const;
 

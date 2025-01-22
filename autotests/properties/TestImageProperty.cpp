@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         ImageProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.imageData().has_value());
         QVERIFY(!property.width().has_value());
         QVERIFY(!property.height().has_value());
@@ -34,7 +34,7 @@ private Q_SLOTS:
     {
         ImageProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {

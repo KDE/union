@@ -19,6 +19,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype ImagePropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of ImageProperty to QML.
+ */
 class ImagePropertyGroup : public QObject
 {
     Q_OBJECT
@@ -30,26 +37,56 @@ public:
     void update(const Union::Properties::ImageProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty QImage ImagePropertyGroup::imageData
+     *
+     * Exposes ImageProperty::imageData to QML.
+     */
     Q_PROPERTY(QJSValue imageData READ imageData NOTIFY imageDataChanged)
     QJSValue imageData() const;
     Q_SIGNAL void imageDataChanged();
 
+    /*!
+     * \qmlproperty qreal ImagePropertyGroup::width
+     *
+     * Exposes ImageProperty::width to QML.
+     */
     Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
     QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
+    /*!
+     * \qmlproperty qreal ImagePropertyGroup::height
+     *
+     * Exposes ImageProperty::height to QML.
+     */
     Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
     QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
+    /*!
+     * \qmlproperty qreal ImagePropertyGroup::xOffset
+     *
+     * Exposes ImageProperty::xOffset to QML.
+     */
     Q_PROPERTY(QJSValue xOffset READ xOffset NOTIFY xOffsetChanged)
     QJSValue xOffset() const;
     Q_SIGNAL void xOffsetChanged();
 
+    /*!
+     * \qmlproperty qreal ImagePropertyGroup::yOffset
+     *
+     * Exposes ImageProperty::yOffset to QML.
+     */
     Q_PROPERTY(QJSValue yOffset READ yOffset NOTIFY yOffsetChanged)
     QJSValue yOffset() const;
     Q_SIGNAL void yOffsetChanged();
 
+    /*!
+     * \qmlproperty Union::Properties::ImageFlags ImagePropertyGroup::flags
+     *
+     * Exposes ImageProperty::flags to QML.
+     */
     Q_PROPERTY(QJSValue flags READ flags NOTIFY flagsChanged)
     QJSValue flags() const;
     Q_SIGNAL void flagsChanged();

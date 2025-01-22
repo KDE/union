@@ -24,48 +24,106 @@ namespace Properties
 
 class AlignmentPropertyPrivate;
 
+/*!
+\class Union::Properties::AlignmentProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group with properties related to alignment.
+
+*/
 class UNION_EXPORT AlignmentProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     AlignmentProperty();
+    /*!
+     * Copy constructor.
+     */
     AlignmentProperty(const AlignmentProperty &other);
+    /*!
+     * Move constructor.
+     */
     AlignmentProperty(AlignmentProperty &&other);
     ~AlignmentProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     AlignmentProperty &operator=(const AlignmentProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     AlignmentProperty &operator=(AlignmentProperty &&other);
 
+    /*!
+     * Returns the value of container.
+     */
     std::optional<Union::Properties::AlignmentContainer> container() const;
+    /*!
+     * Set the value of container.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setContainer(const std::optional<Union::Properties::AlignmentContainer> &newValue);
 
+    /*!
+     * Returns the value of horizontal.
+     */
     std::optional<Union::Properties::Alignment> horizontal() const;
+    /*!
+     * Set the value of horizontal.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setHorizontal(const std::optional<Union::Properties::Alignment> &newValue);
 
+    /*!
+     * Returns the value of vertical.
+     */
     std::optional<Union::Properties::Alignment> vertical() const;
+    /*!
+     * Set the value of vertical.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setVertical(const std::optional<Union::Properties::Alignment> &newValue);
 
+    /*!
+     * Returns the value of order.
+     */
     std::optional<int> order() const;
+    /*!
+     * Set the value of order.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setOrder(const std::optional<int> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const AlignmentProperty &source, AlignmentProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty AlignmentProperty instance.
      *
      * This will create an empty AlignmentProperty instance, which is defined as
@@ -79,13 +137,16 @@ private:
     std::unique_ptr<AlignmentPropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::AlignmentProperty
+ * Equality comparison for AlignmentProperty.
+ */
 UNION_EXPORT bool operator==(const AlignmentProperty &left, const AlignmentProperty &right);
-UNION_EXPORT inline bool operator!=(const AlignmentProperty &left, const AlignmentProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::AlignmentProperty
+ * QDebug support for AlignmentProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::AlignmentProperty &type);

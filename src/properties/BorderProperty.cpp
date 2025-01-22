@@ -131,43 +131,43 @@ bool BorderProperty::hasAnyValue() const
 void BorderProperty::resolveProperties(const BorderProperty &source, BorderProperty &destination)
 {
     if (source.d->left.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->left.has_value()) {
-            value = destination.d->left.value();
+            property = destination.d->left.value();
         }
-        LineProperty::resolveProperties(source.d->left.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->left = value;
+        LineProperty::resolveProperties(source.d->left.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->left = property;
         }
     }
     if (source.d->right.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->right.has_value()) {
-            value = destination.d->right.value();
+            property = destination.d->right.value();
         }
-        LineProperty::resolveProperties(source.d->right.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->right = value;
+        LineProperty::resolveProperties(source.d->right.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->right = property;
         }
     }
     if (source.d->top.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->top.has_value()) {
-            value = destination.d->top.value();
+            property = destination.d->top.value();
         }
-        LineProperty::resolveProperties(source.d->top.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->top = value;
+        LineProperty::resolveProperties(source.d->top.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->top = property;
         }
     }
     if (source.d->bottom.has_value()) {
-        LineProperty value;
+        LineProperty property;
         if (destination.d->bottom.has_value()) {
-            value = destination.d->bottom.value();
+            property = destination.d->bottom.value();
         }
-        LineProperty::resolveProperties(source.d->bottom.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->bottom = value;
+        LineProperty::resolveProperties(source.d->bottom.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->bottom = property;
         }
     }
 }
@@ -175,10 +175,10 @@ void BorderProperty::resolveProperties(const BorderProperty &source, BorderPrope
 BorderProperty BorderProperty::empty()
 {
     BorderProperty result;
-    result.d->left = LineProperty::empty();
-    result.d->right = LineProperty::empty();
-    result.d->top = LineProperty::empty();
-    result.d->bottom = LineProperty::empty();
+    result.d->left = emptyValue<LineProperty>();
+    result.d->right = emptyValue<LineProperty>();
+    result.d->top = emptyValue<LineProperty>();
+    result.d->bottom = emptyValue<LineProperty>();
     return result;
 }
 

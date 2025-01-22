@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         PaletteProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.accent().has_value());
         QVERIFY(!property.alternateBase().has_value());
         QVERIFY(!property.base().has_value());
@@ -52,7 +52,7 @@ private Q_SLOTS:
     {
         PaletteProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {

@@ -153,43 +153,43 @@ void BackgroundProperty::resolveProperties(const BackgroundProperty &source, Bac
         destination.d->color = source.d->color;
     }
     if (source.d->image.has_value()) {
-        ImageProperty value;
+        ImageProperty property;
         if (destination.d->image.has_value()) {
-            value = destination.d->image.value();
+            property = destination.d->image.value();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->image = value;
+        ImageProperty::resolveProperties(source.d->image.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->image = property;
         }
     }
     if (source.d->border.has_value()) {
-        BorderProperty value;
+        BorderProperty property;
         if (destination.d->border.has_value()) {
-            value = destination.d->border.value();
+            property = destination.d->border.value();
         }
-        BorderProperty::resolveProperties(source.d->border.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->border = value;
+        BorderProperty::resolveProperties(source.d->border.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->border = property;
         }
     }
     if (source.d->corners.has_value()) {
-        CornersProperty value;
+        CornersProperty property;
         if (destination.d->corners.has_value()) {
-            value = destination.d->corners.value();
+            property = destination.d->corners.value();
         }
-        CornersProperty::resolveProperties(source.d->corners.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->corners = value;
+        CornersProperty::resolveProperties(source.d->corners.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->corners = property;
         }
     }
     if (source.d->shadow.has_value()) {
-        ShadowProperty value;
+        ShadowProperty property;
         if (destination.d->shadow.has_value()) {
-            value = destination.d->shadow.value();
+            property = destination.d->shadow.value();
         }
-        ShadowProperty::resolveProperties(source.d->shadow.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->shadow = value;
+        ShadowProperty::resolveProperties(source.d->shadow.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->shadow = property;
         }
     }
 }
@@ -198,10 +198,10 @@ BackgroundProperty BackgroundProperty::empty()
 {
     BackgroundProperty result;
     result.d->color = emptyValue<QColor>();
-    result.d->image = ImageProperty::empty();
-    result.d->border = BorderProperty::empty();
-    result.d->corners = CornersProperty::empty();
-    result.d->shadow = ShadowProperty::empty();
+    result.d->image = emptyValue<ImageProperty>();
+    result.d->border = emptyValue<BorderProperty>();
+    result.d->corners = emptyValue<CornersProperty>();
+    result.d->shadow = emptyValue<ShadowProperty>();
     return result;
 }
 

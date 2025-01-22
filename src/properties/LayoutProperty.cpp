@@ -188,13 +188,13 @@ bool LayoutProperty::hasAnyValue() const
 void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutProperty &destination)
 {
     if (source.d->alignment.has_value()) {
-        AlignmentProperty value;
+        AlignmentProperty property;
         if (destination.d->alignment.has_value()) {
-            value = destination.d->alignment.value();
+            property = destination.d->alignment.value();
         }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->alignment = value;
+        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->alignment = property;
         }
     }
     if (!destination.d->width.has_value()) {
@@ -207,33 +207,33 @@ void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutPrope
         destination.d->spacing = source.d->spacing;
     }
     if (source.d->padding.has_value()) {
-        SizeProperty value;
+        SizeProperty property;
         if (destination.d->padding.has_value()) {
-            value = destination.d->padding.value();
+            property = destination.d->padding.value();
         }
-        SizeProperty::resolveProperties(source.d->padding.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->padding = value;
+        SizeProperty::resolveProperties(source.d->padding.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->padding = property;
         }
     }
     if (source.d->inset.has_value()) {
-        SizeProperty value;
+        SizeProperty property;
         if (destination.d->inset.has_value()) {
-            value = destination.d->inset.value();
+            property = destination.d->inset.value();
         }
-        SizeProperty::resolveProperties(source.d->inset.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->inset = value;
+        SizeProperty::resolveProperties(source.d->inset.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->inset = property;
         }
     }
     if (source.d->margins.has_value()) {
-        SizeProperty value;
+        SizeProperty property;
         if (destination.d->margins.has_value()) {
-            value = destination.d->margins.value();
+            property = destination.d->margins.value();
         }
-        SizeProperty::resolveProperties(source.d->margins.value(), value);
-        if (value.hasAnyValue()) {
-            destination.d->margins = value;
+        SizeProperty::resolveProperties(source.d->margins.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->margins = property;
         }
     }
 }
@@ -241,13 +241,13 @@ void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutPrope
 LayoutProperty LayoutProperty::empty()
 {
     LayoutProperty result;
-    result.d->alignment = AlignmentProperty::empty();
+    result.d->alignment = emptyValue<AlignmentProperty>();
     result.d->width = emptyValue<qreal>();
     result.d->height = emptyValue<qreal>();
     result.d->spacing = emptyValue<qreal>();
-    result.d->padding = SizeProperty::empty();
-    result.d->inset = SizeProperty::empty();
-    result.d->margins = SizeProperty::empty();
+    result.d->padding = emptyValue<SizeProperty>();
+    result.d->inset = emptyValue<SizeProperty>();
+    result.d->margins = emptyValue<SizeProperty>();
     return result;
 }
 

@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         AlignmentProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.container().has_value());
         QVERIFY(!property.horizontal().has_value());
         QVERIFY(!property.vertical().has_value());
@@ -32,7 +32,7 @@ private Q_SLOTS:
     {
         AlignmentProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {

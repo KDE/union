@@ -23,6 +23,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype CornersPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of CornersProperty to QML.
+ */
 class CornersPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -34,15 +41,35 @@ public:
     void update(const Union::Properties::CornersProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty CornerPropertyGroup CornersPropertyGroup::topLeft
+     *
+     * Exposes CornersProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *topLeft READ topLeft CONSTANT)
     CornerPropertyGroup *topLeft() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup CornersPropertyGroup::topRight
+     *
+     * Exposes CornersProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *topRight READ topRight CONSTANT)
     CornerPropertyGroup *topRight() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup CornersPropertyGroup::bottomLeft
+     *
+     * Exposes CornersProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
     CornerPropertyGroup *bottomLeft() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup CornersPropertyGroup::bottomRight
+     *
+     * Exposes CornersProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
     CornerPropertyGroup *bottomRight() const;
 

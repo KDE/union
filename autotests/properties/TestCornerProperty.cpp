@@ -21,7 +21,7 @@ private Q_SLOTS:
     {
         CornerProperty property;
 
-        // An empty instance should have no values set.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.radius().has_value());
         QVERIFY(!property.width().has_value());
         QVERIFY(!property.height().has_value());
@@ -33,7 +33,7 @@ private Q_SLOTS:
     {
         CornerProperty property;
 
-        // An empty instance should not have any values.
+        // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
         {
@@ -65,7 +65,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            // Assigning an empty property to a value should have no effect.
+            // Assigning an empty value to a property should have no effect.
             property.setImage(ImageProperty{});
             QVERIFY(!property.hasAnyValue());
 

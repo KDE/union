@@ -28,6 +28,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype ShadowPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of ShadowProperty to QML.
+ */
 class ShadowPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -39,30 +46,75 @@ public:
     void update(const Union::Properties::ShadowProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty SizePropertyGroup ShadowPropertyGroup::offsets
+     *
+     * Exposes ShadowProperty::SizeProperty to QML.
+     */
     Q_PROPERTY(SizePropertyGroup *offsets READ offsets CONSTANT)
     SizePropertyGroup *offsets() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup ShadowPropertyGroup::left
+     *
+     * Exposes ShadowProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *left READ left CONSTANT)
     LinePropertyGroup *left() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup ShadowPropertyGroup::right
+     *
+     * Exposes ShadowProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *right READ right CONSTANT)
     LinePropertyGroup *right() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup ShadowPropertyGroup::top
+     *
+     * Exposes ShadowProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *top READ top CONSTANT)
     LinePropertyGroup *top() const;
 
+    /*!
+     * \qmlproperty LinePropertyGroup ShadowPropertyGroup::bottom
+     *
+     * Exposes ShadowProperty::LineProperty to QML.
+     */
     Q_PROPERTY(LinePropertyGroup *bottom READ bottom CONSTANT)
     LinePropertyGroup *bottom() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup ShadowPropertyGroup::topLeft
+     *
+     * Exposes ShadowProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *topLeft READ topLeft CONSTANT)
     CornerPropertyGroup *topLeft() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup ShadowPropertyGroup::topRight
+     *
+     * Exposes ShadowProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *topRight READ topRight CONSTANT)
     CornerPropertyGroup *topRight() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup ShadowPropertyGroup::bottomLeft
+     *
+     * Exposes ShadowProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
     CornerPropertyGroup *bottomLeft() const;
 
+    /*!
+     * \qmlproperty CornerPropertyGroup ShadowPropertyGroup::bottomRight
+     *
+     * Exposes ShadowProperty::CornerProperty to QML.
+     */
     Q_PROPERTY(CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
     CornerPropertyGroup *bottomRight() const;
 

@@ -24,48 +24,106 @@ namespace Properties
 
 class CornersPropertyPrivate;
 
+/*!
+\class Union::Properties::CornersProperty
+\inmodule core
+\ingroup core-properties
+
+\brief A property group containing properties of a background's corners.
+
+*/
 class UNION_EXPORT CornersProperty
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     CornersProperty();
+    /*!
+     * Copy constructor.
+     */
     CornersProperty(const CornersProperty &other);
+    /*!
+     * Move constructor.
+     */
     CornersProperty(CornersProperty &&other);
     ~CornersProperty();
 
+    /*!
+     * Copy assignment operator.
+     */
     CornersProperty &operator=(const CornersProperty &other);
+    /*!
+     * Move assignment operator.
+     */
     CornersProperty &operator=(CornersProperty &&other);
 
+    /*!
+     * Returns the value of topLeft.
+     */
     std::optional<CornerProperty> topLeft() const;
+    /*!
+     * Set the value of topLeft.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setTopLeft(const std::optional<CornerProperty> &newValue);
 
+    /*!
+     * Returns the value of topRight.
+     */
     std::optional<CornerProperty> topRight() const;
+    /*!
+     * Set the value of topRight.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setTopRight(const std::optional<CornerProperty> &newValue);
 
+    /*!
+     * Returns the value of bottomLeft.
+     */
     std::optional<CornerProperty> bottomLeft() const;
+    /*!
+     * Set the value of bottomLeft.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setBottomLeft(const std::optional<CornerProperty> &newValue);
 
+    /*!
+     * Returns the value of bottomRight.
+     */
     std::optional<CornerProperty> bottomRight() const;
+    /*!
+     * Set the value of bottomRight.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void setBottomRight(const std::optional<CornerProperty> &newValue);
 
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const CornersProperty &source, CornersProperty &destination);
 
-    /**
+    /*!
      * Create and return an empty CornersProperty instance.
      *
      * This will create an empty CornersProperty instance, which is defined as
@@ -79,13 +137,16 @@ private:
     std::unique_ptr<CornersPropertyPrivate> d;
 };
 
+/*!
+ * \relates Union::Properties::CornersProperty
+ * Equality comparison for CornersProperty.
+ */
 UNION_EXPORT bool operator==(const CornersProperty &left, const CornersProperty &right);
-UNION_EXPORT inline bool operator!=(const CornersProperty &left, const CornersProperty &right)
-{
-    return !(left == right);
-}
-
 }
 }
 
+/*!
+ * \relates Union::Properties::CornersProperty
+ * QDebug support for CornersProperty.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::CornersProperty &type);

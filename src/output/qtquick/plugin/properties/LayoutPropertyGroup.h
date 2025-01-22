@@ -23,6 +23,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype LayoutPropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of LayoutProperty to QML.
+ */
 class LayoutPropertyGroup : public QObject
 {
     Q_OBJECT
@@ -34,27 +41,62 @@ public:
     void update(const Union::Properties::LayoutProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty AlignmentPropertyGroup LayoutPropertyGroup::alignment
+     *
+     * Exposes LayoutProperty::AlignmentProperty to QML.
+     */
     Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
+    /*!
+     * \qmlproperty qreal LayoutPropertyGroup::width
+     *
+     * Exposes LayoutProperty::width to QML.
+     */
     Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
     QJSValue width() const;
     Q_SIGNAL void widthChanged();
 
+    /*!
+     * \qmlproperty qreal LayoutPropertyGroup::height
+     *
+     * Exposes LayoutProperty::height to QML.
+     */
     Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
     QJSValue height() const;
     Q_SIGNAL void heightChanged();
 
+    /*!
+     * \qmlproperty qreal LayoutPropertyGroup::spacing
+     *
+     * Exposes LayoutProperty::spacing to QML.
+     */
     Q_PROPERTY(QJSValue spacing READ spacing NOTIFY spacingChanged)
     QJSValue spacing() const;
     Q_SIGNAL void spacingChanged();
 
+    /*!
+     * \qmlproperty SizePropertyGroup LayoutPropertyGroup::padding
+     *
+     * Exposes LayoutProperty::SizeProperty to QML.
+     */
     Q_PROPERTY(SizePropertyGroup *padding READ padding CONSTANT)
     SizePropertyGroup *padding() const;
 
+    /*!
+     * \qmlproperty SizePropertyGroup LayoutPropertyGroup::inset
+     *
+     * Exposes LayoutProperty::SizeProperty to QML.
+     */
     Q_PROPERTY(SizePropertyGroup *inset READ inset CONSTANT)
     SizePropertyGroup *inset() const;
 
+    /*!
+     * \qmlproperty SizePropertyGroup LayoutPropertyGroup::margins
+     *
+     * Exposes LayoutProperty::SizeProperty to QML.
+     */
     Q_PROPERTY(SizePropertyGroup *margins READ margins CONSTANT)
     SizePropertyGroup *margins() const;
 

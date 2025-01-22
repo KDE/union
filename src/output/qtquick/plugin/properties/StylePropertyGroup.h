@@ -24,6 +24,13 @@
 
 class QuickStyle;
 
+/*!
+ * \qmltype StylePropertyGroup
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of StyleProperty to QML.
+ */
 class StylePropertyGroup : public QObject
 {
     Q_OBJECT
@@ -35,18 +42,43 @@ public:
     void update(const Union::Properties::StyleProperty &newState);
     Q_SIGNAL void updated();
 
+    /*!
+     * \qmlproperty PalettePropertyGroup StylePropertyGroup::palette
+     *
+     * Exposes StyleProperty::PaletteProperty to QML.
+     */
     Q_PROPERTY(PalettePropertyGroup *palette READ palette CONSTANT)
     PalettePropertyGroup *palette() const;
 
+    /*!
+     * \qmlproperty LayoutPropertyGroup StylePropertyGroup::layout
+     *
+     * Exposes StyleProperty::LayoutProperty to QML.
+     */
     Q_PROPERTY(LayoutPropertyGroup *layout READ layout CONSTANT)
     LayoutPropertyGroup *layout() const;
 
+    /*!
+     * \qmlproperty TextPropertyGroup StylePropertyGroup::text
+     *
+     * Exposes StyleProperty::TextProperty to QML.
+     */
     Q_PROPERTY(TextPropertyGroup *text READ text CONSTANT)
     TextPropertyGroup *text() const;
 
+    /*!
+     * \qmlproperty IconPropertyGroup StylePropertyGroup::icon
+     *
+     * Exposes StyleProperty::IconProperty to QML.
+     */
     Q_PROPERTY(IconPropertyGroup *icon READ icon CONSTANT)
     IconPropertyGroup *icon() const;
 
+    /*!
+     * \qmlproperty BackgroundPropertyGroup StylePropertyGroup::background
+     *
+     * Exposes StyleProperty::BackgroundProperty to QML.
+     */
     Q_PROPERTY(BackgroundPropertyGroup *background READ background CONSTANT)
     BackgroundPropertyGroup *background() const;
 
