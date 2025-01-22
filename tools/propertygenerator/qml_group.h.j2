@@ -40,6 +40,13 @@ template but that clang format doesn't like, so disable format for that.
 
 class QuickStyle;
 
+/*!
+ * \qmltype {{ type_name }}Group
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-properties
+ *
+ * \brief A group object exposing the properties of {{ type_name }} to QML.
+ */
 class {{ type_name }}Group : public QObject
 {
     Q_OBJECT
@@ -53,6 +60,11 @@ public:
 
 {% for property in properties %}
 {% if property.is_group %}
+    /*!
+     * \qmlproperty {{ property.type }}Group {{ type_name }}Group::{{ property.name }}
+     *
+     * Exposes {{ type_name }}::{{ property.type }} to QML.
+     */
     Q_PROPERTY({{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
     {{ property.type }}Group *{{ property.name }}() const;
 {% else %}
@@ -62,6 +74,11 @@ public:
     also don't provide a property to QML and instead allow its default handling
     to take over.
 #}
+    /*!
+     * \qmlproperty {{ property.type }} {{ type_name }}Group::{{ property.name }}
+     *
+     * Exposes {{ type_name }}::{{ property.name }} to QML.
+     */
     Q_PROPERTY(QJSValue {{ property.name }} READ {{ property.name }} NOTIFY {{ property.name }}Changed)
     QJSValue {{ property.name }}() const;
     Q_SIGNAL void {{ property.name }}Changed();
