@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+include($KDE_DOCS/global/qt-module-defaults.qdocconf)
+
+project = Union
+description = A style engine designed to style pretty much everything.
+
+documentationinheaders = true
+
+headerdirs = \
+    . \
+    ./plasmasvg \
+    ./qtquick \
+    ../src \
+    ../src/properties \
+    ../src/input/plasmasvg \
+    ../src/output/qtquick
+
+headers.fileextensions = "*.qdoc *.h"
+
+imagedirs = ./images
+
+outputdir  = doc/html
+outputformats = HTML
+
+depends += qtcore qtgui qtwidgets qtquick qtquickcontrols
+
+# navigation.homepage         = union-index.html
+navigation.landingpage      = union-index.html
+navigation.landingtitle     = Union
+navigation.cppclassespage   = Union Core C++ Classes
+# navigation.qmltypespage     = Union QML Types
+
+qhp.projects            = Union
+#
+qhp.Union.file                = union.qhp
+qhp.Union.namespace           = org.kde.union.$QT_VERSION_TAG
+qhp.Union.virtualFolder       = union
+qhp.Union.indexTitle          = Union
+qhp.Union.indexRoot           =
+
+qhp.Union.subprojects         = classes
+qhp.Union.subprojects.classes.title = C++ Classes
+qhp.Union.subprojects.classes.indexTitle = Union Core C++ Classes
+qhp.Union.subprojects.classes.selectors = class fake:headerfile
+qhp.Union.subprojects.classes.sortPages = true

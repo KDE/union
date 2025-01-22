@@ -1,0 +1,24 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\module core
+\title Union Core C++ Classes
+\ingroup modules
+\cmakepackage Union
+
+\section1 Namespaces
+
+\annotatedlist core-namespaces
+
+\section1 Core Classes
+
+\annotatedlist core-classes
+
+\section1 Property Related Classes
+
+\annotatedlist core-properties
+\noautolist
+
+*/

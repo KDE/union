@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page union-index.html
+
+\title Union
+
+Union is a style engine designed to provide a unified style description to a set
+of separate output styles.
+
+\section1 Getting Started
+
+To use Union in your application, ensure it is installed and then tell your
+application to use Union as a style. For detailed instructions on how to to
+this, see the \l{applications.html}{Using Union in applications} page.
+
+If you wish to use the library or develop Union itself, you should start by
+reading the \l{overview.html}{Overview} page. This gives a general overview of
+how the code is structured, important technical concepts and relevant types to
+use.
+
+Note that currently there is no documentation about developing styles for Union.
+This is due to there being only one input format plugin that uses KDE Plasma's
+SVG styling.
+
+\section1 Reference
+\list
+    \li \l{Union Core C++ Classes}
+\endlist
+
+\section1 Input Plugins
+\list
+    \li \l{Plasma SVG Input}
+\endlist
+
+\section1 Output Plugins
+\list
+    \li \l{qtquick-index.html}{QtQuick Output}
+    \li \l{qtwidgets-index.html}{QtWidgets Output}
+\endlist
+
+*/
