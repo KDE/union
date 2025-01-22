@@ -19,6 +19,36 @@ namespace Union
 class Selector;
 class SelectorList;
 
+/*!
+ * \enum Union::SelectorType
+ * \relates Union::Selector
+ *
+ * The type of selector.
+ *
+ * \value Empty
+ *      An empty selector, which does nothing.
+ * \value Type
+ *      A selector matching on the \l{Union::Element::type}{type} property.
+ *      Checks if the specified string is equal to that of the property.
+ * \value Id
+ *      A selector matching on the \l{Union::Element::id}{id} property.
+ *      Checks if the specified string is equal to that of the property.
+ * \value State
+ *      A selector matching on the \l{Union::Element::state}{state} property.
+ *      Checks if the specified state is set in the property.
+ * \value ColorSet
+ *
+ * \value Hint
+ *
+ * \value Attribute
+ *      A selector matching on an attribute in the
+ *      \l{Union::Element::attributes}{attributes} property. Checks if the value
+ *      of the attribute matches the specified value.
+ * \value AnyOf
+ *      A selector that will match if any of the specified selectors match.
+ * \value AllOf
+ *      A selector that will match only if all of the specified selectors match.
+ */
 enum class SelectorType {
     Empty,
     Type,
@@ -47,20 +77,57 @@ namespace detail
 /* clang-format on */
 }
 
+/*!
+ * \class Union::Selector
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief A class to handle matching some data to an element.
+ */
 class UNION_EXPORT Selector
 {
 public:
+    /*!
+     * Returns whether this selector is valid.
+     *
+     * An invalid selector will never match anything.
+     */
     bool isValid() const;
+
+    /*!
+     * Returns the weight of this selector.
+     */
     int weight() const;
 
+    /*!
+     * Returns whether this selector matches an element.
+     *
+     * \a element The element to match against.
+     */
     bool matches(std::shared_ptr<Element> element) const;
+
+    /*!
+     * Return a string representation of this selector.
+     */
     QString toString() const;
 
+    /*!
+     * Create an empty, invalid selector.
+     */
     inline static Selector create()
     {
         return Selector(nullptr);
     }
 
+    /*!
+     * \overload Union::Selector::create()
+     *
+     * Create a new selector of a specific type.
+     *
+     * See \l[CPP]{Union::SelectorType}{SelectorType} for the available types.
+     *
+     * \a data The data to match on.
+     */
     template<SelectorType type, typename DataType>
         requires detail::ArgumentTypesMatch<type, std::decay_t<DataType>>
     static Selector create(DataType &&data)
@@ -96,12 +163,25 @@ private:
     std::shared_ptr<const SelectorPrivate> d;
 };
 
+/*!
+ * \class Union::SelectorList
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief A list of \l Union::Selector
+ */
 class UNION_EXPORT SelectorList : public QList<Selector>
 {
 public:
     using QList::QList;
 
+    /*!
+     * Returns the combined weight of all the selectors in the list.
+     */
     int weight() const;
+    /*!
+     * Returns if the selectors in this list match the list of elements.
+     */
     bool matches(const QList<std::shared_ptr<Element>> &elements) const;
 
     void appendAnyOf(const SelectorList &selectors);
@@ -109,6 +189,15 @@ public:
 };
 }
 
-UNION_EXPORT QDebug
-operator<<(QDebug debug, const Union::Selector &selector);
+/*!
+ * \relates Union::Selector
+ *
+ * QDebug support for Selector.
+ */
+UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Selector &selector);
+/*!
+ * \relates Union::SelectorList
+ *
+ * QDebug support for SelectorList.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::SelectorList &selectors);

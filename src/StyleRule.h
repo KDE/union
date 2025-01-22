@@ -19,8 +19,12 @@ namespace Union
 
 class StyleRulePrivate;
 
-/**
- * A set of style properties that should be applied to a certain set of elements.
+/*!
+ * \class Union::StyleRule
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief A set of style properties that should be applied to a certain set of elements.
  *
  * This class defines a set of properties to apply to an element, along with a
  * list of selectors that should match for this style to apply.

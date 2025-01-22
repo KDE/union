@@ -12,8 +12,12 @@ namespace Union
 
 class Theme;
 
-/**
- * An interface that is used by Theme to allow input plugins to load style rules.
+/*!
+ * \class Union::ThemeLoader
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief An interface that is used by Theme to allow input plugins to load style rules.
  */
 class UNION_EXPORT ThemeLoader
 {
@@ -22,8 +26,10 @@ public:
     {
     }
 
-    /**
+    /*!
      * Load the style rules for a theme.
+     *
+     * \a theme The theme the rules should be added to.
      */
     virtual bool load(std::shared_ptr<Theme> theme) = 0;
 };

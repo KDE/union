@@ -11,8 +11,12 @@ namespace Union
 {
 
 class Theme;
-/**
- * Abstract base class for plugins providing input data.
+/*!
+ * \class Union::InputPlugin
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief Abstract base class for plugins providing input data.
  *
  * This class defines the interface input plugins should implement. Input
  * plugins are plugins providing Theme instances and other themeing specific
@@ -25,7 +29,7 @@ class UNION_EXPORT InputPlugin : public QObject
 public:
     InputPlugin(QObject *parent = nullptr);
 
-    /**
+    /*!
      * Create an instance of a theme by name.
      *
      * This should be reimplemented by subclasses and create a new instance of

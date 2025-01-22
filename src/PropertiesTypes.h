@@ -8,38 +8,67 @@
 
 #include "union_export.h"
 
-/**
- * Flags and enums used by property classes.
- */
-
 namespace Union
 {
+/*!
+ * \namespace Union::Properties
+ * \inmodule core
+ * \ingroup core-namespaces
+ *
+ * Flags and enums used by property classes.
+ */
 namespace Properties
 {
 Q_NAMESPACE_EXPORT(UNION_EXPORT)
 
-/**
- * Flags used to indicate stretching or tiling behaviour for images.
+/*!
+ * \enum Union::Properties::ImageFlag
+ *
+ * Flags used to indicate stretching or tiling behavior for images.
+ *
+ * Note that Repeat and Stretch are mutually exclusive.
+ *
+ * \value RepeatX
+ *      Repeat the image on the X axis.
+ * \value RepeatY
+ *      Repeat the image on the Y axis.
+ * \value RepeatBoth
+ *      Repeat the image on both axes.
+ * \value StretchX
+ *      Stretch the image on the X axis.
+ * \value StretchY
+ *      Stretch the image on the Y axis.
+ * \value StretchBoth
+ *      Stretch the image on both axes.
  */
 enum class ImageFlag {
-    RepeatX = 1 << 0, ///< Repeat the image on the X axis.
-    RepeatY = 1 << 1, ///< Repeat the image on the Y axis.
-    RepeatBoth = RepeatX | RepeatY, ///< Repeat the image on both axes.
-    StretchX = 1 << 2, ///< Stretch the image on the X axis.
-    StretchY = 1 << 3, ///< Stretch the image on the Y axis;
-    StretchBoth = StretchX | StretchY, ///< Stretch the image on both axes.
+    RepeatX = 1 << 0,
+    RepeatY = 1 << 1,
+    RepeatBoth = RepeatX | RepeatY,
+    StretchX = 1 << 2,
+    StretchY = 1 << 3,
+    StretchBoth = StretchX | StretchY,
 };
 Q_ENUM_NS(ImageFlag)
 Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
 
-/**
- * An enum indicating the style that should be used to render a line.
+/*!
+ * \enum Union::Properties::LineStyle
+ *
+ * The style that should be used to render a line.
+ *
+ * \value Solid
+ *      Render as a solid, continuous line.
  */
 enum class LineStyle {
-    Solid, ///< Render as a solid, continuous line.
+    Solid,
 };
 Q_ENUM_NS(LineStyle)
 
+/*!
+ * \enum Union::Properties::AlignmentContainer
+ *
+ */
 enum class AlignmentContainer {
     Item,
     Content,
@@ -47,6 +76,10 @@ enum class AlignmentContainer {
 };
 Q_ENUM_NS(AlignmentContainer)
 
+/*!
+ * \enum Union::Properties::Alignment
+ *
+ */
 enum class Alignment {
     Unspecified,
     Start,
@@ -57,7 +90,7 @@ enum class Alignment {
 };
 Q_ENUM_NS(Alignment)
 
-/*!
+/*
  * A template method to get an empty value of a certain type.
  *
  * By default this will just default-construct the type but it allows us to use
