@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page applications.html
+\title Using Union in applications
+
+
+\section1 Using Union without any application changes
+
+\section2 QtQuick Applications
+
+Support for styling QtQuick applications with Union is provided by the
+\l{qtquick-index.html}{QtQuick Output} plugin. This plugin implements a full
+QtQuick Controls style. To use it in your application, you can set the
+\c{QT_QUICK_CONTROLS_STYLE} environment variable to \c{org.kde.union}. There are
+also other ways of specifying it, see the
+\l{https://doc.qt.io/qt-6/qtquickcontrols-styles.html#using-styles-in-qt-quick-controls}{Qt Documentation}
+for more details.
+
+\section2 QtWidgets Applications
+
+Support for styling QtWidgets applications with Union is provided by the
+\l{qtwidgets-index.html}{QtWidgets Output} plugin. This plugin implements a
+QStyle that can be used with Qt.
+
+\section1 Exposing custom types to Union
+
+How to expose custom types depends on how the type is defined.
+
+\section2 QtQuick Types
+
+For QtQuick based types, you can use the API exposed by the
+\l{qtquick-index.html}{QtQuick Output} plugin. Explicitly import Union using
+\c{import org.kde.union} and use the \l[QML]{org.kde.union.impl::Element}{Element}
+type to provide information about your type. You can use the
+\l[QML]{Style} type to read style properties to style your type.
+
+*/
