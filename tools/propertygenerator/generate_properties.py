@@ -61,6 +61,7 @@ class GroupDescription:
     system_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
+    documentation: str = ""
 
     def __lt__(self, other):
         return self.type_name < other.type_name
@@ -80,6 +81,21 @@ def process_node(node, type_name, memo):
 
     description = GroupDescription(type_name)
     memo[type_name] = description
+
+    if (node.comment and node.comment[-1]):
+        comments = node.comment[-1]
+
+        documentation = ""
+        for line in comments:
+            text = line.value.strip().lstrip("# ")
+
+            if text.startswith("SPDX"):
+                continue
+
+            documentation += text
+            documentation += "\n"
+
+        description.documentation = documentation
 
     for key_node, value_node in node.value:
         if key_node.value == "_extra_code":
@@ -156,6 +172,7 @@ def render_template(template_name: str, output_path: Path, env: jinja2.Environme
     render_data["extra_code"] = data.get("extra_code", {}).get(template_name, "")
     render_data["system_includes"] = data.get("system_includes", {}).get(template_name, [])
     render_data["local_includes"] = data.get("local_includes", {}).get(template_name, [])
+    render_data["documentation"] = data.get("documentation", "")
 
     with open(output_path, "w") as f:
         template = jinja_env.get_template(template_name, None)
