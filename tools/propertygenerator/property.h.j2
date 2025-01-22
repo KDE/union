@@ -42,41 +42,74 @@ namespace Properties
 
 class {{ type_name }}Private;
 
+/*!
+\class Union::Properties::{{ type_name }}
+\inmodule core
+\ingroup core-properties
+
+{{ documentation }}
+*/
 class UNION_EXPORT {{ type_name }}
 {
 public:
+    /*!
+     * Default constructor. Constructs a null instance.
+     *
+     * A null instance in this case means an instance that does not have any
+     * values for its properties. This includes property groups.
+     */
     {{ type_name }}();
+    /*!
+     * Copy constructor.
+     */
     {{ type_name }}(const {{ type_name }} &other);
+    /*!
+     * Move constructor.
+     */
     {{ type_name }}({{ type_name }} &&other);
     ~{{ type_name }}();
 
+    /*!
+     * Copy assignment operator.
+     */
     {{ type_name }} &operator=(const {{ type_name }} &other);
+    /*!
+     * Move assignment operator.
+     */
     {{ type_name }} &operator=({{ type_name }} &&other);
 
 {% for property in properties %}
+    /*!
+     * Returns the value of {{ property.name }}.
+     */
     std::optional<{{ property.type }}> {{ property.name }}() const;
+    /*!
+     * Set the value of {{ property.name }}.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
     void set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue);
 
 {% endfor %}
-    /**
-     * Check if this property has any value set.
+    /*!
+     * Returns if this property group has any value set.
      *
-     * Note that for any sub property that this property has, it also checks if
-     * that sub-property has any value.
+     * Note that for any property that is also a property group, this will also
+     * check if that group has any value.
      */
     bool hasAnyValue() const;
 
-    /**
-     * Copy values from source to destination if destination does not have a value.
+    /*!
+     * Copy property values from source to destination if destination does not have a property value.
      *
-     * This will recursively copy sub-values.
+     * This will recursively copy property values of grouped properties.
      *
-     * \param source The source property to copy from.
-     * \param destination The destination property to copy to.
+     * \a source      The source property group to copy from.
+     * \a destination The destination property group to copy to.
      */
     static void resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination);
 
-    /**
+    /*!
      * Create and return an empty {{ type_name }} instance.
      *
      * This will create an empty {{ type_name }} instance, which is defined as
@@ -97,6 +130,10 @@ private:
 {% endif %}
 };
 
+/*!
+ * \relates Union::Properties::{{ type_name }}
+ * Equality comparison for {{ type_name }}.
+ */
 UNION_EXPORT bool operator==(const {{ type_name }} &left, const {{ type_name}} &right);
 UNION_EXPORT inline bool operator!=(const {{ type_name }} &left, const {{ type_name}} &right)
 {
@@ -106,4 +143,8 @@ UNION_EXPORT inline bool operator!=(const {{ type_name }} &left, const {{ type_n
 }
 }
 
+/*!
+ * \relates Union::Properties::{{ type_name }}
+ * QDebug support for {{ type_name }}.
+ */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::{{ type_name }} &type);
