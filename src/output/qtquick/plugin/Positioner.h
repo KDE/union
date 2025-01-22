@@ -22,13 +22,22 @@ namespace PositionerSource
 Q_NAMESPACE
 QML_ELEMENT
 
-/**
+/*!
+ * \enum PositionerSource::Source
+ *
  * Indicates what property to use for alignment information.
+ *
+ * \value Layout
+ *  Read from the Layout property.
+ * \value Text
+ *  Read from the Text property.
+ * \value Icon
+ *  Read from the Icon property.
  */
 enum class Source {
-    Layout, ///< Read from the Layout property.
-    Text, ///< Read from the Text property.
-    Icon ///< Read from the Icon property.
+    Layout,
+    Text,
+    Icon
 };
 Q_ENUM_NS(Source)
 
@@ -36,12 +45,6 @@ Q_ENUM_NS(Source)
 
 class PositionerLayout;
 
-/**
- * An attached property that can be used to position various objects inside another object.
- *
- * This will position any items added to `positionItems` based on information
- * from the style.
- */
 class PositionerAttached : public QObject
 {
     Q_OBJECT
@@ -52,7 +55,9 @@ public:
     PositionerAttached(QObject *parent = nullptr);
     ~PositionerAttached() override;
 
-    /**
+    /*!
+     * \qmlattachedproperty ItemList Positioner::positionItems
+     *
      * A list of items that should be positioned by this positioner.
      */
     Q_PROPERTY(ItemList positionItems READ positionItems WRITE setPositionItems NOTIFY positionItemsChanged)
@@ -60,21 +65,27 @@ public:
     void setPositionItems(const ItemList &newItems);
     Q_SIGNAL void positionItemsChanged();
 
-    /**
+    /*!
+     * \qmlattachedproperty real Positioner::implicitWidth
+     *
      * The implicit width, as calculated by the internal layout.
      */
     Q_PROPERTY(qreal implicitWidth READ implicitWidth NOTIFY implicitWidthChanged)
     qreal implicitWidth() const;
     Q_SIGNAL void implicitWidthChanged();
 
-    /**
+    /*!
+     * \qmlattachedproperty real Positioner::implicitHeight
+     *
      * The implicit height, as calculated by the internal layout.
      */
     Q_PROPERTY(qreal implicitHeight READ implicitHeight NOTIFY implicitHeightChanged)
     qreal implicitHeight() const;
     Q_SIGNAL void implicitHeightChanged();
 
-    /**
+    /*!
+     * \qmlattachedproperty Sizes Positioner::padding
+     *
      * Padding as calculated by the internal layout.
      *
      * Note that this includes the space that is reserved by the style for the
@@ -100,8 +111,15 @@ private:
     PositionerLayout *m_layout;
 };
 
-/**
- * An uncreatable type used to expose the Positioner attached type.
+/*!
+ * \qmltype Positioner
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief An attached property type that can be used to position various objects inside another object.
+ *
+ * This will position any items added to `positionItems` based on information
+ * from the style.
  */
 class Positioner : public QQuickItem
 {

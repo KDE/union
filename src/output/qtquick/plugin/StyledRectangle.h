@@ -8,8 +8,12 @@
 
 #include "QuickStyle.h"
 
-/**
- * An item used to render a rectangle based on style properties.
+/*!
+ * \qmltype StyledRectangle
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief An item used to render a rectangle based on style properties.
  *
  * This will render a rectangle for an element based on the properties exposed
  * to QuickStyle.

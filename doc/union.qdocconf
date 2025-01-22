@@ -30,7 +30,7 @@ depends += qtcore qtgui qtwidgets qtquick qtquickcontrols
 navigation.landingpage      = union-index.html
 navigation.landingtitle     = Union
 navigation.cppclassespage   = Union Core C++ Classes
-# navigation.qmltypespage     = Union QML Types
+navigation.qmltypespage     = Union QtQuick Output QML Types
 
 qhp.projects            = Union
 #

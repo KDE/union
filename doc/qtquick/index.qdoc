@@ -1,0 +1,35 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\qmlmodule org.kde.union.impl
+\title Union QtQuick Output QML Types
+
+\section1 Core Types
+
+\annotatedlist qtquick-core
+
+\section1 Property Related Types
+
+\annotatedlist qtquick-properties
+\noautolist
+
+*/
+
+/*!
+
+\page qtquick-index.html
+\title Union QtQuick Output Plugin
+
+The Union QtQuick Output plugin implements a QtQuick Controls style that uses
+the data from Union's intermediate layer to style QtQuick Controls. It also
+provides a QML API that can be used by applications and libraries to expose
+their own QML types to Union to be styled.
+
+\section1 Reference
+\list
+    \li \l{Union QtQuick Output QML Types}
+\endlist
+
+*/

@@ -19,8 +19,12 @@
 
 class QuickElement;
 
-/**
- * An attached property that exposes style properties.
+/*!
+ * \qmltype Style
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief An attached property that exposes style properties.
  *
  * This can be used to access style properties relevant to the current element
  * or child. It will try to find the closest QuickElement instance, either the
@@ -36,10 +40,15 @@ class QuickStyle : public QQuickAttachedPropertyPropagator
 public:
     QuickStyle(QQmlEngine *engine, QObject *parent = nullptr);
 
+    /*!
+     * \qmlattachedproperty StylePropertyGroup* Style::properties
+     *
+     * The properties that should be used to style the attached item.
+     */
     Q_PROPERTY(StylePropertyGroup *properties READ properties CONSTANT)
     StylePropertyGroup *properties() const;
 
-    /**
+    /*!
      * The ElementQuery associated with this instance.
      *
      * This exposes the query from the QuickElement that this style is linked
@@ -47,7 +56,9 @@ public:
      */
     Union::ElementQuery *query() const;
 
-    /**
+    /*!
+     * \qmlattachedsignal Style::updated
+     *
      * Emitted whenever something in the underlying style rule selection changes.
      *
      * Most importantly, this will be emitted when the matched style rules

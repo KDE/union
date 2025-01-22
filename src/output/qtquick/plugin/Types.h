@@ -16,6 +16,13 @@ QML_ELEMENT
 QML_FOREIGN_NAMESPACE(Union::Element)
 }
 
+/*!
+ * \qmltype Alignment
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief Helper functions related to alignment.
+ */
 class Alignment : public QObject
 {
     Q_OBJECT
@@ -35,12 +42,24 @@ public:
     };
     Q_ENUM(AlignmentType)
 
+    /*!
+     * Returns a Qt::Alignment value for a horizontal Union Alignment value.
+     *
+     * This assumes the Union Alignment value is used for horizontal alignment.
+     */
     Q_INVOKABLE Qt::Alignment toQtHorizontal(AlignmentType alignment);
+    /*!
+     * Returns a Qt::Alignment value for a vertical Union Alignment value.
+     */
     Q_INVOKABLE Qt::Alignment toQtVertical(AlignmentType alignment);
 };
 
-/**
- * A helper type that wraps and exposes a QMarginsF to QML.
+/*!
+ * \qmlvaluetype Sizes
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief A helper type that wraps and exposes a QMarginsF to QML.
  */
 class Sizes
 {
