@@ -9,15 +9,15 @@ subgroup: tier 2
 release: true
 type: functional
 platforms:
-- name: Linux
-- name: FreeBSD
-- name: Android
-- name: Windows
-- name: macOS
+    - name: Linux
+    - name: FreeBSD
+    - name: Android
+    - name: Windows
+    - name: macOS
 public_lib: true
 public_source_dirs:
-- src
+    - src
 libraries:
- - cmake: Union
+    - cmake: Union
 cmakename: Union
 irc: kde-devel

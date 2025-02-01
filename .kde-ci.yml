@@ -2,12 +2,12 @@
 # SPDX-FileCopyrightText: None
 
 Dependencies:
-- 'on': ['@all']
-  'require':
+ - 'on': ['@all']
+   'require':
     'frameworks/extra-cmake-modules': '@latest-kf6'
 
 Options:
-  test-before-installing: True
-  require-passing-tests-on: [ 'Linux' ]
-  # Disable PlasmaSVG for now so we do not need RYML in the CI image yet.
-  cmake-options: "-DWITH_PLASMASVG_INPUT=OFF"
+ test-before-installing: True
+ require-passing-tests-on: ['Linux']
+ # Disable PlasmaSVG for now so we do not need RYML in the CI image yet.
+ cmake-options: "-DWITH_PLASMASVG_INPUT=OFF"
