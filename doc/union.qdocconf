@@ -12,6 +12,7 @@ headerdirs = \
     . \
     ./plasmasvg \
     ./qtquick \
+    ./qtwidgets \
     ../src \
     ../src/properties \
     ../src/input/plasmasvg \
