@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
-add_library(Union)
+add_library(Union STATIC)
 add_library(Union::Union ALIAS Union)
 
 target_sources(Union PRIVATE
@@ -48,6 +48,8 @@ ecm_generate_export_header(Union
     DEPRECATED_BASE_VERSION 0
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
 )
+
+target_compile_options(Union PUBLIC "-fPIC")
 
 set_target_properties(Union PROPERTIES
     VERSION ${PROJECT_VERSION}
