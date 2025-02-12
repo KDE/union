@@ -19,13 +19,13 @@ namespace Union::detail
 SelectorPrivateConcept::~SelectorPrivateConcept() = default;
 
 template<>
-int SelectorPrivateModel<SelectorType::Type, QString>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::Type, QString>::weight() const
 {
     return 1;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -35,19 +35,19 @@ bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std::shared_ptr<
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::Type, QString>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::Type, QString>::toString() const
 {
     return u"Type(%1)"_s.arg(data);
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::Id, QString>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::Id, QString>::weight() const
 {
     return 100;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -57,19 +57,19 @@ bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::shared_ptr<El
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::Id, QString>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::Id, QString>::toString() const
 {
     return u"Id(%1)"_s.arg(data);
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::State, Element::State>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::State, Element::State>::weight() const
 {
     return 10;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::State, Element::State>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::State, Element::State>::matches(std::shared_ptr<Element> element) const
 {
     if (data == Element::State::None) {
         return false;
@@ -79,20 +79,20 @@ bool SelectorPrivateModel<SelectorType::State, Element::State>::matches(std::sha
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::State, Element::State>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::State, Element::State>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
     return u"State(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::weight() const
 {
     return 10;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
 {
     if (data == Element::ColorSet::None) {
         return false;
@@ -102,20 +102,20 @@ bool SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::matches(st
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
     return u"ColorSet(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::Hint, QString>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::Hint, QString>::weight() const
 {
     return 10;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -124,19 +124,19 @@ bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std::shared_ptr<
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::Hint, QString>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::Hint, QString>::toString() const
 {
     return u"Hint(%1)"_s.arg(data);
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
 {
     return 10;
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
 {
     if (data.first.isEmpty() || data.second.isNull()) {
         return false;
@@ -149,13 +149,13 @@ bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
 {
     return u"Attribute(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {
         return selector.weight();
@@ -164,7 +164,7 @@ int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
 {
     return std::any_of(data.cbegin(), data.cend(), [element](auto &selector) {
         return selector.matches(element);
@@ -172,7 +172,7 @@ bool SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::matches(std::share
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::toString() const
 {
     QStringList all;
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
@@ -182,7 +182,7 @@ QString SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::toString() cons
 }
 
 template<>
-int SelectorPrivateModel<SelectorType::AllOf, SelectorList>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AllOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {
         return selector.weight();
@@ -191,7 +191,7 @@ int SelectorPrivateModel<SelectorType::AllOf, SelectorList>::weight() const
 }
 
 template<>
-bool SelectorPrivateModel<SelectorType::AllOf, SelectorList>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AllOf, SelectorList>::matches(std::shared_ptr<Element> element) const
 {
     return std::all_of(data.cbegin(), data.cend(), [element](auto &selector) {
         return selector.matches(element);
@@ -199,7 +199,7 @@ bool SelectorPrivateModel<SelectorType::AllOf, SelectorList>::matches(std::share
 }
 
 template<>
-QString SelectorPrivateModel<SelectorType::AllOf, SelectorList>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AllOf, SelectorList>::toString() const
 {
     QStringList all;
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {

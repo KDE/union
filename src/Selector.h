@@ -83,7 +83,7 @@ namespace detail
     // for the private implementation details. To avoid having to write a lot of
     // boilerplate, we can use a template class for the concrete implementation
     // that we specialize for the specific selector type.
-    struct SelectorPrivateConcept {
+    struct UNION_EXPORT SelectorPrivateConcept {
         virtual ~SelectorPrivateConcept();
         virtual int weight() const = 0;
         virtual bool matches(std::shared_ptr<Element> element) const = 0;
