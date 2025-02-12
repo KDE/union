@@ -16,16 +16,16 @@ using namespace Qt::StringLiterals;
 
 namespace Union::detail
 {
-SelectorPrivate::~SelectorPrivate() = default;
+SelectorPrivateConcept::~SelectorPrivateConcept() = default;
 
 template<>
-int SelectorPrivateImpl<SelectorType::Type, QString>::weight() const
+int SelectorPrivateModel<SelectorType::Type, QString>::weight() const
 {
     return 1;
 }
 
 template<>
-bool SelectorPrivateImpl<SelectorType::Type, QString>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -35,19 +35,19 @@ bool SelectorPrivateImpl<SelectorType::Type, QString>::matches(std::shared_ptr<E
 }
 
 template<>
-QString SelectorPrivateImpl<SelectorType::Type, QString>::toString() const
+QString SelectorPrivateModel<SelectorType::Type, QString>::toString() const
 {
     return u"Type(%1)"_s.arg(data);
 }
 
 template<>
-int detail::SelectorPrivateImpl<SelectorType::Id, QString>::weight() const
+int SelectorPrivateModel<SelectorType::Id, QString>::weight() const
 {
     return 100;
 }
 
 template<>
-bool detail::SelectorPrivateImpl<SelectorType::Id, QString>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -57,19 +57,19 @@ bool detail::SelectorPrivateImpl<SelectorType::Id, QString>::matches(std::shared
 }
 
 template<>
-QString detail::SelectorPrivateImpl<SelectorType::Id, QString>::toString() const
+QString SelectorPrivateModel<SelectorType::Id, QString>::toString() const
 {
     return u"Id(%1)"_s.arg(data);
 }
 
 template<>
-int detail::SelectorPrivateImpl<SelectorType::State, Element::State>::weight() const
+int SelectorPrivateModel<SelectorType::State, Element::State>::weight() const
 {
     return 10;
 }
 
 template<>
-bool detail::SelectorPrivateImpl<SelectorType::State, Element::State>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::State, Element::State>::matches(std::shared_ptr<Element> element) const
 {
     if (data == Element::State::None) {
         return false;
@@ -79,20 +79,20 @@ bool detail::SelectorPrivateImpl<SelectorType::State, Element::State>::matches(s
 }
 
 template<>
-QString detail::SelectorPrivateImpl<SelectorType::State, Element::State>::toString() const
+QString SelectorPrivateModel<SelectorType::State, Element::State>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("State"));
     return u"State(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
-int detail::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::weight() const
+int SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::weight() const
 {
     return 10;
 }
 
 template<>
-bool detail::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::matches(std::shared_ptr<Element> element) const
 {
     if (data == Element::ColorSet::None) {
         return false;
@@ -102,20 +102,20 @@ bool detail::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::mat
 }
 
 template<>
-QString detail::SelectorPrivateImpl<SelectorType::ColorSet, Element::ColorSet>::toString() const
+QString SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::toString() const
 {
     auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
     return u"ColorSet(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
 }
 
 template<>
-int detail::SelectorPrivateImpl<SelectorType::Hint, QString>::weight() const
+int SelectorPrivateModel<SelectorType::Hint, QString>::weight() const
 {
     return 10;
 }
 
 template<>
-bool detail::SelectorPrivateImpl<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std::shared_ptr<Element> element) const
 {
     if (data.isEmpty()) {
         return false;
@@ -124,19 +124,19 @@ bool detail::SelectorPrivateImpl<SelectorType::Hint, QString>::matches(std::shar
 }
 
 template<>
-QString SelectorPrivateImpl<SelectorType::Hint, QString>::toString() const
+QString SelectorPrivateModel<SelectorType::Hint, QString>::toString() const
 {
     return u"Hint(%1)"_s.arg(data);
 }
 
 template<>
-int SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
+int SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
 {
     return 10;
 }
 
 template<>
-bool SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
 {
     if (data.first.isEmpty() || data.second.isNull()) {
         return false;
@@ -149,13 +149,13 @@ bool SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>:
 }
 
 template<>
-QString SelectorPrivateImpl<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
+QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
 {
     return u"Attribute(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
 }
 
 template<>
-int SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::weight() const
+int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {
         return selector.weight();
@@ -164,7 +164,7 @@ int SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::weight() const
 }
 
 template<>
-bool SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
 {
     return std::any_of(data.cbegin(), data.cend(), [element](auto &selector) {
         return selector.matches(element);
@@ -172,7 +172,7 @@ bool SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::matches(std::shared
 }
 
 template<>
-QString SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::toString() const
+QString SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::toString() const
 {
     QStringList all;
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
@@ -182,7 +182,7 @@ QString SelectorPrivateImpl<SelectorType::AnyOf, SelectorList>::toString() const
 }
 
 template<>
-int SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::weight() const
+int SelectorPrivateModel<SelectorType::AllOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {
         return selector.weight();
@@ -191,7 +191,7 @@ int SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::weight() const
 }
 
 template<>
-bool SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::matches(std::shared_ptr<Element> element) const
+bool SelectorPrivateModel<SelectorType::AllOf, SelectorList>::matches(std::shared_ptr<Element> element) const
 {
     return std::all_of(data.cbegin(), data.cend(), [element](auto &selector) {
         return selector.matches(element);
@@ -199,7 +199,7 @@ bool SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::matches(std::shared
 }
 
 template<>
-QString SelectorPrivateImpl<SelectorType::AllOf, SelectorList>::toString() const
+QString SelectorPrivateModel<SelectorType::AllOf, SelectorList>::toString() const
 {
     QStringList all;
     std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
@@ -242,7 +242,7 @@ QString Selector::toString() const
     return d->toString();
 }
 
-Selector::Selector(std::shared_ptr<const detail::SelectorPrivate> _d)
+Selector::Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d)
     : d(_d)
 {
 }

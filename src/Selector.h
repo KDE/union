@@ -76,16 +76,16 @@ namespace detail
     template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
 /* clang-format on */
 
-    struct SelectorPrivate {
-        virtual ~SelectorPrivate();
+    struct SelectorPrivateConcept {
+        virtual ~SelectorPrivateConcept();
         virtual int weight() const = 0;
         virtual bool matches(std::shared_ptr<Element> element) const = 0;
         virtual QString toString() const = 0;
     };
 
     template<SelectorType _type, typename T>
-    struct SelectorPrivateImpl : public SelectorPrivate {
-        SelectorPrivateImpl(const T &_data)
+    struct SelectorPrivateModel : public SelectorPrivateConcept {
+        SelectorPrivateModel(const T &_data)
             : data(_data)
         {
         }
@@ -154,13 +154,13 @@ public:
         requires detail::ArgumentTypesMatch<type, std::decay_t<DataType>>
     static Selector create(DataType &&data)
     {
-        return Selector(std::make_shared<detail::SelectorPrivateImpl<type, std::decay_t<DataType>>>(std::forward<DataType>(data)));
+        return Selector(std::make_shared<detail::SelectorPrivateModel<type, std::decay_t<DataType>>>(std::forward<DataType>(data)));
     }
 
 private:
-    Selector(std::shared_ptr<const detail::SelectorPrivate> _d);
+    Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d);
 
-    std::shared_ptr<const detail::SelectorPrivate> d;
+    std::shared_ptr<const detail::SelectorPrivateConcept> d;
 };
 
 /*!
