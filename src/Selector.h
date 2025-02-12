@@ -75,6 +75,28 @@ namespace detail
     template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AnyOf, T> = std::is_same_v<T, SelectorList>;
     template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
 /* clang-format on */
+
+    struct SelectorPrivate {
+        virtual ~SelectorPrivate();
+        virtual int weight() const = 0;
+        virtual bool matches(std::shared_ptr<Element> element) const = 0;
+        virtual QString toString() const = 0;
+    };
+
+    template<SelectorType _type, typename T>
+    struct SelectorPrivateImpl : public SelectorPrivate {
+        SelectorPrivateImpl(const T &_data)
+            : data(_data)
+        {
+        }
+
+        int weight() const override;
+        bool matches(std::shared_ptr<Element> element) const override;
+        QString toString() const override;
+
+        SelectorType type = _type;
+        T data;
+    };
 }
 
 /*!
@@ -132,35 +154,13 @@ public:
         requires detail::ArgumentTypesMatch<type, std::decay_t<DataType>>
     static Selector create(DataType &&data)
     {
-        return Selector(std::make_shared<SelectorPrivateImpl<type, std::decay_t<DataType>>>(std::forward<DataType>(data)));
+        return Selector(std::make_shared<detail::SelectorPrivateImpl<type, std::decay_t<DataType>>>(std::forward<DataType>(data)));
     }
 
 private:
-    struct SelectorPrivate {
-        virtual ~SelectorPrivate();
-        virtual int weight() const = 0;
-        virtual bool matches(std::shared_ptr<Element> element) const = 0;
-        virtual QString toString() const = 0;
-    };
+    Selector(std::shared_ptr<const detail::SelectorPrivate> _d);
 
-    template<SelectorType _type, typename T>
-    struct SelectorPrivateImpl : public SelectorPrivate {
-        SelectorPrivateImpl(const T &_data)
-            : data(_data)
-        {
-        }
-
-        int weight() const override;
-        bool matches(std::shared_ptr<Element> element) const override;
-        QString toString() const override;
-
-        SelectorType type = _type;
-        T data;
-    };
-
-    Selector(std::shared_ptr<const SelectorPrivate> _d);
-
-    std::shared_ptr<const SelectorPrivate> d;
+    std::shared_ptr<const detail::SelectorPrivate> d;
 };
 
 /*!
