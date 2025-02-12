@@ -76,6 +76,13 @@ namespace detail
     template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
 /* clang-format on */
 
+    // Partial type-erasure implementation for Selector.
+    // We want to store the concrete data type that is used by the selector,
+    // rather than to relying on something like QVariant, to avoid having to
+    // constantly convert from and to QVariant. This means we need a base class
+    // for the private implementation details. To avoid having to write a lot of
+    // boilerplate, we can use a template class for the concrete implementation
+    // that we specialize for the specific selector type.
     struct SelectorPrivateConcept {
         virtual ~SelectorPrivateConcept();
         virtual int weight() const = 0;
@@ -160,6 +167,13 @@ public:
 private:
     Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d);
 
+    // We want Selector to behave like a value type so that it easy to work with
+    // in lists etc. This means we don't want it to have virtual functions, as
+    // those would not work when passed by value. We also can't use a template
+    // directly, as that would prevent using it in a container. So use type
+    // erasure to hide the implementation details is a separate object. Storing
+    // that in a shared_ptr we get virtual dispatch to the private details while
+    // still allowing copy construction and assignment.
     std::shared_ptr<const detail::SelectorPrivateConcept> d;
 };
 
