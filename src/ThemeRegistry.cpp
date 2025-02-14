@@ -163,7 +163,9 @@ void ThemeRegistry::save()
 
 std::shared_ptr<Theme> ThemeRegistry::defaultTheme()
 {
-    return theme(u"default"_s, u"plasmasvg"_s);
+    static auto name = qEnvironmentVariable("UNION_STYLE_NAME", u"default"_s);
+    static auto plugin = qEnvironmentVariable("UNION_STYLE_PLUGIN", u"plasmasvg"_s);
+    return theme(name, plugin);
 }
 
 std::shared_ptr<Theme> ThemeRegistry::theme(const QString &themeName, const QString &pluginName)
