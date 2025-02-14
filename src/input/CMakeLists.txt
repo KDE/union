@@ -4,3 +4,7 @@
 if (WITH_PLASMASVG_INPUT)
     add_subdirectory(plasmasvg)
 endif()
+
+if (WITH_CSS_INPUT)
+    add_subdirectory(css)
+endif()

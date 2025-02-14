@@ -49,6 +49,11 @@ if (WITH_PLASMASVG_INPUT)
     find_package(ryml REQUIRED)
 endif()
 
+option(WITH_CSS_INPUT "Enable CSS input plugin" ON)
+if (WITH_CSS_INPUT)
+    find_package(cxx-rust-cssparser REQUIRED)
+endif()
+
 add_subdirectory(src)
 
 if(BUILD_TOOLS)
