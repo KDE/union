@@ -15,17 +15,22 @@ struct Selector;
 struct SelectorPart;
 }
 
-class CssLoader : public Union::ThemeLoader
+using namespace Union;
+using namespace Union::Properties;
+
+class CssLoader : public ThemeLoader
 {
 public:
-    bool load(std::shared_ptr<Union::Theme> theme) override;
+    bool load(std::shared_ptr<Theme> theme) override;
 
 private:
-    Union::SelectorList createSelectorList(const cssparser::Selector &selector);
-    Union::Selector createSelector(const cssparser::SelectorPart &part);
-    Union::Properties::StyleProperty createProperties(const std::vector<cssparser::Property> &properties);
+    SelectorList createSelectorList(const cssparser::Selector &selector);
+    Selector createSelector(const cssparser::SelectorPart &part);
+    StyleProperty createProperties(const std::vector<cssparser::Property> &properties);
 
-    void setLayoutProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property);
-    void setBackgroundProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property);
-    void setBorderProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property);
+    void setLayoutProperty(StyleProperty &output, const cssparser::Property &property);
+    // void setLayoutAlignment(LayoutProperty &output, const cssparser::Property &property);
+    void setBackgroundProperty(StyleProperty &output, const cssparser::Property &property);
+    void setBorderProperty(StyleProperty &output, const cssparser::Property &property);
+    void setTextProperty(StyleProperty &output, const cssparser::Property &property);
 };

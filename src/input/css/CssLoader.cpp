@@ -3,6 +3,8 @@
 
 #include "CssLoader.h"
 
+#include <source_location>
+
 #include <QFile>
 #include <QMetaEnum>
 
@@ -13,36 +15,68 @@
 
 #include "css_logging.h"
 
-using namespace Union;
-using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 using namespace std::string_literals;
 
-bool CssLoader::load(Theme::Ptr theme)
+namespace fs = std::filesystem;
+
+template<typename F>
+inline F to_enum_value(const std::string &value)
 {
-    // TODO: Proper style discovery
-    QFile cssFile(u"test.css"_s);
-    if (!cssFile.open(QIODevice::ReadOnly)) {
-        qCWarning(UNION_CSS) << "Could not open test.css";
-        return false;
+    QMetaEnum metaEnum = QMetaEnum::fromType<F>();
+
+    auto count = metaEnum.keyCount();
+    for (int i = 0; i < count; ++i) {
+        if (QByteArray(metaEnum.key(i)).toLower().toStdString() == value) {
+            return F{metaEnum.value(i)};
+        }
     }
 
-    auto data = cssFile.readAll();
+    return F{};
+}
 
-    cssparser::CssParser parser;
-    const auto result = parser.parse(data.toStdString());
+template<typename T>
+inline void setAlignment(T &output, const cssparser::Property &property)
+{
+    auto alignment = output.alignment().value_or(AlignmentProperty{});
 
-    for (const auto &rule : result) {
+    if (property.name.ends_with("alignment-container"s)) {
+        auto value = to_enum_value<AlignmentContainer>(std::get<std::string>(property.values.at(0)));
+        alignment.setContainer(value);
+    } else if (property.name.ends_with("alignment-horizontal"s)) {
+        auto value = to_enum_value<Alignment>(std::get<std::string>(property.values.at(0)));
+        alignment.setHorizontal(value);
+    } else if (property.name.ends_with("alignment-vertical"s)) {
+        auto value = to_enum_value<Alignment>(std::get<std::string>(property.values.at(0)));
+        alignment.setVertical(value);
+    } else if (property.name.ends_with("alignment-order"s)) {
+        auto value = std::get<int>(property.values.at(0));
+        alignment.setOrder(value);
+    }
+
+    if (alignment.hasAnyValue()) {
+        output.setAlignment(alignment);
+    }
+}
+
+bool CssLoader::load(Theme::Ptr theme)
+{
+    auto location = std::source_location::current();
+
+    cssparser::StyleSheet styleSheet;
+    styleSheet.set_root_path(fs::path(location.file_name()).parent_path());
+    styleSheet.parse_file("test.css");
+
+    for (const auto &rule : styleSheet.rules()) {
         if (rule.properties.empty()) {
             continue;
         }
 
-        for (const auto &selector : rule.selectors) {
-            auto styleRule = StyleRule::create();
-            styleRule->setSelectors(createSelectorList(selector));
-            styleRule->setProperties(createProperties(rule.properties));
-            theme->insert(styleRule);
-        }
+        auto styleRule = StyleRule::create();
+        styleRule->setSelectors(createSelectorList(rule.selector));
+        styleRule->setProperties(createProperties(rule.properties));
+        qDebug() << styleRule << styleRule->properties();
+        theme->insert(styleRule);
     }
 
     return true;
@@ -97,9 +131,9 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     return Union::Selector::create();
 }
 
-Union::Properties::StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property> &properties)
+StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property> &properties)
 {
-    Union::Properties::StyleProperty result;
+    StyleProperty result;
 
     for (auto property : properties) {
         if (property.name == "width"s || property.name == "height"s) {
@@ -117,29 +151,37 @@ Union::Properties::StyleProperty CssLoader::createProperties(const std::vector<c
         if (property.name.starts_with("border")) {
             setBorderProperty(result, property);
         }
+
+        if (property.name.starts_with("text")) {
+            setTextProperty(result, property);
+        }
     }
 
     return result;
 }
 
-void CssLoader::setLayoutProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setLayoutProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto layout = output.layout().value_or(Union::Properties::LayoutProperty{});
+    auto layout = output.layout().value_or(LayoutProperty{});
 
     if (property.name == "width"s) {
-        layout.setWidth(std::get<float>(property.values.at(0)));
+        auto length = std::get<cssparser::Dimension>(property.values.at(0));
+        layout.setWidth(length.value);
+    } else if (property.name == "height"s) {
+        auto length = std::get<cssparser::Dimension>(property.values.at(0));
+        layout.setHeight(length.value);
+    } else if (property.name.starts_with("layout-alignment")) {
+        setAlignment(layout, property);
     }
 
-    if (property.name == "height"s) {
-        layout.setHeight(std::get<float>(property.values.at(0)));
+    if (layout.hasAnyValue()) {
+        output.setLayout(layout);
     }
-
-    output.setLayout(layout);
 }
 
-void CssLoader::setBackgroundProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto background = output.background().value_or(Union::Properties::BackgroundProperty{});
+    auto background = output.background().value_or(BackgroundProperty{});
 
     if (property.name == "background"s || property.name == "background-color"s) {
         auto color = std::get<cssparser::Color>(property.values.at(0));
@@ -151,20 +193,20 @@ void CssLoader::setBackgroundProperty(Union::Properties::StyleProperty &output, 
     }
 }
 
-void CssLoader::setBorderProperty(Union::Properties::StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto background = output.background().value_or(Union::Properties::BackgroundProperty{});
+    auto background = output.background().value_or(BackgroundProperty{});
 
-    auto border = background.border().value_or(Union::Properties::BorderProperty{});
-    auto corners = background.corners().value_or(Union::Properties::CornersProperty{});
+    auto border = background.border().value_or(BorderProperty{});
+    auto corners = background.corners().value_or(CornersProperty{});
 
     if (property.name == "border"s) {
-        auto width = std::get<float>(property.values.at(0));
+        auto width = std::get<cssparser::Dimension>(property.values.at(0));
         // auto style = std::get<std::string>(property.values.at(1));
         auto color = std::get<cssparser::Color>(property.values.at(2));
 
-        Union::Properties::LineProperty line;
-        line.setSize(width);
+        LineProperty line;
+        line.setSize(width.value);
         line.setColor(QColor{color.r, color.g, color.b, color.a});
 
         border.setLeft(line);
@@ -172,7 +214,7 @@ void CssLoader::setBorderProperty(Union::Properties::StyleProperty &output, cons
         border.setTop(line);
         border.setBottom(line);
 
-        Union::Properties::CornerProperty corner;
+        CornerProperty corner;
         corner.setColor(QColor{color.r, color.g, color.b, color.a});
         // corner.setWidth(width);
         // corner.setHeight(width);
@@ -191,5 +233,18 @@ void CssLoader::setBorderProperty(Union::Properties::StyleProperty &output, cons
 
     if (background.hasAnyValue()) {
         output.setBackground(background);
+    }
+}
+
+void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property &property)
+{
+    auto text = output.text().value_or(TextProperty{});
+
+    if (property.name.starts_with("text-alignment")) {
+        setAlignment(text, property);
+    }
+
+    if (text.hasAnyValue()) {
+        output.setText(text);
     }
 }
