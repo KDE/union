@@ -31,7 +31,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std
         return false;
     }
 
-    return element->type() == data;
+    return element->type().toLower() == data.toLower();
 }
 
 template<>
@@ -53,7 +53,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::
         return false;
     }
 
-    return element->id() == data;
+    return element->id().toLower() == data.toLower();
 }
 
 template<>
@@ -120,7 +120,10 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std
     if (data.isEmpty()) {
         return false;
     }
-    return element->hints().contains(data);
+
+    return std::ranges::any_of(element->hints(), [this](auto item) {
+        return item.toLower() == data.toLower();
+    });
 }
 
 template<>
