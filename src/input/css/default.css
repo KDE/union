@@ -1,0 +1,12 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+button,
+toolbutton {
+    layout-alignment-container: content;
+    layout-alignment-horizontal: start;
+    layout-alignment-vertical: center;
+    layout-alignment-order: 0;
+}
