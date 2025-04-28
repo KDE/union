@@ -62,11 +62,11 @@ palette:
                     }
 
                     m_palette = m_component->create();
-                    {% for value in values %}
-                    {% if value.name not in ["positive", "neutral", "negative"] %}
+                    {% for property in properties %}
+                    {% if property.name not in ["positive", "neutral", "negative"] %}
 
-                    if (m_state.{{ value.name }}()) {
-                        m_palette->setProperty("{{ value.name }}", QVariant::fromValue(m_state.{{ value.name }}().value()));
+                    if (m_state.{{ property.name }}()) {
+                        m_palette->setProperty("{{ property.name }}", QVariant::fromValue(m_state.{{ property.name }}().value()));
                     }
                     {% endif %}
                     {% endfor %}
