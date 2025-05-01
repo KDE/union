@@ -16,7 +16,7 @@
 }
 
 @property spacing {
-    syntax: "<length>"
+    syntax: "<length>";
 }
 
 /*@property padding {
@@ -97,5 +97,21 @@
 }
 
 @property text-alignment-order {
+    syntax: "<integer>";
+}
+
+@property icon-alignment-container {
+    syntax: "item | content | background";
+}
+
+@property icon-alignment-horizontal {
+    syntax: "start | center | end | fill";
+}
+
+@property icon-alignment-vertical {
+    syntax: "start | center | end | fill | stack";
+}
+
+@property icon-alignment-order {
     syntax: "<integer>";
 }
