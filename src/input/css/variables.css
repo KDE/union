@@ -1,0 +1,14 @@
+
+:root {
+    /* Standard Sizes */
+    --small-spacing: 4px;
+    --large-spacing: 8px;
+    --grid-unit: 18px;
+
+    /* Colors */
+    --window-text-color: #232629;
+    --window-background-color: #eff0f1;
+
+    --button-text-color: #232629;
+    --button-background-color: #fcfcfc;
+}

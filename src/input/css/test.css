@@ -5,23 +5,42 @@
 
 @import "properties.css";
 @import "default.css";
+@import "variables.css";
+
+/*
+ * Text: #232629
+ *
+ * Window Background: #eff0f1
+ *
+ * Button Background: #fcfcfc
+ * Button Text: #232629
+ *
+ * Hover Decoration: #3daee9
+ * Focus Decoration: #3daee9
+ *
+ * Separator Color: #DDDDDD
+ */
 
 button,
 toolbutton {
     width: 32px;
     height: 32px;
+    spacing: 4px;
+    padding: 8px;
 
-    border: 1px solid #000;
-    background-color: #f00;
+    color: var(--button-text-color);
+}
 
-    padding: 4px;
+button {
+    border: 1px solid #ddd;
+    background-color: #fcfcfc;
 
     &:hovered {
-        border: 1px solid #f00;
+        border: 1px solid #3daee9;
     }
 
     &:pressed {
-/*         background-color: #0f0; */
+        background-color: #3daee9;
     }
 
     &:visual-focus {
@@ -29,10 +48,20 @@ toolbutton {
     }
 }
 
+toolbutton {
+    &:hovered {
+        border: 1px solid #3daee9;
+    }
+
+    &:pressed {
+        background-color: #3daee9;
+    }
+}
+
 textfield {
     width: 100px;
     height: 32px;
 
-    background: #00f;
-    border: 1px solid #000;
+    border: 1px solid #ddd;
+    background-color: #fff;
 }
