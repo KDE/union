@@ -10,6 +10,8 @@ import QtTest
 
 import org.kde.union
 
+import org.kde.breeze as Breeze
+
 import org.kde.plasma.components as PC
 
 ApplicationWindow {
@@ -54,28 +56,28 @@ ApplicationWindow {
 
             ToolSeparator { }
 
-            PC.ToolButton {
-                text: "PC3 ToolButton"
+            Breeze.ToolButton {
+                text: "Breeze ToolButton"
                 icon.name: "document-save"
 
                 onClicked: pc3menu.popup(this, 0, height)
 
-                PC.Menu {
+                Breeze.Menu {
                     id: pc3menu
 
-                    PC.MenuItem { text: "Example item" }
-                    PC.Menu {
+                    Breeze.MenuItem { text: "Example item" }
+                    Breeze.Menu {
                         title: "Example Submenu"
 
-                        PC.MenuItem { text: "Example Submenu Item 1" }
-                        PC.MenuItem { text: "Example Submenu Item 2" }
+                        Breeze.MenuItem { text: "Example Submenu Item 1" }
+                        Breeze.MenuItem { text: "Example Submenu Item 2" }
                     }
-                    PC.MenuItem {
+                    Breeze.MenuItem {
                         text: "Checkable Item";
                         checkable: true;
                     }
-                    PC.MenuSeparator { }
-                    PC.MenuItem {
+                    Breeze.MenuSeparator { }
+                    Breeze.MenuItem {
                         text: "Quit";
                         icon.name: "application-exit-symbolic"
                         onClicked: Qt.quit()
@@ -145,7 +147,7 @@ ApplicationWindow {
                 onClicked: cycleButtonDisplay(this)
             }
 
-            PC.Button {
+            Breeze.Button {
                 id: pcButton1
                 Layout.preferredWidth: 200
                 Layout.preferredHeight: 50
@@ -162,7 +164,7 @@ ApplicationWindow {
                 onClicked: cycleButtonDisplay(this)
             }
 
-            PC.Button {
+            Breeze.Button {
                 text: "Test 2"
                 icon.name: "document-save"
                 enabled: !pcButton1.checked
@@ -173,7 +175,7 @@ ApplicationWindow {
                 enabled: !button1.checked
             }
 
-            PC.SpinBox {
+            Breeze.SpinBox {
                 enabled: !pcButton1.checked
             }
 
@@ -184,7 +186,7 @@ ApplicationWindow {
                 onClicked: cycleButtonDisplay(this)
             }
 
-            PC.ItemDelegate {
+            Breeze.ItemDelegate {
                 icon.name: "document-save"
                 text: "Test 4"
                 enabled: !pcButton1.checked
@@ -198,7 +200,7 @@ ApplicationWindow {
                 onClicked: cycleButtonDisplay(this)
             }
 
-            PC.CheckBox {
+            Breeze.CheckBox {
                 icon.name: "document-save"
                 text: "Test 5"
                 enabled: !pcButton1.checked
@@ -214,7 +216,7 @@ ApplicationWindow {
                 onClicked: cycleButtonDisplay(this)
             }
 
-            PC.CheckDelegate {
+            Breeze.CheckDelegate {
                 Layout.preferredWidth: 200
                 Layout.preferredHeight: 50
                 icon.name: "document-save"
@@ -227,7 +229,7 @@ ApplicationWindow {
                 text: "Test Switch"
             }
 
-            PC.Switch {
+            Breeze.Switch {
                 text: "Test Switch"
             }
         }
