@@ -6,6 +6,8 @@
 import dataclasses
 from pathlib import Path
 import shutil
+from typing import Optional, Type
+import re
 
 import ruamel.yaml as yaml
 import jinja2
@@ -14,6 +16,7 @@ base_directory = Path(__file__).parent
 root_directory = base_directory.parent.parent
 src_directory = root_directory / "src" / "properties"
 tests_directory = root_directory / "autotests" / "properties"
+css_input_directory = root_directory / "src" / "input" / "css" / "generated"
 quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin" / "properties"
 
 include_patterns = [
@@ -51,12 +54,15 @@ class PreserveAliasesComposer(yaml.composer.Composer):
 class PropertyDescription:
     name: str
     type: str = ""
-    is_group: bool = False
+    type_object: Optional[Type] = None
+    group: Optional["GroupDescription"] = None
 
 
 @dataclasses.dataclass
 class GroupDescription:
+    name: str
     type_name: str
+    parent_group: Optional["GroupDescription"] = None
     properties: list[PropertyDescription] = dataclasses.field(default_factory=list)
     system_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
@@ -75,12 +81,19 @@ def qualified_name(type_name):
     return f"{ucfirst(type_name)}Property"
 
 
-def process_node(node, type_name, memo):
+def css_name(name):
+    parts = re.split(r"([A-Z][a-z]+)", name)
+    return "-".join(part.lower() for part in parts if part)
+
+
+def process_node(node, name, parent_group, memo):
     if not isinstance(node, yaml.MappingNode):
         raise RuntimeError(f"Node {node} is not a mapping node!")
 
-    description = GroupDescription(type_name)
-    memo[type_name] = description
+    type_name = qualified_name(name)
+
+    description = GroupDescription(name, type_name, parent_group)
+    memo[name] = description
 
     if (node.comment and node.comment[-1]):
         comments = node.comment[-1]
@@ -117,20 +130,22 @@ def process_node(node, type_name, memo):
                     description.system_includes[template_name.value].add(include_name.value)
             continue
 
-        prop = PropertyDescription(key_node.value)
+        prop = PropertyDescription(name = key_node.value, group = description)
 
         match type(value_node).__name__:
             case "MappingNode":
-                type_name = qualified_name(value_node.anchor) if value_node.anchor is not None else qualified_name(key_node.value)
-                memo = memo | process_node(value_node, type_name, memo)
+                name = value_node.anchor if value_node.anchor is not None else key_node.value
+                memo = memo | process_node(value_node, name, description, memo)
 
-                prop.type = type_name
+                prop.type = qualified_name(name)
+                prop.type_object = memo[name]
                 prop.is_group = True
 
             case "AliasNode":
-                group = memo[qualified_name(value_node.value)]
+                group = memo[value_node.value]
 
                 prop.type = group.type_name
+                prop.type_object = group
                 prop.is_group = True
 
             case "ScalarNode":
@@ -188,7 +203,7 @@ if __name__ == "__main__":
     with open(base_directory / "properties.yml") as f:
         structure = parser.compose(f)
 
-    types = process_node(structure, "StyleProperty", {})
+    types = process_node(structure, "style", None, {})
 
     jinja_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(base_directory),
@@ -198,17 +213,22 @@ if __name__ == "__main__":
     )
     jinja_env.filters["ucfirst"] = ucfirst
     jinja_env.filters["render"] = render_template_filter
+    jinja_env.filters["css_name"] = css_name
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)
+    shutil.rmtree(css_input_directory, ignore_errors = True)
     shutil.rmtree(quick_output_directory, ignore_errors = True)
 
     src_directory.mkdir(exist_ok = True)
     tests_directory.mkdir(exist_ok = True)
+    css_input_directory.mkdir(exist_ok = True)
     quick_output_directory.mkdir(exist_ok = True)
 
-    for type_name, type_definition in types.items():
-        data = dataclasses.asdict(type_definition)
+    for name, type_definition in types.items():
+        data = {field.name: getattr(type_definition, field.name) for field in dataclasses.fields(type_definition)}
+
+        type_name = type_definition.type_name
 
         render_template("property.h.j2", (src_directory / type_name).with_suffix(".h"), jinja_env, data)
         render_template("property.cpp.j2", (src_directory / type_name).with_suffix(".cpp"), jinja_env, data)
@@ -225,3 +245,5 @@ if __name__ == "__main__":
     render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)
     render_template("CMakeLists.tests.txt.j2", tests_directory / "CMakeLists.txt", jinja_env, data)
     render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data)
+
+    render_template("properties.css.j2", css_input_directory / "properties.css", jinja_env, data)
