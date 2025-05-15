@@ -196,6 +196,8 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     case cssparser::SelectorKind::Unknown:
     case cssparser::SelectorKind::RelativeParent:
         break;
+    case cssparser::SelectorKind::AnyElement:
+        return Union::Selector::create<Union::SelectorType::AnyElement>();
     case cssparser::SelectorKind::Type:
         return Union::Selector::create<Union::SelectorType::Type>(QString::fromStdString(std::get<std::string>(part.value)));
     case cssparser::SelectorKind::Id:
