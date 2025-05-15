@@ -602,9 +602,6 @@ std::optional<ShadowProperty> PlasmaSvgLoader::createShadowProperty(ryml::ConstN
     auto cleanup = context.pushFromNode(node);
 
     ShadowProperty shadow;
-    with_child(node, "offsets", [&](auto node) {
-        shadow.setOffsets(createSizeProperty(node, context));
-    });
 
     forEachEntry({"left", "right", "top", "bottom"},
                  shadow,

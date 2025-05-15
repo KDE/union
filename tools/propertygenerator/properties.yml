@@ -186,7 +186,9 @@ background:
     shadow:
         # \brief A property group containing properties relating to an element's shadow.
 
-        offsets: *size
+        offset:
+            horizontal: qreal
+            vertical: qreal
 
         left: *line
         right: *line

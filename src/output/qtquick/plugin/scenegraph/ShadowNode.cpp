@@ -52,12 +52,15 @@ void ShadowNode::update(QQuickWindow *window)
     }
 
     QMarginsF offsets;
-    if (m_shadow.offsets().has_value()) {
-        auto sizeProperty = m_shadow.offsets().value();
-        offsets.setLeft(sizeProperty.left().value_or(0.0));
-        offsets.setRight(sizeProperty.right().value_or(0.0));
-        offsets.setTop(sizeProperty.top().value_or(0.0));
-        offsets.setBottom(sizeProperty.bottom().value_or(0.0));
+    if (m_shadow.offset().has_value()) {
+        auto offsetProperty = m_shadow.offset().value();
+        auto horizontal = offsetProperty.horizontal().value_or(0.0);
+        auto vertical = offsetProperty.vertical().value_or(0.0);
+
+        offsets.setLeft(horizontal < 0.0 ? std::abs(horizontal) : 0.0);
+        offsets.setRight(horizontal > 0.0 ? horizontal : 0.0);
+        offsets.setTop(vertical < 0.0 ? std::abs(vertical) : 0.0);
+        offsets.setBottom(vertical > 0.0 ? vertical : 0.0);
     }
 
     auto offsetRect = QRectF{rect.x() - offsets.left(),
