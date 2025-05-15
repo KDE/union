@@ -1,3 +1,6 @@
+# SPDX-License-Identifier: BSD-2-Clause
+# SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+
 # Qt insists on some paths in qt_add_shaders to be target-relative while others
 # are not, making it impossible to put this in the shaders/ subdirectory. To
 # keep things a bit organised and easier to follow, this is still a separate
