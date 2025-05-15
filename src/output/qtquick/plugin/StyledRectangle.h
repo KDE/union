@@ -34,6 +34,8 @@ protected:
 
 private:
     void updateImplicitSize();
+    QSGNode *updateRectangleNode(QSGNode *node, const Union::Properties::BackgroundProperty &background);
+    QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::BackgroundProperty &background);
     QSizeF minimumBackgroundSize(const Union::Properties::BackgroundProperty &background);
 
     QuickStyle *m_style = nullptr;
