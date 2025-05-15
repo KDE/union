@@ -7,6 +7,7 @@
 
 #include <QFile>
 #include <QMetaEnum>
+#include <QStandardPaths>
 
 #include <StyleRule.h>
 #include <Theme.h>
@@ -146,11 +147,21 @@ inline CornerProperty setCornerRadius(const std::optional<CornerProperty> &corne
 
 bool CssLoader::load(Theme::Ptr theme)
 {
-    auto location = std::source_location::current();
+    auto defaultsPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults"_s, QStandardPaths::LocateDirectory);
 
+    // This is a bit hacky but allows us to provide defaults that the actual
+    // style doesn't need to care about. Ultimately we want to do something
+    // cleaner here.
     cssparser::StyleSheet styleSheet;
-    styleSheet.set_root_path(fs::path(location.file_name()).parent_path());
-    styleSheet.parse_file("test.css");
+    styleSheet.set_root_path(fs::path(defaultsPath.toStdString()));
+    styleSheet.parse_file("generated-properties.css"s);
+    styleSheet.parse_file("properties.css"s);
+    styleSheet.parse_file("default.css"s);
+
+    auto stylePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/styles/breeze"_s, QStandardPaths::LocateDirectory);
+
+    styleSheet.set_root_path(fs::path(stylePath.toStdString()));
+    styleSheet.parse_file("style.css");
 
     for (const auto &rule : styleSheet.rules()) {
         if (rule.properties.empty()) {
