@@ -3,32 +3,8 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-/** {
-    layout-alignment-container: content !default;
-    layout-alignment-horizontal: start !default;
-    layout-alignment-vertical: center !default;
-    layout-alignment-order: 0 !default;
-}*/
-
-button,
-toolbutton {
-    layout-alignment-container: content;
-    layout-alignment-horizontal: start;
-    layout-alignment-vertical: center;
-    layout-alignment-order: 0;
-
-    text-alignment-container: content;
-    text-alignment-horizontal: start;
-    text-alignment-vertical: center;
-    text-alignment-order: 1;
-
-    icon-alignment-container: content;
-    icon-alignment-horizontal: start;
-    icon-alignment-vertical: center;
-    icon-alignment-order: 0;
-}
-
-menu {
-    width: 10px;
-    height: 10px;
+* {
+    layout-alignment: item start center 0;
+    text-alignment: content start center 1;
+    icon-alignment: content start center 0;
 }
