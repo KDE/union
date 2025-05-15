@@ -296,10 +296,23 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
     auto border = background.border().value_or(BorderProperty{});
     auto corners = background.corners().value_or(CornersProperty{});
 
+    if (property.name == "border-radius"s) {
+        if (property.values.size() == 1) {
+            auto radius = to_px(property.value());
+            corners.setTopLeft(setCornerRadius(corners.topLeft(), radius));
+            corners.setTopRight(setCornerRadius(corners.topRight(), radius));
+            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), radius));
+            corners.setBottomRight(setCornerRadius(corners.bottomRight(), radius));
+        } else if (property.values.size() == 4) {
+            corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value(0))));
+            corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value(1))));
+            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value(2))));
+            corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value(3))));
+        }
+    }
+
     if (property.name == "border"s) {
-        auto width = std::get<cssparser::Dimension>(property.values.at(0));
         // auto style = std::get<std::string>(property.values.at(1));
-        auto color = std::get<cssparser::Color>(property.values.at(2));
 
         LineProperty line;
         line.setSize(to_px(property.value(0)));
@@ -309,15 +322,6 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
         border.setRight(line);
         border.setTop(line);
         border.setBottom(line);
-
-        CornerProperty corner;
-        corner.setColor(QColor{color.r, color.g, color.b, color.a});
-        // corner.setWidth(width);
-        // corner.setHeight(width);
-        corners.setTopLeft(corner);
-        corners.setTopRight(corner);
-        corners.setBottomLeft(corner);
-        corners.setBottomRight(corner);
     }
 
     if (border.hasAnyValue()) {
