@@ -3,79 +3,34 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+@import "generated/properties.css";
+
 /*
- * Layout properties
+ * Extra Layout properties
  */
 
-@property width {
-    syntax: "<length>";
-}
-
-@property height {
-    syntax: "<length>";
-}
-
-@property spacing {
-    syntax: "<length>";
-}
-
-/*@property padding {
-    syntax: "<length> <length>? <length>? <length>?";
-}*/
-
 @property padding {
-    syntax: "<length>+";
+    syntax: "<length>{1,4}";
 }
 
-@property padding-left {
-    syntax: "<length>";
-}
-
-@property padding-right {
-    syntax: "<length>";
-}
-
-@property padding-top {
-    syntax: "<length>";
-}
-
-@property padding-bottom {
-    syntax: "<length>";
-}
-
-/*@property inset {
-    syntax: "<length> <length>? <length>? <length>?";
+@property inset {
+    syntax: "<length>{1,4}";
 }
 
 @property margin {
-    syntax: "<length> <length>? <length>? <length>?";
-}*/
-
-/*@property layout-alignment {
-    syntax: "(item | content | background)? (start | center | end | fill) (start | center | end | fill) <integer>?"
-}*/
-@property layout-alignment-container {
-    syntax: "item | content | background";
+    syntax: "<length>{1,4}";
 }
 
-@property layout-alignment-horizontal {
-    syntax: "start | center | end | fill";
-}
-
-@property layout-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
-}
-
-@property layout-alignment-order {
-    syntax: "<integer>";
+@property layout-alignment {
+    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
 }
 
 @property border {
     syntax: "<length> solid <color>";
 }
 
-@property background-color {
-    syntax: "<color>";
+@property border-radius {
+    syntax: "<length>{1,4}";
 }
 
 @property color {
@@ -84,34 +39,14 @@
     initial-value: #ffffff;
 }
 
-@property text-alignment-container {
-    syntax: "item | content | background";
+@property text-alignment {
+    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
 }
 
-@property text-alignment-horizontal {
-    syntax: "start | center | end | fill";
+@property icon-alignment {
+    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
 }
 
-@property text-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
-}
-
-@property text-alignment-order {
-    syntax: "<integer>";
-}
-
-@property icon-alignment-container {
-    syntax: "item | content | background";
-}
-
-@property icon-alignment-horizontal {
-    syntax: "start | center | end | fill";
-}
-
-@property icon-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
-}
-
-@property icon-alignment-order {
-    syntax: "<integer>";
+@property shadow {
+    syntax: "<length> <length> <length> <color>";
 }
