@@ -33,6 +33,14 @@ target_sources(UnionQuickImpl PRIVATE
     scenegraph/ShadowNode.h
     scenegraph/RectangleNode.cpp
     scenegraph/RectangleNode.h
+
+    scenegraph/ShaderNode.cpp
+    scenegraph/ShaderNode.h
+    scenegraph/ShaderMaterial.cpp
+    scenegraph/ShaderMaterial.h
+    scenegraph/TextureCache.cpp
+    scenegraph/TextureCache.h
+    scenegraph/UniformDataStream.h
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
@@ -40,6 +48,8 @@ target_sources(UnionQuickImplplugin PRIVATE
 )
 
 add_subdirectory(properties)
+
+include(shaders.cmake)
 
 ecm_qt_declare_logging_category(UnionQuickImpl
     HEADER qtquick_logging.h
