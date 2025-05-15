@@ -211,6 +211,9 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     case cssparser::SelectorKind::Attribute:
         // TODO
         break;
+    case cssparser::SelectorKind::DocumentRoot:
+        // TODO
+        break;
     case cssparser::SelectorKind::DescendantCombinator:
         // TODO
         break;
