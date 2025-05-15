@@ -158,6 +158,24 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QSt
 }
 
 template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyElement, Empty>::weight() const
+{
+    return -100;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AnyElement, Empty>::matches([[maybe_unused]] std::shared_ptr<Element> element) const
+{
+    return bool(element);
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AnyElement, Empty>::toString() const
+{
+    return u"AnyElement"_s;
+}
+
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {
@@ -227,6 +245,15 @@ int Union::Selector::weight() const
     return d->weight();
 }
 
+SelectorType Union::Selector::type() const
+{
+    if (!d) {
+        return SelectorType::Empty;
+    }
+
+    return d->type();
+}
+
 bool Selector::matches(std::shared_ptr<Element> element) const
 {
     if (!d) {
@@ -254,6 +281,10 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
 {
     auto sitr = begin();
     auto eitr = elements.begin();
+
+    if (size() == 1 && at(0).type() == SelectorType::AnyElement) {
+        return true;
+    }
 
     while (sitr != end() && eitr != elements.end()) {
         if (sitr->matches(*eitr)) {

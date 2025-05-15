@@ -82,6 +82,11 @@ private Q_SLOTS:
             Selector::create<SelectorType::State>(Element::State::Hovered),
         };
         QTest::addRow("state only") << selectors << true << 10;
+
+        selectors = {
+            Selector::create<SelectorType::AnyElement>(),
+        };
+        QTest::addRow("any element") << selectors << true << -100;
     }
 
     void testSimpleStructureMatches()

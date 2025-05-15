@@ -44,6 +44,9 @@ class SelectorList;
  *      A selector matching on an attribute in the
  *      \l{Union::Element::attributes}{attributes} property. Checks if the value
  *      of the attribute matches the specified value.
+ * \value AnyElement
+ *      A selector that matches anything.
+ *      Note that this has a low weight and most other selectors will override it.
  * \value AnyOf
  *      A selector that will match if any of the specified selectors match.
  * \value AllOf
@@ -57,53 +60,64 @@ enum class SelectorType {
     ColorSet,
     Hint,
     Attribute,
+    AnyElement,
     AnyOf,
     AllOf,
 };
 
 namespace detail
 {
+
+// A placeholder struct for selectors that don't have any data.
+struct Empty {
+};
+
 // Clang-format insists on moving the template declarations to their own line which makes this utterly unreadable.
 /* clang-format off */
-    template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = false;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::ColorSet, T> = std::is_same_v<T, Element::ColorSet>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Attribute, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AnyOf, T> = std::is_same_v<T, SelectorList>;
-    template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
+template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = false;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::ColorSet, T> = std::is_same_v<T, Element::ColorSet>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Attribute, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AnyOf, T> = std::is_same_v<T, SelectorList>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
 /* clang-format on */
 
-    // Partial type-erasure implementation for Selector.
-    // We want to store the concrete data type that is used by the selector,
-    // rather than to relying on something like QVariant, to avoid having to
-    // constantly convert from and to QVariant. This means we need a base class
-    // for the private implementation details. To avoid having to write a lot of
-    // boilerplate, we can use a template class for the concrete implementation
-    // that we specialize for the specific selector type.
-    struct UNION_EXPORT SelectorPrivateConcept {
-        virtual ~SelectorPrivateConcept();
-        virtual int weight() const = 0;
-        virtual bool matches(std::shared_ptr<Element> element) const = 0;
-        virtual QString toString() const = 0;
-    };
+// Partial type-erasure implementation for Selector.
+// We want to store the concrete data type that is used by the selector,
+// rather than to relying on something like QVariant, to avoid having to
+// constantly convert from and to QVariant. This means we need a base class
+// for the private implementation details. To avoid having to write a lot of
+// boilerplate, we can use a template class for the concrete implementation
+// that we specialize for the specific selector type.
+struct UNION_EXPORT SelectorPrivateConcept {
+    virtual ~SelectorPrivateConcept();
+    virtual int weight() const = 0;
+    virtual bool matches(std::shared_ptr<Element> element) const = 0;
+    virtual QString toString() const = 0;
+    virtual SelectorType type() const = 0;
+};
 
-    template<SelectorType _type, typename T>
-    struct SelectorPrivateModel : public SelectorPrivateConcept {
-        SelectorPrivateModel(const T &_data)
-            : data(_data)
-        {
-        }
+template<SelectorType _type, typename T>
+struct SelectorPrivateModel : public SelectorPrivateConcept {
+    SelectorPrivateModel(const T &_data)
+        : data(_data)
+    {
+    }
 
-        int weight() const override;
-        bool matches(std::shared_ptr<Element> element) const override;
-        QString toString() const override;
+    int weight() const override;
+    bool matches(std::shared_ptr<Element> element) const override;
+    QString toString() const override;
 
-        SelectorType type = _type;
-        T data;
-    };
+    inline SelectorType type() const override
+    {
+        return _type;
+    }
+
+    T data;
+};
 }
 
 /*!
@@ -129,6 +143,11 @@ public:
     int weight() const;
 
     /*!
+     * Returns the type of selector.
+     */
+    SelectorType type() const;
+
+    /*!
      * Returns whether this selector matches an element.
      *
      * \a element The element to match against.
@@ -151,6 +170,25 @@ public:
     /*!
      * \overload Union::Selector::create()
      *
+     * Create a new selector of a specific type, that doesn't need any data.
+     */
+    template<SelectorType type>
+    inline static Selector create([[maybe_unused]] SelectorType _t = type)
+    {
+        switch (type) {
+        case SelectorType::Empty:
+            return Selector(nullptr);
+        case SelectorType::AnyElement:
+            return Selector(std::make_shared<detail::SelectorPrivateModel<SelectorType::AnyElement, detail::Empty>>(detail::Empty{}));
+        default:
+            static_assert("Selector type requires data, use create(DataType) instead");
+            return Selector(nullptr);
+        }
+    }
+
+    /*!
+     * \overload Union::Selector::create()
+     *
      * Create a new selector of a specific type.
      *
      * See \l[CPP]{Union::SelectorType}{SelectorType} for the available types.
@@ -159,7 +197,7 @@ public:
      */
     template<SelectorType type, typename DataType>
         requires detail::ArgumentTypesMatch<type, std::decay_t<DataType>>
-    static Selector create(DataType &&data)
+    inline static Selector create(DataType &&data)
     {
         return Selector(std::make_shared<detail::SelectorPrivateModel<type, std::decay_t<DataType>>>(std::forward<DataType>(data)));
     }
