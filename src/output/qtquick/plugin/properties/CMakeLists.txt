@@ -33,4 +33,6 @@ target_sources(UnionQuickImpl PRIVATE
     CornerPropertyGroup.h
     ShadowPropertyGroup.cpp
     ShadowPropertyGroup.h
+    OffsetPropertyGroup.cpp
+    OffsetPropertyGroup.h
 )

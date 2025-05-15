@@ -14,7 +14,9 @@ using namespace Qt::StringLiterals;
 class Union::Properties::ShadowPropertyPrivate
 {
 public:
-    std::optional<SizeProperty> offsets;
+    std::optional<OffsetProperty> offset;
+    std::optional<QColor> color;
+    std::optional<qreal> size;
     std::optional<LineProperty> left;
     std::optional<LineProperty> right;
     std::optional<LineProperty> top;
@@ -33,7 +35,9 @@ ShadowProperty::ShadowProperty()
 ShadowProperty::ShadowProperty(const ShadowProperty &other)
     : d(std::make_unique<ShadowPropertyPrivate>())
 {
-    d->offsets = other.d->offsets;
+    d->offset = other.d->offset;
+    d->color = other.d->color;
+    d->size = other.d->size;
     d->left = other.d->left;
     d->right = other.d->right;
     d->top = other.d->top;
@@ -54,7 +58,9 @@ ShadowProperty::~ShadowProperty() = default;
 ShadowProperty &ShadowProperty::operator=(const ShadowProperty &other)
 {
     if (this != &other) {
-        d->offsets = other.d->offsets;
+        d->offset = other.d->offset;
+        d->color = other.d->color;
+        d->size = other.d->size;
         d->left = other.d->left;
         d->right = other.d->right;
         d->top = other.d->top;
@@ -73,18 +79,44 @@ ShadowProperty &ShadowProperty::operator=(ShadowProperty &&other)
     return *this;
 }
 
-std::optional<SizeProperty> ShadowProperty::offsets() const
+std::optional<OffsetProperty> ShadowProperty::offset() const
 {
-    return d->offsets;
+    return d->offset;
 }
 
-void ShadowProperty::setOffsets(const std::optional<SizeProperty> &newValue)
+void ShadowProperty::setOffset(const std::optional<OffsetProperty> &newValue)
 {
-    if (newValue == d->offsets) {
+    if (newValue == d->offset) {
         return;
     }
 
-    d->offsets = newValue;
+    d->offset = newValue;
+}
+std::optional<QColor> ShadowProperty::color() const
+{
+    return d->color;
+}
+
+void ShadowProperty::setColor(const std::optional<QColor> &newValue)
+{
+    if (newValue == d->color) {
+        return;
+    }
+
+    d->color = newValue;
+}
+std::optional<qreal> ShadowProperty::size() const
+{
+    return d->size;
+}
+
+void ShadowProperty::setSize(const std::optional<qreal> &newValue)
+{
+    if (newValue == d->size) {
+        return;
+    }
+
+    d->size = newValue;
 }
 std::optional<LineProperty> ShadowProperty::left() const
 {
@@ -193,7 +225,13 @@ void ShadowProperty::setBottomRight(const std::optional<CornerProperty> &newValu
 
 bool ShadowProperty::hasAnyValue() const
 {
-    if (d->offsets.has_value() && d->offsets->hasAnyValue()) {
+    if (d->offset.has_value() && d->offset->hasAnyValue()) {
+        return true;
+    }
+    if (d->color.has_value()) {
+        return true;
+    }
+    if (d->size.has_value()) {
         return true;
     }
     if (d->left.has_value() && d->left->hasAnyValue()) {
@@ -225,15 +263,21 @@ bool ShadowProperty::hasAnyValue() const
 
 void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowProperty &destination)
 {
-    if (source.d->offsets.has_value()) {
-        SizeProperty property;
-        if (destination.d->offsets.has_value()) {
-            property = destination.d->offsets.value();
+    if (source.d->offset.has_value()) {
+        OffsetProperty property;
+        if (destination.d->offset.has_value()) {
+            property = destination.d->offset.value();
         }
-        SizeProperty::resolveProperties(source.d->offsets.value(), property);
+        OffsetProperty::resolveProperties(source.d->offset.value(), property);
         if (property.hasAnyValue()) {
-            destination.d->offsets = property;
+            destination.d->offset = property;
         }
+    }
+    if (!destination.d->color.has_value()) {
+        destination.d->color = source.d->color;
+    }
+    if (!destination.d->size.has_value()) {
+        destination.d->size = source.d->size;
     }
     if (source.d->left.has_value()) {
         LineProperty property;
@@ -320,7 +364,9 @@ void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowPrope
 ShadowProperty ShadowProperty::empty()
 {
     ShadowProperty result;
-    result.d->offsets = emptyValue<SizeProperty>();
+    result.d->offset = emptyValue<OffsetProperty>();
+    result.d->color = emptyValue<QColor>();
+    result.d->size = emptyValue<qreal>();
     result.d->left = emptyValue<LineProperty>();
     result.d->right = emptyValue<LineProperty>();
     result.d->top = emptyValue<LineProperty>();
@@ -334,7 +380,13 @@ ShadowProperty ShadowProperty::empty()
 
 bool Union::Properties::operator==(const ShadowProperty &left, const ShadowProperty &right)
 {
-    if (left.offsets() != right.offsets()) {
+    if (left.offset() != right.offset()) {
+        return false;
+    }
+    if (left.color() != right.color()) {
+        return false;
+    }
+    if (left.size() != right.size()) {
         return false;
     }
     if (left.left() != right.left()) {
@@ -368,7 +420,9 @@ QDebug operator<<(QDebug debug, const Union::Properties::ShadowProperty &type)
 {
     QDebugStateSaver saver(debug);
     debug.nospace() << "ShadowProperty(" //
-                    << "offsets: " << type.offsets() //
+                    << "offset: " << type.offset() //
+                    << ", color: " << type.color() //
+                    << ", size: " << type.size() //
                     << ", left: " << type.left() //
                     << ", right: " << type.right() //
                     << ", top: " << type.top() //

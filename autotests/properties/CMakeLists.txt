@@ -19,5 +19,6 @@ ecm_add_tests(
     TestCornersProperty.cpp
     TestCornerProperty.cpp
     TestShadowProperty.cpp
+    TestOffsetProperty.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )

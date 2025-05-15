@@ -22,7 +22,9 @@ private Q_SLOTS:
         ShadowProperty property;
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.offsets().has_value());
+        QVERIFY(!property.offset().has_value());
+        QVERIFY(!property.color().has_value());
+        QVERIFY(!property.size().has_value());
         QVERIFY(!property.left().has_value());
         QVERIFY(!property.right().has_value());
         QVERIFY(!property.top().has_value());
@@ -42,13 +44,27 @@ private Q_SLOTS:
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setOffsets(SizeProperty{});
+            property.setOffset(OffsetProperty{});
             QVERIFY(!property.hasAnyValue());
 
-            property.setOffsets(testSizePropertyInstance());
+            property.setOffset(testOffsetPropertyInstance());
             QVERIFY(property.hasAnyValue());
 
-            property.setOffsets(std::nullopt);
+            property.setOffset(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            QColor value;
+            property.setColor(value);
+            QVERIFY(property.hasAnyValue());
+            property.setColor(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            qreal value;
+            property.setSize(value);
+            QVERIFY(property.hasAnyValue());
+            property.setSize(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
         {
@@ -154,7 +170,9 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-        source.setOffsets(testSizePropertyInstance());
+        source.setOffset(testOffsetPropertyInstance());
+        source.setColor(QColor{});
+        source.setSize(qreal{});
         source.setLeft(testLinePropertyInstance());
         source.setRight(testLinePropertyInstance());
         source.setTop(testLinePropertyInstance());
@@ -171,7 +189,9 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
-        QCOMPARE(destination.offsets(), source.offsets());
+        QCOMPARE(destination.offset(), source.offset());
+        QCOMPARE(destination.color(), source.color());
+        QCOMPARE(destination.size(), source.size());
         QCOMPARE(destination.left(), source.left());
         QCOMPARE(destination.right(), source.right());
         QCOMPARE(destination.top(), source.top());

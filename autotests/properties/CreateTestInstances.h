@@ -17,6 +17,7 @@
 #include <properties/ImageProperty.h>
 #include <properties/LayoutProperty.h>
 #include <properties/LineProperty.h>
+#include <properties/OffsetProperty.h>
 #include <properties/PaletteProperty.h>
 #include <properties/ShadowProperty.h>
 #include <properties/SizeProperty.h>
@@ -59,6 +60,7 @@ LineProperty testLinePropertyInstance();
 CornersProperty testCornersPropertyInstance();
 CornerProperty testCornerPropertyInstance();
 ShadowProperty testShadowPropertyInstance();
+OffsetProperty testOffsetPropertyInstance();
 
 StyleProperty testStylePropertyInstance()
 {
@@ -247,7 +249,9 @@ ShadowProperty testShadowPropertyInstance()
 {
     ShadowProperty instance;
 
-    instance.setOffsets(testSizePropertyInstance());
+    instance.setOffset(testOffsetPropertyInstance());
+    instance.setColor(testQColorInstance());
+    instance.setSize(testQrealInstance());
     instance.setLeft(testLinePropertyInstance());
     instance.setRight(testLinePropertyInstance());
     instance.setTop(testLinePropertyInstance());
@@ -260,5 +264,14 @@ ShadowProperty testShadowPropertyInstance()
     return instance;
 }
 
+OffsetProperty testOffsetPropertyInstance()
+{
+    OffsetProperty instance;
+
+    instance.setHorizontal(testQrealInstance());
+    instance.setVertical(testQrealInstance());
+
+    return instance;
+}
 }
 }

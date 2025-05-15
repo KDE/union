@@ -33,4 +33,6 @@ target_sources(Union PRIVATE
     CornerProperty.h
     ShadowProperty.cpp
     ShadowProperty.h
+    OffsetProperty.cpp
+    OffsetProperty.h
 )

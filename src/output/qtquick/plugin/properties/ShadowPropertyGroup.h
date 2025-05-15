@@ -15,7 +15,7 @@
 
 #include <properties/ShadowProperty.h>
 
-#include "SizePropertyGroup.h"
+#include "OffsetPropertyGroup.h"
 #include "LinePropertyGroup.h"
 #include "LinePropertyGroup.h"
 #include "LinePropertyGroup.h"
@@ -47,12 +47,30 @@ public:
     Q_SIGNAL void updated();
 
     /*!
-     * \qmlproperty SizePropertyGroup ShadowPropertyGroup::offsets
+     * \qmlproperty OffsetPropertyGroup ShadowPropertyGroup::offset
      *
-     * Exposes ShadowProperty::SizeProperty to QML.
+     * Exposes ShadowProperty::OffsetProperty to QML.
      */
-    Q_PROPERTY(SizePropertyGroup *offsets READ offsets CONSTANT)
-    SizePropertyGroup *offsets() const;
+    Q_PROPERTY(OffsetPropertyGroup *offset READ offset CONSTANT)
+    OffsetPropertyGroup *offset() const;
+
+    /*!
+     * \qmlproperty QColor ShadowPropertyGroup::color
+     *
+     * Exposes ShadowProperty::color to QML.
+     */
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
+    Q_SIGNAL void colorChanged();
+
+    /*!
+     * \qmlproperty qreal ShadowPropertyGroup::size
+     *
+     * Exposes ShadowProperty::size to QML.
+     */
+    Q_PROPERTY(QJSValue size READ size NOTIFY sizeChanged)
+    QJSValue size() const;
+    Q_SIGNAL void sizeChanged();
 
     /*!
      * \qmlproperty LinePropertyGroup ShadowPropertyGroup::left
@@ -120,7 +138,7 @@ public:
 
 private:
     QuickStyle *m_style = nullptr;
-    std::unique_ptr<SizePropertyGroup> m_offsets;
+    std::unique_ptr<OffsetPropertyGroup> m_offset;
     std::unique_ptr<LinePropertyGroup> m_left;
     std::unique_ptr<LinePropertyGroup> m_right;
     std::unique_ptr<LinePropertyGroup> m_top;

@@ -17,7 +17,7 @@ ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
     : QObject()
     , m_style(style)
 {
-    m_offsets = std::make_unique<SizePropertyGroup>(m_style);
+    m_offset = std::make_unique<OffsetPropertyGroup>(m_style);
     m_left = std::make_unique<LinePropertyGroup>(m_style);
     m_right = std::make_unique<LinePropertyGroup>(m_style);
     m_top = std::make_unique<LinePropertyGroup>(m_style);
@@ -31,7 +31,9 @@ ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
 void ShadowPropertyGroup::update(const ShadowProperty &newState)
 {
     m_state = newState;
-    m_offsets->update(newState.offsets().value_or(SizeProperty{}));
+    m_offset->update(newState.offset().value_or(OffsetProperty{}));
+    Q_EMIT colorChanged();
+    Q_EMIT sizeChanged();
     m_left->update(newState.left().value_or(LineProperty{}));
     m_right->update(newState.right().value_or(LineProperty{}));
     m_top->update(newState.top().value_or(LineProperty{}));
@@ -44,9 +46,29 @@ void ShadowPropertyGroup::update(const ShadowProperty &newState)
     Q_EMIT updated();
 }
 
-SizePropertyGroup *ShadowPropertyGroup::offsets() const
+OffsetPropertyGroup *ShadowPropertyGroup::offset() const
 {
-    return m_offsets.get();
+    return m_offset.get();
+}
+
+QJSValue ShadowPropertyGroup::color() const
+{
+    auto value = m_state.color();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue ShadowPropertyGroup::size() const
+{
+    auto value = m_state.size();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
 }
 
 LinePropertyGroup *ShadowPropertyGroup::left() const

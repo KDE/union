@@ -10,10 +10,11 @@
 
 #include <QDebug>
 
+#include <QColor>
 
 #include "CornerProperty.h"
 #include "LineProperty.h"
-#include "SizeProperty.h"
+#include "OffsetProperty.h"
 
 #include "union_export.h"
 
@@ -64,15 +65,37 @@ public:
     ShadowProperty &operator=(ShadowProperty &&other);
 
     /*!
-     * Returns the value of offsets.
+     * Returns the value of offset.
      */
-    std::optional<SizeProperty> offsets() const;
+    std::optional<OffsetProperty> offset() const;
     /*!
-     * Set the value of offsets.
+     * Set the value of offset.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setOffsets(const std::optional<SizeProperty> &newValue);
+    void setOffset(const std::optional<OffsetProperty> &newValue);
+
+    /*!
+     * Returns the value of color.
+     */
+    std::optional<QColor> color() const;
+    /*!
+     * Set the value of color.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setColor(const std::optional<QColor> &newValue);
+
+    /*!
+     * Returns the value of size.
+     */
+    std::optional<qreal> size() const;
+    /*!
+     * Set the value of size.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setSize(const std::optional<qreal> &newValue);
 
     /*!
      * Returns the value of left.

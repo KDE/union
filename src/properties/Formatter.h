@@ -17,6 +17,7 @@
 #include <properties/ImageProperty.h>
 #include <properties/LayoutProperty.h>
 #include <properties/LineProperty.h>
+#include <properties/OffsetProperty.h>
 #include <properties/PaletteProperty.h>
 #include <properties/ShadowProperty.h>
 #include <properties/SizeProperty.h>
@@ -1619,9 +1620,9 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         std::ostringstream out;
 
         out << indent(indentation);
-        out << "offsets: ";
+        out << "offset: ";
         {
-            auto value = group.offsets();
+            auto value = group.offset();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1629,6 +1630,28 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
                 } else {
                     out << "(empty)\n";
                 }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "color: ";
+        {
+            auto value = group.color();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "size: ";
+        {
+            auto value = group.size();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
             } else {
                 out << std::format("{} ", value);
             }
@@ -1757,6 +1780,63 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
                 } else {
                     out << "(empty)\n";
                 }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        return std::ranges::copy(std::move(out).str(), context.out()).out;
+    }
+};
+
+template<>
+struct std::formatter<Union::Properties::OffsetProperty, char> {
+    bool use_newlines = false;
+    int indentation = 0;
+
+    template<class ParseContext>
+    constexpr ParseContext::iterator parse(ParseContext &context)
+    {
+        std::string digits;
+
+        auto itr = context.begin();
+        while (itr != context.end() && *itr != '}') {
+            if (*itr == 'n' && *(itr + 1) == 'l') {
+                use_newlines = true;
+            }
+
+            if (*itr >= 48 && *itr <= 57) {
+                indentation = indentation * 10 + (*itr - 48);
+            }
+
+            itr++;
+        }
+
+        return itr;
+    }
+
+    template<class FormatContext>
+    FormatContext::iterator format(const Union::Properties::OffsetProperty &group, FormatContext &context) const
+    {
+        std::ostringstream out;
+
+        out << indent(indentation);
+        out << "horizontal: ";
+        {
+            auto value = group.horizontal();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "vertical: ";
+        {
+            auto value = group.vertical();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
             } else {
                 out << std::format("{} ", value);
             }
