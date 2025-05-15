@@ -33,3 +33,6 @@ set_target_properties(union-css PROPERTIES
 
 install(TARGETS union-css DESTINATION ${KDE_INSTALL_PLUGINDIR}/union)
 
+set(_css_install_dir "${KDE_INSTALL_DATADIR}/union/css")
+install(DIRECTORY defaults DESTINATION ${_css_install_dir})
+install(DIRECTORY styles DESTINATION ${_css_install_dir})

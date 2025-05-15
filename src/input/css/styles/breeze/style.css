@@ -3,8 +3,6 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-@import "properties.css";
-@import "default.css";
 @import "variables.css";
 
 button,

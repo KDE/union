@@ -3,10 +3,9 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-@import "generated/properties.css";
-
 /*
- * Extra Layout properties
+ * This file contains mainly grouped properties that provide shorthands for some
+ * of the properties defined in "generated-properties.css" above.
  */
 
 @property padding {
