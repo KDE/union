@@ -190,6 +190,9 @@ background:
             horizontal: qreal
             vertical: qreal
 
+        color: QColor
+        size: qreal
+
         left: *line
         right: *line
         top: *line
