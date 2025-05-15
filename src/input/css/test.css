@@ -7,33 +7,25 @@
 @import "default.css";
 @import "variables.css";
 
-/*
- * Text: #232629
- *
- * Window Background: #eff0f1
- *
- * Button Background: #fcfcfc
- * Button Text: #232629
- *
- * Hover Decoration: #3daee9
- * Focus Decoration: #3daee9
- *
- * Separator Color: #DDDDDD
- */
-
 button,
 toolbutton {
     width: 32px;
     height: 32px;
-    spacing: 4px;
-    padding: 8px;
+    spacing: var(--small-spacing);
+    padding: var(--large-spacing);
+    border-radius: var(--corner-radius);
+
+    text-alignment-horizontal: center;
+    icon-alignment-horizontal: center;
 
     color: var(--button-text-color);
 }
 
 button {
-    border: 1px solid #ddd;
-    background-color: #fcfcfc;
+    border: 1px solid var(--button-border-color);
+    background-color: var(--button-background-color);
+
+    shadow: 2px 0px 1px black;
 
     &:hovered {
         border: 1px solid #3daee9;
