@@ -72,17 +72,18 @@ inline void setAlignment(T &output, const cssparser::Property &property)
     auto alignment = output.alignment().value_or(AlignmentProperty{});
 
     if (property.name.ends_with("alignment-container"s)) {
-        auto value = toEnumValue<AlignmentContainer>(std::get<std::string>(property.values.at(0)));
-        alignment.setContainer(value);
+        alignment.setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>()));
     } else if (property.name.ends_with("alignment-horizontal"s)) {
-        auto value = toEnumValue<Alignment>(std::get<std::string>(property.values.at(0)));
-        alignment.setHorizontal(value);
+        alignment.setHorizontal(toEnumValue<Alignment>(property.value<std::string>()));
     } else if (property.name.ends_with("alignment-vertical"s)) {
-        auto value = toEnumValue<Alignment>(std::get<std::string>(property.values.at(0)));
-        alignment.setVertical(value);
+        alignment.setVertical(toEnumValue<Alignment>(property.value<std::string>()));
     } else if (property.name.ends_with("alignment-order"s)) {
-        auto value = std::get<int>(property.values.at(0));
-        alignment.setOrder(value);
+        alignment.setOrder(property.value<int>(0));
+    } else if (property.values.size() == 4) {
+        alignment.setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>(0)));
+        alignment.setHorizontal(toEnumValue<Alignment>(property.value<std::string>(1)));
+        alignment.setVertical(toEnumValue<Alignment>(property.value<std::string>(2)));
+        alignment.setOrder(property.value<int>(3));
     }
 
     if (alignment.hasAnyValue()) {
@@ -95,32 +96,37 @@ inline std::optional<SizeProperty> sizeFromProperty(const std::optional<SizeProp
     auto result = input.value_or(SizeProperty{});
 
     if (property.name.ends_with("left")) {
-        result.setLeft(property.value<cssparser::Dimension>().value);
+        result.setLeft(to_px(property.value()));
     } else if (property.name.ends_with("right")) {
-        result.setRight(property.value<cssparser::Dimension>().value);
+        result.setRight(to_px(property.value()));
     } else if (property.name.ends_with("top")) {
-        result.setTop(property.value<cssparser::Dimension>().value);
+        result.setTop(to_px(property.value()));
     } else if (property.name.ends_with("bottom")) {
-        result.setBottom(property.value<cssparser::Dimension>().value);
+        result.setBottom(to_px(property.value()));
     } else {
         if (property.values.size() == 1) {
-            auto value = property.value<cssparser::Dimension>().value;
+            auto value = to_px(property.value());
             result.setLeft(value);
             result.setRight(value);
             result.setTop(value);
             result.setBottom(value);
         } else if (property.values.size() == 2) {
-            auto horizontal = property.value<cssparser::Dimension>(0).value;
-            auto vertical = property.value<cssparser::Dimension>(1).value;
+            auto horizontal = to_px(property.value(0));
+            auto vertical = to_px(property.value(1));
             result.setLeft(horizontal);
             result.setRight(horizontal);
             result.setTop(vertical);
             result.setBottom(vertical);
+        } else if (property.values.size() == 3) {
+            result.setTop(to_px(property.value(0)));
+            result.setRight(to_px(property.value(1)));
+            result.setBottom(to_px(property.value(2)));
+            result.setLeft(to_px(property.value(1)));
         } else if (property.values.size() == 4) {
-            result.setLeft(property.value<cssparser::Dimension>(0).value);
-            result.setRight(property.value<cssparser::Dimension>(1).value);
-            result.setTop(property.value<cssparser::Dimension>(2).value);
-            result.setBottom(property.value<cssparser::Dimension>(3).value);
+            result.setTop(to_px(property.value(0)));
+            result.setRight(to_px(property.value(1)));
+            result.setBottom(to_px(property.value(2)));
+            result.setLeft(to_px(property.value(3)));
         }
     }
 
@@ -129,6 +135,13 @@ inline std::optional<SizeProperty> sizeFromProperty(const std::optional<SizeProp
     } else {
         return std::nullopt;
     }
+}
+
+inline CornerProperty setCornerRadius(const std::optional<CornerProperty> &corner, qreal radius)
+{
+    auto property = corner.value_or(CornerProperty{});
+    property.setRadius(radius);
+    return property;
 }
 
 bool CssLoader::load(Theme::Ptr theme)
@@ -242,14 +255,12 @@ void CssLoader::setLayoutProperty(StyleProperty &output, const cssparser::Proper
 {
     auto layout = output.layout().value_or(LayoutProperty{});
 
-    qDebug() << property.name; // << property.values;
-
     if (property.name == "width"s) {
-        layout.setWidth(property.value<cssparser::Dimension>().value);
+        layout.setWidth(to_px(property.value()));
     } else if (property.name == "height"s) {
-        layout.setHeight(property.value<cssparser::Dimension>().value);
+        layout.setHeight(to_px(property.value()));
     } else if (property.name == "spacing"s) {
-        layout.setSpacing(property.value<cssparser::Dimension>().value);
+        layout.setSpacing(to_px(property.value()));
     } else if (property.name.starts_with("layout-alignment")) {
         setAlignment(layout, property);
     } else if (property.name.starts_with("padding")) {
@@ -270,8 +281,7 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
     auto background = output.background().value_or(BackgroundProperty{});
 
     if (property.name == "background"s || property.name == "background-color"s) {
-        auto color = property.value<cssparser::Color>();
-        background.setColor(QColor{color.r, color.g, color.b, color.a});
+        background.setColor(to_qcolor(property.value()));
     }
 
     if (background.hasAnyValue()) {
@@ -292,8 +302,8 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
         auto color = std::get<cssparser::Color>(property.values.at(2));
 
         LineProperty line;
-        line.setSize(width.value);
-        line.setColor(QColor{color.r, color.g, color.b, color.a});
+        line.setSize(to_px(property.value(0)));
+        line.setColor(to_qcolor(property.value(2)));
 
         border.setLeft(line);
         border.setRight(line);
