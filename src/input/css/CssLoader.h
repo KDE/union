@@ -33,4 +33,5 @@ private:
     void setBorderProperty(StyleProperty &output, const cssparser::Property &property);
     void setTextProperty(StyleProperty &output, const cssparser::Property &property);
     void setIconProperty(StyleProperty &output, const cssparser::Property &property);
+    void setShadowProperty(StyleProperty &output, const cssparser::Property &property);
 };
