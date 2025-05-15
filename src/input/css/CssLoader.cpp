@@ -20,6 +20,31 @@ using namespace std::string_literals;
 
 namespace fs = std::filesystem;
 
+float to_px(const cssparser::Value &value)
+{
+    if (!std::holds_alternative<cssparser::Dimension>(value)) {
+        return 0.0;
+    }
+
+    auto dimension = std::get<cssparser::Dimension>(value);
+    switch (dimension.unit) {
+    case cssparser::Unit::Px:
+        return dimension.value;
+    default:
+        return 0.0;
+    }
+}
+
+QColor to_qcolor(const cssparser::Value &value)
+{
+    if (!std::holds_alternative<cssparser::Color>(value)) {
+        return QColor{};
+    }
+
+    auto color = std::get<cssparser::Color>(value);
+    return QColor::fromRgb(color.r, color.g, color.b, color.a);
+}
+
 template<typename T>
 inline int toEnumIntValue(const std::string &value)
 {
