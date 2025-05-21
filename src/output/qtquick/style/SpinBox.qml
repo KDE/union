@@ -85,7 +85,7 @@ T.SpinBox {
             anchors.centerIn: parent
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
+            name: Union.Style.properties.icon.name ?? ""
             palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
@@ -105,7 +105,7 @@ T.SpinBox {
             anchors.centerIn: parent
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
+            name: Union.Style.properties.icon.name ?? ""
             palette: Union.Style.properties.palette.quickPalette
             color: palette.buttonText
         }
