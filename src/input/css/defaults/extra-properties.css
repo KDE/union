@@ -25,18 +25,18 @@
 }
 
 @property border {
-    syntax: "<length> solid <color>";
+    syntax: "<length> (solid | dashed) <color>";
 }
 
 @property border-radius {
     syntax: "<length>{1,4}";
 }
 
-@property color {
+/*@property color {
     syntax: "<color>";
     inherits: true;
     initial-value: #ffffff;
-}
+}*/
 
 @property text-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
