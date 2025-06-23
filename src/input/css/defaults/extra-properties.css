@@ -32,6 +32,10 @@
     syntax: "<length>{1,4}";
 }
 
+@property outline {
+    syntax: "<length> (solid | dashed) <color>";
+}
+
 @property color {
     syntax: "<color>";
     inherits: true;

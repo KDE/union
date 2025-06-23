@@ -255,6 +255,8 @@ StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property>
             setBackgroundProperty(result, property);
         } else if (property.name.starts_with("border")) {
             setBorderProperty(result, property);
+        } else if (property.name.starts_with("outline")) {
+            setOutlineProperty(result, property);
         } else if (property.name.starts_with("text")) {
             setTextProperty(result, property);
         } else if (property.name.starts_with("icon")) {
@@ -343,6 +345,26 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
     }
     if (corners.hasAnyValue()) {
         output.setCorners(corners);
+    }
+}
+
+void CssLoader::setOutlineProperty(StyleProperty &output, const cssparser::Property &property)
+{
+    auto outline = output.outline().value_or(OutlineProperty{});
+
+    if (property.name == "outline"s) {
+        LineProperty line;
+        line.setSize(to_px(property.value(0)));
+        line.setColor(to_qcolor(property.value(2)));
+
+        outline.setLeft(line);
+        outline.setRight(line);
+        outline.setTop(line);
+        outline.setBottom(line);
+    }
+
+    if (outline.hasAnyValue()) {
+        output.setOutline(outline);
     }
 }
 
