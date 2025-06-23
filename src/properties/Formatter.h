@@ -250,6 +250,54 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
             }
         }
 
+        out << indent(indentation);
+        out << "border: ";
+        {
+            auto value = group.border();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "corners: ";
+        {
+            auto value = group.corners();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "shadow: ";
+        {
+            auto value = group.shadow();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
         return std::ranges::copy(std::move(out).str(), context.out()).out;
     }
 };
@@ -1046,54 +1094,6 @@ struct std::formatter<Union::Properties::BackgroundProperty, char> {
         out << "image: ";
         {
             auto value = group.image();
-            if (use_newlines) {
-                if (value.has_value()) {
-                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
-                    out << std::vformat(format_string, std::make_format_args(value));
-                } else {
-                    out << "(empty)\n";
-                }
-            } else {
-                out << std::format("{} ", value);
-            }
-        }
-
-        out << indent(indentation);
-        out << "border: ";
-        {
-            auto value = group.border();
-            if (use_newlines) {
-                if (value.has_value()) {
-                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
-                    out << std::vformat(format_string, std::make_format_args(value));
-                } else {
-                    out << "(empty)\n";
-                }
-            } else {
-                out << std::format("{} ", value);
-            }
-        }
-
-        out << indent(indentation);
-        out << "corners: ";
-        {
-            auto value = group.corners();
-            if (use_newlines) {
-                if (value.has_value()) {
-                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
-                    out << std::vformat(format_string, std::make_format_args(value));
-                } else {
-                    out << "(empty)\n";
-                }
-            } else {
-                out << std::format("{} ", value);
-            }
-        }
-
-        out << indent(indentation);
-        out << "shadow: ";
-        {
-            auto value = group.shadow();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
