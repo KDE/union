@@ -15,6 +15,10 @@ REUSE-IgnoreStart
 */
 {# REUSE-IgnoreEnd #}
 
+{#
+This mapping is used to map property names to more familiar CSS property names
+from web CSS, without needing to change the structure of properties.
+#}
 {%- set name_map = {
     "layout-width": "width",
     "layout-height": "height",
@@ -36,6 +40,7 @@ REUSE-IgnoreStart
     "text-font": "font-family",
 }%}
 
+{# A map of C++ property types to CSS syntax strings. #}
 {%- set type_map = {
     "QColor": "<color>",
     "qreal": "<length>",
@@ -47,6 +52,7 @@ REUSE-IgnoreStart
     "Union::Properties::Alignment": "start | center | end | fill | stack",
 }%}
 
+{# Recursively print all properties of an object, with a prefix #}
 {% macro print_properties(name, object) %}
 {% for property in object.properties %}
 {% if property.is_group %}
