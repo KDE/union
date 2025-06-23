@@ -155,7 +155,7 @@ bool CssLoader::load(Theme::Ptr theme)
     cssparser::StyleSheet styleSheet;
     styleSheet.set_root_path(fs::path(defaultsPath.toStdString()));
     styleSheet.parse_file("generated-properties.css"s);
-    styleSheet.parse_file("properties.css"s);
+    styleSheet.parse_file("extra-properties.css"s);
     styleSheet.parse_file("default.css"s);
 
     auto stylePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/styles/breeze"_s, QStandardPaths::LocateDirectory);
