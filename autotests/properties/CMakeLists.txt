@@ -16,6 +16,7 @@ ecm_add_tests(
     TestImageProperty.cpp
     TestBorderProperty.cpp
     TestLineProperty.cpp
+    TestOutlineProperty.cpp
     TestCornersProperty.cpp
     TestCornerProperty.cpp
     TestShadowProperty.cpp

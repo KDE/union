@@ -21,6 +21,7 @@
 #include "IconPropertyGroup.h"
 #include "BackgroundPropertyGroup.h"
 #include "BorderPropertyGroup.h"
+#include "OutlinePropertyGroup.h"
 #include "CornersPropertyGroup.h"
 #include "ShadowPropertyGroup.h"
 // clang-format on
@@ -94,6 +95,14 @@ public:
     BorderPropertyGroup *border() const;
 
     /*!
+     * \qmlproperty OutlinePropertyGroup StylePropertyGroup::outline
+     *
+     * Exposes StyleProperty::OutlineProperty to QML.
+     */
+    Q_PROPERTY(OutlinePropertyGroup *outline READ outline CONSTANT)
+    OutlinePropertyGroup *outline() const;
+
+    /*!
      * \qmlproperty CornersPropertyGroup StylePropertyGroup::corners
      *
      * Exposes StyleProperty::CornersProperty to QML.
@@ -117,6 +126,7 @@ private:
     std::unique_ptr<IconPropertyGroup> m_icon;
     std::unique_ptr<BackgroundPropertyGroup> m_background;
     std::unique_ptr<BorderPropertyGroup> m_border;
+    std::unique_ptr<OutlinePropertyGroup> m_outline;
     std::unique_ptr<CornersPropertyGroup> m_corners;
     std::unique_ptr<ShadowPropertyGroup> m_shadow;
     Union::Properties::StyleProperty m_state;

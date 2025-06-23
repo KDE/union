@@ -18,6 +18,7 @@
 #include <properties/LayoutProperty.h>
 #include <properties/LineProperty.h>
 #include <properties/OffsetProperty.h>
+#include <properties/OutlineProperty.h>
 #include <properties/PaletteProperty.h>
 #include <properties/ShadowProperty.h>
 #include <properties/SizeProperty.h>
@@ -57,6 +58,7 @@ BackgroundProperty testBackgroundPropertyInstance();
 ImageProperty testImagePropertyInstance();
 BorderProperty testBorderPropertyInstance();
 LineProperty testLinePropertyInstance();
+OutlineProperty testOutlinePropertyInstance();
 CornersProperty testCornersPropertyInstance();
 CornerProperty testCornerPropertyInstance();
 ShadowProperty testShadowPropertyInstance();
@@ -72,6 +74,7 @@ StyleProperty testStylePropertyInstance()
     instance.setIcon(testIconPropertyInstance());
     instance.setBackground(testBackgroundPropertyInstance());
     instance.setBorder(testBorderPropertyInstance());
+    instance.setOutline(testOutlinePropertyInstance());
     instance.setCorners(testCornersPropertyInstance());
     instance.setShadow(testShadowPropertyInstance());
 
@@ -216,6 +219,18 @@ LineProperty testLinePropertyInstance()
     instance.setColor(testQColorInstance());
     instance.setStyle(Union::Properties::LineStyle{});
     instance.setImage(testImagePropertyInstance());
+
+    return instance;
+}
+
+OutlineProperty testOutlinePropertyInstance()
+{
+    OutlineProperty instance;
+
+    instance.setLeft(testLinePropertyInstance());
+    instance.setRight(testLinePropertyInstance());
+    instance.setTop(testLinePropertyInstance());
+    instance.setBottom(testLinePropertyInstance());
 
     return instance;
 }

@@ -23,6 +23,7 @@ StylePropertyGroup::StylePropertyGroup(QuickStyle *style)
     m_icon = std::make_unique<IconPropertyGroup>(m_style);
     m_background = std::make_unique<BackgroundPropertyGroup>(m_style);
     m_border = std::make_unique<BorderPropertyGroup>(m_style);
+    m_outline = std::make_unique<OutlinePropertyGroup>(m_style);
     m_corners = std::make_unique<CornersPropertyGroup>(m_style);
     m_shadow = std::make_unique<ShadowPropertyGroup>(m_style);
 }
@@ -36,6 +37,7 @@ void StylePropertyGroup::update(const StyleProperty &newState)
     m_icon->update(newState.icon().value_or(IconProperty{}));
     m_background->update(newState.background().value_or(BackgroundProperty{}));
     m_border->update(newState.border().value_or(BorderProperty{}));
+    m_outline->update(newState.outline().value_or(OutlineProperty{}));
     m_corners->update(newState.corners().value_or(CornersProperty{}));
     m_shadow->update(newState.shadow().value_or(ShadowProperty{}));
 
@@ -70,6 +72,11 @@ BackgroundPropertyGroup *StylePropertyGroup::background() const
 BorderPropertyGroup *StylePropertyGroup::border() const
 {
     return m_border.get();
+}
+
+OutlinePropertyGroup *StylePropertyGroup::outline() const
+{
+    return m_outline.get();
 }
 
 CornersPropertyGroup *StylePropertyGroup::corners() const

@@ -18,6 +18,7 @@
 #include <properties/LayoutProperty.h>
 #include <properties/LineProperty.h>
 #include <properties/OffsetProperty.h>
+#include <properties/OutlineProperty.h>
 #include <properties/PaletteProperty.h>
 #include <properties/ShadowProperty.h>
 #include <properties/SizeProperty.h>
@@ -254,6 +255,22 @@ struct std::formatter<Union::Properties::StyleProperty, char> {
         out << "border: ";
         {
             auto value = group.border();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "outline: ";
+        {
+            auto value = group.outline();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
@@ -1378,6 +1395,105 @@ struct std::formatter<Union::Properties::LineProperty, char> {
         out << "image: ";
         {
             auto value = group.image();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        return std::ranges::copy(std::move(out).str(), context.out()).out;
+    }
+};
+
+template<>
+struct std::formatter<Union::Properties::OutlineProperty, char> {
+    bool use_newlines = false;
+    int indentation = 0;
+
+    template<class ParseContext>
+    constexpr ParseContext::iterator parse(ParseContext &context)
+    {
+        std::string digits;
+
+        auto itr = context.begin();
+        while (itr != context.end() && *itr != '}') {
+            if (*itr == 'n' && *(itr + 1) == 'l') {
+                use_newlines = true;
+            }
+
+            if (*itr >= 48 && *itr <= 57) {
+                indentation = indentation * 10 + (*itr - 48);
+            }
+
+            itr++;
+        }
+
+        return itr;
+    }
+
+    template<class FormatContext>
+    FormatContext::iterator format(const Union::Properties::OutlineProperty &group, FormatContext &context) const
+    {
+        std::ostringstream out;
+
+        out << indent(indentation);
+        out << "left: ";
+        {
+            auto value = group.left();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "right: ";
+        {
+            auto value = group.right();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "top: ";
+        {
+            auto value = group.top();
+            if (use_newlines) {
+                if (value.has_value()) {
+                    auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
+                    out << std::vformat(format_string, std::make_format_args(value));
+                } else {
+                    out << "(empty)\n";
+                }
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "bottom: ";
+        {
+            auto value = group.bottom();
             if (use_newlines) {
                 if (value.has_value()) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";

@@ -16,6 +16,7 @@
 #include "CornersProperty.h"
 #include "IconProperty.h"
 #include "LayoutProperty.h"
+#include "OutlineProperty.h"
 #include "PaletteProperty.h"
 #include "ShadowProperty.h"
 #include "TextProperty.h"
@@ -159,6 +160,21 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setBorder(const std::optional<BorderProperty> &newValue);
+
+    /*!
+     * Returns the value of outline.
+     */
+    std::optional<OutlineProperty> outline() const;
+    /*!
+     * Returns outline if set or a new OutlineProperty if not.
+     */
+    OutlineProperty outline_or_new() const;
+    /*!
+     * Set the value of outline.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setOutline(const std::optional<OutlineProperty> &newValue);
 
     /*!
      * Returns the value of corners.

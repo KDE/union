@@ -28,6 +28,7 @@ private Q_SLOTS:
         QVERIFY(!property.icon().has_value());
         QVERIFY(!property.background().has_value());
         QVERIFY(!property.border().has_value());
+        QVERIFY(!property.outline().has_value());
         QVERIFY(!property.corners().has_value());
         QVERIFY(!property.shadow().has_value());
     }
@@ -107,6 +108,17 @@ private Q_SLOTS:
         }
         {
             // Assigning an empty value to a property should have no effect.
+            property.setOutline(OutlineProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setOutline(testOutlinePropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setOutline(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            // Assigning an empty value to a property should have no effect.
             property.setCorners(CornersProperty{});
             QVERIFY(!property.hasAnyValue());
 
@@ -148,6 +160,7 @@ private Q_SLOTS:
         source.setIcon(testIconPropertyInstance());
         source.setBackground(testBackgroundPropertyInstance());
         source.setBorder(testBorderPropertyInstance());
+        source.setOutline(testOutlinePropertyInstance());
         source.setCorners(testCornersPropertyInstance());
         source.setShadow(testShadowPropertyInstance());
 
@@ -164,6 +177,7 @@ private Q_SLOTS:
         QCOMPARE(destination.icon(), source.icon());
         QCOMPARE(destination.background(), source.background());
         QCOMPARE(destination.border(), source.border());
+        QCOMPARE(destination.outline(), source.outline());
         QCOMPARE(destination.corners(), source.corners());
         QCOMPARE(destination.shadow(), source.shadow());
     }

@@ -167,6 +167,14 @@ border:
     top: *line
     bottom: *line
 
+outline:
+    # \brief A property group containing properties of an element's outline.
+
+    left: *line
+    right: *line
+    top: *line
+    bottom: *line
+
 corners:
     # \brief A property group containing properties of a background's corners.
 

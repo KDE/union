@@ -27,6 +27,8 @@ target_sources(UnionQuickImpl PRIVATE
     BorderPropertyGroup.h
     LinePropertyGroup.cpp
     LinePropertyGroup.h
+    OutlinePropertyGroup.cpp
+    OutlinePropertyGroup.h
     CornersPropertyGroup.cpp
     CornersPropertyGroup.h
     CornerPropertyGroup.cpp

@@ -20,6 +20,7 @@ public:
     std::optional<IconProperty> icon;
     std::optional<BackgroundProperty> background;
     std::optional<BorderProperty> border;
+    std::optional<OutlineProperty> outline;
     std::optional<CornersProperty> corners;
     std::optional<ShadowProperty> shadow;
 };
@@ -38,6 +39,7 @@ StyleProperty::StyleProperty(const StyleProperty &other)
     d->icon = other.d->icon;
     d->background = other.d->background;
     d->border = other.d->border;
+    d->outline = other.d->outline;
     d->corners = other.d->corners;
     d->shadow = other.d->shadow;
 }
@@ -58,6 +60,7 @@ StyleProperty &StyleProperty::operator=(const StyleProperty &other)
         d->icon = other.d->icon;
         d->background = other.d->background;
         d->border = other.d->border;
+        d->outline = other.d->outline;
         d->corners = other.d->corners;
         d->shadow = other.d->shadow;
     }
@@ -178,6 +181,24 @@ void StyleProperty::setBorder(const std::optional<BorderProperty> &newValue)
 
     d->border = newValue;
 }
+std::optional<OutlineProperty> StyleProperty::outline() const
+{
+    return d->outline;
+}
+
+OutlineProperty StyleProperty::outline_or_new() const
+{
+    return d->outline.value_or(OutlineProperty{});
+}
+
+void StyleProperty::setOutline(const std::optional<OutlineProperty> &newValue)
+{
+    if (newValue == d->outline) {
+        return;
+    }
+
+    d->outline = newValue;
+}
 std::optional<CornersProperty> StyleProperty::corners() const
 {
     return d->corners;
@@ -233,6 +254,9 @@ bool StyleProperty::hasAnyValue() const
         return true;
     }
     if (d->border.has_value() && d->border->hasAnyValue()) {
+        return true;
+    }
+    if (d->outline.has_value() && d->outline->hasAnyValue()) {
         return true;
     }
     if (d->corners.has_value() && d->corners->hasAnyValue()) {
@@ -306,6 +330,16 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
             destination.d->border = property;
         }
     }
+    if (source.d->outline.has_value()) {
+        OutlineProperty property;
+        if (destination.d->outline.has_value()) {
+            property = destination.d->outline.value();
+        }
+        OutlineProperty::resolveProperties(source.d->outline.value(), property);
+        if (property.hasAnyValue()) {
+            destination.d->outline = property;
+        }
+    }
     if (source.d->corners.has_value()) {
         CornersProperty property;
         if (destination.d->corners.has_value()) {
@@ -337,6 +371,7 @@ StyleProperty StyleProperty::empty()
     result.d->icon = emptyValue<IconProperty>();
     result.d->background = emptyValue<BackgroundProperty>();
     result.d->border = emptyValue<BorderProperty>();
+    result.d->outline = emptyValue<OutlineProperty>();
     result.d->corners = emptyValue<CornersProperty>();
     result.d->shadow = emptyValue<ShadowProperty>();
     return result;
@@ -362,6 +397,9 @@ bool Union::Properties::operator==(const StyleProperty &left, const StylePropert
     if (left.border() != right.border()) {
         return false;
     }
+    if (left.outline() != right.outline()) {
+        return false;
+    }
     if (left.corners() != right.corners()) {
         return false;
     }
@@ -381,6 +419,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
                     << ", icon: " << type.icon() //
                     << ", background: " << type.background() //
                     << ", border: " << type.border() //
+                    << ", outline: " << type.outline() //
                     << ", corners: " << type.corners() //
                     << ", shadow: " << type.shadow() //
                     << ")";

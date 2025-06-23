@@ -27,6 +27,8 @@ target_sources(Union PRIVATE
     BorderProperty.h
     LineProperty.cpp
     LineProperty.h
+    OutlineProperty.cpp
+    OutlineProperty.h
     CornersProperty.cpp
     CornersProperty.h
     CornerProperty.cpp
