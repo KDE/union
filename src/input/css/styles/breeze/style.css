@@ -5,53 +5,5 @@
 
 @import "variables.css";
 
-button,
-toolbutton {
-    width: 32px;
-    height: 32px;
-    spacing: var(--small-spacing);
-    padding: var(--large-spacing);
-    border-radius: var(--corner-radius);
-
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
-
-    color: var(--button-text-color);
-}
-
-button {
-    border: 1px solid var(--button-border-color);
-    background-color: var(--button-background-color);
-
-    shadow: 2px 0px 1px black;
-
-    &:hovered {
-        border: 1px solid #3daee9;
-    }
-
-    &:pressed {
-        background-color: #3daee9;
-    }
-
-    &:visual-focus {
-/*         outline: 2px solid  */
-    }
-}
-
-toolbutton {
-    &:hovered {
-        border: 1px solid #3daee9;
-    }
-
-    &:pressed {
-        background-color: #3daee9;
-    }
-}
-
-textfield {
-    width: 100px;
-    height: 32px;
-
-    border: 1px solid #ddd;
-    background-color: #fff;
-}
+@import "button.css";
+@import "textfield.css";
