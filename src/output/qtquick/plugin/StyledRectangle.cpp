@@ -30,12 +30,12 @@ inline QVector2D calculateAspect(const QRectF &rect)
     return aspect;
 }
 
-inline QRectF adjustRectForShadow(const QRectF &rect, float shadowSize, const QVector2D &offsets, const QVector2D &aspect)
+inline QRectF adjustRectForShadow(const QRectF &rect, float shadowSize, const QVector2D &offsets, float outlineSize, const QVector2D &aspect)
 {
-    auto adjusted = rect.adjusted(-shadowSize * aspect.x(), -shadowSize * aspect.y(), shadowSize * aspect.x(), shadowSize * aspect.y());
     auto offsetLength = offsets.length();
-    adjusted.adjust(-offsetLength * aspect.x(), -offsetLength * aspect.y(), offsetLength * aspect.x(), offsetLength * aspect.y());
-    return adjusted;
+    auto adjustment = std::max(shadowSize + offsetLength, outlineSize);
+
+    return rect.adjusted(-adjustment * aspect.x(), -adjustment * aspect.y(), adjustment * aspect.x(), adjustment * aspect.y());
 }
 
 StyledRectangle::StyledRectangle(QQuickItem *parent)
@@ -181,21 +181,30 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
 
     auto shaderNode = static_cast<ShaderNode *>(node);
 
-    if (background.border().has_value()) {
-        shaderNode->setShader(u"shadowed_border_rectangle"_s);
-    } else {
-        shaderNode->setShader(u"shadowed_rectangle"_s);
+    auto shaderName = u"shadowed_"_s;
+
+    if (style.outline().has_value()) {
+        shaderName += u"outline_"_s;
     }
+
+    if (style.border().has_value()) {
+        shaderName += u"border_"_s;
+    }
+
+    shaderName += u"rectangle"_s;
+
+    shaderNode->setShader(shaderName);
 
     auto rect = boundingRect();
 
     shaderNode->setRect(rect);
-    shaderNode->setUniformBufferSize(sizeof(float) * 40);
+    shaderNode->setUniformBufferSize(sizeof(float) * 44);
 
     auto aspect = calculateAspect(rect);
     auto minDimension = float(std::min(rect.width(), rect.height()));
 
     auto borderLeft = style.border_or_new().left_or_new();
+    auto outlineLeft = style.outline_or_new().left_or_new();
 
     auto shadow = style.shadow_or_new();
     auto shadowSize = shadow.size().value_or(0.0);
@@ -203,7 +212,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     auto offsets = shadow.offset_or_new();
     auto offset = QVector2D{float(offsets.horizontal().value_or(0.0)), float(offsets.vertical().value_or(0.0))};
 
-    shaderNode->setRect(adjustRectForShadow(rect, shadowSize, offset, aspect));
+    shaderNode->setRect(adjustRectForShadow(rect, shadowSize, offset, outlineLeft.size().value_or(0.0), aspect));
 
     auto corners = style.corners_or_new();
     QVector4D radii;
@@ -216,12 +225,14 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     stream.skipMatrixOpacity();
     stream << float(shadowSize / minDimension) * 2.0f // size
            << float(borderLeft.size().value_or(0.0)) / minDimension // border_width
+           << float(outlineLeft.size().value_or(0.0)) / minDimension // outline_width
            << aspect // aspect
            << offset / minDimension // offset
            << radii / minDimension // radius
            << ShaderNode::toPremultiplied(style.background_or_new().color().value_or(Qt::transparent)) // color
            << ShaderNode::toPremultiplied(shadow.color().value_or(Qt::transparent)) // shadow_color
-           << ShaderNode::toPremultiplied(borderLeft.color().value_or(Qt::transparent)); // border_color
+           << ShaderNode::toPremultiplied(borderLeft.color().value_or(Qt::transparent)) // border_color
+           << ShaderNode::toPremultiplied(outlineLeft.color().value_or(Qt::transparent)); // outline_color
 
     shaderNode->markDirty(QSGNode::DirtyMaterial);
 
