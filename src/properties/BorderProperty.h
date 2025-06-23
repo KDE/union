@@ -29,7 +29,7 @@ class BorderPropertyPrivate;
 \inmodule core
 \ingroup core-properties
 
-\brief A property group containing properties of a background's border.
+\brief A property group containing properties of an element's border.
 
 */
 class UNION_EXPORT BorderProperty
