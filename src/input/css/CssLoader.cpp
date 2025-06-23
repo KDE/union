@@ -47,9 +47,11 @@ QColor to_qcolor(const cssparser::Value &value)
 }
 
 template<typename T>
-inline int toEnumIntValue(const std::string &value)
+inline int toEnumIntValue(/* intentional copy */ std::string value)
 {
     const auto metaEnum = QMetaEnum::fromType<T>();
+
+    std::erase(value, '-');
 
     auto count = metaEnum.keyCount();
     for (int i = 0; i < count; ++i) {
