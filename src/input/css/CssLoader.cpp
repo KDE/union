@@ -309,10 +309,8 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
 
 void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto background = output.background().value_or(BackgroundProperty{});
-
-    auto border = background.border().value_or(BorderProperty{});
-    auto corners = background.corners().value_or(CornersProperty{});
+    auto border = output.border().value_or(BorderProperty{});
+    auto corners = output.corners().value_or(CornersProperty{});
 
     if (property.name == "border-radius"s) {
         if (property.values.size() == 1) {
@@ -330,8 +328,6 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
     }
 
     if (property.name == "border"s) {
-        // auto style = std::get<std::string>(property.values.at(1));
-
         LineProperty line;
         line.setSize(to_px(property.value(0)));
         line.setColor(to_qcolor(property.value(2)));
@@ -343,14 +339,10 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
     }
 
     if (border.hasAnyValue()) {
-        background.setBorder(border);
+        output.setBorder(border);
     }
     if (corners.hasAnyValue()) {
-        background.setCorners(corners);
-    }
-
-    if (background.hasAnyValue()) {
-        output.setBackground(background);
+        output.setCorners(corners);
     }
 }
 
@@ -382,8 +374,7 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
 
 void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto background = output.background().value_or(BackgroundProperty{});
-    auto shadow = background.shadow().value_or(ShadowProperty{});
+    auto shadow = output.shadow().value_or(ShadowProperty{});
 
     if (property.name == "shadow") {
         shadow.setSize(to_px(property.value(0)));
@@ -395,10 +386,6 @@ void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Proper
     }
 
     if (shadow.hasAnyValue()) {
-        background.setShadow(shadow);
-    }
-
-    if (background.hasAnyValue()) {
-        output.setBackground(background);
+        output.setShadow(shadow);
     }
 }
