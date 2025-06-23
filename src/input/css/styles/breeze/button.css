@@ -21,6 +21,7 @@ toolbutton {
     }
 
     &:visual-focus {
+        outline: 2px solid var(--focus-color);
     }
 
     &:pressed {
