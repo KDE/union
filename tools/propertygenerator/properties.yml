@@ -152,53 +152,53 @@ background:
         yOffset: qreal
         flags: Union::Properties::ImageFlags
 
-    border:
-        # \brief A property group containing properties of a background's border.
+border:
+    # \brief A property group containing properties of an element's border.
 
-        left: &line
-            # \brief A property group containing the properties of a line.
+    left: &line
+        # \brief A property group containing the properties of a line.
 
-            size: qreal
-            color: QColor
-            style: Union::Properties::LineStyle
-            image: *image
-
-        right: *line
-        top: *line
-        bottom: *line
-
-    corners:
-        # \brief A property group containing properties of a background's corners.
-
-        topLeft: &corner
-            # \brief A property group containing the properties of a corner.
-
-            radius: qreal
-            width: qreal
-            height: qreal
-            color: QColor
-            image: *image
-
-        topRight: *corner
-        bottomLeft: *corner
-        bottomRight: *corner
-
-    shadow:
-        # \brief A property group containing properties relating to an element's shadow.
-
-        offset:
-            horizontal: qreal
-            vertical: qreal
-
-        color: QColor
         size: qreal
+        color: QColor
+        style: Union::Properties::LineStyle
+        image: *image
 
-        left: *line
-        right: *line
-        top: *line
-        bottom: *line
+    right: *line
+    top: *line
+    bottom: *line
 
-        topLeft: *corner
-        topRight: *corner
-        bottomLeft: *corner
-        bottomRight: *corner
+corners:
+    # \brief A property group containing properties of a background's corners.
+
+    topLeft: &corner
+        # \brief A property group containing the properties of a corner.
+
+        radius: qreal
+        width: qreal
+        height: qreal
+        color: QColor
+        image: *image
+
+    topRight: *corner
+    bottomLeft: *corner
+    bottomRight: *corner
+
+shadow:
+    # \brief A property group containing properties relating to an element's shadow.
+
+    offset:
+        horizontal: qreal
+        vertical: qreal
+
+    color: QColor
+    size: qreal
+
+    left: *line
+    right: *line
+    top: *line
+    bottom: *line
+
+    topLeft: *corner
+    topRight: *corner
+    bottomLeft: *corner
+    bottomRight: *corner
