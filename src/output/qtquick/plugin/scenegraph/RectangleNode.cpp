@@ -33,18 +33,18 @@ RectangleNode::RectangleNode()
 {
 }
 
-Union::Properties::BackgroundProperty RectangleNode::rectangle() const
+Union::Properties::StyleProperty RectangleNode::style() const
 {
-    return m_rectangle;
+    return m_style;
 }
 
-void RectangleNode::setRectangle(const Union::Properties::BackgroundProperty &newRectangle)
+void RectangleNode::setStyle(const Union::Properties::StyleProperty &newStyle)
 {
-    if (newRectangle == m_rectangle) {
+    if (newStyle == m_style) {
         return;
     }
 
-    m_rectangle = newRectangle;
+    m_style = newStyle;
     rebuildHierarchy();
 }
 
@@ -52,40 +52,41 @@ void RectangleNode::update(QQuickWindow *window)
 {
     ensureHierarchy();
 
-    if (!m_rectangle.hasAnyValue()) {
+    if (!m_style.hasAnyValue()) {
         return;
     }
 
     QMarginsF borderSizes;
-    if (m_rectangle.border().has_value()) {
-        auto border = m_rectangle.border().value();
-        borderSizes.setLeft(border.left().value_or(LineProperty{}).size().value_or(0.0));
-        borderSizes.setRight(border.right().value_or(LineProperty{}).size().value_or(0.0));
-        borderSizes.setTop(border.top().value_or(LineProperty{}).size().value_or(0.0));
-        borderSizes.setBottom(border.bottom().value_or(LineProperty{}).size().value_or(0.0));
+    if (m_style.border().has_value()) {
+        auto border = m_style.border().value();
+        borderSizes.setLeft(border.left_or_new().size().value_or(0.0));
+        borderSizes.setRight(border.right_or_new().size().value_or(0.0));
+        borderSizes.setTop(border.top_or_new().size().value_or(0.0));
+        borderSizes.setBottom(border.bottom_or_new().size().value_or(0.0));
     }
 
-    if (m_rectangle.shadow().has_value()) {
+    if (m_style.shadow().has_value()) {
         auto shadowNode = static_cast<ShadowNode *>(childAtIndex(int(SubNodeIndex::Shadow)));
-        shadowNode->setShadow(m_rectangle.shadow().value());
+        shadowNode->setShadow(m_style.shadow().value());
         shadowNode->rect = rect;
         shadowNode->update(window);
     }
 
     auto center = static_cast<AreaNode *>(childAtIndex(int(SubNodeIndex::Center)));
-    center->color = m_rectangle.color().value_or(Qt::transparent);
-    center->image = m_rectangle.image();
+    auto background = m_style.background_or_new();
+    center->color = background.color().value_or(Qt::transparent);
+    center->image = background.image();
     center->rect = rect - borderSizes;
     center->update(window);
 
-    if (m_rectangle.border().has_value()) {
-        auto borders = m_rectangle.border().value();
+    if (m_style.border().has_value()) {
+        auto borders = m_style.border().value();
 
         for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, LineProperty>>{
-                 {SubNodeIndex::Left, borders.left().value_or(LineProperty{})},
-                 {SubNodeIndex::Right, borders.right().value_or(LineProperty{})},
-                 {SubNodeIndex::Top, borders.top().value_or(LineProperty{})},
-                 {SubNodeIndex::Bottom, borders.bottom().value_or(LineProperty{})},
+                 {SubNodeIndex::Left, borders.left_or_new()},
+                 {SubNodeIndex::Right, borders.right_or_new()},
+                 {SubNodeIndex::Top, borders.top_or_new()},
+                 {SubNodeIndex::Bottom, borders.bottom_or_new()},
              }) {
             auto lineNode = static_cast<LineNode *>(childAtIndex(int(subNode)));
 
@@ -123,14 +124,14 @@ void RectangleNode::update(QQuickWindow *window)
         }
     }
 
-    if (m_rectangle.corners().has_value()) {
-        auto corners = m_rectangle.corners().value();
+    if (m_style.corners().has_value()) {
+        auto corners = m_style.corners().value();
 
         for (auto [position, property] : std::initializer_list<std::pair<SubNodeIndex, CornerProperty>>{
-                 {SubNodeIndex::TopLeft, corners.topLeft().value_or(CornerProperty{})},
-                 {SubNodeIndex::TopRight, corners.topRight().value_or(CornerProperty{})},
-                 {SubNodeIndex::BottomLeft, corners.bottomLeft().value_or(CornerProperty{})},
-                 {SubNodeIndex::BottomRight, corners.bottomRight().value_or(CornerProperty{})},
+                 {SubNodeIndex::TopLeft, corners.topLeft_or_new()},
+                 {SubNodeIndex::TopRight, corners.topRight_or_new()},
+                 {SubNodeIndex::BottomLeft, corners.bottomLeft_or_new()},
+                 {SubNodeIndex::BottomRight, corners.bottomRight_or_new()},
              }) {
             auto cornerNode = static_cast<CornerNode *>(childAtIndex(int(position)));
 
@@ -177,11 +178,11 @@ void RectangleNode::update(QQuickWindow *window)
 
 void RectangleNode::buildNodeHierarchy()
 {
-    if (!m_rectangle.hasAnyValue()) {
+    if (!m_style.hasAnyValue()) {
         return;
     }
 
-    if (m_rectangle.shadow().has_value()) {
+    if (m_style.shadow().has_value()) {
         ensureChildNode<ShadowNode>(int(SubNodeIndex::Shadow));
     } else {
         ensureChildNode<PlaceholderNode>(int(SubNodeIndex::Shadow));

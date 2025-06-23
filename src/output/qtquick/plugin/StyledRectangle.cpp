@@ -88,8 +88,8 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
     }
 
     auto rect = boundingRect();
-    auto background = query->properties().background().value();
-    auto minSize = minimumBackgroundSize(background);
+    auto style = query->properties();
+    auto minSize = minimumSize(style);
 
     // If we cannot fit the background image into the required rect, just don't
     // display anything.'
@@ -100,13 +100,11 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
     // Ensure we *don't* delete the node at this point.
     guard.dismiss();
 
-    if (background.image().value_or(ImageProperty{}).hasAnyValue()) {
-        return updateRectangleNode(node, background);
+    if (style.background_or_new().image_or_new().hasAnyValue()) {
+        return updateRectangleNode(node, style);
     } else {
-        return updateShaderNode(node, background);
+        return updateShaderNode(node, style);
     }
-
-    return node;
 }
 
 void StyledRectangle::updateImplicitSize()
@@ -128,54 +126,54 @@ void StyledRectangle::updateImplicitSize()
     update();
 }
 
-QSizeF StyledRectangle::minimumBackgroundSize(const Properties::BackgroundProperty &background)
+QSizeF StyledRectangle::minimumSize(const Properties::StyleProperty &style)
 {
-    if (!background.corners() && !background.border()) {
+    if (!style.corners() && !style.border()) {
         return QSizeF{0.0, 0.0};
     }
 
-    auto corners = background.corners().value_or(Properties::CornersProperty{});
-    auto border = background.border().value_or(Properties::BorderProperty{});
+    auto corners = style.corners_or_new();
+    auto border = style.border_or_new();
 
     auto left = std::initializer_list<qreal>{
-        corners.topLeft().value_or(Properties::CornerProperty{}).width().value_or(0.0),
-        border.left().value_or(Properties::LineProperty{}).size().value_or(0.0),
-        corners.bottomLeft().value_or(Properties::CornerProperty{}).width().value_or(0.0),
+        corners.topLeft_or_new().width().value_or(0.0),
+        border.left_or_new().size().value_or(0.0),
+        corners.bottomLeft_or_new().width().value_or(0.0),
     };
     auto right = std::initializer_list<qreal>{
-        corners.topRight().value_or(Properties::CornerProperty{}).width().value_or(0.0),
-        border.right().value_or(Properties::LineProperty{}).size().value_or(0.0),
-        corners.bottomRight().value_or(Properties::CornerProperty{}).width().value_or(0.0),
+        corners.topRight_or_new().width().value_or(0.0),
+        border.right_or_new().size().value_or(0.0),
+        corners.bottomRight_or_new().width().value_or(0.0),
     };
     auto top = std::initializer_list<qreal>{
-        corners.topLeft().value_or(Properties::CornerProperty{}).height().value_or(0.0),
-        border.top().value_or(Properties::LineProperty{}).size().value_or(0.0),
-        corners.topRight().value_or(Properties::CornerProperty{}).height().value_or(0.0),
+        corners.topLeft_or_new().height().value_or(0.0),
+        border.top_or_new().size().value_or(0.0),
+        corners.topRight_or_new().height().value_or(0.0),
     };
     auto bottom = std::initializer_list<qreal>{
-        corners.bottomLeft().value_or(Properties::CornerProperty{}).height().value_or(0.0),
-        border.bottom().value_or(Properties::LineProperty{}).size().value_or(0.0),
-        corners.bottomRight().value_or(Properties::CornerProperty{}).height().value_or(0.0),
+        corners.bottomLeft_or_new().height().value_or(0.0),
+        border.bottom_or_new().size().value_or(0.0),
+        corners.bottomRight_or_new().height().value_or(0.0),
     };
 
     return QSizeF{std::max(left) + std::max(right), std::max(top) + std::max(bottom)};
 }
 
-QSGNode *StyledRectangle::updateRectangleNode(QSGNode *node, const Union::Properties::BackgroundProperty &background)
+QSGNode *StyledRectangle::updateRectangleNode(QSGNode *node, const Union::Properties::StyleProperty &style)
 {
     if (!node) {
         node = new RectangleNode{};
     }
 
     auto rectangleNode = static_cast<RectangleNode *>(node);
-    rectangleNode->setRectangle(background);
+    rectangleNode->setStyle(style);
     rectangleNode->rect = boundingRect();
     rectangleNode->update(window());
 
     return rectangleNode;
 }
 
-QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const BackgroundProperty &background)
+QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &style)
 {
     if (!node) {
         node = new ShaderNode{};
@@ -197,22 +195,22 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const BackgroundProper
     auto aspect = calculateAspect(rect);
     auto minDimension = float(std::min(rect.width(), rect.height()));
 
-    auto borderLeft = background.border().value_or(BorderProperty{}).left().value_or(LineProperty{});
+    auto borderLeft = style.border_or_new().left_or_new();
 
-    auto shadow = background.shadow().value_or(ShadowProperty{});
+    auto shadow = style.shadow_or_new();
     auto shadowSize = shadow.size().value_or(0.0);
 
-    auto offsets = shadow.offset().value_or(OffsetProperty{});
+    auto offsets = shadow.offset_or_new();
     auto offset = QVector2D{float(offsets.horizontal().value_or(0.0)), float(offsets.vertical().value_or(0.0))};
 
     shaderNode->setRect(adjustRectForShadow(rect, shadowSize, offset, aspect));
 
-    auto corners = background.corners().value_or(CornersProperty{});
+    auto corners = style.corners_or_new();
     QVector4D radii;
-    radii.setX(corners.topLeft().value_or(CornerProperty{}).radius().value_or(0.0));
-    radii.setY(corners.topRight().value_or(CornerProperty{}).radius().value_or(0.0));
-    radii.setZ(corners.bottomLeft().value_or(CornerProperty{}).radius().value_or(0.0));
-    radii.setW(corners.bottomRight().value_or(CornerProperty{}).radius().value_or(0.0));
+    radii.setX(corners.topLeft_or_new().radius().value_or(0.0));
+    radii.setY(corners.topRight_or_new().radius().value_or(0.0));
+    radii.setZ(corners.bottomLeft_or_new().radius().value_or(0.0));
+    radii.setW(corners.bottomRight_or_new().radius().value_or(0.0));
 
     UniformDataStream stream(shaderNode->uniformData());
     stream.skipMatrixOpacity();
@@ -221,9 +219,10 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const BackgroundProper
            << aspect // aspect
            << offset / minDimension // offset
            << radii / minDimension // radius
-           << ShaderNode::toPremultiplied(background.color().value_or(Qt::transparent)) // color
+           << ShaderNode::toPremultiplied(style.background_or_new().color().value_or(Qt::transparent)) // color
            << ShaderNode::toPremultiplied(shadow.color().value_or(Qt::transparent)) // shadow_color
            << ShaderNode::toPremultiplied(borderLeft.color().value_or(Qt::transparent)); // border_color
+
     shaderNode->markDirty(QSGNode::DirtyMaterial);
 
     shaderNode->update();
