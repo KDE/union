@@ -280,6 +280,18 @@ StyleRule::Ptr PlasmaSvgLoader::createStyle(const SelectorList &selectors, ryml:
 
     with_child(node, "background", [&](auto node) {
         properties.setBackground(createBackgroundProperty(node, context));
+
+        with_child(node, "border", [&](auto node) {
+            properties.setBorder(createBorderProperty(node, context));
+        });
+
+        with_child(node, "corners", [&](auto node) {
+            properties.setCorners(createCornersProperty(node, context));
+        });
+
+        with_child(node, "shadow", [&](auto node) {
+            properties.setShadow(createShadowProperty(node, context));
+        });
     });
 
     properties.setPalette(createPaletteProperty(context));
@@ -398,18 +410,6 @@ std::optional<BackgroundProperty> PlasmaSvgLoader::createBackgroundProperty(ryml
 
     with_child(node, "image", [&](auto node) {
         background.setImage(createImageProperty(node, context));
-    });
-
-    with_child(node, "border", [&](auto node) {
-        background.setBorder(createBorderProperty(node, context));
-    });
-
-    with_child(node, "corners", [&](auto node) {
-        background.setCorners(createCornersProperty(node, context));
-    });
-
-    with_child(node, "shadow", [&](auto node) {
-        background.setShadow(createShadowProperty(node, context));
     });
 
     return background;
