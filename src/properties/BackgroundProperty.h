@@ -12,10 +12,7 @@
 
 #include <QColor>
 
-#include "BorderProperty.h"
-#include "CornersProperty.h"
 #include "ImageProperty.h"
-#include "ShadowProperty.h"
 
 #include "union_export.h"
 
@@ -86,39 +83,6 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setImage(const std::optional<ImageProperty> &newValue);
-
-    /*!
-     * Returns the value of border.
-     */
-    std::optional<BorderProperty> border() const;
-    /*!
-     * Set the value of border.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setBorder(const std::optional<BorderProperty> &newValue);
-
-    /*!
-     * Returns the value of corners.
-     */
-    std::optional<CornersProperty> corners() const;
-    /*!
-     * Set the value of corners.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setCorners(const std::optional<CornersProperty> &newValue);
-
-    /*!
-     * Returns the value of shadow.
-     */
-    std::optional<ShadowProperty> shadow() const;
-    /*!
-     * Set the value of shadow.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setShadow(const std::optional<ShadowProperty> &newValue);
 
     /*!
      * Returns if this property group has any value set.

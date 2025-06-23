@@ -16,9 +16,6 @@ class Union::Properties::BackgroundPropertyPrivate
 public:
     std::optional<QColor> color;
     std::optional<ImageProperty> image;
-    std::optional<BorderProperty> border;
-    std::optional<CornersProperty> corners;
-    std::optional<ShadowProperty> shadow;
 };
 
 BackgroundProperty::BackgroundProperty()
@@ -31,9 +28,6 @@ BackgroundProperty::BackgroundProperty(const BackgroundProperty &other)
 {
     d->color = other.d->color;
     d->image = other.d->image;
-    d->border = other.d->border;
-    d->corners = other.d->corners;
-    d->shadow = other.d->shadow;
 }
 
 BackgroundProperty::BackgroundProperty(BackgroundProperty &&other)
@@ -48,9 +42,6 @@ BackgroundProperty &BackgroundProperty::operator=(const BackgroundProperty &othe
     if (this != &other) {
         d->color = other.d->color;
         d->image = other.d->image;
-        d->border = other.d->border;
-        d->corners = other.d->corners;
-        d->shadow = other.d->shadow;
     }
     return *this;
 }
@@ -87,45 +78,6 @@ void BackgroundProperty::setImage(const std::optional<ImageProperty> &newValue)
 
     d->image = newValue;
 }
-std::optional<BorderProperty> BackgroundProperty::border() const
-{
-    return d->border;
-}
-
-void BackgroundProperty::setBorder(const std::optional<BorderProperty> &newValue)
-{
-    if (newValue == d->border) {
-        return;
-    }
-
-    d->border = newValue;
-}
-std::optional<CornersProperty> BackgroundProperty::corners() const
-{
-    return d->corners;
-}
-
-void BackgroundProperty::setCorners(const std::optional<CornersProperty> &newValue)
-{
-    if (newValue == d->corners) {
-        return;
-    }
-
-    d->corners = newValue;
-}
-std::optional<ShadowProperty> BackgroundProperty::shadow() const
-{
-    return d->shadow;
-}
-
-void BackgroundProperty::setShadow(const std::optional<ShadowProperty> &newValue)
-{
-    if (newValue == d->shadow) {
-        return;
-    }
-
-    d->shadow = newValue;
-}
 
 bool BackgroundProperty::hasAnyValue() const
 {
@@ -133,15 +85,6 @@ bool BackgroundProperty::hasAnyValue() const
         return true;
     }
     if (d->image.has_value() && d->image->hasAnyValue()) {
-        return true;
-    }
-    if (d->border.has_value() && d->border->hasAnyValue()) {
-        return true;
-    }
-    if (d->corners.has_value() && d->corners->hasAnyValue()) {
-        return true;
-    }
-    if (d->shadow.has_value() && d->shadow->hasAnyValue()) {
         return true;
     }
     return false;
@@ -162,36 +105,6 @@ void BackgroundProperty::resolveProperties(const BackgroundProperty &source, Bac
             destination.d->image = property;
         }
     }
-    if (source.d->border.has_value()) {
-        BorderProperty property;
-        if (destination.d->border.has_value()) {
-            property = destination.d->border.value();
-        }
-        BorderProperty::resolveProperties(source.d->border.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->border = property;
-        }
-    }
-    if (source.d->corners.has_value()) {
-        CornersProperty property;
-        if (destination.d->corners.has_value()) {
-            property = destination.d->corners.value();
-        }
-        CornersProperty::resolveProperties(source.d->corners.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->corners = property;
-        }
-    }
-    if (source.d->shadow.has_value()) {
-        ShadowProperty property;
-        if (destination.d->shadow.has_value()) {
-            property = destination.d->shadow.value();
-        }
-        ShadowProperty::resolveProperties(source.d->shadow.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->shadow = property;
-        }
-    }
 }
 
 BackgroundProperty BackgroundProperty::empty()
@@ -199,9 +112,6 @@ BackgroundProperty BackgroundProperty::empty()
     BackgroundProperty result;
     result.d->color = emptyValue<QColor>();
     result.d->image = emptyValue<ImageProperty>();
-    result.d->border = emptyValue<BorderProperty>();
-    result.d->corners = emptyValue<CornersProperty>();
-    result.d->shadow = emptyValue<ShadowProperty>();
     return result;
 }
 
@@ -213,15 +123,6 @@ bool Union::Properties::operator==(const BackgroundProperty &left, const Backgro
     if (left.image() != right.image()) {
         return false;
     }
-    if (left.border() != right.border()) {
-        return false;
-    }
-    if (left.corners() != right.corners()) {
-        return false;
-    }
-    if (left.shadow() != right.shadow()) {
-        return false;
-    }
     return true;
 }
 
@@ -231,9 +132,6 @@ QDebug operator<<(QDebug debug, const Union::Properties::BackgroundProperty &typ
     debug.nospace() << "BackgroundProperty(" //
                     << "color: " << type.color() //
                     << ", image: " << type.image() //
-                    << ", border: " << type.border() //
-                    << ", corners: " << type.corners() //
-                    << ", shadow: " << type.shadow() //
                     << ")";
     return debug;
 }

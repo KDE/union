@@ -18,9 +18,6 @@ BackgroundPropertyGroup::BackgroundPropertyGroup(QuickStyle *style)
     , m_style(style)
 {
     m_image = std::make_unique<ImagePropertyGroup>(m_style);
-    m_border = std::make_unique<BorderPropertyGroup>(m_style);
-    m_corners = std::make_unique<CornersPropertyGroup>(m_style);
-    m_shadow = std::make_unique<ShadowPropertyGroup>(m_style);
 }
 
 void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
@@ -28,9 +25,6 @@ void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
     m_state = newState;
     Q_EMIT colorChanged();
     m_image->update(newState.image().value_or(ImageProperty{}));
-    m_border->update(newState.border().value_or(BorderProperty{}));
-    m_corners->update(newState.corners().value_or(CornersProperty{}));
-    m_shadow->update(newState.shadow().value_or(ShadowProperty{}));
 
     Q_EMIT updated();
 }
@@ -48,21 +42,6 @@ QJSValue BackgroundPropertyGroup::color() const
 ImagePropertyGroup *BackgroundPropertyGroup::image() const
 {
     return m_image.get();
-}
-
-BorderPropertyGroup *BackgroundPropertyGroup::border() const
-{
-    return m_border.get();
-}
-
-CornersPropertyGroup *BackgroundPropertyGroup::corners() const
-{
-    return m_corners.get();
-}
-
-ShadowPropertyGroup *BackgroundPropertyGroup::shadow() const
-{
-    return m_shadow.get();
 }
 
 #include "moc_BackgroundPropertyGroup.cpp"

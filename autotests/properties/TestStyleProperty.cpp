@@ -27,6 +27,9 @@ private Q_SLOTS:
         QVERIFY(!property.text().has_value());
         QVERIFY(!property.icon().has_value());
         QVERIFY(!property.background().has_value());
+        QVERIFY(!property.border().has_value());
+        QVERIFY(!property.corners().has_value());
+        QVERIFY(!property.shadow().has_value());
     }
 
     void testHasAnyValue()
@@ -91,6 +94,39 @@ private Q_SLOTS:
             property.setBackground(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
+        {
+            // Assigning an empty value to a property should have no effect.
+            property.setBorder(BorderProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setBorder(testBorderPropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setBorder(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            // Assigning an empty value to a property should have no effect.
+            property.setCorners(CornersProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setCorners(testCornersPropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setCorners(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            // Assigning an empty value to a property should have no effect.
+            property.setShadow(ShadowProperty{});
+            QVERIFY(!property.hasAnyValue());
+
+            property.setShadow(testShadowPropertyInstance());
+            QVERIFY(property.hasAnyValue());
+
+            property.setShadow(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -111,6 +147,9 @@ private Q_SLOTS:
         source.setText(testTextPropertyInstance());
         source.setIcon(testIconPropertyInstance());
         source.setBackground(testBackgroundPropertyInstance());
+        source.setBorder(testBorderPropertyInstance());
+        source.setCorners(testCornersPropertyInstance());
+        source.setShadow(testShadowPropertyInstance());
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());
@@ -124,6 +163,9 @@ private Q_SLOTS:
         QCOMPARE(destination.text(), source.text());
         QCOMPARE(destination.icon(), source.icon());
         QCOMPARE(destination.background(), source.background());
+        QCOMPARE(destination.border(), source.border());
+        QCOMPARE(destination.corners(), source.corners());
+        QCOMPARE(destination.shadow(), source.shadow());
     }
 };
 

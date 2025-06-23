@@ -16,9 +16,6 @@
 #include <properties/BackgroundProperty.h>
 
 #include "ImagePropertyGroup.h"
-#include "BorderPropertyGroup.h"
-#include "CornersPropertyGroup.h"
-#include "ShadowPropertyGroup.h"
 // clang-format on
 
 class QuickStyle;
@@ -58,35 +55,8 @@ public:
     Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
-    /*!
-     * \qmlproperty BorderPropertyGroup BackgroundPropertyGroup::border
-     *
-     * Exposes BackgroundProperty::BorderProperty to QML.
-     */
-    Q_PROPERTY(BorderPropertyGroup *border READ border CONSTANT)
-    BorderPropertyGroup *border() const;
-
-    /*!
-     * \qmlproperty CornersPropertyGroup BackgroundPropertyGroup::corners
-     *
-     * Exposes BackgroundProperty::CornersProperty to QML.
-     */
-    Q_PROPERTY(CornersPropertyGroup *corners READ corners CONSTANT)
-    CornersPropertyGroup *corners() const;
-
-    /*!
-     * \qmlproperty ShadowPropertyGroup BackgroundPropertyGroup::shadow
-     *
-     * Exposes BackgroundProperty::ShadowProperty to QML.
-     */
-    Q_PROPERTY(ShadowPropertyGroup *shadow READ shadow CONSTANT)
-    ShadowPropertyGroup *shadow() const;
-
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
-    std::unique_ptr<BorderPropertyGroup> m_border;
-    std::unique_ptr<CornersPropertyGroup> m_corners;
-    std::unique_ptr<ShadowPropertyGroup> m_shadow;
     Union::Properties::BackgroundProperty m_state;
 };

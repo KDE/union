@@ -71,6 +71,9 @@ StyleProperty testStylePropertyInstance()
     instance.setText(testTextPropertyInstance());
     instance.setIcon(testIconPropertyInstance());
     instance.setBackground(testBackgroundPropertyInstance());
+    instance.setBorder(testBorderPropertyInstance());
+    instance.setCorners(testCornersPropertyInstance());
+    instance.setShadow(testShadowPropertyInstance());
 
     return instance;
 }
@@ -175,9 +178,6 @@ BackgroundProperty testBackgroundPropertyInstance()
 
     instance.setColor(testQColorInstance());
     instance.setImage(testImagePropertyInstance());
-    instance.setBorder(testBorderPropertyInstance());
-    instance.setCorners(testCornersPropertyInstance());
-    instance.setShadow(testShadowPropertyInstance());
 
     return instance;
 }
