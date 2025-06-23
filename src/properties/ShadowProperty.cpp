@@ -84,6 +84,11 @@ std::optional<OffsetProperty> ShadowProperty::offset() const
     return d->offset;
 }
 
+OffsetProperty ShadowProperty::offset_or_new() const
+{
+    return d->offset.value_or(OffsetProperty{});
+}
+
 void ShadowProperty::setOffset(const std::optional<OffsetProperty> &newValue)
 {
     if (newValue == d->offset) {
@@ -123,6 +128,11 @@ std::optional<LineProperty> ShadowProperty::left() const
     return d->left;
 }
 
+LineProperty ShadowProperty::left_or_new() const
+{
+    return d->left.value_or(LineProperty{});
+}
+
 void ShadowProperty::setLeft(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->left) {
@@ -134,6 +144,11 @@ void ShadowProperty::setLeft(const std::optional<LineProperty> &newValue)
 std::optional<LineProperty> ShadowProperty::right() const
 {
     return d->right;
+}
+
+LineProperty ShadowProperty::right_or_new() const
+{
+    return d->right.value_or(LineProperty{});
 }
 
 void ShadowProperty::setRight(const std::optional<LineProperty> &newValue)
@@ -149,6 +164,11 @@ std::optional<LineProperty> ShadowProperty::top() const
     return d->top;
 }
 
+LineProperty ShadowProperty::top_or_new() const
+{
+    return d->top.value_or(LineProperty{});
+}
+
 void ShadowProperty::setTop(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->top) {
@@ -160,6 +180,11 @@ void ShadowProperty::setTop(const std::optional<LineProperty> &newValue)
 std::optional<LineProperty> ShadowProperty::bottom() const
 {
     return d->bottom;
+}
+
+LineProperty ShadowProperty::bottom_or_new() const
+{
+    return d->bottom.value_or(LineProperty{});
 }
 
 void ShadowProperty::setBottom(const std::optional<LineProperty> &newValue)
@@ -175,6 +200,11 @@ std::optional<CornerProperty> ShadowProperty::topLeft() const
     return d->topLeft;
 }
 
+CornerProperty ShadowProperty::topLeft_or_new() const
+{
+    return d->topLeft.value_or(CornerProperty{});
+}
+
 void ShadowProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
 {
     if (newValue == d->topLeft) {
@@ -186,6 +216,11 @@ void ShadowProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
 std::optional<CornerProperty> ShadowProperty::topRight() const
 {
     return d->topRight;
+}
+
+CornerProperty ShadowProperty::topRight_or_new() const
+{
+    return d->topRight.value_or(CornerProperty{});
 }
 
 void ShadowProperty::setTopRight(const std::optional<CornerProperty> &newValue)
@@ -201,6 +236,11 @@ std::optional<CornerProperty> ShadowProperty::bottomLeft() const
     return d->bottomLeft;
 }
 
+CornerProperty ShadowProperty::bottomLeft_or_new() const
+{
+    return d->bottomLeft.value_or(CornerProperty{});
+}
+
 void ShadowProperty::setBottomLeft(const std::optional<CornerProperty> &newValue)
 {
     if (newValue == d->bottomLeft) {
@@ -212,6 +252,11 @@ void ShadowProperty::setBottomLeft(const std::optional<CornerProperty> &newValue
 std::optional<CornerProperty> ShadowProperty::bottomRight() const
 {
     return d->bottomRight;
+}
+
+CornerProperty ShadowProperty::bottomRight_or_new() const
+{
+    return d->bottomRight.value_or(CornerProperty{});
 }
 
 void ShadowProperty::setBottomRight(const std::optional<CornerProperty> &newValue)

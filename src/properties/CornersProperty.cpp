@@ -63,6 +63,11 @@ std::optional<CornerProperty> CornersProperty::topLeft() const
     return d->topLeft;
 }
 
+CornerProperty CornersProperty::topLeft_or_new() const
+{
+    return d->topLeft.value_or(CornerProperty{});
+}
+
 void CornersProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
 {
     if (newValue == d->topLeft) {
@@ -74,6 +79,11 @@ void CornersProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
 std::optional<CornerProperty> CornersProperty::topRight() const
 {
     return d->topRight;
+}
+
+CornerProperty CornersProperty::topRight_or_new() const
+{
+    return d->topRight.value_or(CornerProperty{});
 }
 
 void CornersProperty::setTopRight(const std::optional<CornerProperty> &newValue)
@@ -89,6 +99,11 @@ std::optional<CornerProperty> CornersProperty::bottomLeft() const
     return d->bottomLeft;
 }
 
+CornerProperty CornersProperty::bottomLeft_or_new() const
+{
+    return d->bottomLeft.value_or(CornerProperty{});
+}
+
 void CornersProperty::setBottomLeft(const std::optional<CornerProperty> &newValue)
 {
     if (newValue == d->bottomLeft) {
@@ -100,6 +115,11 @@ void CornersProperty::setBottomLeft(const std::optional<CornerProperty> &newValu
 std::optional<CornerProperty> CornersProperty::bottomRight() const
 {
     return d->bottomRight;
+}
+
+CornerProperty CornersProperty::bottomRight_or_new() const
+{
+    return d->bottomRight.value_or(CornerProperty{});
 }
 
 void CornersProperty::setBottomRight(const std::optional<CornerProperty> &newValue)

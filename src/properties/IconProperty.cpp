@@ -66,6 +66,11 @@ std::optional<AlignmentProperty> IconProperty::alignment() const
     return d->alignment;
 }
 
+AlignmentProperty IconProperty::alignment_or_new() const
+{
+    return d->alignment.value_or(AlignmentProperty{});
+}
+
 void IconProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
 {
     if (newValue == d->alignment) {

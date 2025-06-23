@@ -66,6 +66,10 @@ public:
      */
     std::optional<LineProperty> left() const;
     /*!
+     * Returns left if set or a new LineProperty if not.
+     */
+    LineProperty left_or_new() const;
+    /*!
      * Set the value of left.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -76,6 +80,10 @@ public:
      * Returns the value of right.
      */
     std::optional<LineProperty> right() const;
+    /*!
+     * Returns right if set or a new LineProperty if not.
+     */
+    LineProperty right_or_new() const;
     /*!
      * Set the value of right.
      *
@@ -88,6 +96,10 @@ public:
      */
     std::optional<LineProperty> top() const;
     /*!
+     * Returns top if set or a new LineProperty if not.
+     */
+    LineProperty top_or_new() const;
+    /*!
      * Set the value of top.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -98,6 +110,10 @@ public:
      * Returns the value of bottom.
      */
     std::optional<LineProperty> bottom() const;
+    /*!
+     * Returns bottom if set or a new LineProperty if not.
+     */
+    LineProperty bottom_or_new() const;
     /*!
      * Set the value of bottom.
      *

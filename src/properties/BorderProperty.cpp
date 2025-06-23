@@ -63,6 +63,11 @@ std::optional<LineProperty> BorderProperty::left() const
     return d->left;
 }
 
+LineProperty BorderProperty::left_or_new() const
+{
+    return d->left.value_or(LineProperty{});
+}
+
 void BorderProperty::setLeft(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->left) {
@@ -74,6 +79,11 @@ void BorderProperty::setLeft(const std::optional<LineProperty> &newValue)
 std::optional<LineProperty> BorderProperty::right() const
 {
     return d->right;
+}
+
+LineProperty BorderProperty::right_or_new() const
+{
+    return d->right.value_or(LineProperty{});
 }
 
 void BorderProperty::setRight(const std::optional<LineProperty> &newValue)
@@ -89,6 +99,11 @@ std::optional<LineProperty> BorderProperty::top() const
     return d->top;
 }
 
+LineProperty BorderProperty::top_or_new() const
+{
+    return d->top.value_or(LineProperty{});
+}
+
 void BorderProperty::setTop(const std::optional<LineProperty> &newValue)
 {
     if (newValue == d->top) {
@@ -100,6 +115,11 @@ void BorderProperty::setTop(const std::optional<LineProperty> &newValue)
 std::optional<LineProperty> BorderProperty::bottom() const
 {
     return d->bottom;
+}
+
+LineProperty BorderProperty::bottom_or_new() const
+{
+    return d->bottom.value_or(LineProperty{});
 }
 
 void BorderProperty::setBottom(const std::optional<LineProperty> &newValue)

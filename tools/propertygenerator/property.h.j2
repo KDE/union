@@ -83,6 +83,12 @@ public:
      * Returns the value of {{ property.name }}.
      */
     std::optional<{{ property.type }}> {{ property.name }}() const;
+{% if property.is_group %}
+    /*!
+     * Returns {{ property.name }} if set or a new {{ property.type }} if not.
+     */
+    {{ property.type }} {{ property.name }}_or_new() const;
+{% endif %}
     /*!
      * Set the value of {{ property.name }}.
      *

@@ -111,6 +111,10 @@ public:
      */
     std::optional<ImageProperty> image() const;
     /*!
+     * Returns image if set or a new ImageProperty if not.
+     */
+    ImageProperty image_or_new() const;
+    /*!
      * Set the value of image.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.

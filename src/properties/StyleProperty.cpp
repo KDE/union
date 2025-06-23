@@ -75,6 +75,11 @@ std::optional<PaletteProperty> StyleProperty::palette() const
     return d->palette;
 }
 
+PaletteProperty StyleProperty::palette_or_new() const
+{
+    return d->palette.value_or(PaletteProperty{});
+}
+
 void StyleProperty::setPalette(const std::optional<PaletteProperty> &newValue)
 {
     if (newValue == d->palette) {
@@ -86,6 +91,11 @@ void StyleProperty::setPalette(const std::optional<PaletteProperty> &newValue)
 std::optional<LayoutProperty> StyleProperty::layout() const
 {
     return d->layout;
+}
+
+LayoutProperty StyleProperty::layout_or_new() const
+{
+    return d->layout.value_or(LayoutProperty{});
 }
 
 void StyleProperty::setLayout(const std::optional<LayoutProperty> &newValue)
@@ -101,6 +111,11 @@ std::optional<TextProperty> StyleProperty::text() const
     return d->text;
 }
 
+TextProperty StyleProperty::text_or_new() const
+{
+    return d->text.value_or(TextProperty{});
+}
+
 void StyleProperty::setText(const std::optional<TextProperty> &newValue)
 {
     if (newValue == d->text) {
@@ -112,6 +127,11 @@ void StyleProperty::setText(const std::optional<TextProperty> &newValue)
 std::optional<IconProperty> StyleProperty::icon() const
 {
     return d->icon;
+}
+
+IconProperty StyleProperty::icon_or_new() const
+{
+    return d->icon.value_or(IconProperty{});
 }
 
 void StyleProperty::setIcon(const std::optional<IconProperty> &newValue)
@@ -127,6 +147,11 @@ std::optional<BackgroundProperty> StyleProperty::background() const
     return d->background;
 }
 
+BackgroundProperty StyleProperty::background_or_new() const
+{
+    return d->background.value_or(BackgroundProperty{});
+}
+
 void StyleProperty::setBackground(const std::optional<BackgroundProperty> &newValue)
 {
     if (newValue == d->background) {
@@ -138,6 +163,11 @@ void StyleProperty::setBackground(const std::optional<BackgroundProperty> &newVa
 std::optional<BorderProperty> StyleProperty::border() const
 {
     return d->border;
+}
+
+BorderProperty StyleProperty::border_or_new() const
+{
+    return d->border.value_or(BorderProperty{});
 }
 
 void StyleProperty::setBorder(const std::optional<BorderProperty> &newValue)
@@ -153,6 +183,11 @@ std::optional<CornersProperty> StyleProperty::corners() const
     return d->corners;
 }
 
+CornersProperty StyleProperty::corners_or_new() const
+{
+    return d->corners.value_or(CornersProperty{});
+}
+
 void StyleProperty::setCorners(const std::optional<CornersProperty> &newValue)
 {
     if (newValue == d->corners) {
@@ -164,6 +199,11 @@ void StyleProperty::setCorners(const std::optional<CornersProperty> &newValue)
 std::optional<ShadowProperty> StyleProperty::shadow() const
 {
     return d->shadow;
+}
+
+ShadowProperty StyleProperty::shadow_or_new() const
+{
+    return d->shadow.value_or(ShadowProperty{});
 }
 
 void StyleProperty::setShadow(const std::optional<ShadowProperty> &newValue)

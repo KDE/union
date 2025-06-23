@@ -70,6 +70,11 @@ std::optional<ImageProperty> BackgroundProperty::image() const
     return d->image;
 }
 
+ImageProperty BackgroundProperty::image_or_new() const
+{
+    return d->image.value_or(ImageProperty{});
+}
+
 void BackgroundProperty::setImage(const std::optional<ImageProperty> &newValue)
 {
     if (newValue == d->image) {

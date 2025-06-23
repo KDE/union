@@ -102,6 +102,11 @@ std::optional<ImageProperty> LineProperty::image() const
     return d->image;
 }
 
+ImageProperty LineProperty::image_or_new() const
+{
+    return d->image.value_or(ImageProperty{});
+}
+
 void LineProperty::setImage(const std::optional<ImageProperty> &newValue)
 {
     if (newValue == d->image) {

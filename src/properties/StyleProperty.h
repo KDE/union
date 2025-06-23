@@ -75,6 +75,10 @@ public:
      */
     std::optional<PaletteProperty> palette() const;
     /*!
+     * Returns palette if set or a new PaletteProperty if not.
+     */
+    PaletteProperty palette_or_new() const;
+    /*!
      * Set the value of palette.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -85,6 +89,10 @@ public:
      * Returns the value of layout.
      */
     std::optional<LayoutProperty> layout() const;
+    /*!
+     * Returns layout if set or a new LayoutProperty if not.
+     */
+    LayoutProperty layout_or_new() const;
     /*!
      * Set the value of layout.
      *
@@ -97,6 +105,10 @@ public:
      */
     std::optional<TextProperty> text() const;
     /*!
+     * Returns text if set or a new TextProperty if not.
+     */
+    TextProperty text_or_new() const;
+    /*!
      * Set the value of text.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -107,6 +119,10 @@ public:
      * Returns the value of icon.
      */
     std::optional<IconProperty> icon() const;
+    /*!
+     * Returns icon if set or a new IconProperty if not.
+     */
+    IconProperty icon_or_new() const;
     /*!
      * Set the value of icon.
      *
@@ -119,6 +135,10 @@ public:
      */
     std::optional<BackgroundProperty> background() const;
     /*!
+     * Returns background if set or a new BackgroundProperty if not.
+     */
+    BackgroundProperty background_or_new() const;
+    /*!
      * Set the value of background.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -129,6 +149,10 @@ public:
      * Returns the value of border.
      */
     std::optional<BorderProperty> border() const;
+    /*!
+     * Returns border if set or a new BorderProperty if not.
+     */
+    BorderProperty border_or_new() const;
     /*!
      * Set the value of border.
      *
@@ -141,6 +165,10 @@ public:
      */
     std::optional<CornersProperty> corners() const;
     /*!
+     * Returns corners if set or a new CornersProperty if not.
+     */
+    CornersProperty corners_or_new() const;
+    /*!
      * Set the value of corners.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -151,6 +179,10 @@ public:
      * Returns the value of shadow.
      */
     std::optional<ShadowProperty> shadow() const;
+    /*!
+     * Returns shadow if set or a new ShadowProperty if not.
+     */
+    ShadowProperty shadow_or_new() const;
     /*!
      * Set the value of shadow.
      *

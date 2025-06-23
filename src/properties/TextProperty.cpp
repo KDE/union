@@ -57,6 +57,10 @@ std::optional<AlignmentProperty> TextProperty::alignment() const
     return d->alignment;
 }
 
+AlignmentProperty TextProperty::alignment_or_new() const
+{
+    return d->alignment.value_or(AlignmentProperty{});
+}
 void TextProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
 {
     if (newValue == d->alignment) {

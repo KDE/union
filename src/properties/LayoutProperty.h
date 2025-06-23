@@ -67,6 +67,10 @@ public:
      */
     std::optional<AlignmentProperty> alignment() const;
     /*!
+     * Returns alignment if set or a new AlignmentProperty if not.
+     */
+    AlignmentProperty alignment_or_new() const;
+    /*!
      * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -111,6 +115,10 @@ public:
      */
     std::optional<SizeProperty> padding() const;
     /*!
+     * Returns padding if set or a new SizeProperty if not.
+     */
+    SizeProperty padding_or_new() const;
+    /*!
      * Set the value of padding.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -122,6 +130,10 @@ public:
      */
     std::optional<SizeProperty> inset() const;
     /*!
+     * Returns inset if set or a new SizeProperty if not.
+     */
+    SizeProperty inset_or_new() const;
+    /*!
      * Set the value of inset.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -132,6 +144,10 @@ public:
      * Returns the value of margins.
      */
     std::optional<SizeProperty> margins() const;
+    /*!
+     * Returns margins if set or a new SizeProperty if not.
+     */
+    SizeProperty margins_or_new() const;
     /*!
      * Set the value of margins.
      *

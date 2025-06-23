@@ -72,6 +72,11 @@ std::optional<AlignmentProperty> LayoutProperty::alignment() const
     return d->alignment;
 }
 
+AlignmentProperty LayoutProperty::alignment_or_new() const
+{
+    return d->alignment.value_or(AlignmentProperty{});
+}
+
 void LayoutProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
 {
     if (newValue == d->alignment) {
@@ -124,6 +129,11 @@ std::optional<SizeProperty> LayoutProperty::padding() const
     return d->padding;
 }
 
+SizeProperty LayoutProperty::padding_or_new() const
+{
+    return d->padding.value_or(SizeProperty{});
+}
+
 void LayoutProperty::setPadding(const std::optional<SizeProperty> &newValue)
 {
     if (newValue == d->padding) {
@@ -137,6 +147,11 @@ std::optional<SizeProperty> LayoutProperty::inset() const
     return d->inset;
 }
 
+SizeProperty LayoutProperty::inset_or_new() const
+{
+    return d->inset.value_or(SizeProperty{});
+}
+
 void LayoutProperty::setInset(const std::optional<SizeProperty> &newValue)
 {
     if (newValue == d->inset) {
@@ -148,6 +163,11 @@ void LayoutProperty::setInset(const std::optional<SizeProperty> &newValue)
 std::optional<SizeProperty> LayoutProperty::margins() const
 {
     return d->margins;
+}
+
+SizeProperty LayoutProperty::margins_or_new() const
+{
+    return d->margins.value_or(SizeProperty{});
 }
 
 void LayoutProperty::setMargins(const std::optional<SizeProperty> &newValue)

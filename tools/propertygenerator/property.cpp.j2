@@ -73,6 +73,13 @@ std::optional<{{ property.type }}> {{ type_name }}::{{ property.name }}() const
     return d->{{ property.name }};
 }
 
+{% if property.is_group %}
+{{ property.type }} {{ type_name }}::{{ property.name }}_or_new() const
+{
+    return d->{{ property.name }}.value_or({{ property.type }}{});
+}
+
+{% endif %}
 void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
 {
     if (newValue == d->{{ property.name }}) {

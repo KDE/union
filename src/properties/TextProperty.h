@@ -67,6 +67,10 @@ public:
      */
     std::optional<AlignmentProperty> alignment() const;
     /*!
+     * Returns alignment if set or a new AlignmentProperty if not.
+     */
+    AlignmentProperty alignment_or_new() const;
+    /*!
      * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.

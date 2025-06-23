@@ -69,6 +69,10 @@ public:
      */
     std::optional<OffsetProperty> offset() const;
     /*!
+     * Returns offset if set or a new OffsetProperty if not.
+     */
+    OffsetProperty offset_or_new() const;
+    /*!
      * Set the value of offset.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -102,6 +106,10 @@ public:
      */
     std::optional<LineProperty> left() const;
     /*!
+     * Returns left if set or a new LineProperty if not.
+     */
+    LineProperty left_or_new() const;
+    /*!
      * Set the value of left.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -112,6 +120,10 @@ public:
      * Returns the value of right.
      */
     std::optional<LineProperty> right() const;
+    /*!
+     * Returns right if set or a new LineProperty if not.
+     */
+    LineProperty right_or_new() const;
     /*!
      * Set the value of right.
      *
@@ -124,6 +136,10 @@ public:
      */
     std::optional<LineProperty> top() const;
     /*!
+     * Returns top if set or a new LineProperty if not.
+     */
+    LineProperty top_or_new() const;
+    /*!
      * Set the value of top.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -134,6 +150,10 @@ public:
      * Returns the value of bottom.
      */
     std::optional<LineProperty> bottom() const;
+    /*!
+     * Returns bottom if set or a new LineProperty if not.
+     */
+    LineProperty bottom_or_new() const;
     /*!
      * Set the value of bottom.
      *
@@ -146,6 +166,10 @@ public:
      */
     std::optional<CornerProperty> topLeft() const;
     /*!
+     * Returns topLeft if set or a new CornerProperty if not.
+     */
+    CornerProperty topLeft_or_new() const;
+    /*!
      * Set the value of topLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -156,6 +180,10 @@ public:
      * Returns the value of topRight.
      */
     std::optional<CornerProperty> topRight() const;
+    /*!
+     * Returns topRight if set or a new CornerProperty if not.
+     */
+    CornerProperty topRight_or_new() const;
     /*!
      * Set the value of topRight.
      *
@@ -168,6 +196,10 @@ public:
      */
     std::optional<CornerProperty> bottomLeft() const;
     /*!
+     * Returns bottomLeft if set or a new CornerProperty if not.
+     */
+    CornerProperty bottomLeft_or_new() const;
+    /*!
      * Set the value of bottomLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
@@ -178,6 +210,10 @@ public:
      * Returns the value of bottomRight.
      */
     std::optional<CornerProperty> bottomRight() const;
+    /*!
+     * Returns bottomRight if set or a new CornerProperty if not.
+     */
+    CornerProperty bottomRight_or_new() const;
     /*!
      * Set the value of bottomRight.
      *
