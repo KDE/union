@@ -1,0 +1,56 @@
+import QtQuick
+import QtQuick.Controls
+
+import org.kde.kirigami as Kirigami
+
+Kirigami.ApplicationWindow {
+    id: application
+
+    title: "Control Gallery"
+
+    width: pagePatterns.length * pageStack.defaultColumnWidth + globalDrawer.width + Kirigami.Units.gridUnit
+
+    property var pagePatterns: [
+        "%1_org.kde.union.qml",
+        "%1_org.kde.breeze.qml",
+        "%1_org.kde.desktop.qml",
+    ]
+
+    function pushPage(page) {
+        pageStack.clear()
+        for (let pattern of pagePatterns) {
+            pageStack.push(Qt.resolvedUrl(pattern.arg(page)))
+        }
+        pageStack.currentIndex = 0
+    }
+
+    pageStack.defaultColumnWidth: Kirigami.Units.gridUnit * 25
+    pageStack.columnView.columnResizeMode: Kirigami.ColumnView.FixedColumns
+
+    globalDrawer: Kirigami.GlobalDrawer {
+        width: Kirigami.Units.gridUnit * 15
+        modal: false
+
+        header: ToolBar { }
+
+        actions: [
+            Kirigami.Action {
+                text: "Buttons"
+                onTriggered: application.pushPage("Buttons")
+            },
+            Kirigami.Action {
+                text: "Checkable Controls"
+                onTriggered: application.pushPage("Checkable")
+            }
+        ]
+    }
+
+    pageStack.initialPage: Kirigami.Page {
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            icon.name: "breeze-settings"
+            text: "Control Gallery"
+            explanation: "Select an item in the sidebar to show controls."
+        }
+    }
+}
