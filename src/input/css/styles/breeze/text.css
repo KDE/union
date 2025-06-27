@@ -1,0 +1,36 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+label {
+
+}
+
+textfield,
+textarea,
+spinbox
+{
+    height: var(--large-element-size);
+    padding: var(--large-spacing);
+    border-radius: var(--corner-radius);
+
+    border: 1px solid var(--view-border-color);
+    background-color: var(--view-background-color);
+    color: var(--view-text-color);
+
+    &:hovered,
+    &:visual-focus {
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:visual-focus {
+        outline: 2px solid var(--focus-color);
+    }
+}
+
+textfield,
+textarea
+{
+    width: 100px;
+}

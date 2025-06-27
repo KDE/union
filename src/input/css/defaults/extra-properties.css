@@ -25,11 +25,19 @@
 }
 
 @property border {
-    syntax: "<length> (solid | dashed) <color>";
+    syntax: "<length> (solid | dotted | dashed) <color>";
+}
+
+@property border-width {
+    syntax: "<length>";
+}
+
+@property border-color {
+    syntax: "<color>";
 }
 
 @property border-radius {
-    syntax: "<length>{1,4}";
+    syntax: "<length> | (<length> <length> <length> <length>)";
 }
 
 @property outline {
@@ -52,4 +60,8 @@
 
 @property shadow {
     syntax: "<length> <length> <length> <color>";
+}
+
+@property background-image {
+    syntax: "<url>";
 }

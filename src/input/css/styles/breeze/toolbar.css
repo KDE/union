@@ -3,10 +3,6 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-textfield {
-    width: 100px;
-    height: 32px;
-
-    border: 1px solid var(--);
-    background-color: #fff;
+toolbar {
+    padding: var(--small-spacing);
 }

@@ -1,0 +1,54 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+spinbox
+{
+    width: var(--medium-element-size);
+    layout-alignment-container: content;
+    layout-alignment-horizontal: fill;
+    text-alignment-container: content;
+    text-alignment-horizontal: fill;
+    text-alignment-vertical: fill;
+/*     padding: var(--small-spacing); */
+    padding-left: var(--large-spacing);
+    padding-right: var(--large-spacing);
+    padding-top: var(--small-spacing);
+    padding-bottom: var(--small-spacing);
+}
+
+spinbox indicator
+{
+    width: var(--large-element-size);
+    height: var(--large-element-size);
+    border-radius: var(--corner-radius);
+
+    layout-alignment-container: item;
+    layout-alignment-vertical: fill;
+}
+
+spinbox indicator:hovered {
+    border: 1px solid var(--highlight-color);
+}
+
+spinbox indicator:pressed {
+    background-color: var(--highlight-color);
+}
+
+spinbox indicator.decrease
+{
+    layout-alignment-horizontal: start;
+    icon-name: "arrow-down-symbolic";
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+spinbox indicator.increase
+{
+    layout-alignment-horizontal: end;
+    icon-name: "arrow-up-symbolic";
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+

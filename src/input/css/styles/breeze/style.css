@@ -6,4 +6,10 @@
 @import "variables.css";
 
 @import "button.css";
-@import "textfield.css";
+@import "delegate.css";
+@import "text.css";
+@import "check.css";
+@import "switch.css";
+@import "spinbox.css";
+@import "toolbar.css";
+@import "menu.css";

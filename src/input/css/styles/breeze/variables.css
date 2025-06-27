@@ -10,15 +10,36 @@
     --grid-unit: 18px;
     --corner-radius: 4px;
 
+    /* Icon sizes */
+    --icon-size-small: 16px;
+    --icon-size-smallmedium: 22px;
+    --icon-size-medium: 32px;
+    --icon-size-large: 48px;
+
+    /* Default item sizes */
+    --small-element-size: 16px;
+    --medium-element-size: 24px;
+    --large-element-size: 32px;
+
     /* Colors */
+    --highlight-color: #3daee9;
+
     --window-text-color: #232629;
     --window-background-color: #eff0f1;
+    --window-border-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
+    --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
 
     --button-text-color: #232629;
     --button-background-color: #fcfcfc;
-    --button-border-color: #ddd;
+    --button-border-color: mix(var(--button-background-color), var(--button-text-color), 0.3);
+    --button-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
 
-    --highlight-color: #3daee9;
+    --view-text-color: #232629;
+    --view-background-color: #ffffff;
+    --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
+    --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
 
-    --focus-color: rgba(61, 174, 233, 0.75);
+    --focus-color: rgba(61, 174, 233, 0.42);
+
+    --shadow-color: rgba(0, 0, 0, 0.75);
 }
