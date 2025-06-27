@@ -316,18 +316,28 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
     auto border = output.border().value_or(BorderProperty{});
     auto corners = output.corners().value_or(CornersProperty{});
 
-    if (property.name == "border-radius"s) {
-        if (property.values.size() == 1) {
-            auto radius = to_px(property.value());
-            corners.setTopLeft(setCornerRadius(corners.topLeft(), radius));
-            corners.setTopRight(setCornerRadius(corners.topRight(), radius));
-            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), radius));
-            corners.setBottomRight(setCornerRadius(corners.bottomRight(), radius));
-        } else if (property.values.size() == 4) {
-            corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value(0))));
-            corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value(1))));
-            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value(2))));
-            corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value(3))));
+    if (property.name.ends_with("radius")) {
+        if (property.name == "border-radius"s) {
+            if (property.values.size() == 1) {
+                auto radius = to_px(property.value());
+                corners.setTopLeft(setCornerRadius(corners.topLeft(), radius));
+                corners.setTopRight(setCornerRadius(corners.topRight(), radius));
+                corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), radius));
+                corners.setBottomRight(setCornerRadius(corners.bottomRight(), radius));
+            } else if (property.values.size() == 4) {
+                corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value(0))));
+                corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value(1))));
+                corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value(2))));
+                corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value(3))));
+            }
+        } else if (property.name == "border-top-left-radius") {
+            corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value())));
+        } else if (property.name == "border-top-right-radius") {
+            corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value())));
+        } else if (property.name == "border-bottom-left-radius") {
+            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value())));
+        } else if (property.name == "border-bottom-right-radius") {
+            corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value())));
         }
     }
 
