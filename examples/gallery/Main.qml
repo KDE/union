@@ -45,6 +45,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: "Checkable Controls"
                 onTriggered: application.pushPage("Checkable")
+            },
+            Kirigami.Action {
+                text: "Delegates"
+                onTriggered: application.pushPage("Delegates")
             }
         ]
     }

@@ -13,6 +13,7 @@ ecm_target_qml_sources(union-gallery SOURCES
 set(_configured_files
     Buttons.qml
     Checkable.qml
+    Delegates.qml
 )
 
 set_property(DIRECTORY PROPERTY CMAKE_CONFIGURE_DEPENDS "${_configured_files}")
