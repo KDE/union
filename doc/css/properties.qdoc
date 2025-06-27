@@ -1,0 +1,413 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page css-properties.html
+\title CSS Property Reference
+
+\section1 Layout Properties
+
+These properties all relate to an element's layout and sizing.
+
+\section2 Width and Height
+
+These properties can be used to set the implicit size of an element. The
+implicit size is used as a default when no other size is defined for an element.
+
+\section3 width: <length>
+
+Sets the implicit width of an element.
+
+\section3 height: <length>
+
+Sets the implicit height of an element.
+
+\section2 Padding
+
+Padding defines extra space around an items's contents.
+
+\section3 padding: <length>(1-4)
+
+A shorthand to set all padding values in a single property. Can take one to four
+values. If one value is provided, it will be used for all four padding values.
+If two values are provided, the first will be used for horizontal and the second
+for vertical padding values. If three values are provided, the first will be
+used for top, the second for horizontal and the third for bottom padding. If
+four values are provided, they are used for top, right, bottom, left padding in
+that order.
+
+\section3 padding-left: <length>
+
+The amount of padding on the left side of the element.
+
+\section3 padding-right: <length>
+
+The amount of padding on the right side of the element.
+
+\section3 padding-top: <length>
+
+The amount of padding on the top of the element.
+
+\section3 padding-bottom: <length>
+
+The amount of padding on the bottom of the element.
+
+\section2 Inset
+
+Inset defines extra space around an items's background.
+
+\section3 inset: <length>(1-4)
+
+A shorthand to set all inset values in a single property. Can take one to four
+values. If one value is provided, it will be used for all four inset values.
+If two values are provided, the first will be used for horizontal and the second
+for vertical inset values. If three values are provided, the first will be
+used for top, the second for horizontal and the third for bottom inset. If
+four values are provided, they are used for top, right, bottom, left inset in
+that order.
+
+\section3 inset-left: <length>
+
+The amount of inset on the left side of the element.
+
+\section3 inset-right: <length>
+
+The amount of inset on the right side of the element.
+
+\section3 inset-top: <length>
+
+The amount of inset on the top of the element.
+
+\section3 inset-bottom: <length>
+
+The amount of inset on the bottom of the element.
+
+\section2 Margins
+
+Margins define extra space between one item and its siblings. Whether margins
+are respected depends on the context of an element, as an application ultimately
+controls the layout of elements.
+
+\section3 margin: <length>(1-4)
+
+A shorthand to set all margins in a single property. Can take one to four
+values. If one value is provided, it will be used for all four margins. If two
+values are provided, the first will be used for horizontal and the second for
+vertical margins. If three values are provided, the first will be used for top,
+the second for horizontal and the third for bottom margins. If four values are
+provided, they are used for top, right, bottom, left margin in that order.
+
+\section3 margin-left: <length>
+
+The amount of margin on the left side of the element.
+
+\section3 margin-right: <length>
+
+The amount of margin on the right side of the element.
+
+\section3 margin-top: <length>
+
+The amount of margin on the top of the element.
+
+\section3 margin-bottom: <length>
+
+The amount of margin on the bottom of the element.
+
+\section2 Spacing
+
+Spacing defines the space between sibling items. Where spacing is used depends
+on the element, it usually applies to things like the space between an icon and
+its label.
+
+\section3 spacing: <length>
+
+The spacing of an element.
+
+\section2 Alignment
+
+The alignment related properties can be used to control the alignment for
+elements that combine multiple items into a single element, such as a checkbox
+that contains a check mark (usually referred to as \c{indicator}), an icon and
+a label. For details about how the layout for elements works, see \l{layout}.
+
+Horizontal and vertical alignment is specified in relative terms that do not
+imply a writing direction.
+
+\section3 layout-alignment: <container> <horizontal> <vertical> <order>
+
+A shorthand to set all four alignment properties in a single property. Expects
+four values, the first used to set \c{layout-alignment-container}, the second to
+set \c{layout-alignment-horizontal}, the third to set
+\c{layout-alignment-vertical} and the fourth to set \c{layout-alignment-order}.
+
+\section3 layout-alignment-container: item | content | background
+
+Sets the alignment container. Can be one of three values, \c{item}, \c{content}
+or \c{background}.
+
+\section3 layout-alignment-horizontal: start | center | end | fill
+
+Sets the horizontal alignment. Can be one of four values, \c{start}, \c{center},
+\c{end} or \c{fill}.
+
+\section3 layout-alignment-vertical: start | center | end | fill | stack
+
+Sets the vertical alignment. Can be one of five values, \c{start}, \c{center},
+\c{end}, \c{fill} and \c{stack}.
+
+\section3 layout-alignment-order: <integer>
+
+Sets the order of an element relative to other elements in the same alignment
+container and with the same alignment.
+
+\section1 Border and Outline
+
+These are used to add decorations around an element.
+
+Note that while there are style properties exposed for all borders, they are
+currently not used and all borders behave as if they have the style "solid".
+
+\section2 Border
+
+These properties are used to define the border around an element's background.
+
+\section3 border: <length> <style> <color>
+
+A shorthand to set all four borders in a single property. Expects three values,
+the first will be used to set all borders' width properties, the second will set
+all borders' style properties and the third value will set all borders' color
+property.
+
+\section3 border-width: <length>
+
+A shorthand to set all four borders' width in a single property.
+
+\section3 border-style: solid | dotted | dashed
+
+A shorthand to set all four borders' style property in a single property.
+
+\section3 border-color: <color>
+
+A shorthand to set all four borders' color in a single property.
+
+\section3 border-left: <length> <style> <color>
+
+A shorthand to set all properties of the left border in a single property.
+Expects three values, the first used to set the border's width, the second its
+style and the third its color.
+
+\section3 border-left-width: <length>
+
+Sets the width of the left border.
+
+\section3 border-left-style: solid | dotted | dashed
+
+Sets the style of the left border.
+
+\section3 border-left-color: <color>
+
+Sets the color of the left border.
+
+\section3 border-right: <length> <style> <color>
+
+A shorthand to set all properties of the right border in a single property.
+Expects three values, the first used to set the border's width, the second its
+style and the third its color.
+
+\section3 border-right-width: <length>
+
+Sets the width of the right border.
+
+\section3 border-right-style: solid | dotted | dashed
+
+Sets the style of the right border.
+
+\section3 border-right-color: <color>
+
+Sets the color of the right border.
+
+\section3 border-top: <length> <style> <color>
+
+A shorthand to set all properties of the top border in a single property.
+Expects three values, the first used to set the border's width, the second its
+style and the third its color.
+
+\section3 border-top-width: <length>
+
+Sets the width of the top border.
+
+\section3 border-top-style: solid | dotted | dashed
+
+Sets the style of the top border.
+
+\section3 border-top-color: <color>
+
+Sets the color of the top border.
+
+\section3 border-bottom: <length> <style> <color>
+
+A shorthand to set all properties of the bottom border in a single property.
+Expects three values, the first used to set the border's width, the second its
+style and the third its color.
+
+\section3 border-bottom-width: <length>
+
+Sets the width of the bottom border.
+
+\section3 border-bottom-style: solid | dotted | dashed
+
+Sets the style of the bottom border.
+
+\section3 border-bottom-color: <color>
+
+Sets the color of the bottom border.
+
+\section2 Border Radius
+
+These properties are used to set the corner radius of an element's background,
+border and outline.
+
+\section3 border-radius: <length>(1 | 4)
+
+A shorthand to set all border radius properties in one property. Expects one or
+four values. If only one is provided, it will be used to set all four border
+radius properties. If four values are provided, they are used to set each
+property in the order top-left, top-right, bottom-right, bottom-left.
+
+\section3 border-top-left-radius: <length>
+
+Sets the radius of the top left corner.
+
+\section3 border-top-right-radius: <length>
+
+Sets the radius of the top right corner.
+
+\section3 border-bottom-left-radius: <length>
+
+Sets the radius of the bottom left corner.
+
+\section3 border-bottom-right-radius: <length>
+
+Sets the radius of the bottom right corner.
+
+\section2 Outline
+
+An element's outline is similar to a border except it is always outside an
+element's background.
+
+\section3 outline: <length> <style> <color>
+
+A shorthand to set all four outlines in a single property. Expects three values,
+the first will be used to set all outlines' width properties, the second will
+set all outlines' style properties and the third value will set all outlines'
+color property.
+
+\section3 outline-width: <length>
+
+A shorthand to set all four outlines' width in a single property.
+
+\section3 outline-style: solid | dotted | dashed
+
+A shorthand to set all four outlines' style property in a single property.
+
+\section3 outline-color: <color>
+
+A shorthand to set all four outlines' color in a single property.
+
+\section3 outline-left: <length> <style> <color>
+
+A shorthand to set all properties of the left outline in a single property.
+Expects three values, the first used to set the outline's width, the second its
+style and the third its color.
+
+\section3 outline-left-width: <length>
+
+Sets the width of the left outline.
+
+\section3 outline-left-style: solid | dotted | dashed
+
+Sets the style of the left outline.
+
+\section3 outline-left-color: <color>
+
+Sets the color of the left outline.
+
+\section3 outline-right: <length> <style> <color>
+
+A shorthand to set all properties of the right outline in a single property.
+Expects three values, the first used to set the outline's width, the second its
+style and the third its color.
+
+\section3 outline-right-width: <length>
+
+Sets the width of the right outline.
+
+\section3 outline-right-style: solid | dotted | dashed
+
+Sets the style of the right outline.
+
+\section3 outline-right-color: <color>
+
+Sets the color of the right outline.
+
+\section3 outline-top: <length> <style> <color>
+
+A shorthand to set all properties of the top outline in a single property.
+Expects three values, the first used to set the outline's width, the second its
+style and the third its color.
+
+\section3 outline-top-width: <length>
+
+Sets the width of the top outline.
+
+\section3 outline-top-style: solid | dotted | dashed
+
+Sets the style of the top outline.
+
+\section3 outline-top-color: <color>
+
+Sets the color of the top outline.
+
+\section3 outline-bottom: <length> <style> <color>
+
+A shorthand to set all properties of the bottom outline in a single property.
+Expects three values, the first used to set the outline's width, the second its
+style and the third its color.
+
+\section3 outline-bottom-width: <length>
+
+Sets the width of the bottom outline.
+
+\section3 outline-bottom-style: solid | dotted | dashed
+
+Sets the style of the bottom outline.
+
+\section3 outline-bottom-color: <color>
+
+Sets the color of the bottom outline.
+
+\section1 Background and Shadow
+
+These properties control the appearance of an element's background and shadow.
+
+\section2 Background
+
+\section3 background-color: <color>
+
+Sets the color of an element's background.
+
+\section3 background-image: <url>
+
+Sets an image that will be used as an element's background. This image should be
+placed in the same directory as the CSS files.
+
+\section2 Shadow
+
+\section3 shadow: <length> <length> <length> <color>
+
+Sets the properties of a box-shaped shadow for the element. The first value is
+the shadow's size, the second its X offset, the third its Y offset and the last
+is the color of the shadow.
+
+*/

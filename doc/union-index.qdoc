@@ -33,6 +33,7 @@ SVG styling.
 \section1 Input Plugins
 \list
     \li \l{Plasma SVG Input}
+    \li \l{CSS Input}
 \endlist
 
 \section1 Output Plugins

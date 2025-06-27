@@ -1,0 +1,34 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\module css
+\title CSS Input C++ Classes
+\ingroup modules
+
+*/
+
+/*!
+
+\page css-index.html
+\title CSS Input
+
+The CSS input plugin uses a customised CSS parser as an input format. These CSS
+rules are mapped to Union's properties and selectors so they can be used by any
+of the output plugins.
+
+The CSS supported for wiriting Union styles is generally CSS Level 3 with some
+newer elements also implemented. One important difference is the supported
+properties. Since Union needs to map CSS to its internal representation, many
+properties defined by CSS do not make sense. Others may have differences in how
+they are used. See the page \l{css-support.html}{Supported CSS} for details on
+what is and is not supported.
+
+\section1 Articles
+
+\list
+    \li \l{css-support.html}{Supported CSS}
+    \li \l{css-properties.html}{Property Reference}
+\endlist
+*/

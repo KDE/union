@@ -1,0 +1,77 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page css-support.html
+\title Supported CSS
+
+Union uses a CSS parser that implements most of CSS Level 3 syntax, along with
+some extensions.
+
+\section1 Supported Selectors
+
+Most of the basic selectors are supported:
+
+\list
+    \li Element type, such as "Button". Note that matching is case-insensitive.
+    \li Element ID
+    \li Class. Note that this will be converted to an attribute selector that
+        checks if the given name exists as a boolean attribute and has a value
+        of \c true.
+    \li Pseudo-class. Pseudo-classes are interpreted as states, which means that
+        the following pseudo-classes are available:
+        \list
+            \li hovered
+            \li active-focus
+            \li visual-focus
+            \li pressed
+            \li checked
+            \li disabled
+            \li highlighted
+        \endlist
+    \li Attribute
+    \li Universal
+\endlist
+
+In addition, the \c :root selector is supported as a way of declaring variables,
+but does not actually match any element.
+
+\section2 Supported Combinators
+
+At the moment, only the descendant combinator is supported. The direct child
+(\c >) combinator is supported by the parser but not implemented in Union
+itself. Other combinators are unsupported pending implementation in the parser
+library.
+
+\section1 Properties
+
+Union uses a different data model from that used by HTML/the web. This means
+that not all properties known from web CSS are supported by Union, and Union
+adds several other properties that have no equivalent to web properties. Some
+effort is made to map Union properties to more familiar web properties, but this
+will necessarily not be a one-to-one mapping.
+
+For a detailed overview of supported properties and their effects see
+\l{css-properties.html}{CSS Properties}.
+
+\section2 Custom Properties
+
+Custom properties are supported and can be created in two ways. The first way is
+to prefix the property with \c -- and declaring it in any rule. Note that these
+are currently not scoped so a custom property declared in a rule for a specific
+element will be available for all other properties that are declared after the
+initial declaration.
+
+The second way is to declare a property at the top level using \c @property
+syntax. This syntax allows for specifying additional information about a
+property, most importantly it allows specifying a syntax for values of the
+property.
+
+Note that using \c{@property} allows creating custom properties that do not need
+to start with \c{--}. It is however recommended to not make use of this, as it
+is used by Union itself to define properties which may end up conflicting with
+any custom properties you have declared.
+
+
+*/
