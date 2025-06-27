@@ -401,6 +401,14 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
         setAlignment(icon, property);
     }
 
+    if (property.name == "icon-name") {
+        icon.setName(QString::fromStdString(property.value<std::string>()));
+    } else if (property.name == "icon-width") {
+        icon.setWidth(to_px(property.value()));
+    } else if (property.name == "icon-height") {
+        icon.setHeight(to_px(property.value()));
+    }
+
     if (icon.hasAnyValue()) {
         output.setIcon(icon);
     }
