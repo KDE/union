@@ -23,9 +23,21 @@ Kirigami.Page {
             text: "Checkbox with Text and Icon"
         }
 
+        // Controls.RadioButton {
+        //     text: "RadioButton with Text"
+        // }
+
+        // Controls.RadioButton {
+        //     icon.name: "document-save"
+        //     text: "RadioButton withh Text and Icon"
+        // }
+
+        Controls.Switch {
+            text: "Switch with Text"
+        }
+
         Item {
             Layout.fillHeight: true
         }
     }
 }
-
