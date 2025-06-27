@@ -10,3 +10,4 @@
 .clangd
 /cmake-build*
 .cache
+.qmlls.ini
