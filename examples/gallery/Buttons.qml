@@ -25,27 +25,49 @@ Kirigami.Page {
 
         Controls.Button {
             icon.name: "document-save"
-            text: "Flat"
+            text: "Disabled Button"
+            enabled: false
+        }
+
+        Controls.Button {
+            icon.name: "document-save"
+            text: "Button Flat"
             flat: true
         }
 
         Controls.Button {
             icon.name: "document-save"
-            text: "Text Under Icon"
+            text: "Button Text Under Icon"
             display: Controls.Button.TextUnderIcon
         }
 
         Controls.Button {
             icon.name: "document-save"
-            text: "Checkable"
+            text: "Button Checkable"
             checkable: true
             checked: true
         }
 
         Controls.Button {
             icon.name: "document-save"
-            text: "Highlighted"
+            text: "Button Highlighted"
             highlighted: true
+        }
+
+        Controls.ToolButton {
+            text: "ToolButton with Text"
+        }
+
+        Controls.ToolButton {
+            icon.name: "document-save"
+            text: "ToolButton with Text and Icon"
+        }
+
+        Controls.ToolButton {
+            icon.name: "document-save"
+            text: "ToolButton Checkable"
+            checkable: true
+            checked: true
         }
 
         Item {
