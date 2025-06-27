@@ -216,10 +216,10 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
 
     auto corners = style.corners_or_new();
     QVector4D radii;
-    radii.setX(corners.topLeft_or_new().radius().value_or(0.0));
-    radii.setY(corners.topRight_or_new().radius().value_or(0.0));
-    radii.setZ(corners.bottomLeft_or_new().radius().value_or(0.0));
-    radii.setW(corners.bottomRight_or_new().radius().value_or(0.0));
+    radii.setX(corners.topRight_or_new().radius().value_or(0.0));
+    radii.setY(corners.bottomRight_or_new().radius().value_or(0.0));
+    radii.setZ(corners.topLeft_or_new().radius().value_or(0.0));
+    radii.setW(corners.bottomLeft_or_new().radius().value_or(0.0));
 
     UniformDataStream stream(shaderNode->uniformData());
     stream.skipMatrixOpacity();
