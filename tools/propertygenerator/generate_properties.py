@@ -83,7 +83,8 @@ def qualified_name(type_name):
 
 def css_name(name):
     parts = re.split(r"([A-Z][a-z]+)", name)
-    return "-".join(part.lower() for part in parts if part)
+    result = "-".join(part.lower() for part in parts if part)
+    return result.replace("--", "-")
 
 
 def process_node(node, name, parent_group, memo):
