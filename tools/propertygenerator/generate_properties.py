@@ -16,7 +16,7 @@ base_directory = Path(__file__).parent
 root_directory = base_directory.parent.parent
 src_directory = root_directory / "src" / "properties"
 tests_directory = root_directory / "autotests" / "properties"
-css_input_directory = root_directory / "src" / "input" / "css" / "generated"
+css_input_directory = root_directory / "src" / "input" / "css" / "defaults"
 quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin" / "properties"
 
 include_patterns = [
@@ -217,8 +217,11 @@ if __name__ == "__main__":
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)
-    shutil.rmtree(css_input_directory, ignore_errors = True)
     shutil.rmtree(quick_output_directory, ignore_errors = True)
+
+    css_generated_path = css_input_directory / "generated-properties.css"
+    if css_generated_path.exists():
+        css_generated_path.unlink()
 
     src_directory.mkdir(exist_ok = True)
     tests_directory.mkdir(exist_ok = True)
@@ -246,4 +249,4 @@ if __name__ == "__main__":
     render_template("CMakeLists.tests.txt.j2", tests_directory / "CMakeLists.txt", jinja_env, data)
     render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data)
 
-    render_template("properties.css.j2", css_input_directory / "properties.css", jinja_env, data)
+    render_template("properties.css.j2", css_generated_path, jinja_env, data)
