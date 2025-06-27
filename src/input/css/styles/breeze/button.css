@@ -4,9 +4,14 @@
  */
 
 button,
-toolbutton {
-    width: 32px;
-    height: 32px;
+toolbutton,
+checkbox indicator,
+checkdelegate indicator,
+menuitem indicator,
+radiobutton indicator
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
     spacing: var(--small-spacing);
     padding: var(--large-spacing);
     border-radius: var(--corner-radius);
@@ -15,26 +20,55 @@ toolbutton {
     icon-alignment-horizontal: center;
 
     color: var(--button-text-color);
-
-    &:hovered {
-        border: 1px solid var(--highlight-color);
-    }
-
-    &:visual-focus {
-        outline: 2px solid var(--focus-color);
-    }
-
-    &:pressed {
-        background-color: var(--highlight-color);
-    }
-}
-
-button {
     border: 1px solid var(--button-border-color);
     background-color: var(--button-background-color);
 
-    shadow: 2px 0px 1px black;
+    &.flat
+    {
+        border: 0px solid transparent;
+        background-color: transparent;
+        shadow: 0px 0px 0px transparent;
+    }
+
+    &:hovered
+    {
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:visual-focus
+    {
+        border: 1px solid var(--highlight-color);
+        outline: 2px solid var(--focus-color);
+    }
+
+    &:checked
+    {
+        border: 1px solid var(--button-border-color);
+        background-color: mix(var(--button-background-color), var(--button-text-color), 0.2);
+    }
 }
 
-toolbutton {
+button
+{
+    shadow: 2px 0px 1px var(--shadow-color);
+}
+
+button:pressed,
+toolbutton:pressed
+{
+    border: 1px solid var(--highlight-color);
+    background-color: var(--button-highlight-color);
+    shadow: 0px 0px 0px transparent;
+}
+
+button:checked
+{
+    shadow: 0px 0px 0px transparent;
+}
+
+toolbutton
+{
+    border: 0px solid transparent;
+    background-color: transparent;
+    shadow: 0px 0px 0px transparent;
 }

@@ -1,0 +1,48 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+menu
+{
+    border-radius: var(--corner-radius);
+    padding: var(--small-spacing);
+
+    background-color: var(--window-background-color);
+    border: 1px solid var(--window-border-color);
+    shadow: 2px 0px 1px var(--shadow-color);
+}
+
+menuitem
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+    padding: var(--small-spacing);
+    spacing: var(--small-spacing);
+
+    border-radius: var(--corner-radius);
+
+    &:hovered,
+    &:pressed,
+    &:highlighted
+    {
+        background-color: var(--focus-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    & indicator
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+
+        layout-alignment-container: content;
+        layout-alignment-horizontal: start;
+        layout-alignment-order: -1;
+    }
+
+    & arrow
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+    }
+}

@@ -5,6 +5,6 @@
 
 * {
     layout-alignment: item start center 0;
-    text-alignment: content start center 1;
     icon-alignment: content start center 0;
+    text-alignment: content start center 1;
 }
