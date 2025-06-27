@@ -83,11 +83,15 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
         return nullptr;
     }
 
-    if (!query->properties().background().has_value()) {
+    if (!query->properties().hasAnyValue()) {
         return nullptr;
     }
 
     auto rect = boundingRect();
+    if (rect.isEmpty()) {
+        return nullptr;
+    }
+
     auto style = query->properties();
     auto minSize = minimumSize(style);
 
