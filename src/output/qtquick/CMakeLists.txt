@@ -23,6 +23,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Page.qml
     style/Pane.qml
     style/ProgressBar.qml
+    style/RadioButton.qml
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
