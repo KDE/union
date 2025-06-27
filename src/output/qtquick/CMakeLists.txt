@@ -16,6 +16,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/CheckBox.qml
     style/CheckDelegate.qml
     style/ItemDelegate.qml
+    style/Label.qml
     style/Menu.qml
     style/MenuItem.qml
     style/MenuSeparator.qml
