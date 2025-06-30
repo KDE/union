@@ -29,7 +29,7 @@ Kirigami.ApplicationWindow {
     }
 
     pageStack.defaultColumnWidth: Kirigami.Units.gridUnit * 25
-    pageStack.columnView.columnResizeMode: Kirigami.ColumnView.FixedColumns
+    pageStack.columnView.columnResizeMode: Kirigami.ColumnView.DynamicColumns
 
     globalDrawer: Kirigami.GlobalDrawer {
         width: Kirigami.Units.gridUnit * 15

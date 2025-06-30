@@ -11,6 +11,11 @@ import org.kde.kirigami as Kirigami
 Kirigami.Page {
     title: "Delegates QtQuick.Controls"
 
+    Kirigami.ColumnView.interactiveResizeEnabled: true
+    Kirigami.ColumnView.minimumWidth: Kirigami.Units.gridUnit * 10
+    Kirigami.ColumnView.preferredWidth: Kirigami.Units.gridUnit * 25
+    Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
+
     ColumnLayout {
         anchors.fill: parent
 
