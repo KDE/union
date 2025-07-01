@@ -33,7 +33,7 @@ checkbox:checked indicator,
 checkdelegate:checked indicator,
 menuitem:checked indicator
 {
-/*     background-image: url("checkmark.svg"); */
+    background-image: url("images/checkmark.svg");
     background-color: var(--button-highlight-color);
     border: 1px solid var(--highlight-color);
 }
