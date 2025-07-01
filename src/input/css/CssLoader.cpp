@@ -47,6 +47,16 @@ QColor to_qcolor(const cssparser::Value &value)
     return QColor::fromRgb(color.r, color.g, color.b, color.a);
 }
 
+fs::path to_path(const cssparser::Value &value)
+{
+    if (!std::holds_alternative<cssparser::Url>(value)) {
+        return fs::path{};
+    }
+
+    auto url = std::get<cssparser::Url>(value);
+    return url.data;
+}
+
 template<typename T>
 inline int toEnumIntValue(/* intentional copy */ std::string value)
 {
@@ -227,9 +237,10 @@ bool CssLoader::load(Theme::Ptr theme)
     styleSheet.parse_file("extra-properties.css"s);
     styleSheet.parse_file("default.css"s);
 
-    auto stylePath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/styles/breeze"_s, QStandardPaths::LocateDirectory);
+    m_stylePath =
+        fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/styles/breeze"_s, QStandardPaths::LocateDirectory).toStdString());
 
-    styleSheet.set_root_path(fs::path(stylePath.toStdString()));
+    styleSheet.set_root_path(m_stylePath);
     styleSheet.parse_file("style.css");
 
     for (const auto &rule : styleSheet.rules()) {
@@ -369,8 +380,23 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
 {
     auto background = output.background().value_or(BackgroundProperty{});
 
-    if (property.name == "background"s || property.name == "background-color"s) {
+    if (property.name == "background-color"s) {
         background.setColor(to_qcolor(property.value()));
+    }
+
+    if (property.name == "background-image") {
+        auto path = m_stylePath / to_path(property.value());
+
+        QImage imageData;
+        if (!imageData.load(QString::fromStdString(path))) {
+            qCWarning(UNION_CSS) << "Could not load image" << path.string();
+        }
+
+        auto image = background.image_or_new();
+        image.setImageData(imageData);
+        image.setWidth(imageData.width());
+        image.setHeight(imageData.height());
+        background.setImage(image);
     }
 
     if (background.hasAnyValue()) {

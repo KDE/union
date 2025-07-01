@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <filesystem>
+
 #include <Selector.h>
 #include <StyleRule.h>
 
@@ -35,4 +37,6 @@ private:
     void setTextProperty(StyleProperty &output, const cssparser::Property &property);
     void setIconProperty(StyleProperty &output, const cssparser::Property &property);
     void setShadowProperty(StyleProperty &output, const cssparser::Property &property);
+
+    std::filesystem::path m_stylePath;
 };
