@@ -7,6 +7,7 @@
 
 #include <QFile>
 #include <QMetaEnum>
+#include <QRegularExpression>
 #include <QStandardPaths>
 
 #include <StyleRule.h>
@@ -137,6 +138,72 @@ inline std::optional<SizeProperty> sizeFromProperty(const std::optional<SizeProp
         return result;
     } else {
         return std::nullopt;
+    }
+}
+
+template<typename T>
+void setDirectionValue(T &output, const std::string &baseName, const cssparser::Property &property)
+{
+    QList<QByteArray> directions;
+    QList<QByteArray> properties;
+    QList<cssparser::Value> values;
+
+    if (property.name == baseName) {
+        directions = {"left", "right", "top", "bottom"};
+        properties = {"width", "color"};
+        values = {property.value(0), property.value(2)};
+    } else if (property.name == baseName + "-width") {
+        directions = {"left", "right", "top", "bottom"};
+        properties = {"width"};
+        values = {property.value()};
+    } else if (property.name == baseName + "-color") {
+        directions = {"left", "right", "top", "bottom"};
+        properties = {"color"};
+        values = {property.value()};
+    } else {
+        static const QRegularExpression directionValueExpression{QStringLiteral(R"(([^-]+)-([^-]+)-(.+))"),
+                                                                 QRegularExpression::PatternOption::CaseInsensitiveOption};
+        auto matches = directionValueExpression.match(QString::fromStdString(property.name));
+
+        if (!matches.hasMatch() || matches.captured(1).toStdString() != baseName) {
+            return;
+        }
+
+        directions = {matches.captured(2).toLatin1()};
+        properties = {matches.captured(3).toLatin1()};
+        values = {property.value()};
+    }
+
+    auto setLineValue = [](LineProperty &line, const QByteArray &property, const cssparser::Value &value) -> LineProperty {
+        if (property == "width") {
+            line.setSize(to_px(value));
+        } else if (property == "size") {
+            line.setSize(to_px(value));
+        } else if (property == "color") {
+            line.setColor(to_qcolor(value));
+        }
+        return line;
+    };
+
+    for (const auto &direction : std::as_const(directions)) {
+        for (qsizetype i = 0; i < properties.size(); ++i) {
+            auto property = properties.at(i);
+            auto value = values.at(i);
+            LineProperty line;
+            if (direction == "left") {
+                auto line = output.left_or_new();
+                output.setLeft(setLineValue(line, property, value));
+            } else if (direction == "right") {
+                auto line = output.right_or_new();
+                output.setRight(setLineValue(line, property, value));
+            } else if (direction == "top") {
+                auto line = output.top_or_new();
+                output.setTop(setLineValue(line, property, value));
+            } else if (direction == "bottom") {
+                auto line = output.left_or_new();
+                output.setBottom(setLineValue(line, property, value));
+            }
+        }
     }
 }
 
@@ -313,10 +380,9 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
 
 void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto border = output.border().value_or(BorderProperty{});
-    auto corners = output.corners().value_or(CornersProperty{});
-
     if (property.name.ends_with("radius")) {
+        auto corners = output.corners().value_or(CornersProperty{});
+
         if (property.name == "border-radius"s) {
             if (property.values.size() == 1) {
                 auto radius = to_px(property.value());
@@ -339,41 +405,27 @@ void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Proper
         } else if (property.name == "border-bottom-right-radius") {
             corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value())));
         }
+
+        if (corners.hasAnyValue()) {
+            output.setCorners(corners);
+        }
+
+        return;
     }
 
-    if (property.name == "border"s) {
-        LineProperty line;
-        line.setSize(to_px(property.value(0)));
-        line.setColor(to_qcolor(property.value(2)));
-
-        border.setLeft(line);
-        border.setRight(line);
-        border.setTop(line);
-        border.setBottom(line);
-    }
+    auto border = output.border_or_new();
+    setDirectionValue(border, "border"s, property);
 
     if (border.hasAnyValue()) {
         output.setBorder(border);
-    }
-    if (corners.hasAnyValue()) {
-        output.setCorners(corners);
     }
 }
 
 void CssLoader::setOutlineProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto outline = output.outline().value_or(OutlineProperty{});
+    auto outline = output.outline_or_new();
 
-    if (property.name == "outline"s) {
-        LineProperty line;
-        line.setSize(to_px(property.value(0)));
-        line.setColor(to_qcolor(property.value(2)));
-
-        outline.setLeft(line);
-        outline.setRight(line);
-        outline.setTop(line);
-        outline.setBottom(line);
-    }
+    setDirectionValue(outline, "outline"s, property);
 
     if (outline.hasAnyValue()) {
         output.setOutline(outline);
