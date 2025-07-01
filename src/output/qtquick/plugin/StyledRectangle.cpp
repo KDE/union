@@ -104,7 +104,7 @@ QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaint
     // Ensure we *don't* delete the node at this point.
     guard.dismiss();
 
-    if (style.background_or_new().image_or_new().hasAnyValue()) {
+    if (style.border_or_new().left_or_new().image_or_new().hasAnyValue()) {
         return updateRectangleNode(node, style);
     } else {
         return updateShaderNode(node, style);
@@ -195,14 +195,24 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
         shaderName += u"border_"_s;
     }
 
-    shaderName += u"rectangle"_s;
+    auto background = style.background_or_new();
+    auto image = background.image_or_new().imageData();
+    if (image.has_value()) {
+        shaderName += u"texture"_s;
+    } else {
+        shaderName += u"rectangle"_s;
+    }
 
     shaderNode->setShader(shaderName);
+    shaderNode->setUniformBufferSize(sizeof(float) * 44);
+
+    if (image.has_value()) {
+        shaderNode->setTextureChannels(1);
+    }
 
     auto rect = boundingRect();
 
     shaderNode->setRect(rect);
-    shaderNode->setUniformBufferSize(sizeof(float) * 44);
 
     auto aspect = calculateAspect(rect);
     auto minDimension = float(std::min(rect.width(), rect.height()));
@@ -233,10 +243,14 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
            << aspect // aspect
            << offset / minDimension // offset
            << radii / minDimension // radius
-           << ShaderNode::toPremultiplied(style.background_or_new().color().value_or(Qt::transparent)) // color
+           << ShaderNode::toPremultiplied(background.color().value_or(Qt::transparent)) // color
            << ShaderNode::toPremultiplied(shadow.color().value_or(Qt::transparent)) // shadow_color
            << ShaderNode::toPremultiplied(borderLeft.color().value_or(Qt::transparent)) // border_color
            << ShaderNode::toPremultiplied(outlineLeft.color().value_or(Qt::transparent)); // outline_color
+
+    if (image.has_value()) {
+        shaderNode->setTexture(0, image.value(), window());
+    }
 
     shaderNode->markDirty(QSGNode::DirtyMaterial);
 

@@ -56,3 +56,18 @@ add_shaders("shadowed_border_texture"
         ENABLE_BORDER=1
         ENABLE_TEXTURE=1
 )
+
+add_shaders("shadowed_outline_texture"
+    INPUT shadowedrectangle
+    DEFINES
+        ENABLE_OUTLINE=1
+        ENABLE_TEXTURE=1
+)
+
+add_shaders("shadowed_outline_border_texture"
+    INPUT shadowedrectangle
+    DEFINES
+        ENABLE_OUTLINE=1
+        ENABLE_BORDER=1
+        ENABLE_TEXTURE=1
+)
