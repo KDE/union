@@ -265,7 +265,7 @@
 
 
 
-@property border-left-size {
+@property border-left-width {
     syntax: "<length>";
 }
 
@@ -291,7 +291,7 @@
 
 
 
-@property border-right-size {
+@property border-right-width {
     syntax: "<length>";
 }
 
@@ -317,7 +317,7 @@
 
 
 
-@property border-top-size {
+@property border-top-width {
     syntax: "<length>";
 }
 
@@ -343,7 +343,7 @@
 
 
 
-@property border-bottom-size {
+@property border-bottom-width {
     syntax: "<length>";
 }
 
