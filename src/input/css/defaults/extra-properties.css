@@ -8,6 +8,16 @@
  * of the properties defined in "generated-properties.css" above.
  */
 
+@property --internal-border-syntax {
+    syntax: "<string>";
+    initial-value: "<length> (solid | dotted | dashed) <color>";
+}
+
+@property --internal-alignment-syntax {
+    syntax: "<string>";
+    initial-value: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>";
+}
+
 @property padding {
     syntax: "<length>{1,4}";
 }
@@ -21,11 +31,11 @@
 }
 
 @property layout-alignment {
-    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
+    syntax: var(--internal-alignment-syntax);
 }
 
 @property border {
-    syntax: "<length> (solid | dotted | dashed) <color>";
+    syntax: var(--internal-border-syntax);
 }
 
 @property border-width {
@@ -41,7 +51,7 @@
 }
 
 @property outline {
-    syntax: "<length> (solid | dashed) <color>";
+    syntax: var(--internal-border-syntax);
 }
 
 @property color {
@@ -51,11 +61,11 @@
 }
 
 @property text-alignment {
-    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
+    syntax: var(--internal-alignment-syntax);
 }
 
 @property icon-alignment {
-    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>"
+    syntax: var(--internal-alignment-syntax);
 }
 
 @property shadow {
