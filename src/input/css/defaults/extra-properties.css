@@ -50,7 +50,39 @@
     syntax: "<length> | (<length> <length> <length> <length>)";
 }
 
+@property border-left {
+    syntax: var(--internal-border-syntax);
+}
+
+@property border-right {
+    syntax: var(--internal-border-syntax);
+}
+
+@property border-top {
+    syntax: var(--internal-border-syntax);
+}
+
+@property border-bottom {
+    syntax: var(--internal-border-syntax);
+}
+
 @property outline {
+    syntax: var(--internal-border-syntax);
+}
+
+@property outline-left {
+    syntax: var(--internal-border-syntax);
+}
+
+@property outline-right {
+    syntax: var(--internal-border-syntax);
+}
+
+@property outline-top {
+    syntax: var(--internal-border-syntax);
+}
+
+@property outline-bottom {
     syntax: var(--internal-border-syntax);
 }
 
