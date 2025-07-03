@@ -10,8 +10,16 @@ import org.kde.union.impl as Union
 
 T.MenuBarItem {
 	id: control
-
 	Union.Element.type: "MenuBarItem"
+	Union.Element.states {
+		hovered: control.hovered
+		activeFocus: control.activeFocus
+		visualFocus: control.visualFocus
+		pressed: control.down
+		checked: control.checked
+		enabled: control.enabled
+		highlighted: control.highlighted
+	}
 	font: Union.Style.properties.text.font
 	palette: Union.Style.properties.palette.quickPalette
 
