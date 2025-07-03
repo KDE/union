@@ -384,7 +384,7 @@ void CssLoader::setLayoutProperty(StyleProperty &output, const cssparser::Proper
 
 void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto background = output.background().value_or(BackgroundProperty{});
+    auto background = output.background_or_new();
 
     if (property.name == "background-color"s) {
         background.setColor(to_qcolor(property.value()));
@@ -466,7 +466,7 @@ void CssLoader::setOutlineProperty(StyleProperty &output, const cssparser::Prope
 
 void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto text = output.text().value_or(TextProperty{});
+    auto text = output.text_or_new();
 
     if (property.name.starts_with("text-alignment")) {
         setAlignment(text, property);
@@ -479,7 +479,7 @@ void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property
 
 void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto icon = output.icon().value_or(IconProperty{});
+    auto icon = output.icon_or_new();
 
     if (property.name.starts_with("icon-alignment")) {
         setAlignment(icon, property);
