@@ -49,14 +49,12 @@ void main()
     // We want to account for size in regards to shadow radius, so that a larger shadow is
     // more rounded, but only if we are not already rounding the corners due to corner radius.
     lowp vec4 size_factor = 0.5 * (minimum_shadow_radius / max(clamped_radius, minimum_shadow_radius));
-    lowp vec4 shadow_radius = clamped_radius + ubuf.size * size_factor;
+    lowp vec4 shadow_radius = clamped_radius + ubuf.shadowSize + ubuf.shadowBlur * size_factor;
 
     // Calculate the shadow's distance field.
-    lowp float shadow = sdf_rounded_rectangle(uv - ubuf.offset * 2.0 * inverse_scale, ubuf.aspect * inverse_scale, shadow_radius * inverse_scale);
-    // Render it, interpolating the color over the distance.
-    col = mix(col, ubuf.shadowColor * sign(ubuf.size), 1.0 - smoothstep(-ubuf.size * 0.5, ubuf.size * 0.5, shadow));
-#else
-    lowp float inverse_scale = 1.0;
+    mediump vec4 shadow_rect = adjusted_rect(vec4(uv, ubuf.aspect * inverse_scale), vec4(-ubuf.shadowSize));
+    lowp float shadow = sdf_rounded_rectangle(shadow_rect.xy - ubuf.shadowOffset * 2.0 * inverse_scale, shadow_rect.zw, shadow_radius * inverse_scale);
+    col = mix(col, ubuf.shadowColor, 1.0 - smoothstep(-ubuf.shadowBlur * 0.5, ubuf.shadowBlur * 0.5, shadow));
 #endif
 
     // Scale corrected corner radius

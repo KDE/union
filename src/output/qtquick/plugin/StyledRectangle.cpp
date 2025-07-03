@@ -30,9 +30,9 @@ inline QVector2D calculateAspect(const QRectF &rect)
     return aspect;
 }
 
-inline float adjustmentForShadowOutline(float shadowSize, const QVector2D &offsets, const QVector4D &outlineSize)
+inline float adjustmentForShadowOutline(float shadowSize, float shadowBlur, const QVector2D &offsets, const QVector4D &outlineSize)
 {
-    auto shadowAdjustment = shadowSize + offsets.length();
+    auto shadowAdjustment = shadowSize + shadowBlur / 2.0f + offsets.length();
     auto maxOutline = std::max({outlineSize.x(), outlineSize.y(), outlineSize.z(), outlineSize.w()});
     return std::max(shadowAdjustment, maxOutline);
 }
@@ -234,11 +234,12 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
 
     auto shadow = style.shadow_or_new();
     auto shadowSize = shadow.size().value_or(0.0);
+    auto shadowBlur = std::max(shadow.blur().value_or(0.0), 2.0);
 
     auto offsets = shadow.offset_or_new();
     auto offset = QVector2D{float(offsets.horizontal().value_or(0.0)), float(offsets.vertical().value_or(0.0))};
 
-    auto adjustment = adjustmentForShadowOutline(shadowSize, offset, outlineSize);
+    auto adjustment = adjustmentForShadowOutline(shadowSize, shadowBlur, offset, outlineSize);
     auto adjustedRect = rect.adjusted(-adjustment * aspect.x(), -adjustment * aspect.y(), adjustment * aspect.x(), adjustment * aspect.y());
     shaderNode->setRect(adjustedRect);
 
@@ -252,6 +253,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     UniformDataStream stream(shaderNode->uniformData());
     stream.skipMatrixOpacity();
     stream << float(shadowSize / minDimension) // size
+           << float(shadowBlur / minDimension) // blur
            << float(1.0 / (1.0 + (adjustment * 2.0 / minDimension))) // inverse_scale
            << borderSize / minDimension // border_width
            << outlineSize / minDimension // outline_width

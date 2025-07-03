@@ -9,7 +9,8 @@ layout(std140, binding = 0) uniform buf {
     highp mat4 matrix; // 16 components
     mediump float opacity; // 17 components
 
-    mediump float size; // 18 components
+    mediump float shadowSize; // 18 components
+    mediump float shadowBlur; // 19 components
     highp float inverseScale; // 20 components
     mediump vec4 borderWidth; // 24 components
     mediump vec4 outlineWidth; // 28 components
