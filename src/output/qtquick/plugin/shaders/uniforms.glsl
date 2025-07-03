@@ -10,17 +10,17 @@ layout(std140, binding = 0) uniform buf {
     mediump float opacity; // 17 components
 
     mediump float size; // 18 components
-    mediump float borderWidth; // 19 components
-    mediump float outlineWidth; // 20 components
+    highp float inverseScale; // 20 components
+    mediump vec4 borderWidth; // 24 components
+    mediump vec4 outlineWidth; // 28 components
 
-    mediump vec2 aspect; // 22 components
-    mediump vec2 offset; // 24 components
+    mediump vec2 aspect; // 30 components
+    mediump vec2 shadowOffset; // 32 components
 
-    mediump vec4 radius; // 28 components
+    mediump vec4 radius; // 36 components
 
-    mediump vec4 color; // 32 components
-    mediump vec4 shadowColor; // 36 components
-    mediump vec4 borderColor; // 40 components
-    mediump vec4 outlineColor; // 44 components
+    mediump vec4 color; // 40 components
+    mediump vec4 shadowColor; // 44 components
+    mediump vec4 borderColor; // 48 components
+    mediump vec4 outlineColor; // 52 components
 } ubuf;
-

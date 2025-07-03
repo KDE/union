@@ -20,6 +20,21 @@ layout(location = 0) out lowp vec4 out_color;
 
 const lowp float minimum_shadow_radius = 0.05;
 
+mediump vec4 adjusted_rect(mediump vec4 rect, mediump vec4 adjustment)
+{
+    return vec4(rect.xy - adjustment.xy + adjustment.zw, rect.zw - (adjustment.xy + adjustment.zw));
+}
+
+mediump vec4 adjusted_radius(mediump vec4 radius, mediump vec4 adjustment)
+{
+    return vec4(
+        radius.x - min(adjustment.z, adjustment.w),
+        radius.y - min(adjustment.z, adjustment.y),
+        radius.z - min(adjustment.x, adjustment.w),
+        radius.w - min(adjustment.x, adjustment.y)
+    );
+}
+
 void main()
 {
     lowp vec4 clamped_radius = clamp(ubuf.radius * 2.0, 0.0, 1.0);
@@ -28,7 +43,7 @@ void main()
 
 #ifndef ENABLE_LOWPOWER
     // Scaling factor that is the inverse of the amount of scaling applied to the geometry.
-    lowp float inverse_scale = 1.0 / (1.0 + max(ubuf.size + length(ubuf.offset) * 2.0,  ubuf.outlineWidth * 2.0));
+    highp float inverse_scale = ubuf.inverseScale;
 
     // Correction factor to round the corners of a larger shadow.
     // We want to account for size in regards to shadow radius, so that a larger shadow is
@@ -47,26 +62,34 @@ void main()
     // Scale corrected corner radius
     lowp vec4 corner_radius = clamped_radius * inverse_scale;
 
-    lowp float rect = sdf_rounded_rectangle(uv, ubuf.aspect * inverse_scale, corner_radius);
+    mediump vec4 rect = vec4(uv, ubuf.aspect * inverse_scale);
 
 #ifdef ENABLE_OUTLINE
-    col = sdf_render(rect - (ubuf.outlineWidth * inverse_scale) * 2.0, col, ubuf.outlineColor);
+    rect = adjusted_rect(rect, -ubuf.outlineWidth * inverse_scale);
+    corner_radius = adjusted_radius(corner_radius, -ubuf.outlineWidth * inverse_scale);
+    col = sdf_render(sdf_rounded_rectangle(rect.xy, rect.zw, corner_radius), col, ubuf.outlineColor);
+
+    rect = vec4(uv, ubuf.aspect * inverse_scale);
+    corner_radius = clamped_radius * inverse_scale;
 #endif
 
 #ifdef ENABLE_BORDER
-    col = sdf_render(rect, col, ubuf.borderColor);
+    col = sdf_render(sdf_rounded_rectangle(rect.xy, rect.zw, corner_radius), col, ubuf.borderColor);
+    rect = adjusted_rect(rect, ubuf.borderWidth * inverse_scale);
 
-    // The inner rectangle distance field is the outer reduced by twice the border size.
-    rect = rect + (ubuf.borderWidth * inverse_scale) * 2.0;
+    // Adjust corner radius for the amount the border makes the inner rectangle
+    // smaller.
+    corner_radius = adjusted_radius(corner_radius, ubuf.borderWidth * inverse_scale);
 #endif
     // Finally, render the inner rectangle.
-    col = sdf_render(rect, col, ubuf.color);
+    mediump float sdf = sdf_rounded_rectangle(rect.xy, rect.zw, corner_radius);
+    col = sdf_render(sdf, col, ubuf.color);
 
 #ifdef ENABLE_TEXTURE
     // Sample the texture, then blend it on top of the background color.
     lowp vec2 texture_uv = ((uv / ubuf.aspect) + (1.0 * inverse_scale)) / (2.0 * inverse_scale);
     lowp vec4 texture_color = texture(textureSource, texture_uv);
-    col = sdf_render(rect, col, texture_color, texture_color.a, sdf_default_smoothing);
+    col = sdf_render(sdf, col, texture_color, texture_color.a, sdf_default_smoothing);
 #endif
 
     out_color = col * ubuf.opacity;
