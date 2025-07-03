@@ -18,6 +18,8 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
+    style/MenuBar.qml
+    style/MenuBarItem.qml
     style/MenuItem.qml
     style/MenuSeparator.qml
     style/Page.qml
