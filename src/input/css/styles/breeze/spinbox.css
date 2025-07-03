@@ -11,7 +11,6 @@ spinbox
     text-alignment-container: content;
     text-alignment-horizontal: fill;
     text-alignment-vertical: fill;
-/*     padding: var(--small-spacing); */
     padding-left: var(--large-spacing);
     padding-right: var(--large-spacing);
     padding-top: var(--small-spacing);
@@ -23,6 +22,7 @@ spinbox indicator
     width: var(--large-element-size);
     height: var(--large-element-size);
     border-radius: var(--corner-radius);
+    border-color: var(--button-border-color);
 
     layout-alignment-container: item;
     layout-alignment-vertical: fill;
@@ -42,6 +42,7 @@ spinbox indicator.decrease
     icon-name: "arrow-down-symbolic";
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
+    border-right-width: 1px;
 }
 
 spinbox indicator.increase
@@ -50,5 +51,6 @@ spinbox indicator.increase
     icon-name: "arrow-up-symbolic";
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
+    border-left-width: 1px;
 }
 
