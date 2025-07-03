@@ -171,7 +171,7 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
         properties = {"color"};
         values = {property.value()};
     } else {
-        static const QRegularExpression directionValueExpression{QStringLiteral(R"(([^-]+)-([^-]+)-(.+))"),
+        static const QRegularExpression directionValueExpression{QStringLiteral(R"(([^-]+)-([^-]+)(?:-(.+))?)"),
                                                                  QRegularExpression::PatternOption::CaseInsensitiveOption};
         auto matches = directionValueExpression.match(QString::fromStdString(property.name));
 
@@ -180,8 +180,14 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
         }
 
         directions = {matches.captured(2).toLatin1()};
-        properties = {matches.captured(3).toLatin1()};
-        values = {property.value()};
+
+        if (matches.hasCaptured(3)) {
+            properties = {matches.captured(3).toLatin1()};
+            values = {property.value()};
+        } else {
+            properties = {"width", "color"};
+            values = {property.value(0), property.value(2)};
+        }
     }
 
     auto setLineValue = [](LineProperty &line, const QByteArray &property, const cssparser::Value &value) -> LineProperty {
