@@ -10,7 +10,6 @@ menu
 
     background-color: var(--window-background-color);
     border: 1px solid var(--window-border-color);
-    shadow: 2px 0px 1px var(--shadow-color);
 }
 
 menuitem

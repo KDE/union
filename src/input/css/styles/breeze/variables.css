@@ -33,6 +33,7 @@
     --button-background-color: #fcfcfc;
     --button-border-color: mix(var(--button-background-color), var(--button-text-color), 0.3);
     --button-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
+    --button-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
 
     --view-text-color: #232629;
     --view-background-color: #ffffff;
@@ -41,5 +42,5 @@
 
     --focus-color: rgba(61, 174, 233, 0.42);
 
-    --shadow-color: rgba(0, 0, 0, 0.75);
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
