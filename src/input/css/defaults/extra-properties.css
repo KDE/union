@@ -100,8 +100,8 @@
     syntax: var(--internal-alignment-syntax);
 }
 
-@property shadow {
-    syntax: "<length> <length> <length> <color>";
+@property box-shadow {
+    syntax: "<length> <length> <length> <length> <color>";
 }
 
 @property background-image {

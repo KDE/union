@@ -349,7 +349,7 @@ StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property>
             setIconProperty(result, property);
         } else if (property.name == "color"s) {
             setTextProperty(result, property);
-        } else if (property.name.starts_with("shadow")) {
+        } else if (property.name.starts_with("shadow") || property.name.starts_with("box-shadow")) {
             setShadowProperty(result, property);
         }
     }
@@ -500,15 +500,17 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
 
 void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Property &property)
 {
-    auto shadow = output.shadow().value_or(ShadowProperty{});
+    auto shadow = output.shadow_or_new();
 
-    if (property.name == "shadow") {
-        shadow.setSize(to_px(property.value(0)));
-        shadow.setColor(to_qcolor(property.value(3)));
+    if (property.name == "box-shadow") {
+        auto offset = shadow.offset_or_new();
+        offset.setHorizontal(to_px(property.value(0)));
+        offset.setVertical(to_px(property.value(1)));
+        shadow.setOffset(offset);
 
-        auto offset = shadow.offset().value_or(OffsetProperty{});
-        offset.setHorizontal(to_px(property.value(1)));
-        offset.setVertical(to_px(property.value(2)));
+        shadow.setBlur(to_px(property.value(2)));
+        shadow.setSize(to_px(property.value(3)));
+        shadow.setColor(to_qcolor(property.value(4)));
     }
 
     if (shadow.hasAnyValue()) {
