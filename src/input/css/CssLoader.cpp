@@ -372,7 +372,7 @@ void CssLoader::setLayoutProperty(StyleProperty &output, const cssparser::Proper
     } else if (property.name.starts_with("padding")) {
         layout.setPadding(sizeFromProperty(layout.padding(), property));
     } else if (property.name.starts_with("inset")) {
-        layout.setInset(sizeFromProperty(layout.padding(), property));
+        layout.setInset(sizeFromProperty(layout.inset(), property));
     } else if (property.name.starts_with("margin")) {
         layout.setMargins(sizeFromProperty(layout.margins(), property));
     }
