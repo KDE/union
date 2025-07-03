@@ -6,6 +6,12 @@
 # keep things a bit organised and easier to follow, this is still a separate
 # file that gets included.
 
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+    set(_extra_options DEBUGINFO)
+else()
+    set(_extra_options PRECOMPILE OPTIMIZED)
+endif()
+
 macro(add_shaders ARG_NAME)
     cmake_parse_arguments(ARG "" "INPUT" "DEFINES" ${ARGV})
     qt6_add_shaders(UnionQuickImpl "${ARG_NAME}"
