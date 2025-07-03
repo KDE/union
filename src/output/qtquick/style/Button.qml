@@ -29,7 +29,16 @@ T.Button {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
+    Union.Element.hints: {
+        let result = []
+        if (icon.name || icon.source.toString()) {
+            result.push("with-icon")
+        }
+        if (flat) {
+            result.push("flat")
+        }
+        return result
+    }
     Union.Element.attributes: {
         let result = {}
         switch (display) {
