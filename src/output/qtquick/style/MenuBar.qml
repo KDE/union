@@ -11,16 +11,18 @@ T.MenuBar {
 	id: control
 
 	Union.Element.type: "MenuBar"
+	font: Union.Style.properties.text.font
+	palette: Union.Style.properties.palette.quickPalette
 
 	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
 							implicitContentWidth + leftPadding + rightPadding)
 	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
 							 implicitContentHeight + topPadding + bottomPadding)
 
-	topPadding: SafeArea.margins.top
-	leftPadding: SafeArea.margins.left
-	rightPadding: SafeArea.margins.right
-	bottomPadding: SafeArea.margins.bottom
+	leftPadding: Union.Style.properties.layout.padding.left
+	rightPadding: Union.Style.properties.layout.padding.right
+	topPadding: Union.Style.properties.layout.padding.top
+	bottomPadding: Union.Style.properties.layout.padding.bottom
 
 	delegate: MenuBarItem { }
 
@@ -31,8 +33,5 @@ T.MenuBar {
 		}
 	}
 
-	background: Rectangle {
-		implicitHeight: 40
-		color: control.palette.button
-	}
+	background: Union.StyledRectangle { }
 }

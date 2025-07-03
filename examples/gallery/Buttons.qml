@@ -16,8 +16,30 @@ Kirigami.Page {
     Kirigami.ColumnView.preferredWidth: Kirigami.Units.gridUnit * 25
     Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
 
+
     ColumnLayout {
         anchors.fill: parent
+
+        Controls.MenuBar {
+            Controls.Menu {
+                title: qsTr("File")
+                Kirigami.Action { text: qsTr("New...") }
+                Kirigami.Action { text: qsTr("Open...") }
+                Controls.MenuSeparator { }
+                Kirigami.Action { text: qsTr("Save") }
+                Kirigami.Action { text: qsTr("Save As...") }
+            }
+            Controls.Menu {
+                title: qsTr("Edit")
+                Kirigami.Action { text: qsTr("Cut") }
+                Kirigami.Action { text: qsTr("Copy") }
+                Kirigami.Action { text: qsTr("Paste") }
+            }
+            Controls.Menu {
+                title: qsTr("Help")
+                Kirigami.Action { text: qsTr("About") }
+            }
+        }
 
         Controls.Button {
             text: "Button with Text"
@@ -74,7 +96,6 @@ Kirigami.Page {
             checkable: true
             checked: true
         }
-
         Item {
             Layout.fillHeight: true
         }

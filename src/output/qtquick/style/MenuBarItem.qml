@@ -12,7 +12,7 @@ T.MenuBarItem {
 	id: control
 
 	Union.Element.type: "MenuBarItem"
-
+	font: Union.Style.properties.text.font
 	palette: Union.Style.properties.palette.quickPalette
 
 	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
@@ -21,18 +21,18 @@ T.MenuBarItem {
 							 implicitContentHeight + topPadding + bottomPadding,
 							 implicitIndicatorHeight + topPadding + bottomPadding)
 
-	spacing: 6
-	padding: 6
-	leftPadding: 12
-	rightPadding: 16
+	spacing: Union.Style.properties.layout.spacing
+	topPadding: Union.Style.properties.layout.padding.top
+	bottomPadding: Union.Style.properties.layout.padding.bottom
+	leftPadding: Union.Style.properties.layout.padding.left
+	rightPadding: Union.Style.properties.layout.padding.right
 
-	icon.width: 24
-	icon.height: 24
+	icon.width: Union.Style.properties.icon.width
+	icon.height: Union.Style.properties.icon.height
 	icon.color: control.palette.buttonText
 
 	contentItem: IconLabel {
-		font: Union.Style.properties.text.font
-		palette: Union.Style.properties.palette.quickPalette
+		font: control.font
 		spacing: control.spacing
 		mirrored: control.mirrored
 		display: control.display
@@ -43,13 +43,5 @@ T.MenuBarItem {
 		color: control.palette.buttonText
 	}
 
-	background: Rectangle {
-		implicitWidth: 40
-		implicitHeight: 40
-		palette: Union.Style.properties.palette.quickPalette
-		color: control.down || control.highlighted ? control.palette.mid : "transparent"
-		border.color: control.palette.dark
-		border.width: Qt.styleHints.accessibility.contrastPreference === Qt.HighContrast &&
-		control.highlighted ? 1 : 0
-	}
+	background: Union.StyledRectangle { }
 }
