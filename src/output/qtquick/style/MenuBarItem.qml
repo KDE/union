@@ -9,47 +9,45 @@ import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
 T.MenuBarItem {
-	id: control
-	Union.Element.type: "MenuBarItem"
-	Union.Element.states {
-		hovered: control.hovered
-		activeFocus: control.activeFocus
-		visualFocus: control.visualFocus
-		pressed: control.down
-		checked: control.checked
-		enabled: control.enabled
-		highlighted: control.highlighted
-	}
-	font: Union.Style.properties.text.font
-	palette: Union.Style.properties.palette.quickPalette
+    id: control
+    Union.Element.type: "MenuBarItem"
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.visualFocus
+        pressed: control.down
+        checked: control.checked
+        enabled: control.enabled
+        highlighted: control.highlighted
+    }
 
-	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-							implicitContentWidth + leftPadding + rightPadding)
-	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-							 implicitContentHeight + topPadding + bottomPadding,
-							 implicitIndicatorHeight + topPadding + bottomPadding)
+    font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
-	spacing: Union.Style.properties.layout.spacing
-	topPadding: Union.Style.properties.layout.padding.top
-	bottomPadding: Union.Style.properties.layout.padding.bottom
-	leftPadding: Union.Style.properties.layout.padding.left
-	rightPadding: Union.Style.properties.layout.padding.right
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding, implicitIndicatorHeight + topPadding + bottomPadding)
 
-	icon.width: Union.Style.properties.icon.width
-	icon.height: Union.Style.properties.icon.height
-	icon.color: control.palette.buttonText
+    spacing: Union.Style.properties.layout.spacing
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
 
-	contentItem: IconLabel {
-		font: control.font
-		spacing: control.spacing
-		mirrored: control.mirrored
-		display: control.display
-		alignment: Qt.AlignLeft
+    icon.width: Union.Style.properties.icon.width
+    icon.height: Union.Style.properties.icon.height
+    icon.color: control.palette.buttonText
 
-		icon: control.icon
-		text: control.text
-		color: control.palette.buttonText
-	}
+    contentItem: IconLabel {
+        font: control.font
+        spacing: control.spacing
+        mirrored: control.mirrored
+        display: control.display
+        alignment: Qt.AlignLeft
 
-	background: Union.StyledRectangle { }
+        icon: control.icon
+        text: control.text
+        color: control.palette.buttonText
+    }
+
+    background: Union.StyledRectangle {}
 }

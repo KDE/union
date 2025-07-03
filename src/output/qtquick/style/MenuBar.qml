@@ -8,30 +8,28 @@ import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
 T.MenuBar {
-	id: control
+    id: control
 
-	Union.Element.type: "MenuBar"
-	font: Union.Style.properties.text.font
-	palette: Union.Style.properties.palette.quickPalette
+    Union.Element.type: "MenuBar"
+    font: Union.Style.properties.text.font
+    palette: Union.Style.properties.palette.quickPalette
 
-	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-							implicitContentWidth + leftPadding + rightPadding)
-	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-							 implicitContentHeight + topPadding + bottomPadding)
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)
 
-	leftPadding: Union.Style.properties.layout.padding.left
-	rightPadding: Union.Style.properties.layout.padding.right
-	topPadding: Union.Style.properties.layout.padding.top
-	bottomPadding: Union.Style.properties.layout.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-	delegate: MenuBarItem { }
+    delegate: MenuBarItem {}
 
-	contentItem: Row {
-		spacing: control.spacing
-		Repeater {
-			model: control.contentModel
-		}
-	}
+    contentItem: Row {
+        spacing: control.spacing
+        Repeater {
+            model: control.contentModel
+        }
+    }
 
-	background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {}
 }
