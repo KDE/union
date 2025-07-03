@@ -185,22 +185,20 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
 
     auto shaderNode = static_cast<ShaderNode *>(node);
 
-    auto shaderName = u"shadowed_"_s;
-
-    if (style.outline().has_value()) {
-        shaderName += u"outline_"_s;
-    }
+    auto shaderName = u"styledrectangle"_s;
 
     if (style.border().has_value()) {
-        shaderName += u"border_"_s;
+        shaderName += u"-border"_s;
+    }
+
+    if (style.outline().has_value()) {
+        shaderName += u"-outline"_s;
     }
 
     auto background = style.background_or_new();
     auto image = background.image_or_new().imageData();
     if (image.has_value()) {
-        shaderName += u"texture"_s;
-    } else {
-        shaderName += u"rectangle"_s;
+        shaderName += u"-texture"_s;
     }
 
     shaderNode->setShader(shaderName);

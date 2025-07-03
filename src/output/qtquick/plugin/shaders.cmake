@@ -30,48 +30,48 @@ macro(add_shaders ARG_NAME)
     install(TARGETS ${_targets} EXPORT KirigamiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
-add_shaders("shadowed_rectangle"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle"
+    INPUT styledrectangle
 )
 
-add_shaders("shadowed_border_rectangle"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-border"
+    INPUT styledrectangle
     DEFINES ENABLE_BORDER=1
 )
 
-add_shaders("shadowed_outline_rectangle"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-outline"
+    INPUT styledrectangle
     DEFINES ENABLE_OUTLINE=1
 )
 
-add_shaders("shadowed_outline_border_rectangle"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-outline-border"
+    INPUT styledrectangle
     DEFINES
         ENABLE_OUTLINE=1
         ENABLE_BORDER=1
 )
 
-add_shaders("shadowed_texture"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-texture"
+    INPUT styledrectangle
     DEFINES ENABLE_TEXTURE=1
 )
 
-add_shaders("shadowed_border_texture"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-border-texture"
+    INPUT styledrectangle
     DEFINES
         ENABLE_BORDER=1
         ENABLE_TEXTURE=1
 )
 
-add_shaders("shadowed_outline_texture"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-outline-texture"
+    INPUT styledrectangle
     DEFINES
         ENABLE_OUTLINE=1
         ENABLE_TEXTURE=1
 )
 
-add_shaders("shadowed_outline_border_texture"
-    INPUT shadowedrectangle
+add_shaders("styledrectangle-outline-border-texture"
+    INPUT styledrectangle
     DEFINES
         ENABLE_OUTLINE=1
         ENABLE_BORDER=1
