@@ -30,50 +30,52 @@ macro(add_shaders ARG_NAME)
     install(TARGETS ${_targets} EXPORT KirigamiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
-add_shaders("styledrectangle"
-    INPUT styledrectangle
+macro(name_to_define ARG_NAME ARG_OUTPUT)
+    if ("${ARG_NAME}" STREQUAL "shadow")
+        set(${ARG_OUTPUT} ENABLE_SHADOW=1)
+    endif()
+    if ("${ARG_NAME}" STREQUAL "border")
+        set(${ARG_OUTPUT} ENABLE_BORDER=1)
+    endif()
+    if ("${ARG_NAME}" STREQUAL "outline")
+        set(${ARG_OUTPUT} ENABLE_OUTLINE=1)
+    endif()
+    if ("${ARG_NAME}" STREQUAL "texture")
+        set(${ARG_OUTPUT} ENABLE_TEXTURE=1)
+    endif()
+endmacro()
+
+set(_variants
+    "shadow"
+    "shadow-border"
+    "shadow-outline"
+    "shadow-texture"
+    "shadow-border-outline"
+    "shadow-border-texture"
+    "shadow-outline-texture"
+    "shadow-border-outline-texture"
+    "border"
+    "border-outline"
+    "border-texture"
+    "border-outline-texture"
+    "outline"
+    "outline-texture"
+    "texture"
 )
 
-add_shaders("styledrectangle-border"
-    INPUT styledrectangle
-    DEFINES ENABLE_BORDER=1
-)
+add_shaders("styledrectangle" INPUT styledrectangle)
 
-add_shaders("styledrectangle-outline"
-    INPUT styledrectangle
-    DEFINES ENABLE_OUTLINE=1
-)
+foreach(_variant ${_variants})
+    string(REPLACE "-" ";" _parts "${_variant}")
 
-add_shaders("styledrectangle-outline-border"
-    INPUT styledrectangle
-    DEFINES
-        ENABLE_OUTLINE=1
-        ENABLE_BORDER=1
-)
+    set(_defines "")
+    foreach(_part ${_parts})
+        name_to_define("${_part}" _define)
+        list(APPEND _defines "${_define}")
+    endforeach()
 
-add_shaders("styledrectangle-texture"
-    INPUT styledrectangle
-    DEFINES ENABLE_TEXTURE=1
-)
-
-add_shaders("styledrectangle-border-texture"
-    INPUT styledrectangle
-    DEFINES
-        ENABLE_BORDER=1
-        ENABLE_TEXTURE=1
-)
-
-add_shaders("styledrectangle-outline-texture"
-    INPUT styledrectangle
-    DEFINES
-        ENABLE_OUTLINE=1
-        ENABLE_TEXTURE=1
-)
-
-add_shaders("styledrectangle-outline-border-texture"
-    INPUT styledrectangle
-    DEFINES
-        ENABLE_OUTLINE=1
-        ENABLE_BORDER=1
-        ENABLE_TEXTURE=1
-)
+    add_shaders("styledrectangle-${_variant}"
+        INPUT styledrectangle
+        DEFINES ${_defines}
+    )
+endforeach()

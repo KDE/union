@@ -41,10 +41,10 @@ void main()
 
     lowp vec4 col = vec4(0.0);
 
-#ifndef ENABLE_LOWPOWER
     // Scaling factor that is the inverse of the amount of scaling applied to the geometry.
     highp float inverse_scale = ubuf.inverseScale;
 
+#ifdef ENABLE_SHADOW
     // Correction factor to round the corners of a larger shadow.
     // We want to account for size in regards to shadow radius, so that a larger shadow is
     // more rounded, but only if we are not already rounding the corners due to corner radius.
