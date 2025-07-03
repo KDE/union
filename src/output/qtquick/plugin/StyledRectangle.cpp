@@ -187,7 +187,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     auto shaderName = u"styledrectangle"_s;
 
     if (style.shadow().has_value()) {
-        shaderName = u"-shadow"_s;
+        shaderName += u"-shadow"_s;
     }
 
     if (style.border().has_value()) {
