@@ -34,6 +34,7 @@ void ShadowPropertyGroup::update(const ShadowProperty &newState)
     m_offset->update(newState.offset().value_or(OffsetProperty{}));
     Q_EMIT colorChanged();
     Q_EMIT sizeChanged();
+    Q_EMIT blurChanged();
     m_left->update(newState.left().value_or(LineProperty{}));
     m_right->update(newState.right().value_or(LineProperty{}));
     m_top->update(newState.top().value_or(LineProperty{}));
@@ -64,6 +65,16 @@ QJSValue ShadowPropertyGroup::color() const
 QJSValue ShadowPropertyGroup::size() const
 {
     auto value = m_state.size();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue ShadowPropertyGroup::blur() const
+{
+    auto value = m_state.blur();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

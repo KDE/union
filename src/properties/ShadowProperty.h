@@ -102,6 +102,17 @@ public:
     void setSize(const std::optional<qreal> &newValue);
 
     /*!
+     * Returns the value of blur.
+     */
+    std::optional<qreal> blur() const;
+    /*!
+     * Set the value of blur.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setBlur(const std::optional<qreal> &newValue);
+
+    /*!
      * Returns the value of left.
      */
     std::optional<LineProperty> left() const;

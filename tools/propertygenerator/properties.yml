@@ -200,6 +200,7 @@ shadow:
 
     color: QColor
     size: qreal
+    blur: qreal
 
     left: *line
     right: *line

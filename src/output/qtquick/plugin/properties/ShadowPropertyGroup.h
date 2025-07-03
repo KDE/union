@@ -73,6 +73,15 @@ public:
     Q_SIGNAL void sizeChanged();
 
     /*!
+     * \qmlproperty qreal ShadowPropertyGroup::blur
+     *
+     * Exposes ShadowProperty::blur to QML.
+     */
+    Q_PROPERTY(QJSValue blur READ blur NOTIFY blurChanged)
+    QJSValue blur() const;
+    Q_SIGNAL void blurChanged();
+
+    /*!
      * \qmlproperty LinePropertyGroup ShadowPropertyGroup::left
      *
      * Exposes ShadowProperty::LineProperty to QML.

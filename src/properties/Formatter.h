@@ -1774,6 +1774,17 @@ struct std::formatter<Union::Properties::ShadowProperty, char> {
         }
 
         out << indent(indentation);
+        out << "blur: ";
+        {
+            auto value = group.blur();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
         out << "left: ";
         {
             auto value = group.left();

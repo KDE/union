@@ -17,6 +17,7 @@ public:
     std::optional<OffsetProperty> offset;
     std::optional<QColor> color;
     std::optional<qreal> size;
+    std::optional<qreal> blur;
     std::optional<LineProperty> left;
     std::optional<LineProperty> right;
     std::optional<LineProperty> top;
@@ -38,6 +39,7 @@ ShadowProperty::ShadowProperty(const ShadowProperty &other)
     d->offset = other.d->offset;
     d->color = other.d->color;
     d->size = other.d->size;
+    d->blur = other.d->blur;
     d->left = other.d->left;
     d->right = other.d->right;
     d->top = other.d->top;
@@ -61,6 +63,7 @@ ShadowProperty &ShadowProperty::operator=(const ShadowProperty &other)
         d->offset = other.d->offset;
         d->color = other.d->color;
         d->size = other.d->size;
+        d->blur = other.d->blur;
         d->left = other.d->left;
         d->right = other.d->right;
         d->top = other.d->top;
@@ -122,6 +125,19 @@ void ShadowProperty::setSize(const std::optional<qreal> &newValue)
     }
 
     d->size = newValue;
+}
+std::optional<qreal> ShadowProperty::blur() const
+{
+    return d->blur;
+}
+
+void ShadowProperty::setBlur(const std::optional<qreal> &newValue)
+{
+    if (newValue == d->blur) {
+        return;
+    }
+
+    d->blur = newValue;
 }
 std::optional<LineProperty> ShadowProperty::left() const
 {
@@ -279,6 +295,9 @@ bool ShadowProperty::hasAnyValue() const
     if (d->size.has_value()) {
         return true;
     }
+    if (d->blur.has_value()) {
+        return true;
+    }
     if (d->left.has_value() && d->left->hasAnyValue()) {
         return true;
     }
@@ -323,6 +342,9 @@ void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowPrope
     }
     if (!destination.d->size.has_value()) {
         destination.d->size = source.d->size;
+    }
+    if (!destination.d->blur.has_value()) {
+        destination.d->blur = source.d->blur;
     }
     if (source.d->left.has_value()) {
         LineProperty property;
@@ -412,6 +434,7 @@ ShadowProperty ShadowProperty::empty()
     result.d->offset = emptyValue<OffsetProperty>();
     result.d->color = emptyValue<QColor>();
     result.d->size = emptyValue<qreal>();
+    result.d->blur = emptyValue<qreal>();
     result.d->left = emptyValue<LineProperty>();
     result.d->right = emptyValue<LineProperty>();
     result.d->top = emptyValue<LineProperty>();
@@ -432,6 +455,9 @@ bool Union::Properties::operator==(const ShadowProperty &left, const ShadowPrope
         return false;
     }
     if (left.size() != right.size()) {
+        return false;
+    }
+    if (left.blur() != right.blur()) {
         return false;
     }
     if (left.left() != right.left()) {
@@ -468,6 +494,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::ShadowProperty &type)
                     << "offset: " << type.offset() //
                     << ", color: " << type.color() //
                     << ", size: " << type.size() //
+                    << ", blur: " << type.blur() //
                     << ", left: " << type.left() //
                     << ", right: " << type.right() //
                     << ", top: " << type.top() //

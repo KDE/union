@@ -25,6 +25,7 @@ private Q_SLOTS:
         QVERIFY(!property.offset().has_value());
         QVERIFY(!property.color().has_value());
         QVERIFY(!property.size().has_value());
+        QVERIFY(!property.blur().has_value());
         QVERIFY(!property.left().has_value());
         QVERIFY(!property.right().has_value());
         QVERIFY(!property.top().has_value());
@@ -65,6 +66,13 @@ private Q_SLOTS:
             property.setSize(value);
             QVERIFY(property.hasAnyValue());
             property.setSize(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
+        {
+            qreal value;
+            property.setBlur(value);
+            QVERIFY(property.hasAnyValue());
+            property.setBlur(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
         {
@@ -173,6 +181,7 @@ private Q_SLOTS:
         source.setOffset(testOffsetPropertyInstance());
         source.setColor(QColor{});
         source.setSize(qreal{});
+        source.setBlur(qreal{});
         source.setLeft(testLinePropertyInstance());
         source.setRight(testLinePropertyInstance());
         source.setTop(testLinePropertyInstance());
@@ -192,6 +201,7 @@ private Q_SLOTS:
         QCOMPARE(destination.offset(), source.offset());
         QCOMPARE(destination.color(), source.color());
         QCOMPARE(destination.size(), source.size());
+        QCOMPARE(destination.blur(), source.blur());
         QCOMPARE(destination.left(), source.left());
         QCOMPARE(destination.right(), source.right());
         QCOMPARE(destination.top(), source.top());

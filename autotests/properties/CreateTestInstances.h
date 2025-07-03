@@ -267,6 +267,7 @@ ShadowProperty testShadowPropertyInstance()
     instance.setOffset(testOffsetPropertyInstance());
     instance.setColor(testQColorInstance());
     instance.setSize(testQrealInstance());
+    instance.setBlur(testQrealInstance());
     instance.setLeft(testLinePropertyInstance());
     instance.setRight(testLinePropertyInstance());
     instance.setTop(testLinePropertyInstance());

@@ -629,6 +629,10 @@
     syntax: "<length>";
 }
 
+@property shadow-blur {
+    syntax: "<length>";
+}
+
 @property shadow-left-size {
     syntax: "<length>";
 }
