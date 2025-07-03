@@ -32,12 +32,12 @@ radiobutton indicator
 
     &:hovered
     {
-        border: 1px solid var(--highlight-color);
+        border-color: var(--highlight-color);
     }
 
     &:visual-focus
     {
-        border: 1px solid var(--highlight-color);
+        border-color: var(--highlight-color);
         outline: 2px solid var(--focus-color);
     }
 
@@ -68,7 +68,7 @@ button:checked
 
 toolbutton
 {
-    border: 0px solid transparent;
+    border-color: transparent;
     background-color: transparent;
     shadow: 0px 0px 0px transparent;
 }
