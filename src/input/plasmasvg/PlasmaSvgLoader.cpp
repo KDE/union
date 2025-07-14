@@ -185,7 +185,6 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
                 auto val = Element::State(value<Element::States>(child).toInt());
                 allOfList.append(Selector::create<SelectorType::State>(val));
             }
-            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -201,7 +200,6 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
                 }
                 allOfList.append(Selector::create<SelectorType::Hint>(value<QString>(child)));
             }
-            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -215,7 +213,6 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
                 auto pair = std::make_pair<QString, QVariant>(QString::fromLatin1(child.key()), QString::fromLatin1(child.val()));
                 allOfList.append(Selector::create<SelectorType::Attribute>(pair));
             }
-            selectors.appendAllOf(allOfList);
         }
     });
 
@@ -233,7 +230,6 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
                 }
                 anyOfList.append(Selector::create<SelectorType::ColorSet>(value<Element::ColorSet>(child)));
             }
-            selectors.appendAnyOf(anyOfList);
         }
     });
 
@@ -248,7 +244,6 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
     });
 
     SelectorList result;
-    result.appendAllOf(selectors);
 
     if (!childSelectors.isEmpty()) {
         result.append(childSelectors);

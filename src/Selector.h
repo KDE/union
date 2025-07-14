@@ -63,8 +63,6 @@ enum class SelectorType {
     AnyElement,
     ChildCombinator,
     DescendantCombinator,
-    AnyOf,
-    AllOf,
 };
 
 namespace detail
@@ -83,8 +81,6 @@ template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> 
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::ColorSet, T> = std::is_same_v<T, Element::ColorSet>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Attribute, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AnyOf, T> = std::is_same_v<T, SelectorList>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AllOf, T> = std::is_same_v<T, SelectorList>;
 /* clang-format on */
 
 // Partial type-erasure implementation for Selector.
@@ -250,9 +246,6 @@ public:
      * Returns if the selectors in this list match the list of elements.
      */
     bool matches(const QList<std::shared_ptr<Element>> &elements) const;
-
-    void appendAnyOf(const SelectorList &selectors);
-    void appendAllOf(const SelectorList &selectors);
     /*!
      * Returns a string representation of this list.
      */

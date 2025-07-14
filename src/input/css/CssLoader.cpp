@@ -264,24 +264,9 @@ bool CssLoader::load(Theme::Ptr theme)
 Union::SelectorList CssLoader::createSelectorList(const cssparser::Selector &selector)
 {
     Union::SelectorList result;
-
-    auto itr = selector.parts.begin();
-    while (itr != selector.parts.end()) {
-        Union::SelectorList all;
-
-        while (itr != selector.parts.end() && !itr->is_combinator()) {
-            all.push_back(createSelector(*itr++));
-        }
-
-        if (!all.isEmpty()) {
-            result.appendAllOf(all);
-        }
-
-        if (itr != selector.parts.end()) {
-            itr++;
-        }
-    }
-
+    std::ranges::transform(selector.parts, std::back_inserter(result), [this](const auto &part) {
+        return createSelector(part);
+    });
     return result;
 }
 
