@@ -295,11 +295,9 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
         // TODO
         break;
     case cssparser::SelectorKind::DescendantCombinator:
-        // TODO
-        break;
+        return Union::Selector::create<Union::SelectorType::DescendantCombinator>();
     case cssparser::SelectorKind::ChildCombinator:
-        // TODO
-        break;
+        return Union::Selector::create<Union::SelectorType::ChildCombinator>();
     }
 
     return Union::Selector::create();
