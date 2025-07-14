@@ -59,7 +59,9 @@ enum class SelectorType {
     State,
     ColorSet,
     Hint,
-    Attribute,
+    AttributeExists,
+    AttributeEquals,
+    AttributeSubstringMatch,
     AnyElement,
     ChildCombinator,
     DescendantCombinator,
@@ -80,7 +82,9 @@ template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = s
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::ColorSet, T> = std::is_same_v<T, Element::ColorSet>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Attribute, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeSubstringMatch, T> = std::is_same_v<T, std::pair<QString, QString>>;
 /* clang-format on */
 
 // Partial type-erasure implementation for Selector.
