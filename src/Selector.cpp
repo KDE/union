@@ -160,7 +160,7 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QSt
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyElement, Empty>::weight() const
 {
-    return -100;
+    return 0;
 }
 
 template<>
