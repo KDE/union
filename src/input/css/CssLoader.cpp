@@ -22,19 +22,23 @@ using namespace std::string_literals;
 
 namespace fs = std::filesystem;
 
+float to_px(const cssparser::Dimension &value)
+{
+    switch (value.unit) {
+    case cssparser::Unit::Px:
+        return value.value;
+    default:
+        return 0.0;
+    }
+}
+
 float to_px(const cssparser::Value &value)
 {
     if (!std::holds_alternative<cssparser::Dimension>(value)) {
         return 0.0;
     }
 
-    auto dimension = std::get<cssparser::Dimension>(value);
-    switch (dimension.unit) {
-    case cssparser::Unit::Px:
-        return dimension.value;
-    default:
-        return 0.0;
-    }
+    return to_px(std::get<cssparser::Dimension>(value));
 }
 
 QColor to_qcolor(const cssparser::Value &value)
@@ -55,6 +59,26 @@ fs::path to_path(const cssparser::Value &value)
 
     auto url = std::get<cssparser::Url>(value);
     return url.data;
+}
+
+template<class... Ts>
+struct overloads : Ts... {
+    using Ts::operator()...;
+};
+
+QVariant to_qvariant(const cssparser::Value &value)
+{
+    constexpr auto visitor = overloads{
+        /* clang-format off */
+        [](std::nullopt_t) { return QVariant{}; },
+        [](const std::string &v) { return QVariant{QString::fromStdString(v)}; },
+        [](int v) { return QVariant::fromValue(v); },
+        [](const cssparser::Color &v) { return QVariant::fromValue(QColor::fromRgb(v.r, v.g, v.b, v.a)); },
+        [](const cssparser::Dimension &v) { return QVariant::fromValue(to_px(v)); },
+        [](const cssparser::Url &v) { return QVariant::fromValue(fs::path(v.data)); },
+        /* clang-format on */
+    };
+    return std::visit(visitor, value);
 }
 
 template<typename T>
@@ -288,9 +312,30 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     }
     case cssparser::SelectorKind::Class:
         return Union::Selector::create<Union::SelectorType::Hint>(QString::fromStdString(std::get<std::string>(part.value)));
-    case cssparser::SelectorKind::Attribute:
-        // TODO
+    case cssparser::SelectorKind::Attribute: {
+        auto attributeMatch = part.attributeMatch.value();
+        auto name = QString::fromStdString(attributeMatch.name);
+        switch (attributeMatch.op) {
+        case cssparser::AttributeOperator::Exists:
+            return Union::Selector::create<Union::SelectorType::AttributeExists>(name);
+        case cssparser::AttributeOperator::Equals:
+            return Union::Selector::create<Union::SelectorType::AttributeEquals>(std::make_pair(name, to_qvariant(attributeMatch.value)));
+        case cssparser::AttributeOperator::Includes:
+        case cssparser::AttributeOperator::Prefixed:
+        case cssparser::AttributeOperator::Suffixed:
+            // TODO The above should technically not be substring matches
+        case cssparser::AttributeOperator::Substring: {
+            auto value = QString::fromStdString(std::get<std::string>(attributeMatch.value));
+            return Union::Selector::create<Union::SelectorType::AttributeSubstringMatch>(std::make_pair(name, value));
+        }
+        case cssparser::AttributeOperator::DashMatch:
+            // TODO
+        case cssparser::AttributeOperator::None:
+            break;
+        }
+
         break;
+    }
     case cssparser::SelectorKind::DocumentRoot:
         // TODO
         break;
