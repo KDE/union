@@ -98,6 +98,7 @@ struct UNION_EXPORT SelectorPrivateConcept {
     virtual bool matches(std::shared_ptr<Element> element) const = 0;
     virtual QString toString() const = 0;
     virtual SelectorType type() const = 0;
+    virtual bool isCombinator() const = 0;
 };
 
 template<SelectorType _type, typename T>
@@ -114,6 +115,11 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
     inline SelectorType type() const override
     {
         return _type;
+    }
+
+    inline bool isCombinator() const override
+    {
+        return false;
     }
 
     T data;
@@ -158,6 +164,11 @@ public:
      * Return a string representation of this selector.
      */
     QString toString() const;
+
+    /*!
+     * Return whether this selector is a combinator.
+     */
+    bool isCombinator() const;
 
     /*!
      * Create an empty, invalid selector.
