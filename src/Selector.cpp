@@ -272,6 +272,15 @@ QString Selector::toString() const
     return d->toString();
 }
 
+bool Selector::isCombinator() const
+{
+    if (!d) {
+        return false;
+    }
+
+    return d->isCombinator();
+}
+
 Selector::Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d)
     : d(_d)
 {
