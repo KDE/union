@@ -368,6 +368,15 @@ void SelectorList::appendAllOf(const SelectorList &selectors)
     }
 }
 
+QString SelectorList::toString() const
+{
+    QStringList all;
+    std::transform(cbegin(), cend(), std::back_inserter(all), [](auto &selector) {
+        return selector.toString();
+    });
+    return u"SelectorList("_s + all.join(u", ") + u")"_s;
+}
+
 QDebug operator<<(QDebug debug, const Union::Selector &selector)
 {
     QDebugStateSaver saver(debug);
@@ -378,11 +387,6 @@ QDebug operator<<(QDebug debug, const Union::Selector &selector)
 QDebug operator<<(QDebug debug, const Union::SelectorList &selectors)
 {
     QDebugStateSaver saver(debug);
-
-    QStringList all;
-    std::transform(selectors.cbegin(), selectors.cend(), std::back_inserter(all), [](auto &selector) {
-        return selector.toString();
-    });
-    debug.nospace() << "SelectorList(" << all.join(u" ") << ")";
+    debug << selectors.toString();
     return debug;
 }

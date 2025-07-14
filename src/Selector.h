@@ -253,6 +253,10 @@ public:
 
     void appendAnyOf(const SelectorList &selectors);
     void appendAllOf(const SelectorList &selectors);
+    /*!
+     * Returns a string representation of this list.
+     */
+    QString toString() const;
 };
 }
 
