@@ -272,3 +272,18 @@ UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Selector &selector);
  * QDebug support for SelectorList.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::SelectorList &selectors);
+
+/*!
+ * \relates Union::SelectorList
+ *
+ * Specialization of std::formatter to support formatting a SelectorList as string.
+ */
+template<>
+struct std::formatter<Union::SelectorList, char> : public std::formatter<std::string, char> {
+    template<class FormatContext>
+    FormatContext::iterator format(const Union::SelectorList &value, FormatContext &context) const
+    {
+        auto string = value.toString().toStdString();
+        return std::formatter<std::string, char>::format(string, context);
+    }
+};
