@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2022 Arjen Hiemstra <ahiemstra@heimr.nl>
 
+#include <ranges>
+
 #include <QtTest>
 
 #include <Element.h>
@@ -8,6 +10,139 @@
 
 using namespace Union;
 using namespace Qt::StringLiterals;
+
+Union::Element::State stateFromString(const QString &string)
+{
+    const auto metaEnum = QMetaEnum::fromType<Union::Element::States>();
+
+    QByteArray value = string.toUtf8();
+
+    auto count = metaEnum.keyCount();
+    for (int i = 0; i < count; ++i) {
+        if (qstrnicmp(metaEnum.key(i), value.data(), value.size()) == 0) {
+            return Union::Element::State(metaEnum.value(i));
+        }
+    }
+
+    return Union::Element::State::None;
+}
+
+struct ElementProperties {
+    QString type;
+    QString id;
+    Union::Element::States states;
+    QStringList hints;
+    QVariantMap attributes;
+    bool universal = false;
+    bool child = false;
+    bool descendant = false;
+};
+
+ElementProperties jsonToProperties(const QJsonObject &json)
+{
+    ElementProperties result;
+
+    if (json.contains(u"type")) {
+        result.type = json.value(u"type").toString();
+    }
+
+    if (json.contains(u"id")) {
+        result.id = json.value(u"id").toString();
+    }
+
+    if (json.contains(u"states")) {
+        QJsonArray statesArray;
+        if (json.value(u"states").isArray()) {
+            statesArray = json.value(u"states").toArray();
+        } else {
+            statesArray = {json.value(u"states")};
+        }
+        Union::Element::States states;
+        for (auto state : statesArray) {
+            states |= stateFromString(state.toString());
+        }
+        result.states = states;
+    }
+
+    if (json.contains(u"hints")) {
+        const auto hintsArray = json.value(u"hints").toArray();
+        QStringList hints;
+        std::ranges::transform(hintsArray, std::back_inserter(hints), [](const auto &entry) {
+            return entry.toString();
+        });
+        result.hints = hints;
+    }
+
+    if (json.contains(u"attributes")) {
+        result.attributes = json.value(u"attributes").toObject().toVariantMap();
+    }
+
+    if (json.contains(u"universal")) {
+        result.universal = json.value(u"universal").toBool();
+    }
+
+    if (json.contains(u"child")) {
+        result.child = json.value(u"child").toBool();
+    }
+
+    if (json.contains(u"descendant")) {
+        result.descendant = json.value(u"descendant").toBool();
+    }
+
+    return result;
+}
+
+SelectorList jsonToSelectorList(const QJsonArray &json)
+{
+    SelectorList result;
+    for (auto entry : json) {
+        auto properties = jsonToProperties(entry.toObject());
+
+        if (properties.universal) {
+            result.append(Union::Selector::create<Union::SelectorType::AnyElement>());
+            continue;
+        }
+
+        if (properties.child) {
+            result.append(Union::Selector::create<Union::SelectorType::ChildCombinator>());
+            continue;
+        }
+
+        if (properties.descendant) {
+            result.append(Union::Selector::create<Union::SelectorType::DescendantCombinator>());
+            continue;
+        }
+
+        if (!properties.type.isEmpty()) {
+            result.append(Union::Selector::create<Union::SelectorType::Type>(properties.type));
+        }
+
+        if (!properties.id.isEmpty()) {
+            result.append(Union::Selector::create<Union::SelectorType::Id>(properties.id));
+        }
+
+        if (properties.states != 0) {
+            QMetaEnum statesEnum = QMetaEnum::fromType<Union::Element::States>();
+            const auto count = statesEnum.keyCount();
+            for (int i = 0; i < count; ++i) {
+                auto value = statesEnum.value(i);
+                if (properties.states & value) {
+                    result.append(Union::Selector::create<Union::SelectorType::State>(Union::Element::State(value)));
+                }
+            }
+        }
+
+        for (const auto &hint : properties.hints) {
+            result.append(Union::Selector::create<Union::SelectorType::Hint>(hint));
+        }
+
+        for (auto [key, value] : properties.attributes.asKeyValueRange()) {
+            result.append(Union::Selector::create<Union::SelectorType::Attribute>(std::make_pair(key, value)));
+        }
+    }
+
+    return result;
+}
 
 class TestSelector : public QObject
 {
@@ -37,104 +172,76 @@ private Q_SLOTS:
         QVERIFY2(!emptySelector.matches(emptyElement), "Empty Attribute selector should not match an empty element");
     }
 
-    void testSimpleStructureMatches_data()
+    // Note that this data function reads the JSON files under TestSelectorData
+    // and converts them to QTest data.
+    void testSelectors_data()
     {
-        QTest::addColumn<SelectorList>("selectors");
+        QTest::addColumn<QList<Union::Element::Ptr>>("structure");
+        QTest::addColumn<Union::SelectorList>("selectors");
         QTest::addColumn<bool>("expected");
-        QTest::addColumn<int>("weight");
 
-        SelectorList selectors = {
-            Selector::create<SelectorType::Id>(u"id"_s),
-            Selector::create<SelectorType::Type>(u"Type"_s),
-            Selector::create<SelectorType::State>(Element::State::Hovered),
-        };
-        QTest::addRow("exact") << selectors << true << 111;
+        auto data = QFINDTESTDATA("TestSelectorData");
+        for (const auto &entry : std::filesystem::directory_iterator(data.toStdString())) {
+            QFile file(entry.path());
+            QVERIFY(file.open(QFile::ReadOnly));
+            QJsonParseError error;
+            auto json = QJsonDocument::fromJson(file.readAll(), &error);
+            file.close();
 
-        selectors = {
-            Selector::create<SelectorType::Type>(u"Type"_s),
-            Selector::create<SelectorType::State>(Element::State::Hovered),
-        };
-        QTest::addRow("skip first") << selectors << true << 11;
+            if (error.error != QJsonParseError::NoError) {
+                auto message = std::format("JSON file {} failed to parse: {}", entry.path().filename().string(), error.errorString().toStdString());
+                QFAIL(message.c_str());
+            }
 
-        selectors = {
-            Selector::create<SelectorType::Id>(u"id"_s),
-            Selector::create<SelectorType::State>(Element::State::Hovered),
-        };
-        QTest::addRow("skip middle") << selectors << true << 110;
+            auto structure_json = json[u"structure"].toArray();
+            QList<Union::Element::Ptr> structure;
+            for (auto item : structure_json) {
+                auto properties = jsonToProperties(item.toObject());
 
-        selectors = {
-            Selector::create<SelectorType::Id>(u"id"_s),
-            Selector::create<SelectorType::Type>(u"Type"_s),
-        };
-        QTest::addRow("skip last") << selectors << false << 101;
+                auto element = Union::Element::create();
+                element->setType(properties.type);
+                element->setId(properties.id);
+                element->setStates(properties.states);
+                element->setHints(properties.hints);
+                element->setAttributes(properties.attributes);
 
-        selectors = {
-            Selector::create<SelectorType::Id>(u"id"_s),
-        };
-        QTest::addRow("id only") << selectors << false << 100;
+                structure.append(element);
+            }
 
-        selectors = {
-            Selector::create<SelectorType::Type>(u"Type"_s),
-        };
-        QTest::addRow("type only") << selectors << false << 1;
+            auto matching = json[u"matching_selectors"].toObject();
 
-        selectors = {
-            Selector::create<SelectorType::State>(Element::State::Hovered),
-        };
-        QTest::addRow("state only") << selectors << true << 10;
+            const auto matching_keys = matching.keys();
+            for (auto item : matching_keys) {
+                Union::SelectorList selectors = jsonToSelectorList(matching.value(item).toArray());
+                QString name = QString::fromStdString(entry.path().stem()) + u"_matches_" + item;
+                QTest::addRow("%s", name.toUtf8().data()) << structure << selectors << true;
+            }
 
-        selectors = {
-            Selector::create<SelectorType::AnyElement>(),
-        };
-        QTest::addRow("any element") << selectors << true << -100;
+            auto failing = json[u"failing_selectors"].toObject();
+            const auto failing_keys = failing.keys();
+            for (auto item : failing_keys) {
+                Union::SelectorList selectors = jsonToSelectorList(failing.value(item).toArray());
+                QString name = QString::fromStdString(entry.path().stem()) + u"_no_match_" + item;
+                QTest::addRow("%s", name.toUtf8().data()) << structure << selectors << false;
+            }
+        }
     }
 
-    void testSimpleStructureMatches()
+    void testSelectors()
     {
-        ElementList elements;
-        auto element = Element::create();
-        element->setId(u"id"_s);
-        elements.append(element);
-
-        element = Element::create();
-        element->setType(u"Type"_s);
-        elements.append(element);
-
-        element = Element::create();
-        element->setStates(Element::State::Hovered);
-        elements.append(element);
-
-        QFETCH(SelectorList, selectors);
+        QFETCH(QList<Union::Element::Ptr>, structure);
+        QFETCH(Union::SelectorList, selectors);
         QFETCH(bool, expected);
-        QFETCH(int, weight);
 
-        QCOMPARE(selectors.matches(elements), expected);
-        QCOMPARE(selectors.weight(), weight);
-    }
-
-    void testSkipEmpty()
-    {
-        ElementList elements;
-        auto element = Element::create();
-        elements.append(element);
-
-        element = Element::create();
-        element->setType(u"type"_s);
-        elements.append(element);
-
-        element = Element::create();
-        elements.append(element);
-
-        element = Element::create();
-        element->setStates(Element::State::Hovered);
-        elements.append(element);
-
-        SelectorList selectors = {
-            Selector::create<SelectorType::Type>(u"type"_s),
-            Selector::create<SelectorType::State>(Element::State::Hovered),
-        };
-
-        QVERIFY(selectors.matches(elements));
+        if (selectors.matches(structure) != expected) {
+            if (expected) {
+                auto message = std::format("Selector {} did not match structure {}", selectors, structure);
+                QFAIL(message.c_str());
+            } else {
+                auto message = std::format("Selector {} matched structure {} but was not supposed to", selectors, structure);
+                QFAIL(message.c_str());
+            }
+        }
     }
 };
 

@@ -1,0 +1,49 @@
+{
+    "structure": [
+        {
+            "id": "id"
+        },
+        {
+            "type": "Type"
+        },
+        {
+            "states": "hovered"
+        }
+
+    ],
+    "matching_selectors": {
+        "exact": [
+            { "id": "id" },
+            { "descendant": true },
+            { "type": "Type" },
+            { "descendant": true },
+            { "states": "hovered" }
+        ],
+        "skip_first": [
+            { "type": "Type" },
+            { "descendant": true },
+            { "states": "hovered" }
+        ],
+        "skip_middle": [
+            { "id": "id" },
+            { "descendant": true },
+            { "states": "hovered" }
+        ],
+        "state_only": [
+            { "states": "hovered" }
+        ]
+    },
+    "failing_selectors": {
+        "skip_last": [
+            { "id": "id" },
+            { "descendant": true },
+            { "type": "Type" }
+        ],
+        "id_only": [
+            { "id": "id" }
+        ],
+        "type_only": [
+            { "type": "type" }
+        ]
+    }
+}
