@@ -213,6 +213,11 @@ public:
     Q_SIGNAL void updated();
 
     /*!
+     * Returns a string representation of this Element.
+     */
+    QString toString() const;
+
+    /*!
      * Returns a newly created instance of Element.
      */
     static Element::Ptr create();

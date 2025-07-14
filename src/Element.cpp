@@ -136,39 +136,31 @@ QVariant Element::attribute(const QString &name) const
     return d->attributes.value(name);
 }
 
-Element::Ptr Union::Element::create()
+QString Element::toString() const
 {
-    return std::make_shared<Element>(std::make_unique<ElementPrivate>());
-}
-
-QDebug operator<<(QDebug debug, Union::Element::Ptr element)
-{
-    QDebugStateSaver saver(debug);
-    debug << "Element(";
-
     QStringList properties;
 
-    if (!element->type().isEmpty()) {
-        properties << u"type: "_s + element->type();
+    if (!d->type.isEmpty()) {
+        properties << u"type: "_s + d->type;
     }
 
-    if (!element->id().isEmpty()) {
-        properties << u"id: "_s + element->id();
+    if (!d->id.isEmpty()) {
+        properties << u"id: "_s + d->id;
     }
 
-    if (element->states() != 0) {
+    if (d->states != 0) {
         auto flags = QMetaEnum::fromType<Element::States>();
-        properties << u"states: "_s + QString::fromUtf8(flags.valueToKeys(element->states()));
+        properties << u"states: "_s + QString::fromUtf8(flags.valueToKeys(d->states));
     }
 
-    if (!element->hints().isEmpty()) {
-        properties << u"hints: "_s + element->hints().join(u", ");
+    if (!d->hints.isEmpty()) {
+        properties << u"hints: "_s + d->hints.join(u", ");
     }
 
     QString attributes;
-    if (!element->attributes().isEmpty()) {
+    if (!d->attributes.isEmpty()) {
         attributes = QString{};
-        for (auto [key, value] : element->attributes().asKeyValueRange()) {
+        for (auto [key, value] : d->attributes.asKeyValueRange()) {
             if (!attributes.isEmpty()) {
                 attributes += u", ";
             }
@@ -183,6 +175,17 @@ QDebug operator<<(QDebug debug, Union::Element::Ptr element)
         properties << u"attributes: "_s + attributes;
     }
 
-    debug << qPrintable(properties.join(u", "_s)) << ")";
+    return u"Element("_s + properties.join(u" "_s) + u")"_s;
+}
+
+Element::Ptr Union::Element::create()
+{
+    return std::make_shared<Element>(std::make_unique<ElementPrivate>());
+}
+
+QDebug operator<<(QDebug debug, Union::Element::Ptr element)
+{
+    QDebugStateSaver saver(debug);
+    debug << element->toString();
     return debug;
 }
