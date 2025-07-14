@@ -211,7 +211,7 @@ SelectorList PlasmaSvgLoader::createSelectors(ryml::ConstNodeRef node, LoadingCo
                     continue;
                 }
                 auto pair = std::make_pair<QString, QVariant>(QString::fromLatin1(child.key()), QString::fromLatin1(child.val()));
-                allOfList.append(Selector::create<SelectorType::Attribute>(pair));
+                allOfList.append(Selector::create<SelectorType::AttributeEquals>(pair));
             }
         }
     });
