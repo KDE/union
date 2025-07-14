@@ -176,6 +176,42 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::AnyElement, Empty>::toSt
 }
 
 template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::weight() const
+{
+    return 0;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::matches([[maybe_unused]] std::shared_ptr<Element> element) const
+{
+    return false;
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::toString() const
+{
+    return u"Child"_s;
+}
+
+template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::DescendantCombinator, Empty>::weight() const
+{
+    return 0;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::DescendantCombinator, Empty>::matches([[maybe_unused]] std::shared_ptr<Element> element) const
+{
+    return false;
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::DescendantCombinator, Empty>::toString() const
+{
+    return u"Descendant"_s;
+}
+
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
 {
     auto weights = std::views::transform(data, [](auto selector) {

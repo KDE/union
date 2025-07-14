@@ -61,6 +61,8 @@ enum class SelectorType {
     Hint,
     Attribute,
     AnyElement,
+    ChildCombinator,
+    DescendantCombinator,
     AnyOf,
     AllOf,
 };
@@ -119,7 +121,7 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
 
     inline bool isCombinator() const override
     {
-        return false;
+        return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator;
     }
 
     T data;
@@ -190,7 +192,9 @@ public:
         case SelectorType::Empty:
             return Selector(nullptr);
         case SelectorType::AnyElement:
-            return Selector(std::make_shared<detail::SelectorPrivateModel<SelectorType::AnyElement, detail::Empty>>(detail::Empty{}));
+        case SelectorType::ChildCombinator:
+        case SelectorType::DescendantCombinator:
+            return Selector(std::make_shared<detail::SelectorPrivateModel<type, detail::Empty>>(detail::Empty{}));
         default:
             static_assert("Selector type requires data, use create(DataType) instead");
             return Selector(nullptr);
