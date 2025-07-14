@@ -33,7 +33,14 @@ swipedelegate
         background-color: var(--highlight-color);
     }
 
-    indicator {
+    &[display="text-under-icon"]
+    {
+        text-alignment-vertical: stack;
+        icon-alignment-vertical: stack;
+    }
+
+    indicator
+    {
         layout-alignment-container: content;
         layout-alignment-order: -1;
     }
