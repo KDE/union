@@ -1,0 +1,57 @@
+{
+    "structure": [
+        {
+            "id": "id"
+        },
+        {
+            "type": "Type"
+        },
+        {
+            "attributes": {
+                "first": true,
+                "second": 2,
+                "third": "value"
+            }
+        }
+
+    ],
+    "matching_selectors": {
+        "exact": [
+            { "id": "id" },
+            { "descendant": true },
+            { "type": "Type" },
+            { "descendant": true },
+            {
+                "attributes": {
+                    "first": true,
+                    "second": 2,
+                    "third": "value"
+                }
+            }
+        ],
+        "one_attribute": [
+            {
+                "attributes": {
+                    "second": 2
+                }
+            }
+        ]
+    },
+    "failing_selectors": {
+        "invalid_attribute": [
+            {
+                "attributes": {
+                    "first": false
+                }
+            }
+        ],
+        "mixed_valid_invalid": [
+            {
+                "attributes": {
+                    "first": true,
+                    "second": 3
+                }
+            }
+        ]
+    }
+}
