@@ -1,0 +1,34 @@
+{
+    "structure": [
+        {
+            "id": "id"
+        },
+        {
+            "type": "Type"
+        },
+        {
+            "states": "hovered"
+        }
+
+    ],
+    "matching_selectors": {
+        "child": [
+            { "type": "Type" },
+            { "child": true },
+            { "states": "hovered" }
+        ]
+    },
+    "failing_selectors": {
+        "failing_child": [
+            { "id": "id" },
+            { "child": true },
+            { "states": "hovered" }
+        ],
+        "not_lowest": [
+            { "id": "id" },
+            { "child": true },
+            { "type": "Type" }
+        ]
+    }
+}
+
