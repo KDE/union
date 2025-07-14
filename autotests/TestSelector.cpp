@@ -33,12 +33,9 @@ struct ElementProperties {
     Union::Element::States states;
     QStringList hints;
     QVariantMap attributes;
-    bool universal = false;
-    bool child = false;
-    bool descendant = false;
 };
 
-ElementProperties jsonToProperties(const QJsonObject &json)
+ElementProperties jsonToElementProperties(const QJsonObject &json)
 {
     ElementProperties result;
 
@@ -77,6 +74,25 @@ ElementProperties jsonToProperties(const QJsonObject &json)
         result.attributes = json.value(u"attributes").toObject().toVariantMap();
     }
 
+    return result;
+}
+
+struct SelectorProperties {
+    ElementProperties element;
+    bool universal = false;
+    bool child = false;
+    bool descendant = false;
+    QVariantList attributes_exists;
+    QVariantMap attributes_equals;
+    QVariantMap attributes_substring;
+};
+
+SelectorProperties jsonToSelectorProperties(const QJsonObject &json)
+{
+    SelectorProperties result;
+
+    result.element = jsonToElementProperties(json);
+
     if (json.contains(u"universal")) {
         result.universal = json.value(u"universal").toBool();
     }
@@ -89,6 +105,18 @@ ElementProperties jsonToProperties(const QJsonObject &json)
         result.descendant = json.value(u"descendant").toBool();
     }
 
+    if (json.contains(u"attributes_exists")) {
+        result.attributes_exists = json.value(u"attributes_exists").toArray().toVariantList();
+    }
+
+    if (json.contains(u"attributes_equals")) {
+        result.attributes_equals = json.value(u"attributes_equals").toObject().toVariantMap();
+    }
+
+    if (json.contains(u"attribute_substring")) {
+        result.attributes_substring = json.value(u"attributes_substring").toObject().toVariantMap();
+    }
+
     return result;
 }
 
@@ -96,7 +124,7 @@ SelectorList jsonToSelectorList(const QJsonArray &json)
 {
     SelectorList result;
     for (auto entry : json) {
-        auto properties = jsonToProperties(entry.toObject());
+        auto properties = jsonToSelectorProperties(entry.toObject());
 
         if (properties.universal) {
             result.append(Union::Selector::create<Union::SelectorType::AnyElement>());
@@ -113,27 +141,39 @@ SelectorList jsonToSelectorList(const QJsonArray &json)
             continue;
         }
 
-        if (!properties.type.isEmpty()) {
-            result.append(Union::Selector::create<Union::SelectorType::Type>(properties.type));
+        if (!properties.element.type.isEmpty()) {
+            result.append(Union::Selector::create<Union::SelectorType::Type>(properties.element.type));
         }
 
-        if (!properties.id.isEmpty()) {
-            result.append(Union::Selector::create<Union::SelectorType::Id>(properties.id));
+        if (!properties.element.id.isEmpty()) {
+            result.append(Union::Selector::create<Union::SelectorType::Id>(properties.element.id));
         }
 
-        if (properties.states != 0) {
+        if (properties.element.states != 0) {
             QMetaEnum statesEnum = QMetaEnum::fromType<Union::Element::States>();
             const auto count = statesEnum.keyCount();
             for (int i = 0; i < count; ++i) {
                 auto value = statesEnum.value(i);
-                if (properties.states & value) {
+                if (properties.element.states & value) {
                     result.append(Union::Selector::create<Union::SelectorType::State>(Union::Element::State(value)));
                 }
             }
         }
 
-        for (const auto &hint : properties.hints) {
+        for (const auto &hint : properties.element.hints) {
             result.append(Union::Selector::create<Union::SelectorType::Hint>(hint));
+        }
+
+        for (const auto &exists : properties.attributes_exists) {
+            result.append(Union::Selector::create<Union::SelectorType::AttributeExists>(exists.toString()));
+        }
+
+        for (auto [key, value] : properties.attributes_equals.asKeyValueRange()) {
+            result.append(Union::Selector::create<Union::SelectorType::AttributeEquals>(std::make_pair(key, value)));
+        }
+
+        for (auto [key, value] : properties.attributes_substring.asKeyValueRange()) {
+            result.append(Union::Selector::create<Union::SelectorType::AttributeSubstringMatch>(std::make_pair(key, value.toString())));
         }
     }
 
@@ -163,6 +203,15 @@ private Q_SLOTS:
 
         emptySelector = Selector::create<SelectorType::Hint>(QString{});
         QVERIFY2(!emptySelector.matches(emptyElement), "Empty Hint selector should not match an empty element");
+
+        emptySelector = Selector::create<SelectorType::AttributeExists>(QString{});
+        QVERIFY2(!emptySelector.matches(emptyElement), "Empty Attribute Exists selector should not match an empty element");
+
+        emptySelector = Selector::create<SelectorType::AttributeEquals>(std::make_pair(QString{}, QVariant{}));
+        QVERIFY2(!emptySelector.matches(emptyElement), "Empty Attribute Equals selector should not match an empty element");
+
+        emptySelector = Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(QString{}, QString{}));
+        QVERIFY2(!emptySelector.matches(emptyElement), "Empty Attribute Substring Match selector should not match an empty element");
     }
 
     // Note that this data function reads the JSON files under TestSelectorData
@@ -189,7 +238,7 @@ private Q_SLOTS:
             auto structure_json = json[u"structure"].toArray();
             QList<Union::Element::Ptr> structure;
             for (auto item : structure_json) {
-                auto properties = jsonToProperties(item.toObject());
+                auto properties = jsonToElementProperties(item.toObject());
 
                 auto element = Union::Element::create();
                 element->setType(properties.type);

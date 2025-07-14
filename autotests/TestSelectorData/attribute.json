@@ -16,38 +16,58 @@
 
     ],
     "matching_selectors": {
-        "exact": [
+        "exists_exact": [
+            { "id": "id" },
+            { "descendant": true },
+            { "type": "Type" },
+            { "descendant": true },
+            { "attributes_exists": ["first", "second", "third"] }
+        ],
+        "exists_one": [
+            { "attributes_exists": ["second"] }
+        ],
+        "equals_exact": [
             { "id": "id" },
             { "descendant": true },
             { "type": "Type" },
             { "descendant": true },
             {
-                "attributes": {
+                "attributes_equals": {
                     "first": true,
                     "second": 2,
                     "third": "value"
                 }
             }
         ],
-        "one_attribute": [
+        "equals_one": [
             {
-                "attributes": {
+                "attributes_equals": {
                     "second": 2
+                }
+            }
+        ],
+        "substring": [
+            {
+                "attributes_substring": {
+                    "third": "val"
                 }
             }
         ]
     },
     "failing_selectors": {
-        "invalid_attribute": [
+        "invalid_exists": [
+            { "attributes_exists": ["nonexistent"] }
+        ],
+        "invalid_equals": [
             {
-                "attributes": {
+                "attributes_equals": {
                     "first": false
                 }
             }
         ],
-        "mixed_valid_invalid": [
+        "mixed_valid_invalid_equals": [
             {
-                "attributes": {
+                "attributes_equals": {
                     "first": true,
                     "second": 3
                 }
