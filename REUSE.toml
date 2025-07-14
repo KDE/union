@@ -17,3 +17,8 @@ SPDX-FileCopyrightText = "2024 Arjen Hiemstra <ahiemstra@heimr.nl>"
 path = "**/.qmlls.ini"
 SPDX-License-Identifier = "CC0-1.0"
 SPDX-FileCopyrightText = "None"
+
+[[annotations]]
+path = "autotests/TestSelectorData/*.json"
+SPDX-License-Identifier = "BSD-2-Clause"
+SPDX-FileCopyrightText = "2025 Arjen Hiemstra <ahiemstra@heimr.nl>"
