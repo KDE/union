@@ -210,61 +210,6 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::DescendantCombinator, Em
 {
     return u"Descendant"_s;
 }
-
-template<>
-UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::weight() const
-{
-    auto weights = std::views::transform(data, [](auto selector) {
-        return selector.weight();
-    });
-    return *std::ranges::max_element(weights);
-}
-
-template<>
-UNION_EXPORT bool SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::matches(std::shared_ptr<Element> element) const
-{
-    return std::any_of(data.cbegin(), data.cend(), [element](auto &selector) {
-        return selector.matches(element);
-    });
-}
-
-template<>
-UNION_EXPORT QString SelectorPrivateModel<SelectorType::AnyOf, SelectorList>::toString() const
-{
-    QStringList all;
-    std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
-        return selector.toString();
-    });
-    return u"AnyOf(%1)"_s.arg(all.join(u","));
-}
-
-template<>
-UNION_EXPORT int SelectorPrivateModel<SelectorType::AllOf, SelectorList>::weight() const
-{
-    auto weights = std::views::transform(data, [](auto selector) {
-        return selector.weight();
-    });
-    return std::accumulate(weights.begin(), weights.end(), 0);
-}
-
-template<>
-UNION_EXPORT bool SelectorPrivateModel<SelectorType::AllOf, SelectorList>::matches(std::shared_ptr<Element> element) const
-{
-    return std::all_of(data.cbegin(), data.cend(), [element](auto &selector) {
-        return selector.matches(element);
-    });
-}
-
-template<>
-UNION_EXPORT QString SelectorPrivateModel<SelectorType::AllOf, SelectorList>::toString() const
-{
-    QStringList all;
-    std::transform(data.cbegin(), data.cend(), std::back_inserter(all), [](auto &selector) {
-        return selector.toString();
-    });
-    return u"AllOf(%1)"_s.arg(all.join(u","));
-}
-
 }
 
 bool Selector::isValid() const
@@ -365,24 +310,6 @@ int SelectorList::weight() const
         result += selector.weight();
     }
     return result;
-}
-
-void SelectorList::appendAnyOf(const SelectorList &selectors)
-{
-    if (selectors.size() == 1) {
-        append(selectors.first());
-    } else {
-        append(Selector::create<SelectorType::AnyOf>(selectors));
-    }
-}
-
-void SelectorList::appendAllOf(const SelectorList &selectors)
-{
-    if (selectors.size() == 1) {
-        append(selectors.first());
-    } else {
-        append(Selector::create<SelectorType::AllOf>(selectors));
-    }
 }
 
 QString SelectorList::toString() const
