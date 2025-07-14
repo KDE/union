@@ -133,13 +133,35 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Hint, QString>::toString
 }
 
 template<>
-UNION_EXPORT int SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::weight() const
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeExists, QString>::weight() const
 {
     return 10;
 }
 
 template<>
-UNION_EXPORT bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeExists, QString>::matches(std::shared_ptr<Element> element) const
+{
+    if (data.isEmpty()) {
+        return false;
+    }
+
+    return element->hasAttribute(data);
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeExists, QString>::toString() const
+{
+    return u"AttributeExists(%1)"_s.arg(data);
+}
+
+template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<QString, QVariant>>::weight() const
+{
+    return 10;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<QString, QVariant>>::matches(std::shared_ptr<Element> element) const
 {
     if (data.first.isEmpty() || data.second.isNull()) {
         return false;
@@ -152,9 +174,34 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Attribute, std::pair<QStrin
 }
 
 template<>
-UNION_EXPORT QString SelectorPrivateModel<SelectorType::Attribute, std::pair<QString, QVariant>>::toString() const
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<QString, QVariant>>::toString() const
 {
-    return u"Attribute(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
+    return u"AttributeEquals(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
+}
+
+template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeSubstringMatch, std::pair<QString, QString>>::weight() const
+{
+    return 10;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeSubstringMatch, std::pair<QString, QString>>::matches(std::shared_ptr<Element> element) const
+{
+    if (data.first.isEmpty() || data.second.isNull()) {
+        return false;
+    }
+
+    if (element->hasAttribute(data.first)) {
+        return element->attribute(data.first).toString().contains(data.second);
+    }
+    return false;
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeSubstringMatch, std::pair<QString, QString>>::toString() const
+{
+    return u"AttributeSubstringMatch(key=%1, value=%2)"_s.arg(data.first, data.second);
 }
 
 template<>

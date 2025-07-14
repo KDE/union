@@ -135,10 +135,6 @@ SelectorList jsonToSelectorList(const QJsonArray &json)
         for (const auto &hint : properties.hints) {
             result.append(Union::Selector::create<Union::SelectorType::Hint>(hint));
         }
-
-        for (auto [key, value] : properties.attributes.asKeyValueRange()) {
-            result.append(Union::Selector::create<Union::SelectorType::Attribute>(std::make_pair(key, value)));
-        }
     }
 
     return result;
@@ -167,9 +163,6 @@ private Q_SLOTS:
 
         emptySelector = Selector::create<SelectorType::Hint>(QString{});
         QVERIFY2(!emptySelector.matches(emptyElement), "Empty Hint selector should not match an empty element");
-
-        emptySelector = Selector::create<SelectorType::Attribute>(std::make_pair(QString{}, QVariant{}));
-        QVERIFY2(!emptySelector.matches(emptyElement), "Empty Attribute selector should not match an empty element");
     }
 
     // Note that this data function reads the JSON files under TestSelectorData
