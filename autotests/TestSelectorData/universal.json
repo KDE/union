@@ -1,0 +1,37 @@
+{
+    "structure": [
+        {
+            "type": "Test"
+        },
+        {
+            "hints": ["example"]
+        }
+    ],
+    "matching_selectors": {
+        "single": [
+            { "universal": true }
+        ],
+        "descendant": [
+            { "type": "Test" },
+            { "descendant": true },
+            { "universal": true }
+        ],
+        "parent": [
+            { "universal": true },
+            { "descendant": true },
+            { "hints": ["example"] }
+        ]
+    },
+    "failing_selectors": {
+        "incorrect_type" : [
+            { "type": "Fail" },
+            { "descendant": true },
+            { "universal": true }
+        ],
+        "incorrect_hint": [
+            { "universal": true },
+            { "descendant": true },
+            { "hints": ["fail"] }
+        ]
+    }
+}
