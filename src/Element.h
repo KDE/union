@@ -244,3 +244,35 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Element::States)
  * Implements QDebug support for Union::Element.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Element::Ptr element);
+
+/*!
+ * \relates Union::Element
+ *
+ * Specialization of std::formatter to support formatting an element as string.
+ */
+template<>
+struct std::formatter<Union::Element::Ptr, char> : public std::formatter<std::string, char> {
+    template<class FormatContext>
+    FormatContext::iterator format(const Union::Element::Ptr &value, FormatContext &context) const
+    {
+        auto string = value->toString().toStdString();
+        return std::formatter<std::string, char>::format(string, context);
+    }
+};
+
+/*!
+ */
+template<>
+struct std::formatter<Union::ElementList, char> : public std::formatter<std::string, char> {
+    template<class FormatContext>
+    FormatContext::iterator format(const Union::ElementList &value, FormatContext &context) const
+    {
+        using namespace Qt::StringLiterals;
+
+        QStringList elements;
+        std::ranges::transform(value, std::back_inserter(elements), &Union::Element::toString);
+        auto string = QString(u"ElementList("_s + elements.join(u", "_s) + u")"_s).toStdString();
+
+        return std::formatter<std::string, char>::format(string, context);
+    }
+};
