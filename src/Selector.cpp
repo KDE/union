@@ -324,21 +324,38 @@ Selector::Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d)
 
 bool SelectorList::matches(const QList<Element::Ptr> &elements) const
 {
-    auto sitr = begin();
-    auto eitr = elements.begin();
+    auto sitr = rbegin();
+    auto eitr = elements.rbegin();
 
-    if (size() == 1 && at(0).type() == SelectorType::AnyElement) {
-        return true;
-    }
-
-    while (sitr != end() && eitr != elements.end()) {
-        if (sitr->matches(*eitr)) {
-            sitr++;
+    while (sitr != rend()) {
+        if (!sitr->matches(*eitr)) {
+            return false;
         }
-        eitr++;
+        sitr++;
+
+        if (sitr != rend() && sitr->isCombinator()) {
+            switch (sitr->type()) {
+            case SelectorType::ChildCombinator:
+                sitr++;
+                eitr++;
+                break;
+            case SelectorType::DescendantCombinator:
+                sitr++;
+                eitr++;
+                while (!sitr->matches(*eitr)) {
+                    eitr++;
+                    if (eitr == elements.rend()) {
+                        return false;
+                    }
+                }
+                break;
+            default:
+                return false;
+            }
+        }
     }
 
-    return sitr == end() && eitr == elements.end();
+    return true;
 }
 
 int SelectorList::weight() const
