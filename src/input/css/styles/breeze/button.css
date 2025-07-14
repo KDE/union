@@ -47,6 +47,11 @@ radiodelegate indicator
 /*         border: 1px solid var(--button-border-color); */
         background-color: mix(var(--button-background-color), var(--button-text-color), 0.2);
     }
+
+    &[display="text-under-icon"] {
+        text-alignment-vertical: stack;
+        icon-alignment-vertical: stack;
+    }
 }
 
 button

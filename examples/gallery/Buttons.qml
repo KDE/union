@@ -70,6 +70,12 @@ Kirigami.Page {
 
         Controls.ToolButton {
             icon.name: "document-save"
+            text: "ToolButton Text Under Icon"
+            display: Controls.Button.TextUnderIcon
+        }
+
+        Controls.ToolButton {
+            icon.name: "document-save"
             text: "ToolButton Checkable"
             checkable: true
             checked: true
