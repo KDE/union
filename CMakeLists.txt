@@ -34,9 +34,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(REQUIRED_QT_VERSION 6.8.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
 
+find_package(KF6KirigamiPlatform REQUIRED)
+
 if (BUILD_EXAMPLES)
-    find_package(KF6Kirigami2 REQUIRED)
-    set_package_properties(KF6Kirigami2 PROPERTIES TYPE REQUIRED PURPOSE "The gallery example uses Kirigami for its UI.")
+    find_package(KF6Kirigami REQUIRED)
+    set_package_properties(KF6Kirigami PROPERTIES TYPE REQUIRED PURPOSE "The gallery example uses Kirigami for its UI.")
 endif()
 
 if (BUILD_TESTING)
