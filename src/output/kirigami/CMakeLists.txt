@@ -14,7 +14,7 @@ target_link_libraries(org.kde.union
         Qt6::Qml
         Qt6::Quick
         Union
+        UnionQuickImpl
 )
 
 install(TARGETS org.kde.union DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/kirigami/platform)
-
