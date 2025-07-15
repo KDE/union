@@ -12,9 +12,21 @@ T.Label {
 
     Union.Element.type: "Label"
 
+    leftPadding: Union.Positioner.padding.left
+    rightPadding: Union.Positioner.padding.right
+    topPadding: Union.Positioner.padding.top
+    bottomPadding:  Union.Positioner.padding.bottom
+
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
+
     font: Union.Style.properties.text.font
     palette: Union.Style.properties.palette.quickPalette
 
     color: control.palette.windowText
     linkColor: control.palette.link
+
+    background: Union.StyledRectangle { }
 }
