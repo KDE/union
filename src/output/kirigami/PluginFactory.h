@@ -16,5 +16,6 @@ class PluginFactory : public Kirigami::Platform::PlatformPluginFactory
 public:
     explicit PluginFactory(QObject *parent = nullptr);
 
+    Kirigami::Platform::PlatformTheme *createPlatformTheme(QObject *parent) override;
     Kirigami::Platform::Units *createUnits(QObject *parent) override;
 };

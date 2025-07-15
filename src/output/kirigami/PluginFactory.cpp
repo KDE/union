@@ -11,6 +11,11 @@ PluginFactory::PluginFactory(QObject *parent)
 {
 }
 
+Kirigami::Platform::PlatformTheme *PluginFactory::createPlatformTheme(QObject *parent)
+{
+    return new PlatformTheme(parent);
+}
+
 Kirigami::Platform::Units *PluginFactory::createUnits(QObject *parent)
 {
     return new Units(parent);
