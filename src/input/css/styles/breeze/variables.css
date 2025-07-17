@@ -43,4 +43,6 @@
     --focus-color: rgba(61, 174, 233, 0.42);
 
     --shadow-color: rgba(0, 0, 0, 0.1);
+
+    --dialog-shadow: 0px 1px 32px 0px rgba(0, 0, 0, 0.3);
 }
