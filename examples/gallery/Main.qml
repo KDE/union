@@ -51,6 +51,10 @@ Kirigami.ApplicationWindow {
                 onTriggered: application.pushPage("Delegates")
             },
             Kirigami.Action {
+                text: "Dialogs"
+                onTriggered: application.pushPage("Dialogs")
+            },
+            Kirigami.Action {
                 text: "Menus"
                 onTriggered: application.pushPage("Menus")
             }
