@@ -20,7 +20,7 @@ radiobutton indicator
     icon-alignment-horizontal: center;
 
     color: var(--button-text-color);
-    border: 1px solid var(--button-border-color);
+    border: var(--button-border);
     background-color: var(--button-background-color);
 
     &.flat
@@ -38,7 +38,7 @@ radiobutton indicator
     &:visual-focus
     {
         border-color: var(--highlight-color);
-        outline: 2px solid var(--focus-color);
+        outline: var(--focus-outline);
     }
 
     &:checked
