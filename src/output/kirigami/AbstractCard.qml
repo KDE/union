@@ -8,8 +8,10 @@ import org.kde.kirigami.templates as KT
 import org.kde.union.impl as Union
 
 KT.AbstractCard {
+    id: control
+
     Union.Element.type: "Card"
-    Union.Element.states: {
+    Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
@@ -19,5 +21,11 @@ KT.AbstractCard {
         highlighted: control.highlighted
     }
 
-    background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {
+        // Workaround for Card expecting background to be a QtQuick Rectangle.
+        property real radius: Union.Style.properties.corners.topLeft.radius ?? 0.0
+        property QtObject border: QtObject {
+            property real width: Union.Style.properties.border.left.size ?? 0.0
+        }
+    }
 }
