@@ -17,6 +17,8 @@
 #include "Types.h"
 #include "properties/StylePropertyGroup.h"
 
+#include "unionquickimpl_export.h"
+
 class QuickElement;
 
 /*!
@@ -31,7 +33,7 @@ class QuickElement;
  * one attached to the same Item as this class is attached to, or to any parent
  * Item.
  */
-class QuickStyle : public QQuickAttachedPropertyPropagator
+class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Style)
