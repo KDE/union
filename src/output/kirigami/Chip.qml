@@ -3,6 +3,8 @@
 
 import QtQuick
 
+import QtQuick.Controls.impl as QQCImpl
+
 import org.kde.kirigami.templates as KT
 
 import org.kde.union as Union
@@ -24,7 +26,6 @@ KT.Chip {
         pressed: control.down
         checked: control.checked
         enabled: control.enabled
-        highlighted: control.highlighted
     }
 
     Impl.Element.hints: {
@@ -90,7 +91,7 @@ KT.Chip {
 
             name: control.icon.name
             color: control.icon.color
-            visible: name.length > 0 && control.display != T.AbstractButton.TextOnly
+            visible: name.length > 0 && control.display != KT.Chip.TextOnly
 
             sourceSize.width: control.icon.width
             sourceSize.height: control.icon.height
@@ -103,14 +104,14 @@ KT.Chip {
             font: control.font
             color: control.palette.buttonText
 
-            visible: control.display != T.AbstractButton.IconOnly
+            visible: control.display != KT.Chip.IconOnly
         }
     }
 
     indicator: Union.ToolButton {
         id: indicator
 
-        Union.Element.type: "Indicator"
+        Union.Element.hints: ["indicator"]
 
         visible: control.closable
     }
