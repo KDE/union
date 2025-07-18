@@ -22,6 +22,7 @@ install(TARGETS org.kde.union DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/kirigami/
 install(FILES
     AbstractApplicationHeader.qml
     AbstractCard.qml
+    Chip.qml
     Heading.qml
     DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
 )
