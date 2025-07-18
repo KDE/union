@@ -22,16 +22,17 @@ T.Label {
     property int type: Heading.Type.Normal
 
     Union.Element.type: "Heading"
-    Union.Element.hints: ["level-" + control.level]
-    Union.Element.attributes: {
-        let result = {}
+    Union.Element.hints: {
+        let result = ["level-" + control.level]
         switch (control.type) {
-        case Heading.Normal:
-            result.type = "normal"
         case Heading.Primary:
-            result.type = "primary"
+            result.push("primary")
+            break
         case Heading.Secondary:
-            result.type = "secondary"
+            result.push("secondary")
+            break
+        default:
+            break
         }
         return result
     }
