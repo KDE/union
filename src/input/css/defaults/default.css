@@ -3,6 +3,9 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+@import "generated-properties.css";
+@import "extra-properties.css";
+
 * {
     layout-alignment: item start center 0;
     icon-alignment: content start center 0;
