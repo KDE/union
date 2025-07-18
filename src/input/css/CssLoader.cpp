@@ -343,7 +343,7 @@ StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property>
             setBorderProperty(result, property);
         } else if (property.name.starts_with("outline")) {
             setOutlineProperty(result, property);
-        } else if (property.name.starts_with("text")) {
+        } else if (property.name.starts_with("text") || property.name.starts_with("font")) {
             setTextProperty(result, property);
         } else if (property.name.starts_with("icon")) {
             setIconProperty(result, property);
@@ -470,6 +470,47 @@ void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property
 
     if (property.name.starts_with("text-alignment")) {
         setAlignment(text, property);
+    }
+
+    if (property.name.starts_with("font")) {
+        auto font = text.font().value_or(QFont{});
+
+        if (property.name == "font-family") {
+            font.setFamily(QString::fromStdString(property.value<std::string>()));
+        } else if (property.name == "font-size") {
+            auto dimension = property.value<cssparser::Dimension>();
+            switch (dimension.unit) {
+            case cssparser::Unit::Px:
+                font.setPixelSize(int(dimension.value));
+                break;
+            case cssparser::Unit::Pt:
+                font.setPointSizeF(dimension.value);
+                break;
+            case cssparser::Unit::Percent:
+                font.setPointSizeF(font.pointSizeF() * dimension.value);
+                break;
+            default:
+                qCWarning(UNION_CSS) << "Invalid unit for font-size";
+                break;
+            }
+        } else if (property.name == "font-weight") {
+            if (std::holds_alternative<int>(property.value())) {
+                font.setWeight(QFont::Weight(property.value<int>()));
+            } else {
+                auto name = property.value<std::string>();
+                if (name == "normal") {
+                    font.setWeight(QFont::Weight::Normal);
+                } else if (name == "bold") {
+                    font.setWeight(QFont::Weight::Bold);
+                } else if (name == "bolder") {
+                    font.setWeight(QFont::Weight(font.weight() + 100));
+                } else if (name == "lighter") {
+                    font.setWeight(QFont::Weight(font.weight() - 100));
+                }
+            }
+        }
+
+        text.setFont(font);
     }
 
     if (text.hasAnyValue()) {

@@ -107,3 +107,15 @@
 @property background-image {
     syntax: "<url>";
 }
+
+@property font-family {
+    syntax: "<string>";
+}
+
+@property font-size {
+    syntax: "<length-percentage>";
+}
+
+@property font-weight {
+    syntax: "<integer> | (normal | bold | bolder | lighter)";
+}
