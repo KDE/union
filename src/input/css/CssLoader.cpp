@@ -216,7 +216,7 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
                 auto line = output.top_or_new();
                 output.setTop(setLineValue(line, property, value));
             } else if (direction == "bottom") {
-                auto line = output.left_or_new();
+                auto line = output.bottom_or_new();
                 output.setBottom(setLineValue(line, property, value));
             }
         }
