@@ -8,7 +8,8 @@ toolbutton,
 checkbox indicator,
 checkdelegate indicator,
 menuitem indicator,
-radiobutton indicator
+radiobutton indicator,
+radiodelegate indicator
 {
     width: var(--medium-element-size);
     height: var(--medium-element-size);
