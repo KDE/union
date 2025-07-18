@@ -6,7 +6,8 @@
 itemdelegate,
 checkdelegate,
 radiodelegate,
-switchdelegate
+switchdelegate,
+swipedelegate
 {
     padding: var(--small-spacing);
     spacing: var(--small-spacing);

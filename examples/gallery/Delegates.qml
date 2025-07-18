@@ -32,13 +32,26 @@ Kirigami.Page {
             text: "CheckDelegate with Text"
         }
 
-        // Controls.RadioDelegate {
-        //     text: "RadioDelegate with Text"
-        // }
+        Controls.RadioDelegate {
+            text: "RadioDelegate n. 1 with Text"
+        }
 
-        // Controls.SwitchDelegate {
-        //     text: "SwitchDelegate with Text"
-        // }
+        Controls.RadioDelegate {
+            text: "RadioDelegate n. 2 with Text"
+        }
+
+        Controls.SwitchDelegate {
+            text: "SwitchDelegate with Text"
+        }
+
+        Controls.SwipeDelegate {
+            text: "Swipe me!"
+
+            swipe.right: Rectangle {
+                anchors.fill: parent
+                color: "blue"
+            }
+        }
 
         Item {
             Layout.fillHeight: true

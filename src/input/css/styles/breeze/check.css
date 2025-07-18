@@ -4,7 +4,8 @@
  */
 
 checkbox,
-radiobutton
+radiobutton,
+radiodelegate
 {
     icon-alignment-horizontal: start;
 /*     icon-width:  */
@@ -15,7 +16,8 @@ radiobutton
 }
 
 checkbox indicator,
-radiobutton indicator
+radiobutton indicator,
+radiodelegate indicator
 {
     layout-alignment-container: content;
     layout-alignment-horizontal: start;
@@ -25,7 +27,8 @@ radiobutton indicator
 checkbox indicator,
 checkdelegate indicator,
 menuitem indicator,
-radiobutton indicator
+radiobutton indicator,
+radiodelegate indicator
 {
     width: var(--icon-size-small);
     height: var(--icon-size-small);
@@ -42,7 +45,8 @@ radiobutton:checked indicator
     color: var(--button-text-color);
 }
 
-radiobutton indicator
+radiobutton indicator,
+radiodelegate indicator
 {
     border-radius: 8px;
 }

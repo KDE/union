@@ -26,11 +26,14 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Pane.qml
     style/ProgressBar.qml
     style/RadioButton.qml
+    style/RadioDelegate.qml
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
     style/SpinBox.qml
+    style/SwipeDelegate.qml
     style/Switch.qml
+    style/SwitchDelegate.qml
     style/TabButton.qml
     style/TabBar.qml
     style/TextArea.qml

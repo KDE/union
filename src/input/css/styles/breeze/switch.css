@@ -3,7 +3,9 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-switch {
+switch,
+switchdelegate
+{
     padding: var(--large-spacing);
 
     icon-alignment: content start center 0;
@@ -26,7 +28,7 @@ switchdelegate indicator
     handle {
         width: var(--grid-unit);
         height: var(--grid-unit);
-/*         border-radius: calc(var(--grid-unit) / 2); */
+/*      border-radius: calc(var(--grid-unit) / 2); */
         border-radius: 9px;
 
         background-color: var(--button-background-color);
