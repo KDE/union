@@ -6,6 +6,7 @@
 :root {
     /* Standard Sizes */
     --small-spacing: 4px;
+    --medium-spacing: 6px;
     --large-spacing: 8px;
     --grid-unit: 18px;
     --corner-radius: 4px;
