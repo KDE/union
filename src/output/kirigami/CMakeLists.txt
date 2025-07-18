@@ -18,3 +18,10 @@ target_link_libraries(org.kde.union
 )
 
 install(TARGETS org.kde.union DESTINATION ${KDE_INSTALL_PLUGINDIR}/kf6/kirigami/platform)
+
+install(FILES
+    AbstractApplicationHeader.qml
+    AbstractCard.qml
+    Heading.qml
+    DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
+)
