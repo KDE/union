@@ -34,15 +34,17 @@ menuitem
         width: var(--icon-size-small);
         height: var(--icon-size-small);
 
-        layout-alignment-container: content;
-        layout-alignment-horizontal: start;
-        layout-alignment-order: -1;
+        layout-alignment: content start center -1;
     }
 
     & arrow
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
+
+        icon-name: "arrow-right-symbolic";
+
+        layout-alignment: content end center 0;
     }
 }
 
