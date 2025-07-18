@@ -239,8 +239,6 @@ bool CssLoader::load(Theme::Ptr theme)
     // cleaner here.
     cssparser::StyleSheet styleSheet;
     styleSheet.set_root_path(fs::path(defaultsPath.toStdString()));
-    styleSheet.parse_file("generated-properties.css"s);
-    styleSheet.parse_file("extra-properties.css"s);
     styleSheet.parse_file("default.css"s);
 
     m_stylePath =
