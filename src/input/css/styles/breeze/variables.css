@@ -48,4 +48,8 @@
     --focus-color: rgba(61, 174, 233, 0.42);
 
     --shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* Standard Elements */
+    --button-border: 1px solid var(--button-border-color);
+    --focus-outline: 2px solid var(--focus-color);
 }
