@@ -51,6 +51,11 @@ void PalettePropertyGroup::update(const PaletteProperty &newState)
         // We need a QML engine to create a QQmlComponent. Try to determine it
         // based on the style we're part of.
         Q_ASSERT(m_style);
+
+        if (!m_style->engine()) {
+            return;
+        }
+
         m_component = new QQmlComponent(m_style->engine());
         m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
     }
