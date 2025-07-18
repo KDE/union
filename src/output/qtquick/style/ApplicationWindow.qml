@@ -12,5 +12,5 @@ T.ApplicationWindow {
 
     Union.Element.type: "ApplicationWindow"
 
-    color: window.palette.window
+    color: Union.Style.properties.background.color
 }
