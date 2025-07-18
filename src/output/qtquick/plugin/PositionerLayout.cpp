@@ -51,8 +51,12 @@ PositionerLayout::PositionerLayout(QQuickItem *parentItem)
 
 void PositionerLayout::markDirty()
 {
-    m_layoutDirty = true;
-    polish();
+    if (!m_layouting) {
+        m_layoutDirty = true;
+        polish();
+    } else {
+        m_requeuePolish = true;
+    }
 }
 
 void PositionerLayout::addItem(QQuickItem *item)
@@ -110,6 +114,7 @@ void PositionerLayout::updatePolish()
         return;
     }
 
+    m_layouting = true;
     m_layoutDirty = false;
 
     LayoutContainer itemRelative;
@@ -294,7 +299,13 @@ void PositionerLayout::updatePolish()
         Q_EMIT paddingChanged();
     }
 
+    m_layouting = false;
+
     Q_EMIT layoutFinished();
+
+    if (m_requeuePolish) {
+        QMetaObject::invokeMethod(this, &PositionerLayout::markDirty, Qt::QueuedConnection);
+    }
 }
 
 void PositionerLayout::layoutContainer(LayoutContainer &container)

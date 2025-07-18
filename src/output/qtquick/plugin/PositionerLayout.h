@@ -108,4 +108,7 @@ private:
     QSizeF m_implicitSize;
     Sizes m_padding;
     QSizeF m_parentSize;
+
+    bool m_layouting = false;
+    bool m_requeuePolish = false;
 };
