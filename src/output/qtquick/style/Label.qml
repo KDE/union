@@ -22,7 +22,7 @@ T.Label {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font ?? Application.font
     palette: Union.Style.properties.palette.quickPalette
 
     color: control.palette.windowText
