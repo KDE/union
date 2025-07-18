@@ -32,6 +32,7 @@ int main(int argc, char **argv)
         {u"id"_s, u"The ID to match"_s, u"id"_s},
         {u"states"_s, u"The states to match"_s, u"states"_s},
         {u"colorset"_s, u"The color set to match"_s, u"colorset"_s},
+        {u"hint"_s, u"The hint to match. Can be specified multiple times."_s, u"hint"_s},
     });
 
     parser.process(app);
@@ -65,6 +66,10 @@ int main(int argc, char **argv)
     if (parser.isSet(u"colorset"_s)) {
         auto colorSetEnum = queryElement->metaObject()->enumerator(queryElement->metaObject()->indexOfEnumerator("ColorSet"));
         queryElement->setColorSet(static_cast<Union::Element::ColorSet>(colorSetEnum.keyToValue(parser.value(u"colorset"_s).toUtf8().data())));
+    }
+
+    if (parser.isSet(u"hint"_s)) {
+        queryElement->setHints(parser.values(u"hint"_s));
     }
 
     query.setElements({queryElement});
