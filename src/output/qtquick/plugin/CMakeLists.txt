@@ -60,6 +60,14 @@ ecm_qt_declare_logging_category(UnionQuickImpl
     EXPORT Union
 )
 
+ecm_generate_export_header(UnionQuickImpl
+    BASE_NAME UnionQuickImpl
+    GROUP_BASE_NAME KF
+    VERSION ${PROJECT_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+)
+
 target_include_directories(UnionQuickImpl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/properties)
 target_link_libraries(UnionQuickImpl PUBLIC Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2 Union::Union)
 

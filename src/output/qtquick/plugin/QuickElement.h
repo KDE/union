@@ -12,6 +12,8 @@
 #include <ElementQuery.h>
 #include <Selector.h>
 
+#include "unionquickimpl_export.h"
+
 class QuickElement;
 
 class StatesGroup : public QObject
@@ -185,7 +187,7 @@ private:
  * \sa Union::Element
  * \sa Union::Selector
  */
-class QuickElement : public QQuickAttachedPropertyPropagator
+class UNIONQUICKIMPL_EXPORT QuickElement : public QQuickAttachedPropertyPropagator
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Element)
