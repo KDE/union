@@ -8,11 +8,7 @@
 PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
-    setSupportsIconColoring(true);
-
-    auto parentItem = qobject_cast<QQuickItem *>(parent);
-    m_style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parentItem));
-    connect(m_style, &QuickStyle::updated, this, &PlatformTheme::syncColors);
+    setSupportsIconColoring(false);
 }
 
 PlatformTheme::~PlatformTheme()
@@ -33,22 +29,33 @@ QIcon PlatformTheme::iconFromTheme(const QString &name, const QColor &customColo
 
 void PlatformTheme::syncColors()
 {
+    if (!m_style) {
+        auto parentItem = qobject_cast<QQuickItem *>(parent());
+        m_style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parentItem));
+        if (!m_style) {
+            return;
+        }
+        connect(m_style, &QuickStyle::updated, this, &PlatformTheme::syncColors);
+    }
+
     auto query = m_style->query();
-    if (!query->hasMatches() || !query->properties().palette().has_value()) {
+    if (!query || !query->hasMatches()) {
         return;
     }
 
-    auto palette = query->properties().palette().value();
+    auto palette = query->properties().palette();
 
     // clang-format off
-#define SET_IF_AVAILABLE(target, palette_value) \
-    if (palette.palette_value().has_value()) { \
-        target(palette.palette_value().value()); \
+#define SET_IF_AVAILABLE(target, palette_value, default_value) \
+    if (palette.has_value() && palette.value().palette_value().has_value()) { \
+        target(palette.value().palette_value().value()); \
+    } else { \
+        target(default_value); \
     }
     // clang-format on
 
-    SET_IF_AVAILABLE(setBackgroundColor, window);
-    SET_IF_AVAILABLE(setTextColor, windowText);
+    SET_IF_AVAILABLE(setBackgroundColor, window, Qt::white);
+    SET_IF_AVAILABLE(setTextColor, windowText, Qt::black);
 }
 
 bool PlatformTheme::event(QEvent *event)
