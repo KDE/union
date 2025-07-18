@@ -45,3 +45,9 @@ switchdelegate indicator
         background-color: var(--button-highlight-color);
     }
 }
+
+switch:visual-focus indicator handle,
+switchdelegate:visual-focus indicator handle
+{
+    outline: var(--focus-outline);
+}
