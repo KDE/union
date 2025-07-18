@@ -40,6 +40,10 @@
     --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
     --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
 
+    --header-text-color: #232629;
+    --header-background-color: #dee0e2;
+    --header-border-color: mix(var(--header-background-color), var(--header-text-color), 0.3);
+
     --focus-color: rgba(61, 174, 233, 0.42);
 
     --shadow-color: rgba(0, 0, 0, 0.1);
