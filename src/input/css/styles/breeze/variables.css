@@ -21,6 +21,7 @@
     --small-element-size: 16px;
     --medium-element-size: 24px;
     --large-element-size: 32px;
+    --scrollbar-size: 20px;
 
     /* Colors */
     --highlight-color: #3daee9;
@@ -50,6 +51,10 @@
     --card-border-color: var(--view-border-color);
     --card-hover-color: mix(var(--card-background-color), var(--highlight-color), 0.1);
     --card-pressed-color: mix(var(--card-background-color), var(--highlight-color), 0.3);
+
+    --scrollbar-border-color: var(--window-border-color);
+    --scrollbar-handle-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
+    --scrollbar-active-color: mix(var(--window-background-color), var(--highlight-color), 0.3);
 
     --focus-color: rgba(61, 174, 233, 0.42);
 
