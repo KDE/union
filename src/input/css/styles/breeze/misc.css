@@ -2,37 +2,3 @@
  * SPDX-License-Identifier: BSD-2-Clause
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
-
-chip
-{
-    width: var(--medium-element-size);
-    height: var(--medium-element-size);
-    padding: var(--medium-spacing);
-
-    background-color: var(--button-background-color);
-    border-radius: var(--corner-radius);
-    border: 1px solid var(--button-border-color);
-
-    spacing: var(--small-spacing);
-
-    & > .indicator
-    {
-        width: var(--small-element-size);
-        height: var(--small-element-size);
-
-        icon-name: "edit-delete-remove";
-        icon-width: var(--icon-size-small);
-        icon-height: var(--icon-size-small);
-
-        layout-alignment: item end center 0;
-    }
-
-    &:hovered {
-        border-color: var(--highlight-color);
-    }
-
-    &:pressed {
-        border-color: var(--highlight-color);
-        background-color: var(--button-highlight-color);
-    }
-}
