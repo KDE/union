@@ -36,7 +36,7 @@ set(REQUIRED_QT_VERSION 6.8.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
 
 if (WITH_KIRIGAMI)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS KirigamiPlatform)
+    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS KirigamiPlatform IconThemes)
 endif()
 
 if (BUILD_EXAMPLES)

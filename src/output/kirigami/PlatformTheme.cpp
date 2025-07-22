@@ -3,12 +3,14 @@
 
 #include "PlatformTheme.h"
 
+#include <KIconColors>
+
 #include "../qtquick/plugin/QuickStyle.h"
 
 PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
-    setSupportsIconColoring(false);
+    setSupportsIconColoring(true);
 }
 
 PlatformTheme::~PlatformTheme()
@@ -17,14 +19,13 @@ PlatformTheme::~PlatformTheme()
 
 QIcon PlatformTheme::iconFromTheme(const QString &name, const QColor &customColor)
 {
-    return QIcon::fromTheme(name);
-    // if (customColor != Qt::transparent) {
-    //     KIconColors colors;
-    //     colors.setText(customColor);
-    //     return KDE::icon(name, colors);
-    // } else {
-    //     return KDE::icon(name);
-    // }
+    if (customColor != Qt::transparent) {
+        KIconColors colors;
+        colors.setText(customColor);
+        return KDE::icon(name, colors);
+    } else {
+        return KDE::icon(name);
+    }
 }
 
 void PlatformTheme::syncColors()

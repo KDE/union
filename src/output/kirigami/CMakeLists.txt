@@ -16,6 +16,7 @@ target_link_libraries(org.kde.union
     PRIVATE
         Qt6::Qml
         Qt6::Quick
+        KF6::IconThemes
         Union
         UnionQuickImpl
 )
