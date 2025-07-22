@@ -62,10 +62,9 @@ T.ItemDelegate {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     icon {
-        color: palette.text
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -89,7 +88,7 @@ T.ItemDelegate {
             Union.PositionedItem.source: Union.PositionerSource.Text
             text: control.text
             font: control.font
-            color: control.palette.text
+            color: Union.Style.properties.text.color ?? "black"
             horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
             verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             renderType: Text.NativeRendering
