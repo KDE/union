@@ -347,6 +347,7 @@ StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property>
             setIconProperty(result, property);
         } else if (property.name == "color"s) {
             setTextProperty(result, property);
+            setIconProperty(result, property);
         } else if (property.name.starts_with("shadow") || property.name.starts_with("box-shadow")) {
             setShadowProperty(result, property);
         }
@@ -511,6 +512,10 @@ void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property
         text.setFont(font);
     }
 
+    if (property.name == "color" || property.name == "text-color") {
+        text.setColor(to_qcolor(property.value()));
+    }
+
     if (text.hasAnyValue()) {
         output.setText(text);
     }
@@ -530,6 +535,8 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
         icon.setWidth(to_px(property.value()));
     } else if (property.name == "icon-height") {
         icon.setHeight(to_px(property.value()));
+    } else if (property.name == "color" || property.name == "icon-color") {
+        icon.setColor(to_qcolor(property.value()));
     }
 
     if (icon.hasAnyValue()) {
