@@ -111,3 +111,23 @@ heading {
     }
 }
 
+inlinemessage {
+    padding: var(--small-spacing);
+
+    background-color: mix(var(--window-background-color), var(--highlight-color), 0.2);
+    border: 1px solid var(--highlight-color);
+    border-radius: var(--corner-radius);
+    color: var(--window-text-color);
+
+    /*&[type="positive"] {
+
+    }
+
+    &[type="warning"] {
+
+    }
+
+    &[type="error"] {
+
+    }*/
+}
