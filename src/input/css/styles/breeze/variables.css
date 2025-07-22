@@ -45,6 +45,12 @@
     --header-background-color: #dee0e2;
     --header-border-color: mix(var(--header-background-color), var(--header-text-color), 0.3);
 
+    --card-background-color: var(--view-background-color);
+    --card-text-color: var(--view-text-color);
+    --card-border-color: var(--view-border-color);
+    --card-hover-color: mix(var(--card-background-color), var(--highlight-color), 0.1);
+    --card-pressed-color: mix(var(--card-background-color), var(--highlight-color), 0.3);
+
     --focus-color: rgba(61, 174, 233, 0.42);
 
     --shadow-color: rgba(0, 0, 0, 0.1);
