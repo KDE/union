@@ -7,8 +7,3 @@ applicationwindow {
     background-color: var(--window-background-color);
 }
 
-applicationheader {
-    background-color: var(--header-background-color);
-    border-color: var(--header-border-color);
-    border-bottom: 1px solid var(--header-border-color);
-}
