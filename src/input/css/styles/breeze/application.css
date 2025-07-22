@@ -5,5 +5,9 @@
 
 applicationwindow {
     background-color: var(--window-background-color);
+    color: var(--window-text-color);
 }
 
+page {
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);

@@ -6,15 +6,14 @@
 spinbox
 {
     width: var(--medium-element-size);
-    layout-alignment-container: content;
-    layout-alignment-horizontal: fill;
-    text-alignment-container: content;
-    text-alignment-horizontal: fill;
-    text-alignment-vertical: fill;
+    layout-alignment: content fill fill 0;
+    text-alignment: content fill fill 0;
     padding-left: var(--large-spacing);
     padding-right: var(--large-spacing);
     padding-top: var(--small-spacing);
     padding-bottom: var(--small-spacing);
+
+    color: var(--button-text-color);
 }
 
 spinbox indicator
@@ -23,6 +22,7 @@ spinbox indicator
     height: var(--large-element-size);
     border-radius: var(--corner-radius);
     border-color: var(--button-border-color);
+    color: var(--button-text-color);
 
     layout-alignment-container: item;
     layout-alignment-vertical: fill;
