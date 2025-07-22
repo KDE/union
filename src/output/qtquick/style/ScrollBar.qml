@@ -23,8 +23,12 @@ T.ScrollBar {
         pressed: control.pressed
         enabled: control.enabled
     }
-    Union.Element.attributes: {
-        "orientation": control.horizontal ? "horizontal" : "vertical"
+    Union.Element.hints: {
+        if (control.horizontal) {
+            return ["horizontal"]
+        } else {
+            return ["vertical"]
+        }
     }
 
     leftPadding: Union.Positioner.padding.left
