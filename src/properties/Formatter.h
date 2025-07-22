@@ -966,6 +966,17 @@ struct std::formatter<Union::Properties::TextProperty, char> {
             }
         }
 
+        out << indent(indentation);
+        out << "color: ";
+        {
+            auto value = group.color();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
         return std::ranges::copy(std::move(out).str(), context.out()).out;
     }
 };
@@ -1054,6 +1065,17 @@ struct std::formatter<Union::Properties::IconProperty, char> {
         out << "source: ";
         {
             auto value = group.source();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
+        out << indent(indentation);
+        out << "color: ";
+        {
+            auto value = group.color();
             if (use_newlines) {
                 out << std::format("{}\n", value);
             } else {

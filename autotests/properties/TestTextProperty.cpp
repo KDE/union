@@ -24,6 +24,7 @@ private Q_SLOTS:
         // An empty instance should not have any values for its properties.
         QVERIFY(!property.alignment().has_value());
         QVERIFY(!property.font().has_value());
+        QVERIFY(!property.color().has_value());
     }
 
     void testHasAnyValue()
@@ -51,6 +52,13 @@ private Q_SLOTS:
             property.setFont(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
+        {
+            QColor value;
+            property.setColor(value);
+            QVERIFY(property.hasAnyValue());
+            property.setColor(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -68,6 +76,7 @@ private Q_SLOTS:
 
         source.setAlignment(testAlignmentPropertyInstance());
         source.setFont(QFont{});
+        source.setColor(QColor{});
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());
@@ -78,6 +87,7 @@ private Q_SLOTS:
 
         QCOMPARE(destination.alignment(), source.alignment());
         QCOMPARE(destination.font(), source.font());
+        QCOMPARE(destination.color(), source.color());
     }
 };
 

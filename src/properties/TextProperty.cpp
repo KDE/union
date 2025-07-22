@@ -16,6 +16,7 @@ class Union::Properties::TextPropertyPrivate
 public:
     std::optional<AlignmentProperty> alignment;
     std::optional<QFont> font;
+    std::optional<QColor> color;
 };
 
 TextProperty::TextProperty()
@@ -28,6 +29,7 @@ TextProperty::TextProperty(const TextProperty &other)
 {
     d->alignment = other.d->alignment;
     d->font = other.d->font;
+    d->color = other.d->color;
 }
 
 TextProperty::TextProperty(TextProperty &&other)
@@ -42,6 +44,7 @@ TextProperty &TextProperty::operator=(const TextProperty &other)
     if (this != &other) {
         d->alignment = other.d->alignment;
         d->font = other.d->font;
+        d->color = other.d->color;
     }
     return *this;
 }
@@ -61,6 +64,7 @@ AlignmentProperty TextProperty::alignment_or_new() const
 {
     return d->alignment.value_or(AlignmentProperty{});
 }
+
 void TextProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
 {
     if (newValue == d->alignment) {
@@ -82,6 +86,19 @@ void TextProperty::setFont(const std::optional<QFont> &newValue)
 
     d->font = newValue;
 }
+std::optional<QColor> TextProperty::color() const
+{
+    return d->color;
+}
+
+void TextProperty::setColor(const std::optional<QColor> &newValue)
+{
+    if (newValue == d->color) {
+        return;
+    }
+
+    d->color = newValue;
+}
 
 bool TextProperty::hasAnyValue() const
 {
@@ -89,6 +106,9 @@ bool TextProperty::hasAnyValue() const
         return true;
     }
     if (d->font.has_value()) {
+        return true;
+    }
+    if (d->color.has_value()) {
         return true;
     }
     return false;
@@ -109,6 +129,9 @@ void TextProperty::resolveProperties(const TextProperty &source, TextProperty &d
     if (!destination.d->font.has_value()) {
         destination.d->font = source.d->font;
     }
+    if (!destination.d->color.has_value()) {
+        destination.d->color = source.d->color;
+    }
 }
 
 TextProperty TextProperty::empty()
@@ -116,6 +139,7 @@ TextProperty TextProperty::empty()
     TextProperty result;
     result.d->alignment = emptyValue<AlignmentProperty>();
     result.d->font = emptyValue<QFont>();
+    result.d->color = emptyValue<QColor>();
     return result;
 }
 
@@ -127,6 +151,9 @@ bool Union::Properties::operator==(const TextProperty &left, const TextProperty 
     if (left.font() != right.font()) {
         return false;
     }
+    if (left.color() != right.color()) {
+        return false;
+    }
     return true;
 }
 
@@ -136,6 +163,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::TextProperty &type)
     debug.nospace() << "TextProperty(" //
                     << "alignment: " << type.alignment() //
                     << ", font: " << type.font() //
+                    << ", color: " << type.color() //
                     << ")";
     return debug;
 }

@@ -158,6 +158,7 @@ TextProperty testTextPropertyInstance()
 
     instance.setAlignment(testAlignmentPropertyInstance());
     instance.setFont(testQFontInstance());
+    instance.setColor(testQColorInstance());
 
     return instance;
 }
@@ -171,6 +172,7 @@ IconProperty testIconPropertyInstance()
     instance.setHeight(testQrealInstance());
     instance.setName(QString{});
     instance.setSource(QUrl{});
+    instance.setColor(testQColorInstance());
 
     return instance;
 }

@@ -25,6 +25,7 @@ void TextPropertyGroup::update(const TextProperty &newState)
     m_state = newState;
     m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
     Q_EMIT fontChanged();
+    Q_EMIT colorChanged();
 
     Q_EMIT updated();
 }
@@ -37,6 +38,16 @@ AlignmentPropertyGroup *TextPropertyGroup::alignment() const
 QJSValue TextPropertyGroup::font() const
 {
     auto value = m_state.font();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue TextPropertyGroup::color() const
+{
+    auto value = m_state.color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

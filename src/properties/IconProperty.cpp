@@ -19,6 +19,7 @@ public:
     std::optional<qreal> height;
     std::optional<QString> name;
     std::optional<QUrl> source;
+    std::optional<QColor> color;
 };
 
 IconProperty::IconProperty()
@@ -34,6 +35,7 @@ IconProperty::IconProperty(const IconProperty &other)
     d->height = other.d->height;
     d->name = other.d->name;
     d->source = other.d->source;
+    d->color = other.d->color;
 }
 
 IconProperty::IconProperty(IconProperty &&other)
@@ -51,6 +53,7 @@ IconProperty &IconProperty::operator=(const IconProperty &other)
         d->height = other.d->height;
         d->name = other.d->name;
         d->source = other.d->source;
+        d->color = other.d->color;
     }
     return *this;
 }
@@ -131,6 +134,19 @@ void IconProperty::setSource(const std::optional<QUrl> &newValue)
 
     d->source = newValue;
 }
+std::optional<QColor> IconProperty::color() const
+{
+    return d->color;
+}
+
+void IconProperty::setColor(const std::optional<QColor> &newValue)
+{
+    if (newValue == d->color) {
+        return;
+    }
+
+    d->color = newValue;
+}
 
 bool IconProperty::hasAnyValue() const
 {
@@ -147,6 +163,9 @@ bool IconProperty::hasAnyValue() const
         return true;
     }
     if (d->source.has_value()) {
+        return true;
+    }
+    if (d->color.has_value()) {
         return true;
     }
     return false;
@@ -176,6 +195,9 @@ void IconProperty::resolveProperties(const IconProperty &source, IconProperty &d
     if (!destination.d->source.has_value()) {
         destination.d->source = source.d->source;
     }
+    if (!destination.d->color.has_value()) {
+        destination.d->color = source.d->color;
+    }
 }
 
 IconProperty IconProperty::empty()
@@ -186,6 +208,7 @@ IconProperty IconProperty::empty()
     result.d->height = emptyValue<qreal>();
     result.d->name = emptyValue<QString>();
     result.d->source = emptyValue<QUrl>();
+    result.d->color = emptyValue<QColor>();
     return result;
 }
 
@@ -206,6 +229,9 @@ bool Union::Properties::operator==(const IconProperty &left, const IconProperty 
     if (left.source() != right.source()) {
         return false;
     }
+    if (left.color() != right.color()) {
+        return false;
+    }
     return true;
 }
 
@@ -218,6 +244,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::IconProperty &type)
                     << ", height: " << type.height() //
                     << ", name: " << type.name() //
                     << ", source: " << type.source() //
+                    << ", color: " << type.color() //
                     << ")";
     return debug;
 }

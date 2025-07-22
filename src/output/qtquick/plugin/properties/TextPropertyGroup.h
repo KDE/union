@@ -55,6 +55,15 @@ public:
     QJSValue font() const;
     Q_SIGNAL void fontChanged();
 
+    /*!
+     * \qmlproperty QColor TextPropertyGroup::color
+     *
+     * Exposes TextProperty::color to QML.
+     */
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
+    Q_SIGNAL void colorChanged();
+
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;

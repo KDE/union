@@ -133,6 +133,7 @@ text:
 
     alignment: *alignment
     font: QFont
+    color: QColor
 
 icon:
     # \brief A property group containing properties related to an element's icon.
@@ -142,6 +143,7 @@ icon:
     height: qreal
     name: QString
     source: QUrl
+    color: QColor
 
 background:
     # \brief A property group containing properties related to an element's background.
