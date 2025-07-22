@@ -21,6 +21,29 @@ KT.AbstractCard {
         highlighted: control.highlighted
     }
 
+    down: !control.showClickFeedback ? false : undefined
+
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding:  Union.Style.properties.layout.padding.bottom
+
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
+
+    font: Union.Style.properties.text.font
+
+    spacing: Union.Style.properties.layout.spacing
+
+    icon {
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: Union.Style.properties.icon.name
+        source: Union.Style.properties.icon.source
+    }
+
     background: Union.StyledRectangle {
         // Workaround for Card expecting background to be a QtQuick Rectangle.
         property real radius: Union.Style.properties.corners.topLeft.radius ?? 0.0
