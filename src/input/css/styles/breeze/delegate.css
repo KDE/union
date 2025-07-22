@@ -18,6 +18,8 @@ switchdelegate
 
     layout-alignment: content start center 0;
 
+    color: var(--window-text-color);
+
     &:hovered
     {
         border: 1px solid var(--highlight-color);

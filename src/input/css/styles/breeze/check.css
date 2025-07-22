@@ -10,6 +10,8 @@ radiobutton
 /*     icon-width:  */
     spacing: var(--small-spacing);
     padding: var(--small-spacing);
+
+    color: var(--button-text-color);
 }
 
 checkbox indicator,
@@ -37,6 +39,7 @@ radiobutton:checked indicator
     background-image: url("images/checkmark.svg");
     background-color: var(--button-highlight-color);
     border: 1px solid var(--highlight-color);
+    color: var(--button-text-color);
 }
 
 radiobutton indicator
