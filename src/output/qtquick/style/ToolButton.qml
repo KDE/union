@@ -62,10 +62,9 @@ T.ToolButton {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     icon {
-        color: palette.buttonText
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -94,7 +93,7 @@ T.ToolButton {
 
             text: control.text
             font: control.font
-            color: control.palette.buttonText
+            color: Union.Style.properties.text.color
 
             visible: control.display != T.AbstractButton.IconOnly
         }

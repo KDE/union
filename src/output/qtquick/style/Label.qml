@@ -25,7 +25,7 @@ T.Label {
     font: Union.Style.properties.text.font ?? Application.font
     palette: Union.Style.properties.palette.quickPalette
 
-    color: control.palette.windowText
+    color: Union.Style.properties.text.color ?? "black"
     linkColor: control.palette.link
 
     background: Union.StyledRectangle { }

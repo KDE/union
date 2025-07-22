@@ -43,10 +43,10 @@ T.TextField {
     font: Union.Style.properties.text.font ?? Application.font
     palette: Union.Style.properties.palette.quickPalette
 
-    color: control.palette.text
+    color: Union.Style.properties.text.color ?? palette.text
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
-    placeholderTextColor: control.palette.placeholderText
+    placeholderTextColor: Union.Style.properties.text.color ?? palette.placeholderText
 
     horizontalAlignment: Union.Style.properties.text.alignment & Qt.AlignHorizontal_Mask
     verticalAlignment: Union.Style.properties.text.alignment & Qt.AlignHorizontal_Mask
