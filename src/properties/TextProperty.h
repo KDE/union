@@ -10,6 +10,7 @@
 
 #include <QDebug>
 
+#include <QColor>
 #include <QFont>
 
 #include "AlignmentProperty.h"
@@ -87,6 +88,17 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setFont(const std::optional<QFont> &newValue);
+
+    /*!
+     * Returns the value of color.
+     */
+    std::optional<QColor> color() const;
+    /*!
+     * Set the value of color.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setColor(const std::optional<QColor> &newValue);
 
     /*!
      * Returns if this property group has any value set.

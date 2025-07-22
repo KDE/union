@@ -27,6 +27,7 @@ private Q_SLOTS:
         QVERIFY(!property.height().has_value());
         QVERIFY(!property.name().has_value());
         QVERIFY(!property.source().has_value());
+        QVERIFY(!property.color().has_value());
     }
 
     void testHasAnyValue()
@@ -75,6 +76,13 @@ private Q_SLOTS:
             property.setSource(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
+        {
+            QColor value;
+            property.setColor(value);
+            QVERIFY(property.hasAnyValue());
+            property.setColor(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -95,6 +103,7 @@ private Q_SLOTS:
         source.setHeight(qreal{});
         source.setName(QString{});
         source.setSource(QUrl{});
+        source.setColor(QColor{});
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());
@@ -108,6 +117,7 @@ private Q_SLOTS:
         QCOMPARE(destination.height(), source.height());
         QCOMPARE(destination.name(), source.name());
         QCOMPARE(destination.source(), source.source());
+        QCOMPARE(destination.color(), source.color());
     }
 };
 

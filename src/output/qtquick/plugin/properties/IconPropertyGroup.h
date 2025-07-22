@@ -82,6 +82,15 @@ public:
     QJSValue source() const;
     Q_SIGNAL void sourceChanged();
 
+    /*!
+     * \qmlproperty QColor IconPropertyGroup::color
+     *
+     * Exposes IconProperty::color to QML.
+     */
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
+    Q_SIGNAL void colorChanged();
+
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;

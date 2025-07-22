@@ -28,6 +28,7 @@ void IconPropertyGroup::update(const IconProperty &newState)
     Q_EMIT heightChanged();
     Q_EMIT nameChanged();
     Q_EMIT sourceChanged();
+    Q_EMIT colorChanged();
 
     Q_EMIT updated();
 }
@@ -70,6 +71,16 @@ QJSValue IconPropertyGroup::name() const
 QJSValue IconPropertyGroup::source() const
 {
     auto value = m_state.source();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue IconPropertyGroup::color() const
+{
+    auto value = m_state.color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

@@ -208,6 +208,10 @@
     syntax: "<string>";
 }
 
+@property text-color {
+    syntax: "<color>";
+}
+
 
 @property icon-alignment-container {
     syntax: "item | content | background";
@@ -240,6 +244,10 @@
 
 @property icon-source {
     syntax: "<url>";
+}
+
+@property icon-color {
+    syntax: "<color>";
 }
 
 
