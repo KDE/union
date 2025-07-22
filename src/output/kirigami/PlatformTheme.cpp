@@ -46,6 +46,24 @@ void PlatformTheme::syncColors()
 
     auto palette = query->properties().palette();
 
+    if (query->properties().background_or_new().color().has_value()) {
+        setBackgroundColor(query->properties().background().value().color().value());
+    } else if (palette.has_value() && palette.value().window().has_value()) {
+        setBackgroundColor(palette.value().window().value());
+    } else {
+        setBackgroundColor(Qt::white);
+    }
+
+    if (query->properties().text_or_new().color().has_value()) {
+        setTextColor(query->properties().text().value().color().value());
+        setHighlightedTextColor(query->properties().text().value().color().value());
+    } else if (palette.has_value() && palette.value().windowText().has_value()) {
+        setTextColor(palette.value().windowText().value());
+        setHighlightedTextColor(palette.value().windowText().value());
+    } else {
+        setTextColor(Qt::black);
+    }
+
     // clang-format off
 #define SET_IF_AVAILABLE(target, palette_value, default_value) \
     if (palette.has_value() && palette.value().palette_value().has_value()) { \
@@ -54,9 +72,6 @@ void PlatformTheme::syncColors()
         target(default_value); \
     }
     // clang-format on
-
-    SET_IF_AVAILABLE(setBackgroundColor, window, Qt::white);
-    SET_IF_AVAILABLE(setTextColor, windowText, Qt::black);
 }
 
 bool PlatformTheme::event(QEvent *event)
