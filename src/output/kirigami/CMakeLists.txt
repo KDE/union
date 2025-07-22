@@ -27,5 +27,6 @@ install(FILES
     AbstractCard.qml
     Chip.qml
     Heading.qml
+    InlineMessage.qml
     DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
 )
