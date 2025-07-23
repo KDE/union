@@ -69,7 +69,8 @@ int main(int argc, char **argv)
     }
 
     if (parser.isSet(u"hint"_s)) {
-        queryElement->setHints(parser.values(u"hint"_s));
+        const auto hints = parser.values(u"hint"_s);
+        queryElement->setHints(QSet<QString>(hints.begin(), hints.end()));
     }
 
     query.setElements({queryElement});

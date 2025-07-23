@@ -161,7 +161,7 @@ public:
     /*!
      * \property Union::Element::hints
      *
-     * A list of hints for this element.
+     * A set of hints for this element.
      *
      * Hints are used to indicate there's something different about the element
      * which might be useful for style rule matching. This includes things like
@@ -170,9 +170,9 @@ public:
      * usually should not be used for state information, the \l states property
      * should cover most of those.
      */
-    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged)
-    QStringList hints() const;
-    void setHints(const QStringList &newHints);
+    Q_PROPERTY(QSet<QString> hints READ hints WRITE setHints NOTIFY hintsChanged)
+    QSet<QString> hints() const;
+    void setHints(const QSet<QString> &newHints);
     Q_SIGNAL void hintsChanged();
 
     /*!
