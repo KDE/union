@@ -121,9 +121,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Hint, QString>::matches(std
         return false;
     }
 
-    return std::ranges::any_of(element->hints(), [this](auto item) {
-        return item.toLower() == data.toLower();
-    });
+    return element->hasHint(data);
 }
 
 template<>
