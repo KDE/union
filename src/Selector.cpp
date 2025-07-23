@@ -165,10 +165,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<
         return false;
     }
 
-    if (element->hasAttribute(data.first)) {
-        return element->attribute(data.first) == data.second;
-    }
-    return false;
+    return element->attribute(data.first) == data.second;
 }
 
 template<>
