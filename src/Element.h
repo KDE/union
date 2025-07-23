@@ -176,6 +176,22 @@ public:
     Q_SIGNAL void hintsChanged();
 
     /*!
+     * Add or remove a single hint.
+     *
+     * This adds the hint \p name if \p present is \c{true} and the hint was not
+     * yet added. It will remove the hint if \p present is \c{false} and the
+     * hint is present.
+     */
+    void setHint(const QString &name, bool present = true);
+
+    /*!
+     * Check if a hint is set.
+     *
+     * Returns \c{true} if \p name is present, otherwise returns \c{false}.
+     */
+    bool hasHint(const QString &name);
+
+    /*!
      * \property Union::Element::attributes
      *
      * A map of extra attributes that can be used for rule matching.
@@ -187,6 +203,11 @@ public:
     QVariantMap attributes() const;
     void setAttributes(const QVariantMap &attributes);
     Q_SIGNAL void attributesChanged();
+
+    /*!
+     * Set a single attribute value.
+     */
+    void setAttribute(const QString &name, const QVariant &value);
 
     /*!
      * Check if a certain attribute is set on this element.
