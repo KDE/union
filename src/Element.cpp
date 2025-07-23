@@ -18,7 +18,7 @@ public:
     QString id;
     Element::States states;
     Element::ColorSet colorSet;
-    QStringList hints;
+    QSet<QString> hints;
     QVariantMap attributes;
 };
 
@@ -94,12 +94,12 @@ void Element::setColorSet(ColorSet newColorSet)
     Q_EMIT updated();
 }
 
-QStringList Element::hints() const
+QSet<QString> Element::hints() const
 {
     return d->hints;
 }
 
-void Element::setHints(const QStringList &newHints)
+void Element::setHints(const QSet<QString> &newHints)
 {
     if (d->hints == newHints) {
         return;
@@ -154,7 +154,7 @@ QString Element::toString() const
     }
 
     if (!d->hints.isEmpty()) {
-        properties << u"hints: "_s + d->hints.join(u", ");
+        properties << u"hints: "_s + QStringList(d->hints.begin(), d->hints.end()).join(u", ");
     }
 
     QString attributes;

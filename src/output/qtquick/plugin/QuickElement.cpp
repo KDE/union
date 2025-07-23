@@ -157,12 +157,13 @@ void QuickElement::setColorSet(Union::Element::ColorSet newColorSet)
 
 QStringList QuickElement::hints() const
 {
-    return m_element->hints();
+    const auto h = m_element->hints();
+    return QStringList(h.begin(), h.end());
 }
 
 void QuickElement::setHints(const QStringList &newHints)
 {
-    m_element->setHints(newHints);
+    m_element->setHints(QSet<QString>(newHints.begin(), newHints.end()));
 }
 
 QVariantMap QuickElement::attributes() const
