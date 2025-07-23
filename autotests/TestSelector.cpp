@@ -316,6 +316,57 @@ private Q_SLOTS:
             }
         }
     }
+
+    void benchmarkSelectors_data()
+    {
+        QTest::addColumn<QJsonArray>("structure");
+        QTest::addColumn<SelectorList>("selectors");
+
+        QTest::addRow("type") << QJsonArray{QJsonObject{{u"type"_s, u"type"_s}}} << SelectorList{Selector::create<SelectorType::Type>(u"type"_s)};
+        QTest::addRow("id") << QJsonArray{QJsonObject{{u"id"_s, u"id"_s}}} << SelectorList{Selector::create<SelectorType::Id>(u"id"_s)};
+        QTest::addRow("state") << QJsonArray{QJsonObject{{u"states"_s, u"hovered"_s}}}
+                               << SelectorList{Selector::create<SelectorType::State>(Element::State::Hovered)};
+        QTest::addRow("hint") << QJsonArray{QJsonObject{{u"hints"_s, QJsonArray{u"hint"_s}}}} << SelectorList{Selector::create<SelectorType::Hint>(u"hint"_s)};
+        auto attribute = QJsonArray{QJsonObject{{u"attributes"_s, QJsonObject{{u"test"_s, u"value"_s}}}}};
+        QTest::addRow("attribute_exists") << attribute << SelectorList{Selector::create<SelectorType::AttributeExists>(u"test"_s)};
+        QTest::addRow("attribute_equals") << attribute
+                                          << SelectorList{
+                                                 Selector::create<SelectorType::AttributeEquals>(std::make_pair(u"test"_s, QVariant::fromValue(u"value"_s)))};
+        QTest::addRow("attribute_substring") << attribute
+                                             << SelectorList{Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(u"test"_s, (u"lu"_s)))};
+
+        auto structure = QJsonArray{
+            QJsonObject{{u"type"_s, u"test"_s}},
+            QJsonObject{{u"id"_s, u"id"_s}},
+            QJsonObject{{u"states"_s, u"hovered"_s}},
+        };
+        QTest::addRow("child") << structure
+                               << SelectorList{
+                                      Selector::create<SelectorType::Id>(u"id"_s),
+                                      Selector::create<SelectorType::ChildCombinator>(),
+                                      Selector::create<SelectorType::State>(Element::State::Hovered),
+                                  };
+        QTest::addRow("descendant") << structure
+                                    << SelectorList{
+                                           Selector::create<SelectorType::Type>(u"test"_s),
+                                           Selector::create<SelectorType::DescendantCombinator>(),
+                                           Selector::create<SelectorType::State>(Element::State::Hovered),
+                                       };
+    }
+
+    void benchmarkSelectors()
+    {
+        QFETCH(QJsonArray, structure);
+        QFETCH(SelectorList, selectors);
+
+        auto elements = structureFromJson(structure);
+
+        QVERIFY(selectors.matches(elements));
+
+        QBENCHMARK {
+            selectors.matches(elements);
+        }
+    }
 };
 
 QTEST_MAIN(TestSelector)
