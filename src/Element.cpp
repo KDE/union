@@ -110,6 +110,22 @@ void Element::setHints(const QSet<QString> &newHints)
     Q_EMIT updated();
 }
 
+void Element::setHint(const QString &name, bool present)
+{
+    if (present) {
+        d->hints.insert(name);
+    } else {
+        d->hints.remove(name);
+    }
+    Q_EMIT hintsChanged();
+    Q_EMIT updated();
+}
+
+bool Union::Element::hasHint(const QString &name)
+{
+    return d->hints.contains(name);
+}
+
 QVariantMap Element::attributes() const
 {
     return d->attributes;
@@ -134,6 +150,13 @@ bool Element::hasAttribute(const QString &name) const
 QVariant Element::attribute(const QString &name) const
 {
     return d->attributes.value(name);
+}
+
+void Element::setAttribute(const QString &name, const QVariant &value)
+{
+    d->attributes[name] = value;
+    Q_EMIT attributesChanged();
+    Q_EMIT updated();
 }
 
 QString Element::toString() const
