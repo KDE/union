@@ -131,3 +131,13 @@ inlinemessage {
 
     }*/
 }
+
+overlaydrawer {
+    background-color: var(--view-background-color);
+    color: var(--view-text-color);
+
+    &.modal {
+        background-color: var(--window-background-color);
+        color: var(--window-text-color);
+    }
+}
