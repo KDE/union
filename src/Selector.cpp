@@ -31,7 +31,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Type, QString>::matches(std
         return false;
     }
 
-    return element->type().toLower() == data.toLower();
+    return QString::compare(element->type(), data, Qt::CaseSensitivity::CaseInsensitive) == 0;
 }
 
 template<>
@@ -53,7 +53,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::Id, QString>::matches(std::
         return false;
     }
 
-    return element->id().toLower() == data.toLower();
+    return QString::compare(element->id(), data, Qt::CaseSensitivity::CaseInsensitive) == 0;
 }
 
 template<>
