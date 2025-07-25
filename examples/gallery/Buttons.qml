@@ -74,7 +74,6 @@ Kirigami.Page {
             checkable: true
             checked: true
         }
-
         Item {
             Layout.fillHeight: true
         }

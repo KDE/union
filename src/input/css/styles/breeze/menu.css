@@ -45,3 +45,25 @@ menuitem
         height: var(--icon-size-small);
     }
 }
+
+menubar, menubaritem
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+    padding: var(--small-spacing);
+    spacing: var(--small-spacing);
+
+    border-radius: var(--corner-radius);
+}
+
+menubaritem {
+    &:hovered,
+    &:pressed,
+    &:highlighted {
+        background-color: var(--focus-color);
+        border: 1px solid var(--highlight-color);
+    }
+    text-alignment-horizontal: center;
+    text-alignment-vertical: center;
+
+}

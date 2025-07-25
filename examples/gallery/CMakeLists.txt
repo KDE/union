@@ -14,6 +14,7 @@ set(_configured_files
     Buttons.qml
     Checkable.qml
     Delegates.qml
+    Menus.qml
 )
 
 set_property(DIRECTORY PROPERTY CMAKE_CONFIGURE_DEPENDS "${_configured_files}")
