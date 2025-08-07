@@ -13,12 +13,8 @@ T.SwitchDelegate {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding,
-                            implicitIndicatorWidth + leftPadding + rightPadding,
                             Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding,
-                             implicitIndicatorHeight + topPadding + bottomPadding,
                              Union.Positioner.implicitHeight)
 
     Union.Element.type: "SwitchDelegate"
