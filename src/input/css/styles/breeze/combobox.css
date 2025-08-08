@@ -1,0 +1,51 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+combobox
+{
+	width: var(--medium-element-size);
+	height: var(--medium-element-size);
+	spacing: var(--small-spacing);
+	padding: var(--large-spacing);
+	border-radius: var(--corner-radius);
+
+	text-alignment-horizontal: center;
+	icon-alignment-horizontal: center;
+
+	color: var(--button-text-color);
+	border: var(--button-border);
+	background-color: var(--button-background-color);
+
+	&.flat
+	{
+		border: 0px solid transparent;
+		background-color: transparent;
+		box-shadow: 0px 0px 0px 0px transparent;
+	}
+
+	&:hovered
+	{
+		border-color: var(--highlight-color);
+	}
+
+	&:visual-focus
+	{
+		border-color: var(--highlight-color);
+		outline: var(--focus-outline);
+	}
+
+	box-shadow: var(--button-shadow);
+
+	icon-name: "arrow-down-symbolic";
+}
+
+combobox:pressed
+{
+	border: 1px solid var(--highlight-color);
+	background-color: var(--button-highlight-color);
+	box-shadow: 0px 0px 0px 0px transparent;
+}
+
+

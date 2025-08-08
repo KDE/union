@@ -80,6 +80,13 @@ Kirigami.Page {
             checkable: true
             checked: true
         }
+
+        Controls.ComboBox {
+            currentIndex: 1
+            displayText: "Size: " + currentText
+            model: ["S", "M", "L"]
+        }
+
         Item {
             Layout.fillHeight: true
         }
