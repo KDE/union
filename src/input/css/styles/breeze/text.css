@@ -27,6 +27,11 @@ spinbox
     &:visual-focus {
         outline: 2px solid var(--focus-color);
     }
+
+    .placeholder
+    {
+        color: mix(var(--view-text-color), var(--view-background-color), 0.3);
+    }
 }
 
 textfield,
