@@ -41,11 +41,10 @@ T.TextField {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font ?? Application.font
-
     color: Union.Style.properties.text.color ?? palette.text
+
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
-    placeholderTextColor: Union.Style.properties.text.color ?? palette.placeholderText
 
     horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
     verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
