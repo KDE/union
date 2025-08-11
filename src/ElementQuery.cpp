@@ -18,6 +18,8 @@ public:
     std::optional<Properties::StyleProperty> properties = std::nullopt;
 
     inline static const Properties::StyleProperty emptyProperties;
+
+    inline static QHash<std::size_t, std::optional<Properties::StyleProperty>> s_matchesCache;
 };
 
 ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
@@ -42,11 +44,19 @@ bool ElementQuery::execute()
 {
     qCInfo(UNION_QUERY) << "Trying to match" << d->elements;
 
+    auto cacheKey = elementListCacheKey(d->elements, QHashSeed::globalSeed());
+    if (ElementQueryPrivate::s_matchesCache.contains(cacheKey)) {
+        qCInfo(UNION_QUERY) << "Matched from cache";
+        d->properties = ElementQueryPrivate::s_matchesCache.value(cacheKey);
+        return true;
+    }
+
     d->styles = d->theme->matches(d->elements);
 
     if (d->styles.isEmpty()) {
         qCInfo(UNION_QUERY) << "Did not match any style rules!";
         d->properties = std::nullopt;
+        ElementQueryPrivate::s_matchesCache.insert(cacheKey, std::nullopt);
         return false;
     }
 
@@ -62,6 +72,8 @@ bool ElementQuery::execute()
     for (auto style : std::as_const(d->styles)) {
         Properties::StyleProperty::resolveProperties(style->properties(), d->properties.value());
     }
+
+    ElementQueryPrivate::s_matchesCache.insert(cacheKey, d->properties);
 
     return true;
 }
