@@ -11,8 +11,8 @@ textfield,
 textarea,
 spinbox
 {
-    height: var(--large-element-size);
-    padding: var(--large-spacing);
+    height: var(--medium-element-size);
+    padding: var(--medium-spacing);
     border-radius: var(--corner-radius);
 
     border: 1px solid var(--view-border-color);
