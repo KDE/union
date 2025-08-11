@@ -3,6 +3,7 @@
 
 #include "Element.h"
 
+#include <QBuffer>
 #include <QCoreApplication>
 #include <QDebug>
 #include <QMetaEnum>
@@ -222,6 +223,20 @@ QString Element::toString() const
     }
 
     return u"Element("_s + properties.join(u" "_s) + u")"_s;
+}
+
+std::size_t Union::Element::cacheKey(std::size_t seed) const
+{
+    QByteArray serialized;
+    serialized.reserve(1000);
+
+    QBuffer buffer(&serialized);
+    buffer.open(QIODevice::WriteOnly);
+
+    QDataStream stream(&buffer);
+    stream << d->type << d->id << d->states << d->hints << d->attributes;
+
+    return qHash(serialized, seed);
 }
 
 Element::Ptr Union::Element::create()
