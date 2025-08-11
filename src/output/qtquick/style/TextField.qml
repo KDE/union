@@ -47,8 +47,8 @@ T.TextField {
     selectedTextColor: control.palette.highlightedText
     placeholderTextColor: Union.Style.properties.text.color ?? palette.placeholderText
 
-    horizontalAlignment: Union.Style.properties.text.alignment & Qt.AlignHorizontal_Mask
-    verticalAlignment: Union.Style.properties.text.alignment & Qt.AlignHorizontal_Mask
+    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
 
     PlaceholderText {
         id: placeholder
