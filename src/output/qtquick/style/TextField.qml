@@ -52,17 +52,20 @@ T.TextField {
 
     PlaceholderText {
         id: placeholder
+
+        Union.Element.hints: ["placeholder"]
+
         x: control.leftPadding
         y: control.topPadding
         width: control.width - (control.leftPadding + control.rightPadding)
         height: control.height - (control.topPadding + control.bottomPadding)
 
         text: control.placeholderText
-        font: control.font
-        color: control.placeholderTextColor
+        font: Union.Style.properties.text.font ?? Application.font
+        color: Union.Style.properties.text.color ?? control.palette.placeholderText
         horizontalAlignment: control.horizontalAlignment
         verticalAlignment: control.verticalAlignment
-        visible: !control.length && !control.preeditText && !control.activeFocus
+        visible: !control.length && !control.preeditText
         elide: Text.ElideRight
         renderType: control.renderType
     }
