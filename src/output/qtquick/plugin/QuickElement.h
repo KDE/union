@@ -131,7 +131,12 @@ public:
     Q_SIGNAL void activeStatesChanged();
 
 private:
+    friend class QuickElement;
+
     void setState(Union::Element::State state, bool set);
+
+    // Called by QuickElement upon changes to its underlying Element instance.
+    void setActiveStates(Union::Element::States states);
 
     QuickElement *m_parent = nullptr;
     Union::Element::States m_activeStates;
