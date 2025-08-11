@@ -97,7 +97,7 @@ template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeS
 struct UNION_EXPORT SelectorPrivateConcept {
     virtual ~SelectorPrivateConcept();
     virtual int weight() const = 0;
-    virtual bool matches(std::shared_ptr<Element> element) const = 0;
+    virtual bool matches(Element *element) const = 0;
     virtual QString toString() const = 0;
     virtual SelectorType type() const = 0;
     virtual bool isCombinator() const = 0;
@@ -111,7 +111,7 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
     }
 
     int weight() const override;
-    bool matches(std::shared_ptr<Element> element) const override;
+    bool matches(Element *element) const override;
     QString toString() const override;
 
     inline SelectorType type() const override
@@ -160,7 +160,7 @@ public:
      *
      * \a element The element to match against.
      */
-    bool matches(std::shared_ptr<Element> element) const;
+    bool matches(Element *element) const;
 
     /*!
      * Return a string representation of this selector.
@@ -218,7 +218,7 @@ public:
     }
 
 private:
-    Selector(std::shared_ptr<const detail::SelectorPrivateConcept> _d);
+    Selector(const std::shared_ptr<const detail::SelectorPrivateConcept> &_d);
 
     // We want Selector to behave like a value type so that it easy to work with
     // in lists etc. This means we don't want it to have virtual functions, as
