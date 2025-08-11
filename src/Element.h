@@ -255,6 +255,8 @@ public:
      */
     QString toString() const;
 
+    std::size_t cacheKey(std::size_t seed = 0) const;
+
     /*!
      * Returns a newly created instance of Element.
      */
