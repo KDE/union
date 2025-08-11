@@ -28,6 +28,12 @@ Kirigami.Page {
             text: "ItemDelegate with Text and Icon"
         }
 
+        Controls.ItemDelegate {
+            icon.name: "document-save"
+            text: "ItemDelegate Highlighted"
+            highlighted: true
+        }
+
         Controls.CheckDelegate {
             text: "CheckDelegate with Text"
         }
