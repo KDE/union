@@ -49,6 +49,14 @@ combobox
         background-color: mix(var(--button-background-color), var(--button-text-color), 0.2);
     }
 
+    &:disabled
+    {
+        background-color: mix(var(--window-background-color), var(--window-text-color), 0.05);
+        color: mix(var(--window-background-color), var(--window-text-color), 0.35);
+        border-color: mix(var(--window-background-color), var(--window-text-color), 0.2);
+        box-shadow: 0px 0px 0px 0px transparent;
+    }
+
     &[display="text-under-icon"] {
         text-alignment-vertical: stack;
         icon-alignment-vertical: stack;
