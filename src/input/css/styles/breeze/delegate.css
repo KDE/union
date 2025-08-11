@@ -9,7 +9,8 @@ radiodelegate,
 switchdelegate,
 swipedelegate
 {
-    padding: var(--small-spacing);
+    padding: var(--large-spacing) var(--medium-spacing);
+    inset: var(--small-spacing) 3px;
     spacing: var(--small-spacing);
 
     border-radius: var(--corner-radius);
