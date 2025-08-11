@@ -3,6 +3,7 @@
 
 #include "Element.h"
 
+#include <QCoreApplication>
 #include <QDebug>
 #include <QMetaEnum>
 #include <QProperty>
@@ -42,6 +43,9 @@ void Element::setType(const QString &type)
     }
 
     d->type = type;
+
+    sendChangeEvent(Change::Type);
+
     Q_EMIT typeChanged();
     Q_EMIT updated();
 }
@@ -58,6 +62,9 @@ void Element::setId(const QString &newId)
     }
 
     d->id = newId;
+
+    sendChangeEvent(Change::Id);
+
     Q_EMIT idChanged();
     Q_EMIT updated();
 }
@@ -74,6 +81,9 @@ void Element::setStates(States newStates)
     }
 
     d->states = newStates;
+
+    sendChangeEvent(Change::States);
+
     Q_EMIT statesChanged();
     Q_EMIT updated();
 }
@@ -90,6 +100,7 @@ void Element::setColorSet(ColorSet newColorSet)
     }
 
     d->colorSet = newColorSet;
+
     Q_EMIT colorSetChanged();
     Q_EMIT updated();
 }
@@ -106,6 +117,9 @@ void Element::setHints(const QSet<QString> &newHints)
     }
 
     d->hints = newHints;
+
+    sendChangeEvent(Change::Hints);
+
     Q_EMIT hintsChanged();
     Q_EMIT updated();
 }
@@ -117,6 +131,9 @@ void Element::setHint(const QString &name, bool present)
     } else {
         d->hints.remove(name);
     }
+
+    sendChangeEvent(Change::Hints);
+
     Q_EMIT hintsChanged();
     Q_EMIT updated();
 }
@@ -138,6 +155,9 @@ void Element::setAttributes(const QVariantMap &attributes)
     }
 
     d->attributes = attributes;
+
+    sendChangeEvent(Change::Attributes);
+
     Q_EMIT attributesChanged();
     Q_EMIT updated();
 }
@@ -155,6 +175,9 @@ QVariant Element::attribute(const QString &name) const
 void Element::setAttribute(const QString &name, const QVariant &value)
 {
     d->attributes[name] = value;
+
+    sendChangeEvent(Change::Attributes);
+
     Q_EMIT attributesChanged();
     Q_EMIT updated();
 }
@@ -206,9 +229,21 @@ Element::Ptr Union::Element::create()
     return std::make_shared<Element>(std::make_unique<ElementPrivate>());
 }
 
+void Union::Element::sendChangeEvent(Changes changes)
+{
+    ElementChangedEvent event{changes};
+    QCoreApplication::sendEvent(this, &event);
+}
+
 QDebug operator<<(QDebug debug, Union::Element::Ptr element)
 {
     QDebugStateSaver saver(debug);
     debug << element->toString();
     return debug;
+}
+
+ElementChangedEvent::ElementChangedEvent(Element::Changes _changes)
+    : QEvent(ElementChangedEvent::s_type)
+    , changes(_changes)
+{
 }

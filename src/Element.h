@@ -6,6 +6,7 @@
 #include <memory>
 
 #include <QDebug>
+#include <QEvent>
 #include <QObject>
 
 #include "union_export.h"
@@ -97,6 +98,22 @@ public:
         Header,
     };
     Q_ENUM(ColorSet)
+
+    /*!
+     * \enum Union::Element::Change
+     *
+     * A set of flags to indicate what changed about an element.
+     */
+    enum class Change {
+        Nothing = 0,
+        Type = 1 << 0,
+        Id = 1 << 1,
+        States = 1 << 2,
+        Hints = 1 << 3,
+        Attributes = 1 << 4,
+    };
+    Q_DECLARE_FLAGS(Changes, Change)
+    Q_FLAG(Changes)
 
     /*!
      * \typealias Union::Element::Ptr
@@ -244,6 +261,8 @@ public:
     static Element::Ptr create();
 
 private:
+    void sendChangeEvent(Changes changes);
+
     const std::unique_ptr<ElementPrivate> d;
 };
 
@@ -255,9 +274,26 @@ private:
  */
 using ElementList = QList<Element::Ptr>;
 
+/*!
+ * \class ElementChangedEvent
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * An event that gets sent by Element when any of its properties change.
+ */
+class UNION_EXPORT ElementChangedEvent : public QEvent
+{
+public:
+    ElementChangedEvent(Element::Changes _changes);
+
+    const Element::Changes changes;
+
+    inline static QEvent::Type s_type = QEvent::None;
+};
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Element::States)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Element::Changes)
 
 /*!
  * \relates Union::Element
