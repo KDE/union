@@ -11,6 +11,9 @@ PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
     setSupportsIconColoring(true);
+    // TODO Find some way of maintaining inherit while using the correct colors.
+    setInherit(false);
+    syncColors();
 }
 
 PlatformTheme::~PlatformTheme()
@@ -31,8 +34,7 @@ QIcon PlatformTheme::iconFromTheme(const QString &name, const QColor &customColo
 void PlatformTheme::syncColors()
 {
     if (!m_style) {
-        auto parentItem = qobject_cast<QQuickItem *>(parent());
-        m_style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parentItem));
+        m_style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parent()));
         if (!m_style) {
             return;
         }
