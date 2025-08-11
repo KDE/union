@@ -12,6 +12,7 @@ ecm_target_qml_sources(union-gallery SOURCES
 
 set(_configured_files
     Buttons.qml
+    Text.qml
     Checkable.qml
     Delegates.qml
     Menus.qml
