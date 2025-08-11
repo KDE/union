@@ -293,6 +293,7 @@ public:
 
 protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
+    bool eventFilter(QObject *watched, QEvent *event) override;
 
 private:
     friend class StatesGroup;
