@@ -27,10 +27,12 @@ swipedelegate
         background-color: var(--focus-color);
     }
 
-    &:pressed
+    &:pressed,
+    &:highlighted
     {
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
+        color: var(--highlight-text-color);
     }
 
     &[display="text-under-icon"]
