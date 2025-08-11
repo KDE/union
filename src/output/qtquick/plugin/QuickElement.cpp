@@ -109,16 +109,21 @@ void StatesGroup::setState(Union::Element::State state, bool set)
     m_parent->setActiveStates(m_activeStates);
 }
 
+void StatesGroup::setActiveStates(Element::States states)
+{
+    if (states == m_activeStates) {
+        return;
+    }
+
+    m_activeStates = states;
+    Q_EMIT activeStatesChanged();
+}
+
 QuickElement::QuickElement(QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
 {
     m_element = Element::create();
-    connect(m_element.get(), &Element::typeChanged, this, &QuickElement::typeChanged);
-    connect(m_element.get(), &Element::idChanged, this, &QuickElement::elementIdChanged);
-    connect(m_element.get(), &Element::colorSetChanged, this, &QuickElement::colorSetChanged);
-    connect(m_element.get(), &Element::hintsChanged, this, &QuickElement::hintsChanged);
-    connect(m_element.get(), &Element::attributesChanged, this, &QuickElement::attributesChanged);
-    connect(m_element.get(), &Element::updated, this, &QuickElement::update);
+    m_element->installEventFilter(this);
 
     m_statesGroup = std::make_unique<StatesGroup>(this);
 
@@ -197,6 +202,32 @@ void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQui
     // called, so delay the update momentarily so the parent can be updated
     // first.
     QMetaObject::invokeMethod(this, &QuickElement::update, Qt::QueuedConnection);
+}
+
+bool QuickElement::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_element.get() && event->type() == ElementChangedEvent::s_type) {
+        auto changeEvent = static_cast<ElementChangedEvent *>(event);
+        if (changeEvent->changes & Element::Change::Type) {
+            Q_EMIT typeChanged();
+        }
+        if (changeEvent->changes & Element::Change::Id) {
+            Q_EMIT elementIdChanged();
+        }
+        if (changeEvent->changes & Element::Change::States) {
+            m_statesGroup->setActiveStates(m_element->states());
+        }
+        if (changeEvent->changes & Element::Change::Hints) {
+            Q_EMIT hintsChanged();
+        }
+        if (changeEvent->changes & Element::Change::Attributes) {
+            Q_EMIT attributesChanged();
+        }
+
+        update();
+    }
+
+    return QObject::eventFilter(watched, event);
 }
 
 void QuickElement::setActiveStates(Union::Element::States newActiveStates)
