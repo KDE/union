@@ -20,7 +20,7 @@ spinbox
     color: var(--view-text-color);
 
     &:hovered,
-    &:visual-focus {
+    &:active-focus {
         border: 1px solid var(--highlight-color);
     }
 
