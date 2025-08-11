@@ -277,6 +277,21 @@ private:
 using ElementList = QList<Element::Ptr>;
 
 /*!
+ * \relates Union::Element
+ *
+ * Get a cache key for an ElementList.
+ */
+inline std::size_t elementListCacheKey(const Union::ElementList &key, std::size_t seed = 0)
+{
+    QList<std::size_t> elements;
+    elements.reserve(key.size());
+    std::ranges::transform(key, std::back_inserter(elements), [seed](const Union::Element::Ptr &element) {
+        return element->cacheKey(seed);
+    });
+    return qHash(elements, seed);
+}
+
+/*!
  * \class ElementChangedEvent
  * \inmodule core
  * \ingroup core-classes
