@@ -38,11 +38,6 @@ void ElementQuery::setElements(const QList<Element::Ptr> &elements)
     d->elements = elements;
 }
 
-QList<StyleRule::Ptr> ElementQuery::matchedRules() const
-{
-    return d->styles;
-}
-
 bool ElementQuery::execute()
 {
     qCInfo(UNION_QUERY) << "Trying to match" << d->elements;

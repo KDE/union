@@ -61,11 +61,6 @@ public:
     void setElements(const QList<Element::Ptr> &elements);
 
     /*!
-     * Returns the list of matched style rules for this query.
-     */
-    QList<StyleRule::Ptr> matchedRules() const;
-
-    /*!
      * Execute the query.
      *
      * This will perform matching of style rules from the query's theme against
