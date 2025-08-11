@@ -281,7 +281,7 @@ using ElementList = QList<Element::Ptr>;
  *
  * An event that gets sent by Element when any of its properties change.
  */
-class ElementChangedEvent : public QEvent
+class UNION_EXPORT ElementChangedEvent : public QEvent
 {
 public:
     ElementChangedEvent(Element::Changes _changes);
