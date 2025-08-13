@@ -20,6 +20,8 @@ target_sources(UnionQuickImpl PRIVATE
     Positioner.cpp
     PositionerLayout.h
     PositionerLayout.cpp
+    Icon.h
+    Icon.cpp
 
     scenegraph/UnionNode.cpp
     scenegraph/UnionNode.h
@@ -70,6 +72,11 @@ ecm_generate_export_header(UnionQuickImpl
 
 target_include_directories(UnionQuickImpl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/properties)
 target_link_libraries(UnionQuickImpl PUBLIC Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2 Union::Union)
+
+if (WITH_KICONTHEMES)
+    target_compile_definitions(UnionQuickImpl PRIVATE WITH_KICONTHEMES)
+    target_link_libraries(UnionQuickImpl PRIVATE KF6::IconThemes)
+endif()
 
 set_target_properties(UnionQuickImpl PROPERTIES
     VERSION ${PROJECT_VERSION}

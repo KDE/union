@@ -28,15 +28,25 @@ include(ECMGenerateQDoc)
 
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
+option(WITH_KICONTHEMES "Build with KIconThemes for icon recoloring" ON)
 option(WITH_KIRIGAMI "Build with Kirigami integration" ON)
+
+if (WITH_KIRIGAMI AND NOT WITH_KICONTHEMES)
+    message(STATUS "KIconThemes was disabled but Kirigami enabled, forcing KIconThemes as it is required for Kirigami output")
+    set(WITH_KICONTHEMES ON)
+endif()
 
 set(CMAKE_CXX_STANDARD 20)
 
 set(REQUIRED_QT_VERSION 6.8.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
 
+if (WITH_KICONTHEMES)
+    find_package(KF6IconThemes ${KF_DEP_VERSION} CONFIG REQUIRED)
+endif()
+
 if (WITH_KIRIGAMI)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS KirigamiPlatform IconThemes)
+    find_package(KF6KirigamiPlatform ${KF_DEP_VERSION} CONFIG REQUIRED)
 endif()
 
 if (BUILD_EXAMPLES)
