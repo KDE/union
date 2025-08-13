@@ -23,16 +23,25 @@ LayoutPropertyGroup::LayoutPropertyGroup(QuickStyle *style)
     m_margins = std::make_unique<SizePropertyGroup>(m_style);
 }
 
-void LayoutPropertyGroup::update(const LayoutProperty &newState)
+void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
 {
     m_state = newState;
-    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
+
+    if (!newState) {
+        m_alignment->update(std::nullopt);
+        m_padding->update(std::nullopt);
+        m_inset->update(std::nullopt);
+        m_margins->update(std::nullopt);
+    } else {
+        m_alignment->update(newState.value().alignment());
+        m_padding->update(newState.value().padding());
+        m_inset->update(newState.value().inset());
+        m_margins->update(newState.value().margins());
+    }
+
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT spacingChanged();
-    m_padding->update(newState.padding().value_or(SizeProperty{}));
-    m_inset->update(newState.inset().value_or(SizeProperty{}));
-    m_margins->update(newState.margins().value_or(SizeProperty{}));
 
     Q_EMIT updated();
 }
@@ -44,7 +53,11 @@ AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
 
 QJSValue LayoutPropertyGroup::width() const
 {
-    auto value = m_state.width();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -54,7 +67,11 @@ QJSValue LayoutPropertyGroup::width() const
 
 QJSValue LayoutPropertyGroup::height() const
 {
-    auto value = m_state.height();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -64,7 +81,11 @@ QJSValue LayoutPropertyGroup::height() const
 
 QJSValue LayoutPropertyGroup::spacing() const
 {
-    auto value = m_state.spacing();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().spacing();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

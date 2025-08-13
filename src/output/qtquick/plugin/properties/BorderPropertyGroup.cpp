@@ -23,13 +23,21 @@ BorderPropertyGroup::BorderPropertyGroup(QuickStyle *style)
     m_bottom = std::make_unique<LinePropertyGroup>(m_style);
 }
 
-void BorderPropertyGroup::update(const BorderProperty &newState)
+void BorderPropertyGroup::update(const std::optional<BorderProperty> &newState)
 {
     m_state = newState;
-    m_left->update(newState.left().value_or(LineProperty{}));
-    m_right->update(newState.right().value_or(LineProperty{}));
-    m_top->update(newState.top().value_or(LineProperty{}));
-    m_bottom->update(newState.bottom().value_or(LineProperty{}));
+
+    if (!newState) {
+        m_left->update(std::nullopt);
+        m_right->update(std::nullopt);
+        m_top->update(std::nullopt);
+        m_bottom->update(std::nullopt);
+    } else {
+        m_left->update(newState.value().left());
+        m_right->update(newState.value().right());
+        m_top->update(newState.value().top());
+        m_bottom->update(newState.value().bottom());
+    }
 
     Q_EMIT updated();
 }

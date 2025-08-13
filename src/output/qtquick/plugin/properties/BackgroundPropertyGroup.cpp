@@ -20,18 +20,28 @@ BackgroundPropertyGroup::BackgroundPropertyGroup(QuickStyle *style)
     m_image = std::make_unique<ImagePropertyGroup>(m_style);
 }
 
-void BackgroundPropertyGroup::update(const BackgroundProperty &newState)
+void BackgroundPropertyGroup::update(const std::optional<BackgroundProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+        m_image->update(std::nullopt);
+    } else {
+        m_image->update(newState.value().image());
+    }
+
     Q_EMIT colorChanged();
-    m_image->update(newState.image().value_or(ImageProperty{}));
 
     Q_EMIT updated();
 }
 
 QJSValue BackgroundPropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

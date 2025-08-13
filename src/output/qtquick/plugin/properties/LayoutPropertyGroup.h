@@ -38,7 +38,7 @@ class LayoutPropertyGroup : public QObject
 public:
     explicit LayoutPropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::LayoutProperty &newState);
+    void update(const std::optional<Union::Properties::LayoutProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -106,5 +106,7 @@ private:
     std::unique_ptr<SizePropertyGroup> m_padding;
     std::unique_ptr<SizePropertyGroup> m_inset;
     std::unique_ptr<SizePropertyGroup> m_margins;
-    Union::Properties::LayoutProperty m_state;
+
+    inline static std::optional<Union::Properties::LayoutProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::LayoutProperty> &m_state = nullValue;
 };
