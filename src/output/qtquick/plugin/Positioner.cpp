@@ -10,23 +10,23 @@
 
 using namespace Union;
 
-PositionerAttached::PositionerAttached(QObject *parent)
+Positioner::Positioner(QObject *parent)
     : QObject(parent)
 {
     m_layout = new PositionerLayout(qobject_cast<QQuickItem *>(parent));
-    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &PositionerAttached::implicitWidthChanged);
-    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &PositionerAttached::implicitHeightChanged);
-    connect(m_layout, &PositionerLayout::paddingChanged, this, &PositionerAttached::paddingChanged);
+    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitWidthChanged);
+    connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitHeightChanged);
+    connect(m_layout, &PositionerLayout::paddingChanged, this, &Positioner::paddingChanged);
 }
 
-PositionerAttached::~PositionerAttached() = default;
+Positioner::~Positioner() = default;
 
-QList<QQuickItem *> PositionerAttached::positionItems() const
+QList<QQuickItem *> Positioner::positionItems() const
 {
     return m_positionItems;
 }
 
-void PositionerAttached::setPositionItems(const ItemList &newItems)
+void Positioner::setPositionItems(const ItemList &newItems)
 {
     if (newItems == m_positionItems) {
         return;
@@ -35,7 +35,7 @@ void PositionerAttached::setPositionItems(const ItemList &newItems)
     auto [addedItems, removedItems] = findPositionedItemChanges(m_positionItems, newItems);
 
     for (auto item : std::as_const(addedItems)) {
-        auto positionedItemAttached = qobject_cast<PositionedItemAttached *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
+        auto positionedItemAttached = qobject_cast<PositionedItem *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
         if (positionedItemAttached && positionedItemAttached->positionChildren()) {
             connect(item, &QQuickItem::childrenChanged, this, [this, item]() {
                 auto itr = std::find_if(m_positionChildrenItems.begin(), m_positionChildrenItems.end(), [item](const auto &watcher) {
@@ -91,23 +91,22 @@ void PositionerAttached::setPositionItems(const ItemList &newItems)
     Q_EMIT positionItemsChanged();
 }
 
-qreal PositionerAttached::implicitWidth() const
+qreal Positioner::implicitWidth() const
 {
     return m_layout->implicitSize().width();
 }
 
-qreal PositionerAttached::implicitHeight() const
+qreal Positioner::implicitHeight() const
 {
     return m_layout->implicitSize().height();
 }
 
-Sizes PositionerAttached::padding() const
+Sizes Positioner::padding() const
 {
     return m_layout->padding();
 }
 
-std::pair<PositionerAttached::ItemList, PositionerAttached::ItemList> PositionerAttached::findPositionedItemChanges(const ItemList &currentItems,
-                                                                                                                    const ItemList &newItems)
+std::pair<Positioner::ItemList, Positioner::ItemList> Positioner::findPositionedItemChanges(const ItemList &currentItems, const ItemList &newItems)
 {
     ItemList removedItems = currentItems;
     ItemList addedItems;
@@ -123,17 +122,17 @@ std::pair<PositionerAttached::ItemList, PositionerAttached::ItemList> Positioner
     return std::make_pair(addedItems, removedItems);
 }
 
-PositionerAttached *Positioner::qmlAttachedProperties(QObject *parent)
+Positioner *Positioner::qmlAttachedProperties(QObject *parent)
 {
-    return new PositionerAttached(parent);
+    return new Positioner(parent);
 }
 
-bool PositionedItemAttached::positionChildren() const
+bool PositionedItem::positionChildren() const
 {
     return m_positionChildren;
 }
 
-void PositionedItemAttached::setPositionChildren(bool position)
+void PositionedItem::setPositionChildren(bool position)
 {
     if (position == m_positionChildren) {
         return;
@@ -142,22 +141,22 @@ void PositionedItemAttached::setPositionChildren(bool position)
     m_positionChildren = position;
 }
 
-PositionerSource::Source PositionedItemAttached::source() const
+PositionerSource::Source PositionedItem::source() const
 {
     return m_source;
 }
 
-void PositionedItemAttached::setSource(PositionerSource::Source newSource)
+void PositionedItem::setSource(PositionerSource::Source newSource)
 {
     m_source = newSource;
 }
 
-Union::Properties::Alignment PositionedItemAttached::horizontalAlignment() const
+Union::Properties::Alignment PositionedItem::horizontalAlignment() const
 {
     return m_horizontalAlignment;
 }
 
-void PositionedItemAttached::setHorizontalAlignment(Union::Properties::Alignment newAlignment)
+void PositionedItem::setHorizontalAlignment(Union::Properties::Alignment newAlignment)
 {
     if (newAlignment == m_horizontalAlignment) {
         return;
@@ -167,17 +166,17 @@ void PositionedItemAttached::setHorizontalAlignment(Union::Properties::Alignment
     Q_EMIT horizontalAlignmentChanged();
 }
 
-void PositionedItemAttached::resetHorizontalAlignment()
+void PositionedItem::resetHorizontalAlignment()
 {
     setHorizontalAlignment(Union::Properties::Alignment::Unspecified);
 }
 
-Union::Properties::Alignment PositionedItemAttached::verticalAlignment() const
+Union::Properties::Alignment PositionedItem::verticalAlignment() const
 {
     return m_verticalAlignment;
 }
 
-void PositionedItemAttached::setVerticalAlignment(Union::Properties::Alignment newAlignment)
+void PositionedItem::setVerticalAlignment(Union::Properties::Alignment newAlignment)
 {
     if (newAlignment == m_verticalAlignment) {
         return;
@@ -187,12 +186,12 @@ void PositionedItemAttached::setVerticalAlignment(Union::Properties::Alignment n
     Q_EMIT verticalAlignmentChanged();
 }
 
-void PositionedItemAttached::resetVerticalAlignment()
+void PositionedItem::resetVerticalAlignment()
 {
     setVerticalAlignment(Union::Properties::Alignment::Unspecified);
 }
 
-PositionedItemAttached *PositionedItem::qmlAttachedProperties(QObject *parent)
+PositionedItem *PositionedItem::qmlAttachedProperties(QObject *parent)
 {
-    return new PositionedItemAttached(parent);
+    return new PositionedItem(parent);
 }

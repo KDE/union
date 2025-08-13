@@ -128,7 +128,7 @@ void PositionerLayout::updatePolish()
             continue;
         }
 
-        auto positionedItemAttached = qobject_cast<PositionedItemAttached *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
+        auto positionedItemAttached = qobject_cast<PositionedItem *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
         if (positionedItemAttached) {
             source = positionedItemAttached->source();
         }
