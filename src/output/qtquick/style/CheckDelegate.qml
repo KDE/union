@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
+
 import org.kde.union.impl as Union
 
 T.CheckDelegate {
@@ -76,14 +76,10 @@ T.CheckDelegate {
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
-        QQCImpl.IconImage {
+        Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-            sourceSize.width: control.icon.width
-            sourceSize.height: control.icon.height
-            name: control.icon.name
-            source: control.icon.source
-            color: control.icon.color
-            visible: control.display !== T.AbstractButton.TextOnly && status === Image.Ready
+            control: control
+            visible: name && control.display !== T.AbstractButton.TextOnly
         }
         Text {
             Union.PositionedItem.source: Union.PositionerSource.Text
