@@ -7,12 +7,15 @@
 #include <QQmlEngine>
 
 #include <Element.h>
+#include <EventHelper.h>
 #include <StyleRule.h>
 #include <Theme.h>
 
 #include "QuickElement.h"
 
 using namespace Union;
+
+static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleRegistration;
 
 QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
