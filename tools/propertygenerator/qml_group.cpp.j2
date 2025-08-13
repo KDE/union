@@ -57,7 +57,6 @@ void {{ group_name }}::update(const std::optional<{{ type_name }}> &newState)
     Q_EMIT {{ property.name }}Changed();
 {% endif %}
 {% endfor %}
-
 {% if extra_code and "update" in extra_code %}
 {{ extra_code["update"] | render }}
 {% endif %}
