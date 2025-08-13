@@ -34,17 +34,29 @@ using namespace Qt::StringLiterals;
 {% endfor %}
 }
 
-void {{ group_name }}::update(const {{ type_name }} &newState)
+void {{ group_name }}::update(const std::optional<{{ type_name }}> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
 {% for property in properties %}
-{% if property.is_group %}
-    m_{{ property.name }}->update(newState.{{ property.name }}().value_or({{ property.type }}{}));
-{% else %}
+    {% if property.is_group %}
+        m_{{ property.name }}->update(std::nullopt);
+    {% endif %}
+{% endfor %}
+    } else {
+{% for property in properties %}
+    {% if property.is_group %}
+        m_{{ property.name }}->update(newState.value().{{ property.name }}());
+    {% endif %}
+{% endfor %}
+    }
+
+{% for property in properties %}
+{% if not property.is_group %}
     Q_EMIT {{ property.name }}Changed();
 {% endif %}
 {% endfor %}
-
 {% if extra_code and "update" in extra_code %}
 {{ extra_code["update"] | render }}
 {% endif %}
@@ -61,7 +73,11 @@ void {{ group_name }}::update(const {{ type_name }} &newState)
 {% else %}
 QJSValue {{ group_name }}::{{ property.name }}() const
 {
-    auto value = m_state.{{ property.name }}();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().{{ property.name }}();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
