@@ -35,7 +35,7 @@ class TextPropertyGroup : public QObject
 public:
     explicit TextPropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::TextProperty &newState);
+    void update(const std::optional<Union::Properties::TextProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -67,5 +67,7 @@ public:
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
-    Union::Properties::TextProperty m_state;
+
+    inline static std::optional<Union::Properties::TextProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::TextProperty> &m_state = nullValue;
 };

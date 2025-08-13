@@ -20,21 +20,31 @@ CornerPropertyGroup::CornerPropertyGroup(QuickStyle *style)
     m_image = std::make_unique<ImagePropertyGroup>(m_style);
 }
 
-void CornerPropertyGroup::update(const CornerProperty &newState)
+void CornerPropertyGroup::update(const std::optional<CornerProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+        m_image->update(std::nullopt);
+    } else {
+        m_image->update(newState.value().image());
+    }
+
     Q_EMIT radiusChanged();
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT colorChanged();
-    m_image->update(newState.image().value_or(ImageProperty{}));
 
     Q_EMIT updated();
 }
 
 QJSValue CornerPropertyGroup::radius() const
 {
-    auto value = m_state.radius();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().radius();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -44,7 +54,11 @@ QJSValue CornerPropertyGroup::radius() const
 
 QJSValue CornerPropertyGroup::width() const
 {
-    auto value = m_state.width();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -54,7 +68,11 @@ QJSValue CornerPropertyGroup::width() const
 
 QJSValue CornerPropertyGroup::height() const
 {
-    auto value = m_state.height();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -64,7 +82,11 @@ QJSValue CornerPropertyGroup::height() const
 
 QJSValue CornerPropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

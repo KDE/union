@@ -23,13 +23,21 @@ CornersPropertyGroup::CornersPropertyGroup(QuickStyle *style)
     m_bottomRight = std::make_unique<CornerPropertyGroup>(m_style);
 }
 
-void CornersPropertyGroup::update(const CornersProperty &newState)
+void CornersPropertyGroup::update(const std::optional<CornersProperty> &newState)
 {
     m_state = newState;
-    m_topLeft->update(newState.topLeft().value_or(CornerProperty{}));
-    m_topRight->update(newState.topRight().value_or(CornerProperty{}));
-    m_bottomLeft->update(newState.bottomLeft().value_or(CornerProperty{}));
-    m_bottomRight->update(newState.bottomRight().value_or(CornerProperty{}));
+
+    if (!newState) {
+        m_topLeft->update(std::nullopt);
+        m_topRight->update(std::nullopt);
+        m_bottomLeft->update(std::nullopt);
+        m_bottomRight->update(std::nullopt);
+    } else {
+        m_topLeft->update(newState.value().topLeft());
+        m_topRight->update(newState.value().topRight());
+        m_bottomLeft->update(newState.value().bottomLeft());
+        m_bottomRight->update(newState.value().bottomRight());
+    }
 
     Q_EMIT updated();
 }

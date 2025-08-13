@@ -38,7 +38,7 @@ class OutlinePropertyGroup : public QObject
 public:
     explicit OutlinePropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::OutlineProperty &newState);
+    void update(const std::optional<Union::Properties::OutlineProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -79,5 +79,7 @@ private:
     std::unique_ptr<LinePropertyGroup> m_right;
     std::unique_ptr<LinePropertyGroup> m_top;
     std::unique_ptr<LinePropertyGroup> m_bottom;
-    Union::Properties::OutlineProperty m_state;
+
+    inline static std::optional<Union::Properties::OutlineProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::OutlineProperty> &m_state = nullValue;
 };

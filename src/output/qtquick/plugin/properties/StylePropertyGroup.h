@@ -43,7 +43,7 @@ class StylePropertyGroup : public QObject
 public:
     explicit StylePropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::StyleProperty &newState);
+    void update(const std::optional<Union::Properties::StyleProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -129,5 +129,7 @@ private:
     std::unique_ptr<OutlinePropertyGroup> m_outline;
     std::unique_ptr<CornersPropertyGroup> m_corners;
     std::unique_ptr<ShadowPropertyGroup> m_shadow;
-    Union::Properties::StyleProperty m_state;
+
+    inline static std::optional<Union::Properties::StyleProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::StyleProperty> &m_state = nullValue;
 };

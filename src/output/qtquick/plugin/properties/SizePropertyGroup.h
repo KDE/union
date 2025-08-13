@@ -34,7 +34,7 @@ class SizePropertyGroup : public QObject
 public:
     explicit SizePropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::SizeProperty &newState);
+    void update(const std::optional<Union::Properties::SizeProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -75,5 +75,7 @@ public:
 
 private:
     QuickStyle *m_style = nullptr;
-    Union::Properties::SizeProperty m_state;
+
+    inline static std::optional<Union::Properties::SizeProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::SizeProperty> &m_state = nullValue;
 };

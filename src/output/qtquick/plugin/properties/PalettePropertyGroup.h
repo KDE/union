@@ -12,8 +12,6 @@
 #include <QProperty>
 #include <qqmlregistration.h>
 
-#include <QQmlComponent>
-#include <QVariant>
 
 #include <properties/PaletteProperty.h>
 
@@ -36,7 +34,7 @@ class PalettePropertyGroup : public QObject
 public:
     explicit PalettePropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::PaletteProperty &newState);
+    void update(const std::optional<Union::Properties::PaletteProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -255,12 +253,9 @@ public:
     QJSValue negative() const;
     Q_SIGNAL void negativeChanged();
 
-    Q_PROPERTY(QObject *quickPalette READ quickPalette NOTIFY updated)
-    QObject *quickPalette() const;
-
 private:
     QuickStyle *m_style = nullptr;
-    Union::Properties::PaletteProperty m_state;
-    QObject *m_palette = nullptr;
-    QQmlComponent *m_component = nullptr;
+
+    inline static std::optional<Union::Properties::PaletteProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::PaletteProperty> &m_state = nullValue;
 };

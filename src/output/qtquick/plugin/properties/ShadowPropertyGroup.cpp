@@ -28,21 +28,35 @@ ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
     m_bottomRight = std::make_unique<CornerPropertyGroup>(m_style);
 }
 
-void ShadowPropertyGroup::update(const ShadowProperty &newState)
+void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
 {
     m_state = newState;
-    m_offset->update(newState.offset().value_or(OffsetProperty{}));
+
+    if (!newState) {
+        m_offset->update(std::nullopt);
+        m_left->update(std::nullopt);
+        m_right->update(std::nullopt);
+        m_top->update(std::nullopt);
+        m_bottom->update(std::nullopt);
+        m_topLeft->update(std::nullopt);
+        m_topRight->update(std::nullopt);
+        m_bottomLeft->update(std::nullopt);
+        m_bottomRight->update(std::nullopt);
+    } else {
+        m_offset->update(newState.value().offset());
+        m_left->update(newState.value().left());
+        m_right->update(newState.value().right());
+        m_top->update(newState.value().top());
+        m_bottom->update(newState.value().bottom());
+        m_topLeft->update(newState.value().topLeft());
+        m_topRight->update(newState.value().topRight());
+        m_bottomLeft->update(newState.value().bottomLeft());
+        m_bottomRight->update(newState.value().bottomRight());
+    }
+
     Q_EMIT colorChanged();
     Q_EMIT sizeChanged();
     Q_EMIT blurChanged();
-    m_left->update(newState.left().value_or(LineProperty{}));
-    m_right->update(newState.right().value_or(LineProperty{}));
-    m_top->update(newState.top().value_or(LineProperty{}));
-    m_bottom->update(newState.bottom().value_or(LineProperty{}));
-    m_topLeft->update(newState.topLeft().value_or(CornerProperty{}));
-    m_topRight->update(newState.topRight().value_or(CornerProperty{}));
-    m_bottomLeft->update(newState.bottomLeft().value_or(CornerProperty{}));
-    m_bottomRight->update(newState.bottomRight().value_or(CornerProperty{}));
 
     Q_EMIT updated();
 }
@@ -54,7 +68,11 @@ OffsetPropertyGroup *ShadowPropertyGroup::offset() const
 
 QJSValue ShadowPropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -64,7 +82,11 @@ QJSValue ShadowPropertyGroup::color() const
 
 QJSValue ShadowPropertyGroup::size() const
 {
-    auto value = m_state.size();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().size();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -74,7 +96,11 @@ QJSValue ShadowPropertyGroup::size() const
 
 QJSValue ShadowPropertyGroup::blur() const
 {
-    auto value = m_state.blur();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().blur();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

@@ -19,9 +19,14 @@ OffsetPropertyGroup::OffsetPropertyGroup(QuickStyle *style)
 {
 }
 
-void OffsetPropertyGroup::update(const OffsetProperty &newState)
+void OffsetPropertyGroup::update(const std::optional<OffsetProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+    } else {
+    }
+
     Q_EMIT horizontalChanged();
     Q_EMIT verticalChanged();
 
@@ -30,7 +35,11 @@ void OffsetPropertyGroup::update(const OffsetProperty &newState)
 
 QJSValue OffsetPropertyGroup::horizontal() const
 {
-    auto value = m_state.horizontal();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().horizontal();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -40,7 +49,11 @@ QJSValue OffsetPropertyGroup::horizontal() const
 
 QJSValue OffsetPropertyGroup::vertical() const
 {
-    auto value = m_state.vertical();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().vertical();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

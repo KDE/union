@@ -20,20 +20,30 @@ LinePropertyGroup::LinePropertyGroup(QuickStyle *style)
     m_image = std::make_unique<ImagePropertyGroup>(m_style);
 }
 
-void LinePropertyGroup::update(const LineProperty &newState)
+void LinePropertyGroup::update(const std::optional<LineProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+        m_image->update(std::nullopt);
+    } else {
+        m_image->update(newState.value().image());
+    }
+
     Q_EMIT sizeChanged();
     Q_EMIT colorChanged();
     Q_EMIT styleChanged();
-    m_image->update(newState.image().value_or(ImageProperty{}));
 
     Q_EMIT updated();
 }
 
 QJSValue LinePropertyGroup::size() const
 {
-    auto value = m_state.size();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().size();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -43,7 +53,11 @@ QJSValue LinePropertyGroup::size() const
 
 QJSValue LinePropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -53,7 +67,11 @@ QJSValue LinePropertyGroup::color() const
 
 QJSValue LinePropertyGroup::style() const
 {
-    auto value = m_state.style();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().style();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

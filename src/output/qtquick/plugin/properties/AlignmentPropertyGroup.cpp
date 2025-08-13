@@ -19,9 +19,14 @@ AlignmentPropertyGroup::AlignmentPropertyGroup(QuickStyle *style)
 {
 }
 
-void AlignmentPropertyGroup::update(const AlignmentProperty &newState)
+void AlignmentPropertyGroup::update(const std::optional<AlignmentProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+    } else {
+    }
+
     Q_EMIT containerChanged();
     Q_EMIT horizontalChanged();
     Q_EMIT verticalChanged();
@@ -32,7 +37,11 @@ void AlignmentPropertyGroup::update(const AlignmentProperty &newState)
 
 QJSValue AlignmentPropertyGroup::container() const
 {
-    auto value = m_state.container();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().container();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -42,7 +51,11 @@ QJSValue AlignmentPropertyGroup::container() const
 
 QJSValue AlignmentPropertyGroup::horizontal() const
 {
-    auto value = m_state.horizontal();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().horizontal();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -52,7 +65,11 @@ QJSValue AlignmentPropertyGroup::horizontal() const
 
 QJSValue AlignmentPropertyGroup::vertical() const
 {
-    auto value = m_state.vertical();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().vertical();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -62,7 +79,11 @@ QJSValue AlignmentPropertyGroup::vertical() const
 
 QJSValue AlignmentPropertyGroup::order() const
 {
-    auto value = m_state.order();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().order();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

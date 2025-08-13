@@ -20,10 +20,16 @@ IconPropertyGroup::IconPropertyGroup(QuickStyle *style)
     m_alignment = std::make_unique<AlignmentPropertyGroup>(m_style);
 }
 
-void IconPropertyGroup::update(const IconProperty &newState)
+void IconPropertyGroup::update(const std::optional<IconProperty> &newState)
 {
     m_state = newState;
-    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
+
+    if (!newState) {
+        m_alignment->update(std::nullopt);
+    } else {
+        m_alignment->update(newState.value().alignment());
+    }
+
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT nameChanged();
@@ -40,7 +46,11 @@ AlignmentPropertyGroup *IconPropertyGroup::alignment() const
 
 QJSValue IconPropertyGroup::width() const
 {
-    auto value = m_state.width();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -50,7 +60,11 @@ QJSValue IconPropertyGroup::width() const
 
 QJSValue IconPropertyGroup::height() const
 {
-    auto value = m_state.height();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -60,7 +74,11 @@ QJSValue IconPropertyGroup::height() const
 
 QJSValue IconPropertyGroup::name() const
 {
-    auto value = m_state.name();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().name();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -70,7 +88,11 @@ QJSValue IconPropertyGroup::name() const
 
 QJSValue IconPropertyGroup::source() const
 {
-    auto value = m_state.source();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().source();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -80,7 +102,11 @@ QJSValue IconPropertyGroup::source() const
 
 QJSValue IconPropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

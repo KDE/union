@@ -20,10 +20,16 @@ TextPropertyGroup::TextPropertyGroup(QuickStyle *style)
     m_alignment = std::make_unique<AlignmentPropertyGroup>(m_style);
 }
 
-void TextPropertyGroup::update(const TextProperty &newState)
+void TextPropertyGroup::update(const std::optional<TextProperty> &newState)
 {
     m_state = newState;
-    m_alignment->update(newState.alignment().value_or(AlignmentProperty{}));
+
+    if (!newState) {
+        m_alignment->update(std::nullopt);
+    } else {
+        m_alignment->update(newState.value().alignment());
+    }
+
     Q_EMIT fontChanged();
     Q_EMIT colorChanged();
 
@@ -37,7 +43,11 @@ AlignmentPropertyGroup *TextPropertyGroup::alignment() const
 
 QJSValue TextPropertyGroup::font() const
 {
-    auto value = m_state.font();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().font();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -47,7 +57,11 @@ QJSValue TextPropertyGroup::font() const
 
 QJSValue TextPropertyGroup::color() const
 {
-    auto value = m_state.color();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

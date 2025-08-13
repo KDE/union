@@ -35,7 +35,7 @@ class IconPropertyGroup : public QObject
 public:
     explicit IconPropertyGroup(QuickStyle *style);
 
-    void update(const Union::Properties::IconProperty &newState);
+    void update(const std::optional<Union::Properties::IconProperty> &newState);
     Q_SIGNAL void updated();
 
     /*!
@@ -94,5 +94,7 @@ public:
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
-    Union::Properties::IconProperty m_state;
+
+    inline static std::optional<Union::Properties::IconProperty> nullValue = std::nullopt;
+    std::optional<Union::Properties::IconProperty> &m_state = nullValue;
 };
