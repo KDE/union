@@ -3,6 +3,7 @@
 
 #include "QuickElement.h"
 
+#include <QCoreApplication>
 #include <QQmlEngine>
 
 #include "Element.h"

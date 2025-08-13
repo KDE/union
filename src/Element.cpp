@@ -10,8 +10,12 @@
 #include <QProperty>
 #include <QVariant>
 
+#include "EventHelper.h"
+
 using namespace Union;
 using namespace Qt::StringLiterals;
+
+static EventTypeRegistration<ElementChangedEvent> elementRegistration;
 
 class Union::ElementPrivate
 {
