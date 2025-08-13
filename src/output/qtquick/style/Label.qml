@@ -23,7 +23,6 @@ T.Label {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font ?? Application.font
-    palette: Union.Style.properties.palette.quickPalette
 
     color: Union.Style.properties.text.color ?? "black"
     linkColor: control.palette.link

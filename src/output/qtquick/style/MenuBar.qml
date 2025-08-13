@@ -12,7 +12,6 @@ T.MenuBar {
 
     Union.Element.type: "MenuBar"
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)
