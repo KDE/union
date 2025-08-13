@@ -19,9 +19,14 @@ ImagePropertyGroup::ImagePropertyGroup(QuickStyle *style)
 {
 }
 
-void ImagePropertyGroup::update(const ImageProperty &newState)
+void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+    } else {
+    }
+
     Q_EMIT imageDataChanged();
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
@@ -34,7 +39,11 @@ void ImagePropertyGroup::update(const ImageProperty &newState)
 
 QJSValue ImagePropertyGroup::imageData() const
 {
-    auto value = m_state.imageData();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().imageData();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -44,7 +53,11 @@ QJSValue ImagePropertyGroup::imageData() const
 
 QJSValue ImagePropertyGroup::width() const
 {
-    auto value = m_state.width();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -54,7 +67,11 @@ QJSValue ImagePropertyGroup::width() const
 
 QJSValue ImagePropertyGroup::height() const
 {
-    auto value = m_state.height();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -64,7 +81,11 @@ QJSValue ImagePropertyGroup::height() const
 
 QJSValue ImagePropertyGroup::xOffset() const
 {
-    auto value = m_state.xOffset();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().xOffset();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -74,7 +95,11 @@ QJSValue ImagePropertyGroup::xOffset() const
 
 QJSValue ImagePropertyGroup::yOffset() const
 {
-    auto value = m_state.yOffset();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().yOffset();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -84,7 +109,11 @@ QJSValue ImagePropertyGroup::yOffset() const
 
 QJSValue ImagePropertyGroup::flags() const
 {
-    auto value = m_state.flags();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().flags();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

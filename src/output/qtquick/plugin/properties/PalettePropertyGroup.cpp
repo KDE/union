@@ -19,9 +19,14 @@ PalettePropertyGroup::PalettePropertyGroup(QuickStyle *style)
 {
 }
 
-void PalettePropertyGroup::update(const PaletteProperty &newState)
+void PalettePropertyGroup::update(const std::optional<PaletteProperty> &newState)
 {
     m_state = newState;
+
+    if (!newState) {
+    } else {
+    }
+
     Q_EMIT accentChanged();
     Q_EMIT alternateBaseChanged();
     Q_EMIT baseChanged();
@@ -47,115 +52,16 @@ void PalettePropertyGroup::update(const PaletteProperty &newState)
     Q_EMIT neutralChanged();
     Q_EMIT negativeChanged();
 
-    if (!m_component) {
-        // We need a QML engine to create a QQmlComponent. Try to determine it
-        // based on the style we're part of.
-        Q_ASSERT(m_style);
-
-        if (!m_style->engine()) {
-            return;
-        }
-
-        m_component = new QQmlComponent(m_style->engine());
-        m_component->setData("import QtQuick; Palette { }"_ba, QUrl{});
-    }
-
-    if (m_palette) {
-        delete m_palette;
-    }
-
-    m_palette = m_component->create();
-
-    if (m_state.accent()) {
-        m_palette->setProperty("accent", QVariant::fromValue(m_state.accent().value()));
-    }
-
-    if (m_state.alternateBase()) {
-        m_palette->setProperty("alternateBase", QVariant::fromValue(m_state.alternateBase().value()));
-    }
-
-    if (m_state.base()) {
-        m_palette->setProperty("base", QVariant::fromValue(m_state.base().value()));
-    }
-
-    if (m_state.brightText()) {
-        m_palette->setProperty("brightText", QVariant::fromValue(m_state.brightText().value()));
-    }
-
-    if (m_state.button()) {
-        m_palette->setProperty("button", QVariant::fromValue(m_state.button().value()));
-    }
-
-    if (m_state.buttonText()) {
-        m_palette->setProperty("buttonText", QVariant::fromValue(m_state.buttonText().value()));
-    }
-
-    if (m_state.dark()) {
-        m_palette->setProperty("dark", QVariant::fromValue(m_state.dark().value()));
-    }
-
-    if (m_state.highlight()) {
-        m_palette->setProperty("highlight", QVariant::fromValue(m_state.highlight().value()));
-    }
-
-    if (m_state.highlightedText()) {
-        m_palette->setProperty("highlightedText", QVariant::fromValue(m_state.highlightedText().value()));
-    }
-
-    if (m_state.light()) {
-        m_palette->setProperty("light", QVariant::fromValue(m_state.light().value()));
-    }
-
-    if (m_state.link()) {
-        m_palette->setProperty("link", QVariant::fromValue(m_state.link().value()));
-    }
-
-    if (m_state.linkVisited()) {
-        m_palette->setProperty("linkVisited", QVariant::fromValue(m_state.linkVisited().value()));
-    }
-
-    if (m_state.mid()) {
-        m_palette->setProperty("mid", QVariant::fromValue(m_state.mid().value()));
-    }
-
-    if (m_state.midlight()) {
-        m_palette->setProperty("midlight", QVariant::fromValue(m_state.midlight().value()));
-    }
-
-    if (m_state.placeholderText()) {
-        m_palette->setProperty("placeholderText", QVariant::fromValue(m_state.placeholderText().value()));
-    }
-
-    if (m_state.shadow()) {
-        m_palette->setProperty("shadow", QVariant::fromValue(m_state.shadow().value()));
-    }
-
-    if (m_state.text()) {
-        m_palette->setProperty("text", QVariant::fromValue(m_state.text().value()));
-    }
-
-    if (m_state.toolTipBase()) {
-        m_palette->setProperty("toolTipBase", QVariant::fromValue(m_state.toolTipBase().value()));
-    }
-
-    if (m_state.toolTipText()) {
-        m_palette->setProperty("toolTipText", QVariant::fromValue(m_state.toolTipText().value()));
-    }
-
-    if (m_state.window()) {
-        m_palette->setProperty("window", QVariant::fromValue(m_state.window().value()));
-    }
-
-    if (m_state.windowText()) {
-        m_palette->setProperty("windowText", QVariant::fromValue(m_state.windowText().value()));
-    }
-
     Q_EMIT updated();
 }
 
 QJSValue PalettePropertyGroup::accent() const
 {
-    auto value = m_state.accent();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().accent();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -165,7 +71,11 @@ QJSValue PalettePropertyGroup::accent() const
 
 QJSValue PalettePropertyGroup::alternateBase() const
 {
-    auto value = m_state.alternateBase();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().alternateBase();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -175,7 +85,11 @@ QJSValue PalettePropertyGroup::alternateBase() const
 
 QJSValue PalettePropertyGroup::base() const
 {
-    auto value = m_state.base();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().base();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -185,7 +99,11 @@ QJSValue PalettePropertyGroup::base() const
 
 QJSValue PalettePropertyGroup::brightText() const
 {
-    auto value = m_state.brightText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().brightText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -195,7 +113,11 @@ QJSValue PalettePropertyGroup::brightText() const
 
 QJSValue PalettePropertyGroup::button() const
 {
-    auto value = m_state.button();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().button();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -205,7 +127,11 @@ QJSValue PalettePropertyGroup::button() const
 
 QJSValue PalettePropertyGroup::buttonText() const
 {
-    auto value = m_state.buttonText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().buttonText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -215,7 +141,11 @@ QJSValue PalettePropertyGroup::buttonText() const
 
 QJSValue PalettePropertyGroup::dark() const
 {
-    auto value = m_state.dark();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().dark();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -225,7 +155,11 @@ QJSValue PalettePropertyGroup::dark() const
 
 QJSValue PalettePropertyGroup::highlight() const
 {
-    auto value = m_state.highlight();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().highlight();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -235,7 +169,11 @@ QJSValue PalettePropertyGroup::highlight() const
 
 QJSValue PalettePropertyGroup::highlightedText() const
 {
-    auto value = m_state.highlightedText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().highlightedText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -245,7 +183,11 @@ QJSValue PalettePropertyGroup::highlightedText() const
 
 QJSValue PalettePropertyGroup::light() const
 {
-    auto value = m_state.light();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().light();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -255,7 +197,11 @@ QJSValue PalettePropertyGroup::light() const
 
 QJSValue PalettePropertyGroup::link() const
 {
-    auto value = m_state.link();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().link();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -265,7 +211,11 @@ QJSValue PalettePropertyGroup::link() const
 
 QJSValue PalettePropertyGroup::linkVisited() const
 {
-    auto value = m_state.linkVisited();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().linkVisited();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -275,7 +225,11 @@ QJSValue PalettePropertyGroup::linkVisited() const
 
 QJSValue PalettePropertyGroup::mid() const
 {
-    auto value = m_state.mid();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().mid();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -285,7 +239,11 @@ QJSValue PalettePropertyGroup::mid() const
 
 QJSValue PalettePropertyGroup::midlight() const
 {
-    auto value = m_state.midlight();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().midlight();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -295,7 +253,11 @@ QJSValue PalettePropertyGroup::midlight() const
 
 QJSValue PalettePropertyGroup::placeholderText() const
 {
-    auto value = m_state.placeholderText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().placeholderText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -305,7 +267,11 @@ QJSValue PalettePropertyGroup::placeholderText() const
 
 QJSValue PalettePropertyGroup::shadow() const
 {
-    auto value = m_state.shadow();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().shadow();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -315,7 +281,11 @@ QJSValue PalettePropertyGroup::shadow() const
 
 QJSValue PalettePropertyGroup::text() const
 {
-    auto value = m_state.text();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().text();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -325,7 +295,11 @@ QJSValue PalettePropertyGroup::text() const
 
 QJSValue PalettePropertyGroup::toolTipBase() const
 {
-    auto value = m_state.toolTipBase();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().toolTipBase();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -335,7 +309,11 @@ QJSValue PalettePropertyGroup::toolTipBase() const
 
 QJSValue PalettePropertyGroup::toolTipText() const
 {
-    auto value = m_state.toolTipText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().toolTipText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -345,7 +323,11 @@ QJSValue PalettePropertyGroup::toolTipText() const
 
 QJSValue PalettePropertyGroup::window() const
 {
-    auto value = m_state.window();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().window();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -355,7 +337,11 @@ QJSValue PalettePropertyGroup::window() const
 
 QJSValue PalettePropertyGroup::windowText() const
 {
-    auto value = m_state.windowText();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().windowText();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -365,7 +351,11 @@ QJSValue PalettePropertyGroup::windowText() const
 
 QJSValue PalettePropertyGroup::positive() const
 {
-    auto value = m_state.positive();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().positive();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -375,7 +365,11 @@ QJSValue PalettePropertyGroup::positive() const
 
 QJSValue PalettePropertyGroup::neutral() const
 {
-    auto value = m_state.neutral();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().neutral();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -385,17 +379,16 @@ QJSValue PalettePropertyGroup::neutral() const
 
 QJSValue PalettePropertyGroup::negative() const
 {
-    auto value = m_state.negative();
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().negative();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
 
     return QJSValue(QJSValue::UndefinedValue);
-}
-
-QObject *PalettePropertyGroup::quickPalette() const
-{
-    return m_palette;
 }
 
 #include "moc_PalettePropertyGroup.cpp"
