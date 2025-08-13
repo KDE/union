@@ -4,9 +4,9 @@
 #pragma once
 
 #include <QEvent>
-#include <QMarginsF>
 #include <QObject>
-#include <QProperty>
+#include <QQmlEngine>
+#include <QQmlParserStatus>
 #include <QQuickAttachedPropertyPropagator>
 #include <qqmlregistration.h>
 
@@ -33,11 +33,12 @@ class QuickElement;
  * one attached to the same Item as this class is attached to, or to any parent
  * Item.
  */
-class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator
+class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator, public QQmlParserStatus
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Style)
     QML_ATTACHED(QuickStyle)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QuickStyle(QQmlEngine *engine, QObject *parent = nullptr);
@@ -82,6 +83,8 @@ protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
     bool event(QEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
+    void classBegin() override;
+    void componentComplete() override;
 
 private:
     void setElement(QuickElement *newElement);
@@ -90,6 +93,8 @@ private:
     std::unique_ptr<StylePropertyGroup> m_properties;
     QPointer<QuickElement> m_element = nullptr;
     QQmlEngine *m_engine = nullptr;
+
+    bool m_completed = false;
 };
 
 class QuickStyleUpdatedEvent : public QEvent

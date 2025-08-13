@@ -6,6 +6,7 @@
 #include <QEvent>
 #include <QObject>
 #include <QProperty>
+#include <QQmlParserStatus>
 #include <QQuickAttachedPropertyPropagator>
 #include <qqmlregistration.h>
 
@@ -195,12 +196,13 @@ private:
  * \sa Union::Element
  * \sa Union::Selector
  */
-class UNIONQUICKIMPL_EXPORT QuickElement : public QQuickAttachedPropertyPropagator
+class UNIONQUICKIMPL_EXPORT QuickElement : public QQuickAttachedPropertyPropagator, public QQmlParserStatus
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Element)
     QML_UNCREATABLE("Attached property")
     QML_ATTACHED(QuickElement)
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QuickElement(QObject *parent = nullptr);
@@ -298,6 +300,9 @@ protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
 
+    void classBegin() override;
+    void componentComplete() override;
+
 private:
     friend class StatesGroup;
 
@@ -309,7 +314,7 @@ private:
 
     std::unique_ptr<Union::ElementQuery> m_query;
 
-    QPropertyNotifier m_activeStatesNotifier;
+    bool m_completed = false;
 };
 
 class QuickElementUpdatedEvent : public QEvent
