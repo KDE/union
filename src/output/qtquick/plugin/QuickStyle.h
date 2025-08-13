@@ -37,6 +37,7 @@ class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Style)
+    QML_UNCREATABLE("Attached Property")
     QML_ATTACHED(QuickStyle)
     Q_INTERFACES(QQmlParserStatus)
 
