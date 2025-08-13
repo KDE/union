@@ -6,6 +6,7 @@
 #include <QQmlEngine>
 
 #include "Element.h"
+#include "EventHelper.h"
 #include "StyleRule.h"
 #include "Theme.h"
 #include "ThemeRegistry.h"
@@ -13,6 +14,8 @@
 #include "QuickStyle.h"
 
 using namespace Union;
+
+static EventTypeRegistration<QuickElementUpdatedEvent> quickElementRegistration;
 
 StatesGroup::StatesGroup(QuickElement *parent)
     : m_parent(parent)
@@ -260,10 +263,18 @@ void QuickElement::update()
         qmlAttachedPropertiesObject<QuickStyle>(parent(), true);
     }
 
+    QuickElementUpdatedEvent event;
+    QCoreApplication::sendEvent(this, &event);
+
     Q_EMIT updated();
 
     const auto children = attachedChildren();
     for (auto child : children) {
         qobject_cast<QuickElement *>(child)->update();
     }
+}
+
+QuickElementUpdatedEvent::QuickElementUpdatedEvent()
+    : QEvent(QuickElementUpdatedEvent::s_type)
+{
 }

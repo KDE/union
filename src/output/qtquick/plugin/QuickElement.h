@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QEvent>
 #include <QObject>
 #include <QProperty>
 #include <QQuickAttachedPropertyPropagator>
@@ -307,4 +308,14 @@ private:
     std::unique_ptr<Union::ElementQuery> m_query;
 
     QPropertyNotifier m_activeStatesNotifier;
+};
+
+class QuickElementUpdatedEvent : public QEvent
+{
+public:
+    QuickElementUpdatedEvent();
+
+    // Todo: Use registerEventType() instead of a hardcoded random offset
+    // inline static QEvent::Type s_type = QEvent::Type(QEvent::User + 21860);
+    inline static QEvent::Type s_type = QEvent::None;
 };
