@@ -68,6 +68,17 @@ bool QuickStyle::event(QEvent *event)
     return QObject::event(event);
 }
 
+bool QuickStyle::eventFilter(QObject *watched, QEvent *event)
+{
+    if (watched == m_element && event->type() == QuickElementUpdatedEvent::s_type) {
+        update();
+        // Allow the event to be processed by other event filters.
+        return false;
+    }
+
+    return QObject::eventFilter(watched, event);
+}
+
 void QuickStyle::setElement(QuickElement *newElement)
 {
     if (newElement == m_element) {
@@ -75,13 +86,13 @@ void QuickStyle::setElement(QuickElement *newElement)
     }
 
     if (m_element) {
-        m_element->disconnect(this);
+        m_element->removeEventFilter(this);
     }
 
     m_element = newElement;
 
     if (m_element) {
-        connect(m_element, &QuickElement::updated, this, &QuickStyle::update);
+        m_element->installEventFilter(this);
     }
 }
 
