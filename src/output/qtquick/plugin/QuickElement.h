@@ -21,7 +21,8 @@ class QuickElement;
 class StatesGroup : public QObject
 {
     Q_OBJECT
-    QML_ANONYMOUS
+    QML_NAMED_ELEMENT(States)
+    QML_UNCREATABLE("Grouped property")
 
 public:
     StatesGroup(QuickElement *parent);
