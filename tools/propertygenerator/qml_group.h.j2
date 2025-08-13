@@ -55,7 +55,7 @@ class {{ type_name }}Group : public QObject
 public:
     explicit {{ type_name }}Group(QuickStyle *style);
 
-    void update(const Union::Properties::{{ type_name }} &newState);
+    void update(const std::optional<Union::Properties::{{ type_name }}> &newState);
     Q_SIGNAL void updated();
 
 {% for property in properties %}
@@ -96,7 +96,9 @@ private:
     std::unique_ptr<{{ property.type }}Group> m_{{ property.name }};
 {% endif %}
 {% endfor %}
-    Union::Properties::{{ type_name }} m_state;
+
+    inline static std::optional<Union::Properties::{{ type_name }}> nullValue = std::nullopt;
+    std::optional<Union::Properties::{{ type_name }}> &m_state = nullValue;
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
 {% endif %}
