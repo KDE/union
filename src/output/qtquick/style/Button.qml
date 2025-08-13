@@ -4,8 +4,8 @@
 // SPDX-FileCopyrightText: 2022 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
+
 import org.kde.union.impl as Union
 
 T.Button {
@@ -85,15 +85,10 @@ T.Button {
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
 
-        QQCImpl.IconImage {
+        Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-
-            name: control.icon.name
-            color: control.icon.color
-            visible: name.length > 0 && control.display != T.AbstractButton.TextOnly
-
-            sourceSize.width: control.icon.width
-            sourceSize.height: control.icon.height
+            control: control
+            visible: name && control.display != T.AbstractButton.TextOnly
         }
 
         Text {

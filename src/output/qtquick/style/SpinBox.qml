@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -80,11 +79,11 @@ T.SpinBox {
             enabled: control.up?.enabled ?? true
         }
 
-        QQCImpl.IconImage {
+        Union.Icon {
             anchors.centerIn: parent
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name ?? ""
+            name: Union.Style.properties.icon.name
             color: Union.Style.properties.text.color
         }
     }
@@ -99,11 +98,11 @@ T.SpinBox {
             enabled: control.down?.enabled ?? true
         }
 
-        QQCImpl.IconImage {
+        Union.Icon {
             anchors.centerIn: parent
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name ?? ""
+            name: Union.Style.properties.icon.name
             color: Union.Style.properties.text.color
         }
     }

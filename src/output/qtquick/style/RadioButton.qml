@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -60,7 +59,7 @@ T.RadioButton {
     font: Union.Style.properties.text.font
 
     icon {
-        color: palette.windowText
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
@@ -75,14 +74,10 @@ T.RadioButton {
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
-        QQCImpl.IconImage {
+        Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-            sourceSize.width: control.icon.width
-            sourceSize.height: control.icon.height
-            name: control.icon.name
-            source: control.icon.source
-            color: control.icon.color
-            visible: control.display !== T.AbstractButton.TextOnly && status === Image.Ready
+            control: control
+            visible: name && control.display !== T.AbstractButton.TextOnly
         }
         Text {
             Union.PositionedItem.source: Union.PositionerSource.Text

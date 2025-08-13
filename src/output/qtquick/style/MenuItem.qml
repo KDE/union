@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -54,27 +53,10 @@ T.MenuItem {
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
 
-        // This is wrapped in an Item because IconImage's implicit size is only
-        // settable through sourceSize but that is ignored if there is no source
-        // which means the icon cannot reserve size even if it should because
-        // the menu has icons.
-        Item {
+        Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-
-            implicitWidth:  control.icon.width
-            implicitHeight:  control.icon.height
-
+            control: control
             visible: control.ListView.view?.hasIcons ?? false
-
-            QQCImpl.IconImage {
-                anchors.fill: parent
-
-                name: control.icon.name
-                color: control.icon.color
-
-                sourceSize.width: control.icon.width
-                sourceSize.height: control.icon.height
-            }
         }
 
         Text {
@@ -99,14 +81,15 @@ T.MenuItem {
         }
     }
 
-    arrow: QQCImpl.IconImage {
+    arrow: Union.Icon {
         Union.Element.type: "Arrow"
 
-        visible: control.subMenu
-        name: Union.Style.properties.icon.name ?? ""
+        implicitWidth: Union.Style.properties.layout.width
+        implicitHeight: Union.Style.properties.layout.height
 
-        sourceSize.width: Union.Style.properties.layout.width ?? 0
-        sourceSize.height: Union.Style.properties.layout.height ?? 0
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.icon.color
+        visible: name && control.subMenu
     }
 
     background: Union.StyledRectangle { }
