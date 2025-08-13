@@ -4,7 +4,6 @@
 
 import QtQuick
 import QtQuick.Templates as T
-import QtQuick.Controls.impl as QQCImpl
 
 import org.kde.union.impl as Union
 
@@ -86,14 +85,10 @@ T.Switch {
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
 
-        QQCImpl.IconImage {
+        Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
-            sourceSize.width: control.icon.width
-            sourceSize.height: control.icon.height
-            name: control.icon.name
-            source: control.icon.source
-            color: control.icon.color
-            visible: control.display !== T.AbstractButton.TextOnly && (name || source.toString())
+            control: control
+            visible: name && control.display !== T.AbstractButton.TextOnly
         }
         Text {
             Union.PositionedItem.source: Union.PositionerSource.Text

@@ -11,9 +11,9 @@ T.TabButton {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
+                            Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
+                             Union.Positioner.implicitHeight)
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -31,10 +31,10 @@ T.TabButton {
     Union.Element.attributes: control.T.TabBar.position === T.TabBar.Footer ?
         {"tab-position": "south"} : {"tab-position": "north"}
 
-    leftPadding: Union.Style.properties.layout.padding.left
-    rightPadding: Union.Style.properties.layout.padding.right
-    topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: Union.Style.properties.layout.padding.bottom
+    leftPadding: Union.Positioner.padding.left
+    rightPadding: Union.Positioner.padding.right
+    topPadding: Union.Positioner.padding.top
+    bottomPadding: Union.Positioner.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
@@ -52,15 +52,26 @@ T.TabButton {
         source: Union.Style.properties.icon.source
     }
 
-    contentItem: QCCImpl.IconLabel {
-        spacing: control.spacing
-        mirrored: control.mirrored
-        display: control.display
-        icon: control.icon
-        text: control.text
-        font: control.font
-        color: control.palette.buttonText
-        alignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal) | Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+    Union.Positioner.positionItems: ["contentItem"]
+
+    contentItem: Item {
+        Union.PositionedItem.positionChildren: true
+
+        Union.Icon {
+            Union.PositionedItem.source: Union.PositionerSource.Icon
+            control: control
+            visible: name && control.display != T.AbstractButton.TextOnly
+        }
+
+        Text {
+            Union.PositionedItem.source: Union.PositionerSource.Text
+
+            text: control.text
+            font: control.font
+            color: Union.Style.properties.text.color
+
+            visible: control.display != T.AbstractButton.IconOnly
+        }
     }
 
     background: Union.StyledRectangle {}

@@ -3,8 +3,6 @@
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Controls.impl as QQCImpl
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
