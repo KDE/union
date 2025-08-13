@@ -24,6 +24,7 @@ QML_ELEMENT
 
 /*!
  * \enum PositionerSource::Source
+ * \relates Positioner
  *
  * Indicates what property to use for alignment information.
  *
@@ -45,15 +46,28 @@ Q_ENUM_NS(Source)
 
 class PositionerLayout;
 
-class PositionerAttached : public QObject
+/*!
+ * \qmltype Positioner
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief An attached property type that can be used to position various objects inside another object.
+ *
+ * This will position any items added to `positionItems` based on information
+ * from the style.
+ */
+class Positioner : public QObject
 {
     Q_OBJECT
-    QML_ANONYMOUS
+    QML_ELEMENT
+    QML_UNCREATABLE("Attached Property")
+    QML_ATTACHED(Positioner)
+
 public:
     using ItemList = QList<QQuickItem *>;
 
-    PositionerAttached(QObject *parent = nullptr);
-    ~PositionerAttached() override;
+    Positioner(QObject *parent = nullptr);
+    ~Positioner() override;
 
     /*!
      * \qmlattachedproperty ItemList Positioner::positionItems
@@ -98,6 +112,8 @@ public:
     Sizes padding() const;
     Q_SIGNAL void paddingChanged();
 
+    static Positioner *qmlAttachedProperties(QObject *parent);
+
 private:
     std::pair<ItemList, ItemList> findPositionedItemChanges(const ItemList &currentItems, const ItemList &newItems);
 
@@ -112,39 +128,26 @@ private:
 };
 
 /*!
- * \qmltype Positioner
+ * \qmltype PositionedItem
  * \inqmlmodule org.kde.union.impl
  * \ingroup qtquick-core
  *
- * \brief An attached property type that can be used to position various objects inside another object.
- *
- * This will position any items added to `positionItems` based on information
- * from the style.
+ * \brief Attached property that contains properties to control the behaviour of
+ *        Positioner with regards to the attached item.
  */
-class Positioner : public QQuickItem
+class PositionedItem : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
-    QML_UNCREATABLE("Just for attached properties")
-    QML_ATTACHED(PositionerAttached)
+    QML_UNCREATABLE("Attached Property")
+    QML_ATTACHED(PositionedItem)
 
-public:
-    using QQuickItem::QQuickItem;
-
-    static PositionerAttached *qmlAttachedProperties(QObject *parent);
-};
-
-/**
- * Attached property that contains properties for a single item positioned by Positioner.
- */
-class PositionedItemAttached : public QObject
-{
-    Q_OBJECT
-    QML_ANONYMOUS
 public:
     using QObject::QObject;
 
-    /**
+    /*!
+     * \qmlattachedproperty bool PositionedItem::positionChildren
+     *
      * Position the children of this item, not this item itself.
      *
      * This indicates the current item is merely a container for a bunch of
@@ -159,7 +162,9 @@ public:
     bool positionChildren() const;
     void setPositionChildren(bool position);
 
-    /**
+    /*!
+     * \qmlattachedproperty PositionerSource::Source source
+     *
      * Which property to use as source for this item's alignment.
      *
      * This can be used to indicate the item is meant to represent an icon or
@@ -171,7 +176,9 @@ public:
     void setSource(PositionerSource::Source newSource);
     Q_SIGNAL void sourceChanged();
 
-    /**
+    /*!
+     * \qmlattachedproperty Union::Properties::Alignment horizontalAlignment
+     *
      * An override of the style-provided horizontal alignment value.
      *
      * Use this to force the alignment to a certain value, in case you want to
@@ -186,7 +193,9 @@ public:
     void resetHorizontalAlignment();
     Q_SIGNAL void horizontalAlignmentChanged();
 
-    /**
+    /*!
+     * \qmlattachedproperty Union::Properties::Alignment horizontalAlignment
+     *
      * An override of the style-provided vertical alignment value.
      */
     Q_PROPERTY(Union::Properties::Alignment verticalAlignment READ verticalAlignment WRITE setVerticalAlignment RESET resetVerticalAlignment //
@@ -196,25 +205,11 @@ public:
     void resetVerticalAlignment();
     Q_SIGNAL void verticalAlignmentChanged();
 
+    static PositionedItem *qmlAttachedProperties(QObject *parent);
+
 private:
     bool m_positionChildren = false;
     PositionerSource::Source m_source = PositionerSource::Source::Layout;
     Union::Properties::Alignment m_horizontalAlignment = Union::Properties::Alignment::Unspecified;
     Union::Properties::Alignment m_verticalAlignment = Union::Properties::Alignment::Unspecified;
-};
-
-/**
- * Uncreatable item to expose PositionedItem as attached object to QML.
- */
-class PositionedItem : public QQuickItem
-{
-    Q_OBJECT
-    QML_ELEMENT
-    QML_UNCREATABLE("Just for attached properties")
-    QML_ATTACHED(PositionedItemAttached)
-
-public:
-    using QQuickItem::QQuickItem;
-
-    static PositionedItemAttached *qmlAttachedProperties(QObject *parent);
 };
