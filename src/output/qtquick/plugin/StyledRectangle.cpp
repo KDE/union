@@ -57,7 +57,7 @@ bool StyledRectangle::event(QEvent *event)
 {
     if (event->type() == QuickStyleUpdatedEvent::s_type) {
         updateImplicitSize();
-        return true;
+        return false;
     }
 
     return QQuickItem::event(event);
