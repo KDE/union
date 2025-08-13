@@ -96,6 +96,5 @@ class QuickStyleUpdatedEvent : public QEvent
 public:
     QuickStyleUpdatedEvent();
 
-    // Todo: Use registerEventType() instead of a hardcoded random offset
-    inline static QEvent::Type s_type = QEvent::Type(QEvent::User + 57423);
+    inline static QEvent::Type s_type = QEvent::None;
 };
