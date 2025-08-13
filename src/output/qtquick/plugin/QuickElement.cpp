@@ -108,7 +108,8 @@ void StatesGroup::setState(Union::Element::State state, bool set)
     }
 
     m_activeStates = newStates;
-    Q_EMIT highlightedChanged();
+
+    emitStateChange(state);
     Q_EMIT activeStatesChanged();
     m_parent->setActiveStates(m_activeStates);
 }
@@ -120,7 +121,33 @@ void StatesGroup::setActiveStates(Element::States states)
     }
 
     m_activeStates = states;
+    emitStateChange(m_activeStates);
     Q_EMIT activeStatesChanged();
+}
+
+void StatesGroup::emitStateChange(Union::Element::States states)
+{
+    if (states & Element::State::Hovered) {
+        Q_EMIT hoveredChanged();
+    }
+    if (states & Element::State::ActiveFocus) {
+        Q_EMIT activeFocusChanged();
+    }
+    if (states & Element::State::VisualFocus) {
+        Q_EMIT visualFocusChanged();
+    }
+    if (states & Element::State::Pressed) {
+        Q_EMIT pressedChanged();
+    }
+    if (states & Element::State::Checked) {
+        Q_EMIT checkedChanged();
+    }
+    if (states & Element::State::Highlighted) {
+        Q_EMIT highlightedChanged();
+    }
+    if (states & Element::State::Disabled) {
+        Q_EMIT enabledChanged();
+    }
 }
 
 QuickElement::QuickElement(QObject *parent)

@@ -139,6 +139,8 @@ private:
     // Called by QuickElement upon changes to its underlying Element instance.
     void setActiveStates(Union::Element::States states);
 
+    void emitStateChange(Union::Element::States states);
+
     QuickElement *m_parent = nullptr;
     Union::Element::States m_activeStates;
 };
