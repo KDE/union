@@ -255,6 +255,7 @@ bool QuickElement::eventFilter(QObject *watched, QEvent *event)
         }
 
         update();
+        return false;
     }
 
     return QObject::eventFilter(watched, event);

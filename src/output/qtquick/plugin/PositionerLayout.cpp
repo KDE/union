@@ -99,6 +99,7 @@ bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QuickStyleUpdatedEvent::s_type) {
         markDirty();
+        return false;
     }
 
     return QQuickItem::eventFilter(target, event);
