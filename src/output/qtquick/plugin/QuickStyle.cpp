@@ -79,6 +79,16 @@ bool QuickStyle::eventFilter(QObject *watched, QEvent *event)
     return QObject::eventFilter(watched, event);
 }
 
+void QuickStyle::classBegin()
+{
+}
+
+void QuickStyle::componentComplete()
+{
+    m_completed = true;
+    update();
+}
+
 void QuickStyle::setElement(QuickElement *newElement)
 {
     if (newElement == m_element) {

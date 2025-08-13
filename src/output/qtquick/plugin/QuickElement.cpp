@@ -159,6 +159,8 @@ QuickElement::QuickElement(QObject *parent)
     m_statesGroup = std::make_unique<StatesGroup>(this);
 
     initialize();
+
+    update();
 }
 
 QString QuickElement::type() const
@@ -229,10 +231,7 @@ QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
 
 void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *)
 {
-    // The attached parent may not yet have been fully initialized when this is
-    // called, so delay the update momentarily so the parent can be updated
-    // first.
-    QMetaObject::invokeMethod(this, &QuickElement::update, Qt::QueuedConnection);
+    update();
 }
 
 bool QuickElement::eventFilter(QObject *watched, QEvent *event)
@@ -261,6 +260,16 @@ bool QuickElement::eventFilter(QObject *watched, QEvent *event)
     return QObject::eventFilter(watched, event);
 }
 
+void QuickElement::classBegin()
+{
+}
+
+void QuickElement::componentComplete()
+{
+    m_completed = true;
+    update();
+}
+
 void QuickElement::setActiveStates(Union::Element::States newActiveStates)
 {
     m_element->setStates(newActiveStates);
@@ -268,6 +277,10 @@ void QuickElement::setActiveStates(Union::Element::States newActiveStates)
 
 void QuickElement::update()
 {
+    if (!m_completed) {
+        return;
+    }
+
     auto theme = ThemeRegistry::instance()->defaultTheme();
 
     m_query = std::make_unique<Union::ElementQuery>(theme);
