@@ -57,7 +57,6 @@ T.CheckDelegate {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     spacing: Union.Style.properties.layout.spacing
 

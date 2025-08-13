@@ -41,7 +41,6 @@ T.TextField {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font ?? Application.font
-    palette: Union.Style.properties.palette.quickPalette
 
     color: Union.Style.properties.text.color ?? palette.text
     selectionColor: control.palette.highlight

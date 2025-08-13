@@ -36,7 +36,6 @@ T.SpinBox {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     editable: true
     wheelEnabled: true
@@ -86,8 +85,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name ?? ""
-            palette: Union.Style.properties.palette.quickPalette
-            color: palette.buttonText
+            color: Union.Style.properties.text.color
         }
     }
 
@@ -106,8 +104,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name ?? ""
-            palette: Union.Style.properties.palette.quickPalette
-            color: palette.buttonText
+            color: Union.Style.properties.text.color
         }
     }
 

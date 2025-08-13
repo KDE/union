@@ -40,7 +40,6 @@ T.MenuItem {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     icon {
         color: palette.windowText

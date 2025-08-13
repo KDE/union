@@ -36,7 +36,6 @@ T.ToolTip {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     leftMargin: Union.Style.properties.layout.margins.left
     rightMargin: Union.Style.properties.layout.margins.right

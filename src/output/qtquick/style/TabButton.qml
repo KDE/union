@@ -42,7 +42,6 @@ T.TabButton {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     spacing: 6
     icon {
