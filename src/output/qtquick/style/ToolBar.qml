@@ -35,7 +35,6 @@ T.ToolBar {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
-    palette: Union.Style.properties.palette.quickPalette
 
     background: Union.StyledRectangle { }
 }

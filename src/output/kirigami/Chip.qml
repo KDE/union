@@ -69,7 +69,6 @@ KT.Chip {
     bottomInset: Impl.Style.properties.layout.inset.bottom
 
     font: Impl.Style.properties.text.font
-    palette: Impl.Style.properties.palette.quickPalette
 
     spacing: Impl.Style.properties.layout.spacing
 
