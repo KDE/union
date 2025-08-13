@@ -304,7 +304,8 @@ void PositionerLayout::updatePolish()
     Q_EMIT layoutFinished();
 
     if (m_requeuePolish) {
-        QMetaObject::invokeMethod(this, &PositionerLayout::markDirty, Qt::QueuedConnection);
+        markDirty();
+        m_requeuePolish = false;
     }
 }
 
