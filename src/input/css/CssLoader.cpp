@@ -563,6 +563,9 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
         icon.setWidth(to_px(property.value()));
     } else if (property.name == "icon-height") {
         icon.setHeight(to_px(property.value()));
+    } else if (property.name == "icon-size") {
+        icon.setWidth(to_px(property.value()));
+        icon.setHeight(to_px(property.value()));
     } else if (property.name == "color" || property.name == "icon-color") {
         icon.setColor(to_qcolor(property.value()));
     }

@@ -119,3 +119,7 @@
 @property font-weight {
     syntax: "<integer> | (normal | bold | bolder | lighter)";
 }
+
+@property icon-size {
+    syntax: "<length>";
+}
