@@ -5,6 +5,8 @@
 
 @import "variables.css";
 
+@import "defaults.css";
+
 @import "button.css";
 @import "delegate.css";
 @import "text.css";
