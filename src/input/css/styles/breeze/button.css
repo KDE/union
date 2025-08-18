@@ -79,6 +79,8 @@ toolbutton
     border-color: transparent;
     background-color: transparent;
     box-shadow: 0px 0px 0px 0px transparent;
+
+    icon-size: var(--icon-size-smallmedium);
 }
 
 combobox {
