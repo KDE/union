@@ -15,6 +15,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Button.qml
     style/CheckBox.qml
     style/CheckDelegate.qml
+    style/ComboBox.qml
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
@@ -24,6 +25,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/MenuSeparator.qml
     style/Page.qml
     style/Pane.qml
+    style/Popup.qml
     style/ProgressBar.qml
     style/RadioButton.qml
     style/RadioDelegate.qml

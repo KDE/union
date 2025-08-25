@@ -80,6 +80,38 @@ Kirigami.Page {
             checkable: true
             checked: true
         }
+
+        Controls.ComboBox {
+            currentIndex: 1
+            displayText: "Combobox: " + currentText
+            model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+        }
+
+        Controls.ComboBox {
+            editable: true
+            currentIndex: 1
+            displayText: "Editable Combobox: " + currentText
+            model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+            selectTextByMouse: true
+        }
+
+        Controls.ComboBox {
+            flat: true
+            currentIndex: 1
+            displayText: "Flat Combobox: " + currentText
+            model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+        }
+
+        Controls.ComboBox {
+            flat: true
+            editable: true
+            currentIndex: 1
+            displayText: "Flat Editable Combobox: " + currentText
+            model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+            selectTextByMouse: true
+        }
+
+
         Item {
             Layout.fillHeight: true
         }

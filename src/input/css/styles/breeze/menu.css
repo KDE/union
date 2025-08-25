@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-menu
+menu, popup
 {
     border-radius: var(--corner-radius);
     padding: var(--small-spacing);
