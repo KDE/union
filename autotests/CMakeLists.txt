@@ -9,6 +9,7 @@ ecm_add_tests(
     TestSelector.cpp
     TestTheme.cpp
     TestThemeRegistry.cpp
+    TestColor.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )
 
