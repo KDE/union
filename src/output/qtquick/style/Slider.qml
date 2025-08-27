@@ -9,61 +9,57 @@ import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
 T.Slider {
-	id: control
+    id: control
 
-	Union.Element.type: "Slider"
-	Union.Element.attributes: {
-		"orientation": control.horizontal ? "horizontal" : "vertical"
-	}
-	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-							implicitHandleWidth + leftPadding + rightPadding)
-	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-							 implicitHandleHeight + topPadding + bottomPadding)
+    Union.Element.type: "Slider"
+    Union.Element.hints: control.horizontal ? ["horizontal"] : ["vertical"]
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.visualFocus
+        pressed: control.pressed
+        enabled: control.enabled
+    }
 
-	leftPadding: Union.Style.properties.layout.padding.left
-	rightPadding: Union.Style.properties.layout.padding.right
-	topPadding: Union.Style.properties.layout.padding.top
-	bottomPadding: Union.Style.properties.layout.padding.bottom
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitHandleWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitHandleHeight + topPadding + bottomPadding)
 
-	leftInset: Union.Style.properties.layout.inset.left
-	rightInset: Union.Style.properties.layout.inset.right
-	topInset: Union.Style.properties.layout.inset.top
-	bottomInset: Union.Style.properties.layout.inset.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-	palette: Union.Style.properties.palette.quickPalette
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
-	handle: Rectangle {
-		Union.Element.type: "Handle"
-		x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
-		y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
-		implicitWidth: 28
-		implicitHeight: 28
-		radius: width / 2
-		color: control.pressed ? control.palette.light : control.palette.window
-		border.width: control.visualFocus ? 2 : 1
-		border.color: {
-			if (activeFocus) {
-				return control.palette.highlight
-			}
-				return control.enabled ? control.palette.mid : control.palette.midlight
-		}
-	}
+    palette: Union.Style.properties.palette.quickPalette
 
-	background: Union.StyledRectangle {
-		Union.Element.type: "SliderBackground"
-		x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
-		y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+    handle: Union.StyledRectangle {
+        Union.Element.type: "SliderHandle"
+        Union.Element.states {
+            hovered: control.hovered
+            activeFocus: control.activeFocus
+            visualFocus: control.visualFocus
+            pressed: control.pressed
+            enabled: control.enabled
+        }
+        x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
+    }
 
-		Union.StyledRectangle {
-			Union.Element.type: "SliderBackgroundFill"
-			y: control.horizontal ? 0 : control.visualPosition * parent.height
-			width: control.horizontal ? control.position * parent.width : parent.height
-			height: control.horizontal ? parent.width : control.position * parent.height
-		}
-	}
+    background: Union.StyledRectangle {
+        Union.Element.type: "SliderBackground"
+        Union.Element.hints: control.Union.Element.hints
+        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
 
-	Component.onCompleted: {
-		console.warn("bg", background.width, background.implicitWidth, background.height, background.implicitHeight, control.availableHeight, control.availableWidth);
-	}
-
+        Union.StyledRectangle {
+            Union.Element.type: "SliderBackgroundFill"
+            y: control.horizontal ? 0 : control.visualPosition * parent.height
+            width: control.horizontal ? control.position * parent.width : parent.width
+            height: control.horizontal ? parent.height : control.position * parent.height
+        }
+    }
 }
