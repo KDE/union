@@ -1,0 +1,15 @@
+slider.horizontal {
+	width: 200px;
+	height: 6px;
+	background-color: #aaaa00;
+}
+
+slider.vertical {
+	width: 6px;
+	height: 200px;
+	background-color: #aaaaff;
+}
+
+sliderbackgroundfill {
+	background-color: var(--highlight-color);
+}
