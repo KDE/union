@@ -4,7 +4,6 @@
 pragma ComponentBehavior: Bound
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -57,11 +56,10 @@ T.ComboBox {
         hoverEnabled: control.hoverEnabled
     }
 
-    indicator: IconImage {
+    indicator: Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
-        name: Union.Style.properties.icon.name ?? ""
-        palette: control.palette
-        color: palette.buttonText
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.icon.color
     }
 
     contentItem: TextField {
