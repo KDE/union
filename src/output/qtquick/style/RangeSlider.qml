@@ -6,69 +6,70 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
+import org.kde.union.impl as Union
+
 T.RangeSlider {
-	id: control
+    id: control
+    Union.Element.type: "RangeSlider"
+    Union.Element.hints: control.horizontal ? ["horizontal"] : ["vertical"]
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.visualFocus
+        enabled: control.enabled
+    }
 
-	readonly property color handleBorderColor: {
-		if (activeFocus)
-			return palette.highlight
-			else if (Qt.styleHints.accessibility.contrastPreference !== Qt.HighContrast)
-				return enabled ? palette.mid : palette.midlight
-				else
-					return enabled ? palette.windowText : palette.mid
-	}
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, first.implicitHandleWidth + leftPadding + rightPadding, second.implicitHandleWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, first.implicitHandleHeight + topPadding + bottomPadding, second.implicitHandleHeight + topPadding + bottomPadding)
 
-	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-							first.implicitHandleWidth + leftPadding + rightPadding,
-							second.implicitHandleWidth + leftPadding + rightPadding)
-	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-							 first.implicitHandleHeight + topPadding + bottomPadding,
-							 second.implicitHandleHeight + topPadding + bottomPadding)
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
-	padding: 6
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
-	first.handle: Rectangle {
-		x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
-		y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
-		implicitWidth: 28
-		implicitHeight: 28
-		radius: width / 2
-		border.width: activeFocus ? 2 : 1
-		border.color: control.handleBorderColor
-		color: control.first.pressed ? control.palette.light : control.palette.window
-	}
+    palette: Union.Style.properties.palette.quickPalette
 
-	second.handle: Rectangle {
-		x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
-		y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
-		implicitWidth: 28
-		implicitHeight: 28
-		radius: width / 2
-		border.width: activeFocus ? 2 : 1
-		border.color: control.handleBorderColor
-		color: control.second.pressed ? control.palette.light : control.palette.window
-	}
+    first.handle: Union.StyledRectangle {
+        Union.Element.type: "SliderHandle"
+        Union.Element.states {
+            hovered: control.first.hovered
+            activeFocus: control.first.handle.activeFocus
+            enabled: control.first.handle.enabled
+        }
+        x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
+    }
 
-	background: Rectangle {
-		x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
-		y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-		implicitWidth: control.horizontal ? 200 : 6
-		implicitHeight: control.horizontal ? 6 : 200
-		width: control.horizontal ? control.availableWidth : implicitWidth
-		height: control.horizontal ? implicitHeight : control.availableHeight
-		radius: 3
-		color: control.palette.midlight
-		scale: control.horizontal && control.mirrored ? -1 : 1
-		border.width: Qt.styleHints.accessibility.contrastPreference === Qt.HighContrast ? 1 : 0
-		border.color: enabled ? control.palette.dark : control.palette.mid
+    second.handle: Union.StyledRectangle {
+        Union.Element.type: "SliderHandle"
+        Union.Element.states {
+            hovered: control.second.hovered
+            activeFocus: control.second.handle.activeFocus
+            enabled: control.second.handle.enabled
+        }
+        x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
+    }
 
-		Rectangle {
-			x: control.horizontal ? control.first.position * parent.width + 3 : 0
-			y: control.horizontal ? 0 : control.second.visualPosition * parent.height + 3
-			width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - 6 : 6
-			height: control.horizontal ? 6 : control.second.position * parent.height - control.first.position * parent.height - 6
+    background: Union.StyledRectangle {
+        Union.Element.type: "SliderBackground"
+        Union.Element.hints: control.Union.Element.hints
+        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+        scale: control.horizontal && control.mirrored ? -1 : 1
 
-			color: control.palette.dark
-		}
-	}
+        Union.StyledRectangle {
+            Union.Element.type: "SliderBackgroundFill"
+            readonly property int smallerValue: Math.min(parent.width, parent.height)
+            x: control.horizontal ? control.first.position * parent.width + (smallerValue / 2) : 0
+            y: control.horizontal ? 0 : control.second.visualPosition * parent.height + (smallerValue / 2)
+            width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - smallerValue : smallerValue
+            height: control.horizontal ? smallerValue : control.second.position * parent.height - control.first.position * parent.height - smallerValue
+        }
+    }
 }

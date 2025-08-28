@@ -42,7 +42,6 @@ T.Slider {
             hovered: control.hovered
             activeFocus: control.activeFocus
             visualFocus: control.visualFocus
-            pressed: control.pressed
             enabled: control.enabled
         }
         x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
