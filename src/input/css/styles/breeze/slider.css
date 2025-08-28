@@ -14,12 +14,12 @@ sliderbackground {
 		height: 200px;
 	}
 
-	background-color: var(--view-background-color);
-	border: 1px solid var(--scrollbar-border-color);
+	background-color: var(--slider-background-color);
+	border: 1px solid var(--slider-border-color);
 }
 
 sliderbackgroundfill {
-	background-color: var(--highlight-color);
+	background-color: var(--slider-fill-color);
 }
 
 sliderbackground,
@@ -30,12 +30,12 @@ sliderbackgroundfill {
 sliderhandle {
 	width: var(--medium-element-size);
 	height: var(--medium-element-size);
-	background-color: var(--button-background-color);
-	border: 1px solid var(--scrollbar-border-color);
+	background-color: var(--slider-handle-background-color);
+	border: 1px solid var(--slider-border-color);
 	border-radius: var(--small-element-size);
 
 	&:pressed {
-		background-color: var(--button-highlight-color);
+		background-color: var(--slider-handle-highlight-color);
 		border-color: var(--highlight-color);
 	}
 
