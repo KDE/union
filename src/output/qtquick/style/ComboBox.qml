@@ -44,7 +44,6 @@ T.ComboBox {
 
     font: Union.Style.properties.text.font
     spacing: Union.Style.properties.layout.spacing
-    palette: Union.Style.properties.palette.quickPalette
 
     delegate: ItemDelegate {
         required property var model

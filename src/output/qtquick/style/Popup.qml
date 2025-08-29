@@ -14,7 +14,6 @@ T.Popup {
 		activeFocus: control.activeFocus
 		enabled: control.enabled
 	}
-	palette: Union.Style.properties.palette.quickPalette
 
 	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
 							implicitContentWidth + leftPadding + rightPadding)
