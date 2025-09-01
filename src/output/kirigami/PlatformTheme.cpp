@@ -46,22 +46,15 @@ void PlatformTheme::syncColors()
         return;
     }
 
-    auto palette = query->properties().palette();
-
     if (query->properties().background_or_new().color().has_value()) {
-        setBackgroundColor(query->properties().background().value().color().value());
-    } else if (palette.has_value() && palette.value().window().has_value()) {
-        setBackgroundColor(palette.value().window().value());
+        setBackgroundColor(query->properties().background().value().color().value().toQColor());
     } else {
         setBackgroundColor(Qt::white);
     }
 
     if (query->properties().text_or_new().color().has_value()) {
-        setTextColor(query->properties().text().value().color().value());
-        setHighlightedTextColor(query->properties().text().value().color().value());
-    } else if (palette.has_value() && palette.value().windowText().has_value()) {
-        setTextColor(palette.value().windowText().value());
-        setHighlightedTextColor(palette.value().windowText().value());
+        setTextColor(query->properties().text().value().color().value().toQColor());
+        setHighlightedTextColor(query->properties().text().value().color().value().toQColor());
     } else {
         setTextColor(Qt::black);
     }
