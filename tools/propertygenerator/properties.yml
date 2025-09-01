@@ -5,35 +5,6 @@
 #
 # This class contains all the properties that are used to style an element.
 
-palette:
-    # \brief A collection of colors to be used for coloring an element.
-
-    accent: QColor
-    alternateBase: QColor
-    base: QColor
-    brightText: QColor
-    button: QColor
-    buttonText: QColor
-    dark: QColor
-    highlight: QColor
-    highlightedText: QColor
-    light: QColor
-    link: QColor
-    linkVisited: QColor
-    mid: QColor
-    midlight: QColor
-    placeholderText: QColor
-    shadow: QColor
-    text: QColor
-    toolTipBase: QColor
-    toolTipText: QColor
-    window: QColor
-    windowText: QColor
-    positive: QColor
-    neutral: QColor
-    negative: QColor
-
-
 layout:
     # \brief A property group containing properties related to the layout of an element.
 
@@ -85,7 +56,7 @@ text:
 
     alignment: *alignment
     font: QFont
-    color: QColor
+    color: Union::Color
 
 icon:
     # \brief A property group containing properties related to an element's icon.
@@ -95,12 +66,12 @@ icon:
     height: qreal
     name: QString
     source: QUrl
-    color: QColor
+    color: Union::Color
 
 background:
     # \brief A property group containing properties related to an element's background.
 
-    color: QColor
+    color: Union::Color
     image: &image
         # \brief A property group describing properties of an image.
 
@@ -118,7 +89,7 @@ border:
         # \brief A property group containing the properties of a line.
 
         size: qreal
-        color: QColor
+        color: Union::Color
         style: Union::Properties::LineStyle
         image: *image
 
@@ -143,7 +114,7 @@ corners:
         radius: qreal
         width: qreal
         height: qreal
-        color: QColor
+        color: Union::Color
         image: *image
 
     topRight: *corner
@@ -157,7 +128,7 @@ shadow:
         horizontal: qreal
         vertical: qreal
 
-    color: QColor
+    color: Union::Color
     size: qreal
     blur: qreal
 

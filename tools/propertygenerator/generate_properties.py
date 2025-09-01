@@ -25,6 +25,7 @@ include_patterns = [
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "Q", "system_include": True},
     {"pattern": "Union::Properties::", "use_include": "../PropertiesTypes.h"},
+    {"pattern": "Union::Color", "use_include": "../Color.h"},
     {"pattern": "", },
 ]
 
