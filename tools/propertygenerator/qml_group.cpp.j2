@@ -79,7 +79,11 @@ QJSValue {{ group_name }}::{{ property.name }}() const
 
     auto value = m_state.value().{{ property.name }}();
     if (value) {
+{% if property.type == "Union::Color" %}
+        return m_style->engine()->toScriptValue(value.value().toQColor());
+{% else %}
         return m_style->engine()->toScriptValue(value.value());
+{% endif %}
     }
 
     return QJSValue(QJSValue::UndefinedValue);
