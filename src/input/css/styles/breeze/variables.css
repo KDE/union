@@ -24,28 +24,32 @@
     --scrollbar-size: 20px;
 
     /* Colors */
-    --highlight-color: #3daee9;
-    --highlight-text-color: #fff;
+    --highlight-color: custom-color("kcolorscheme", "active", "selection", "background", "normal");
+    --highlight-text-color: custom-color("kcolorscheme", "active", "selection", "foreground", "text");
 
-    --window-text-color: #232629;
-    --window-background-color: #eff0f1;
+    --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
+    --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
     --window-border-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
 
-    --button-text-color: #232629;
-    --button-background-color: #fcfcfc;
+    --button-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
+    --button-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");
     --button-border-color: mix(var(--button-background-color), var(--button-text-color), 0.3);
     --button-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
     --button-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
 
-    --view-text-color: #232629;
-    --view-background-color: #ffffff;
+    --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
+    --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
     --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
     --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
 
-    --header-text-color: #232629;
-    --header-background-color: #dee0e2;
+    --header-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
+    --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
     --header-border-color: mix(var(--header-background-color), var(--header-text-color), 0.3);
+
+    --tooltip-text-color: custom-color("kcolorscheme", "active", "tooltip", "foreground", "text");
+    --tooltip-background-color: custom-color("kcolorscheme", "active", "tooltip", "background", "normal");
+    --tooltip-border-color: mix(var(--tooltip-background-color), var(--tooltip-text-color), 0.3);
 
     --card-background-color: var(--view-background-color);
     --card-text-color: var(--view-text-color);
@@ -63,7 +67,7 @@
     --slider-handle-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
     --slider-fill-color: var(--highlight-color);
 
-    --focus-color: rgba(61, 174, 233, 0.42);
+    --focus-color: custom-color("kcolorscheme", "active", "window", "decoration", "focus");
 
     --shadow-color: rgba(0, 0, 0, 0.1);
 
