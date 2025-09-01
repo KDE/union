@@ -6,6 +6,8 @@
 #include <QSGSimpleRectNode>
 #include <QSGSimpleTextureNode>
 
+#include <Color.h>
+
 CornerNode::CornerNode()
 {
 }
@@ -13,7 +15,7 @@ CornerNode::CornerNode()
 void CornerNode::update(QQuickWindow *window)
 {
     auto colorNode = ensureChildNode<QSGSimpleRectNode>(0);
-    colorNode->setColor(corner.color().value_or(Qt::transparent));
+    colorNode->setColor(corner.color().value_or(Union::Color{}).toQColor());
     colorNode->setRect(rect);
 
     QRectF sourceRect;
