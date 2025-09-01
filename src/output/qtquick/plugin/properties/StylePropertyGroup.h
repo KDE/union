@@ -15,7 +15,6 @@
 
 #include <properties/StyleProperty.h>
 
-#include "PalettePropertyGroup.h"
 #include "LayoutPropertyGroup.h"
 #include "TextPropertyGroup.h"
 #include "IconPropertyGroup.h"
@@ -45,14 +44,6 @@ public:
 
     void update(const std::optional<Union::Properties::StyleProperty> &newState);
     Q_SIGNAL void updated();
-
-    /*!
-     * \qmlproperty PalettePropertyGroup StylePropertyGroup::palette
-     *
-     * Exposes StyleProperty::PaletteProperty to QML.
-     */
-    Q_PROPERTY(PalettePropertyGroup *palette READ palette CONSTANT)
-    PalettePropertyGroup *palette() const;
 
     /*!
      * \qmlproperty LayoutPropertyGroup StylePropertyGroup::layout
@@ -120,7 +111,6 @@ public:
 
 private:
     QuickStyle *m_style = nullptr;
-    std::unique_ptr<PalettePropertyGroup> m_palette;
     std::unique_ptr<LayoutPropertyGroup> m_layout;
     std::unique_ptr<TextPropertyGroup> m_text;
     std::unique_ptr<IconPropertyGroup> m_icon;

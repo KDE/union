@@ -17,7 +17,6 @@
 #include "IconProperty.h"
 #include "LayoutProperty.h"
 #include "OutlineProperty.h"
-#include "PaletteProperty.h"
 #include "ShadowProperty.h"
 #include "TextProperty.h"
 
@@ -70,21 +69,6 @@ public:
      * Move assignment operator.
      */
     StyleProperty &operator=(StyleProperty &&other);
-
-    /*!
-     * Returns the value of palette.
-     */
-    std::optional<PaletteProperty> palette() const;
-    /*!
-     * Returns palette if set or a new PaletteProperty if not.
-     */
-    PaletteProperty palette_or_new() const;
-    /*!
-     * Set the value of palette.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setPalette(const std::optional<PaletteProperty> &newValue);
 
     /*!
      * Returns the value of layout.

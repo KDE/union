@@ -57,7 +57,6 @@ void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
     Q_EMIT colorChanged();
     Q_EMIT sizeChanged();
     Q_EMIT blurChanged();
-
     Q_EMIT updated();
 }
 
@@ -74,7 +73,7 @@ QJSValue ShadowPropertyGroup::color() const
 
     auto value = m_state.value().color();
     if (value) {
-        return m_style->engine()->toScriptValue(value.value());
+        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

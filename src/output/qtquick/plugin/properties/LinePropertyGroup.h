@@ -48,7 +48,7 @@ public:
     Q_SIGNAL void sizeChanged();
 
     /*!
-     * \qmlproperty QColor LinePropertyGroup::color
+     * \qmlproperty Union::Color LinePropertyGroup::color
      *
      * Exposes LineProperty::color to QML.
      */

@@ -16,7 +16,7 @@ class Union::Properties::TextPropertyPrivate
 public:
     std::optional<AlignmentProperty> alignment;
     std::optional<QFont> font;
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
 };
 
 TextProperty::TextProperty()
@@ -86,12 +86,12 @@ void TextProperty::setFont(const std::optional<QFont> &newValue)
 
     d->font = newValue;
 }
-std::optional<QColor> TextProperty::color() const
+std::optional<Union::Color> TextProperty::color() const
 {
     return d->color;
 }
 
-void TextProperty::setColor(const std::optional<QColor> &newValue)
+void TextProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -139,7 +139,7 @@ TextProperty TextProperty::empty()
     TextProperty result;
     result.d->alignment = emptyValue<AlignmentProperty>();
     result.d->font = emptyValue<QFont>();
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     return result;
 }
 

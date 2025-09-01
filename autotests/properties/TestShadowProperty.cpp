@@ -55,7 +55,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            QColor value;
+            Union::Color value;
             property.setColor(value);
             QVERIFY(property.hasAnyValue());
             property.setColor(std::nullopt);
@@ -179,7 +179,7 @@ private Q_SLOTS:
         QVERIFY(!destination.hasAnyValue());
 
         source.setOffset(testOffsetPropertyInstance());
-        source.setColor(QColor{});
+        source.setColor(Union::Color{});
         source.setSize(qreal{});
         source.setBlur(qreal{});
         source.setLeft(testLinePropertyInstance());

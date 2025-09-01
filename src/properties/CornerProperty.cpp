@@ -17,7 +17,7 @@ public:
     std::optional<qreal> radius;
     std::optional<qreal> width;
     std::optional<qreal> height;
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
     std::optional<ImageProperty> image;
 };
 
@@ -100,12 +100,12 @@ void CornerProperty::setHeight(const std::optional<qreal> &newValue)
 
     d->height = newValue;
 }
-std::optional<QColor> CornerProperty::color() const
+std::optional<Union::Color> CornerProperty::color() const
 {
     return d->color;
 }
 
-void CornerProperty::setColor(const std::optional<QColor> &newValue)
+void CornerProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -184,7 +184,7 @@ CornerProperty CornerProperty::empty()
     result.d->radius = emptyValue<qreal>();
     result.d->width = emptyValue<qreal>();
     result.d->height = emptyValue<qreal>();
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     result.d->image = emptyValue<ImageProperty>();
     return result;
 }

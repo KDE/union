@@ -33,7 +33,6 @@ void LinePropertyGroup::update(const std::optional<LineProperty> &newState)
     Q_EMIT sizeChanged();
     Q_EMIT colorChanged();
     Q_EMIT styleChanged();
-
     Q_EMIT updated();
 }
 
@@ -59,7 +58,7 @@ QJSValue LinePropertyGroup::color() const
 
     auto value = m_state.value().color();
     if (value) {
-        return m_style->engine()->toScriptValue(value.value());
+        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

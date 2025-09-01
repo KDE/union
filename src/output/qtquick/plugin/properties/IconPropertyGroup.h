@@ -83,7 +83,7 @@ public:
     Q_SIGNAL void sourceChanged();
 
     /*!
-     * \qmlproperty QColor IconPropertyGroup::color
+     * \qmlproperty Union::Color IconPropertyGroup::color
      *
      * Exposes IconProperty::color to QML.
      */

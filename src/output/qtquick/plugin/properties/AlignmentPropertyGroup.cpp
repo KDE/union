@@ -31,7 +31,6 @@ void AlignmentPropertyGroup::update(const std::optional<AlignmentProperty> &newS
     Q_EMIT horizontalChanged();
     Q_EMIT verticalChanged();
     Q_EMIT orderChanged();
-
     Q_EMIT updated();
 }
 

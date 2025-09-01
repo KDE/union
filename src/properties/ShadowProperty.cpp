@@ -15,7 +15,7 @@ class Union::Properties::ShadowPropertyPrivate
 {
 public:
     std::optional<OffsetProperty> offset;
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
     std::optional<qreal> size;
     std::optional<qreal> blur;
     std::optional<LineProperty> left;
@@ -100,12 +100,12 @@ void ShadowProperty::setOffset(const std::optional<OffsetProperty> &newValue)
 
     d->offset = newValue;
 }
-std::optional<QColor> ShadowProperty::color() const
+std::optional<Union::Color> ShadowProperty::color() const
 {
     return d->color;
 }
 
-void ShadowProperty::setColor(const std::optional<QColor> &newValue)
+void ShadowProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -432,7 +432,7 @@ ShadowProperty ShadowProperty::empty()
 {
     ShadowProperty result;
     result.d->offset = emptyValue<OffsetProperty>();
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     result.d->size = emptyValue<qreal>();
     result.d->blur = emptyValue<qreal>();
     result.d->left = emptyValue<LineProperty>();

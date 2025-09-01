@@ -34,7 +34,6 @@ void CornerPropertyGroup::update(const std::optional<CornerProperty> &newState)
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT colorChanged();
-
     Q_EMIT updated();
 }
 
@@ -88,7 +87,7 @@ QJSValue CornerPropertyGroup::color() const
 
     auto value = m_state.value().color();
     if (value) {
-        return m_style->engine()->toScriptValue(value.value());
+        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

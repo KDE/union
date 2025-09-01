@@ -22,7 +22,6 @@ private Q_SLOTS:
         StyleProperty property;
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.palette().has_value());
         QVERIFY(!property.layout().has_value());
         QVERIFY(!property.text().has_value());
         QVERIFY(!property.icon().has_value());
@@ -40,17 +39,6 @@ private Q_SLOTS:
         // An empty instance should not have any values for its properties.
         QVERIFY(!property.hasAnyValue());
 
-        {
-            // Assigning an empty value to a property should have no effect.
-            property.setPalette(PaletteProperty{});
-            QVERIFY(!property.hasAnyValue());
-
-            property.setPalette(testPalettePropertyInstance());
-            QVERIFY(property.hasAnyValue());
-
-            property.setPalette(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
-        }
         {
             // Assigning an empty value to a property should have no effect.
             property.setLayout(LayoutProperty{});
@@ -154,7 +142,6 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-        source.setPalette(testPalettePropertyInstance());
         source.setLayout(testLayoutPropertyInstance());
         source.setText(testTextPropertyInstance());
         source.setIcon(testIconPropertyInstance());
@@ -171,7 +158,6 @@ private Q_SLOTS:
 
         QVERIFY(destination.hasAnyValue());
 
-        QCOMPARE(destination.palette(), source.palette());
         QCOMPARE(destination.layout(), source.layout());
         QCOMPARE(destination.text(), source.text());
         QCOMPARE(destination.icon(), source.icon());

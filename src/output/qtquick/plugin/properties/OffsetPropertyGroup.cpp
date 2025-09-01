@@ -29,7 +29,6 @@ void OffsetPropertyGroup::update(const std::optional<OffsetProperty> &newState)
 
     Q_EMIT horizontalChanged();
     Q_EMIT verticalChanged();
-
     Q_EMIT updated();
 }
 

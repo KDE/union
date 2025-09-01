@@ -32,7 +32,6 @@ void TextPropertyGroup::update(const std::optional<TextProperty> &newState)
 
     Q_EMIT fontChanged();
     Q_EMIT colorChanged();
-
     Q_EMIT updated();
 }
 
@@ -63,7 +62,7 @@ QJSValue TextPropertyGroup::color() const
 
     auto value = m_state.value().color();
     if (value) {
-        return m_style->engine()->toScriptValue(value.value());
+        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);
