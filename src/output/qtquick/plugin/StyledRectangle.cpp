@@ -260,10 +260,10 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
            << aspect // aspect
            << offset / minDimension // offset
            << radii / minDimension // radius
-           << ShaderNode::toPremultiplied(background.color().value_or(Qt::transparent)) // color
-           << ShaderNode::toPremultiplied(shadow.color().value_or(Qt::transparent)) // shadow_color
-           << ShaderNode::toPremultiplied(border.left_or_new().color().value_or(Qt::transparent)) // border_color
-           << ShaderNode::toPremultiplied(outline.left_or_new().color().value_or(Qt::transparent)); // outline_color
+           << ShaderNode::toPremultiplied(background.color().value_or(Color{}).toQColor()) // color
+           << ShaderNode::toPremultiplied(shadow.color().value_or(Color{}).toQColor()) // shadow_color
+           << ShaderNode::toPremultiplied(border.left_or_new().color().value_or(Color{}).toQColor()) // border_color
+           << ShaderNode::toPremultiplied(outline.left_or_new().color().value_or(Color{}).toQColor()); // outline_color
 
     if (image.has_value()) {
         shaderNode->setTexture(0, image.value(), window());

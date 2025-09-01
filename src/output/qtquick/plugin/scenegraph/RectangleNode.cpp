@@ -74,7 +74,7 @@ void RectangleNode::update(QQuickWindow *window)
 
     auto center = static_cast<AreaNode *>(childAtIndex(int(SubNodeIndex::Center)));
     auto background = m_style.background_or_new();
-    center->color = background.color().value_or(Qt::transparent);
+    center->color = background.color().value_or(Union::Color{}).toQColor();
     center->image = background.image();
     center->rect = rect - borderSizes;
     center->update(window);

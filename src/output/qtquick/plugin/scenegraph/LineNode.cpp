@@ -6,6 +6,8 @@
 #include <QSGSimpleRectNode>
 #include <QSGSimpleTextureNode>
 
+#include <Color.h>
+
 LineNode::LineNode()
 {
 }
@@ -13,7 +15,7 @@ LineNode::LineNode()
 void LineNode::update(QQuickWindow *window)
 {
     auto colorNode = ensureChildNode<QSGSimpleRectNode>(0);
-    colorNode->setColor(line.color().value_or(Qt::transparent));
+    colorNode->setColor(line.color().value_or(Union::Color{}).toQColor());
     colorNode->setRect(rect);
 
     QRectF sourceRect;
