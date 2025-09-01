@@ -10,6 +10,7 @@
 #include <QRegularExpression>
 #include <QStandardPaths>
 
+#include <Color.h>
 #include <StyleRule.h>
 #include <Theme.h>
 
@@ -41,14 +42,44 @@ float to_px(const cssparser::Value &value)
     return to_px(std::get<cssparser::Dimension>(value));
 }
 
-QColor to_qcolor(const cssparser::Value &value)
+Color to_color(const cssparser::Color::Color &color)
 {
-    if (!std::holds_alternative<cssparser::Color>(value)) {
-        return QColor{};
+    switch (color.type) {
+    case cssparser::Color::ColorType::Empty: {
+        return Color{};
+    }
+    case cssparser::Color::ColorType::Rgba: {
+        auto value = std::get<cssparser::Color::Rgba>(color.data);
+        return Color::rgba(value.r, value.g, value.b, value.a);
+    }
+    case cssparser::Color::ColorType::Custom: {
+        auto value = std::get<cssparser::Color::CustomColor>(color.data);
+        QStringList arguments;
+        std::ranges::transform(value.arguments, std::back_inserter(arguments), QString::fromStdString);
+        return Color::custom(QString::fromStdString(value.source), arguments);
+    }
+    case cssparser::Color::ColorType::Mix: {
+        auto value = std::get<cssparser::Color::MixedColor>(color.data);
+        if (!value.first || !value.second) {
+            return Color{};
+        }
+
+        auto first = to_color(*value.first);
+        auto second = to_color(*value.second);
+        return Color::mix(first, second, value.amount);
+    }
     }
 
-    auto color = std::get<cssparser::Color>(value);
-    return QColor::fromRgb(color.r, color.g, color.b, color.a);
+    return Color{};
+}
+
+Color to_color(const cssparser::Value &value)
+{
+    if (!std::holds_alternative<cssparser::Color::Color>(value)) {
+        return Color{};
+    }
+
+    return to_color(std::get<cssparser::Color::Color>(value));
 }
 
 fs::path to_path(const cssparser::Value &value)
@@ -73,7 +104,7 @@ QVariant to_qvariant(const cssparser::Value &value)
         [](std::nullopt_t) { return QVariant{}; },
         [](const std::string &v) { return QVariant{QString::fromStdString(v)}; },
         [](int v) { return QVariant::fromValue(v); },
-        [](const cssparser::Color &v) { return QVariant::fromValue(QColor::fromRgb(v.r, v.g, v.b, v.a)); },
+        [](const cssparser::Color::Color &v) { return QVariant::fromValue(to_color(v).toQColor()); },
         [](const cssparser::Dimension &v) { return QVariant::fromValue(to_px(v)); },
         [](const cssparser::Url &v) { return QVariant::fromValue(fs::path(v.data)); },
         /* clang-format on */
@@ -220,7 +251,7 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
         } else if (property == "size") {
             line.setSize(to_px(value));
         } else if (property == "color") {
-            line.setColor(to_qcolor(value));
+            line.setColor(to_color(value));
         }
         return line;
     };
@@ -414,7 +445,7 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
     auto background = output.background_or_new();
 
     if (property.name == "background-color"s) {
-        background.setColor(to_qcolor(property.value()));
+        background.setColor(to_color(property.value()));
     }
 
     if (property.name == "background-image") {
@@ -541,7 +572,7 @@ void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property
     }
 
     if (property.name == "color" || property.name == "text-color") {
-        text.setColor(to_qcolor(property.value()));
+        text.setColor(to_color(property.value()));
     }
 
     if (text.hasAnyValue()) {
@@ -567,7 +598,7 @@ void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property
         icon.setWidth(to_px(property.value()));
         icon.setHeight(to_px(property.value()));
     } else if (property.name == "color" || property.name == "icon-color") {
-        icon.setColor(to_qcolor(property.value()));
+        icon.setColor(to_color(property.value()));
     }
 
     if (icon.hasAnyValue()) {
@@ -587,7 +618,7 @@ void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Proper
 
         shadow.setBlur(to_px(property.value(2)));
         shadow.setSize(to_px(property.value(3)));
-        shadow.setColor(to_qcolor(property.value(4)));
+        shadow.setColor(to_color(property.value(4)));
     }
 
     if (shadow.hasAnyValue()) {
