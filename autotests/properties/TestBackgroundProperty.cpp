@@ -34,7 +34,7 @@ private Q_SLOTS:
         QVERIFY(!property.hasAnyValue());
 
         {
-            QColor value;
+            Union::Color value;
             property.setColor(value);
             QVERIFY(property.hasAnyValue());
             property.setColor(std::nullopt);
@@ -66,7 +66,7 @@ private Q_SLOTS:
 
         QVERIFY(!destination.hasAnyValue());
 
-        source.setColor(QColor{});
+        source.setColor(Union::Color{});
         source.setImage(testImagePropertyInstance());
 
         QVERIFY(source.hasAnyValue());

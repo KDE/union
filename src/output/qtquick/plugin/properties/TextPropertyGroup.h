@@ -56,7 +56,7 @@ public:
     Q_SIGNAL void fontChanged();
 
     /*!
-     * \qmlproperty QColor TextPropertyGroup::color
+     * \qmlproperty Union::Color TextPropertyGroup::color
      *
      * Exposes TextProperty::color to QML.
      */

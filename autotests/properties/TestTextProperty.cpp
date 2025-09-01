@@ -53,7 +53,7 @@ private Q_SLOTS:
             QVERIFY(!property.hasAnyValue());
         }
         {
-            QColor value;
+            Union::Color value;
             property.setColor(value);
             QVERIFY(property.hasAnyValue());
             property.setColor(std::nullopt);
@@ -76,7 +76,7 @@ private Q_SLOTS:
 
         source.setAlignment(testAlignmentPropertyInstance());
         source.setFont(QFont{});
-        source.setColor(QColor{});
+        source.setColor(Union::Color{});
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());

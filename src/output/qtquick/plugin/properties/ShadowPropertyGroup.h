@@ -55,7 +55,7 @@ public:
     OffsetPropertyGroup *offset() const;
 
     /*!
-     * \qmlproperty QColor ShadowPropertyGroup::color
+     * \qmlproperty Union::Color ShadowPropertyGroup::color
      *
      * Exposes ShadowProperty::color to QML.
      */

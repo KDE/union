@@ -14,7 +14,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::BackgroundPropertyPrivate
 {
 public:
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
     std::optional<ImageProperty> image;
 };
 
@@ -52,12 +52,12 @@ BackgroundProperty &BackgroundProperty::operator=(BackgroundProperty &&other)
     return *this;
 }
 
-std::optional<QColor> BackgroundProperty::color() const
+std::optional<Union::Color> BackgroundProperty::color() const
 {
     return d->color;
 }
 
-void BackgroundProperty::setColor(const std::optional<QColor> &newValue)
+void BackgroundProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -115,7 +115,7 @@ void BackgroundProperty::resolveProperties(const BackgroundProperty &source, Bac
 BackgroundProperty BackgroundProperty::empty()
 {
     BackgroundProperty result;
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     result.d->image = emptyValue<ImageProperty>();
     return result;
 }

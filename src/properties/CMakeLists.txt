@@ -7,8 +7,6 @@
 target_sources(Union PRIVATE
     StyleProperty.cpp
     StyleProperty.h
-    PaletteProperty.cpp
-    PaletteProperty.h
     LayoutProperty.cpp
     LayoutProperty.h
     AlignmentProperty.cpp

@@ -19,7 +19,7 @@ public:
     std::optional<qreal> height;
     std::optional<QString> name;
     std::optional<QUrl> source;
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
 };
 
 IconProperty::IconProperty()
@@ -134,12 +134,12 @@ void IconProperty::setSource(const std::optional<QUrl> &newValue)
 
     d->source = newValue;
 }
-std::optional<QColor> IconProperty::color() const
+std::optional<Union::Color> IconProperty::color() const
 {
     return d->color;
 }
 
-void IconProperty::setColor(const std::optional<QColor> &newValue)
+void IconProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -208,7 +208,7 @@ IconProperty IconProperty::empty()
     result.d->height = emptyValue<qreal>();
     result.d->name = emptyValue<QString>();
     result.d->source = emptyValue<QUrl>();
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     return result;
 }
 

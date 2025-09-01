@@ -7,8 +7,6 @@
 target_sources(UnionQuickImpl PRIVATE
     StylePropertyGroup.cpp
     StylePropertyGroup.h
-    PalettePropertyGroup.cpp
-    PalettePropertyGroup.h
     LayoutPropertyGroup.cpp
     LayoutPropertyGroup.h
     AlignmentPropertyGroup.cpp

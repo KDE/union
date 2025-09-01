@@ -15,7 +15,7 @@ class Union::Properties::LinePropertyPrivate
 {
 public:
     std::optional<qreal> size;
-    std::optional<QColor> color;
+    std::optional<Union::Color> color;
     std::optional<Union::Properties::LineStyle> style;
     std::optional<ImageProperty> image;
 };
@@ -71,12 +71,12 @@ void LineProperty::setSize(const std::optional<qreal> &newValue)
 
     d->size = newValue;
 }
-std::optional<QColor> LineProperty::color() const
+std::optional<Union::Color> LineProperty::color() const
 {
     return d->color;
 }
 
-void LineProperty::setColor(const std::optional<QColor> &newValue)
+void LineProperty::setColor(const std::optional<Union::Color> &newValue)
 {
     if (newValue == d->color) {
         return;
@@ -160,7 +160,7 @@ LineProperty LineProperty::empty()
 {
     LineProperty result;
     result.d->size = emptyValue<qreal>();
-    result.d->color = emptyValue<QColor>();
+    result.d->color = emptyValue<Union::Color>();
     result.d->style = emptyValue<Union::Properties::LineStyle>();
     result.d->image = emptyValue<ImageProperty>();
     return result;

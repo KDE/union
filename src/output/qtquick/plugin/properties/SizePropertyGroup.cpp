@@ -31,7 +31,6 @@ void SizePropertyGroup::update(const std::optional<SizeProperty> &newState)
     Q_EMIT rightChanged();
     Q_EMIT topChanged();
     Q_EMIT bottomChanged();
-
     Q_EMIT updated();
 }
 

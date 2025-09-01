@@ -42,7 +42,6 @@ void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT spacingChanged();
-
     Q_EMIT updated();
 }
 

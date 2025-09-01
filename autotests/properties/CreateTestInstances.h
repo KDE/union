@@ -19,7 +19,6 @@
 #include <properties/LineProperty.h>
 #include <properties/OffsetProperty.h>
 #include <properties/OutlineProperty.h>
-#include <properties/PaletteProperty.h>
 #include <properties/ShadowProperty.h>
 #include <properties/SizeProperty.h>
 #include <properties/StyleProperty.h>
@@ -48,7 +47,6 @@ QFont testQFontInstance()
 }
 
 StyleProperty testStylePropertyInstance();
-PaletteProperty testPalettePropertyInstance();
 LayoutProperty testLayoutPropertyInstance();
 AlignmentProperty testAlignmentPropertyInstance();
 SizeProperty testSizePropertyInstance();
@@ -68,7 +66,6 @@ StyleProperty testStylePropertyInstance()
 {
     StyleProperty instance;
 
-    instance.setPalette(testPalettePropertyInstance());
     instance.setLayout(testLayoutPropertyInstance());
     instance.setText(testTextPropertyInstance());
     instance.setIcon(testIconPropertyInstance());
@@ -77,38 +74,6 @@ StyleProperty testStylePropertyInstance()
     instance.setOutline(testOutlinePropertyInstance());
     instance.setCorners(testCornersPropertyInstance());
     instance.setShadow(testShadowPropertyInstance());
-
-    return instance;
-}
-
-PaletteProperty testPalettePropertyInstance()
-{
-    PaletteProperty instance;
-
-    instance.setAccent(testQColorInstance());
-    instance.setAlternateBase(testQColorInstance());
-    instance.setBase(testQColorInstance());
-    instance.setBrightText(testQColorInstance());
-    instance.setButton(testQColorInstance());
-    instance.setButtonText(testQColorInstance());
-    instance.setDark(testQColorInstance());
-    instance.setHighlight(testQColorInstance());
-    instance.setHighlightedText(testQColorInstance());
-    instance.setLight(testQColorInstance());
-    instance.setLink(testQColorInstance());
-    instance.setLinkVisited(testQColorInstance());
-    instance.setMid(testQColorInstance());
-    instance.setMidlight(testQColorInstance());
-    instance.setPlaceholderText(testQColorInstance());
-    instance.setShadow(testQColorInstance());
-    instance.setText(testQColorInstance());
-    instance.setToolTipBase(testQColorInstance());
-    instance.setToolTipText(testQColorInstance());
-    instance.setWindow(testQColorInstance());
-    instance.setWindowText(testQColorInstance());
-    instance.setPositive(testQColorInstance());
-    instance.setNeutral(testQColorInstance());
-    instance.setNegative(testQColorInstance());
 
     return instance;
 }
@@ -158,7 +123,7 @@ TextProperty testTextPropertyInstance()
 
     instance.setAlignment(testAlignmentPropertyInstance());
     instance.setFont(testQFontInstance());
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
 
     return instance;
 }
@@ -172,7 +137,7 @@ IconProperty testIconPropertyInstance()
     instance.setHeight(testQrealInstance());
     instance.setName(QString{});
     instance.setSource(QUrl{});
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
 
     return instance;
 }
@@ -181,7 +146,7 @@ BackgroundProperty testBackgroundPropertyInstance()
 {
     BackgroundProperty instance;
 
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
     instance.setImage(testImagePropertyInstance());
 
     return instance;
@@ -218,7 +183,7 @@ LineProperty testLinePropertyInstance()
     LineProperty instance;
 
     instance.setSize(testQrealInstance());
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
     instance.setStyle(Union::Properties::LineStyle{});
     instance.setImage(testImagePropertyInstance());
 
@@ -256,7 +221,7 @@ CornerProperty testCornerPropertyInstance()
     instance.setRadius(testQrealInstance());
     instance.setWidth(testQrealInstance());
     instance.setHeight(testQrealInstance());
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
     instance.setImage(testImagePropertyInstance());
 
     return instance;
@@ -267,7 +232,7 @@ ShadowProperty testShadowPropertyInstance()
     ShadowProperty instance;
 
     instance.setOffset(testOffsetPropertyInstance());
-    instance.setColor(testQColorInstance());
+    instance.setColor(Union::Color{});
     instance.setSize(testQrealInstance());
     instance.setBlur(testQrealInstance());
     instance.setLeft(testLinePropertyInstance());

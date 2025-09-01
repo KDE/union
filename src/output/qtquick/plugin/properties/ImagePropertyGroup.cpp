@@ -33,7 +33,6 @@ void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
     Q_EMIT xOffsetChanged();
     Q_EMIT yOffsetChanged();
     Q_EMIT flagsChanged();
-
     Q_EMIT updated();
 }
 

@@ -39,7 +39,7 @@ public:
     Q_SIGNAL void updated();
 
     /*!
-     * \qmlproperty QColor BackgroundPropertyGroup::color
+     * \qmlproperty Union::Color BackgroundPropertyGroup::color
      *
      * Exposes BackgroundProperty::color to QML.
      */

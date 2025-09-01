@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 class Union::Properties::StylePropertyPrivate
 {
 public:
-    std::optional<PaletteProperty> palette;
     std::optional<LayoutProperty> layout;
     std::optional<TextProperty> text;
     std::optional<IconProperty> icon;
@@ -33,7 +32,6 @@ StyleProperty::StyleProperty()
 StyleProperty::StyleProperty(const StyleProperty &other)
     : d(std::make_unique<StylePropertyPrivate>())
 {
-    d->palette = other.d->palette;
     d->layout = other.d->layout;
     d->text = other.d->text;
     d->icon = other.d->icon;
@@ -54,7 +52,6 @@ StyleProperty::~StyleProperty() = default;
 StyleProperty &StyleProperty::operator=(const StyleProperty &other)
 {
     if (this != &other) {
-        d->palette = other.d->palette;
         d->layout = other.d->layout;
         d->text = other.d->text;
         d->icon = other.d->icon;
@@ -73,24 +70,6 @@ StyleProperty &StyleProperty::operator=(StyleProperty &&other)
     return *this;
 }
 
-std::optional<PaletteProperty> StyleProperty::palette() const
-{
-    return d->palette;
-}
-
-PaletteProperty StyleProperty::palette_or_new() const
-{
-    return d->palette.value_or(PaletteProperty{});
-}
-
-void StyleProperty::setPalette(const std::optional<PaletteProperty> &newValue)
-{
-    if (newValue == d->palette) {
-        return;
-    }
-
-    d->palette = newValue;
-}
 std::optional<LayoutProperty> StyleProperty::layout() const
 {
     return d->layout;
@@ -238,9 +217,6 @@ void StyleProperty::setShadow(const std::optional<ShadowProperty> &newValue)
 
 bool StyleProperty::hasAnyValue() const
 {
-    if (d->palette.has_value() && d->palette->hasAnyValue()) {
-        return true;
-    }
     if (d->layout.has_value() && d->layout->hasAnyValue()) {
         return true;
     }
@@ -270,16 +246,6 @@ bool StyleProperty::hasAnyValue() const
 
 void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty &destination)
 {
-    if (source.d->palette.has_value()) {
-        PaletteProperty property;
-        if (destination.d->palette.has_value()) {
-            property = destination.d->palette.value();
-        }
-        PaletteProperty::resolveProperties(source.d->palette.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->palette = property;
-        }
-    }
     if (source.d->layout.has_value()) {
         LayoutProperty property;
         if (destination.d->layout.has_value()) {
@@ -365,7 +331,6 @@ void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty
 StyleProperty StyleProperty::empty()
 {
     StyleProperty result;
-    result.d->palette = emptyValue<PaletteProperty>();
     result.d->layout = emptyValue<LayoutProperty>();
     result.d->text = emptyValue<TextProperty>();
     result.d->icon = emptyValue<IconProperty>();
@@ -379,9 +344,6 @@ StyleProperty StyleProperty::empty()
 
 bool Union::Properties::operator==(const StyleProperty &left, const StyleProperty &right)
 {
-    if (left.palette() != right.palette()) {
-        return false;
-    }
     if (left.layout() != right.layout()) {
         return false;
     }
@@ -413,8 +375,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
 {
     QDebugStateSaver saver(debug);
     debug.nospace() << "StyleProperty(" //
-                    << "palette: " << type.palette() //
-                    << ", layout: " << type.layout() //
+                    << "layout: " << type.layout() //
                     << ", text: " << type.text() //
                     << ", icon: " << type.icon() //
                     << ", background: " << type.background() //

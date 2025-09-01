@@ -17,7 +17,6 @@ StylePropertyGroup::StylePropertyGroup(QuickStyle *style)
     : QObject()
     , m_style(style)
 {
-    m_palette = std::make_unique<PalettePropertyGroup>(m_style);
     m_layout = std::make_unique<LayoutPropertyGroup>(m_style);
     m_text = std::make_unique<TextPropertyGroup>(m_style);
     m_icon = std::make_unique<IconPropertyGroup>(m_style);
@@ -33,7 +32,6 @@ void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
     m_state = newState;
 
     if (!newState) {
-        m_palette->update(std::nullopt);
         m_layout->update(std::nullopt);
         m_text->update(std::nullopt);
         m_icon->update(std::nullopt);
@@ -43,7 +41,6 @@ void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
         m_corners->update(std::nullopt);
         m_shadow->update(std::nullopt);
     } else {
-        m_palette->update(newState.value().palette());
         m_layout->update(newState.value().layout());
         m_text->update(newState.value().text());
         m_icon->update(newState.value().icon());
@@ -55,11 +52,6 @@ void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
     }
 
     Q_EMIT updated();
-}
-
-PalettePropertyGroup *StylePropertyGroup::palette() const
-{
-    return m_palette.get();
 }
 
 LayoutPropertyGroup *StylePropertyGroup::layout() const

@@ -10,8 +10,8 @@
 
 #include <QDebug>
 
-#include <QColor>
 
+#include "../Color.h"
 #include "../PropertiesTypes.h"
 #include "ImageProperty.h"
 
@@ -77,13 +77,13 @@ public:
     /*!
      * Returns the value of color.
      */
-    std::optional<QColor> color() const;
+    std::optional<Union::Color> color() const;
     /*!
      * Set the value of color.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setColor(const std::optional<QColor> &newValue);
+    void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
      * Returns the value of style.

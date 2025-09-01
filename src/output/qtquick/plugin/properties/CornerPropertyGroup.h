@@ -66,7 +66,7 @@ public:
     Q_SIGNAL void heightChanged();
 
     /*!
-     * \qmlproperty QColor CornerPropertyGroup::color
+     * \qmlproperty Union::Color CornerPropertyGroup::color
      *
      * Exposes CornerProperty::color to QML.
      */
