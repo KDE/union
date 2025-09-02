@@ -20,4 +20,7 @@ public:
     KColorSchemeProvider(QObject *parent = nullptr);
 
     std::optional<Union::ColorProvider::Rgba> color(const QStringList &arguments) const override;
+
+private:
+    mutable Union::LruCache<qsizetype, Union::ColorProvider::Rgba> m_cache;
 };
