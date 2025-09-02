@@ -5,6 +5,8 @@
 
 #include <QSharedData>
 
+#include "PluginRegistry.h"
+
 #include "union_logging.h"
 
 using namespace Union;
@@ -57,6 +59,9 @@ struct CustomData : ColorData {
         , source(_source)
         , arguments(_arguments)
     {
+        if (!s_colorProviderRegistry) {
+            s_colorProviderRegistry = std::make_shared<PluginRegistry<ColorProvider>>(QJsonObject{{u"union-plugintype"_s, u"colorprovider"_s}});
+        }
     }
 
     CustomData(const CustomData &other)
@@ -68,10 +73,13 @@ struct CustomData : ColorData {
 
     inline ColorData *toRgba() const override
     {
-        auto provider = ColorProvider::provider(source);
+        auto provider = s_knownProviders.value(source);
         if (!provider) {
-            qCWarning(UNION_GENERAL) << "No provider" << source << "found";
-            return nullptr;
+            provider = s_colorProviderRegistry->pluginObject(u"union-colorprovider-"_s + source);
+            if (!provider) {
+                qCWarning(UNION_GENERAL) << "No provider" << source << "found";
+                return nullptr;
+            }
         }
 
         auto colorValue = provider->color(arguments);
@@ -96,6 +104,9 @@ struct CustomData : ColorData {
 
     QString source;
     QStringList arguments;
+
+    inline static std::shared_ptr<PluginRegistry<ColorProvider>> s_colorProviderRegistry;
+    inline static QHash<QString, ColorProvider *> s_knownProviders;
 };
 
 struct MixData : ColorData {
@@ -269,26 +280,9 @@ Color Color::mix(const Color &first, const Color &second, qreal amount)
     return Color(new MixData(first, second, amount));
 }
 
-ColorProvider::ColorProvider()
+void ColorProvider::registerProvider(const QString &name, ColorProvider *provider)
 {
-}
-
-ColorProvider::~ColorProvider() noexcept
-{
-}
-
-std::shared_ptr<ColorProvider> ColorProvider::provider(const QString &source)
-{
-    if (s_providers.contains(source)) {
-        return s_providers.value(source);
-    }
-
-    return nullptr;
-}
-
-void Union::ColorProvider::registerProvider(const QString &source, const std::shared_ptr<ColorProvider> &provider)
-{
-    s_providers[source] = provider;
+    CustomData::s_knownProviders.insert(name, provider);
 }
 
 QDebug &operator<<(QDebug &stream, const Union::Color &color)

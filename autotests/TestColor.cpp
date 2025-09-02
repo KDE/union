@@ -35,7 +35,7 @@ class TestColor : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
-        ColorProvider::registerProvider(u"test"_s, std::make_shared<TestColorProvider>());
+        ColorProvider::registerProvider(u"test"_s, new TestColorProvider);
     }
 
     void testCreate()

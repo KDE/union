@@ -155,8 +155,9 @@ private:
  *
  * \brief An interface for objects that can provide custom colors.
  */
-class UNION_EXPORT ColorProvider
+class UNION_EXPORT ColorProvider : public QObject
 {
+    Q_OBJECT
 public:
     struct Rgba {
         uint8_t r = 0;
@@ -165,8 +166,7 @@ public:
         uint8_t a = 0;
     };
 
-    ColorProvider();
-    virtual ~ColorProvider();
+    using QObject::QObject;
 
     /*!
      * Returns a color matching the provided arguments.
@@ -175,14 +175,16 @@ public:
      */
     virtual std::optional<Rgba> color(const QStringList &arguments) const = 0;
 
-    static void registerProvider(const QString &source, const std::shared_ptr<ColorProvider> &provider);
-    static std::shared_ptr<ColorProvider> provider(const QString &source);
-
-private:
-    inline static QHash<QString, std::shared_ptr<ColorProvider>> s_providers;
+    /*!
+     * Register a color provider.
+     */
+    static void registerProvider(const QString &name, ColorProvider *provider);
 };
 
 }
+
+Q_DECLARE_INTERFACE(Union::ColorProvider, "org.kde.union.ColorProvider")
+Q_DECLARE_METATYPE(Union::ColorProvider)
 
 UNION_EXPORT QDebug &operator<<(QDebug &stream, const Union::Color &color);
 
