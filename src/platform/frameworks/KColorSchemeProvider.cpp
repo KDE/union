@@ -110,6 +110,11 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
         return std::nullopt;
     }
 
+    auto argumentsHash = qHash(arguments, QHashSeed::globalSeed());
+    if (m_cache.contains(argumentsHash)) {
+        return m_cache.value(argumentsHash).value();
+    }
+
     auto group = colorGroupFromString(arguments.at(0));
     if (!group) {
         qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, group" << arguments.at(0) << "does not exist";
@@ -158,6 +163,10 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
         }
     } else {
         qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, role type" << roleType << "does not exist";
+    }
+
+    if (value) {
+        m_cache.insert(argumentsHash, value.value());
     }
 
     return value;
