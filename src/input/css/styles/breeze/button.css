@@ -3,6 +3,27 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+:root {
+    --button-active-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
+    --button-active-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");
+    --button-active-border-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.3);
+    --button-active-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.5);
+    --button-active-checked-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.2);
+
+    --button-inactive-text-color: custom-color("kcolorscheme", "inactive", "button", "foreground", "text");
+    --button-inactive-background-color: custom-color("kcolorscheme", "inactive", "button", "background", "normal");
+    --button-inactive-border-color: mix(var(--button-inactive-background-color), var(--button-inactive-text-color), 0.3);
+    --button-inactive-highlight-color: mix(var(--button-inactive-background-color), var(--highlight-color), 0.5);
+    --button-inactive-checked-color: mix(var(--button-inactive-background-color), var(--button-inactive-text-color), 0.2);
+
+    --button-disabled-text-color: custom-color("kcolorscheme", "disabled", "window", "foreground", "text");
+    --button-disabled-background-color: custom-color("kcolorscheme", "disabled", "window", "background", "normal");
+    --button-disabled-border-color: mix(var(--button-disabled-background-color), var(--button-disabled-text-color), 0.3);
+
+    --button-border: 1px solid var(--button-active-border-color);
+    --button-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
+}
+
 button,
 toolbutton,
 checkbox indicator,
@@ -21,13 +42,13 @@ combobox
     text-alignment-horizontal: center;
     icon-alignment-horizontal: center;
 
-    color: var(--button-text-color);
+    color: var(--button-active-text-color);
     border: var(--button-border);
-    background-color: var(--button-background-color);
+    background-color: var(--button-active-background-color);
 
     &.flat
     {
-        border: 0px solid transparent;
+        border-color: transparent;
         background-color: transparent;
         box-shadow: 0px 0px 0px 0px transparent;
     }
@@ -45,15 +66,14 @@ combobox
 
     &:checked
     {
-/*         border: 1px solid var(--button-border-color); */
-        background-color: mix(var(--button-background-color), var(--button-text-color), 0.2);
+        background-color: var(--button-active-checked-color);
     }
 
     &:disabled
     {
-        background-color: mix(var(--window-background-color), var(--window-text-color), 0.05);
-        color: mix(var(--window-background-color), var(--window-text-color), 0.35);
-        border-color: mix(var(--window-background-color), var(--window-text-color), 0.2);
+        background-color: var(--button-disabled-background-color);
+        color: var(--button-disabled-text-color);
+        border-color: var(--button-disabled-border-color);
         box-shadow: 0px 0px 0px 0px transparent;
     }
 
@@ -73,7 +93,7 @@ toolbutton:pressed,
 combobox:pressed
 {
     border: 1px solid var(--highlight-color);
-    background-color: var(--button-highlight-color);
+    background-color: var(--button-active-highlight-color);
     box-shadow: 0px 0px 0px 0px transparent;
 }
 
