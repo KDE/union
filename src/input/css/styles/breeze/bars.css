@@ -3,6 +3,14 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+:root {
+    --slider-border-color: var(--window-border-color);
+    --slider-background-color: var(--view-background-color);
+    --slider-handle-background-color: var(--button-active-background-color);
+    --slider-handle-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.5);
+    --slider-fill-color: var(--highlight-color);
+}
+
 progressbar
 {
     width: 200px;
@@ -10,12 +18,12 @@ progressbar
     padding: 0px var(--large-spacing);
     inset: 0px var(--large-spacing);
 
-    background-color: var(--button-background-color);
-    border: 1px solid var(--button-border-color);
+    background-color: var(--button-active-background-color);
+    border: 1px solid var(--button-active-border-color);
     border-radius: var(--corner-radius);
 
     track {
-        background-color: var(--button-highlight-color);
+        background-color: var(--button-active-highlight-color);
         border: 1px solid var(--highlight-color);
         border-radius: var(--corner-radius);
     }

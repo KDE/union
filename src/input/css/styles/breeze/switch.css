@@ -22,8 +22,8 @@ switchdelegate indicator
     height: 12px;
     border-radius: 6px;
 
-    background-color: mix(var(--button-background-color), var(--button-text-color), 0.1);
-    border: 1px solid var(--button-border-color);
+    background-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.1);
+    border: 1px solid var(--button-active-border-color);
 
     handle {
         width: var(--grid-unit);
@@ -31,8 +31,8 @@ switchdelegate indicator
 /*      border-radius: calc(var(--grid-unit) / 2); */
         border-radius: 9px;
 
-        background-color: var(--button-background-color);
-        border: 1px solid var(--button-border-color);
+        background-color: var(--button-active-background-color);
+        border: 1px solid var(--button-active-border-color);
     }
 
     &:hovered {
@@ -44,7 +44,7 @@ switchdelegate indicator
     }
 
     &:checked {
-        background-color: var(--button-highlight-color);
+        background-color: var(--button-active-highlight-color);
     }
 }
 

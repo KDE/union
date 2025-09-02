@@ -32,12 +32,6 @@
     --window-border-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
 
-    --button-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
-    --button-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");
-    --button-border-color: mix(var(--button-background-color), var(--button-text-color), 0.3);
-    --button-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
-    --button-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
-
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
     --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
@@ -61,18 +55,11 @@
     --scrollbar-handle-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
     --scrollbar-active-color: mix(var(--window-background-color), var(--highlight-color), 0.3);
 
-    --slider-border-color: var(--window-border-color);
-    --slider-background-color: var(--view-background-color);
-    --slider-handle-background-color: var(--button-background-color);
-    --slider-handle-highlight-color: mix(var(--button-background-color), var(--highlight-color), 0.5);
-    --slider-fill-color: var(--highlight-color);
-
     --focus-color: custom-color("kcolorscheme", "active", "window", "decoration", "focus");
 
     --shadow-color: rgba(0, 0, 0, 0.1);
 
     /* Standard Elements */
-    --button-border: 1px solid var(--button-border-color);
     --focus-outline: 2px solid var(--focus-color);
     --dialog-shadow: 0px 1px 32px 0px rgba(0, 0, 0, 0.3);
 }
