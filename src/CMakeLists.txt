@@ -23,6 +23,7 @@ target_sources(Union PRIVATE
     PropertiesTypes.h
     Color.cpp
     Color.h
+    PluginRegistry.h
 )
 
 ecm_qt_declare_logging_category(Union
