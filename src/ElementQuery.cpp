@@ -3,6 +3,7 @@
 
 #include "ElementQuery.h"
 
+#include "LruCache.h"
 #include "Theme.h"
 
 #include "union_query_logging.h"
@@ -19,7 +20,7 @@ public:
 
     inline static const Properties::StyleProperty emptyProperties;
 
-    inline static QHash<std::size_t, std::optional<Properties::StyleProperty>> s_matchesCache;
+    inline static LruCache<std::size_t, std::optional<Properties::StyleProperty>, 500> s_matchesCache;
 };
 
 ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
@@ -45,9 +46,9 @@ bool ElementQuery::execute()
     qCInfo(UNION_QUERY) << "Trying to match" << d->elements;
 
     auto cacheKey = elementListCacheKey(d->elements, QHashSeed::globalSeed());
-    if (ElementQueryPrivate::s_matchesCache.contains(cacheKey)) {
+    if (auto cached = ElementQueryPrivate::s_matchesCache.value(cacheKey); cached) {
         qCInfo(UNION_QUERY) << "Matched from cache";
-        d->properties = ElementQueryPrivate::s_matchesCache.value(cacheKey);
+        d->properties = cached.value();
         return true;
     }
 
