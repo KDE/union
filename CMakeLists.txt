@@ -28,7 +28,7 @@ include(ECMGenerateQDoc)
 
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
-option(WITH_KICONTHEMES "Build with KIconThemes for icon recoloring" ON)
+option(WITH_FRAMEWORKS "Build features dependant on KDE frameworks" ON)
 option(WITH_KIRIGAMI "Build with Kirigami integration" ON)
 
 if (WITH_KIRIGAMI AND NOT WITH_KICONTHEMES)
@@ -41,8 +41,10 @@ set(CMAKE_CXX_STANDARD 20)
 set(REQUIRED_QT_VERSION 6.8.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
 
-if (WITH_KICONTHEMES)
-    find_package(KF6IconThemes ${KF_DEP_VERSION} CONFIG REQUIRED)
+if (WITH_FRAMEWORKS)
+    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme)
+    set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
+    set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
 endif()
 
 if (WITH_KIRIGAMI)

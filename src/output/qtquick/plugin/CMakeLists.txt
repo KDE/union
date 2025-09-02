@@ -73,7 +73,7 @@ ecm_generate_export_header(UnionQuickImpl
 target_include_directories(UnionQuickImpl PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/properties)
 target_link_libraries(UnionQuickImpl PUBLIC Qt6::Core Qt6::Qml Qt6::Quick Qt6::QuickControls2 Union::Union)
 
-if (WITH_KICONTHEMES)
+if (WITH_FRAMEWORKS)
     target_compile_definitions(UnionQuickImpl PRIVATE WITH_KICONTHEMES)
     target_link_libraries(UnionQuickImpl PRIVATE KF6::IconThemes)
 endif()
