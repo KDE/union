@@ -71,6 +71,7 @@ add_subdirectory(properties)
 
 add_subdirectory(input)
 add_subdirectory(output)
+add_subdirectory(platform)
 
 ecm_qt_install_logging_categories(EXPORT Union DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
