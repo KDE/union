@@ -34,6 +34,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
+    style/Slider.qml
     style/SpinBox.qml
     style/SwipeDelegate.qml
     style/Switch.qml
@@ -46,6 +47,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ToolButton.qml
     style/ToolTip.qml
     style/ToolSeparator.qml
+    style/RangeSlider.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)

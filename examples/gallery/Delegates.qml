@@ -59,9 +59,40 @@ Kirigami.Page {
             }
         }
 
+        Controls.Slider {
+            from: 0
+            to: 100
+            stepSize: 1
+            value: 50
+        }
+
+        Controls.Slider {
+            from: 0
+            to: 100
+            stepSize: 1
+            value: 50
+            orientation: Qt.Vertical
+        }
+
+        Controls.RangeSlider {
+            from: 0
+            to: 100
+            stepSize: 1
+            first.value: 25
+            second.value: 75
+        }
+
+        Controls.RangeSlider {
+            from: 0
+            to: 100
+            stepSize: 1
+            first.value: 25
+            second.value: 75
+            orientation: Qt.Vertical
+        }
+
         Item {
             Layout.fillHeight: true
         }
     }
 }
-
