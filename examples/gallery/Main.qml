@@ -55,6 +55,10 @@ Kirigami.ApplicationWindow {
                 onTriggered: application.pushPage("Delegates")
             },
             Kirigami.Action {
+                text: "Progress Bar & Slider"
+                onTriggered: application.pushPage("ProgressSlider")
+            },
+            Kirigami.Action {
                 text: "Dialogs"
                 onTriggered: application.pushPage("Dialogs")
             },
