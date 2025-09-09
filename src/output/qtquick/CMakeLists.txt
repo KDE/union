@@ -10,6 +10,14 @@ ecm_add_qml_module(UnionQuickStyle
     GENERATE_PLUGIN_SOURCE
 )
 
+
+# Workaround for QTBUG-139626
+if (${Qt6Core_VERSION} VERSION_EQUAL "6.9.2")
+    set_target_properties(UnionQuickStyle PROPERTIES
+        QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
+    )
+endif()
+
 ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ApplicationWindow.qml
     style/Button.qml
