@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+// SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls as Controls
+import org.kde.kirigami as Kirigami
+import Qt.labs.qmlmodels
+
+Kirigami.Page {
+    title: "Tables QtQuick.Controls"
+    
+    Kirigami.ColumnView.interactiveResizeEnabled: true
+    Kirigami.ColumnView.minimumWidth: Kirigami.Units.gridUnit * 10
+    Kirigami.ColumnView.preferredWidth: Kirigami.Units.gridUnit * 25
+    Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
+    
+    Rectangle {
+        anchors.fill: parent
+
+        Controls.HorizontalHeaderView {
+            id: horizontalHeader
+            anchors.left: tableView.left
+            anchors.top: parent.top
+            syncView: tableView
+            clip: true
+            textRole: "display"
+        }
+        
+        Controls.VerticalHeaderView {
+            id: verticalHeader
+            anchors.top: tableView.top
+            anchors.left: parent.left
+            syncView: tableView
+            clip: true
+            textRole: "display"
+        }
+        
+        TableView {
+            id: tableView
+            anchors.left: verticalHeader.right
+            anchors.top: horizontalHeader.bottom
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            clip: true
+            alternatingRows: true
+            
+            model: TableModel {
+                TableModelColumn { display: "name" }
+                TableModelColumn { display: "color" }
+                
+                rows: [
+                    {
+                        "name": "cat",
+                        "color": "black"
+                    },
+                    {
+                        "name": "dog",
+                        "color": "brown"
+                    },
+                    {
+                        "name": "bird",
+                        "color": "white"
+                    },
+                    {
+                        "name": "lizard",
+                        "color": "green"
+                    },
+                    {
+                        "name": "fish",
+                        "color": "blue"
+                    }
+                ]
+            }
+            
+            delegate: Controls.TableViewDelegate {}
+        }
+    }
+}
