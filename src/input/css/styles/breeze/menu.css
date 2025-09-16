@@ -11,6 +11,7 @@ menu, popup
     background-color: var(--window-background-color);
     border: 1px solid var(--window-border-color);
     color: var(--window-text-color);
+    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.4);
 }
 
 menuitem
