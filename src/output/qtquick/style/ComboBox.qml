@@ -25,6 +25,9 @@ T.ComboBox {
         if (flat) {
             result.push("flat");
         }
+        if (editable) {
+            result.push("editable");
+        }
         return result;
     }
     Union.Positioner.positionItems: [contentItem, indicator]
