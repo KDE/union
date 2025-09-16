@@ -111,12 +111,37 @@ toolbutton
     icon-size: var(--icon-size-smallmedium);
 }
 
-combobox {
-    padding: 0px;
-    padding-left: var(--large-spacing);
-    padding-right: var(--large-spacing);
-    text-alignment-horizontal: fill;
-    icon-alignment-horizontal: start;
+combobox
+{
+    layout-alignment: content fill center 0;
+    text-alignment: content fill center 0;
+    icon-alignment: content end center 0;
     icon-name: "arrow-down-symbolic";
+    box-shadow: var(--button-shadow);
+
+    &.editable {
+        /* Ensure we have a minimum size that's at least one character + icon +
+         * padding, otherwise the click target becomes too small and we can't
+         * click to edit text anymore.
+         */
+        width: 48px;
+
+        background-color: var(--view-background-color);
+        border: 1px solid var(--view-border-color);
+        box-shadow: 0px 0px 0px 0px transparent;
+
+        &:hovered {
+            border-color: var(--highlight-color);
+        }
+
+        &:pressed {
+            border-color: var(--highlight-color);
+            icon-color: var(--highlight-color);
+        }
+    }
 }
 
+popup.combobox
+{
+    background-color: var(--view-background-color);
+}
