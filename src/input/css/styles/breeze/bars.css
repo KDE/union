@@ -1,0 +1,110 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+progressbar
+{
+    width: 200px;
+    height: var(--large-spacing);
+    padding: 0px var(--large-spacing);
+    inset: 0px var(--large-spacing);
+
+    background-color: var(--button-background-color);
+    border: 1px solid var(--button-border-color);
+    border-radius: var(--corner-radius);
+
+    track {
+        background-color: var(--button-highlight-color);
+        border: 1px solid var(--highlight-color);
+        border-radius: var(--corner-radius);
+    }
+}
+
+slider,
+rangeslider
+{
+    &.horizontal
+    {
+        width: 200px;
+        height: 6px;
+    }
+
+    &.vertical
+    {
+        width: 6px;
+        height: 200px;
+    }
+
+    background-color: var(--slider-background-color);
+    border: 1px solid var(--slider-border-color);
+    border-radius: var(--corner-radius);
+}
+
+slider fill,
+rangeslider fill
+{
+    background-color: var(--slider-fill-color);
+    border-radius: var(--corner-radius);
+}
+
+
+slider handle,
+rangeslider handle
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+    background-color: var(--slider-handle-background-color);
+    border: 1px solid var(--slider-border-color);
+    border-radius: var(--small-element-size);
+
+    &:hovered
+    {
+        border-color: var(--highlight-color);
+    }
+
+    &:visual-focus
+    {
+        border-color: var(--highlight-color);
+        outline: var(--focus-outline);
+    }
+}
+
+slider:pressed handle,
+rangeslider handle:pressed
+{
+    background-color: var(--slider-handle-highlight-color);
+    border-color: var(--highlight-color);
+}
+
+scrollbar
+{
+    width: var(--scrollbar-size);
+    height: var(--scrollbar-size);
+
+    padding: var(--medium-spacing);
+
+    &.horizontal
+    {
+        border-top: 1px solid var(--scrollbar-border-color);
+    }
+
+    &.vertical
+    {
+        border-left: 1px solid var(--scrollbar-border-color);
+    }
+
+    handle
+    {
+        background-color: var(--scrollbar-handle-color);
+        border: 1px solid var(--scrollbar-border-color);
+        border-radius: var(--small-element-size);
+
+        &:hovered,
+        &:pressed
+        {
+            background-color: var(--scrollbar-active-color);
+            border-color: var(--scrollbar-active-color);
+        }
+    }
+}

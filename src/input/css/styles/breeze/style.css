@@ -17,8 +17,7 @@
 @import "menu.css";
 @import "application.css";
 @import "scroll.css";
-@import "slider.css";
-@import "misc.css";
+@import "bars.css";
+@import "dialog.css";
 
 @import "kirigami.css";
-@import "dialog.css"
