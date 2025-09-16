@@ -26,6 +26,7 @@ set(_styles
     "org.kde.union"
     "org.kde.breeze"
     "org.kde.desktop"
+    "org.kde.plasma.components"
 )
 
 foreach(_file ${_configured_files})

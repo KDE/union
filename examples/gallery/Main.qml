@@ -18,6 +18,7 @@ Kirigami.ApplicationWindow {
         "%1_org.kde.union.qml",
         "%1_org.kde.breeze.qml",
         "%1_org.kde.desktop.qml",
+        "%1_org.kde.plasma.components.qml"
     ]
 
     function pushPage(page) {
