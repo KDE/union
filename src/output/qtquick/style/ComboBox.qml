@@ -84,11 +84,18 @@ T.ComboBox {
         Union.Element.hints: ["combobox"]
 
         y: control.height
-        width: control.width
-        height: Math.min(contentItem.implicitHeight, control.Window.height)
+        width: Math.max(control.width, contentItem.implicitWidth)
+        height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
         contentItem: ListView {
             clip: true
+            implicitWidth: {
+                let max = 0
+                for (let i of contentItem.visibleChildren) {
+                    max = Math.max(i.implicitWidth, max)
+                }
+                return max
+            }
             implicitHeight: contentHeight
             model: control.delegateModel
             currentIndex: control.highlightedIndex
