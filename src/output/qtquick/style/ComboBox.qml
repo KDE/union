@@ -81,6 +81,8 @@ T.ComboBox {
     }
 
     popup: Popup {
+        Union.Element.hints: ["combobox"]
+
         y: control.height
         width: control.width
         height: Math.min(contentItem.implicitHeight, control.Window.height)
