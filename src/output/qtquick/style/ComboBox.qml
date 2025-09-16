@@ -35,8 +35,8 @@ T.ComboBox {
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
-    leftPadding: Union.Positioner.padding.left + (!control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
-    rightPadding: Union.Positioner.padding.right + (control.mirrored || !indicator || !indicator.visible ? 0 : indicator.width + spacing)
+    leftPadding: Union.Positioner.padding.left
+    rightPadding: Union.Positioner.padding.right
     topPadding: Union.Positioner.padding.top
     bottomPadding: Union.Positioner.padding.bottom
 
@@ -60,25 +60,25 @@ T.ComboBox {
 
     indicator: Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
+        implicitWidth: Union.Style.properties.icon.width
+        implicitHeight: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
     }
 
-    contentItem: TextField {
+    contentItem: TextInput {
+        Union.PositionedItem.source: Union.PositionerSource.Text
+
         text: control.editable ? control.editText : control.displayText
-        padding: 0
         enabled: control.editable
         autoScroll: control.editable
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
         selectByMouse: control.selectTextByMouse
-        background: Item {}
     }
 
-    background: Union.StyledRectangle {
-        anchors.fill: parent
-    }
+    background: Union.StyledRectangle { }
 
     popup: Popup {
         Union.Element.hints: ["combobox"]
