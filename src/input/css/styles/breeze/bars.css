@@ -11,6 +11,13 @@
     --slider-fill-color: var(--highlight-color);
 }
 
+busyindicator
+{
+    width: 36px;
+    height: 36px;
+    icon-name: "process-working-symbolic";
+}
+
 progressbar
 {
     width: 200px;
