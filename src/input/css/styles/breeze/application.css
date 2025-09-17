@@ -3,11 +3,25 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-applicationwindow {
+applicationwindow
+{
     background-color: var(--window-background-color);
     color: var(--window-text-color);
 }
 
-page {
+page
+{
     background-color: var(--window-background-color);
     color: var(--window-text-color);
+}
+
+drawer
+{
+    color: var(--view-text-color);
+    background-color: var(--view-background-color);
+
+    &.modal {
+        color: var(--window-text-color);
+        background-color: var(--window-background-color);
+    }
+}
