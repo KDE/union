@@ -44,6 +44,7 @@ Kirigami.Page {
             anchors.bottom: parent.bottom
             clip: true
             alternatingRows: true
+            acceptedButtons: Qt.NoButton
             
             model: TableModel {
                 TableModelColumn { display: "name" }
@@ -73,7 +74,15 @@ Kirigami.Page {
                 ]
             }
             
+            selectionModel: ItemSelectionModel {
+                model: tableView.model
+            }
+            
             delegate: Controls.TableViewDelegate {}
+        }
+        
+        Controls.SelectionRectangle {
+            target: tableView
         }
     }
 }

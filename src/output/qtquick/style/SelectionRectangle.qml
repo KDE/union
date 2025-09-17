@@ -21,9 +21,6 @@ T.SelectionRectangle {
         enabled: control.enabled
     }
     
-    topLeftHandle: Handle {}
-    bottomRightHandle: Handle {}
-    
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
     topPadding: Union.Positioner.padding.top
@@ -34,7 +31,16 @@ T.SelectionRectangle {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
     
+    topLeftHandle: Handle {}
+    bottomRightHandle: Handle {}
+    
     component Handle : Union.StyledRectangle {
+        Union.Element.type: "SelectionRectangleHandle"
+        property Item control: SelectionRectangle.control
+        Union.Element.states {
+            enabled: control.enabled
+            visualFocus: SelectionRectangle.dragging
+        }
         visible: SelectionRectangle.control.active
     }
     

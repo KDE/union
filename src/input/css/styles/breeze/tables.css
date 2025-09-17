@@ -1,6 +1,9 @@
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
+    .alternatingRows {
+        background-color: var(--view-background-alternate-color);
+    }
     inset: 0px;
     padding: var(--small-spacing);
     border-radius: 0px;
@@ -13,9 +16,11 @@ tableviewdelegate {
     &:visual-focus {
         outline: 1px solid var(--focus-color);
     }
-
-    .alternatingRows {
-        background-color: var(--view-background-alternate-color);
+    
+    &:highlighted {
+        color: var(--highlight-text-color);
+        border: 1px solid var(--highlight-color);
+        background-color: var(--highlight-color);
     }
 }
 
@@ -51,4 +56,18 @@ selectionrectangle {
     border: 1px solid var(--highlight-color);
     border-radius: var(--corner-radius);
     background-color: var(--highlight-color);
+}
+
+selectionrectanglehandle {
+    width: var(--small-element-size);
+    height: var(--small-element-size);
+    background-color: var(--slider-handle-background-color);
+    border: 1px solid var(--slider-border-color);
+    border-radius: var(--small-element-size);
+    
+    &:visual-focus
+    {
+        border-color: var(--highlight-color);
+        outline: var(--focus-outline);
+    }
 }
