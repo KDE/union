@@ -23,6 +23,14 @@ T.ToolBar {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
+    Union.Element.hints: {
+        if (position == T.ToolBar.Header) {
+            return ["header"]
+        } else if (position == T.ToolBar.Footer) {
+            return ["footer"]
+        }
+        return []
+    }
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
