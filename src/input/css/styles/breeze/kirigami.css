@@ -160,4 +160,14 @@ overlaydrawer
         background-color: var(--window-background-color);
         color: var(--window-text-color);
     }
+
+    /* If the application uses a toolbar as a header of a drawer, it's most
+     * likely intended to look as a header.
+     */
+    & > toolbar.header
+    {
+        background-color: var(--header-background-color);
+        border-color: var(--header-border-color);
+        border-bottom: 1px solid var(--header-border-color);
+    }
 }
