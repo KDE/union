@@ -1,3 +1,8 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
