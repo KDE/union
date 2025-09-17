@@ -49,27 +49,33 @@ Kirigami.Page {
             model: TableModel {
                 TableModelColumn { display: "name" }
                 TableModelColumn { display: "color" }
+                TableModelColumn { display: "testing" }
                 
                 rows: [
                     {
                         "name": "cat",
-                        "color": "black"
+                        "color": "black",
+                        "testing": "A",
                     },
                     {
                         "name": "dog",
-                        "color": "brown"
+                        "color": "brownnnnnnnnnnnnnnnnnnnnnnnnnn",
+                        "testing": "B"
                     },
                     {
                         "name": "bird",
-                        "color": "white"
+                        "color": "white",
+                        "testing": "CCCCCCCCCCCC"
                     },
                     {
                         "name": "lizard",
-                        "color": "green"
+                        "color": "green",
+                        "testing": "DDDDDD"
                     },
                     {
-                        "name": "fish",
-                        "color": "blue"
+                        "name": "fishiesssssssss",
+                        "color": "blue",
+                        "testing": "EEEEE"
                     }
                 ]
             }
@@ -78,7 +84,8 @@ Kirigami.Page {
                 model: tableView.model
             }
             
-            delegate: Controls.TableViewDelegate {}
+            delegate: Controls.TableViewDelegate {
+            }
         }
         
         Controls.SelectionRectangle {
