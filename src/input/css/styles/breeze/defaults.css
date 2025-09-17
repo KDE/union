@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Global defaults that should apply to all elements.
+ */
+
 * {
     icon-size: var(--icon-size-small);
 }

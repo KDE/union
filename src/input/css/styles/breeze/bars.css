@@ -1,6 +1,11 @@
 /*
  * SPDX-License-Identifier: BSD-2-Clause
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+/*
+ * Bar-like controls such as progress bars and sliders.
  */
 
 :root {

@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Buttons and button-like controls.
+ */
+
 :root {
     --button-active-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
     --button-active-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");

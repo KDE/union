@@ -3,6 +3,11 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Base style definition. Don't put any rules here, place them in a separate
+ * file and use @import to import it.
+ */
+
 @import "variables.css";
 
 @import "defaults.css";
@@ -11,13 +16,7 @@
 @import "delegate.css";
 @import "text.css";
 @import "check.css";
-@import "switch.css";
-@import "spinbox.css";
-@import "toolbar.css";
-@import "menu.css";
+@import "popup.css";
 @import "application.css";
-@import "scroll.css";
 @import "bars.css";
-@import "dialog.css";
-
 @import "kirigami.css";

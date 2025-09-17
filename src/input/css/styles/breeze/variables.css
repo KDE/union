@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Custom global variables used by all the other style rules.
+ */
+
 :root {
     /* Standard Sizes */
     --small-spacing: 4px;
