@@ -27,6 +27,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ComboBox.qml
     style/Dialog.qml
     style/DialogButtonBox.qml
+    style/Drawer.qml
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
