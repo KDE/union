@@ -41,7 +41,8 @@ radiodelegate indicator
 checkbox:checked indicator,
 checkdelegate:checked indicator,
 menuitem:checked indicator,
-radiobutton:checked indicator
+radiobutton:checked indicator,
+radiodelegate:checked indicator
 {
     background-image: url("images/checkmark.svg");
     background-color: var(--button-active-highlight-color);
@@ -55,7 +56,8 @@ radiodelegate indicator
     border-radius: 8px;
 }
 
-radiobutton:checked indicator
+radiobutton:checked indicator,
+radiodelegate:checked indicator
 {
     background-image: url("images/radio.svg");
 }
