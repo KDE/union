@@ -302,6 +302,13 @@ bool CssLoader::load(Theme::Ptr theme)
     styleSheet.set_root_path(m_stylePath);
     styleSheet.parse_file("style.css");
 
+    if (styleSheet.errors().size() > 0) {
+        qCWarning(UNION_CSS) << "Errors encountered while parsing CSS:";
+        for (const auto &error : styleSheet.errors()) {
+            qCWarning(UNION_CSS) << error.message.data();
+        }
+    }
+
     for (const auto &rule : styleSheet.rules()) {
         if (rule.properties.empty()) {
             continue;
