@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * View delegates
+ */
+
 itemdelegate,
 checkdelegate,
 radiodelegate,

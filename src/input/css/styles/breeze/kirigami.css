@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Kirigami-specific controls
+ */
+
 applicationheader
 {
     background-color: var(--header-background-color);
@@ -53,65 +57,79 @@ chip
         layout-alignment: item end center 0;
     }
 
-    &:hovered {
+    &:hovered
+    {
         border-color: var(--highlight-color);
     }
 
-    &:pressed {
+    &:pressed
+    {
         border-color: var(--highlight-color);
         background-color: var(--button-active-highlight-color);
     }
 }
 
-heading {
+heading
+{
     color: var(--window-text-color);
 
-    &.primary {
+    &.primary
+    {
         font-weight: bolder;
     }
 
-    &.level-1 {
+    &.level-1
+    {
         font-size: 135%;
     }
 
-    &.primary.level-1 {
+    &.primary.level-1
+    {
         font-size: 135%;
         font-weight: bolder;
     }
 
-    &.level-2 {
+    &.level-2
+    {
         font-size: 120%;
     }
 
-    &.primary.level-2 {
+    &.primary.level-2
+    {
         font-size: 120%;
         font-weight: bolder;
     }
 
-    &.level-3 {
+    &.level-3
+    {
         font-size: 115%;
     }
 
-    &.primary.level-3 {
+    &.primary.level-3
+    {
         font-size: 115%;
         font-weight: bolder;
     }
 
-    &.level-4 {
+    &.level-4
+    {
         font-size: 110%;
     }
 
-    &.primary.level-4 {
+    &.primary.level-4
+    {
         font-size: 110%;
         font-weight: bolder;
     }
 
-    &.secondary {
+    &.secondary
+    {
         /*         opacity: 0.75; */
     }
 }
 
-inlinemessage {
+inlinemessage
+{
     padding: var(--small-spacing);
 
     background-color: mix(var(--window-background-color), var(--highlight-color), 0.2);
@@ -132,11 +150,13 @@ inlinemessage {
     }*/
 }
 
-overlaydrawer {
+overlaydrawer
+{
     background-color: var(--view-background-color);
     color: var(--view-text-color);
 
-    &.modal {
+    &.modal
+    {
         background-color: var(--window-background-color);
         color: var(--window-text-color);
     }

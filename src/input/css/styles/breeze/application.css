@@ -3,6 +3,10 @@
  * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+/*
+ * Application-structural elements like windows, drawers, etc.
+ */
+
 applicationwindow
 {
     background-color: var(--window-background-color);
@@ -15,6 +19,11 @@ page
     color: var(--window-text-color);
 }
 
+toolbar
+{
+    padding: var(--small-spacing);
+}
+
 drawer
 {
     color: var(--view-text-color);
@@ -24,4 +33,9 @@ drawer
         color: var(--window-text-color);
         background-color: var(--window-background-color);
     }
+}
+
+scrollview {
+    background-color: var(--view-background-color);
+    color: var(--view-text-color);
 }
