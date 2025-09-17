@@ -19,6 +19,20 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
 
+        RowLayout {
+            Controls.BusyIndicator {
+                running: true
+            }
+
+            Controls.BusyIndicator {
+                running: true
+            }
+
+            Controls.BusyIndicator {
+                running: false
+            }
+        }
+
         Controls.ProgressBar {
             from: 0
             to: 100
