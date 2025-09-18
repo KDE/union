@@ -4,7 +4,7 @@
  */
 
 
-tableviewdelegate {
+tableviewdelegate, treeviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
     .alternatingRows {
@@ -32,6 +32,24 @@ tableviewdelegate {
         background-color: var(--highlight-color);
     }
 }
+
+treeviewdelegate {
+    & > .indicator
+    {
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+
+        icon-name: "arrow-right-symbolic";
+        icon-width: var(--icon-size-small);
+        icon-height: var(--icon-size-small);
+
+        layout-alignment: item end center 0;
+    }
+    &.expanded > .indicator {
+        icon-name: "arrow-down-symbolic";
+    }
+}
+
 
 displayfield {
     color: var(--view-text-color);

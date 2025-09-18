@@ -60,6 +60,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/HorizontalHeaderView.qml
     style/SelectionRectangle.qml
     style/VerticalHeaderView.qml
+    style/TreeViewDelegate.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)
