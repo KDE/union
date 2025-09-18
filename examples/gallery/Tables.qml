@@ -15,7 +15,7 @@ Kirigami.Page {
     Kirigami.ColumnView.preferredWidth: Kirigami.Units.gridUnit * 25
     Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
     
-    Rectangle {
+    Item {
         anchors.fill: parent
 
         Controls.HorizontalHeaderView {
