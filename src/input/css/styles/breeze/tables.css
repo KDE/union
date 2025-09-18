@@ -3,6 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
  */
 
+
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
@@ -12,6 +13,8 @@ tableviewdelegate {
     inset: 0px;
     padding: var(--small-spacing);
     border-radius: 0px;
+    width: 100px;
+    height: 30px;
 
     &:hovered,
     &:active-focus {
@@ -45,8 +48,8 @@ editfield {
 
 verticalheaderview,
 horizontalheaderview {
-    border: 1px solid var(--window-border-color);
-    background-color: var(--window-background-alternate-color);
+    border: 1px solid var(--button-active-border-color);
+    background-color: var(--button-active-background-color);
     padding: var(--small-spacing);
     inset: var(--small-spacing);
     text-alignment-horizontal: center;
@@ -56,7 +59,7 @@ horizontalheaderview {
 }
 
 headerviewlabel {
-    color: var(--window-text-color);
+    color: var(--button-active-text-color);
     text-alignment-horizontal: center;
     text-alignment-vertical: center;
 }
