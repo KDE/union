@@ -86,7 +86,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
-            color: Union.Style.properties.text.color
+            color: Union.Style.properties.icon.color
         }
     }
 
@@ -107,7 +107,7 @@ T.SpinBox {
             width: Union.Style.properties.icon.width
             height: Union.Style.properties.icon.height
             name: Union.Style.properties.icon.name
-            color: Union.Style.properties.text.color
+            color: Union.Style.properties.icon.color
         }
     }
 
