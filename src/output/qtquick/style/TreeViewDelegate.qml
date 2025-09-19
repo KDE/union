@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -11,7 +10,17 @@ import org.kde.union.impl as Union
 T.TreeViewDelegate {
     id: control
     Union.Element.type: "TreeViewDelegate"
-    Union.Element.hints: control.expanded ? ["expanded"] : []
+    Union.Element.hints: {
+        let hints = [];
+        if (control.treeView.alternatingRows && control.row % 2) {
+            hints.push("alternatingRows");
+        }
+        if (control.expanded) {
+            hints.push("expanded");
+        }
+        return hints;
+    }
+
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -25,10 +34,10 @@ T.TreeViewDelegate {
     required property var model
     readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
-    indentation: indicator ? indicator.width : 12
+    indentation: Union.Style.properties.layout.spacing
 
-    implicitWidth: leftMargin + __contentIndent + implicitContentWidth + rightPadding + rightMargin
-    implicitHeight: Math.max(indicator ? indicator.height : 0, implicitContentHeight) * 1.25
+    implicitWidth: __contentIndent + Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)
 
     topPadding: contentItem ? (height - contentItem.implicitHeight) / 2 : Union.Style.properties.layout.padding.top
     leftPadding: !mirrored ? Union.Style.properties.layout.padding.left + __contentIndent : width - Union.Style.properties.layout.padding.left - __contentIndent - implicitContentWidth
@@ -40,20 +49,20 @@ T.TreeViewDelegate {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    highlighted: control.selected || control.current
-    || ((control.treeView.selectionBehavior === TableView.SelectRows
-    || control.treeView.selectionBehavior === TableView.SelectionDisabled)
-    && control.row === control.treeView.currentRow)
+    highlighted: control.selected || control.current || ((control.treeView.selectionBehavior === TableView.SelectRows || control.treeView.selectionBehavior === TableView.SelectionDisabled) && control.row === control.treeView.currentRow)
 
     indicator: Union.Icon {
-        Union.Element.hints: ["indicator"]
+        Union.Element.type: "Indicator"
+        readonly property real __indicatorIndent: control.leftMargin + (control.depth * control.indentation)
+        x: !control.mirrored ? __indicatorIndent : control.width - __indicatorIndent - width
+        y: (control.height - height) / 2
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
     }
 
-    background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {}
 
     contentItem: Label {
         Union.Element.type: "DisplayField"
@@ -68,10 +77,10 @@ T.TreeViewDelegate {
         height: parent.height
 
         readonly property int __role: {
-            let model = control.treeView.model
-            let index = control.treeView.index(row, column)
-            let editText = model.data(index, Qt.EditRole)
-            return editText !== undefined ? Qt.EditRole : Qt.DisplayRole
+            let model = control.treeView.model;
+            let index = control.treeView.index(row, column);
+            let editText = model.data(index, Qt.EditRole);
+            return editText !== undefined ? Qt.EditRole : Qt.DisplayRole;
         }
 
         TextField {
@@ -85,8 +94,8 @@ T.TreeViewDelegate {
         }
 
         TableView.onCommit: {
-            let index = TableView.view.index(row, column)
-            TableView.view.model.setData(index, textField.text, __role)
+            let index = TableView.view.index(row, column);
+            TableView.view.model.setData(index, textField.text, __role);
         }
 
         Component.onCompleted: textField.selectAll()

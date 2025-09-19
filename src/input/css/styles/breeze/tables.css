@@ -4,12 +4,15 @@
  */
 
 
-tableviewdelegate, treeviewdelegate {
+tableviewdelegate,
+treeviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
+
     .alternatingRows {
         background-color: var(--view-background-alternate-color);
     }
+
     inset: 0px;
     padding: var(--small-spacing);
     border-radius: 0px;
@@ -25,7 +28,7 @@ tableviewdelegate, treeviewdelegate {
     &:visual-focus {
         outline: 1px solid var(--focus-color);
     }
-    
+
     &:highlighted {
         color: var(--highlight-text-color);
         border: 1px solid var(--highlight-color);
@@ -34,30 +37,24 @@ tableviewdelegate, treeviewdelegate {
 }
 
 treeviewdelegate {
-
-    icon-alignment-horizontal: center;
-    icon-alignment-vertical: center;
-    text-alignment-horizontal: center;
-    text-alignment-vertical: center;
+    spacing: var(--icon-size-small);
+    padding: var(--icon-size-small);
 
     &:hovered,
     &:active-focus {
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
     }
+}
 
-    & > .indicator
-    {
-        width: var(--small-element-size);
-        height: var(--small-element-size);
+treeviewdelegate indicator {
+    width: var(--icon-size-small);
+    height: var(--icon-size-small);
+    icon-name: "arrow-right-symbolic";
+}
 
-        icon-name: "arrow-right-symbolic";
-        icon-width: var(--icon-size-small);
-        icon-height: var(--icon-size-small);
-    }
-    &.expanded > .indicator {
-        icon-name: "arrow-down-symbolic";
-    }
+treeviewdelegate.expanded indicator {
+    icon-name: "arrow-down-symbolic";
 }
 
 
@@ -106,8 +103,7 @@ selectionrectanglehandle {
     border: 1px solid var(--slider-border-color);
     border-radius: var(--small-element-size);
 
-    &:visual-focus
-    {
+    &:visual-focus {
         border-color: var(--highlight-color);
         outline: var(--focus-outline);
     }
