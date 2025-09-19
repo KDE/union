@@ -21,9 +21,17 @@ T.TreeViewDelegate {
         highlighted: control.highlighted
     }
 
+    required property int row
+    required property var model
+    readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
+
+    indentation: indicator ? indicator.width : 12
+
     implicitWidth: leftMargin + __contentIndent + implicitContentWidth + rightPadding + rightMargin
     implicitHeight: Math.max(indicator ? indicator.height : 0, implicitContentHeight) * 1.25
 
+    topPadding: contentItem ? (height - contentItem.implicitHeight) / 2 : Union.Style.properties.layout.padding.top
+    leftPadding: !mirrored ? Union.Style.properties.layout.padding.left + __contentIndent : width - Union.Style.properties.layout.padding.left - __contentIndent - implicitContentWidth
     rightPadding: Union.Style.properties.layout.padding.right
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
@@ -32,17 +40,10 @@ T.TreeViewDelegate {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    topPadding: contentItem ? (height - contentItem.implicitHeight) / 2 : Union.Style.properties.layout.padding.top
-    leftPadding: !mirrored ? Union.Style.properties.layout.padding.left + __contentIndent : width - Union.Style.properties.layout.padding.left - __contentIndent - implicitContentWidth
-
     highlighted: control.selected || control.current
     || ((control.treeView.selectionBehavior === TableView.SelectRows
     || control.treeView.selectionBehavior === TableView.SelectionDisabled)
     && control.row === control.treeView.currentRow)
-
-    required property int row
-    required property var model
-    readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
     indicator: Union.Icon {
         Union.Element.hints: ["indicator"]
