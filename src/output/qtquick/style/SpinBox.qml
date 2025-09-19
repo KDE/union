@@ -70,13 +70,15 @@ T.SpinBox {
     }
 
     up.indicator: Union.StyledRectangle {
+        id: upIndicator
+
         Union.Element.type: "Indicator"
         Union.Element.hints: ["increase"]
 
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
-            enabled: control.up?.enabled ?? true
+            enabled: upIndicator.enabled
         }
 
         Union.Icon {
@@ -89,13 +91,15 @@ T.SpinBox {
     }
 
     down.indicator: Union.StyledRectangle {
+        id: downIndicator
+
         Union.Element.type: "Indicator"
         Union.Element.hints: ["decrease"]
 
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
-            enabled: control.down?.enabled ?? true
+            enabled: downIndicator.enabled
         }
 
         Union.Icon {
