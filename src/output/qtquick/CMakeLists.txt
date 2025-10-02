@@ -12,7 +12,7 @@ ecm_add_qml_module(UnionQuickStyle
 
 
 # Workaround for QTBUG-139626
-if (${Qt6Core_VERSION} VERSION_EQUAL "6.9.2")
+if (${Qt6Core_VERSION} VERSION_GREATER_EQUAL "6.9.2")
     set_target_properties(UnionQuickStyle PROPERTIES
         QT_QMLCACHEGEN_ARGUMENTS "--only-bytecode"
     )
