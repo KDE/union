@@ -1,0 +1,72 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+
+tableviewdelegate {
+    color: var(--view-text-color);
+    background-color: var(--view-background-color);
+    .alternatingRows {
+        background-color: var(--view-background-alternate-color);
+    }
+    inset: 0px;
+    padding: var(--small-spacing);
+    width: 100px;
+    height: 30px;
+    border-radius: 0px;
+
+    &:hovered,
+    &:active-focus {
+        border: 1px solid var(--highlight-color);
+        background-color: transparent;
+    }
+
+    &:visual-focus {
+        outline: 1px solid var(--focus-color);
+    }
+
+    &:highlighted {
+        color: var(--highlight-text-color);
+        border: 1px solid var(--highlight-color);
+        background-color: var(--highlight-color);
+    }
+
+    .editing {
+        border: 1px solid var(--highlight-color);
+    }
+}
+
+headerview,
+headerviewdelegate {
+    border: 1px solid var(--button-active-border-color);
+    background-color: var(--button-active-background-color);
+    padding: var(--small-spacing);
+    inset: var(--small-spacing);
+    color: var(--button-active-text-color);
+    text-alignment-horizontal: center;
+    text-alignment-vertical: center;
+    width: var(--large-element-size);
+    height: var(--large-element-size);
+}
+
+selectionrectangle {
+    color: var(--highlight-color);
+    border: 1px solid var(--highlight-color);
+    border-radius: var(--corner-radius);
+    background-color: var(--highlight-color);
+}
+
+selectionrectanglehandle {
+    width: var(--small-element-size);
+    height: var(--small-element-size);
+    background-color: var(--slider-handle-background-color);
+    border: 1px solid var(--slider-border-color);
+    border-radius: var(--small-element-size);
+
+    &:visual-focus
+    {
+        border-color: var(--highlight-color);
+        outline: var(--focus-outline);
+    }
+}

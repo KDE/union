@@ -51,6 +51,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/SwitchDelegate.qml
     style/TabButton.qml
     style/TabBar.qml
+    style/TableViewDelegate.qml
     style/TextArea.qml
     style/TextField.qml
     style/ToolBar.qml
@@ -58,6 +59,9 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ToolTip.qml
     style/ToolSeparator.qml
     style/RangeSlider.qml
+    style/HorizontalHeaderView.qml
+    style/SelectionRectangle.qml
+    style/VerticalHeaderView.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)

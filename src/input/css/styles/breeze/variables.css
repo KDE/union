@@ -33,11 +33,13 @@
 
     --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
     --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
+    --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
     --window-border-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
 
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
+    --view-background-alternate-color: custom-color("kcolorscheme", "active", "view", "background", "alternate");
     --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
     --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
 
