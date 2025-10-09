@@ -11,7 +11,19 @@ import org.kde.union.impl as Union
 T.TreeViewDelegate {
     id: control
     Union.Element.type: "TreeViewDelegate"
-    Union.Element.hints: control.expanded ? ["expanded"] : []
+    Union.Element.hints: {
+        let hints = [];
+        if (control.treeView.alternatingRows && control.row % 2){
+            hints.push("alternatingRows");
+        }
+        if (control.expanded) {
+            hints.push("expanded");
+        }
+        if (control.editing){
+            hints.push("editing");
+        }
+        return hints;
+    }
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -45,7 +57,9 @@ T.TreeViewDelegate {
     readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
     indicator: Union.Icon {
-        Union.Element.hints: ["indicator"]
+        readonly property real __indicatorIndent: control.leftMargin + (control.depth * control.indentation)
+        x: !control.mirrored ? __indicatorIndent : control.width - __indicatorIndent - width
+        y: (control.height - height) / 2
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
@@ -54,12 +68,14 @@ T.TreeViewDelegate {
 
     background: Union.StyledRectangle { }
 
-    contentItem: Label {
-        Union.Element.type: "DisplayField"
+    contentItem: Text {
         clip: false
-        text: control.model.display
+        text: control.model.display ?? ""
         elide: Text.ElideRight
         visible: !control.editing
+        color: Union.Style.properties.text.color
+        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
 
     TableView.editDelegate: FocusScope {
@@ -75,7 +91,10 @@ T.TreeViewDelegate {
 
         TextField {
             id: textField
-            Union.Element.type: "EditField"
+            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            // Remove the TextField background, we want to use the Control background.
+            background: Item {}
             x: control.contentItem.x
             y: (parent.height - height) / 2
             width: control.contentItem.width

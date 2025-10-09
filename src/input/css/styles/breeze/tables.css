@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
  */
 
-
+treeviewdelegate,
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
@@ -35,6 +35,12 @@ tableviewdelegate {
     .editing {
         border: 1px solid var(--highlight-color);
     }
+}
+
+treeviewdelegate indicator {
+    color: var(--view-text-color);
+    icon-size: var(--icon-size-smallmedium);
+    icon-name: "arrow-down-symbolic";
 }
 
 headerview,
