@@ -25,5 +25,7 @@ protected:
     bool eventFilter(QObject *target, QEvent *event) override;
 
 private:
+    void syncColorSchemeColors();
+
     QuickStyle *m_style = nullptr;
 };
