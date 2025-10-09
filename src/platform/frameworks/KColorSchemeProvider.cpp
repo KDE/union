@@ -43,21 +43,21 @@ std::optional<KColorScheme::ColorSet> colorSetFromString(const QString &set)
 
 std::optional<KColorScheme::BackgroundRole> backgroundRoleFromString(const QString &role)
 {
-    if (role.compare(u"normal") == 0) {
+    if (role.compare(u"normal", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::NormalBackground;
-    } else if (role.compare(u"alternate") == 0) {
+    } else if (role.compare(u"alternate", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::AlternateBackground;
-    } else if (role.compare(u"active") == 0) {
+    } else if (role.compare(u"active", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::ActiveBackground;
-    } else if (role.compare(u"positive") == 0) {
+    } else if (role.compare(u"positive", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::PositiveBackground;
-    } else if (role.compare(u"neutral") == 0) {
+    } else if (role.compare(u"neutral", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::NeutralBackground;
-    } else if (role.compare(u"negative") == 0) {
+    } else if (role.compare(u"negative", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::NegativeBackground;
-    } else if (role.compare(u"link") == 0) {
+    } else if (role.compare(u"link", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::LinkBackground;
-    } else if (role.compare(u"visited") == 0) {
+    } else if (role.compare(u"visited", Qt::CaseInsensitive) == 0) {
         return KColorScheme::BackgroundRole::VisitedBackground;
     }
 
@@ -66,21 +66,21 @@ std::optional<KColorScheme::BackgroundRole> backgroundRoleFromString(const QStri
 
 std::optional<KColorScheme::ForegroundRole> foregroundRoleFromString(const QString &role)
 {
-    if (role.compare(u"text") == 0) {
+    if (role.compare(u"text", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::NormalText;
-    } else if (role.compare(u"active") == 0) {
+    } else if (role.compare(u"active", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::ActiveText;
-    } else if (role.compare(u"inactive") == 0) {
+    } else if (role.compare(u"inactive", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::InactiveText;
-    } else if (role.compare(u"positive") == 0) {
+    } else if (role.compare(u"positive", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::PositiveText;
-    } else if (role.compare(u"neutral") == 0) {
+    } else if (role.compare(u"neutral", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::NeutralText;
-    } else if (role.compare(u"negative") == 0) {
+    } else if (role.compare(u"negative", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::NegativeText;
-    } else if (role.compare(u"link") == 0) {
+    } else if (role.compare(u"link", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::LinkText;
-    } else if (role.compare(u"visited") == 0) {
+    } else if (role.compare(u"visited", Qt::CaseInsensitive) == 0) {
         return KColorScheme::ForegroundRole::VisitedText;
     }
 
@@ -89,9 +89,9 @@ std::optional<KColorScheme::ForegroundRole> foregroundRoleFromString(const QStri
 
 std::optional<KColorScheme::DecorationRole> decorationRoleFromString(const QString &role)
 {
-    if (role.compare(u"hover") == 0) {
+    if (role.compare(u"hover", Qt::CaseInsensitive) == 0) {
         return KColorScheme::DecorationRole::HoverColor;
-    } else if (role.compare(u"focus") == 0) {
+    } else if (role.compare(u"focus", Qt::CaseInsensitive) == 0) {
         return KColorScheme::DecorationRole::FocusColor;
     }
 
