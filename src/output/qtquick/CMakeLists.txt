@@ -34,6 +34,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/DialogButtonBox.qml
     style/Drawer.qml
     style/Frame.qml
+    style/GroupBox.qml
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
