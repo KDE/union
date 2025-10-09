@@ -53,6 +53,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ScrollView.qml
     style/Slider.qml
     style/SpinBox.qml
+    style/SplitView.qml
     style/SwipeDelegate.qml
     style/Switch.qml
     style/SwitchDelegate.qml
