@@ -19,9 +19,7 @@ T.ToolSeparator {
     Union.Element.states {
         enabled: control.enabled
     }
-    Union.Element.attributes: {
-        "orientation": horizontal ? "horizontal" : "vertical"
-    }
+    Union.Element.hints: horizontal ? ["horizontal"] : ["vertical"]
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -33,5 +31,5 @@ T.ToolSeparator {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    contentItem: Union.StyledRectangle { }
+    background: Union.StyledRectangle { }
 }
