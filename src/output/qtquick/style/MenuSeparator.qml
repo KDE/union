@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -31,5 +30,5 @@ T.MenuSeparator {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    contentItem: Union.StyledRectangle { }
+    background: Union.StyledRectangle { }
 }
