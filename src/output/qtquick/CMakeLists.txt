@@ -19,12 +19,17 @@ if (${Qt6Core_VERSION} VERSION_GREATER_EQUAL "6.9.2")
 endif()
 
 ecm_target_qml_sources(UnionQuickStyle SOURCES
+    style/AbstractButton.qml
+    style/Action.qml
+    style/ActionGroup.qml
     style/ApplicationWindow.qml
     style/BusyIndicator.qml
     style/Button.qml
     style/CheckBox.qml
     style/CheckDelegate.qml
     style/ComboBox.qml
+    style/Container.qml
+    style/Control.qml
     style/Dialog.qml
     style/DialogButtonBox.qml
     style/Drawer.qml
