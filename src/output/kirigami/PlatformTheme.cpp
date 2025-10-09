@@ -38,7 +38,7 @@ void PlatformTheme::syncColors()
         if (!m_style) {
             return;
         }
-        connect(m_style, &QuickStyle::updated, this, &PlatformTheme::syncColors);
+        m_style->installEventFilter(this);
     }
 
     auto query = m_style->query();
@@ -84,4 +84,14 @@ bool PlatformTheme::event(QEvent *event)
     }
 
     return Kirigami::Platform::PlatformTheme::event(event);
+}
+
+bool PlatformTheme::eventFilter(QObject *target, QEvent *event)
+{
+    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+        syncColors();
+        return false;
+    }
+
+    return Kirigami::Platform::PlatformTheme::eventFilter(target, event);
 }

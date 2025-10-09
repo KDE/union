@@ -22,6 +22,7 @@ public:
 
 protected:
     bool event(QEvent *event) override;
+    bool eventFilter(QObject *target, QEvent *event) override;
 
 private:
     QuickStyle *m_style = nullptr;
