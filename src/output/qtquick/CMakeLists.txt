@@ -35,6 +35,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Drawer.qml
     style/Frame.qml
     style/GroupBox.qml
+    style/HorizontalHeaderView.qml
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
@@ -48,27 +49,26 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ProgressBar.qml
     style/RadioButton.qml
     style/RadioDelegate.qml
+    style/RangeSlider.qml
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
+    style/SelectionRectangle.qml
     style/Slider.qml
     style/SpinBox.qml
     style/SplitView.qml
     style/SwipeDelegate.qml
     style/Switch.qml
     style/SwitchDelegate.qml
-    style/TabButton.qml
     style/TabBar.qml
+    style/TabButton.qml
     style/TableViewDelegate.qml
     style/TextArea.qml
     style/TextField.qml
     style/ToolBar.qml
     style/ToolButton.qml
-    style/ToolTip.qml
     style/ToolSeparator.qml
-    style/RangeSlider.qml
-    style/HorizontalHeaderView.qml
-    style/SelectionRectangle.qml
+    style/ToolTip.qml
     style/VerticalHeaderView.qml
 )
 
