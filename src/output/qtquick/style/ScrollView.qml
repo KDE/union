@@ -11,9 +11,9 @@ T.ScrollView {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            contentWidth + leftPadding + rightPadding)
+                            implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             contentHeight + topPadding + bottomPadding)
+                             implicitContentHeight + topPadding + bottomPadding)
 
     Union.Element.type: "ScrollView"
     Union.Element.states {
@@ -22,11 +22,21 @@ T.ScrollView {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
+    Union.Element.hints: {
+        let result = []
+        if (ScrollBar.vertical.visible) {
+            result.push("vertical-scroll")
+        }
+        if (ScrollBar.horizontal.visible) {
+            result.push("horizontal-scroll")
+        }
+        return result
+    }
 
-    leftPadding: (Union.Style.properties.layout.padding.left ?? 0) + (control.mirrored && ScrollBar.vertical?.visible ? ScrollBar.vertical.width : 0)
-    rightPadding: (Union.Style.properties.layout.padding.right ?? 0) + (!control.mirrored && ScrollBar.vertical?.visible ? ScrollBar.vertical.width : 0)
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: (Union.Style.properties.layout.padding.bottom ?? 0) + (ScrollBar.horizontal?.visible ? ScrollBar.horizontal?.height : 0)
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
@@ -35,7 +45,7 @@ T.ScrollView {
 
     ScrollBar.vertical: ScrollBar {
         parent: control
-        x: control.mirrored ? 0 : control.width - width
+        x: control.mirrored ? control.leftPadding : control.width - control.rightPadding
         y: control.topPadding
         height: control.availableHeight
         active: control.ScrollBar.horizontal.active
@@ -44,7 +54,7 @@ T.ScrollView {
     ScrollBar.horizontal: ScrollBar {
         parent: control
         x: control.leftPadding
-        y: control.height - height
+        y: control.height - control.bottomPadding
         width: control.availableWidth
         active: control.ScrollBar.vertical.active
     }
