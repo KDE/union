@@ -16,6 +16,12 @@ T.Frame {
                              implicitContentHeight + topPadding + bottomPadding)
 
     Union.Element.type: "Frame"
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.visualFocus
+        enabled: control.enabled
+    }
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

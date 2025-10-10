@@ -11,6 +11,12 @@ T.GroupBox {
     id: control
 
     Union.Element.type: "GroupBox"
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.visualFocus
+        enabled: control.enabled
+    }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding,
