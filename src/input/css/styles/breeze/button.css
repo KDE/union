@@ -50,13 +50,6 @@ combobox
     border: var(--button-border);
     background-color: var(--button-active-background-color);
 
-    &.flat
-    {
-        border-color: transparent;
-        background-color: transparent;
-        box-shadow: 0px 0px 0px 0px transparent;
-    }
-
     &:hovered
     {
         border-color: var(--highlight-color);
@@ -75,8 +68,8 @@ combobox
 
     &:disabled
     {
-        background-color: var(--button-disabled-background-color);
         color: var(--button-disabled-text-color);
+        background-color: var(--button-disabled-background-color);
         border-color: var(--button-disabled-border-color);
         box-shadow: 0px 0px 0px 0px transparent;
     }
@@ -106,12 +99,26 @@ button:checked
     box-shadow: 0px 0px 0px 0px transparent;
 }
 
-toolbutton
+toolbutton,
+button.flat,
+combobox.flat
 {
     border-color: transparent;
     background-color: transparent;
     box-shadow: 0px 0px 0px 0px transparent;
 
+    &:hovered {
+        border-color: var(--highlight-color);
+    }
+
+    &:disabled {
+        border-color: transparent;
+        background-color: transparent;
+    }
+}
+
+toolbutton
+{
     icon-size: var(--icon-size-smallmedium);
 }
 
