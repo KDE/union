@@ -5,15 +5,16 @@
 
 import QtQuick
 import QtQuick.Templates as T
+
 import org.kde.union.impl as Union
 
 T.Pane {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            contentWidth + leftPadding + rightPadding)
+                            implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             contentHeight + topPadding + bottomPadding)
+                             implicitContentHeight + topPadding + bottomPadding)
 
     Union.Element.type: "Pane"
     Union.Element.states {
