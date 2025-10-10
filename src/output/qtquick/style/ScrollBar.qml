@@ -41,8 +41,13 @@ T.ScrollBar {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    visible: (size > 0 && size < 1 && policy === T.ScrollBar.AsNeeded) || policy === T.ScrollBar.AlwaysOn
-    minimumSize: orientation === Qt.Horizontal ? height / width : width / height
+    minimumSize: horizontal ? height / width : width / height
+
+    Binding on visible {
+        delayed: true
+        restoreMode: Binding.RestoreBindingOrValue
+        value: control.size < 1.0 && control.size > 0 && control.policy !== T.ScrollBar.AlwaysOff && control.parent !== null
+    }
 
     contentItem: Union.StyledRectangle {
         Union.Element.type: "Handle"
