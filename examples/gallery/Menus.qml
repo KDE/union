@@ -57,6 +57,24 @@ Kirigami.Page {
             }
         }
 
+        Controls.ToolBar {
+            Layout.fillWidth: true
+
+            RowLayout {
+                Controls.ToolButton {
+                    text: "ToolButton"
+                }
+
+                Controls.ToolSeparator {
+                }
+
+                Controls.ToolButton {
+                    text: "Disabled ToolButton"
+                    enabled: false
+                }
+            }
+        }
+
         Item {
             Layout.fillHeight: true
         }
