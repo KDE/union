@@ -38,4 +38,12 @@ drawer
 scrollview {
     background-color: var(--view-background-color);
     color: var(--view-text-color);
+
+    &.vertical-scroll {
+        padding-right: var(--scrollbar-size);
+    }
+
+    &.horizontal-scroll {
+        padding-bottom: var(--scrollbar-size);
+    }
 }
