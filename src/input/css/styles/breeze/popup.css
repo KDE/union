@@ -58,6 +58,13 @@ menuitem
     }
 }
 
+menuseparator {
+    inset: 0px var(--small-spacing);
+    width: var(--large-element-size);
+    height: 1px;
+    background-color: var(--window-border-color);
+}
+
 menubar, menubaritem
 {
     width: var(--medium-element-size);

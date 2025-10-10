@@ -149,3 +149,19 @@ popup.combobox
 {
     background-color: var(--view-background-color);
 }
+
+toolseparator {
+    background-color: var(--button-active-border-color);
+
+    .horizontal {
+        width: var(--large-element-size);
+        height: 1px;
+        inset: 0px var(--small-spacing);
+    }
+
+    .vertical {
+        width: 1px;
+        height: var(--large-element-size);
+        inset: var(--small-spacing) 0px;
+    }
+}
