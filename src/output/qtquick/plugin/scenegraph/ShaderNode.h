@@ -88,6 +88,16 @@ public:
      */
     void setTextureChannels(unsigned char count);
 
+    void setColorChannels(unsigned char count);
+
+    void setVertexCount(int count);
+
+    using UpdateVertexDataCallback = std::function<void(float *, int)>;
+
+    void setUpdateVertexDataCallback(const UpdateVertexDataCallback &callback);
+
+    // void setDataChannels(unsigned char count);
+
     /*!
      * Set the texture for a channel to an image.
      *
@@ -142,6 +152,10 @@ private:
     QVarLengthArray<QRectF, 16> m_uvs;
     bool m_geometryUpdateNeeded = true;
     unsigned char m_textureChannels = 1;
+    unsigned char m_colorChannels = 0;
+    int m_vertexCount = 4;
+
+    UpdateVertexDataCallback m_updateVertexDataCallback;
 
     QSGMaterialType *m_materialVariant = nullptr;
     ShaderMaterial *m_shaderMaterial = nullptr;

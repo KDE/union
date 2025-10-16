@@ -39,4 +39,12 @@ private:
     QSizeF minimumSize(const Union::Properties::StyleProperty &background);
 
     QuickStyle *m_style = nullptr;
+
+    struct Vertex {
+        QVector2D position;
+        // QVector2D texture;
+        QColor border;
+        QColor outline;
+    };
+    std::array<Vertex, 9> m_vertices;
 };

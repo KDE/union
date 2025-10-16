@@ -37,6 +37,10 @@ ShaderNode::~ShaderNode() noexcept
             texture.provider->disconnect(texture.providerConnection);
         }
     }
+
+    setGeometry(nullptr);
+    delete[] m_attributeSet->attributes;
+    delete m_attributeSet;
 }
 
 void ShaderNode::preprocess()
@@ -146,6 +150,39 @@ void ShaderNode::setTextureChannels(unsigned char count)
     m_geometryUpdateNeeded = true;
 }
 
+void ShaderNode::setColorChannels(unsigned char count)
+{
+    if (count == m_colorChannels) {
+        return;
+    }
+
+    m_colorChannels = count;
+
+    if (geometry()) {
+        setGeometry(nullptr);
+        delete[] m_attributeSet->attributes;
+        delete m_attributeSet;
+    }
+
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::setVertexCount(int count)
+{
+    if (count == m_vertexCount) {
+        return;
+    }
+
+    m_vertexCount = count;
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::setUpdateVertexDataCallback(const UpdateVertexDataCallback &callback)
+{
+    m_updateVertexDataCallback = callback;
+    m_geometryUpdateNeeded = true;
+}
+
 void ShaderNode::setTexture(TextureChannel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
 {
     if (!m_shaderMaterial) {
@@ -214,33 +251,56 @@ void ShaderNode::setTexture(TextureChannel channel, QSGTextureProvider *provider
 void ShaderNode::update()
 {
     if (m_geometryUpdateNeeded) {
-        const auto attributeCount = 1 + m_textureChannels;
+        const auto attributeCount = 1 + m_textureChannels + m_colorChannels;
 
         if (!geometry()) {
             QSGGeometry::Attribute *attributes = new QSGGeometry::Attribute[attributeCount];
             attributes[0] = QSGGeometry::Attribute::createWithAttributeType(0, 2, QSGGeometry::FloatType, QSGGeometry::PositionAttribute);
 
+            int start = 1;
+
             for (int i = 0; i < m_textureChannels; ++i) {
-                attributes[i + 1] = QSGGeometry::Attribute::createWithAttributeType(i + 1, 2, QSGGeometry::FloatType, QSGGeometry::TexCoordAttribute);
+                attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 2, QSGGeometry::FloatType, QSGGeometry::TexCoordAttribute);
             }
 
-            m_attributeSet =
-                new QSGGeometry::AttributeSet{.count = attributeCount, .stride = int(sizeof(float)) * 2 * attributeCount, .attributes = attributes};
+            start += m_textureChannels;
 
-            setGeometry(new QSGGeometry{*m_attributeSet, Vertices.size()});
+            for (int i = 0; i < m_textureChannels; ++i) {
+                attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 4, QSGGeometry::FloatType, QSGGeometry::ColorAttribute);
+            }
+
+            int stride = sizeof(float) * 2 * (m_textureChannels + 1) + sizeof(float) * 4 * m_colorChannels;
+            m_attributeSet = new QSGGeometry::AttributeSet{.count = attributeCount, .stride = stride, .attributes = attributes};
+
+            setGeometry(new QSGGeometry{*m_attributeSet, m_vertexCount});
+        }
+
+        if (geometry()->vertexCount() != m_vertexCount) {
+            geometry()->allocate(m_vertexCount);
         }
 
         auto vertices = static_cast<float *>(geometry()->vertexData());
 
-        auto index = 0;
-        for (auto layout : Vertices) {
-            vertices[index++] = (m_rect.*layout.x)();
-            vertices[index++] = (m_rect.*layout.y)();
+        if (m_updateVertexDataCallback) {
+            m_updateVertexDataCallback(vertices, m_vertexCount);
+        } else {
+            auto index = 0;
+            for (auto layout : Vertices) {
+                vertices[index++] = (m_rect.*layout.x)();
+                vertices[index++] = (m_rect.*layout.y)();
 
-            for (int channel = 0; channel < m_textureChannels; ++channel) {
-                auto uv = uvs(channel);
-                vertices[index++] = (uv.*layout.x)();
-                vertices[index++] = (uv.*layout.y)();
+                for (int channel = 0; channel < m_textureChannels; ++channel) {
+                    auto uv = uvs(channel);
+                    vertices[index++] = (uv.*layout.x)();
+                    vertices[index++] = (uv.*layout.y)();
+                }
+
+                for (int channel = 0; channel < m_colorChannels; ++channel) {
+                    vertices[index++] = 0.0;
+                    vertices[index++] = 0.0;
+                    vertices[index++] = 0.0;
+                    vertices[index++] = 0.0;
+                }
             }
         }
 

@@ -37,10 +37,31 @@ inline float adjustmentForShadowOutline(float shadowSize, float shadowBlur, cons
     return std::max(shadowAdjustment, maxOutline);
 }
 
+constexpr std::array<int, 24> Indices = {
+    0, 3, 1, //
+    3, 1, 4, //
+    1, 5, 4, //
+    1, 2, 5, //
+    3, 7, 6, //
+    3, 4, 7, //
+    4, 5, 7, //
+    5, 8, 7, //
+};
+
 StyledRectangle::StyledRectangle(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents);
+
+    m_vertices[0].position = QVector2D{0.0, 0.0};
+    m_vertices[1].position = QVector2D{0.5, 0.0};
+    m_vertices[2].position = QVector2D{1.0, 0.0};
+    m_vertices[3].position = QVector2D{0.0, 0.5};
+    m_vertices[4].position = QVector2D{0.5, 0.5};
+    m_vertices[5].position = QVector2D{1.0, 0.5};
+    m_vertices[6].position = QVector2D{0.0, 1.0};
+    m_vertices[7].position = QVector2D{0.5, 1.0};
+    m_vertices[8].position = QVector2D{1.0, 1.0};
 }
 
 void StyledRectangle::componentComplete()
@@ -183,6 +204,29 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     }
 
     auto shaderNode = static_cast<ShaderNode *>(node);
+    shaderNode->setUpdateVertexDataCallback([this](float *data, int count) {
+        auto rect = boundingRect();
+
+        for (int i = 0; i < count; ++i) {
+            auto vertex = m_vertices[Indices[i]];
+
+            *data++ = vertex.position.x() * rect.width();
+            *data++ = vertex.position.y() * rect.height();
+
+            // *data++ = vertex.position.x();
+            // *data++ = vertex.position.y();
+
+            *data++ = vertex.border.redF();
+            *data++ = vertex.border.greenF();
+            *data++ = vertex.border.blueF();
+            *data++ = vertex.border.alphaF();
+
+            *data++ = vertex.outline.redF();
+            *data++ = vertex.outline.greenF();
+            *data++ = vertex.outline.blueF();
+            *data++ = vertex.outline.alphaF();
+        }
+    });
 
     auto shaderName = u"styledrectangle"_s;
 
@@ -206,10 +250,12 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
 
     shaderNode->setShader(shaderName);
     shaderNode->setUniformBufferSize(sizeof(float) * 52);
+    shaderNode->setVertexCount(24);
+    // shaderNode->setTextureChannels(1);
+    shaderNode->setColorChannels(2);
 
-    if (image.has_value()) {
-        shaderNode->setTextureChannels(1);
-    }
+    // if (image.has_value()) {
+    // }
 
     auto rect = boundingRect();
 
