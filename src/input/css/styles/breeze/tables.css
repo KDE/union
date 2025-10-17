@@ -7,6 +7,7 @@ treeviewdelegate,
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
+    spacing: var(--small-spacing);
 
     .alternatingRows {
         background-color: var(--view-background-alternate-color);
