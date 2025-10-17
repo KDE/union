@@ -33,9 +33,12 @@ T.TreeViewDelegate {
         highlighted: control.highlighted
     }
 
-    implicitWidth: leftMargin + __contentIndent + implicitContentWidth + rightPadding + rightMargin
-    implicitHeight: Math.max(indicator ? indicator.height : 0, implicitContentHeight) * 1.25
+    required property var model
+    required property int row
+    readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
+    implicitWidth: leftMargin + leftPadding + __contentIndent + implicitContentWidth + rightPadding + rightMargin
+    implicitHeight: Math.max(indicator ? indicator.height : 0, implicitContentHeight) + topPadding + bottomPadding
     rightPadding: Union.Style.properties.layout.padding.right
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
@@ -52,11 +55,9 @@ T.TreeViewDelegate {
     || control.treeView.selectionBehavior === TableView.SelectionDisabled)
     && control.row === control.treeView.currentRow)
 
-    required property int row
-    required property var model
-    readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
     indicator: Union.Icon {
+        Union.Element.type: "Indicator"
         readonly property real __indicatorIndent: control.leftMargin + (control.depth * control.indentation)
         x: !control.mirrored ? __indicatorIndent : control.width - __indicatorIndent - width
         y: (control.height - height) / 2
