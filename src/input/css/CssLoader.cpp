@@ -58,15 +58,31 @@ Color to_color(const cssparser::Color::Color &color)
         std::ranges::transform(value.arguments, std::back_inserter(arguments), QString::fromStdString);
         return Color::custom(QString::fromStdString(value.source), arguments);
     }
-    case cssparser::Color::ColorType::Mix: {
-        auto value = std::get<cssparser::Color::MixedColor>(color.data);
-        if (!value.first || !value.second) {
-            return Color{};
-        }
+    case cssparser::Color::ColorType::Modified: {
+        auto modifiedColor = std::get<cssparser::Color::ModifiedColor>(color.data);
 
-        auto first = to_color(*value.first);
-        auto second = to_color(*value.second);
-        return Color::mix(first, second, value.amount);
+        switch (modifiedColor.operation) {
+        case cssparser::Color::OperationType::Add: {
+            auto other = std::get<std::shared_ptr<cssparser::Color::Color>>(modifiedColor.data);
+            return Color::add(to_color(*modifiedColor.color), to_color(*other));
+        }
+        case cssparser::Color::OperationType::Subtract: {
+            auto other = std::get<std::shared_ptr<cssparser::Color::Color>>(modifiedColor.data);
+            return Color::subtract(to_color(*modifiedColor.color), to_color(*other));
+        }
+        case cssparser::Color::OperationType::Multiply: {
+            auto other = std::get<std::shared_ptr<cssparser::Color::Color>>(modifiedColor.data);
+            return Color::multiply(to_color(*modifiedColor.color), to_color(*other));
+        }
+        case cssparser::Color::OperationType::Set: {
+            auto data = std::get<cssparser::Color::SetOperationData>(modifiedColor.data);
+            return Color::set(to_color(*modifiedColor.color), data.r, data.g, data.b, data.a);
+        }
+        case cssparser::Color::OperationType::Mix: {
+            auto data = std::get<cssparser::Color::MixOperationData>(modifiedColor.data);
+            return Color::mix(to_color(*modifiedColor.color), to_color(*data.other), data.amount);
+        }
+        }
     }
     }
 
