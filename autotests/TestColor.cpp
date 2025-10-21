@@ -58,7 +58,7 @@ private Q_SLOTS:
 
         auto mix = Color::mix(rgba, custom, 0.5);
         QVERIFY(mix.isValid());
-        QCOMPARE(mix.type(), ColorData::Type::Mix);
+        QCOMPARE(mix.type(), ColorData::Type::MixOperation);
     }
 
     void testCustom()
@@ -72,6 +72,61 @@ private Q_SLOTS:
         QCOMPARE(rgba.red(), 255);
         QCOMPARE(rgba.green(), 0);
         QCOMPARE(rgba.blue(), 0);
+        QCOMPARE(rgba.alpha(), 255);
+    }
+
+    void testAdd()
+    {
+        auto color = Color::rgba(127, 127, 127, 127);
+        auto other = Color::rgba(100, 100, 100, 100);
+        auto add = Color::add(color, other);
+
+        auto rgba = add.toRgba();
+        QVERIFY(rgba.isValid());
+        QCOMPARE(rgba.red(), 227);
+        QCOMPARE(rgba.green(), 227);
+        QCOMPARE(rgba.blue(), 227);
+        QCOMPARE(rgba.alpha(), 227);
+    }
+
+    void testSubtract()
+    {
+        auto color = Color::rgba(127, 127, 127, 127);
+        auto other = Color::rgba(100, 100, 100, 100);
+        auto sub = Color::subtract(color, other);
+
+        auto rgba = sub.toRgba();
+        QVERIFY(rgba.isValid());
+        QCOMPARE(rgba.red(), 27);
+        QCOMPARE(rgba.green(), 27);
+        QCOMPARE(rgba.blue(), 27);
+        QCOMPARE(rgba.alpha(), 27);
+    }
+
+    void testMultiply()
+    {
+        auto color = Color::rgba(127, 127, 127, 127);
+        auto other = Color::rgba(127, 127, 127, 127);
+        auto mul = Color::multiply(color, other);
+
+        auto rgba = mul.toRgba();
+        QVERIFY(rgba.isValid());
+        QCOMPARE(rgba.red(), 63);
+        QCOMPARE(rgba.green(), 63);
+        QCOMPARE(rgba.blue(), 63);
+        QCOMPARE(rgba.alpha(), 63);
+    }
+
+    void testSet()
+    {
+        auto color = Color::rgba(127, 127, 127, 127);
+        auto set = Color::set(color, std::nullopt, 255, std::nullopt, 255);
+
+        auto rgba = set.toRgba();
+        QVERIFY(rgba.isValid());
+        QCOMPARE(rgba.red(), 127);
+        QCOMPARE(rgba.green(), 255);
+        QCOMPARE(rgba.blue(), 127);
         QCOMPARE(rgba.alpha(), 255);
     }
 

@@ -21,7 +21,11 @@ struct ColorData : public QSharedData {
         Empty,
         RGBA,
         Custom,
-        Mix,
+        AddOperation,
+        SubtractOperation,
+        MultiplyOperation,
+        SetOperation,
+        MixOperation,
     };
 
     ColorData(Type _type)
@@ -134,6 +138,31 @@ public:
      * specified ColorProvider.
      */
     static Color custom(const QString &source, const QStringList &arguments);
+    /*!
+     * Return a new add color.
+     *
+     * Add colors represents the addition of color \p other to \p color.
+     */
+    static Color add(const Color &color, const Color &other);
+    /*!
+     * Return a new subtract color.
+     *
+     * Subtract colors represents the subtraction of color \p other from \p color.
+     */
+    static Color subtract(const Color &color, const Color &other);
+    /*!
+     * Return a new multiply color.
+     *
+     * Multiply colors represents the multiplication of color \p color by \p other.
+     */
+    static Color multiply(const Color &color, const Color &other);
+    /*!
+     * Return a new set color.
+     *
+     * Set colors represents a color operation where the values of certain
+     * components of color \p color are replaced with different values.
+     */
+    static Color set(const Color &color, std::optional<uint8_t> r, std::optional<uint8_t> g, std::optional<uint8_t> b, std::optional<uint8_t> a);
     /*!
      * Return a new mix color.
      *

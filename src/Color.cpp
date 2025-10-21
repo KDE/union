@@ -109,51 +109,207 @@ struct CustomData : ColorData {
     inline static QHash<QString, ColorProvider *> s_knownProviders;
 };
 
-struct MixData : ColorData {
-    MixData(const Color &_first, const Color &_second, qreal _amount)
-        : ColorData(Type::Mix)
-        , first(_first)
-        , second(_second)
-        , amount(_amount)
+struct ColorOperationData : ColorData {
+    ColorOperationData(ColorData::Type type, const Color &_color, const Color &_other)
+        : ColorData(type)
+        , color(_color)
+        , other(_other)
     {
     }
 
-    MixData(const MixData &other)
-        : ColorData(other)
+    ColorOperationData(const ColorOperationData &_other)
+        : ColorData(_other)
     {
-        first = other.first;
-        second = other.second;
-        amount = other.amount;
+        color = _other.color;
+        other = _other.other;
+    }
+
+    inline bool equals(const ColorData *_other) const override
+    {
+        auto otherData = static_cast<const ColorOperationData *>(_other);
+        return color == otherData->color && other == otherData->other;
+    }
+
+    Color color;
+    Color other;
+};
+
+struct AddOperationData : ColorOperationData {
+    AddOperationData(const Color &_color, const Color &_other)
+        : ColorOperationData(Type::AddOperation, _color, _other)
+    {
     }
 
     inline ColorData *toRgba() const override
     {
-        auto firstRgba = first.toRgba();
-        auto secondRgba = second.toRgba();
-
-        auto invAmount = 1.0 - amount;
+        auto colorRgba = color.toRgba();
+        auto otherRgba = other.toRgba();
 
         return new RgbaData{
-            uint8_t(firstRgba.red() * invAmount + secondRgba.red() * amount),
-            uint8_t(firstRgba.green() * invAmount + secondRgba.green() * amount),
-            uint8_t(firstRgba.blue() * invAmount + secondRgba.blue() * amount),
-            uint8_t(firstRgba.alpha() * invAmount + secondRgba.alpha() * amount),
+            uint8_t(std::clamp(colorRgba.red() + otherRgba.red(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.green() + otherRgba.green(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.blue() + otherRgba.blue(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.alpha() + otherRgba.alpha(), 0, 255)),
         };
     }
 
     inline QString toString() const override
     {
-        return u"Mix, first: %1, second: %2, amount: %3"_s.arg(first.toString(), second.toString()).arg(amount);
+        return u"Add, color: %1, other: %2"_s.arg(color.toString(), other.toString());
     }
+};
 
-    inline bool equals(const ColorData *other) const override
+struct SubtractOperationData : ColorOperationData {
+    SubtractOperationData(const Color &_color, const Color &_other)
+        : ColorOperationData(Type::SubtractOperation, _color, _other)
     {
-        auto otherMix = static_cast<const MixData *>(other);
-        return first == otherMix->first && second == otherMix->second && qFuzzyCompare(amount, otherMix->amount);
     }
 
-    Color first;
-    Color second;
+    inline ColorData *toRgba() const override
+    {
+        auto colorRgba = color.toRgba();
+        auto otherRgba = other.toRgba();
+
+        return new RgbaData{
+            uint8_t(std::clamp(colorRgba.red() - otherRgba.red(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.green() - otherRgba.green(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.blue() - otherRgba.blue(), 0, 255)),
+            uint8_t(std::clamp(colorRgba.alpha() - otherRgba.alpha(), 0, 255)),
+        };
+    }
+
+    inline QString toString() const override
+    {
+        return u"Subtract, color: %1, other: %2"_s.arg(color.toString(), other.toString());
+    }
+};
+
+struct MultiplyOperationData : ColorOperationData {
+    MultiplyOperationData(const Color &_color, const Color &_other)
+        : ColorOperationData(Type::MultiplyOperation, _color, _other)
+    {
+    }
+
+    inline ColorData *toRgba() const override
+    {
+        auto colorRgba = color.toRgba();
+        auto otherRgba = other.toRgba();
+
+        return new RgbaData{
+            uint8_t(std::clamp(int(((colorRgba.red() / 255.0) * (otherRgba.red() / 255.0)) * 255.0), 0, 255)),
+            uint8_t(std::clamp(int(((colorRgba.green() / 255.0) * (otherRgba.green() / 255.0)) * 255.0), 0, 255)),
+            uint8_t(std::clamp(int(((colorRgba.blue() / 255.0) * (otherRgba.blue() / 255.0)) * 255.0), 0, 255)),
+            uint8_t(std::clamp(int(((colorRgba.alpha() / 255.0) * (otherRgba.alpha() / 255.0)) * 255.0), 0, 255)),
+        };
+    }
+
+    inline QString toString() const override
+    {
+        return u"Multiply, color: %1, other: %2"_s.arg(color.toString(), other.toString());
+    }
+};
+
+struct SetOperationData : ColorData {
+    SetOperationData(const Color &_color, std::optional<uint8_t> _r, std::optional<uint8_t> _g, std::optional<uint8_t> _b, std::optional<uint8_t> _a)
+        : ColorData(Type::SetOperation)
+        , color(_color)
+        , r(_r)
+        , g(_g)
+        , b(_b)
+        , a(_a)
+    {
+    }
+
+    SetOperationData(const SetOperationData &other)
+        : ColorData(other)
+    {
+        color = other.color;
+        r = other.r;
+        g = other.g;
+        b = other.b;
+        a = other.a;
+    }
+
+    ColorData *toRgba() const override
+    {
+        auto colorRgba = color.toRgba();
+
+        return new RgbaData{
+            r.value_or(colorRgba.red()),
+            g.value_or(colorRgba.green()),
+            b.value_or(colorRgba.blue()),
+            a.value_or(colorRgba.alpha()),
+        };
+    }
+
+    QString toString() const override
+    {
+        return u"Set, color: %1, r: %2, g: %3, b: %4, a: %5"_s //
+            .arg(color.toString())
+            .arg(r ? QString::number(r.value()) : u"None"_s)
+            .arg(g ? QString::number(g.value()) : u"None"_s)
+            .arg(b ? QString::number(b.value()) : u"None"_s)
+            .arg(a ? QString::number(a.value()) : u"None"_s);
+    }
+
+    bool equals(const ColorData *other) const override
+    {
+        auto otherData = static_cast<const SetOperationData *>(other);
+        return color == otherData->color && r == otherData->r && g == otherData->g && b == otherData->b && a == otherData->a;
+    }
+
+    Color color;
+    std::optional<uint8_t> r;
+    std::optional<uint8_t> g;
+    std::optional<uint8_t> b;
+    std::optional<uint8_t> a;
+};
+
+struct MixOperationData : ColorData {
+    MixOperationData(const Color &_color, const Color &_other, qreal _amount)
+        : ColorData(Type::MixOperation)
+        , color(_color)
+        , other(_other)
+        , amount(_amount)
+    {
+    }
+
+    MixOperationData(const MixOperationData &_other)
+        : ColorData(_other)
+    {
+        color = _other.color;
+        other = _other.other;
+        amount = _other.amount;
+    }
+
+    inline ColorData *toRgba() const override
+    {
+        auto colorRgba = color.toRgba();
+        auto otherRgba = other.toRgba();
+
+        auto invAmount = 1.0 - amount;
+
+        return new RgbaData{
+            uint8_t(colorRgba.red() * invAmount + otherRgba.red() * amount),
+            uint8_t(colorRgba.green() * invAmount + otherRgba.green() * amount),
+            uint8_t(colorRgba.blue() * invAmount + otherRgba.blue() * amount),
+            uint8_t(colorRgba.alpha() * invAmount + otherRgba.alpha() * amount),
+        };
+    }
+
+    inline QString toString() const override
+    {
+        return u"Mix, color: %1, other: %2, amount: %3"_s.arg(color.toString(), other.toString()).arg(amount);
+    }
+
+    inline bool equals(const ColorData *_other) const override
+    {
+        auto otherData = static_cast<const MixOperationData *>(_other);
+        return color == otherData->color && other == otherData->other && qFuzzyCompare(amount, otherData->amount);
+    }
+
+    Color color;
+    Color other;
     qreal amount;
 };
 
@@ -275,9 +431,29 @@ Color Color::custom(const QString &source, const QStringList &arguments)
     return Color(new CustomData(source, arguments));
 }
 
-Color Color::mix(const Color &first, const Color &second, qreal amount)
+Color Color::add(const Color &color, const Color &other)
 {
-    return Color(new MixData(first, second, amount));
+    return Color(new AddOperationData(color, other));
+}
+
+Color Color::subtract(const Color &color, const Color &other)
+{
+    return Color(new SubtractOperationData(color, other));
+}
+
+Color Color::multiply(const Color &color, const Color &other)
+{
+    return Color(new MultiplyOperationData(color, other));
+}
+
+Color Color::set(const Color &color, std::optional<uint8_t> r, std::optional<uint8_t> g, std::optional<uint8_t> b, std::optional<uint8_t> a)
+{
+    return Color(new SetOperationData(color, r, g, b, a));
+}
+
+Color Color::mix(const Color &color, const Color &other, qreal amount)
+{
+    return Color(new MixOperationData(color, other, amount));
 }
 
 void ColorProvider::registerProvider(const QString &name, ColorProvider *provider)
