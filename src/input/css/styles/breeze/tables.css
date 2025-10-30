@@ -3,13 +3,16 @@
  * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
  */
 
-
+treeviewdelegate,
 tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
+    spacing: var(--small-spacing);
+
     .alternatingRows {
         background-color: var(--view-background-alternate-color);
     }
+
     inset: 0px;
     padding: var(--small-spacing);
     width: 100px;
@@ -34,6 +37,19 @@ tableviewdelegate {
 
     .editing {
         border: 1px solid var(--highlight-color);
+    }
+}
+
+treeviewdelegate {
+    & indicator {
+        color: var(--view-text-color);
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "arrow-right-symbolic";
+    }
+
+    &.expanded indicator {
+        icon-name: "arrow-down-symbolic"
     }
 }
 
@@ -64,8 +80,7 @@ selectionrectanglehandle {
     border: 1px solid var(--slider-border-color);
     border-radius: var(--small-element-size);
 
-    &:visual-focus
-    {
+    &:visual-focus {
         border-color: var(--highlight-color);
         outline: var(--focus-outline);
     }
