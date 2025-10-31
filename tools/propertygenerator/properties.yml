@@ -128,6 +128,26 @@ shadow:
         horizontal: qreal
         vertical: qreal
 
+        _extra_system_includes:
+            "property.h.j2":
+            -   "QVector2D"
+
+        _extra_code:
+            "property.h.j2":
+                public: |4
+                        /*!
+                           Convert an Offset property to QVector2D.
+
+                           If any values are not set, they will use 0.0.
+                         */
+                        QVector2D toVector2D() const;
+            "property.cpp.j2":
+                global: |4
+                    QVector2D {{ type_name }}::toVector2D() const
+                    {
+                        return QVector2D{float(d->horizontal.value_or(0.0)), float(d->vertical.value_or(0.0))};
+                    }
+
     color: Union::Color
     size: qreal
     blur: qreal
