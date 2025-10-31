@@ -127,6 +127,27 @@ public:
     void setExtraDataChannels(unsigned char count);
 
     /*!
+     * Set the data for channel \p channel to the provided values.
+     *
+     * \p topLeft, \p topRight, \p bottomLeft and \p bottomRight are used to set
+     * the data value of the default quad's vertices to the specified value.
+     */
+    void setExtraDataChannelData(Channel channel, //
+                                 const QVector4D &topLeft,
+                                 const QVector4D &topRight,
+                                 const QVector4D &bottomLeft,
+                                 const QVector4D &bottomRight);
+
+    /*!
+     * Set the data for channel \p channel to the provided colors.
+     *
+     * \p topLeft, \p topRight, \p bottomLeft and \p bottomRight are used to set
+     * the data value of the default quad's vertices to the specified color
+     * value.
+     */
+    void setExtraDataChannelData(Channel channel, const QColor &topLeft, const QColor &topRight, const QColor &bottomLeft, const QColor &bottomRight);
+
+    /*!
      * Update internal state based on newly-set parameters.
      *
      * This is done as an explicit step to ensure we don't modify expensive GPU
