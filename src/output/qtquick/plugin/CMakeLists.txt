@@ -43,6 +43,9 @@ target_sources(UnionQuickImpl PRIVATE
     scenegraph/TextureCache.cpp
     scenegraph/TextureCache.h
     scenegraph/UniformDataStream.h
+
+    scenegraph/RectangleShadowNode.cpp
+    scenegraph/RectangleShadowNode.h
 )
 
 target_sources(UnionQuickImplplugin PRIVATE

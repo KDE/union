@@ -18,8 +18,6 @@ layout(binding = 1) uniform sampler2D textureSource;
 layout(location = 0) in lowp vec2 uv;
 layout(location = 0) out lowp vec4 out_color;
 
-const lowp float minimum_shadow_radius = 0.05;
-
 mediump vec4 adjusted_rect(mediump vec4 rect, mediump vec4 adjustment)
 {
     return vec4(rect.xy - adjustment.xy + adjustment.zw, rect.zw - (adjustment.xy + adjustment.zw));
@@ -43,19 +41,6 @@ void main()
 
     // Scaling factor that is the inverse of the amount of scaling applied to the geometry.
     highp float inverse_scale = ubuf.inverseScale;
-
-#ifdef ENABLE_SHADOW
-    // Correction factor to round the corners of a larger shadow.
-    // We want to account for size in regards to shadow radius, so that a larger shadow is
-    // more rounded, but only if we are not already rounding the corners due to corner radius.
-    lowp vec4 size_factor = 0.5 * (minimum_shadow_radius / max(clamped_radius, minimum_shadow_radius));
-    lowp vec4 shadow_radius = clamped_radius + ubuf.shadowSize + ubuf.shadowBlur * size_factor;
-
-    // Calculate the shadow's distance field.
-    mediump vec4 shadow_rect = adjusted_rect(vec4(uv, ubuf.aspect * inverse_scale), vec4(-ubuf.shadowSize));
-    lowp float shadow = sdf_rounded_rectangle(shadow_rect.xy - ubuf.shadowOffset * 2.0 * inverse_scale, shadow_rect.zw, shadow_radius * inverse_scale);
-    col = mix(col, ubuf.shadowColor, 1.0 - smoothstep(-ubuf.shadowBlur * 0.5, ubuf.shadowBlur * 0.5, shadow));
-#endif
 
     // Scale corrected corner radius
     lowp vec4 corner_radius = clamped_radius * inverse_scale;
