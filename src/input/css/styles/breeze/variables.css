@@ -68,4 +68,8 @@
     /* Standard Elements */
     --focus-outline: 2px solid var(--focus-color);
     --dialog-shadow: 0px 1px 32px 0px rgba(0, 0, 0, 0.3);
+
+    --indicator-color: modify-color(var(--window-text-color) set-alpha 0.4);
+    --indicator-press-color: modify-color(var(--window-text-color) set-alpha 0.7);
+    --indicator-current-color: modify-color(var(--window-text-color) set-alpha 0.95);
 }

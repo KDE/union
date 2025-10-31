@@ -74,6 +74,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: "TreeView"
                 onTriggered: application.pushPage("TreeView")
+            },
+            Kirigami.Action {
+                text: "SwipeView"
+                onTriggered: application.pushPage("SwipeView")
             }
         ]
     }

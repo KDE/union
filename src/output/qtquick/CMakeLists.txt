@@ -44,6 +44,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/MenuItem.qml
     style/MenuSeparator.qml
     style/Page.qml
+    style/PageIndicator.qml
     style/Pane.qml
     style/Popup.qml
     style/ProgressBar.qml

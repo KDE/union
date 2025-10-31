@@ -20,6 +20,7 @@ set(_configured_files
     ProgressSlider.qml
     Tables.qml
     TreeView.qml
+    SwipeView.qml
 )
 
 set_property(DIRECTORY PROPERTY CMAKE_CONFIGURE_DEPENDS "${_configured_files}")
