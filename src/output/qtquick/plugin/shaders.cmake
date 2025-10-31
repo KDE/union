@@ -30,10 +30,9 @@ macro(add_shaders ARG_NAME)
     install(TARGETS ${_targets} EXPORT KirigamiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
+add_shaders("rectangleshadow" INPUT rectangleshadow)
+
 macro(name_to_define ARG_NAME ARG_OUTPUT)
-    if ("${ARG_NAME}" STREQUAL "shadow")
-        set(${ARG_OUTPUT} ENABLE_SHADOW=1)
-    endif()
     if ("${ARG_NAME}" STREQUAL "border")
         set(${ARG_OUTPUT} ENABLE_BORDER=1)
     endif()
@@ -46,14 +45,6 @@ macro(name_to_define ARG_NAME ARG_OUTPUT)
 endmacro()
 
 set(_variants
-    "shadow"
-    "shadow-border"
-    "shadow-outline"
-    "shadow-texture"
-    "shadow-border-outline"
-    "shadow-border-texture"
-    "shadow-outline-texture"
-    "shadow-border-outline-texture"
     "border"
     "border-outline"
     "border-texture"
