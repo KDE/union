@@ -25,6 +25,16 @@ static const std::array<VertexLayout, 4> Vertices = {
     VertexLayout{.x = &QRectF::right, .y = &QRectF::bottom, .data = &ShaderNode::DataChannel::bottomRight},
 };
 
+inline QVector4D toVector4D(const QColor &color)
+{
+    return QVector4D{
+        color.redF(),
+        color.greenF(),
+        color.blueF(),
+        color.alphaF(),
+    };
+}
+
 ShaderNode::ShaderNode()
     : m_rect(QRectF{0.0, 0.0, 1.0, 1.0})
     , m_uvs(16, QRectF{0.0, 0.0, 1.0, 1.0})
@@ -231,6 +241,44 @@ void ShaderNode::setExtraDataChannels(unsigned char count)
         delete[] m_attributeSet->attributes;
         delete m_attributeSet;
     }
+
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::setExtraDataChannelData(Channel channel,
+                                         const QVector4D &topLeft,
+                                         const QVector4D &topRight,
+                                         const QVector4D &bottomLeft,
+                                         const QVector4D &bottomRight)
+{
+    if (channel >= m_extraChannels) {
+        return;
+    }
+
+    auto &data = m_extraChannelData[channel];
+    data.topLeft = topLeft;
+    data.topRight = topRight;
+    data.bottomLeft = bottomLeft;
+    data.bottomRight = bottomRight;
+
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::setExtraDataChannelData(Channel channel, //
+                                         const QColor &topLeft,
+                                         const QColor &topRight,
+                                         const QColor &bottomLeft,
+                                         const QColor &bottomRight)
+{
+    if (channel >= m_extraChannels) {
+        return;
+    }
+
+    auto &data = m_extraChannelData[channel];
+    data.topLeft = toVector4D(toPremultiplied(topLeft));
+    data.topRight = toVector4D(toPremultiplied(topRight));
+    data.bottomLeft = toVector4D(toPremultiplied(bottomLeft));
+    data.bottomRight = toVector4D(toPremultiplied(bottomRight));
 
     m_geometryUpdateNeeded = true;
 }
