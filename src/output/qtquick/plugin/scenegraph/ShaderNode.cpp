@@ -230,25 +230,17 @@ void ShaderNode::update()
 
             m_attributeSet =
                 new QSGGeometry::AttributeSet{.count = attributeCount, .stride = int(sizeof(float)) * 2 * attributeCount, .attributes = attributes};
-
-            setGeometry(new QSGGeometry{*m_attributeSet, Vertices.size()});
+            setGeometry(new QSGGeometry{*m_attributeSet, m_vertexCount});
         }
 
-        auto vertices = static_cast<float *>(geometry()->vertexData());
+        auto g = geometry();
 
-        auto index = 0;
-        for (auto layout : Vertices) {
-            vertices[index++] = (m_rect.*layout.x)();
-            vertices[index++] = (m_rect.*layout.y)();
-
-            for (int channel = 0; channel < m_textureChannels; ++channel) {
-                auto uv = uvs(channel);
-                vertices[index++] = (uv.*layout.x)();
-                vertices[index++] = (uv.*layout.y)();
-            }
+        if (g->vertexCount() != m_vertexCount || g->indexCount() != m_indexCount) {
+            g->allocate(m_vertexCount, m_indexCount);
+            markDirty(QSGNode::DirtyGeometry);
         }
 
-        markDirty(QSGNode::DirtyGeometry);
+        updateGeometry(g);
         m_geometryUpdateNeeded = false;
     }
 }
@@ -256,6 +248,49 @@ void ShaderNode::update()
 QSGMaterial *ShaderNode::createMaterialVariant(QSGMaterialType *variant)
 {
     return new ShaderMaterial(variant);
+}
+
+void ShaderNode::setVertexCount(int count)
+{
+    if (count == m_vertexCount) {
+        return;
+    }
+
+    m_vertexCount = count;
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::setIndexCount(int count)
+{
+    if (count == m_indexCount) {
+        return;
+    }
+
+    m_indexCount = count;
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::requestGeometryUpdate()
+{
+    m_geometryUpdateNeeded = true;
+}
+
+void ShaderNode::updateGeometry(QSGGeometry *geometry)
+{
+    auto vertexData = static_cast<float *>(geometry->vertexData());
+
+    for (auto layout : Vertices) {
+        *vertexData++ = (m_rect.*layout.x)();
+        *vertexData++ = (m_rect.*layout.y)();
+
+        for (int channel = 0; channel < m_textureChannels; ++channel) {
+            auto uv = uvs(channel);
+            *vertexData++ = (uv.*layout.x)();
+            *vertexData++ = (uv.*layout.y)();
+        }
+    }
+
+    markDirty(QSGNode::DirtyGeometry);
 }
 
 void ShaderNode::preprocessTexture(const TextureInfo &info)

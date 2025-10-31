@@ -134,6 +134,32 @@ protected:
      * or nullptr if the specified variant cannot be handled by the current node.
      */
     virtual QSGMaterial *createMaterialVariant(QSGMaterialType *variant);
+    /*!
+     * Set the number of vertices used by the geometry of this node to \p count.
+     *
+     * By default a single quad is used, if you set this you will also want to
+     * override updateGeometry() .
+     */
+    void setVertexCount(int count);
+    /*!
+     * Set the number of indices used by the geometry of this node to \p count.
+     *
+     * The default geometry uses no indices. If you set this you will also want
+     * to override updateGeometry() to make use of the indices.
+     */
+    void setIndexCount(int count);
+    /*!
+     * Request an update of the geometry data.
+     *
+     * Geometry updates are only performed on request for performance reasons.
+     */
+    void requestGeometryUpdate();
+    /*!
+     * Update the geometry data of this node.
+     *
+     * Override this if you want to change the vertex and/or index data.
+     */
+    virtual void updateGeometry(QSGGeometry *geometry);
 
 private:
     void preprocessTexture(const TextureInfo &texture);
@@ -142,6 +168,8 @@ private:
     QVarLengthArray<QRectF, 16> m_uvs;
     bool m_geometryUpdateNeeded = true;
     unsigned char m_textureChannels = 1;
+    int m_vertexCount = 4;
+    int m_indexCount = 0;
 
     QSGMaterialType *m_materialVariant = nullptr;
     ShaderMaterial *m_shaderMaterial = nullptr;
