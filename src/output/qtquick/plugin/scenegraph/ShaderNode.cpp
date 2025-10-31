@@ -11,16 +11,18 @@
 
 struct VertexLayout {
     using RectPropertyFunction = qreal (QRectF::*)() const;
+    using DataProperty = QVector4D(ShaderNode::DataChannel::*);
 
     RectPropertyFunction x;
     RectPropertyFunction y;
+    DataProperty data;
 };
 
 static const std::array<VertexLayout, 4> Vertices = {
-    VertexLayout{.x = &QRectF::left, .y = &QRectF::top},
-    VertexLayout{.x = &QRectF::left, .y = &QRectF::bottom},
-    VertexLayout{.x = &QRectF::right, .y = &QRectF::top},
-    VertexLayout{.x = &QRectF::right, .y = &QRectF::bottom},
+    VertexLayout{.x = &QRectF::left, .y = &QRectF::top, .data = &ShaderNode::DataChannel::topLeft},
+    VertexLayout{.x = &QRectF::left, .y = &QRectF::bottom, .data = &ShaderNode::DataChannel::bottomLeft},
+    VertexLayout{.x = &QRectF::right, .y = &QRectF::top, .data = &ShaderNode::DataChannel::topRight},
+    VertexLayout{.x = &QRectF::right, .y = &QRectF::bottom, .data = &ShaderNode::DataChannel::bottomRight},
 };
 
 ShaderNode::ShaderNode()
@@ -67,13 +69,13 @@ void ShaderNode::setRect(const QRectF &newRect)
     m_geometryUpdateNeeded = true;
 }
 
-QRectF ShaderNode::uvs(TextureChannel channel) const
+QRectF ShaderNode::uvs(Channel channel) const
 {
     Q_ASSERT(channel < m_textureChannels);
     return m_uvs[channel];
 }
 
-void ShaderNode::setUVs(TextureChannel channel, const QRectF &newUvs)
+void ShaderNode::setUVs(Channel channel, const QRectF &newUvs)
 {
     Q_ASSERT(channel < m_textureChannels);
 
@@ -150,7 +152,7 @@ void ShaderNode::setTextureChannels(unsigned char count)
     m_geometryUpdateNeeded = true;
 }
 
-void ShaderNode::setTexture(TextureChannel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
 {
     if (!m_shaderMaterial) {
         return;
@@ -184,7 +186,7 @@ void ShaderNode::setTexture(TextureChannel channel, const QImage &image, QQuickW
     markDirty(QSGNode::DirtyMaterial);
 }
 
-void ShaderNode::setTexture(TextureChannel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options)
 {
     if (!m_shaderMaterial) {
         return;
@@ -215,21 +217,48 @@ void ShaderNode::setTexture(TextureChannel channel, QSGTextureProvider *provider
     }
 }
 
+void ShaderNode::setExtraDataChannels(unsigned char count)
+{
+    if (count == m_extraChannels) {
+        return;
+    }
+
+    m_extraChannels = count;
+    m_extraChannelData.resize(count);
+
+    if (geometry()) {
+        setGeometry(nullptr);
+        delete[] m_attributeSet->attributes;
+        delete m_attributeSet;
+    }
+
+    m_geometryUpdateNeeded = true;
+}
+
 void ShaderNode::update()
 {
     if (m_geometryUpdateNeeded) {
-        const auto attributeCount = 1 + m_textureChannels;
+        const auto attributeCount = 1 + m_textureChannels + m_extraChannels;
 
         if (!geometry()) {
             QSGGeometry::Attribute *attributes = new QSGGeometry::Attribute[attributeCount];
             attributes[0] = QSGGeometry::Attribute::createWithAttributeType(0, 2, QSGGeometry::FloatType, QSGGeometry::PositionAttribute);
 
+            int start = 1;
+
             for (int i = 0; i < m_textureChannels; ++i) {
-                attributes[i + 1] = QSGGeometry::Attribute::createWithAttributeType(i + 1, 2, QSGGeometry::FloatType, QSGGeometry::TexCoordAttribute);
+                attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 2, QSGGeometry::FloatType, QSGGeometry::TexCoordAttribute);
             }
 
-            m_attributeSet =
-                new QSGGeometry::AttributeSet{.count = attributeCount, .stride = int(sizeof(float)) * 2 * attributeCount, .attributes = attributes};
+            start += m_textureChannels;
+
+            for (int i = 0; i < m_extraChannels; ++i) {
+                attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 4, QSGGeometry::FloatType, QSGGeometry::UnknownAttribute);
+            }
+
+            int stride = sizeof(float) * 2 * (m_textureChannels + 1) + sizeof(float) * 4 * m_extraChannels;
+            m_attributeSet = new QSGGeometry::AttributeSet{.count = attributeCount, .stride = stride, .attributes = attributes};
+
             setGeometry(new QSGGeometry{*m_attributeSet, m_vertexCount});
         }
 
@@ -287,6 +316,14 @@ void ShaderNode::updateGeometry(QSGGeometry *geometry)
             auto uv = uvs(channel);
             *vertexData++ = (uv.*layout.x)();
             *vertexData++ = (uv.*layout.y)();
+        }
+
+        for (int channel = 0; channel < m_extraChannels; ++channel) {
+            auto data = m_extraChannelData[channel];
+            *vertexData++ = (data.*layout.data).x();
+            *vertexData++ = (data.*layout.data).y();
+            *vertexData++ = (data.*layout.data).z();
+            *vertexData++ = (data.*layout.data).w();
         }
     }
 

@@ -18,14 +18,21 @@ class ShaderMaterial;
 class ShaderNode : public QSGGeometryNode
 {
 public:
-    using TextureChannel = unsigned char;
+    using Channel = unsigned char;
 
     struct TextureInfo {
-        TextureChannel channel = 0;
+        Channel channel = 0;
         QQuickWindow::CreateTextureOptions options;
         std::shared_ptr<QSGTexture> texture = nullptr;
         QPointer<QSGTextureProvider> provider = nullptr;
         QMetaObject::Connection providerConnection;
+    };
+
+    struct DataChannel {
+        QVector4D topLeft;
+        QVector4D topRight;
+        QVector4D bottomLeft;
+        QVector4D bottomRight;
     };
 
     ShaderNode();
@@ -42,8 +49,8 @@ public:
     /*!
      * The UV coordinates of the geometry of this node.
      */
-    QRectF uvs(TextureChannel channel) const;
-    void setUVs(TextureChannel channel, const QRectF &newUvs);
+    QRectF uvs(Channel channel) const;
+    void setUVs(Channel channel, const QRectF &newUvs);
 
     /*!
      * The variant of the material used for rendering.
@@ -88,6 +95,8 @@ public:
      */
     void setTextureChannels(unsigned char count);
 
+    void setColorChannels(unsigned char count);
+
     /*!
      * Set the texture for a channel to an image.
      *
@@ -96,7 +105,7 @@ public:
      * Textures created from images are cached, if an image has the same cache
      * ID as a previous call to setTexture(), no new texture will be created.
      */
-    void setTexture(TextureChannel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
 
     /*!
      * Set the texture for a channel to a texture provider.
@@ -105,7 +114,17 @@ public:
      * \p options will be used whenever a new texture is created from
      * \p provider.
      */
-    void setTexture(TextureChannel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options = {});
+
+    /*!
+     * Set the number of extra vertex data channels to \p count.
+     *
+     * Extra vertex data channels are used to store extra data in the vertices
+     * of the geometry. These can be used to store colors or other values. By
+     * default ShaderNode uses a single quad as geometry with no extra data
+     * channels.
+     */
+    void setExtraDataChannels(unsigned char count);
 
     /*!
      * Update internal state based on newly-set parameters.
@@ -165,9 +184,14 @@ private:
     void preprocessTexture(const TextureInfo &texture);
 
     QRectF m_rect;
-    QVarLengthArray<QRectF, 16> m_uvs;
     bool m_geometryUpdateNeeded = true;
+
     unsigned char m_textureChannels = 1;
+    QVarLengthArray<QRectF, 16> m_uvs;
+
+    unsigned char m_extraChannels = 0;
+    QVector<DataChannel> m_extraChannelData;
+
     int m_vertexCount = 4;
     int m_indexCount = 0;
 
