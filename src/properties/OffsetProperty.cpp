@@ -108,6 +108,11 @@ OffsetProperty OffsetProperty::empty()
     return result;
 }
 
+QVector2D OffsetProperty::toVector2D() const
+{
+    return QVector2D{float(d->horizontal.value_or(0.0)), float(d->vertical.value_or(0.0))};
+}
+
 bool Union::Properties::operator==(const OffsetProperty &left, const OffsetProperty &right)
 {
     if (left.horizontal() != right.horizontal()) {

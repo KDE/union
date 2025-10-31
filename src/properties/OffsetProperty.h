@@ -10,6 +10,7 @@
 
 #include <QDebug>
 
+#include <QVector2D>
 
 
 #include "union_export.h"
@@ -108,6 +109,13 @@ public:
      * values unset.
      */
     static OffsetProperty empty();
+
+    /*!
+       Convert an Offset property to QVector2D.
+
+       If any values are not set, they will use 0.0.
+     */
+    QVector2D toVector2D() const;
 
 private:
     std::unique_ptr<OffsetPropertyPrivate> d;
