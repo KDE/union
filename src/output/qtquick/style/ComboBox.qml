@@ -68,7 +68,7 @@ T.ComboBox {
 
     contentItem: TextInput {
         Union.PositionedItem.source: Union.PositionerSource.Text
-
+        color: Union.Style.properties.text.color
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
         autoScroll: control.editable
@@ -76,7 +76,9 @@ T.ComboBox {
         inputMethodHints: control.inputMethodHints
         validator: control.validator
         selectByMouse: control.selectTextByMouse
-    }
+        selectionColor: control.palette.highlight
+        selectedTextColor: control.palette.highlightedText
+   }
 
     background: Union.StyledRectangle { }
 
