@@ -81,6 +81,11 @@ Kirigami.Page {
             checked: true
         }
 
+        Controls.RoundButton {
+            icon.name: "document-save"
+            text: "RoundButton"
+        }
+
         Controls.ComboBox {
             currentIndex: 1
             displayText: "Combobox: " + currentText
