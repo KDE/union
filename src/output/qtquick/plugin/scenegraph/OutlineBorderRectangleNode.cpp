@@ -29,6 +29,27 @@ inline QVector4D toVector4D(const T &property)
     return result;
 }
 
+/* Index data for the following geometry:
+ *
+ * 0-----2------5-----9
+ * |    *|     *|*    |
+ * |  *  |   *  |  *  |
+ * |*    | *    |    *|
+ * 1----3,4----6,7----8
+ * |   11,24  26,16  *|
+ * |  *  |   *  |  *  |
+ * |*    | *    |*    |
+ * 10--12,25--27,17--18
+ * |*  15,22  23,19  *|
+ * |  *  |  *   |  *  |
+ * |    *|*     |*    |
+ * 13---14-----20----21
+ *
+ * This geometry is used for outline and border colors, by setting the vertex
+ * colors of the outer ring of triangles. The corners are meant to be blended
+ * when border colors differ. Some of the vertices are duplicated since they
+ * should *not* blend.
+ */
 static constexpr std::array<uint16_t, 54> Indices = {
     /* clang-format off */
     // Left-Top
