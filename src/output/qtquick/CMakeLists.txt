@@ -51,6 +51,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/RadioButton.qml
     style/RadioDelegate.qml
     style/RangeSlider.qml
+    style/RoundButton.qml
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
