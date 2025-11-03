@@ -35,7 +35,8 @@ checkdelegate indicator,
 menuitem indicator,
 radiobutton indicator,
 radiodelegate indicator,
-combobox
+combobox,
+roundbutton
 {
     width: var(--medium-element-size);
     height: var(--medium-element-size);
@@ -80,34 +81,43 @@ combobox
     }
 }
 
-button
+button,
+roundbutton
 {
     box-shadow: var(--button-shadow);
 }
 
 button:pressed,
 toolbutton:pressed,
-combobox:pressed
+combobox:pressed,
+roundbutton:pressed
 {
     border: 1px solid var(--highlight-color);
     background-color: var(--button-active-highlight-color);
     box-shadow: 0px 0px 0px 0px transparent;
 }
 
-button:checked
+button:checked,
+roundbutton:checked
 {
     box-shadow: 0px 0px 0px 0px transparent;
 }
 
 toolbutton,
 button.flat,
-combobox.flat
+combobox.flat,
+roundbutton.flat
 {
     border-color: transparent;
     background-color: transparent;
     box-shadow: 0px 0px 0px 0px transparent;
 
     &:hovered {
+        border-color: var(--highlight-color);
+    }
+
+    &:visual-focus {
+        border-width: 1px;
         border-color: var(--highlight-color);
     }
 
@@ -120,6 +130,11 @@ combobox.flat
 toolbutton
 {
     icon-size: var(--icon-size-smallmedium);
+}
+
+roundbutton
+{
+    border-radius: var(--medium-element-size);
 }
 
 combobox
@@ -148,6 +163,10 @@ combobox
         &:pressed {
             border-color: var(--highlight-color);
             icon-color: var(--highlight-color);
+        }
+
+        &:visual-focus {
+            border-color: var(--highlight-color);
         }
     }
 }
