@@ -112,6 +112,10 @@ std::pair<Positioner::ItemList, Positioner::ItemList> Positioner::findPositioned
     ItemList addedItems;
 
     for (auto item : newItems) {
+        if (!item) {
+            continue;
+        }
+
         if (removedItems.contains(item)) {
             removedItems.removeAll(item);
         } else {
