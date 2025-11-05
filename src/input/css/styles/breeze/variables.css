@@ -34,22 +34,22 @@
     --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
     --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
     --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
-    --window-border-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
+    --window-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
 
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
     --view-background-alternate-color: custom-color("kcolorscheme", "active", "view", "background", "alternate");
-    --view-border-color: mix(var(--view-background-color), var(--view-text-color), 0.3);
+    --view-border-color: custom-color("kcolorscheme", "active", "view", "decoration", "frame");
     --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
 
     --header-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
     --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
-    --header-border-color: mix(var(--header-background-color), var(--header-text-color), 0.3);
+    --header-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
 
     --tooltip-text-color: custom-color("kcolorscheme", "active", "tooltip", "foreground", "text");
     --tooltip-background-color: custom-color("kcolorscheme", "active", "tooltip", "background", "normal");
-    --tooltip-border-color: mix(var(--tooltip-background-color), var(--tooltip-text-color), 0.3);
+    --tooltip-border-color: custom-color("kcolorscheme", "active", "tooltip", "decoration", "frame");
 
     --card-background-color: var(--view-background-color);
     --card-text-color: var(--view-text-color);

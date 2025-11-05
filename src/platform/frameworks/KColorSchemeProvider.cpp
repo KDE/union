@@ -3,6 +3,7 @@
 
 #include "KColorSchemeProvider.h"
 
+#include <KColorUtils>
 #include <QMetaEnum>
 
 #include "kcolorscheme_logging.h"
@@ -155,11 +156,18 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
             qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, foreground role" << arguments.at(3) << "does not exist";
         }
     } else if (roleType.compare(u"decoration", Qt::CaseInsensitive) == 0) {
-        auto role = decorationRoleFromString(arguments.at(3));
-        if (role) {
-            value = rgbaFromQColor(colorScheme.decoration(role.value()).color());
+        if (arguments.at(3) == u"frame") {
+            QColor framecolor = KColorUtils::mix(colorScheme.background(KColorScheme::BackgroundRole::NormalBackground).color(),
+                                                 colorScheme.foreground(KColorScheme::ForegroundRole::NormalText).color(),
+                                                 KColorScheme::frameContrast());
+            value = rgbaFromQColor(framecolor);
         } else {
-            qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, decoration role" << arguments.at(3) << "does not exist";
+            auto role = decorationRoleFromString(arguments.at(3));
+            if (role) {
+                value = rgbaFromQColor(colorScheme.decoration(role.value()).color());
+            } else {
+                qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, decoration role" << arguments.at(3) << "does not exist";
+            }
         }
     } else {
         qCWarning(UNION_KCOLORSCHEME) << "Invalid arguments for KColorScheme color provider, role type" << roleType << "does not exist";

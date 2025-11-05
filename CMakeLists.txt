@@ -42,7 +42,7 @@ set(REQUIRED_QT_VERSION 6.8.0)
 find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
 
 if (WITH_FRAMEWORKS)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme)
+    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme GuiAddons)
     set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
     set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
 endif()

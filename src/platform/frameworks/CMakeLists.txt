@@ -7,7 +7,7 @@ target_sources(union-colorprovider-kcolorscheme PRIVATE
     KColorSchemeProvider.cpp
 )
 
-target_link_libraries(union-colorprovider-kcolorscheme PRIVATE Union KF6::ColorScheme)
+target_link_libraries(union-colorprovider-kcolorscheme PRIVATE Union KF6::ColorScheme KF6::GuiAddons)
 
 ecm_qt_declare_logging_category(union-colorprovider-kcolorscheme
     HEADER kcolorscheme_logging.h
