@@ -8,8 +8,7 @@
  */
 
 checkbox,
-radiobutton,
-radiodelegate
+radiobutton
 {
     icon-alignment-horizontal: start;
 /*     icon-width:  */
@@ -62,8 +61,7 @@ radiodelegate:checked indicator
     background-image: url("images/radio.svg");
 }
 
-switch,
-switchdelegate
+switch
 {
     padding: var(--large-spacing);
 
@@ -74,7 +72,7 @@ switchdelegate
 switch indicator,
 switchdelegate indicator
 {
-    layout-alignment-container: item;
+    layout-alignment-container: content;
     layout-alignment-horizontal: start;
 
     width: 36px;
