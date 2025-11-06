@@ -128,6 +128,28 @@ bool AlignmentProperty::hasAnyValue() const
     return false;
 }
 
+bool AlignmentProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->container.has_value() && d->container.value() != emptyValue<Union::Properties::AlignmentContainer>()) {
+        return false;
+    }
+    if (d->horizontal.has_value() && d->horizontal.value() != emptyValue<Union::Properties::Alignment>()) {
+        return false;
+    }
+    if (d->vertical.has_value() && d->vertical.value() != emptyValue<Union::Properties::Alignment>()) {
+        return false;
+    }
+    if (d->order.has_value() && d->order.value() != emptyValue<int>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void AlignmentProperty::resolveProperties(const AlignmentProperty &source, AlignmentProperty &destination)
 {
     if (!destination.d->container.has_value()) {

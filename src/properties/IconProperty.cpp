@@ -171,6 +171,34 @@ bool IconProperty::hasAnyValue() const
     return false;
 }
 
+bool IconProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+        return false;
+    }
+    if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->height.has_value() && d->height.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->name.has_value() && d->name.value() != emptyValue<QString>()) {
+        return false;
+    }
+    if (d->source.has_value() && d->source.value() != emptyValue<QUrl>()) {
+        return false;
+    }
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void IconProperty::resolveProperties(const IconProperty &source, IconProperty &destination)
 {
     if (source.d->alignment.has_value()) {

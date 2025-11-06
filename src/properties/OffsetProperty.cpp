@@ -90,6 +90,22 @@ bool OffsetProperty::hasAnyValue() const
     return false;
 }
 
+bool OffsetProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->horizontal.has_value() && d->horizontal.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->vertical.has_value() && d->vertical.value() != emptyValue<qreal>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void OffsetProperty::resolveProperties(const OffsetProperty &source, OffsetProperty &destination)
 {
     if (!destination.d->horizontal.has_value()) {

@@ -152,6 +152,31 @@ bool CornerProperty::hasAnyValue() const
     return false;
 }
 
+bool CornerProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->radius.has_value() && d->radius.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->height.has_value() && d->height.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+    if (d->image.has_value() && !d->image->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void CornerProperty::resolveProperties(const CornerProperty &source, CornerProperty &destination)
 {
     if (!destination.d->radius.has_value()) {

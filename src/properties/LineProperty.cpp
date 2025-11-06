@@ -133,6 +133,28 @@ bool LineProperty::hasAnyValue() const
     return false;
 }
 
+bool LineProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->size.has_value() && d->size.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+    if (d->style.has_value() && d->style.value() != emptyValue<Union::Properties::LineStyle>()) {
+        return false;
+    }
+    if (d->image.has_value() && !d->image->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void LineProperty::resolveProperties(const LineProperty &source, LineProperty &destination)
 {
     if (!destination.d->size.has_value()) {

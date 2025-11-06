@@ -205,6 +205,37 @@ bool LayoutProperty::hasAnyValue() const
     return false;
 }
 
+bool LayoutProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+        return false;
+    }
+    if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->height.has_value() && d->height.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->spacing.has_value() && d->spacing.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->padding.has_value() && !d->padding->isEmpty()) {
+        return false;
+    }
+    if (d->inset.has_value() && !d->inset->isEmpty()) {
+        return false;
+    }
+    if (d->margins.has_value() && !d->margins->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutProperty &destination)
 {
     if (source.d->alignment.has_value()) {

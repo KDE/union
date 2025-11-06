@@ -148,6 +148,28 @@ bool BorderProperty::hasAnyValue() const
     return false;
 }
 
+bool BorderProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->left.has_value() && !d->left->isEmpty()) {
+        return false;
+    }
+    if (d->right.has_value() && !d->right->isEmpty()) {
+        return false;
+    }
+    if (d->top.has_value() && !d->top->isEmpty()) {
+        return false;
+    }
+    if (d->bottom.has_value() && !d->bottom->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void BorderProperty::resolveProperties(const BorderProperty &source, BorderProperty &destination)
 {
     if (source.d->left.has_value()) {

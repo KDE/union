@@ -114,6 +114,25 @@ bool TextProperty::hasAnyValue() const
     return false;
 }
 
+bool TextProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+        return false;
+    }
+    if (d->font.has_value() && d->font.value() != emptyValue<QFont>()) {
+        return false;
+    }
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void TextProperty::resolveProperties(const TextProperty &source, TextProperty &destination)
 {
     if (source.d->alignment.has_value()) {

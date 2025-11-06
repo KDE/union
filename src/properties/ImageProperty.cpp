@@ -166,6 +166,34 @@ bool ImageProperty::hasAnyValue() const
     return false;
 }
 
+bool ImageProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->imageData.has_value() && d->imageData.value() != emptyValue<QImage>()) {
+        return false;
+    }
+    if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->height.has_value() && d->height.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->xOffset.has_value() && d->xOffset.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->yOffset.has_value() && d->yOffset.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->flags.has_value() && d->flags.value() != emptyValue<Union::Properties::ImageFlags>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void ImageProperty::resolveProperties(const ImageProperty &source, ImageProperty &destination)
 {
     if (!destination.d->imageData.has_value()) {

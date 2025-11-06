@@ -199,6 +199,14 @@ public:
     bool hasAnyValue() const;
 
     /*!
+     * Returns if this property is considered empty.
+     *
+     * A property is considered empty if it has no values or if the values it
+     * contains are all considered empty values.
+     */
+    bool isEmpty() const;
+
+    /*!
      * Copy property values from source to destination if destination does not have a property value.
      *
      * This will recursively copy property values of grouped properties.

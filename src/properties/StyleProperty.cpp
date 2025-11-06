@@ -244,6 +244,40 @@ bool StyleProperty::hasAnyValue() const
     return false;
 }
 
+bool StyleProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->layout.has_value() && !d->layout->isEmpty()) {
+        return false;
+    }
+    if (d->text.has_value() && !d->text->isEmpty()) {
+        return false;
+    }
+    if (d->icon.has_value() && !d->icon->isEmpty()) {
+        return false;
+    }
+    if (d->background.has_value() && !d->background->isEmpty()) {
+        return false;
+    }
+    if (d->border.has_value() && !d->border->isEmpty()) {
+        return false;
+    }
+    if (d->outline.has_value() && !d->outline->isEmpty()) {
+        return false;
+    }
+    if (d->corners.has_value() && !d->corners->isEmpty()) {
+        return false;
+    }
+    if (d->shadow.has_value() && !d->shadow->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty &destination)
 {
     if (source.d->layout.has_value()) {

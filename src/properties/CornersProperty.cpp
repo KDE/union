@@ -148,6 +148,28 @@ bool CornersProperty::hasAnyValue() const
     return false;
 }
 
+bool CornersProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->topLeft.has_value() && !d->topLeft->isEmpty()) {
+        return false;
+    }
+    if (d->topRight.has_value() && !d->topRight->isEmpty()) {
+        return false;
+    }
+    if (d->bottomLeft.has_value() && !d->bottomLeft->isEmpty()) {
+        return false;
+    }
+    if (d->bottomRight.has_value() && !d->bottomRight->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void CornersProperty::resolveProperties(const CornersProperty &source, CornersProperty &destination)
 {
     if (source.d->topLeft.has_value()) {

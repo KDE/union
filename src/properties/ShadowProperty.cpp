@@ -325,6 +325,52 @@ bool ShadowProperty::hasAnyValue() const
     return false;
 }
 
+bool ShadowProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->offset.has_value() && !d->offset->isEmpty()) {
+        return false;
+    }
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+    if (d->size.has_value() && d->size.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->blur.has_value() && d->blur.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->left.has_value() && !d->left->isEmpty()) {
+        return false;
+    }
+    if (d->right.has_value() && !d->right->isEmpty()) {
+        return false;
+    }
+    if (d->top.has_value() && !d->top->isEmpty()) {
+        return false;
+    }
+    if (d->bottom.has_value() && !d->bottom->isEmpty()) {
+        return false;
+    }
+    if (d->topLeft.has_value() && !d->topLeft->isEmpty()) {
+        return false;
+    }
+    if (d->topRight.has_value() && !d->topRight->isEmpty()) {
+        return false;
+    }
+    if (d->bottomLeft.has_value() && !d->bottomLeft->isEmpty()) {
+        return false;
+    }
+    if (d->bottomRight.has_value() && !d->bottomRight->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowProperty &destination)
 {
     if (source.d->offset.has_value()) {

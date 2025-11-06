@@ -106,6 +106,27 @@ bool {{ type_name }}::hasAnyValue() const
     return false;
 }
 
+bool {{ type_name }}::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+{% for property in properties %}
+{% if property.is_group %}
+    if (d->{{ property.name }}.has_value() && !d->{{ property.name }}->isEmpty()) {
+        return false;
+    }
+{% else %}
+    if (d->{{ property.name }}.has_value() && d->{{ property.name }}.value() != emptyValue<{{ property.type }}>()) {
+        return false;
+    }
+{% endif %}
+{% endfor %}
+
+    return true;
+}
+
 void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination)
 {
 {% for property in properties %}

@@ -95,6 +95,22 @@ bool BackgroundProperty::hasAnyValue() const
     return false;
 }
 
+bool BackgroundProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+    if (d->image.has_value() && !d->image->isEmpty()) {
+        return false;
+    }
+
+    return true;
+}
+
 void BackgroundProperty::resolveProperties(const BackgroundProperty &source, BackgroundProperty &destination)
 {
     if (!destination.d->color.has_value()) {

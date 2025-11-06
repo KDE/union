@@ -128,6 +128,28 @@ bool SizeProperty::hasAnyValue() const
     return false;
 }
 
+bool SizeProperty::isEmpty() const
+{
+    if (!hasAnyValue()) {
+        return true;
+    }
+
+    if (d->left.has_value() && d->left.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->right.has_value() && d->right.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->top.has_value() && d->top.value() != emptyValue<qreal>()) {
+        return false;
+    }
+    if (d->bottom.has_value() && d->bottom.value() != emptyValue<qreal>()) {
+        return false;
+    }
+
+    return true;
+}
+
 void SizeProperty::resolveProperties(const SizeProperty &source, SizeProperty &destination)
 {
     if (!destination.d->left.has_value()) {
