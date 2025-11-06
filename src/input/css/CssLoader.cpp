@@ -108,6 +108,16 @@ fs::path to_path(const cssparser::Value &value)
     return url.data;
 }
 
+bool matches_keyword(const cssparser::Value &value, const QString &keyword)
+{
+    if (!std::holds_alternative<std::string>(value)) {
+        return false;
+    }
+
+    auto string = QString::fromStdString(std::get<std::string>(value));
+    return string.compare(keyword, Qt::CaseInsensitive) == 0;
+}
+
 template<class... Ts>
 struct overloads : Ts... {
     using Ts::operator()...;
@@ -644,14 +654,18 @@ void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Proper
     auto shadow = output.shadow_or_new();
 
     if (property.name == "box-shadow") {
-        auto offset = shadow.offset_or_new();
-        offset.setHorizontal(to_px(property.value(0)));
-        offset.setVertical(to_px(property.value(1)));
-        shadow.setOffset(offset);
+        if (matches_keyword(property.value(), u"none"_s)) {
+            shadow = ShadowProperty::empty();
+        } else {
+            auto offset = shadow.offset_or_new();
+            offset.setHorizontal(to_px(property.value(0)));
+            offset.setVertical(to_px(property.value(1)));
+            shadow.setOffset(offset);
 
-        shadow.setBlur(to_px(property.value(2)));
-        shadow.setSize(to_px(property.value(3)));
-        shadow.setColor(to_color(property.value(4)));
+            shadow.setBlur(to_px(property.value(2)));
+            shadow.setSize(to_px(property.value(3)));
+            shadow.setColor(to_color(property.value(4)));
+        }
     }
 
     if (shadow.hasAnyValue()) {

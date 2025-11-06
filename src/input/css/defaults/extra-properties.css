@@ -106,7 +106,7 @@
 }
 
 @property box-shadow {
-    syntax: "<length> <length> <length> <length> <color>";
+    syntax: "none | (<length> <length> <length> <length> <color>)";
 }
 
 @property background-image {
