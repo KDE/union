@@ -505,6 +505,18 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
 {
     auto background = output.background_or_new();
 
+    if (property.name == "background"s) {
+        auto value = property.value();
+        if (matches_keyword(value, u"none"_s)) {
+            background.setColor(Union::Color{});
+            background.setImage(ImageProperty::empty());
+        } else if (std::holds_alternative<cssparser::Color::Color>(value)) {
+            background.setColor(to_color(value));
+        } else if (std::holds_alternative<cssparser::Url>(value)) {
+            setImage(background, m_stylePath, property);
+        }
+    }
+
     if (property.name == "background-color"s) {
         background.setColor(to_color(property.value()));
     }
