@@ -136,8 +136,7 @@ void OutlineBorderRectangleNode::update()
         }
     }
 
-    auto image = m_background.image_or_new().imageData();
-    if (image.has_value()) {
+    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
         shaderName += u"-texture"_s;
     }
 
@@ -169,8 +168,8 @@ void OutlineBorderRectangleNode::update()
            << m_radius / minDimension // radius
            << ShaderNode::toPremultiplied(backgroundColor); // color
 
-    if (image.has_value()) {
-        setTexture(0, image.value(), m_window);
+    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
+        setTexture(0, m_background.image()->imageData().value(), m_window);
     }
 
     markDirty(QSGNode::DirtyMaterial);
