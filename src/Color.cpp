@@ -339,6 +339,10 @@ bool Color::operator==(const Color &other) const
         return true;
     }
 
+    if (!data || !other.data) {
+        return false;
+    }
+
     if (data->type != other.data->type) {
         return false;
     }
