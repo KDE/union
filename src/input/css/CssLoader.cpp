@@ -23,7 +23,7 @@ using namespace std::string_literals;
 
 namespace fs = std::filesystem;
 
-float to_px(const cssparser::Dimension &value)
+inline float to_px(const cssparser::Dimension &value)
 {
     switch (value.unit) {
     case cssparser::Unit::Px:
@@ -33,7 +33,7 @@ float to_px(const cssparser::Dimension &value)
     }
 }
 
-float to_px(const cssparser::Value &value)
+inline float to_px(const cssparser::Value &value)
 {
     if (!std::holds_alternative<cssparser::Dimension>(value)) {
         return 0.0;
@@ -89,7 +89,7 @@ Color to_color(const cssparser::Color::Color &color)
     return Color{};
 }
 
-Color to_color(const cssparser::Value &value)
+inline Color to_color(const cssparser::Value &value)
 {
     if (!std::holds_alternative<cssparser::Color::Color>(value)) {
         return Color{};
@@ -98,7 +98,7 @@ Color to_color(const cssparser::Value &value)
     return to_color(std::get<cssparser::Color::Color>(value));
 }
 
-fs::path to_path(const cssparser::Value &value)
+inline fs::path to_path(const cssparser::Value &value)
 {
     if (!std::holds_alternative<cssparser::Url>(value)) {
         return fs::path{};
@@ -123,7 +123,7 @@ struct overloads : Ts... {
     using Ts::operator()...;
 };
 
-QVariant to_qvariant(const cssparser::Value &value)
+inline QVariant to_qvariant(const cssparser::Value &value)
 {
     constexpr auto visitor = overloads{
         /* clang-format off */
@@ -260,6 +260,7 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
     if (property.name == baseName) {
         directions = {"left", "right", "top", "bottom"};
         properties = {"width", "style", "color"};
+
         if (property.values.size() == 1 && std::holds_alternative<std::string>(property.value())) {
             values = {std::nullopt, property.value(), std::nullopt};
         } else {
