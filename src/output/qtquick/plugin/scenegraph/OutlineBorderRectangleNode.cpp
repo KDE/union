@@ -22,10 +22,35 @@ template<typename T>
 inline QVector4D toVector4D(const T &property)
 {
     QVector4D result;
-    result.setX(property.left_or_new().size().value_or(0.0));
-    result.setY(property.top_or_new().size().value_or(0.0));
-    result.setZ(property.right_or_new().size().value_or(0.0));
-    result.setW(property.bottom_or_new().size().value_or(0.0));
+
+    if (property.left().has_value()) {
+        auto left = property.left().value();
+        if (left.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
+            result.setX(left.size().value_or(0.0));
+        }
+    }
+
+    if (property.right().has_value()) {
+        auto right = property.right().value();
+        if (right.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
+            result.setZ(right.size().value_or(0.0));
+        }
+    }
+
+    if (property.top().has_value()) {
+        auto top = property.top().value();
+        if (top.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
+            result.setY(top.size().value_or(0.0));
+        }
+    }
+
+    if (property.bottom().has_value()) {
+        auto bottom = property.bottom().value();
+        if (bottom.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
+            result.setW(bottom.size().value_or(0.0));
+        }
+    }
+
     return result;
 }
 
@@ -95,12 +120,20 @@ void OutlineBorderRectangleNode::update()
 {
     auto shaderName = u"styledrectangle"_s;
 
+    QVector4D borderSize;
     if (m_border.has_value()) {
-        shaderName += u"-border"_s;
+        borderSize = toVector4D(m_border.value());
+        if (!borderSize.isNull()) {
+            shaderName += u"-border"_s;
+        }
     }
 
+    QVector4D outlineSize;
     if (m_outline.has_value()) {
-        shaderName += u"-outline"_s;
+        outlineSize = toVector4D(m_outline.value());
+        if (!outlineSize.isNull()) {
+            shaderName += u"-outline"_s;
+        }
     }
 
     auto image = m_background.image_or_new().imageData();
@@ -117,18 +150,12 @@ void OutlineBorderRectangleNode::update()
 
     auto backgroundColor = m_background.color().value_or(Color{}).toQColor();
 
-    QVector4D borderSize;
-    if (m_border.has_value()) {
-        auto border = m_border.value();
-        borderSize = toVector4D(border);
-        updateBorderColors(border, backgroundColor);
+    if (m_border.has_value() && !borderSize.isNull()) {
+        updateBorderColors(m_border.value(), backgroundColor);
     }
 
-    QVector4D outlineSize;
-    if (m_outline.has_value()) {
-        auto outline = m_outline.value();
-        outlineSize = toVector4D(outline);
-        updateOutlineColors(outline, backgroundColor);
+    if (m_outline.has_value() && !outlineSize.isNull()) {
+        updateOutlineColors(m_outline.value(), backgroundColor);
     }
 
     updateVertices(m_itemRect, m_radius, borderSize, outlineSize);
