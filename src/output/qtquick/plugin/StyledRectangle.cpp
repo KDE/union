@@ -178,7 +178,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     // This is done because the shadow geometry can vary greatly from the
     // rectangle geometry and separating them into different nodes made the
     // whole thing a lot simpler.
-    if (style.shadow().has_value()) {
+    if (auto shadow = style.shadow(); shadow.has_value() && !shadow->isEmpty()) {
         if (node->childCount() == 0) {
             node->appendChildNode(new RectangleShadowNode{});
             node->appendChildNode(new OutlineBorderRectangleNode{});
@@ -186,15 +186,13 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
             node->prependChildNode(new RectangleShadowNode{});
         }
 
-        auto shadow = style.shadow().value();
-
         auto shadowNode = static_cast<RectangleShadowNode *>(node->firstChild());
         shadowNode->setItemRect(rect);
         shadowNode->setRadius(radii);
-        shadowNode->setBlur(shadow.blur().value_or(0.0));
-        shadowNode->setSpread(shadow.size().value_or(0.0));
-        shadowNode->setOffset(shadow.offset_or_new().toVector2D());
-        shadowNode->setColor(shadow.color().value_or(Union::Color{}).toQColor());
+        shadowNode->setBlur(shadow->blur().value_or(0.0));
+        shadowNode->setSpread(shadow->size().value_or(0.0));
+        shadowNode->setOffset(shadow->offset_or_new().toVector2D());
+        shadowNode->setColor(shadow->color().value_or(Union::Color{}).toQColor());
         shadowNode->update();
 
         borderNode = static_cast<OutlineBorderRectangleNode *>(node->lastChild());
