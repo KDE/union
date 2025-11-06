@@ -100,6 +100,11 @@ dialog
     border: 1px solid var(--view-border-color);
     background-color: var(--view-background-color);
     box-shadow: var(--dialog-shadow);
+
+    .header {
+        font-size: 20px;
+        padding: var(--large-spacing);
+    }
 }
 
 dialogbuttonbox
