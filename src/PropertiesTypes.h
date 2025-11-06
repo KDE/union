@@ -61,6 +61,7 @@ Q_DECLARE_FLAGS(ImageFlags, ImageFlag)
  *      Render as a solid, continuous line.
  */
 enum class LineStyle {
+    None,
     Solid,
 };
 Q_ENUM_NS(LineStyle)
