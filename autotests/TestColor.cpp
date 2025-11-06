@@ -154,6 +154,30 @@ private Q_SLOTS:
         QCOMPARE(customRgba.blue(), 63);
         QCOMPARE(customRgba.alpha(), 255);
     }
+
+    void testCompare_data()
+    {
+        QTest::addColumn<Union::Color>("first");
+        QTest::addColumn<Union::Color>("second");
+        QTest::addColumn<bool>("expected");
+
+        QTest::addRow("both invalid") << Color{} << Color{} << true;
+        QTest::addRow("same rgba") << Color::rgba(255, 0, 0, 255) << Color::rgba(255, 0, 0, 255) << true;
+        QTest::addRow("different rgba") << Color::rgba(255, 0, 0, 255) << Color::rgba(0, 255, 0, 255) << false;
+        QTest::addRow("rgba and invalid") << Color::rgba(255, 0, 0, 255) << Color{} << false;
+        QTest::addRow("same custom") << Color::custom(u"test"_s, {u"green"_s}) << Color::custom(u"test"_s, {u"green"_s}) << true;
+        QTest::addRow("custom and invalid") << Color::custom(u"test"_s, {u"green"_s}) << Color{} << false;
+        QTest::addRow("custom and rgba") << Color::custom(u"test"_s, {u"green"_s}) << Color::rgba(255, 0, 0, 255) << false;
+    }
+
+    void testCompare()
+    {
+        QFETCH(Union::Color, first);
+        QFETCH(Union::Color, second);
+        QFETCH(bool, expected);
+
+        QCOMPARE(first == second, expected);
+    }
 };
 
 QTEST_MAIN(TestColor)
