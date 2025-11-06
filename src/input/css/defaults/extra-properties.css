@@ -5,12 +5,13 @@
 
 /*
  * This file contains mainly grouped properties that provide shorthands for some
- * of the properties defined in "generated-properties.css" above.
+ * of the properties defined in "generated-properties.css".
  */
 
-@property --internal-border-syntax {
+/* Syntax for properties defining an edge, such as borders */
+@property --internal-edge-syntax {
     syntax: "<string>";
-    initial-value: "<length> (solid | dotted | dashed) <color>";
+    initial-value: "none | (<length> (none | solid) <color>)";
 }
 
 @property --internal-alignment-syntax {
@@ -35,7 +36,7 @@
 }
 
 @property border {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property border-width {
@@ -46,44 +47,48 @@
     syntax: "<color>";
 }
 
+@property border-style {
+    syntax: "none | solid";
+}
+
 @property border-radius {
     syntax: "<length> | (<length> <length> <length> <length>)";
 }
 
 @property border-left {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property border-right {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property border-top {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property border-bottom {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property outline {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property outline-left {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property outline-right {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property outline-top {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property outline-bottom {
-    syntax: var(--internal-border-syntax);
+    syntax: var(--internal-edge-syntax);
 }
 
 @property color {

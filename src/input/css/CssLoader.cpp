@@ -231,11 +231,19 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
 
     if (property.name == baseName) {
         directions = {"left", "right", "top", "bottom"};
-        properties = {"width", "color"};
-        values = {property.value(0), property.value(2)};
+        properties = {"width", "style", "color"};
+        if (property.values.size() == 1 && std::holds_alternative<std::string>(property.value())) {
+            values = {std::nullopt, property.value(), std::nullopt};
+        } else {
+            values = {property.value(0), property.value(1), property.value(2)};
+        }
     } else if (property.name == baseName + "-width") {
         directions = {"left", "right", "top", "bottom"};
         properties = {"width"};
+        values = {property.value()};
+    } else if (property.name == baseName + "-style") {
+        directions = {"left", "right", "top", "bottom"};
+        properties = {"style"};
         values = {property.value()};
     } else if (property.name == baseName + "-color") {
         directions = {"left", "right", "top", "bottom"};
@@ -256,8 +264,8 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
             properties = {matches.captured(3).toLatin1()};
             values = {property.value()};
         } else {
-            properties = {"width", "color"};
-            values = {property.value(0), property.value(2)};
+            properties = {"width", "style", "color"};
+            values = {property.value(0), property.value(1), property.value(2)};
         }
     }
 
@@ -266,6 +274,8 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
             line.setSize(to_px(value));
         } else if (property == "size") {
             line.setSize(to_px(value));
+        } else if (property == "style") {
+            line.setStyle(toEnumValue<Union::Properties::LineStyle>(std::get<std::string>(value)));
         } else if (property == "color") {
             line.setColor(to_color(value));
         }
