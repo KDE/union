@@ -22,7 +22,7 @@ menu, popup
 
 menuitem
 {
-    width: var(--medium-element-size);
+    width: var(--menu-item-width);
     height: var(--medium-element-size);
     padding: var(--small-spacing);
     spacing: var(--small-spacing);
