@@ -162,6 +162,24 @@ inline T toEnumValue(const std::string &value)
 }
 
 template<typename T>
+inline void setImage(T &output, const fs::path &rootPath, const cssparser::Property &property)
+{
+    auto path = rootPath / to_path(property.value());
+
+    QImage imageData;
+    if (!imageData.load(QString::fromStdString(path))) {
+        qCWarning(UNION_CSS) << "Could not load image" << path.string();
+        return;
+    }
+
+    auto image = output.image_or_new();
+    image.setImageData(imageData);
+    image.setWidth(imageData.width());
+    image.setHeight(imageData.height());
+    output.setImage(image);
+}
+
+template<typename T>
 inline void setAlignment(T &output, const cssparser::Property &property)
 {
     auto alignment = output.alignment().value_or(AlignmentProperty{});
@@ -492,18 +510,11 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
     }
 
     if (property.name == "background-image") {
-        auto path = m_stylePath / to_path(property.value());
-
-        QImage imageData;
-        if (!imageData.load(QString::fromStdString(path))) {
-            qCWarning(UNION_CSS) << "Could not load image" << path.string();
+        if (matches_keyword(property.value(), u"none"_s)) {
+            background.setImage(ImageProperty::empty());
+        } else {
+            setImage(background, m_stylePath, property);
         }
-
-        auto image = background.image_or_new();
-        image.setImageData(imageData);
-        image.setWidth(imageData.width());
-        image.setHeight(imageData.height());
-        background.setImage(image);
     }
 
     if (background.hasAnyValue()) {

@@ -110,7 +110,7 @@
 }
 
 @property background-image {
-    syntax: "<url>";
+    syntax: "none | <url>";
 }
 
 @property font-family {
