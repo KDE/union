@@ -62,7 +62,8 @@
     --scrollbar-handle-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
     --scrollbar-active-color: mix(var(--window-background-color), var(--highlight-color), 0.3);
 
-    --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha 0.4);
+    --focus-outline-alpha: 0.4;
+    --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
     --shadow-color: rgba(0, 0, 0, 0.1);
 
