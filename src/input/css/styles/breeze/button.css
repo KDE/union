@@ -11,12 +11,14 @@
     --button-active-text-color: custom-color("kcolorscheme", "active", "button", "foreground", "text");
     --button-active-background-color: custom-color("kcolorscheme", "active", "button", "background", "normal");
     --button-active-border-color: custom-color("kcolorscheme", "active", "button", "decoration", "frame");
-    --button-active-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.5);
-    --button-active-checked-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.2);
+    --button-active-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.333);
+    --button-active-border-highlight-color: var(--highlight-color);
+    --button-active-checked-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.125);
+    --button-active-focus-color: modify-color(custom-color("kcolorscheme", "active", "button", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
     --button-inactive-text-color: custom-color("kcolorscheme", "inactive", "button", "foreground", "text");
     --button-inactive-background-color: custom-color("kcolorscheme", "inactive", "button", "background", "normal");
-    --button-inactive-border-color:custom-color("kcolorscheme", "inactive", "button","decoration", "frame" );
+    --button-inactive-border-color: custom-color("kcolorscheme", "inactive", "button","decoration", "frame" );
     --button-inactive-highlight-color: mix(var(--button-inactive-background-color), var(--highlight-color), 0.5);
     --button-inactive-checked-color: mix(var(--button-inactive-background-color), var(--button-inactive-text-color), 0.2);
 
@@ -25,7 +27,14 @@
     --button-disabled-border-color: custom-color("kcolorscheme", "disabled", "button", "decoration", "frame");
 
     --button-border: 1px solid var(--button-active-border-color);
+    --button-border-highlight: 1px solid var(--button-active-border-highlight-color);
     --button-shadow: 0px 1px 0px 0px rgba(0, 0, 0, 0.1);
+    --button-focus: 2px solid var(--button-active-focus-color);
+
+    /* Values derived from Breeze QStyle metrics */
+    --button-default-size: 32px; /* 16 + 2 * 6 + 2 * 2  */
+    --button-padding: 8px; /* 6 + 2 */
+    --button-spacing: 4px;
 }
 
 button,
@@ -38,10 +47,10 @@ radiodelegate indicator,
 combobox,
 roundbutton
 {
-    width: var(--medium-element-size);
-    height: var(--medium-element-size);
-    spacing: var(--small-spacing);
-    padding: var(--large-spacing);
+    width: var(--button-default-size);
+    height: var(--button-default-size);
+    spacing: var(--button-spacing);
+    padding: var(--button-padding);
     border-radius: var(--corner-radius);
 
     text-alignment-horizontal: center;
@@ -53,13 +62,13 @@ roundbutton
 
     &:hovered
     {
-        border-color: var(--highlight-color);
+        border-color: var(--button-active-border-highlight-color);
     }
 
     &:visual-focus
     {
-        border-color: var(--highlight-color);
-        outline: var(--focus-outline);
+        border-color: var(--button-active-border-highlight-color);
+        outline: var(--button-focus);
     }
 
     &:checked
@@ -72,7 +81,7 @@ roundbutton
         color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
         border-color: var(--button-disabled-border-color);
-        box-shadow: 0px 0px 0px 0px transparent;
+        box-shadow: none;
     }
 
     &[display="text-under-icon"] {
@@ -92,15 +101,15 @@ toolbutton:pressed,
 combobox:pressed,
 roundbutton:pressed
 {
-    border: 1px solid var(--highlight-color);
+    border-color: var(--button-active-border-highlight-color);
     background-color: var(--button-active-highlight-color);
-    box-shadow: 0px 0px 0px 0px transparent;
+    box-shadow: none;
 }
 
 button:checked,
 roundbutton:checked
 {
-    box-shadow: 0px 0px 0px 0px transparent;
+    box-shadow: none;
 }
 
 toolbutton,
@@ -108,22 +117,26 @@ button.flat,
 combobox.flat,
 roundbutton.flat
 {
-    border-color: transparent;
-    background-color: transparent;
-    box-shadow: 0px 0px 0px 0px transparent;
+    border: none;
+    background: none;
+    box-shadow: none;
 
     &:hovered {
-        border-color: var(--highlight-color);
+        border: var(--button-border-highlight);
     }
 
     &:visual-focus {
-        border-width: 1px;
-        border-color: var(--highlight-color);
+        border: var(--button-border-highlight);
     }
 
     &:disabled {
-        border-color: transparent;
-        background-color: transparent;
+        border: none;
+        background: none;
+    }
+
+    &:pressed {
+        border: var(--button-border-highlight);
+        background-color: var(--button-active-highlight-color);
     }
 }
 
@@ -134,7 +147,7 @@ toolbutton
 
 roundbutton
 {
-    border-radius: var(--medium-element-size);
+    border-radius: var(--button-default-size);
 }
 
 combobox
@@ -145,28 +158,24 @@ combobox
     icon-name: "arrow-down-symbolic";
     box-shadow: var(--button-shadow);
 
-    &.editable {
-        /* Ensure we have a minimum size that's at least one character + icon +
-         * padding, otherwise the click target becomes too small and we can't
-         * click to edit text anymore.
-         */
-        width: 48px;
-
+    &.editable,
+    &.flat.editable
+    {
         background-color: var(--view-background-color);
         border: 1px solid var(--view-border-color);
-        box-shadow: 0px 0px 0px 0px transparent;
+        box-shadow: none;
 
         &:hovered {
-            border-color: var(--highlight-color);
+            border-color: var(--button-active-border-highlight-color);
         }
 
         &:pressed {
-            border-color: var(--highlight-color);
-            icon-color: var(--highlight-color);
+            border-color: var(--button-active-border-highlight-color);
+            icon-color: var(--button-active-border-highlight-color);
         }
 
         &:visual-focus {
-            border-color: var(--highlight-color);
+            border-color: var(--button-active-border-highlight-color);
         }
     }
 }
