@@ -35,6 +35,8 @@
     --button-default-size: 32px; /* 16 + 2 * 6 + 2 * 2  */
     --button-padding: 8px; /* 6 + 2 */
     --button-spacing: 4px;
+
+    --toolbutton-padding: 6px;
 }
 
 button,
@@ -143,6 +145,7 @@ roundbutton.flat
 toolbutton
 {
     icon-size: var(--icon-size-smallmedium);
+    padding: var(--toolbutton-padding);
 }
 
 roundbutton
