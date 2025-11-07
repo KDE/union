@@ -9,6 +9,13 @@
  * All forms of popups: Menus, Dialogs, plain Popup
  */
 
+:root
+{
+    --tooltip-text-color: custom-color("kcolorscheme", "active", "tooltip", "foreground", "text");
+    --tooltip-background-color: custom-color("kcolorscheme", "active", "tooltip", "background", "normal");
+    --tooltip-border-color: custom-color("kcolorscheme", "active", "tooltip", "decoration", "frame");
+}
+
 menu, popup
 {
     border-radius: var(--corner-radius);
@@ -118,4 +125,15 @@ dialogbuttonbox
      *    border: 1px solid var(--view-border-color);
      *    TODO add border radius to bottom corners only
      */
+}
+
+tooltip
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+    padding: var(--large-spacing);
+    background-color: var(--tooltip-background-color);
+    border-radius: var(--corner-radius);
+    border: 1px solid var(--tooltip-border-color);
+    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.2);
 }
