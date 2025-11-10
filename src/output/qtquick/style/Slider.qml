@@ -49,8 +49,6 @@ T.Slider {
     background: Union.StyledRectangle {
         x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-        width: control.implicitBackgroundWidth
-        height: control.implicitBackgroundHeight
 
         Union.StyledRectangle {
             Union.Element.type: "Fill"
