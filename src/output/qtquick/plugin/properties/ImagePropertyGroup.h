@@ -91,6 +91,15 @@ public:
     QJSValue flags() const;
     Q_SIGNAL void flagsChanged();
 
+    /*!
+     * \qmlproperty Union::Color ImagePropertyGroup::maskColor
+     *
+     * Exposes ImageProperty::maskColor to QML.
+     */
+    Q_PROPERTY(QJSValue maskColor READ maskColor NOTIFY maskColorChanged)
+    QJSValue maskColor() const;
+    Q_SIGNAL void maskColorChanged();
+
 private:
     QuickStyle *m_style = nullptr;
 

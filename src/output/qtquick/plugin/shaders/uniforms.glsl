@@ -15,4 +15,5 @@ layout(std140, binding = 0) uniform buf {
     mediump vec4 outlineWidth; // 28 components
     mediump vec4 radius; // 32 components
     mediump vec4 color; // 36 components
+    mediump vec4 mask_color; // 40 components
 } ubuf;

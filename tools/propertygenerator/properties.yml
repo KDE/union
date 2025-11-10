@@ -81,6 +81,7 @@ background:
         xOffset: qreal
         yOffset: qreal
         flags: Union::Properties::ImageFlags
+        maskColor: Union::Color
 
 border:
     # \brief A property group containing properties of an element's border.

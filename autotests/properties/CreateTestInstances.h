@@ -162,6 +162,7 @@ ImageProperty testImagePropertyInstance()
     instance.setXOffset(testQrealInstance());
     instance.setYOffset(testQrealInstance());
     instance.setFlags(Union::Properties::ImageFlags{});
+    instance.setMaskColor(Union::Color{});
 
     return instance;
 }

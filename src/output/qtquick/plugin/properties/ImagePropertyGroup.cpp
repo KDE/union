@@ -33,6 +33,7 @@ void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
     Q_EMIT xOffsetChanged();
     Q_EMIT yOffsetChanged();
     Q_EMIT flagsChanged();
+    Q_EMIT maskColorChanged();
     Q_EMIT updated();
 }
 
@@ -115,6 +116,20 @@ QJSValue ImagePropertyGroup::flags() const
     auto value = m_state.value().flags();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue ImagePropertyGroup::maskColor() const
+{
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state.value().maskColor();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

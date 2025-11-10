@@ -164,9 +164,9 @@ inline T toEnumValue(const std::string &value)
 template<typename T>
 inline void setImage(T &output, const fs::path &rootPath, const cssparser::Property &property)
 {
-    auto path = rootPath / to_path(property.value());
-
     QImage imageData;
+    std::filesystem::path path = rootPath / to_path(property.value());
+
     if (!imageData.load(QString::fromStdString(path))) {
         qCWarning(UNION_CSS) << "Could not load image" << path.string();
         return;
@@ -176,6 +176,16 @@ inline void setImage(T &output, const fs::path &rootPath, const cssparser::Prope
     image.setImageData(imageData);
     image.setWidth(imageData.width());
     image.setHeight(imageData.height());
+    if (property.values.size() > 1) {
+        auto value = property.values.at(1);
+        if (matches_keyword(value, u"mask"_s)) {
+            image.setFlags(ImageFlag::Mask);
+        } else if (matches_keyword(value, u"inverted-mask"_s)) {
+            image.setFlags(ImageFlag::InvertedMask);
+        }
+        image.setMaskColor(to_color(property.values.at(2)));
+    }
+
     output.setImage(image);
 }
 

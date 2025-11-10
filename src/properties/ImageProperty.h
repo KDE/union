@@ -12,6 +12,7 @@
 
 #include <QImage>
 
+#include "../Color.h"
 #include "../PropertiesTypes.h"
 
 #include "union_export.h"
@@ -127,6 +128,17 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setFlags(const std::optional<Union::Properties::ImageFlags> &newValue);
+
+    /*!
+     * Returns the value of maskColor.
+     */
+    std::optional<Union::Color> maskColor() const;
+    /*!
+     * Set the value of maskColor.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setMaskColor(const std::optional<Union::Color> &newValue);
 
     /*!
      * Returns if this property group has any value set.

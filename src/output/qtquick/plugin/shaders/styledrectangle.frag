@@ -72,6 +72,12 @@ void main()
     // Sample the texture, then blend it on top of the background color.
     highp vec2 texture_uv = uv / (ubuf.aspect * 2.0) + 0.5;
     mediump vec4 texture_color = texture(textureSource, texture_uv);
+#ifdef ENABLE_MASK
+    texture_color = vec4(ubuf.mask_color.xyz * texture_color.a, texture_color.a);
+#endif
+#ifdef ENABLE_INVERTEDMASK
+    texture_color = vec4(ubuf.mask_color.xyz * (1 - texture_color.a), (1 - texture_color.a));
+#endif
     col = sdf_render(sdf, col, texture_color, texture_color.a, sdf_default_smoothing);
 #endif
 

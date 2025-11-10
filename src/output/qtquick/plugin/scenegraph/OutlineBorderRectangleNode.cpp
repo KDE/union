@@ -136,12 +136,25 @@ void OutlineBorderRectangleNode::update()
         }
     }
 
-    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
+    auto imageProperties = m_background.image_or_new();
+    auto image = imageProperties.imageData();
+
+    auto maskColor = QColor(Qt::GlobalColor::transparent);
+
+    if (image.has_value()) {
         shaderName += u"-texture"_s;
+        if (imageProperties.flags().has_value()) {
+            if (imageProperties.flags().value().testFlag(ImageFlag::Mask)) {
+                shaderName += u"-mask"_s;
+            } else if (imageProperties.flags().value().testFlag(ImageFlag::InvertedMask)) {
+                shaderName += u"-invertedmask"_s;
+            }
+            maskColor = imageProperties.maskColor().value_or(Color{}).toQColor();
+        }
     }
 
     setShader(shaderName);
-    setUniformBufferSize(sizeof(float) * 36);
+    setUniformBufferSize(sizeof(float) * 40);
 
     auto aspect = m_itemRect.width() > m_itemRect.height() ? QVector2D{float(m_itemRect.width() / m_itemRect.height()), 1.0}
                                                            : QVector2D{1.0, float(m_itemRect.height() / m_itemRect.width())};
@@ -166,7 +179,8 @@ void OutlineBorderRectangleNode::update()
            << borderSize / minDimension // border_width
            << outlineSize / minDimension // outline_width
            << m_radius / minDimension // radius
-           << ShaderNode::toPremultiplied(backgroundColor); // color
+           << ShaderNode::toPremultiplied(backgroundColor) // color
+           << ShaderNode::toPremultiplied(maskColor); // mask-color
 
     if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
         setTexture(0, m_background.image()->imageData().value(), m_window);

@@ -114,7 +114,7 @@
 }
 
 @property background-image {
-    syntax: "none | <url>";
+    syntax: "(<url> (mask | inverted-mask) <color>) | <url>"
 }
 
 @property font-family {

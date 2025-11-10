@@ -11,3 +11,4 @@
 /cmake-build*
 .cache
 .qmlls.ini
+/tools/propertygenerator/.python-version

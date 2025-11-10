@@ -40,6 +40,10 @@ Q_NAMESPACE_EXPORT(UNION_EXPORT)
  *      Stretch the image on the Y axis.
  * \value StretchBoth
  *      Stretch the image on both axes.
+ * \value Mask
+ *      Use the image as a mask.
+ * \value InvertedMask
+ *      Use the image as a mask, but invert the masked area.
  */
 enum class ImageFlag {
     RepeatX = 1 << 0,
@@ -48,6 +52,8 @@ enum class ImageFlag {
     StretchX = 1 << 2,
     StretchY = 1 << 3,
     StretchBoth = StretchX | StretchY,
+    Mask = 1 << 4,
+    InvertedMask = 1 << 5
 };
 Q_ENUM_NS(ImageFlag)
 Q_DECLARE_FLAGS(ImageFlags, ImageFlag)

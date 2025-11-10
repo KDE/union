@@ -20,6 +20,7 @@ public:
     std::optional<qreal> xOffset;
     std::optional<qreal> yOffset;
     std::optional<Union::Properties::ImageFlags> flags;
+    std::optional<Union::Color> maskColor;
 };
 
 ImageProperty::ImageProperty()
@@ -36,6 +37,7 @@ ImageProperty::ImageProperty(const ImageProperty &other)
     d->xOffset = other.d->xOffset;
     d->yOffset = other.d->yOffset;
     d->flags = other.d->flags;
+    d->maskColor = other.d->maskColor;
 }
 
 ImageProperty::ImageProperty(ImageProperty &&other)
@@ -54,6 +56,7 @@ ImageProperty &ImageProperty::operator=(const ImageProperty &other)
         d->xOffset = other.d->xOffset;
         d->yOffset = other.d->yOffset;
         d->flags = other.d->flags;
+        d->maskColor = other.d->maskColor;
     }
     return *this;
 }
@@ -142,6 +145,19 @@ void ImageProperty::setFlags(const std::optional<Union::Properties::ImageFlags> 
 
     d->flags = newValue;
 }
+std::optional<Union::Color> ImageProperty::maskColor() const
+{
+    return d->maskColor;
+}
+
+void ImageProperty::setMaskColor(const std::optional<Union::Color> &newValue)
+{
+    if (newValue == d->maskColor) {
+        return;
+    }
+
+    d->maskColor = newValue;
+}
 
 bool ImageProperty::hasAnyValue() const
 {
@@ -161,6 +177,9 @@ bool ImageProperty::hasAnyValue() const
         return true;
     }
     if (d->flags.has_value()) {
+        return true;
+    }
+    if (d->maskColor.has_value()) {
         return true;
     }
     return false;
@@ -190,6 +209,9 @@ bool ImageProperty::isEmpty() const
     if (d->flags.has_value() && d->flags.value() != emptyValue<Union::Properties::ImageFlags>()) {
         return false;
     }
+    if (d->maskColor.has_value() && d->maskColor.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
 
     return true;
 }
@@ -214,6 +236,9 @@ void ImageProperty::resolveProperties(const ImageProperty &source, ImageProperty
     if (!destination.d->flags.has_value()) {
         destination.d->flags = source.d->flags;
     }
+    if (!destination.d->maskColor.has_value()) {
+        destination.d->maskColor = source.d->maskColor;
+    }
 }
 
 ImageProperty ImageProperty::empty()
@@ -225,6 +250,7 @@ ImageProperty ImageProperty::empty()
     result.d->xOffset = emptyValue<qreal>();
     result.d->yOffset = emptyValue<qreal>();
     result.d->flags = emptyValue<Union::Properties::ImageFlags>();
+    result.d->maskColor = emptyValue<Union::Color>();
     return result;
 }
 
@@ -248,6 +274,9 @@ bool Union::Properties::operator==(const ImageProperty &left, const ImagePropert
     if (left.flags() != right.flags()) {
         return false;
     }
+    if (left.maskColor() != right.maskColor()) {
+        return false;
+    }
     return true;
 }
 
@@ -261,6 +290,7 @@ QDebug operator<<(QDebug debug, const Union::Properties::ImageProperty &type)
                     << ", xOffset: " << type.xOffset() //
                     << ", yOffset: " << type.yOffset() //
                     << ", flags: " << type.flags() //
+                    << ", maskColor: " << type.maskColor() //
                     << ")";
     return debug;
 }

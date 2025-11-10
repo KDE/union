@@ -930,6 +930,17 @@ struct std::formatter<Union::Properties::ImageProperty, char> {
             }
         }
 
+        out << indent(indentation);
+        out << "maskColor: ";
+        {
+            auto value = group.maskColor();
+            if (use_newlines) {
+                out << std::format("{}\n", value);
+            } else {
+                out << std::format("{} ", value);
+            }
+        }
+
         return std::ranges::copy(std::move(out).str(), context.out()).out;
     }
 };

@@ -28,6 +28,7 @@ private Q_SLOTS:
         QVERIFY(!property.xOffset().has_value());
         QVERIFY(!property.yOffset().has_value());
         QVERIFY(!property.flags().has_value());
+        QVERIFY(!property.maskColor().has_value());
     }
 
     void testHasAnyValue()
@@ -79,6 +80,13 @@ private Q_SLOTS:
             property.setFlags(std::nullopt);
             QVERIFY(!property.hasAnyValue());
         }
+        {
+            Union::Color value;
+            property.setMaskColor(value);
+            QVERIFY(property.hasAnyValue());
+            property.setMaskColor(std::nullopt);
+            QVERIFY(!property.hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -100,6 +108,7 @@ private Q_SLOTS:
         source.setXOffset(qreal{});
         source.setYOffset(qreal{});
         source.setFlags(Union::Properties::ImageFlags{});
+        source.setMaskColor(Union::Color{});
 
         QVERIFY(source.hasAnyValue());
         QVERIFY(!destination.hasAnyValue());
@@ -114,6 +123,7 @@ private Q_SLOTS:
         QCOMPARE(destination.xOffset(), source.xOffset());
         QCOMPARE(destination.yOffset(), source.yOffset());
         QCOMPARE(destination.flags(), source.flags());
+        QCOMPARE(destination.maskColor(), source.maskColor());
     }
 };
 
