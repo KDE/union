@@ -33,12 +33,29 @@ Kirigami.Page {
             highlighted: true
         }
 
+        Controls.ItemDelegate {
+            icon.name: "document-save"
+            enabled: false
+            text: "Disabled ItemDelegate with Text and Icon"
+        }
+
         Controls.CheckDelegate {
             text: "CheckDelegate with Text"
         }
 
+
+        Controls.CheckDelegate {
+            enabled: false
+            text: "DisabledCheckDelegate with Text"
+        }
+
         Controls.RadioDelegate {
             text: "RadioDelegate n. 1 with Text"
+        }
+
+        Controls.RadioDelegate {
+            enabled: false
+            text: "Disabled RadioDelegate n. 1 with Text"
         }
 
         Controls.RadioDelegate {
@@ -49,8 +66,23 @@ Kirigami.Page {
             text: "SwitchDelegate with Text"
         }
 
+        Controls.SwitchDelegate {
+            enabled: false
+            text: "Disabled SwitchDelegate with Text"
+        }
+
         Controls.SwipeDelegate {
             text: "Swipe me!"
+
+            swipe.right: Rectangle {
+                anchors.fill: parent
+                color: "blue"
+            }
+        }
+
+        Controls.SwipeDelegate {
+            enabled: false
+            text: "Disabled Swipe delegate"
 
             swipe.right: Rectangle {
                 anchors.fill: parent

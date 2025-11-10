@@ -55,6 +55,14 @@ Kirigami.Page {
                     text: qsTr("About")
                 }
             }
+            Controls.Menu {
+                title: qsTr("Disabled Menu")
+                enabled: false
+                Kirigami.Action {
+                    text: qsTr("How did you open me??")
+                    enabled: false
+                }
+            }
         }
 
         Controls.ToolBar {
