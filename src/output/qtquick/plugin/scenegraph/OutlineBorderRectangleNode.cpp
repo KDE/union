@@ -228,15 +228,18 @@ void OutlineBorderRectangleNode::updateGeometry(QSGGeometry *geometry)
 
 void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize)
 {
-    const float left = rect.x() - outlineSize.x();
-    const float right = rect.x() + rect.width() + outlineSize.z();
-    const float top = rect.y() - outlineSize.y();
-    const float bottom = rect.y() + rect.height() + outlineSize.w();
+    const float width = rect.width();
+    const float height = rect.height();
 
-    const float leftWidth = std::max(outlineSize.x() + borderSize.x(), std::max(radii.z(), radii.w()));
-    const float rightWidth = std::max(outlineSize.z() + borderSize.z(), std::max(radii.x(), radii.y()));
-    const float topWidth = std::max(outlineSize.y() + borderSize.y(), std::max(radii.x(), radii.z()));
-    const float bottomWidth = std::max(outlineSize.w() + borderSize.w(), std::max(radii.y(), radii.w()));
+    const float left = rect.x() - outlineSize.x();
+    const float right = rect.x() + width + outlineSize.z();
+    const float top = rect.y() - outlineSize.y();
+    const float bottom = rect.y() + height + outlineSize.w();
+
+    const float leftWidth = std::max(outlineSize.x() + borderSize.x(), std::min(std::max(radii.z(), radii.w()), width / 2));
+    const float rightWidth = std::max(outlineSize.z() + borderSize.z(), std::min(std::max(radii.x(), radii.y()), width / 2));
+    const float topWidth = std::max(outlineSize.y() + borderSize.y(), std::min(std::max(radii.x(), radii.z()), height / 2));
+    const float bottomWidth = std::max(outlineSize.w() + borderSize.w(), std::min(std::max(radii.y(), radii.w()), height / 2));
 
     float leftUV = leftWidth / rect.width();
     float rightUV = 1.0 - (rightWidth / rect.width());
