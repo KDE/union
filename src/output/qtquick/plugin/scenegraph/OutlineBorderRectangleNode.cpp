@@ -136,20 +136,20 @@ void OutlineBorderRectangleNode::update()
         }
     }
 
-    auto imageProperties = m_background.image_or_new();
-    auto image = imageProperties.imageData();
-
     auto maskColor = QColor(Qt::GlobalColor::transparent);
-
-    if (image.has_value()) {
-        shaderName += u"-texture"_s;
-        if (imageProperties.flags().has_value()) {
-            if (imageProperties.flags().value().testFlag(ImageFlag::Mask)) {
-                shaderName += u"-mask"_s;
-            } else if (imageProperties.flags().value().testFlag(ImageFlag::InvertedMask)) {
-                shaderName += u"-invertedmask"_s;
+    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
+        auto imageProperties = m_background.image_or_new();
+        auto image = imageProperties.imageData();
+        if (image.has_value()) {
+            shaderName += u"-texture"_s;
+            if (imageProperties.flags().has_value()) {
+                if (imageProperties.flags().value().testFlag(ImageFlag::Mask)) {
+                    shaderName += u"-mask"_s;
+                } else if (imageProperties.flags().value().testFlag(ImageFlag::InvertedMask)) {
+                    shaderName += u"-invertedmask"_s;
+                }
+                maskColor = imageProperties.maskColor().value_or(Color{}).toQColor();
             }
-            maskColor = imageProperties.maskColor().value_or(Color{}).toQColor();
         }
     }
 
