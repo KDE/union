@@ -75,6 +75,12 @@ Kirigami.Page {
             orientation: Qt.Vertical
         }
 
+        Controls.ScrollBar {
+            Layout.preferredHeight: 100
+            orientation: Qt.Vertical
+            size: 0.4
+        }
+
         Item {
             Layout.fillHeight: true
         }
