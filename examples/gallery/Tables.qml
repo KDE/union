@@ -23,6 +23,8 @@ Kirigami.Page {
             checked: true
             onCheckedChanged: {
                 tableView.enabled = checked;
+                horizontalHeader.enabled = checked;
+                verticalHeader.enabled = checked;
             }
         }
 

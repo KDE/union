@@ -23,6 +23,9 @@ T.VerticalHeaderView {
     delegate: Union.StyledRectangle {
         id: delegate
         Union.Element.type: "HeaderViewDelegate"
+        Union.Element.states {
+            enabled: control.enabled
+        }
 
         required property var model
 
@@ -32,6 +35,7 @@ T.VerticalHeaderView {
         Text {
             id: text
             anchors.fill: parent
+            enabled: parent.enabled
             horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
             verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             text: delegate.model[control.textRole]
