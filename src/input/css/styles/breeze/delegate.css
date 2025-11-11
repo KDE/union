@@ -39,6 +39,12 @@ swipedelegate
         color: var(--highlight-text-color);
     }
 
+    &:disabled {
+        color: var(--window-disabled-text-color);
+        background-color: transparent;
+        border: none;
+    }
+
     &[display="text-under-icon"]
     {
         text-alignment-vertical: stack;
