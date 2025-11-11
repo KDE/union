@@ -137,17 +137,20 @@ inlinemessage
     border-radius: var(--corner-radius);
     color: var(--window-text-color);
 
-    /*&[type="positive"] {
-
+    &[type="positive"] {
+        background-color: var(--positive-background);
+        border: 1px solid var(--positive-text);
     }
 
     &[type="warning"] {
-
+        background-color: var(--neutral-background);
+        border: 1px solid var(--neutral-text);
     }
 
     &[type="error"] {
-
-    }*/
+        background-color: var(--negative-background);
+        border: 1px solid var(--negative-text);
+    }
 }
 
 overlaydrawer

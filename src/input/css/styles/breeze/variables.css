@@ -48,6 +48,15 @@
     --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
     --header-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
 
+
+    --positive-text: custom-color("kcolorscheme", "active", "view", "foreground","positive");
+    --neutral-text: custom-color("kcolorscheme", "active", "view", "foreground","neutral");
+    --negative-text: custom-color("kcolorscheme", "active", "view", "foreground","negative");
+    --positive-background: custom-color("kcolorscheme", "active", "view", "background","positive");
+    --neutral-background: custom-color("kcolorscheme", "active", "view", "background","neutral");
+    --negative-background: custom-color("kcolorscheme", "active", "view", "background","negative");
+
+
     --card-background-color: var(--view-background-color);
     --card-text-color: var(--view-text-color);
     --card-border-color: var(--view-border-color);
