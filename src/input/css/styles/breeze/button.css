@@ -22,9 +22,10 @@
     --button-inactive-highlight-color: mix(var(--button-inactive-background-color), var(--highlight-color), 0.5);
     --button-inactive-checked-color: mix(var(--button-inactive-background-color), var(--button-inactive-text-color), 0.2);
 
-    --button-disabled-text-color: custom-color("kcolorscheme", "disabled", "window", "foreground", "text");
-    --button-disabled-background-color: custom-color("kcolorscheme", "disabled", "window", "background", "normal");
+    --button-disabled-text-color: custom-color("kcolorscheme", "disabled", "button", "foreground", "text");
+    --button-disabled-background-color: custom-color("kcolorscheme", "disabled", "button", "background", "normal");
     --button-disabled-border-color: custom-color("kcolorscheme", "disabled", "button", "decoration", "frame");
+    --button-disabled-highlight-color: mix(var(--button-disabled-background-color), var(--highlight-color), 0.333);
 
     --button-border: 1px solid var(--button-active-border-color);
     --button-border-highlight: 1px solid var(--button-active-border-highlight-color);

@@ -37,12 +37,18 @@
     --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
     --window-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
+    --window-disabled-text-color: custom-color("kcolorscheme", "disabled", "window", "foreground", "text");
+    --window-disabled-background-color: custom-color("kcolorscheme", "disabled", "window", "background", "normal");
+    --window-disabled-border-color: custom-color("kcolorscheme", "disabled", "window", "decoration", "frame");
 
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
     --view-background-alternate-color: custom-color("kcolorscheme", "active", "view", "background", "alternate");
     --view-border-color: custom-color("kcolorscheme", "active", "view", "decoration", "frame");
     --view-highlight-color: mix(var(--view-background-color), var(--highlight-color), 0.5);
+    --view-disabled-text-color: custom-color("kcolorscheme", "disabled", "view", "foreground", "text");
+    --view-disabled-background-color: custom-color("kcolorscheme", "disabled", "view", "background", "normal");
+    --view-disabled-border-color: custom-color("kcolorscheme", "disabled", "view", "decoration", "frame");
 
     --header-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
     --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
