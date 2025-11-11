@@ -11,6 +11,9 @@ T.Label {
     id: control
 
     Union.Element.type: "Label"
+    Union.Element.states {
+        enabled: control.enabled
+    }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
