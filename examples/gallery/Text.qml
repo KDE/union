@@ -45,6 +45,10 @@ Kirigami.Page {
         }
 
         Controls.TextArea {
+            placeholderText: "Text Area"
+        }
+
+        Controls.TextArea {
             enabled: false
             placeholderText: "Disabled Text Area"
         }
