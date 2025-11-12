@@ -227,6 +227,10 @@ void PositionerLayout::updatePolish()
 
     const auto containerItem = parentItem();
     const auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(containerItem, true))->query();
+    if (!query) {
+        polish();
+        return;
+    }
     qreal spacing = query->properties().layout().value_or(LayoutProperty{}).spacing().value_or(0.0);
 
     auto sort = [](auto &container) {
