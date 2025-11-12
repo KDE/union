@@ -175,12 +175,15 @@ overlaydrawer
     }
 }
 
+genericdrawericon, menuicon {
+    icon-width: var(--icon-size-small);
+    icon-height: var(--icon-size-small);
+}
+
 menuicon
 {
     icon-name: "application-menu";
     .opened {
         icon-name: "window-close";
     }
-    icon-width: var(--icon-size-small);
-    icon-height: var(--icon-size-small);
 }
