@@ -83,7 +83,7 @@ T.TabButton {
         source: Union.Style.properties.icon.source
     }
 
-    Union.Positioner.positionItems: ["contentItem"]
+    Union.Positioner.positionItems: [contentItem]
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
