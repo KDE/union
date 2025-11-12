@@ -174,3 +174,13 @@ overlaydrawer
         border-bottom: 1px solid var(--header-border-color);
     }
 }
+
+menuicon
+{
+    icon-name: "application-menu";
+    .opened {
+        icon-name: "window-close";
+    }
+    icon-width: var(--icon-size-small);
+    icon-height: var(--icon-size-small);
+}

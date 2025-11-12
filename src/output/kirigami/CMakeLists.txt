@@ -32,3 +32,8 @@ install(FILES
     OverlayDrawer.qml
     DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
 )
+
+install(FILES
+    private/MenuIcon.qml
+    DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union/templates/private
+)
