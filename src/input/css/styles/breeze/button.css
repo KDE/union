@@ -47,7 +47,8 @@ menuitem indicator,
 radiobutton indicator,
 radiodelegate indicator,
 combobox,
-roundbutton
+roundbutton,
+tabbutton
 {
     width: var(--button-default-size);
     height: var(--button-default-size);
@@ -101,7 +102,8 @@ roundbutton
 button:pressed,
 toolbutton:pressed,
 combobox:pressed,
-roundbutton:pressed
+roundbutton:pressed,
+tabbutton:pressed
 {
     border-color: var(--button-active-border-highlight-color);
     background-color: var(--button-active-highlight-color);
@@ -201,5 +203,47 @@ toolseparator {
         width: 1px;
         height: var(--large-element-size);
         inset: var(--small-spacing) 0px;
+    }
+}
+
+tabbutton {
+    layout-alignment: content fill center 0;
+    text-alignment: content fill center 0;
+    icon-alignment: content end center 0;
+    background-color: var(--window-background-color);
+    &:checked
+    {
+        background-color: var(--window-background-color);
+    }
+
+    &[tab-position="north"] {
+        /* shouldnt this be border-bottom-left? */
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        border-bottom: 0px solid transparent;
+        corners-bottom-left-color: transparent;
+        corners-bottom-right-color: transparent;
+        corners-bottom-left-width: 0px;
+        corners-bottom-right-width: 0px;
+        &:checked
+        {
+            border-top-width: 4px;
+            border-top-color: var(--highlight-color);
+        }
+    }
+
+    &[tab-position="south"] {
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-top: 0px solid transparent;
+        corners-top-left-color: transparent;
+        corners-top-right-color: transparent;
+        corners-top-left-width: 0px;
+        corners-top-right-width: 0px;
+        &:checked
+        {
+            border-bottom-width: 4px;
+            border-bottom-color: var(--highlight-color);
+        }
     }
 }

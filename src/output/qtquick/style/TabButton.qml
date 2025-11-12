@@ -43,7 +43,8 @@ T.TabButton {
 
     font: Union.Style.properties.text.font
 
-    spacing: 6
+    spacing: Union.Style.properties.layout.spacing
+
     icon {
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
