@@ -19,6 +19,7 @@ set(_configured_files
     Dialogs.qml
     ProgressSlider.qml
     Tables.qml
+    Tabs.qml
     TreeView.qml
     SwipeView.qml
 )

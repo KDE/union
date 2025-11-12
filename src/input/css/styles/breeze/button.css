@@ -38,6 +38,15 @@
     --button-spacing: 4px;
 
     --toolbutton-padding: 6px;
+
+    --tab-background-color: mix(var(--view-background-color), var(--view-text-color), 0.17);
+    --tab-text-color: var(--view-text-color);
+    --tab-open-background-color: var(--window-background-color);
+    --tab-open-text-color: var(--window-text-color);
+    --tab-disabled-text-color: var(--button-disabled-text-color);
+    --tab-disabled-background-color: var(--button-disabled-background-color);
+
+    --tab-highlight-size: 3px;
 }
 
 button,
@@ -206,4 +215,72 @@ toolseparator {
         height: var(--large-element-size);
         inset: var(--small-spacing) 0px;
     }
+}
+
+tabbutton {
+    width: var(--button-default-size);
+    height: var(--button-default-size);
+    spacing: 0px;
+    padding: 0px;
+    border-radius: var(--corner-radius);
+    background-color: var(--tab-background-color);
+    border: 1px solid var(--tab-background-color);
+    color: var(--tab-text-color);
+
+    icon-alignment: content start center 0;
+    text-alignment-horizontal: center;
+    icon-alignment-horizontal: center;
+
+    &[direction="top"] {
+        border-bottom-left-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-bottom: var(--button-border);
+    }
+
+    &[direction="bottom"] {
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        border-top: var(--button-border);
+    }
+
+    &:disabled {
+        background-color: var(--tab-disabled-background-color);
+        color: var(--button-disabled-text-color);
+    }
+
+    &:hovered
+    {
+        background-color: var(--button-active-highlight-color);
+        border: 1px solid var(--button-active-highlight-color);
+    }
+
+    &:pressed
+    {
+        border-color: var(--button-active-border-highlight-color);
+        background-color: var(--button-active-highlight-color);
+        box-shadow: none;
+    }
+
+    &:checked
+    {
+        background-color: var(--tab-open-background-color);
+        color: var(--tab-open-text-color);
+        border: var(--button-border);
+
+        &[direction="top"] {
+            border-top-width: var(--tab-highlight-size);
+            border-top-color: var(--highlight-color);
+            border-bottom-color: var(--tab-open-background-color);
+        }
+
+        &[direction="bottom"] {
+            border-bottom-width: var(--tab-highlight-size);
+            border-bottom-color: var(--highlight-color);
+            border-top-color: var(--tab-open-background-color);
+        }
+    }
+}
+
+tabbar {
+    spacing: 0px;
 }

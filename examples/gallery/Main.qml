@@ -72,6 +72,10 @@ Kirigami.ApplicationWindow {
                 onTriggered: application.pushPage("Tables")
             },
             Kirigami.Action {
+                text: "Tabs"
+                onTriggered: application.pushPage("Tabs")
+            },
+            Kirigami.Action {
                 text: "TreeView"
                 onTriggered: application.pushPage("TreeView")
             },
