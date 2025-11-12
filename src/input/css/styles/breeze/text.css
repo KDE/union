@@ -41,6 +41,7 @@ spinbox
 textfield,
 textarea
 {
+    text-alignment: content start start 0;
     width: 200px;
 }
 
