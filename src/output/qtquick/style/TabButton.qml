@@ -27,9 +27,39 @@ T.TabButton {
         checked: control.checked
         enabled: control.enabled
     }
-    Union.Element.hints: !control.ListView?.view?.highlightItem ? [] : ["itemview-highlight"]
-    Union.Element.attributes: control.T.TabBar.position === T.TabBar.Footer ?
-        {"tab-position": "south"} : {"tab-position": "north"}
+    Union.Element.hints: {
+        let result = []
+        if (icon.name || icon.source.toString()) {
+            result.push("with-icon");
+        }
+        if (control.ListView?.view?.highlightItem) {
+            result.push("itemview-highlight");
+        }
+        return result
+    }
+    Union.Element.attributes: {
+        let result = {}
+        switch (display) {
+            case T.AbstractButton.IconOnly:
+                result.display = "icon-only"
+                break
+            case T.AbstractButton.TextOnly:
+                result.display = "text-only"
+                break
+            case T.AbstractButton.TextBesideIcon:
+                result.display = "text-beside-icon"
+                break
+            case T.AbstractButton.TextUnderIcon:
+                result.display = "text-under-icon"
+                break
+        }
+        if (control.T.TabBar.position === T.TabBar.Footer){
+            result.direction = "south"
+        } else {
+            result.direction = "north"
+        }
+        return result
+    }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right

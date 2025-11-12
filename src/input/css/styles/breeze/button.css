@@ -216,7 +216,7 @@ tabbutton {
         background-color: var(--window-background-color);
     }
 
-    &[tab-position="north"] {
+    &[direction="north"] {
         /* shouldnt this be border-bottom-left? */
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
@@ -232,7 +232,7 @@ tabbutton {
         }
     }
 
-    &[tab-position="south"] {
+    &[direction="south"] {
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
         border-top: 0px solid transparent;
@@ -246,4 +246,9 @@ tabbutton {
             border-bottom-color: var(--highlight-color);
         }
     }
+}
+
+tabbar {
+    padding: var(--small-spacing);
+    spacing: 0px;
 }
