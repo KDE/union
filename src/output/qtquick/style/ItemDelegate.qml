@@ -13,9 +13,9 @@ T.ItemDelegate {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
+                            Math.max(Union.Positioner.implicitWidth, implicitContentWidth + leftPadding + rightPadding))
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
+                             Math.max(Union.Positioner.implicitHeight, implicitContentHeight + topPadding + bottomPadding))
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
