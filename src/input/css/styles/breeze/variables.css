@@ -32,11 +32,13 @@
     --highlight-color: custom-color("kcolorscheme", "active", "selection", "background", "normal");
     --highlight-text-color: custom-color("kcolorscheme", "active", "selection", "foreground", "text");
 
+
     --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
     --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
     --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
     --window-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
+
 
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");
@@ -71,6 +73,30 @@
     --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
     --shadow-color: rgba(0, 0, 0, 0.1);
+
+    /* Disabled colors */
+    --window-disabled-text-color: custom-color("kcolorscheme", "disabled", "window", "foreground", "text");
+    --window-disabled-background-color: custom-color("kcolorscheme", "disabled", "window", "background", "normal");
+    --window-disabled-border-color: custom-color("kcolorscheme", "disabled", "window", "decoration", "frame");
+
+    --view-disabled-text-color: custom-color("kcolorscheme", "disabled", "view", "foreground", "text");
+    --view-disabled-background-color: custom-color("kcolorscheme", "disabled", "view", "background", "normal");
+    --view-disabled-border-color: custom-color("kcolorscheme", "disabled", "view", "decoration", "frame");
+
+    --header-disabled-text-color: custom-color("kcolorscheme", "disabled", "header", "foreground", "text");
+    --header-disabled-background-color: custom-color("kcolorscheme", "disabled", "header", "background", "normal");
+    --header-disabled-border-color: custom-color("kcolorscheme", "disabled", "header", "decoration", "frame");
+
+    --highlight-disabled-color: mix(var(--window-disabled-background-color), var(--highlight-color), 0.2);
+    --highlight-disabled-text-color: mix(var(--window-disabled-text-color), var(--highlight-text-color), 0.2);
+
+    --card-disabled-background-color: var(--view-disabled-background-color);
+    --card-disabled-text-color: var(--view-disabled-text-color);
+    --card-disabled-border-color: var(--view-disabled-border-color);
+
+    --scrollbar-disabled-border-color: var(--window-disabled-border-color);
+    --scrollbar-disabled-handle-color: mix(var(--window-disabled-background-color), var(--window-disabled-text-color), 0.3);
+    --scrollbar-disabled-color: mix(var(--window-disabled-background-color), var(--highlight-disabled-color), 0.3);
 
     /* Standard Elements */
     --focus-outline: 2px solid var(--focus-color);

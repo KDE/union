@@ -93,10 +93,26 @@ Kirigami.Page {
         }
 
         Controls.ComboBox {
+            enabled: false
+            currentIndex: 1
+            displayText: "Disabled Combobox: " + currentText
+            model: ["I am not enabled!", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+        }
+
+        Controls.ComboBox {
             editable: true
             currentIndex: 1
             displayText: "Editable Combobox: " + currentText
             model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+            selectTextByMouse: true
+        }
+
+        Controls.ComboBox {
+            editable: true
+            enabled: false
+            currentIndex: 1
+            displayText: "Disabled Editable Combobox: " + currentText
+            model: ["I am not enabled!", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
             selectTextByMouse: true
         }
 
@@ -108,11 +124,29 @@ Kirigami.Page {
         }
 
         Controls.ComboBox {
+            enabled: false
+            flat: true
+            currentIndex: 1
+            displayText: "Disabled Flat Combobox: " + currentText
+            model: ["I am not enabled!", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+        }
+
+        Controls.ComboBox {
             flat: true
             editable: true
             currentIndex: 1
             displayText: "Flat Editable Combobox: " + currentText
             model: ["AAAAAAAA", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
+            selectTextByMouse: true
+        }
+
+        Controls.ComboBox {
+            flat: true
+            editable: true
+            enabled: false
+            currentIndex: 1
+            displayText: "Disabled Flat Editable Combobox: " + currentText
+            model: ["I am not enabled!", "BBBBBBBBBBB", "CCCCCCCCCCCCCC"]
             selectTextByMouse: true
         }
 

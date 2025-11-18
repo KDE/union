@@ -15,29 +15,25 @@ Kirigami.Page {
     Kirigami.ColumnView.preferredWidth: Kirigami.Units.gridUnit * 25
     Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
 
-    Item {
+    ColumnLayout {
         anchors.fill: parent
-
-        Controls.HorizontalHeaderView {
-            id: horizontalHeader
-            anchors.left: tableView.left
-            anchors.top: parent.top
-            syncView: tableView
-            clip: true
-            textRole: "display"
+        Controls.CheckBox {
+            text: "Treeview enabled"
+            checked: true
+            onCheckedChanged: {
+                treeView.enabled = checked;
+            }
         }
+    Item {
+        Layout.fillHeight: true
+        Layout.fillWidth: true
 
-        Controls.VerticalHeaderView {
-            id: verticalHeader
-            anchors.top: tableView.top
-            anchors.left: parent.left
-            syncView: tableView
-            clip: true
-            textRole: "display"
-        }
         TreeView {
             id: treeView
             anchors.fill: parent
+            Component.onCompleted: {
+                treeView.expandRecursively();
+            }
 
             selectionModel: ItemSelectionModel {}
 
@@ -128,5 +124,6 @@ Kirigami.Page {
 
             delegate: Controls.TreeViewDelegate {}
         }
+    }
     }
 }

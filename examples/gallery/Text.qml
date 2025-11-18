@@ -19,20 +19,48 @@ Kirigami.Page {
             text: "Label"
         }
 
+        Controls.Label {
+            enabled: false
+            text: "Disabled Label"
+        }
+
         Kirigami.Heading {
             level: 1
             text: "Heading"
+        }
+
+        Kirigami.Heading {
+            enabled: false
+            level: 1
+            text: "Disabled Heading"
         }
 
         Controls.TextField {
             placeholderText: "Text Field"
         }
 
+        Controls.TextField {
+            enabled: false
+            placeholderText: "Disabled Text Field"
+        }
+
         Controls.TextArea {
             placeholderText: "Text Area"
         }
 
+        Controls.TextArea {
+            enabled: false
+            placeholderText: "Disabled Text Area"
+        }
+
         Controls.SpinBox {
+            from: 0
+            to: 1000
+            stepSize: 1
+        }
+
+        Controls.SpinBox {
+            enabled: false
             from: 0
             to: 1000
             stepSize: 1

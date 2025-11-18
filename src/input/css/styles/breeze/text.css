@@ -9,6 +9,10 @@
 
 label {
     color: var(--window-text-color);
+
+    &:disabled {
+        color: var(--window-disabled-text-color);
+    }
 }
 
 textfield,
@@ -35,6 +39,17 @@ spinbox
     .placeholder
     {
         color: mix(var(--view-text-color), var(--view-background-color), 0.3);
+    }
+
+    &:disabled {
+        color: var(--view-disabled-text-color);
+        background-color: var(--view-disabled-background-color);
+        border: 1px solid var(--view-disabled-border-color);
+
+        .placeholder
+        {
+            color: mix(var(--view-text-color), var(--view-background-color), 0.7);
+        }
     }
 }
 

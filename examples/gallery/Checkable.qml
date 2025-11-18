@@ -28,6 +28,12 @@ Kirigami.Page {
             text: "Checkbox with Text and Icon"
         }
 
+        Controls.CheckBox {
+            icon.name: "document-save"
+            enabled: false
+            text: "Disabled Checkbox"
+        }
+
         Controls.RadioButton {
             text: "RadioButton with Text"
         }
@@ -37,8 +43,19 @@ Kirigami.Page {
             text: "RadioButton withh Text and Icon"
         }
 
+        Controls.RadioButton {
+            icon.name: "document-save"
+            enabled: false
+            text: "Disabled RadioButton"
+        }
+
         Controls.Switch {
             text: "Switch with Text"
+        }
+
+        Controls.Switch {
+            text: "Disabled Switch with Text"
+            enabled: false
         }
 
         Item {

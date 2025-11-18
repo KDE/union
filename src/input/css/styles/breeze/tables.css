@@ -38,6 +38,11 @@ tableviewdelegate {
     .editing {
         border: 1px solid var(--highlight-color);
     }
+
+    &:disabled {
+        color: var(--view-disabled-text-color);
+        background-color: var(--view-disabled-background-color);
+    }
 }
 
 treeviewdelegate {
@@ -50,6 +55,15 @@ treeviewdelegate {
 
     &.expanded indicator {
         icon-name: "arrow-down-symbolic"
+    }
+
+    &:disabled {
+        color: var(--view-disabled-text-color);
+        background-color: var(--view-disabled-background-color);
+
+        indicator {
+            color: var(--view-disabled-text-color);
+        }
     }
 }
 
@@ -64,6 +78,12 @@ headerviewdelegate {
     text-alignment-vertical: center;
     width: var(--large-element-size);
     height: var(--large-element-size);
+
+    &:disabled {
+        border: 1px solid var(--button-disabled-border-color);
+        color: var(--button-disabled-text-color);
+        background-color: var(--button-disabled-background-color);
+    }
 }
 
 selectionrectangle {
@@ -71,6 +91,12 @@ selectionrectangle {
     border: 1px solid var(--highlight-color);
     border-radius: var(--corner-radius);
     background-color: var(--highlight-color);
+
+    &:disabled {
+        border: 1px solid var(--highlight-disabled-color);
+        color: var(--highlight-disabled-color));
+        background-color: var(--highlight-disabled-color));
+    }
 }
 
 selectionrectanglehandle {
@@ -83,5 +109,11 @@ selectionrectanglehandle {
     &:visual-focus {
         border-color: var(--highlight-color);
         outline: var(--focus-outline);
+    }
+
+    &:disabled {
+        color: var(--highlight-disabled-color));
+        background-color: var(--slider-disabled-handle-background-color);
+        border: 1px solid var(--slider-disabled-border-color);
     }
 }

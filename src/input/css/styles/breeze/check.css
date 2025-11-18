@@ -49,6 +49,18 @@ radiodelegate:checked indicator
     color: var(--window-text-color);
 }
 
+checkbox:disabled indicator,
+checkdelegate:disabled indicator,
+menuitem:disabled indicator,
+radiobutton:disabled indicator,
+radiodelegate:disabled indicator
+{
+    background-image: url("images/checkmark.svg") mask var(--window-disabled-text-color);
+    background-color: var(--button-active-highlight-color);
+    border: 1px solid var(--button-disabled-border-color);
+    color: var(--window-disabled-text-color);
+}
+
 radiobutton indicator,
 radiodelegate indicator
 {
@@ -102,6 +114,15 @@ switchdelegate indicator
 
     &:checked {
         background-color: var(--button-active-highlight-color);
+    }
+
+    &:disabled {
+        border: 1px solid var(--button-disabled-border-color);
+        background-color: var(--button-disabled-highlight-color);
+
+        handle {
+            border: 1px solid var(--button-disabled-border-color);
+        }
     }
 }
 
