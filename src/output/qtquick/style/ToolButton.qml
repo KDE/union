@@ -30,6 +30,7 @@ T.ToolButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: flat ? [] : ["raised"]
     Union.Element.attributes: {
         let result = {}
         switch (display) {
