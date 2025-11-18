@@ -94,8 +94,8 @@ selectionrectangle {
 
     &:disabled {
         border: 1px solid var(--highlight-disabled-color);
-        color: var(--highlight-disabled-color));
-        background-color: var(--highlight-disabled-color));
+        color: var(--highlight-disabled-color);
+        background-color: var(--highlight-disabled-color);
     }
 }
 
@@ -112,7 +112,7 @@ selectionrectanglehandle {
     }
 
     &:disabled {
-        color: var(--highlight-disabled-color));
+        color: var(--highlight-disabled-color);
         background-color: var(--slider-disabled-handle-background-color);
         border: 1px solid var(--slider-disabled-border-color);
     }
