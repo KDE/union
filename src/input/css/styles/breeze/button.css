@@ -48,7 +48,8 @@ menuitem indicator,
 radiobutton indicator,
 radiodelegate indicator,
 combobox,
-roundbutton
+roundbutton,
+toolbutton.raised
 {
     width: var(--button-default-size);
     height: var(--button-default-size);
@@ -102,7 +103,8 @@ roundbutton
 button:pressed,
 toolbutton:pressed,
 combobox:pressed,
-roundbutton:pressed
+roundbutton:pressed,
+toolbutton.raised:pressed
 {
     border-color: var(--button-active-border-highlight-color);
     background-color: var(--button-active-highlight-color);
@@ -143,7 +145,8 @@ roundbutton.flat
     }
 }
 
-toolbutton
+toolbutton,
+toolbutton.raised
 {
     icon-size: var(--icon-size-smallmedium);
     padding: var(--toolbutton-padding);
