@@ -13,6 +13,10 @@ ecm_add_tests(
     LINK_LIBRARIES Qt6::Test Union::Union
 )
 
+if (WITH_CSS_INPUT)
+    ecm_add_test(input/TestCss.cpp LINK_LIBRARIES Qt6::Test Union::Union cxx-rust-cssparser)
+endif()
+
 # TestTheme requires properly working selectors for it to function
 set_tests_properties(TestSelector PROPERTIES FIXTURES_SETUP Selector)
 set_tests_properties(TestTheme PROPERTIES FIXTURES_REQUIRED Selector)
