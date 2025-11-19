@@ -47,6 +47,13 @@ Kirigami.Page {
         }
 
         Controls.Button {
+            // An icon-only button that is icon only due to not having text
+            // This should look the same as a button with text but in IconOnly
+            // mode.
+            icon.name: "document-save"
+        }
+
+        Controls.Button {
             icon.name: "document-save"
             text: "Button Checkable"
             checkable: true
@@ -72,6 +79,12 @@ Kirigami.Page {
             icon.name: "document-save"
             text: "ToolButton Text Under Icon"
             display: Controls.Button.TextUnderIcon
+        }
+
+        Controls.ToolButton {
+            icon.name: "document-save"
+            text: "ToolButton Icon Only"
+            display: Controls.Button.IconOnly
         }
 
         Controls.ToolButton {
