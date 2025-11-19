@@ -361,17 +361,17 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
             switch (item.verticalAlignment) {
             case Union::Properties::Alignment::Unspecified:
             case Union::Properties::Alignment::Start:
-                item.position.setY(0.0);
+                item.position.setY(item.margins.top());
                 break;
             case Union::Properties::Alignment::Center:
-                item.position.setY(std::round(bucket->size.height() / 2 - item.implicitSize.height() / 2));
+                item.position.setY(std::round(bucket->size.height() / 2 - (item.implicitSize.height() + item.margins.top() + item.margins.bottom()) / 2));
                 break;
             case Union::Properties::Alignment::End:
-                item.position.setY(bucket->size.height() - item.implicitSize.height());
+                item.position.setY(bucket->size.height() - item.implicitSize.height() - item.margins.bottom());
                 break;
             case Union::Properties::Alignment::Fill:
-                item.position.setY(0);
-                item.size.setHeight(bucket->size.height());
+                item.position.setY(item.margins.top());
+                item.size.setHeight(bucket->size.height() - item.margins.top() - item.margins.bottom());
                 break;
             case Union::Properties::Alignment::Stack:
                 stackedY += item.margins.top();
