@@ -167,10 +167,12 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty &s
     auto rect = boundingRect();
 
     auto corners = style.corners_or_new();
-    auto radii = QVector4D{float(corners.topRight_or_new().radius().value_or(0.0)),
-                           float(corners.bottomRight_or_new().radius().value_or(0.0)),
-                           float(corners.topLeft_or_new().radius().value_or(0.0)),
-                           float(corners.bottomLeft_or_new().radius().value_or(0.0))};
+
+    // Shader corner radius order is bottom right, top right, bottom left, top left.
+    auto radii = QVector4D{float(corners.bottomRight_or_new().radius().value_or(0.0)),
+                           float(corners.topRight_or_new().radius().value_or(0.0)),
+                           float(corners.bottomLeft_or_new().radius().value_or(0.0)),
+                           float(corners.topLeft_or_new().radius().value_or(0.0))};
 
     OutlineBorderRectangleNode *borderNode = nullptr;
 

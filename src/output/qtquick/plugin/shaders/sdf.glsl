@@ -84,7 +84,7 @@ lowp float sdf_rectangle(in lowp vec2 point, in lowp vec2 rect)
 //
 // \param point The point to calculate the distance of.
 // \param rect The rectangle to calculate the distance of.
-// \param radius A vec4 with the radius of each corner. Order is top right, bottom right, top left, bottom left.
+// \param radius A vec4 with the radius of each corner. Order is bottom right, top right, bottom left, top left.
 //
 // \return The signed distance from point to rectangle. If negative, point is
 //         inside the rectangle.
