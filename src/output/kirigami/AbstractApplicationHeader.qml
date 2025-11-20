@@ -5,6 +5,7 @@
  */
 
 import QtQuick
+import QtQuick.Templates as T
 
 import org.kde.kirigami.templates as KT
 
@@ -14,6 +15,13 @@ KT.AbstractApplicationHeader {
     id: root
 
     Union.Element.type: "ApplicationHeader"
+    Union.Element.hints: {
+        if (root.separatorVisible && (!root.page || !root.page.header || !root.page.header.visible || !(root.page.header instanceof T.ToolBar))) {
+            return ["with-separator"]
+        } else {
+            return []
+        }
+    }
 
     background: Union.StyledRectangle { }
 }
