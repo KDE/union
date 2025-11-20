@@ -22,6 +22,16 @@ page
 toolbar
 {
     padding: var(--small-spacing);
+    background-color: var(--window-background-color);
+
+    .header {
+        border-bottom: 1px solid var(--window-border-color);
+        background-color: var(--header-background-color);
+    }
+
+    .footer {
+        border-top: 1px solid var(--window-border-color);
+    }
 }
 
 drawer
