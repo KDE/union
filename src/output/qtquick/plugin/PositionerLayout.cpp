@@ -397,16 +397,20 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
             item.position.setX(0.0);
             totalHeight += item.margins.top() + item.margins.bottom() + item.implicitSize.height();
         } else {
+            if (x > 0.0) {
+                x += bucket.spacing;
+            }
+
             x += item.margins.left();
             item.position.setX(x);
-            x += item.implicitSize.width() + item.margins.right() + bucket.spacing;
+            x += item.implicitSize.width() + item.margins.right();
         }
 
         maxWidth = std::max(maxWidth, item.margins.left() + item.implicitSize.width() + item.margins.right());
         maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
     }
 
-    bucket.implicitSize.setWidth(std::round(std::max(bucket.stacked ? maxWidth : x - bucket.spacing, 0.0)));
+    bucket.implicitSize.setWidth(std::round(std::max(bucket.stacked ? maxWidth : x, 0.0)));
     bucket.implicitSize.setHeight(std::round(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
 }
 
