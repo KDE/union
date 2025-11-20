@@ -255,7 +255,7 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     float leftTopV = leftTopHeight / rect.height();
     float leftBottomV = 1.0 - (leftBottomHeight / rect.height());
     float rightTopV = rightTopHeight / rect.height();
-    float rightBottomV = 1.0 - (rightBottomWidth / rect.height());
+    float rightBottomV = 1.0 - (rightBottomHeight / rect.height());
 
     // Left-Top
     m_vertices[0].position = QVector2D(left, top);
@@ -306,8 +306,8 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
 
     // Right
     m_vertices[16].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
-    m_vertices[17].position = QVector2D(right - rightBottomWidth, bottom - rightBottomWidth);
-    m_vertices[18].position = QVector2D(right, bottom - rightBottomWidth);
+    m_vertices[17].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
+    m_vertices[18].position = QVector2D(right, bottom - rightBottomHeight);
 
     m_vertices[16].texture = QVector2D(rightTopU, rightTopV);
     m_vertices[17].texture = QVector2D(rightBottomU, rightBottomV);
@@ -324,7 +324,7 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
 
     // Bottom
     m_vertices[22].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
-    m_vertices[23].position = QVector2D(right - rightBottomWidth, bottom - rightBottomWidth);
+    m_vertices[23].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
 
     m_vertices[22].texture = QVector2D(leftBottomU, leftBottomV);
     m_vertices[23].texture = QVector2D(rightBottomU, rightBottomV);
