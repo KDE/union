@@ -397,6 +397,10 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
             item.position.setX(0.0);
             totalHeight += item.margins.top() + item.margins.bottom() + item.implicitSize.height();
         } else {
+            if (qFuzzyIsNull(item.implicitSize.width())) {
+                continue;
+            }
+
             if (x > 0.0) {
                 x += bucket.spacing;
             }
