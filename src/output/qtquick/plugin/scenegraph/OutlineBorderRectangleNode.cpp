@@ -236,98 +236,109 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     const float top = rect.y() - outlineSize.y();
     const float bottom = rect.y() + height + outlineSize.w();
 
-    const float leftWidth = std::max(outlineSize.x() + borderSize.x(), std::min(std::max(radii.z(), radii.w()), width / 2));
-    const float rightWidth = std::max(outlineSize.z() + borderSize.z(), std::min(std::max(radii.x(), radii.y()), width / 2));
-    const float topWidth = std::max(outlineSize.y() + borderSize.y(), std::min(std::max(radii.x(), radii.z()), height / 2));
-    const float bottomWidth = std::max(outlineSize.w() + borderSize.w(), std::min(std::max(radii.y(), radii.w()), height / 2));
+    // Shader corner radius order is bottom right, top right, bottom left, top left.
 
-    float leftUV = leftWidth / rect.width();
-    float rightUV = 1.0 - (rightWidth / rect.width());
-    float topUV = topWidth / rect.height();
-    float bottomUV = 1.0 - (bottomWidth / rect.height());
+    const float leftTopWidth = std::max(outlineSize.x() + borderSize.x(), std::min(radii.w(), width / 2));
+    const float leftBottomWidth = std::max(outlineSize.x() + borderSize.x(), std::min(radii.z(), width / 2));
+    const float rightTopWidth = std::max(outlineSize.z() + borderSize.z(), std::min(radii.y(), width / 2));
+    const float rightBottomWidth = std::max(outlineSize.z() + borderSize.z(), std::min(radii.x(), width / 2));
+
+    const float leftTopHeight = std::max(outlineSize.y() + borderSize.y(), std::min(radii.w(), height / 2));
+    const float leftBottomHeight = std::max(outlineSize.w() + borderSize.w(), std::min(radii.z(), height / 2));
+    const float rightTopHeight = std::max(outlineSize.y() + borderSize.y(), std::min(radii.y(), height / 2));
+    const float rightBottomHeight = std::max(outlineSize.w() + borderSize.w(), std::min(radii.x(), height / 2));
+
+    float leftTopU = leftTopWidth / rect.width();
+    float leftBottomU = leftBottomWidth / rect.width();
+    float rightTopU = 1.0 - (rightTopWidth / rect.width());
+    float rightBottomU = 1.0 - (rightBottomWidth / rect.width());
+    float leftTopV = leftTopHeight / rect.height();
+    float leftBottomV = 1.0 - (leftBottomHeight / rect.height());
+    float rightTopV = rightTopHeight / rect.height();
+    float rightBottomV = 1.0 - (rightBottomWidth / rect.height());
 
     // Left-Top
     m_vertices[0].position = QVector2D(left, top);
-    m_vertices[1].position = QVector2D(left, top + topWidth);
-    m_vertices[2].position = QVector2D(left + leftWidth, top);
-    m_vertices[3].position = QVector2D(left + leftWidth, top + topWidth);
+    m_vertices[1].position = QVector2D(left, top + leftTopHeight);
+    m_vertices[2].position = QVector2D(left + leftTopWidth, top);
+    m_vertices[3].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
 
     m_vertices[0].texture = QVector2D(0.0, 0.0);
-    m_vertices[1].texture = QVector2D(0.0, topUV);
-    m_vertices[2].texture = QVector2D(leftUV, 0.0);
-    m_vertices[3].texture = QVector2D(leftUV, topUV);
+    m_vertices[1].texture = QVector2D(0.0, leftTopV);
+    m_vertices[2].texture = QVector2D(leftTopU, 0.0);
+    m_vertices[3].texture = QVector2D(leftTopU, leftTopV);
 
     // Top
-    m_vertices[4].position = QVector2D(left + leftWidth, top + topWidth);
-    m_vertices[5].position = QVector2D(right - rightWidth, top);
-    m_vertices[6].position = QVector2D(right - rightWidth, top + topWidth);
+    m_vertices[4].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
+    m_vertices[5].position = QVector2D(right - rightTopWidth, top);
+    m_vertices[6].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
 
-    m_vertices[4].texture = QVector2D(leftUV, topUV);
-    m_vertices[5].texture = QVector2D(rightUV, 0.0);
-    m_vertices[6].texture = QVector2D(rightUV, topUV);
+    m_vertices[4].texture = QVector2D(leftTopU, leftTopV);
+    m_vertices[5].texture = QVector2D(rightTopU, 0.0);
+    m_vertices[6].texture = QVector2D(rightTopU, rightTopV);
 
     // Right-Top
-    m_vertices[7].position = QVector2D(right - rightWidth, top + topWidth);
-    m_vertices[8].position = QVector2D(right, top + topWidth);
+    m_vertices[7].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
+    m_vertices[8].position = QVector2D(right, top + rightTopHeight);
     m_vertices[9].position = QVector2D(right, top);
 
-    m_vertices[7].texture = QVector2D(rightUV, topUV);
-    m_vertices[8].texture = QVector2D(1.0, topUV);
+    m_vertices[7].texture = QVector2D(rightTopU, rightTopV);
+    m_vertices[8].texture = QVector2D(1.0, rightTopV);
     m_vertices[9].texture = QVector2D(1.0, 0.0);
 
     // Left
-    m_vertices[10].position = QVector2D(left, bottom - bottomWidth);
-    m_vertices[11].position = QVector2D(left + leftWidth, top + topWidth);
-    m_vertices[12].position = QVector2D(left + leftWidth, bottom - bottomWidth);
+    m_vertices[10].position = QVector2D(left, bottom - leftBottomHeight);
+    m_vertices[11].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
+    m_vertices[12].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
 
-    m_vertices[10].texture = QVector2D(0.0, bottomUV);
-    m_vertices[11].texture = QVector2D(leftUV, topUV);
-    m_vertices[12].texture = QVector2D(leftUV, bottomUV);
+    m_vertices[10].texture = QVector2D(0.0, leftBottomV);
+    m_vertices[11].texture = QVector2D(leftTopU, leftTopV);
+    m_vertices[12].texture = QVector2D(leftBottomU, leftBottomV);
 
     // Left-Bottom
     m_vertices[13].position = QVector2D(left, bottom);
-    m_vertices[14].position = QVector2D(left + leftWidth, bottom);
-    m_vertices[15].position = QVector2D(left + leftWidth, bottom - bottomWidth);
+    m_vertices[14].position = QVector2D(left + leftBottomWidth, bottom);
+    m_vertices[15].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
 
     m_vertices[13].texture = QVector2D(0.0, 1.0);
-    m_vertices[14].texture = QVector2D(leftUV, 1.0);
-    m_vertices[15].texture = QVector2D(leftUV, bottomUV);
+    m_vertices[14].texture = QVector2D(leftBottomU, 1.0);
+    m_vertices[15].texture = QVector2D(leftBottomU, leftBottomV);
 
     // Right
-    m_vertices[16].position = QVector2D(right - rightWidth, top + topWidth);
-    m_vertices[17].position = QVector2D(right - rightWidth, bottom - bottomWidth);
-    m_vertices[18].position = QVector2D(right, bottom - bottomWidth);
+    m_vertices[16].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
+    m_vertices[17].position = QVector2D(right - rightBottomWidth, bottom - rightBottomWidth);
+    m_vertices[18].position = QVector2D(right, bottom - rightBottomWidth);
 
-    m_vertices[16].texture = QVector2D(rightUV, topUV);
-    m_vertices[17].texture = QVector2D(rightUV, bottomUV);
-    m_vertices[18].texture = QVector2D(1.0, bottomUV);
+    m_vertices[16].texture = QVector2D(rightTopU, rightTopV);
+    m_vertices[17].texture = QVector2D(rightBottomU, rightBottomV);
+    m_vertices[18].texture = QVector2D(1.0, rightBottomV);
 
     // Right-Bottom
-    m_vertices[19].position = QVector2D(right - rightWidth, bottom - bottomWidth);
-    m_vertices[20].position = QVector2D(right - rightWidth, bottom);
+    m_vertices[19].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
+    m_vertices[20].position = QVector2D(right - rightBottomWidth, bottom);
     m_vertices[21].position = QVector2D(right, bottom);
 
-    m_vertices[19].texture = QVector2D(rightUV, bottomUV);
-    m_vertices[20].texture = QVector2D(rightUV, 1.0);
+    m_vertices[19].texture = QVector2D(rightBottomU, rightBottomV);
+    m_vertices[20].texture = QVector2D(rightBottomU, 1.0);
     m_vertices[21].texture = QVector2D(1.0, 1.0);
 
     // Bottom
-    m_vertices[22].position = QVector2D(left + leftWidth, bottom - bottomWidth);
-    m_vertices[23].position = QVector2D(right - rightWidth, bottom - bottomWidth);
+    m_vertices[22].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
+    m_vertices[23].position = QVector2D(right - rightBottomWidth, bottom - rightBottomWidth);
 
-    m_vertices[22].texture = QVector2D(leftUV, bottomUV);
-    m_vertices[23].texture = QVector2D(rightUV, bottomUV);
+    m_vertices[22].texture = QVector2D(leftBottomU, leftBottomV);
+    m_vertices[23].texture = QVector2D(rightBottomU, rightBottomV);
 
     // Center
-    m_vertices[24].position = QVector2D(left + leftWidth, top + topWidth);
-    m_vertices[25].position = QVector2D(left + leftWidth, bottom - bottomWidth);
-    m_vertices[26].position = QVector2D(right - rightWidth, top + topWidth);
-    m_vertices[27].position = QVector2D(right - rightWidth, bottom - bottomWidth);
+    m_vertices[24].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
+    m_vertices[25].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
+    m_vertices[26].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
+    m_vertices[27].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
 
-    m_vertices[24].texture = QVector2D(leftUV, topUV);
-    m_vertices[25].texture = QVector2D(leftUV, bottomUV);
-    m_vertices[26].texture = QVector2D(rightUV, topUV);
-    m_vertices[27].texture = QVector2D(rightUV, bottomUV);
+    m_vertices[24].texture = QVector2D(leftTopU, leftTopV);
+    m_vertices[25].texture = QVector2D(leftBottomU, leftBottomV);
+    m_vertices[26].texture = QVector2D(rightTopU, rightTopV);
+    m_vertices[27].texture = QVector2D(rightBottomU, rightBottomV);
 }
 
 void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderProperty &border, const QColor &center)
