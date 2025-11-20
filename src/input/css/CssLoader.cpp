@@ -261,13 +261,19 @@ inline std::optional<SizeProperty> sizeFromProperty(const std::optional<SizeProp
 }
 
 template<typename T>
-void setDirectionValue(T &output, const std::string &baseName, const cssparser::Property &property)
+inline void setDirectionValue(T &output, const std::string &baseName, const cssparser::Property &property)
 {
     QList<QByteArray> directions;
     QList<QByteArray> properties;
     QList<cssparser::Value> values;
 
-    if (property.name == baseName) {
+    auto parts = QByteArray(property.name).split('-');
+    if (parts.isEmpty() || parts.first() != QByteArrayView(baseName)) {
+        qCDebug(UNION_CSS) << "Ignoring invalid property assignment of" << parts << "expected" << baseName;
+        return;
+    }
+
+    if (parts.size() == 1) {
         directions = {"left", "right", "top", "bottom"};
         properties = {"width", "style", "color"};
 
@@ -276,42 +282,30 @@ void setDirectionValue(T &output, const std::string &baseName, const cssparser::
         } else {
             values = {property.value(0), property.value(1), property.value(2)};
         }
-    } else if (property.name == baseName + "-width") {
-        directions = {"left", "right", "top", "bottom"};
-        properties = {"width"};
-        values = {property.value()};
-    } else if (property.name == baseName + "-style") {
-        directions = {"left", "right", "top", "bottom"};
-        properties = {"style"};
-        values = {property.value()};
-    } else if (property.name == baseName + "-color") {
-        directions = {"left", "right", "top", "bottom"};
-        properties = {"color"};
-        values = {property.value()};
-    } else {
-        static const QRegularExpression directionValueExpression{QStringLiteral(R"(([^-]+)-([^-]+)(?:-(.+))?)"),
-                                                                 QRegularExpression::PatternOption::CaseInsensitiveOption};
-        auto matches = directionValueExpression.match(QString::fromStdString(property.name));
-
-        if (!matches.hasMatch() || matches.captured(1).toStdString() != baseName) {
-            return;
-        }
-
-        directions = {matches.captured(2).toLatin1()};
-
-        if (matches.hasCaptured(3)) {
-            properties = {matches.captured(3).toLatin1()};
+    } else if (parts.size() == 2) {
+        auto propertyName = parts.last();
+        if (propertyName == "width" || propertyName == "style" || propertyName == "color") {
+            directions = {"left", "right", "top", "bottom"};
+            properties = {propertyName};
             values = {property.value()};
         } else {
+            directions = {propertyName};
             properties = {"width", "style", "color"};
-            values = {property.value(0), property.value(1), property.value(2)};
+
+            if (property.values.size() == 1 && matches_keyword(property.value(), u"none"_s)) {
+                values = {std::nullopt, property.value(), std::nullopt};
+            } else {
+                values = {property.value(0), property.value(1), property.value(2)};
+            }
         }
+    } else {
+        directions = {parts.at(2)};
+        properties = {parts.at(3)};
+        values = {property.value(0), property.value(1), property.value(2)};
     }
 
     auto setLineValue = [](LineProperty &line, const QByteArray &property, const cssparser::Value &value) -> LineProperty {
-        if (property == "width") {
-            line.setSize(to_px(value));
-        } else if (property == "size") {
+        if (property == "width" || property == "size") {
             line.setSize(to_px(value));
         } else if (property == "style") {
             line.setStyle(toEnumValue<Union::Properties::LineStyle>(std::get<std::string>(value)));
