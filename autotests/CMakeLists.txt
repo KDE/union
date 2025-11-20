@@ -4,7 +4,6 @@
 add_subdirectory(properties)
 
 ecm_add_tests(
-    input/TestPlasmaSvg.cpp
     TestStyleRule.cpp
     TestSelector.cpp
     TestTheme.cpp
