@@ -1,0 +1,40 @@
+{
+    "structure": [
+        {
+            "hints": ["parent1", "parent2"]
+        },
+        {
+            "hints": ["child1", "child2", "child3"]
+        }
+
+    ],
+    "matching_selectors": {
+        "all_child_hints": [
+            { "hints": ["child1", "child2", "child3"] }
+        ],
+        "single_hint": [
+            { "hints": ["child2"] }
+        ],
+        "parent_hint": [
+            { "hints": ["parent1"] },
+            { "descendant": true },
+            { "hints": ["child1"] }
+        ]
+    },
+    "failing_selectors": {
+        "invalid_hint": [
+            { "hints": ["invalid"] }
+        ],
+        "invalid_parent_hint": [
+            { "hints": ["invalid"] },
+            { "descendant": true },
+            { "hints": ["child1"] }
+        ],
+        "invalid_child_hint": [
+            { "hints": ["parent1"] },
+            { "descendant": true },
+            { "hints": ["invalid"] }
+        ]
+    }
+}
+
