@@ -63,6 +63,7 @@ textarea
 spinbox
 {
     width: var(--medium-element-size);
+    height: var(--large-element-size);
     layout-alignment: content fill fill 0;
     text-alignment: content fill fill 0;
     padding-left: var(--large-spacing);
@@ -76,21 +77,32 @@ spinbox
 spinbox indicator
 {
     width: var(--large-element-size);
-    height: var(--large-element-size);
+    height: var(--small-element-size);
     border-radius: var(--corner-radius);
-    border-color: var(--button-active-border-color);
     color: var(--button-active-text-color);
+
+    margin-top: var(--corner-radius);
+    margin-bottom: var(--corner-radius);
 
     layout-alignment-container: item;
     layout-alignment-vertical: fill;
 }
 
+spinbox indicator:hovered,
+spinbox indicator:pressed
+{
+    height: var(--medium-element-size);
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
 spinbox indicator:hovered {
-    border-color: var(--highlight-color);
+    border: 1px solid var(--highlight-color);
 }
 
 spinbox indicator:pressed {
-    background-color: var(--highlight-color);
+    background-color: var(--button-active-highlight-color);
+    border: 1px solid var(--highlight-color);
 }
 
 spinbox indicator:disabled {
@@ -100,17 +112,33 @@ spinbox indicator:disabled {
 spinbox indicator.decrease
 {
     layout-alignment-horizontal: start;
-    icon-name: "arrow-down-symbolic";
+    icon-name: "spinbox-decrease";
     border-top-right-radius: 0px;
     border-bottom-right-radius: 0px;
-    border-right-width: 1px;
+    border-right: 1px solid var(--button-active-border-color);
+}
+
+spinbox indicator.decrease:hovered,
+spinbox indicator.decrease:pressed
+{
+    border-right: 1px solid var(--highlight-color);
+    border-top-right-radius: var(--corner-radius);
+    border-bottom-right-radius: var(--corner-radius);
 }
 
 spinbox indicator.increase
 {
     layout-alignment-horizontal: end;
-    icon-name: "arrow-up-symbolic";
+    icon-name: "spinbox-increase";
     border-top-left-radius: 0px;
     border-bottom-left-radius: 0px;
-    border-left-width: 1px;
+    border-left: 1px solid var(--button-active-border-color);
+}
+
+spinbox indicator.increase:hovered,
+spinbox indicator.increase:pressed
+{
+    border-left: 1px solid var(--highlight-color);
+    border-top-left-radius: var(--corner-radius);
+    border-bottom-left-radius: var(--corner-radius);
 }
