@@ -1,0 +1,45 @@
+{
+    "structure": [
+        {
+            "type": "Type1",
+            "states": "hovered"
+        },
+        {
+            "type": "Type2",
+            "states": "hovered"
+        }
+    ],
+    "matching_selectors": {
+        "exact": [
+            { "type": "Type1", "states": "hovered" },
+            { "descendant": true },
+            { "type": "Type2", "states": "hovered" }
+        ],
+        "states_only": [
+            { "states": "hovered" },
+            { "descendant": true },
+            { "states": "hovered" }
+        ],
+        "type_state": [
+            { "type": "Type1" },
+            { "descendant": true },
+            { "states": "hovered" }
+        ],
+        "state_type": [
+            { "states": "hovered" },
+            { "descendant": true },
+            { "type": "Type2" }
+        ],
+        "subelement_state": [
+            { "type": "Type1" },
+            { "descendant": true },
+            { "type": "Type2", "states": "hovered" }
+        ]
+    },
+    "failing_selectors": {
+        "invalid_state": [
+            { "type": "Type1", "states": "invalid" }
+        ]
+    }
+}
+
