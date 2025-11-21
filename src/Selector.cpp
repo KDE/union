@@ -328,6 +328,7 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
                 break;
             case SelectorType::DescendantCombinator:
                 sitr++;
+                eitr++;
                 while (eitr != elements.rend() && !sitr->matches(eitr->get())) {
                     eitr++;
                 }
