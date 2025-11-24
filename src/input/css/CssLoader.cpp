@@ -299,9 +299,9 @@ inline void setDirectionValue(T &output, const std::string &baseName, const cssp
             }
         }
     } else {
-        directions = {parts.at(2)};
-        properties = {parts.at(3)};
-        values = {property.value(0), property.value(1), property.value(2)};
+        directions = {parts.at(1)};
+        properties = {parts.at(2)};
+        values = {property.value()};
     }
 
     auto setLineValue = [](LineProperty &line, const QByteArray &property, const cssparser::Value &value) -> LineProperty {
