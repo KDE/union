@@ -27,23 +27,33 @@ Kirigami.Page {
             Controls.BusyIndicator {
                 running: true
             }
-
-            Controls.BusyIndicator {
-                running: false
-            }
         }
 
         Controls.ProgressBar {
             from: 0
             to: 100
-            value: 50
+            value: horizontalSlider.value
+        }
+
+        Controls.ProgressBar {
+            from: 0
+            to: 100
+            value: horizontalSlider.value
+            enabled: false
         }
 
         Controls.ProgressBar {
             indeterminate: true
         }
 
+        Controls.ProgressBar {
+            indeterminate: true
+            enabled: false
+        }
+
         Controls.Slider {
+            id: horizontalSlider
+
             from: 0
             to: 100
             stepSize: 1
@@ -55,28 +65,12 @@ Kirigami.Page {
             from: 0
             to: 100
             stepSize: 1
-            value: 50
+            value: horizontalSlider.value
         }
 
-
-        Controls.Slider {
-            from: 0
-            to: 100
-            stepSize: 1
-            value: 50
-            orientation: Qt.Vertical
-        }
-
-        Controls.Slider {
-            enabled: false
-            from: 0
-            to: 100
-            stepSize: 1
-            value: 50
-            orientation: Qt.Vertical
-        }
 
         Controls.RangeSlider {
+            id: horizontalRangeSlider
             from: 0
             to: 100
             stepSize: 1
@@ -89,27 +83,46 @@ Kirigami.Page {
             from: 0
             to: 100
             stepSize: 1
-            first.value: 25
-            second.value: 75
+            first.value: horizontalRangeSlider.first.value
+            second.value: horizontalRangeSlider.second.value
         }
 
-        Controls.RangeSlider {
-            enabled: false
-            from: 0
-            to: 100
-            stepSize: 1
-            first.value: 25
-            second.value: 75
-            orientation: Qt.Vertical
-        }
+        RowLayout {
+            Controls.Slider {
+                from: 0
+                to: 100
+                stepSize: 1
+                value: 50
+                orientation: Qt.Vertical
+            }
 
-        Controls.RangeSlider {
-            from: 0
-            to: 100
-            stepSize: 1
-            first.value: 25
-            second.value: 75
-            orientation: Qt.Vertical
+            Controls.Slider {
+                enabled: false
+                from: 0
+                to: 100
+                stepSize: 1
+                value: 50
+                orientation: Qt.Vertical
+            }
+
+            Controls.RangeSlider {
+                enabled: false
+                from: 0
+                to: 100
+                stepSize: 1
+                first.value: 25
+                second.value: 75
+                orientation: Qt.Vertical
+            }
+
+            Controls.RangeSlider {
+                from: 0
+                to: 100
+                stepSize: 1
+                first.value: 25
+                second.value: 75
+                orientation: Qt.Vertical
+            }
         }
 
         Controls.ScrollBar {
