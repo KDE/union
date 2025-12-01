@@ -534,6 +534,12 @@ void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Pr
         }
     }
 
+    if (property.name == "background-image-mask-color") {
+        auto image = background.image_or_new();
+        image.setMaskColor(to_color(property.value()));
+        background.setImage(image);
+    }
+
     if (background.hasAnyValue()) {
         output.setBackground(background);
     }
