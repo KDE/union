@@ -7,127 +7,190 @@
  * Checkable controls like checkboxes and radio buttons.
  */
 
+:root
+{
+    --checkable-indicator-active-background-color: var(--button-active-background-color);
+    --checkable-indicator-active-text-color: var(--button-active-text-color);
+    --checkable-indicator-active-border-color: var(--button-active-border-color);
+    --checkable-indicator-active-highlight-color: var(--button-active-highlight-color);
+    --checkable-indicator-active-highlight-border-color: var(--button-active-border-highlight-color);
+
+    --checkable-disabled-text-color: var(--window-disabled-text-color);
+    --checkable-indicator-disabled-background-color: var(--button-disabled-background-color);
+    --checkable-indicator-disabled-text-color: var(--button-disabled-text-color);
+    --checkable-indicator-disabled-border-color: var(--button-disabled-border-color);
+
+    --switch-indicator-active-background-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.1);
+    --switch-indicator-active-border-color: var(--button-active-border-color);
+    --switch-indicator-active-highlight-color: var(--button-active-highlight-color);
+    --switch-indicator-active-highlight-border-color: var(--button-active-border-highlight-color);
+
+    --switch-handle-active-background-color: var(--button-active-background-color);
+    --switch-handle-active-border-color: var(--button-active-border-color);
+    --switch-handle-active-highlight-border-color: var(--button-active-border-highlight-color);
+
+    --switch-disabled-text-color: var(--window-disabled-text-color);
+    --switch-indicator-disabled-background-color: var(--window-disabled-background-color);
+    --switch-indicator-disabled-border-color: var(--button-disabled-border-color);
+    --switch-handle-disabled-background-color: var(--button-disabled-background-color);
+    --switch-handle-disabled-border-color: var(--button-disabled-border-color);
+}
+
 checkbox,
-radiobutton
-{
-    icon-alignment-horizontal: start;
-/*     icon-width:  */
-    spacing: var(--small-spacing);
-    padding: var(--small-spacing);
-
-    color: var(--window-text-color);
-}
-
-checkbox indicator,
-radiobutton indicator,
-radiodelegate indicator
-{
-    layout-alignment-container: content;
-    layout-alignment-horizontal: start;
-    layout-alignment-order: -1;
-}
-
-checkbox indicator,
-checkdelegate indicator,
-menuitem indicator,
-radiobutton indicator,
-radiodelegate indicator
-{
-    width: var(--icon-size-small);
-    height: var(--icon-size-small);
-}
-
-checkbox:checked indicator,
-checkdelegate:checked indicator,
-menuitem:checked indicator,
-radiobutton:checked indicator,
-radiodelegate:checked indicator
-{
-    background-image: url("images/checkmark.svg") mask var(--window-text-color);
-    background-color: var(--button-active-highlight-color);
-    border: 1px solid var(--button-active-border-color);
-    color: var(--window-text-color);
-}
-
-checkbox:disabled indicator,
-checkdelegate:disabled indicator,
-menuitem:disabled indicator,
-radiobutton:disabled indicator,
-radiodelegate:disabled indicator
-{
-    background-image: url("images/checkmark.svg") mask var(--window-disabled-text-color);
-    background-color: var(--button-active-highlight-color);
-    border: 1px solid var(--button-disabled-border-color);
-    color: var(--window-disabled-text-color);
-}
-
-radiobutton indicator,
-radiodelegate indicator
-{
-    border-radius: 8px;
-}
-
-radiobutton:checked indicator,
-radiodelegate:checked indicator
-{
-    background-image: url("images/radio.svg") mask var(--window-text-color);
-}
-
+radiobutton,
 switch
 {
-    padding: var(--large-spacing);
+    icon-alignment-horizontal: start;
 
-    icon-alignment: content start center 0;
-    text-alignment: content start center 1;
+    padding: var(--small-spacing);
+    spacing: var(--small-spacing);
+
+    color: var(--window-text-color);
 }
 
-switch indicator,
-switchdelegate indicator
+checkbox,
+checkdelegate,
+menuitem,
+radiobutton,
+radiodelegate
 {
-    layout-alignment-container: content;
-    layout-alignment-horizontal: start;
+    indicator
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
 
-    width: 36px;
-    height: 12px;
-    border-radius: 6px;
+        layout-alignment-container: content;
+        layout-alignment-horizontal: start;
+        layout-alignment-order: -1;
 
-    background-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.1);
-    border: 1px solid var(--button-active-border-color);
+        background-color: var(--checkable-indicator-active-background-color);
+        border: 1px solid var(--checkable-indicator-active-border-color);
+        color: var(--checkable-indicator-active-text-color);
+        border-radius: var(--corner-radius);
+    }
 
-    handle {
+    &:hovered indicator
+    {
+        border-color: var(--checkable-indicator-active-highlight-border-color);
+    }
+
+    &:checked indicator
+    {
+        background-color: var(--checkable-indicator-active-highlight-color);
+        border-color: var(--checkable-indicator-active-highlight-border-color);
+    }
+
+    &:visual-focus indicator
+    {
+        outline: var(--focus-outline);
+        border-color: var(--checkable-indicator-active-highlight-border-color);
+    }
+
+    &:disabled
+    {
+        color: var(--checkable-disabled-text-color);
+
+        indicator
+        {
+            border: 1px solid var(--checkable-indicator-disabled-border-color);
+            color: var(--checkable-indicator-disabled-text-color);
+            background-color: var(--checkable-indicator-disabled-background-color);
+        }
+    }
+
+    &:checked:disabled indicator
+    {
+        background-color: var(--checkable-indicator-disabled-background-color);
+        background-image-mask-color: var(--checkable-indicator-disabled-text-color);
+    }
+}
+
+checkbox,
+checkdelegate,
+menuitem
+{
+    &:checked indicator
+    {
+        background-image: url("images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
+    }
+}
+
+radiobutton,
+radiodelegate
+{
+    indicator
+    {
+        border-radius: 8px;
+    }
+
+    &:checked indicator
+    {
+        background-image: url("images/radio.svg") mask var(--checkable-indicator-active-text-color);
+    }
+}
+
+switch,
+switchdelegate
+{
+    indicator
+    {
+        layout-alignment-container: content;
+        layout-alignment-horizontal: start;
+
+        width: 36px;
+        height: 12px;
+        border-radius: 6px;
+
+        background-color: var(--switch-indicator-active-background-color);
+        border: 1px solid var(--switch-indicator-active-border-color);
+    }
+
+    handle
+    {
         width: var(--grid-unit);
         height: var(--grid-unit);
-        /*      border-radius: calc(var(--grid-unit) / 2); */
-        border-radius: 9px;
+        border-radius: 9px; /* grid-unit / 2 */
 
-        background-color: var(--button-active-background-color);
-        border: 1px solid var(--button-active-border-color);
+        background-color: var(--switch-handle-active-background-color);
+        border: 1px solid var(--switch-handle-active-border-color);
     }
 
-    &:hovered {
-        border: 1px solid var(--highlight-color);
+    &:hovered
+    {
+        indicator
+        {
+            border-color: var(--switch-indicator-active-highlight-border-color);
 
-        handle {
-            border: 1px solid var(--highlight-color);
+            handle
+            {
+                border-color: var(--switch-handle-active-highlight-border-color);
+            }
         }
     }
 
-    &:checked {
-        background-color: var(--button-active-highlight-color);
+    &:checked indicator
+    {
+        background-color: var(--switch-indicator-active-highlight-color);
+        border-color: var(--switch-indicator-active-highlight-border-color);
     }
 
-    &:disabled {
-        border: 1px solid var(--button-disabled-border-color);
-        background-color: var(--button-disabled-highlight-color);
+    &:visual-focus indicator handle
+    {
+        outline: var(--focus-outline);
+    }
 
-        handle {
-            border: 1px solid var(--button-disabled-border-color);
+    &:disabled
+    {
+        color: var(--switch-disabled-text-color);
+
+        indicator {
+            border-color: var(--switch-indicator-disabled-border-color);
+            background-color: var(--switch-indicator-disabled-background-color);
+
+            handle {
+                border-color: var(--switch-handle-disabled-border-color);
+                background-color: var(--switch-handle-disabled-background-color);
+            }
         }
     }
-}
-
-switch:visual-focus indicator handle,
-switchdelegate:visual-focus indicator handle
-{
-    outline: var(--focus-outline);
 }
