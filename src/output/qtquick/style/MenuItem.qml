@@ -12,8 +12,13 @@ T.MenuItem {
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
+    implicitHeight: {
+        if (visible) {
+            return Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
+        } else {
+            return 0
+        }
+    }
 
     Union.Element.type: "MenuItem"
     Union.Element.states {
