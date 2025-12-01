@@ -65,10 +65,6 @@
     --card-hover-color: mix(var(--card-background-color), var(--highlight-color), 0.1);
     --card-pressed-color: mix(var(--card-background-color), var(--highlight-color), 0.3);
 
-    --scrollbar-border-color: var(--window-border-color);
-    --scrollbar-handle-color: mix(var(--window-background-color), var(--window-text-color), 0.3);
-    --scrollbar-active-color: mix(var(--window-background-color), var(--highlight-color), 0.3);
-
     --focus-outline-alpha: 0.4;
     --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
@@ -93,10 +89,6 @@
     --card-disabled-background-color: var(--view-disabled-background-color);
     --card-disabled-text-color: var(--view-disabled-text-color);
     --card-disabled-border-color: var(--view-disabled-border-color);
-
-    --scrollbar-disabled-border-color: var(--window-disabled-border-color);
-    --scrollbar-disabled-handle-color: mix(var(--window-disabled-background-color), var(--window-disabled-text-color), 0.3);
-    --scrollbar-disabled-color: mix(var(--window-disabled-background-color), var(--highlight-disabled-color), 0.3);
 
     /* Standard Elements */
     --focus-outline: 2px solid var(--focus-color);

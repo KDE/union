@@ -9,16 +9,22 @@
  */
 
 :root {
-    --slider-border-color: var(--window-border-color);
-    --slider-background-color: var(--view-background-color);
-    --slider-handle-background-color: var(--button-active-background-color);
-    --slider-handle-highlight-color: mix(var(--button-active-background-color), var(--highlight-color), 0.5);
-    --slider-fill-color: var(--highlight-color);
-    --slider-disabled-border-color: var(--window-disabled-border-color);
-    --slider-disabled-background-color: var(--view-disabled-background-color);
-    --slider-disabled-handle-background-color: var(--button-disabled-background-color);
-    --slider-disabled-handle-highlight-color: mix(var(--button-disabled-background-color), var(--highlight-disabled-color), 0.5);
-    --slider-disabled-fill-color: var(--highlight-disabled-color);
+    --bar-active-background-color: mix(var(--window-background-color), var(--window-text-color), 0.075);
+    --bar-active-border-color: var(--window-border-color);
+    --bar-track-active-background-color: mix(var(--window-background-color), var(--highlight-color), 0.333);
+    --bar-track-active-border-color: var(--highlight-color);
+    --bar-handle-active-background-color: var(--button-active-background-color);
+    --bar-handle-active-border-color: var(--button-active-border-color);
+
+    --bar-handle-active-highlight-color: var(--button-active-highlight-color);
+    --bar-handle-active-highlight-border-color: var(--button-active-border-highlight-color);
+
+    --bar-disabled-background-color: var(--window-disabled-background-color);
+    --bar-disabled-border-color: var(--window-disabled-border-color);
+    --bar-track-disabled-background-color: mix(var(--window-disabled-background-color), var(--window-background-color), 0.75);
+    --bar-track-disabled-border-color: var(--window-disabled-border-color);
+    --bar-handle-disabled-background-color: var(--button-disabled-background-color);
+    --bar-handle-disabled-border-color: var(--button-disabled-border-color);
 }
 
 busyindicator
@@ -31,23 +37,28 @@ busyindicator
 progressbar
 {
     width: 200px;
-    height: var(--large-spacing);
+    height: var(--medium-spacing);
     padding: 0px var(--large-spacing);
     inset: 0px var(--large-spacing);
 
-    background-color: var(--button-active-background-color);
-    border: 1px solid var(--button-active-border-color);
+    background-color: var(--bar-active-background-color);
+    border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
 
     track {
-        background-color: var(--button-active-highlight-color);
-        border: 1px solid var(--highlight-color);
+        background-color: var(--bar-track-active-background-color);
+        border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--corner-radius);
     }
 
     &:disabled {
-        background-color: var(--button-disabled-background-color);
-        border: 1px solid var(--button-disabled-border-color);
+        background-color: var(--bar-disabled-background-color);
+        border-color: var(--bar-disabled-border-color);
+
+        track {
+            background-color: var(--bar-track-disabled-background-color);
+            border-color: var(--bar-track-disabled-border-color);
+        }
     }
 }
 
@@ -66,61 +77,57 @@ rangeslider
         height: 200px;
     }
 
-    background-color: var(--slider-background-color);
-    border: 1px solid var(--slider-border-color);
+    background-color: var(--bar-active-background-color);
+    border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
 
+    & fill {
+        background-color: var(--bar-track-active-background-color);
+        border: 1px solid var(--bar-track-active-border-color);
+        border-radius: var(--corner-radius);
+    }
+
+    & handle {
+        width: var(--medium-element-size);
+        height: var(--medium-element-size);
+        background-color: var(--bar-handle-active-background-color);
+        border: 1px solid var(--bar-handle-active-border-color);
+        border-radius: var(--small-element-size);
+
+        &:hovered
+        {
+            border-color: var(--bar-handle-active-highlight-border-color);
+        }
+    }
+
     &:disabled {
-        background-color: var(--slider-disabled-background-color);
-        border: 1px solid var(--slider-disabled-border-color);
+        background-color: var(--bar-disabled-background-color);
+        border: 1px solid var(--bar-disabled-border-color);
+
+        & fill {
+            background-color: var(--bar-track-disabled-background-color);
+            border-color: var(--bar-track-disabled-border-color);
+        }
+
+        & handle {
+            background-color: var(--bar-handle-disabled-background-color);
+            border-color: var(--bar-handle-disabled-border-color);
+        }
     }
 }
 
-slider fill,
-rangeslider fill
+slider:visual-focus handle,
+rangeslider handle:active-focus
 {
-    background-color: var(--slider-fill-color);
-    border-radius: var(--corner-radius);
-
-    &:disabled {
-        background-color: var(--slider-disabled-fill-color);
-    }
-}
-
-
-slider handle,
-rangeslider handle
-{
-    width: var(--medium-element-size);
-    height: var(--medium-element-size);
-    background-color: var(--slider-handle-background-color);
-    border: 1px solid var(--slider-border-color);
-    border-radius: var(--small-element-size);
-
-    &:hovered
-    {
-        border-color: var(--highlight-color);
-    }
-
-    &:visual-focus
-    {
-        border-color: var(--highlight-color);
-        outline: var(--focus-outline);
-    }
+    border-color: var(--bar-handle-active-highlight-border-color);
+    outline: var(--focus-outline);
 }
 
 slider:pressed handle,
 rangeslider handle:pressed
 {
-    background-color: var(--slider-handle-highlight-color);
-    border-color: var(--highlight-color);
-}
-
-slider:disabled handle,
-rangeslider:disabled handle
-{
-    background-color: var(--slider-disabled-handle-background-color);
-    border: 1px solid var(--slider-disabled-border-color);
+    background-color: var(--bar-handle-active-highlight-color);
+    border-color: var(--bar-handle-active-highlight-border-color);
 }
 
 scrollbar
@@ -132,30 +139,29 @@ scrollbar
 
     &.horizontal
     {
-        border-top: 1px solid var(--scrollbar-border-color);
+        border-top: 1px solid var(--bar-active-border-color);
     }
 
     &.vertical
     {
-        border-left: 1px solid var(--scrollbar-border-color);
+        border-left: 1px solid var(--bar-active-border-color);
     }
 
-    handle
-    {
-        background-color: var(--scrollbar-handle-color);
-        border: 1px solid var(--scrollbar-border-color);
+    handle {
+        background-color: var(--bar-active-background-color);
+        border: 1px solid var(--bar-active-border-color);
         border-radius: var(--small-element-size);
 
         &:hovered,
         &:pressed
         {
-            background-color: var(--scrollbar-active-color);
-            border-color: var(--scrollbar-active-color);
+            background-color: var(--bar-track-active-background-color);
+            border-color: var(--bar-track-active-border-color);
         }
 
         &:disabled {
-            background-color: var(--scrollbar-disabled-color);
-            border: 1px solid var(--scrollbar-disabled-border-color);
+            background-color: var(--bar-disabled-background-color);
+            border: 1px solid var(--bar-disabled-border-color);
         }
     }
 }
