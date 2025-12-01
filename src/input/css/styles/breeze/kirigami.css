@@ -12,7 +12,7 @@ applicationheader
     background-color: var(--header-background-color);
     color: var(--header-text-color);
 
-    .with-separator
+    &.with-separator
     {
         border-bottom: 1px solid var(--header-border-color);
     }

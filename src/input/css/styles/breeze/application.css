@@ -24,12 +24,12 @@ toolbar
     padding: var(--small-spacing);
     background-color: var(--window-background-color);
 
-    .header {
+    &.header {
         border-bottom: 1px solid var(--window-border-color);
         background-color: var(--header-background-color);
     }
 
-    .footer {
+    &.footer {
         border-top: 1px solid var(--window-border-color);
     }
 }
@@ -72,7 +72,7 @@ pageindicatordelegate {
         background-color: var(--indicator-press-color);
     }
 
-    .current {
+    &.current {
         background-color: var(--indicator-current-color);
     }
 }
