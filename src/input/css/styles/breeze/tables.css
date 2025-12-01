@@ -67,19 +67,23 @@ treeviewdelegate {
     }
 }
 
-headerview,
-headerviewdelegate {
-    border: 1px solid var(--button-active-border-color);
-    background-color: var(--button-active-background-color);
-    padding: var(--small-spacing);
-    inset: var(--small-spacing);
-    color: var(--button-active-text-color);
-    text-alignment-horizontal: center;
-    text-alignment-vertical: center;
+headerviewdelegate
+{
     width: var(--large-element-size);
     height: var(--large-element-size);
+    padding: var(--small-spacing);
 
-    &:disabled {
+    border-bottom: 1px solid var(--button-active-border-color);
+    border-right: 1px solid var(--button-active-border-color);
+
+    background-color: var(--button-active-background-color);
+    color: var(--button-active-text-color);
+
+    text-alignment-horizontal: center;
+    text-alignment-vertical: center;
+
+    &:disabled
+    {
         border: 1px solid var(--button-disabled-border-color);
         color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
