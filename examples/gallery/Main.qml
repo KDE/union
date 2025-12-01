@@ -24,7 +24,12 @@ Kirigami.ApplicationWindow {
     function pushPage(page) {
         pageStack.clear()
         for (let pattern of pagePatterns) {
-            pageStack.push(Qt.resolvedUrl(pattern.arg(page)))
+            try {
+                pageStack.push(Qt.resolvedUrl(pattern.arg(page)))
+            } catch (error) {
+                print(error)
+                continue
+            }
         }
         pageStack.currentIndex = 0
     }
