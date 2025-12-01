@@ -188,6 +188,12 @@ combobox
         &:visual-focus {
             border-color: var(--button-active-border-highlight-color);
         }
+
+        &:disabled {
+            background-color: var(--view-disabled-background-color);
+            color: var(--view-disabled-text-color);
+            border-color: var(--view-disabled-border-color);
+        }
     }
 }
 
