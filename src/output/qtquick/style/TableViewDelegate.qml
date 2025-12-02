@@ -10,16 +10,20 @@ import org.kde.union.impl as Union
 
 T.TableViewDelegate {
     id: control
+    required property int column
+    required property int row
+    required property var model
+
     Union.Element.type: "TableViewDelegate"
     Union.Element.hints: {
-        let hints = [];
-        if (control.tableView.alternatingRows && control.row % 2){
-            hints.push("alternatingRows");
+        let result = [];
+        if (control.tableView.alternatingRows && control.row % 2 !== 0) {
+            result.push("alternatingRows");
         }
         if (control.editing){
-            hints.push("editing");
+            result.push("editing");
         }
-        return hints;
+        return result;
     }
     Union.Element.states {
         hovered: control.hovered
@@ -47,9 +51,6 @@ T.TableViewDelegate {
     
     highlighted: control.selected
     
-    required property int column
-    required property int row
-    required property var model
     
     background: Union.StyledRectangle {}
 
