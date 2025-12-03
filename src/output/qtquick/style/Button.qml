@@ -16,8 +16,6 @@ T.Button {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              Union.Positioner.implicitHeight)
 
-    hoverEnabled: true
-
     Union.Element.type: "Button"
     Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
@@ -36,6 +34,12 @@ T.Button {
         }
         if (flat) {
             result.push("flat")
+        }
+        // Match qqc2-desktop-style's logic.
+        // TODO: Figure out how much sense this actually makes, I don't like the
+        // text condition here.
+        if (Accessible.role === Accessible.ButtonMenu && text) {
+            result.push("with-menu")
         }
         return result
     }
@@ -80,7 +84,7 @@ T.Button {
         source: Union.Style.properties.icon.source
     }
 
-    Union.Positioner.positionItems: [contentItem]
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
@@ -100,6 +104,15 @@ T.Button {
 
             visible: control.display != T.AbstractButton.IconOnly
         }
+    }
+
+    indicator: Union.Icon {
+        Union.Element.type: "Indicator"
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.icon.color
+        visible: name !== ""
     }
 
     background: Union.StyledRectangle { }

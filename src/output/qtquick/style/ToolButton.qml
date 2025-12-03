@@ -17,8 +17,6 @@ T.ToolButton {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              Union.Positioner.implicitHeight)
 
-    hoverEnabled: Application.styleHints.useHoverEffects
-
     Union.Element.type: "ToolButton"
     Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
@@ -30,7 +28,16 @@ T.ToolButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: flat ? [] : ["raised"]
+    Union.Element.hints: {
+        let result = []
+        if (!flat) {
+            result.push("raised")
+        }
+        if (Accessible.role === Accessible.ButtonMenu && text) {
+            result.push("with-menu")
+        }
+        return result
+    }
     Union.Element.attributes: {
         let result = {}
         switch (display) {
@@ -73,7 +80,7 @@ T.ToolButton {
     }
     flat: true
 
-    Union.Positioner.positionItems: [contentItem]
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
@@ -93,6 +100,15 @@ T.ToolButton {
 
             visible: control.display != T.AbstractButton.IconOnly
         }
+    }
+
+    indicator: Union.Icon {
+        Union.Element.type: "Indicator"
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.icon.color
+        visible: name !== ""
     }
 
     background: Union.StyledRectangle {}
