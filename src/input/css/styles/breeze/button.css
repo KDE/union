@@ -16,6 +16,9 @@
     --button-active-checked-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.125);
     --button-active-focus-color: modify-color(custom-color("kcolorscheme", "active", "button", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
+    --button-active-header-highlight-color: mix(var(--header-background-color), var(--highlight-color), 0.333);
+    --button-active-header-checked-color: mix(var(--header-background-color), var(--header-text-color), 0.125);
+
     --button-inactive-text-color: custom-color("kcolorscheme", "inactive", "button", "foreground", "text");
     --button-inactive-background-color: custom-color("kcolorscheme", "inactive", "button", "background", "normal");
     --button-inactive-border-color: custom-color("kcolorscheme", "inactive", "button","decoration", "frame" );
@@ -146,14 +149,26 @@ roundbutton.flat
         border: var(--button-border-highlight);
     }
 
-    &:disabled {
-        border: none;
-        background: none;
-    }
-
     &:pressed {
         border: var(--button-border-highlight);
         background-color: var(--button-active-highlight-color);
+    }
+
+    toolbar.header &:checked,
+    applicationheader &:checked
+    {
+        background-color: var(--button-active-header-checked-color);
+    }
+
+    toolbar.header &:pressed,
+    applicationheader &:pressed
+    {
+        background-color: var(--button-active-header-highlight-color);
+    }
+
+    &:disabled {
+        border: none;
+        background: none;
     }
 }
 
