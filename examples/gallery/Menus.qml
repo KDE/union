@@ -70,7 +70,21 @@ Kirigami.Page {
 
             RowLayout {
                 Controls.ToolButton {
-                    text: "ToolButton"
+                    icon.name: "document-new"
+                    text: "ToolButton with Menu"
+                    Accessible.role: Accessible.ButtonMenu
+                    // checkable: true
+                    checked: toolbarMenu.visible
+
+                    Controls.Menu {
+                        id: toolbarMenu
+
+                        Controls.MenuItem { text: "Menu Item 1" }
+                        Controls.MenuItem { text: "Menu Item 2" }
+                        Controls.MenuItem { text: "Menu Item 3" }
+                    }
+
+                    onClicked: toolbarMenu.popup(this, 0, height)
                 }
 
                 Controls.ToolSeparator {
