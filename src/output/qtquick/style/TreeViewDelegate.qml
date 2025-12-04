@@ -58,26 +58,25 @@ T.TreeViewDelegate {
 
     Item {
         id: indentItem
-        visible: control.isTreeNode
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        implicitWidth: control.depth * control.indentation
         implicitHeight: Union.Style.properties.icon.height
-        implicitWidth: (control.depth * control.indentation) + (control.indicator.visible ? 0 : control.indicator.width + control.leftPadding)
+        visible: control.isTreeNode && implicitWidth > 0
     }
 
     indicator: Union.Icon {
         Union.Element.type: "Indicator"
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        implicitWidth: Union.Style.properties.layout.width
+        implicitHeight: Union.Style.properties.layout.height
         color: Union.Style.properties.icon.color
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
+        visible: control.isTreeNode && control.hasChildren
     }
 
     background: Union.StyledRectangle {}
 
     contentItem: Text {
         Union.PositionedItem.source: Union.PositionerSource.Text
-        clip: false
+
         text: control.model.display ?? ""
         elide: Text.ElideRight
         visible: !control.editing
