@@ -46,19 +46,24 @@ tableviewdelegate {
 }
 
 treeviewdelegate {
-    layout-alignment: content fill center 0;
-    icon-alignment: content start center 0;
-    text-alignment: content fill center 0;
+    layout-alignment: item start center 0;
+    icon-alignment: content start center 1;
+    text-alignment: content fill center 2;
     icon-width: var(--icon-size-small);
     icon-height: var(--icon-size-small);
 
     & indicator {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        margin-left: var(--small-spacing);
         color: var(--view-text-color);
         icon-name: "arrow-right-symbolic";
-        icon-alignment: content start center 1;
+        layout-alignment: item start center 1;
     }
 
     &.expanded indicator {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
         icon-name: "arrow-down-symbolic"
     }
 
