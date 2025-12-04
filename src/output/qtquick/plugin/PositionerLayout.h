@@ -85,6 +85,9 @@ public:
     void addItem(QQuickItem *item);
     void removeItem(QQuickItem *item);
 
+    bool isDebugEnabled() const;
+    void setDebugEnabled(bool newDebug);
+
     QSizeF implicitSize() const;
     Q_SIGNAL void implicitSizeChanged();
 
@@ -100,15 +103,23 @@ protected:
 private:
     void layoutContainer(LayoutContainer &container);
     void layoutBucket(LayoutBucket &bucket);
-
     void onParentSizeChanged();
 
-    bool m_layoutDirty = true;
+    template<typename... Args>
+    inline void debug(Args &&...args)
+    {
+        if (m_debugEnabled) {
+            (QMessageLogger(QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC, "union.quick").debug() << ... << args);
+        }
+    }
+
     QSet<QQuickItem *> m_items;
     QSizeF m_implicitSize;
     Sizes m_padding;
     QSizeF m_parentSize;
 
-    bool m_layouting = false;
-    bool m_requeuePolish = false;
+    bool m_layoutDirty : 1 = true;
+    bool m_layouting : 1 = false;
+    bool m_requeuePolish : 1 = false;
+    bool m_debugEnabled : 1 = false;
 };

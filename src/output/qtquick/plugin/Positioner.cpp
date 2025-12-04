@@ -106,6 +106,16 @@ Sizes Positioner::padding() const
     return m_layout->padding();
 }
 
+bool Positioner::debug() const
+{
+    return m_layout->isDebugEnabled();
+}
+
+void Positioner::setDebug(bool newDebug)
+{
+    m_layout->setDebugEnabled(newDebug);
+}
+
 std::pair<Positioner::ItemList, Positioner::ItemList> Positioner::findPositionedItemChanges(const ItemList &currentItems, const ItemList &newItems)
 {
     ItemList removedItems = currentItems;

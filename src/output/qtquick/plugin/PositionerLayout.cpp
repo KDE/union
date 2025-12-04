@@ -68,6 +68,8 @@ void PositionerLayout::addItem(QQuickItem *item)
 
     m_items.insert(item);
 
+    debug("Add item to layout", item);
+
     markDirty();
 }
 
@@ -80,9 +82,21 @@ void PositionerLayout::removeItem(QQuickItem *item)
 
     (*itr)->disconnect(this);
     (*itr)->removeEventFilter(this);
+
+    debug("Remove item from layout", *itr);
     m_items.erase(itr);
 
     markDirty();
+}
+
+bool PositionerLayout::isDebugEnabled() const
+{
+    return m_debugEnabled;
+}
+
+void PositionerLayout::setDebugEnabled(bool newDebug)
+{
+    m_debugEnabled = newDebug;
 }
 
 QSizeF PositionerLayout::implicitSize() const
@@ -122,10 +136,13 @@ void PositionerLayout::updatePolish()
     LayoutContainer contentRelative;
     LayoutContainer backgroundRelative;
 
+    debug("Performing layout for positioner of", parentItem());
+
     for (auto &item : m_items) {
         auto source = PositionerSource::Source::Layout;
 
         if (!item->isVisible()) {
+            debug("  Ignoring invisible item", item);
             continue;
         }
 
@@ -156,6 +173,7 @@ void PositionerLayout::updatePolish()
         }
 
         if (!alignment) {
+            debug("  No alignment found for item", item);
             continue;
         }
 
@@ -223,6 +241,12 @@ void PositionerLayout::updatePolish()
             container->fill.stacked = container->fill.stacked || stacked;
             break;
         }
+
+        debug("  Layout item", item);
+        debug("    Implicit Size:", layoutItem.implicitSize);
+        debug("    Container:", alignment->container());
+        debug("    Alignment: (h)", horizontalAlignment, "(v)", verticalAlignment);
+        debug("    Order:", layoutItem.order);
     }
 
     const auto containerItem = parentItem();
@@ -278,6 +302,8 @@ void PositionerLayout::updatePolish()
                 item.item->setY(mapped.y());
                 item.item->setWidth(item.size.width());
                 item.item->setHeight(item.size.height());
+
+                debug("  Item", item.item, "positioned at", itemPosition, mapped);
             }
         }
     }

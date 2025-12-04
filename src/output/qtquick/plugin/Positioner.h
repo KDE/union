@@ -112,6 +112,16 @@ public:
     Sizes padding() const;
     Q_SIGNAL void paddingChanged();
 
+    /*!
+     * \qmlattachedproperty bool Positioner::debug
+     *
+     * Print debugging info for this positioner.
+     */
+    Q_PROPERTY(bool debug READ debug WRITE setDebug NOTIFY debugChanged)
+    bool debug() const;
+    void setDebug(bool newDebug);
+    Q_SIGNAL void debugChanged();
+
     static Positioner *qmlAttachedProperties(QObject *parent);
 
 private:
