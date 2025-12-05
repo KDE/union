@@ -29,7 +29,15 @@ T.ItemDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
+    Union.Element.hints: {
+        let result = icon.name || icon.source.toString() ? ["with-icon"] : [];
+        if (TableView.view?.alternatingRows && row % 2) {
+            result.push("useAlternateBackgroundColor");
+        } else if (Union.OutputProperties.useAlternatingColors && index % 2) {
+            result.push("useAlternateBackgroundColor")
+        }
+        return result;
+    }
     Union.Element.attributes: {
         let result = {}
         switch (display) {

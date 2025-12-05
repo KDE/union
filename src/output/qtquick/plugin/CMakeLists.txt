@@ -22,6 +22,8 @@ target_sources(UnionQuickImpl PRIVATE
     PositionerLayout.cpp
     Icon.h
     Icon.cpp
+    OutputProperties.cpp
+    OutputProperties.h
 
     scenegraph/UnionNode.cpp
     scenegraph/UnionNode.h

@@ -8,6 +8,7 @@
 #include <QIcon>
 
 class QuickStyle;
+class OutputProperties;
 
 class PlatformTheme : public Kirigami::Platform::PlatformTheme
 {
@@ -26,6 +27,8 @@ protected:
 
 private:
     void syncColorSchemeColors();
+    void syncUseAlternateBackground();
 
     QuickStyle *m_style = nullptr;
+    OutputProperties *m_outputProperties = nullptr;
 };

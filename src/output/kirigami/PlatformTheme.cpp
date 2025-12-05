@@ -7,6 +7,7 @@
 
 #include <Color.h>
 
+#include "../qtquick/plugin/OutputProperties.h"
 #include "../qtquick/plugin/QuickStyle.h"
 
 using namespace Qt::StringLiterals;
@@ -25,6 +26,8 @@ PlatformTheme::PlatformTheme(QObject *parent)
     setSupportsIconColoring(true);
     // TODO Find some way of maintaining inherit while using the correct colors.
     syncColorSchemeColors();
+    syncUseAlternateBackground();
+    connect(this, &PlatformTheme::useAlternateBackgroundColorChanged, this, &PlatformTheme::syncUseAlternateBackground);
 }
 
 PlatformTheme::~PlatformTheme()
@@ -153,4 +156,17 @@ void PlatformTheme::syncColorSchemeColors()
     // decoration
     setHoverColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"hover"_s}).toQColor());
     setFocusColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"focus"_s}).toQColor());
+}
+
+void PlatformTheme::syncUseAlternateBackground()
+{
+    if (!m_outputProperties) {
+        m_outputProperties = static_cast<OutputProperties *>(qmlAttachedPropertiesObject<OutputProperties>(parent()));
+        if (!m_outputProperties) {
+            return;
+        }
+        m_outputProperties->installEventFilter(this);
+    }
+
+    m_outputProperties->setUseAlternatingColors(useAlternateBackgroundColor());
 }
