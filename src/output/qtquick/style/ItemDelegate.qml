@@ -19,6 +19,15 @@ T.ItemDelegate {
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
+    readonly property bool useAlternatingColors: {
+        if (control.TableView.view?.alternatingRows && row % 2) {
+            return true
+        } else if (control.Union.ExtraData.data?.useAlternateBackgroundColor && index % 2) {
+            return true
+        }
+        return false
+    }
+
     Union.Element.type: "ItemDelegate"
     Union.Element.states {
         hovered: control.hovered
@@ -29,7 +38,14 @@ T.ItemDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
+    Union.Element.hints: {
+
+        let result = icon.name || icon.source.toString() ? ["with-icon"] : [];
+        if (control.useAlternatingColors) {
+            result.push("useAlternateBackgroundColor");
+        }
+        return result;
+    }
     Union.Element.attributes: {
         let result = {}
         switch (display) {

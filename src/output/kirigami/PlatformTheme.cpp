@@ -7,6 +7,7 @@
 
 #include <Color.h>
 
+#include "../qtquick/plugin/ExtraData.h"
 #include "../qtquick/plugin/QuickStyle.h"
 
 using namespace Qt::StringLiterals;
@@ -153,4 +154,22 @@ void PlatformTheme::syncColorSchemeColors()
     // decoration
     setHoverColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"hover"_s}).toQColor());
     setFocusColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"focus"_s}).toQColor());
+    syncUseAlternateBackground();
+}
+
+void PlatformTheme::syncUseAlternateBackground()
+{
+    if (!m_extraData) {
+        m_extraData = static_cast<ExtraData *>(qmlAttachedPropertiesObject<ExtraData>(parent()));
+        if (!m_extraData) {
+            return;
+        }
+        m_extraData->installEventFilter(this);
+    }
+
+    Kirigami::Platform::PlatformThemeChangeTracker tracker(this);
+
+    QVariantMap map;
+    map.insert(u"useAlternateBackgroundColor"_s, useAlternateBackgroundColor());
+    m_extraData->setData(map);
 }

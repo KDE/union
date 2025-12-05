@@ -27,6 +27,11 @@ swipedelegate
 
     color: var(--window-text-color);
 
+    &.useAlternateBackgroundColor
+    {
+        background-color: var(--window-background-alternate-color);
+    }
+
     &:hovered
     {
         border: 1px solid var(--highlight-color);
