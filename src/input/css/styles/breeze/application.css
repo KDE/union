@@ -7,6 +7,12 @@
  * Application-structural elements like windows, drawers, etc.
  */
 
+:root {
+    --header-active-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
+    --header-active-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
+    --header-active-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
+}
+
 applicationwindow
 {
     background-color: var(--window-background-color);
@@ -25,8 +31,8 @@ toolbar
     background-color: var(--window-background-color);
 
     &.header {
-        border-bottom: 1px solid var(--window-border-color);
-        background-color: var(--header-background-color);
+        border-bottom: 1px solid var(--header-active-border-color);
+        background-color: var(--header-active-background-color);
     }
 
     &.footer {

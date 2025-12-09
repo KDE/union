@@ -9,12 +9,12 @@
 
 applicationheader
 {
-    background-color: var(--header-background-color);
-    color: var(--header-text-color);
+    background-color: var(--header-active-background-color);
+    color: var(--header-active-text-color);
 
     &.with-separator
     {
-        border-bottom: 1px solid var(--header-border-color);
+        border-bottom: 1px solid var(--header-active-border-color);
     }
 }
 
@@ -165,15 +165,5 @@ overlaydrawer
     {
         background-color: var(--window-background-color);
         color: var(--window-text-color);
-    }
-
-    /* If the application uses a toolbar as a header of a drawer, it's most
-     * likely intended to look as a header.
-     */
-    & > toolbar.header
-    {
-        background-color: var(--header-background-color);
-        border-color: var(--header-border-color);
-        border-bottom: 1px solid var(--header-border-color);
     }
 }
