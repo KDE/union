@@ -16,6 +16,7 @@
     --button-active-checked-color: mix(var(--button-active-background-color), var(--button-active-text-color), 0.125);
     --button-active-focus-color: modify-color(custom-color("kcolorscheme", "active", "button", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
+    --button-active-header-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
     --button-active-header-highlight-color: mix(var(--header-background-color), var(--highlight-color), 0.333);
     --button-active-header-checked-color: mix(var(--header-background-color), var(--header-text-color), 0.125);
 
@@ -84,6 +85,7 @@ toolbutton.raised
 
     &:checked
     {
+        border: var(--button-border);
         background-color: var(--button-active-checked-color);
     }
 
@@ -157,6 +159,7 @@ roundbutton.flat
     toolbar.header &:checked,
     applicationheader &:checked
     {
+        border-color: var(--button-active-header-border-color);
         background-color: var(--button-active-header-checked-color);
     }
 
