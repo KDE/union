@@ -231,16 +231,22 @@ popup.combobox
 toolseparator {
     background-color: var(--button-active-border-color);
 
-    .horizontal {
+    &.horizontal {
         width: var(--large-element-size);
         height: 1px;
         inset: 0px var(--small-spacing);
     }
 
-    .vertical {
+    &.vertical {
         width: 1px;
         height: var(--large-element-size);
         inset: var(--small-spacing) 0px;
+    }
+
+    toolbar.header &,
+    applicationheader &
+    {
+        background-color: var(--button-active-header-border-color);
     }
 }
 
