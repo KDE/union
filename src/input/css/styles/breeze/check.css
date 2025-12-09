@@ -116,7 +116,8 @@ menuitem
 }
 
 radiobutton,
-radiodelegate
+radiodelegate,
+menuitem.exclusive
 {
     indicator
     {
