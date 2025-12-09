@@ -30,6 +30,23 @@ T.MenuItem {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: {
+        let result = []
+        if (autoExclusive) {
+            result.push("exclusive")
+        } else if (action) {
+            let group = action.T.ActionGroup.group
+            if (group && group.exclusive) {
+                result.push("exclusive")
+            }
+        } else {
+            let group = T.ButtonGroup.group
+            if (group && group.excluve) {
+                result.push("exclusive")
+            }
+        }
+        return result
+    }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
