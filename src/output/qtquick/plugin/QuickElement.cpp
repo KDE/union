@@ -224,6 +224,11 @@ Union::ElementQuery *QuickElement::query() const
     return m_query.get();
 }
 
+QuickElement *QuickElement::parentElement() const
+{
+    return static_cast<QuickElement *>(attachedParent());
+}
+
 QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
 {
     return new QuickElement(parent);

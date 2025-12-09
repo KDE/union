@@ -209,6 +209,17 @@ public:
     QuickElement(QObject *parent = nullptr);
 
     /*!
+     * \qmlattachedproperty Element Element::parentElement
+     *
+     * The parent element of this element.
+     *
+     * This is mostly useful to inspect what this element thinks its parent is,
+     * to verify that the element's hierarchy matches with what is expected.
+     */
+    Q_PROPERTY(QuickElement *parentElement READ parentElement NOTIFY updated)
+    QuickElement *parentElement() const;
+
+    /*!
      * \qmlattachedproperty string Element::type
      *
      * The type of element.
