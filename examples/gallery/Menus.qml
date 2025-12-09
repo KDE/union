@@ -79,9 +79,23 @@ Kirigami.Page {
                     Controls.Menu {
                         id: toolbarMenu
 
-                        Controls.MenuItem { text: "Menu Item 1" }
-                        Controls.MenuItem { text: "Menu Item 2" }
-                        Controls.MenuItem { text: "Menu Item 3" }
+                        Controls.MenuItem {
+                            text: "Menu Item 1";
+                            checkable: true;
+                            autoExclusive: true
+                        }
+
+                        Controls.MenuItem {
+                            text: "Menu Item 2"
+                            checkable: true;
+                            autoExclusive: true
+                        }
+
+                        Controls.MenuItem {
+                            text: "Menu Item 3"
+                            checkable: true;
+                            autoExclusive: true
+                        }
                     }
 
                     onClicked: toolbarMenu.popup(this, 0, height)
