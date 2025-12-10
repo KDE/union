@@ -36,8 +36,7 @@ menu, popup
 menuitem
 {
     width: var(--menu-item-width);
-    height: var(--medium-element-size);
-    padding: var(--small-spacing);
+    padding: var(--medium-spacing);
     spacing: var(--small-spacing);
 
     border-radius: var(--corner-radius);
