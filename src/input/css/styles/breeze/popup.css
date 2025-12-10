@@ -14,6 +14,8 @@
     --tooltip-text-color: custom-color("kcolorscheme", "active", "tooltip", "foreground", "text");
     --tooltip-background-color: custom-color("kcolorscheme", "active", "tooltip", "background", "normal");
     --tooltip-border-color: custom-color("kcolorscheme", "active", "tooltip", "decoration", "frame");
+
+    --popup-shadow-size: 20px;
 }
 
 menu, popup
@@ -24,13 +26,18 @@ menu, popup
     background-color: var(--window-background-color);
     border: 1px solid var(--window-border-color);
     color: var(--window-text-color);
-    box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.4);
+    box-shadow: 0px 2px var(--popup-shadow-size) 0px rgba(0, 0, 0, 0.2);
 
     &:disabled {
         color: var(--window-disabled-text-color);
         background-color: var(--window-disabled-background-color);
         border: 1px solid var(--window-disabled-border-color);
     }
+}
+
+menu
+{
+    margin: var(--popup-shadow-size);
 }
 
 menuitem
@@ -145,4 +152,6 @@ tooltip
     border-radius: var(--corner-radius);
     border: 1px solid var(--tooltip-border-color);
     box-shadow: 0px 2px 20px 0px rgba(0, 0, 0, 0.2);
+
+    margin: 20px;
 }
