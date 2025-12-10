@@ -19,25 +19,20 @@ T.ToolTip {
     x: parent ? (parent.width - implicitWidth) / 2 : 0
     y: -implicitHeight
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
+    implicitWidth: Math.max(implicitBackgroundWidth + (Union.Style.properties.layout.inset.left ?? 0) + (Union.Style.properties.layout.inset.right ?? 0),
+                            implicitContentWidth + leftPadding + rightPadding) + (-leftInset) + (-rightInset)
+    implicitHeight: Math.max(implicitBackgroundHeight + (Union.Style.properties.layout.inset.top ?? 0) + (Union.Style.properties.layout.inset.bottom ?? 0),
+                             implicitContentHeight + topPadding + bottomPadding) + (-topInset) + (-bottomInset)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: Union.Style.properties.layout.inset.left
-    rightInset: Union.Style.properties.layout.inset.right
-    topInset: Union.Style.properties.layout.inset.top
-    bottomInset: Union.Style.properties.layout.inset.bottom
-
-    leftMargin: Union.Style.properties.layout.margins.left
-    rightMargin: Union.Style.properties.layout.margins.right
-    topMargin: Union.Style.properties.layout.margins.top
-    bottomMargin: Union.Style.properties.layout.margins.bottom
+    leftInset: -Union.Style.properties.layout.margins.left
+    rightInset: -Union.Style.properties.layout.margins.right
+    topInset: -Union.Style.properties.layout.margins.top
+    bottomInset: -Union.Style.properties.layout.margins.bottom
 
     font: Union.Style.properties.text.font
 
@@ -45,6 +40,8 @@ T.ToolTip {
     delay: 700
     // Never time out while being hovered; it's annoying
     timeout: -1
+
+    popupType: T.Popup.Window
 
     contentItem: Text {
         text: control.text
@@ -55,5 +52,20 @@ T.ToolTip {
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
 
-    background: Union.StyledRectangle {}
+    background: Item {
+        // See explanation in Menu.qml, this uses the same trick to get a larger
+        // window.
+        implicitWidth: Union.Style.properties.layout.width
+        implicitHeight: Union.Style.properties.layout.height
+
+        Union.StyledRectangle {
+            anchors {
+                fill: parent
+                leftMargin: (Union.Style.properties.layout.margins.left ?? 0) + (Union.Style.properties.layout.inset.left ?? 0)
+                rightMargin: (Union.Style.properties.layout.margins.right ?? 0) + (Union.Style.properties.layout.inset.right ?? 0)
+                topMargin: (Union.Style.properties.layout.margins.top ?? 0) + (Union.Style.properties.layout.inset.top ?? 0)
+                bottomMargin: (Union.Style.properties.layout.margins.bottom ?? 0) + (Union.Style.properties.layout.inset.bottom ?? 0)
+            }
+        }
+    }
 }
