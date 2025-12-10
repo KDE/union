@@ -82,6 +82,7 @@ T.ItemDelegate {
     Union.Positioner.positionItems: [contentItem]
 
     contentItem: Item {
+        anchors.fill: parent
         Union.PositionedItem.positionChildren: true
         Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
