@@ -37,6 +37,19 @@ void OutputProperties::setUseAlternatingColors(bool newUseAlternatingColors)
     }
 }
 
+bool OutputProperties::spellCheckEnabled() const
+{
+    return m_spellCheckEnabled;
+}
+
+void OutputProperties::setSpellCheckEnabled(const bool &enabled)
+{
+    if (m_spellCheckEnabled != enabled) {
+        m_spellCheckEnabled = enabled;
+        Q_EMIT spellCheckEnabledChanged();
+    }
+}
+
 OutputProperties *OutputProperties::qmlAttachedProperties(QObject *parent)
 {
     return new OutputProperties(qmlEngine(parent), parent);

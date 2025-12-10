@@ -6,6 +6,7 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 import org.kde.union.impl as Union
+import "private"
 
 T.TextArea {
     id: control
@@ -71,4 +72,8 @@ T.TextArea {
     }
 
     background: Union.StyledRectangle {}
+
+    T.ContextMenu.menu: TextFieldContextMenu {
+        target: control
+    }
 }

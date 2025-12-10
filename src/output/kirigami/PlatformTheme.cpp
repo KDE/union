@@ -28,6 +28,7 @@ PlatformTheme::PlatformTheme(QObject *parent)
     syncColorSchemeColors();
     syncUseAlternateBackground();
     connect(this, &PlatformTheme::useAlternateBackgroundColorChanged, this, &PlatformTheme::syncUseAlternateBackground);
+    // TODO set spellcheck enabled/disabled
 }
 
 PlatformTheme::~PlatformTheme()

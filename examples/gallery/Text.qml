@@ -44,6 +44,10 @@ Kirigami.Page {
             placeholderText: "Disabled Text Field"
         }
 
+        Kirigami.PasswordField {
+            placeholderText: "Password field"
+        }
+
         Controls.TextArea {
             placeholderText: "Text Area"
         }

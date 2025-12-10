@@ -77,6 +77,10 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/VerticalHeaderView.qml
 )
 
+ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES
+    style/private/TextFieldContextMenu.qml
+)
+
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)
 
 set_target_properties(UnionQuickStyle PROPERTIES

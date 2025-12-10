@@ -44,6 +44,17 @@ public:
     Q_SIGNAL void useAlternatingColorsChanged();
 
     /*!
+     * \qmlattachedproperty bool OutputProperties::SpellCheckEnabled
+     *
+     * TODO: Provide backwards compatibility for `Kirigami.SpellCheck.enabled`.
+     * NOTE: Currently this is just a stub!
+     */
+    Q_PROPERTY(bool spellCheckEnabled READ spellCheckEnabled WRITE setSpellCheckEnabled NOTIFY spellCheckEnabledChanged)
+    bool spellCheckEnabled() const;
+    void setSpellCheckEnabled(const bool &enabled);
+    Q_SIGNAL void spellCheckEnabledChanged();
+
+    /*!
      * \qmlattachedsignal OutputProperties::updated
      *
      * Emitted whenever something in OutputProperties changes.
@@ -65,6 +76,7 @@ private:
 
     std::unique_ptr<StylePropertyGroup> m_properties;
     bool m_useAlternatingColors = false;
+    bool m_spellCheckEnabled = false;
     QQmlEngine *m_engine = nullptr;
 
     bool m_completed = false;
