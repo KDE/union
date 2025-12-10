@@ -50,6 +50,46 @@ Kirigami.Page {
                 }
             }
             Controls.Menu {
+                title: "States"
+
+                Controls.MenuItem {
+                    text: "Text Only"
+                }
+
+                Controls.MenuItem {
+                    text: "Text and Icon"
+                    icon.name: "document-new"
+                }
+
+                Controls.MenuItem {
+                    text: "Checkable"
+                    checkable: true
+                }
+
+                Controls.MenuItem {
+                    text: "Checkable with Icon"
+                    icon.name: "document-new"
+                    checkable: true
+                }
+
+                Controls.MenuSeparator { }
+
+                Controls.Menu {
+                    title: "Submenu"
+
+                    Controls.MenuItem {
+                        text: "Submenu Item"
+                        checkable: true
+                        autoExclusive: true
+                    }
+                    Controls.MenuItem {
+                        text: "Another Submenu Item"
+                        checkable: true
+                        autoExclusive: true
+                    }
+                }
+            }
+            Controls.Menu {
                 title: qsTr("Help")
                 Kirigami.Action {
                     text: qsTr("About")
