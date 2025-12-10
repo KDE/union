@@ -21,6 +21,10 @@ OffsetPropertyGroup::OffsetPropertyGroup(QuickStyle *style)
 
 void OffsetPropertyGroup::update(const std::optional<OffsetProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

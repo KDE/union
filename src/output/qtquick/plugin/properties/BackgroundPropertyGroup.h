@@ -59,6 +59,5 @@ private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
 
-    inline static std::optional<Union::Properties::BackgroundProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::BackgroundProperty> &m_state = nullValue;
+    std::optional<Union::Properties::BackgroundProperty> m_state = std::nullopt;
 };

@@ -68,6 +68,5 @@ private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
 
-    inline static std::optional<Union::Properties::TextProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::TextProperty> &m_state = nullValue;
+    std::optional<Union::Properties::TextProperty> m_state = std::nullopt;
 };

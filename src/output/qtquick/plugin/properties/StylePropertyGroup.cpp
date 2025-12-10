@@ -29,6 +29,10 @@ StylePropertyGroup::StylePropertyGroup(QuickStyle *style)
 
 void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

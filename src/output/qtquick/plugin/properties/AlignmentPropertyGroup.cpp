@@ -21,6 +21,10 @@ AlignmentPropertyGroup::AlignmentPropertyGroup(QuickStyle *style)
 
 void AlignmentPropertyGroup::update(const std::optional<AlignmentProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

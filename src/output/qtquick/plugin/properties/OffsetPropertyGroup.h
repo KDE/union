@@ -58,6 +58,5 @@ public:
 private:
     QuickStyle *m_style = nullptr;
 
-    inline static std::optional<Union::Properties::OffsetProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::OffsetProperty> &m_state = nullValue;
+    std::optional<Union::Properties::OffsetProperty> m_state = std::nullopt;
 };

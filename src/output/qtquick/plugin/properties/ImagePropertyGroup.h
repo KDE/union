@@ -103,6 +103,5 @@ public:
 private:
     QuickStyle *m_style = nullptr;
 
-    inline static std::optional<Union::Properties::ImageProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::ImageProperty> &m_state = nullValue;
+    std::optional<Union::Properties::ImageProperty> m_state = std::nullopt;
 };

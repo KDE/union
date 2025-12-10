@@ -22,6 +22,10 @@ IconPropertyGroup::IconPropertyGroup(QuickStyle *style)
 
 void IconPropertyGroup::update(const std::optional<IconProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

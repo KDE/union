@@ -157,6 +157,5 @@ private:
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;
     std::unique_ptr<CornerPropertyGroup> m_bottomRight;
 
-    inline static std::optional<Union::Properties::ShadowProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::ShadowProperty> &m_state = nullValue;
+    std::optional<Union::Properties::ShadowProperty> m_state = std::nullopt;
 };

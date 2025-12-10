@@ -80,6 +80,5 @@ private:
     std::unique_ptr<LinePropertyGroup> m_top;
     std::unique_ptr<LinePropertyGroup> m_bottom;
 
-    inline static std::optional<Union::Properties::OutlineProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::OutlineProperty> &m_state = nullValue;
+    std::optional<Union::Properties::OutlineProperty> m_state = std::nullopt;
 };

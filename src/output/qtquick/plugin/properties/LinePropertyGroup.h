@@ -77,6 +77,5 @@ private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
 
-    inline static std::optional<Union::Properties::LineProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::LineProperty> &m_state = nullValue;
+    std::optional<Union::Properties::LineProperty> m_state = std::nullopt;
 };

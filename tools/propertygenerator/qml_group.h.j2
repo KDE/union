@@ -97,8 +97,7 @@ private:
 {% endif %}
 {% endfor %}
 
-    inline static std::optional<Union::Properties::{{ type_name }}> nullValue = std::nullopt;
-    std::optional<Union::Properties::{{ type_name }}> &m_state = nullValue;
+    std::optional<Union::Properties::{{ type_name }}> m_state = std::nullopt;
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
 {% endif %}

@@ -30,6 +30,10 @@ ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
 
 void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

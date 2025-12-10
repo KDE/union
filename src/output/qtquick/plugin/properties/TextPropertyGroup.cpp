@@ -22,6 +22,10 @@ TextPropertyGroup::TextPropertyGroup(QuickStyle *style)
 
 void TextPropertyGroup::update(const std::optional<TextProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

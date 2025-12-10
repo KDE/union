@@ -25,6 +25,10 @@ CornersPropertyGroup::CornersPropertyGroup(QuickStyle *style)
 
 void CornersPropertyGroup::update(const std::optional<CornersProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

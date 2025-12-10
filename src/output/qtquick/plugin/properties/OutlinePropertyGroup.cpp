@@ -25,6 +25,10 @@ OutlinePropertyGroup::OutlinePropertyGroup(QuickStyle *style)
 
 void OutlinePropertyGroup::update(const std::optional<OutlineProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

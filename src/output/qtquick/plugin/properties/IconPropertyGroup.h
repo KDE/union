@@ -95,6 +95,5 @@ private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroup> m_alignment;
 
-    inline static std::optional<Union::Properties::IconProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::IconProperty> &m_state = nullValue;
+    std::optional<Union::Properties::IconProperty> m_state = std::nullopt;
 };

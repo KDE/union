@@ -107,6 +107,5 @@ private:
     std::unique_ptr<SizePropertyGroup> m_inset;
     std::unique_ptr<SizePropertyGroup> m_margins;
 
-    inline static std::optional<Union::Properties::LayoutProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::LayoutProperty> &m_state = nullValue;
+    std::optional<Union::Properties::LayoutProperty> m_state = std::nullopt;
 };

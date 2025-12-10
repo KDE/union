@@ -21,6 +21,10 @@ SizePropertyGroup::SizePropertyGroup(QuickStyle *style)
 
 void SizePropertyGroup::update(const std::optional<SizeProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

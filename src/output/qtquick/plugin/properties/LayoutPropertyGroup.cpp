@@ -25,6 +25,10 @@ LayoutPropertyGroup::LayoutPropertyGroup(QuickStyle *style)
 
 void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

@@ -21,6 +21,10 @@ ImagePropertyGroup::ImagePropertyGroup(QuickStyle *style)
 
 void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

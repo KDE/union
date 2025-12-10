@@ -120,6 +120,5 @@ private:
     std::unique_ptr<CornersPropertyGroup> m_corners;
     std::unique_ptr<ShadowPropertyGroup> m_shadow;
 
-    inline static std::optional<Union::Properties::StyleProperty> nullValue = std::nullopt;
-    std::optional<Union::Properties::StyleProperty> &m_state = nullValue;
+    std::optional<Union::Properties::StyleProperty> m_state = std::nullopt;
 };

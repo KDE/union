@@ -22,6 +22,10 @@ BackgroundPropertyGroup::BackgroundPropertyGroup(QuickStyle *style)
 
 void BackgroundPropertyGroup::update(const std::optional<BackgroundProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {

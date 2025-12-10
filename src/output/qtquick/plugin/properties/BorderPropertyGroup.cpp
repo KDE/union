@@ -25,6 +25,10 @@ BorderPropertyGroup::BorderPropertyGroup(QuickStyle *style)
 
 void BorderPropertyGroup::update(const std::optional<BorderProperty> &newState)
 {
+    if (newState == m_state) {
+        return;
+    }
+
     m_state = newState;
 
     if (!newState) {
