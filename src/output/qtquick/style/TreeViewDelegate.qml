@@ -56,10 +56,15 @@ T.TreeViewDelegate {
 
     highlighted: control.selected || control.current || ((control.treeView.selectionBehavior === TableView.SelectRows || control.treeView.selectionBehavior === TableView.SelectionDisabled) && control.row === control.treeView.currentRow)
 
+    indentation: indentItem.Union.Style.properties.layout.width
+
     Item {
         id: indentItem
+
+        Union.Element.type: "Indentation"
+
         implicitWidth: control.depth * control.indentation
-        implicitHeight: Union.Style.properties.icon.height
+        implicitHeight: 1
         visible: control.isTreeNode && implicitWidth > 0
     }
 
