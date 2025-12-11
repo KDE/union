@@ -22,24 +22,46 @@ T.HorizontalHeaderView {
     
     delegate: Union.StyledRectangle {
         id: delegate
-        Union.Element.type: "HeaderViewDelegate"
-        Union.Element.states {
-            enabled: control.enabled
-        }
 
         required property var model
 
-        implicitWidth: text.implicitWidth
-        implicitHeight: Math.max(control.height, text.implicitHeight)
+        Union.Element.type: "HeaderViewDelegate"
+        Union.Element.states {
+            activeFocus: delegate.activeFocus
+            enabled: delegate.enabled
+        }
+        Union.Element.hints: {
+            if (model.sort !== undefined) {
+                return model.sort == Qt.AscendingOrder ? ["sort-ascending"] : ["sort-descending"]
+            }
+            return []
+        }
+
+        implicitWidth: Math.max(Union.Style.properties.layout.width, Union.Positioner.implicitWidth)
+        implicitHeight: Math.max(Union.Style.properties.layout.height, Union.Positioner.implicitHeight)
+
+        Union.Positioner.positionItems: [text, icon]
 
         Text {
             id: text
-            enabled: parent.enabled
-            anchors.fill: parent
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+
+            Union.PositionedItem.source: Union.PositionerSource.Text
+
             text: delegate.model[control.textRole]
+            font: Union.Style.properties.text.font ?? Application.font
             color: Union.Style.properties.text.color
+        }
+
+        Union.Icon {
+            id: icon
+
+            Union.PositionedItem.source: Union.PositionerSource.Icon
+
+            color: Union.Style.properties.icon.color
+            implicitWidth: Union.Style.properties.icon.width
+            implicitHeight: Union.Style.properties.icon.height
+            name: Union.Style.properties.icon.name
+            visible: name
         }
     }
 }
