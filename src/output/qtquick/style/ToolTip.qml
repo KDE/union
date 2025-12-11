@@ -17,22 +17,24 @@ T.ToolTip {
     }
 
     x: parent ? (parent.width - implicitWidth) / 2 : 0
-    y: -implicitHeight
+    // Make sure the tooltip doesn't overlap with the cursor, otherwise we end
+    // up in a loop with tooltips that show on hovered.
+    y: -implicitHeight + bottomInset
 
     implicitWidth: Math.max(implicitBackgroundWidth + (Union.Style.properties.layout.inset.left ?? 0) + (Union.Style.properties.layout.inset.right ?? 0),
-                            implicitContentWidth + leftPadding + rightPadding) + (-leftInset) + (-rightInset)
+                            implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + (Union.Style.properties.layout.inset.top ?? 0) + (Union.Style.properties.layout.inset.bottom ?? 0),
-                             implicitContentHeight + topPadding + bottomPadding) + (-topInset) + (-bottomInset)
+                             implicitContentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: -Union.Style.properties.layout.margins.left
-    rightInset: -Union.Style.properties.layout.margins.right
-    topInset: -Union.Style.properties.layout.margins.top
-    bottomInset: -Union.Style.properties.layout.margins.bottom
+    leftInset: -(Union.Style.properties.layout.margins.left ?? 0)
+    rightInset: -(Union.Style.properties.layout.margins.right ?? 0)
+    topInset: -(Union.Style.properties.layout.margins.top ?? 0)
+    bottomInset: -(Union.Style.properties.layout.margins.bottom ?? 0)
 
     font: Union.Style.properties.text.font
 
@@ -55,8 +57,8 @@ T.ToolTip {
     background: Item {
         // See explanation in Menu.qml, this uses the same trick to get a larger
         // window.
-        implicitWidth: Union.Style.properties.layout.width
-        implicitHeight: Union.Style.properties.layout.height
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
 
         Union.StyledRectangle {
             anchors {
