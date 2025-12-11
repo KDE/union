@@ -110,6 +110,8 @@ Kirigami.Page {
 
             RowLayout {
                 Controls.ToolButton {
+                    id: menuButton
+
                     icon.name: "document-new"
                     text: "ToolButton with Menu"
                     Accessible.role: Accessible.ButtonMenu
@@ -139,6 +141,11 @@ Kirigami.Page {
                     }
 
                     onClicked: toolbarMenu.popup(this, 0, height)
+
+                    Controls.ToolTip {
+                        text: "Shows a menu"
+                        visible: menuButton.hovered
+                    }
                 }
 
                 Controls.ToolSeparator {
