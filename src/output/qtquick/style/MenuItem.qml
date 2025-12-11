@@ -11,10 +11,12 @@ T.MenuItem {
     id: control
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
+                            implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: {
         if (visible) {
-            return Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
+            return Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                            implicitIndicatorHeight + topPadding + bottomPadding,
+                            implicitContentHeight + topPadding + bottomPadding)
         } else {
             return 0
         }
@@ -41,17 +43,17 @@ T.MenuItem {
             }
         } else {
             let group = T.ButtonGroup.group
-            if (group && group.excluve) {
+            if (group && group.exclusive) {
                 result.push("exclusive")
             }
         }
         return result
     }
 
-    leftPadding: Union.Positioner.padding.left
-    rightPadding: Union.Positioner.padding.right
-    topPadding: Union.Positioner.padding.top
-    bottomPadding:  Union.Positioner.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
@@ -63,56 +65,83 @@ T.MenuItem {
     font: Union.Style.properties.text.font
 
     icon {
-        color: palette.windowText
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
         source: Union.Style.properties.icon.source
     }
 
-    Union.Positioner.positionItems: [contentItem, indicator, arrow]
+    implicitTextPadding: (checkable ? indicator.implicitWidth : 0) + (icon.name ? icon.width : 0) + (icon.name && checkable ? control.spacing * 2 : control.spacing)
 
     contentItem: Item {
-        Union.PositionedItem.positionChildren: true
+        implicitWidth: Math.ceil(text.implicitWidth) + control.textPadding + (control.menu?.contentItem?.hasAnySubmenu ? control.spacing + control.arrow.width : 0)
+        implicitHeight: Math.max(icon.implicitHeight, text.implicitHeight)
 
         Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
+            id: icon
+            anchors {
+                right: text.left
+                rightMargin: control.spacing
+                verticalCenter: parent.verticalCenter
+            }
             control: control
-            visible: control.ListView.view?.hasIcons ?? false
+            visible: name
         }
 
         Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
+            id: text
+
+            anchors {
+                fill: parent
+                leftMargin: control.textPadding
+                rightMargin: control.menu?.contentItem?.hasAnySubmenu ? control.arrow.implicitWidth + control.spacing : 0
+            }
 
             text: control.text
             font: control.font
             color: control.palette.buttonText
+            elide: Text.ElideRight
         }
     }
 
-    indicator: Item {
+    indicator: Union.StyledRectangle {
         Union.Element.type: "Indicator"
+
+        anchors {
+            left: parent.left
+            leftMargin: control.leftPadding
+            verticalCenter: parent.verticalCenter
+        }
 
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
-        visible: control.checkable || (control.ListView.view?.hasCheckable ?? false)
 
-        Union.StyledRectangle {
-            anchors.fill: parent
-            visible: control.checkable
-        }
+        visible: control.checkable
     }
 
     arrow: Union.Icon {
         Union.Element.type: "Arrow"
+
+        anchors {
+            right: parent.right
+            rightMargin: control.rightPadding
+            verticalCenter: parent.verticalCenter
+        }
 
         implicitWidth: Union.Style.properties.layout.width
         implicitHeight: Union.Style.properties.layout.height
 
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
-        visible: name && control.subMenu
+        visible: control.subMenu
     }
 
     background: Union.StyledRectangle { }
+
+    // Workaround for QTBUG-142697: Text padding does not receive change
+    // notifications correctly.
+    Component.onCompleted: {
+        Qt.callLater(control.textPaddingChanged)
+    }
 }
