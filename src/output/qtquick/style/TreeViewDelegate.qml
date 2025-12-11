@@ -63,6 +63,16 @@ T.TreeViewDelegate {
 
     indentation: indentItem.Union.Style.properties.layout.width
 
+    text: model.display ?? ""
+
+    icon {
+        color: Union.Style.properties.icon.color
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: model.decoration ?? ""
+        source: Union.Style.properties.icon.source
+    }
+
     Item {
         id: indentItem
 
@@ -82,18 +92,27 @@ T.TreeViewDelegate {
         visible: control.isTreeNode && control.hasChildren
     }
 
-    background: Union.StyledRectangle {}
+    contentItem: Item {
+        Union.PositionedItem.positionChildren: true
 
-    contentItem: Text {
+        Union.Icon {
+            Union.PositionedItem.source: Union.PositionerSource.Icon
+            control: control
+            visible: name && control.display !== T.AbstractButton.TextOnly && !control.editing
+        }
+
+        Text {
+            Union.PositionedItem.source: Union.PositionerSource.Text
+            text: control.text
+            font: control.font
+            color: Union.Style.properties.text.color ?? "black"
+            visible: control.display !== T.AbstractButton.IconOnly && !control.editing
+        }
+
         Union.PositionedItem.source: Union.PositionerSource.Text
-
-        text: control.model.display ?? ""
-        elide: Text.ElideRight
-        visible: !control.editing
-        color: Union.Style.properties.text.color
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
+
+    background: Union.StyledRectangle { }
 
     TableView.editDelegate: FocusScope {
         Union.PositionedItem.source: Union.PositionerSource.Text
