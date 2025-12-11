@@ -5,19 +5,26 @@
 
 treeviewdelegate,
 tableviewdelegate {
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+
+    padding: var(--small-spacing);
+    spacing: var(--small-spacing);
+    border-radius: 0px;
+
+    layout-alignment: content fill center 0;
+    icon-alignment: content start center 1;
+    text-alignment: content fill center 2;
+
+    icon-width: var(--icon-size-small);
+    icon-height: var(--icon-size-small);
+
     color: var(--view-text-color);
     background-color: var(--view-background-color);
-    spacing: var(--small-spacing);
 
     &.alternatingRows {
         background-color: var(--view-background-alternate-color);
     }
-
-    inset: 0px;
-    padding: var(--small-spacing);
-    width: 100px;
-    height: 30px;
-    border-radius: 0px;
 
     &:hovered,
     &:active-focus {
@@ -46,24 +53,26 @@ tableviewdelegate {
 }
 
 treeviewdelegate {
-    layout-alignment: item start center 0;
-    icon-alignment: content start center 1;
-    text-alignment: content fill center 2;
-    icon-width: var(--icon-size-small);
-    icon-height: var(--icon-size-small);
+    spacing: 0px;
+
+    & > * {
+        layout-alignment: content fill fill 0;
+    }
+
+    & indentation {
+        width: var(--medium-element-size);
+        layout-alignment: item start center 0;
+    }
 
     & indicator {
-        width: var(--icon-size-small);
+        width: var(--medium-element-size);
         height: var(--icon-size-small);
-        margin-left: var(--small-spacing);
         color: var(--view-text-color);
         icon-name: "arrow-right-symbolic";
         layout-alignment: item start center 1;
     }
 
     &.expanded indicator {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
         icon-name: "arrow-down-symbolic"
     }
 

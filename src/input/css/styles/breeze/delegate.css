@@ -29,6 +29,10 @@ swipedelegate
 
     color: var(--window-text-color);
 
+    & > * {
+        layout-alignment: content fill fill 0;
+    }
+
     &.useAlternateBackgroundColor
     {
         background-color: var(--window-background-alternate-color);
@@ -65,7 +69,6 @@ swipedelegate
 
     indicator
     {
-        layout-alignment-container: content;
-        layout-alignment-order: -1;
+        layout-alignment: content start center -1;
     }
 }
