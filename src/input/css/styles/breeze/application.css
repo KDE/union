@@ -54,8 +54,6 @@ drawer
 scrollview {
     background-color: var(--view-background-color);
     color: var(--view-text-color);
-    border: 1px solid var(--view-border-color);
-    border-radius: var(--corner-radius);
 
     &.vertical-scroll {
         padding-right: var(--scrollbar-size);
@@ -64,11 +62,6 @@ scrollview {
     &.horizontal-scroll {
         padding-bottom: var(--scrollbar-size);
     }
-}
-
-page > scrollview {
-    border: none;
-    border-radius: 0px;
 }
 
 pageindicator {

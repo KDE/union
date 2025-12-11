@@ -58,6 +58,4 @@ T.ScrollView {
         width: control.availableWidth
         active: control.ScrollBar.vertical.active
     }
-
-    background: Union.StyledRectangle {}
 }
