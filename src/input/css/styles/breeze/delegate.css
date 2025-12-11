@@ -24,6 +24,8 @@ swipedelegate
     icon-size: var(--icon-size-smallmedium);
 
     layout-alignment: content fill center 0;
+    icon-alignment: content start center 0;
+    text-alignment: content fill center 0;
 
     color: var(--window-text-color);
 
