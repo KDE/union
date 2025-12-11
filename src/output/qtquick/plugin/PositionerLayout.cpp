@@ -292,22 +292,6 @@ void PositionerLayout::updatePolish()
     contentRelative.size = remainingSize - QSizeF{padding.left() + padding.right(), padding.top() + padding.bottom()};
     layoutContainer(contentRelative);
 
-    for (auto container : {&itemRelative, &backgroundRelative, &contentRelative}) {
-        for (auto bucket : {&container->start, &container->end, &container->center, &container->fill}) {
-            auto position = bucket->position;
-            for (auto item : bucket->items) {
-                auto itemPosition = position + item.position;
-                auto mapped = parentItem()->mapToItem(item.item->parentItem(), itemPosition);
-                item.item->setX(mapped.x());
-                item.item->setY(mapped.y());
-                item.item->setWidth(item.size.width());
-                item.item->setHeight(item.size.height());
-
-                debug("  Item", item.item, "positioned at", itemPosition, mapped);
-            }
-        }
-    }
-
     auto implicitCenterWidth = std::max(backgroundRelative.implicitSize.width() + inset.left() + inset.right(),
                                         contentRelative.implicitSize.width() + padding.left() + padding.right());
     auto implicitWidth = spacedSize({itemRelative.start.implicitSize.width(), implicitCenterWidth, itemRelative.end.implicitSize.width()}, spacing);
@@ -326,8 +310,25 @@ void PositionerLayout::updatePolish()
                             contentRelative.position.y(),
                             bottomRight.height() - contentRelative.position.y());
     if (m_padding != newPadding) {
+        debug("  Updating padding to", newPadding.toMargins());
         m_padding = newPadding;
         Q_EMIT paddingChanged();
+    }
+
+    for (auto container : {&itemRelative, &backgroundRelative, &contentRelative}) {
+        for (auto bucket : {&container->start, &container->end, &container->center, &container->fill}) {
+            auto position = bucket->position;
+            for (auto item : bucket->items) {
+                auto itemPosition = position + item.position;
+                auto mapped = parentItem()->mapToItem(item.item->parentItem(), itemPosition);
+                item.item->setX(mapped.x());
+                item.item->setY(mapped.y());
+                item.item->setWidth(item.size.width());
+                item.item->setHeight(item.size.height());
+
+                debug("  Item", item.item, "positioned at", itemPosition, mapped);
+            }
+        }
     }
 
     m_layouting = false;
