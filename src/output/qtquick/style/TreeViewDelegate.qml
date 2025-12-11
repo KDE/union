@@ -13,7 +13,6 @@ T.TreeViewDelegate {
 
     required property var model
     required property int row
-    readonly property real __contentIndent: !isTreeNode ? 0 : (depth * indentation) + (indicator ? indicator.width + spacing : 0)
 
     Union.Element.type: "TreeViewDelegate"
     Union.Element.hints: {
@@ -39,8 +38,14 @@ T.TreeViewDelegate {
     }
     Union.Positioner.positionItems: [indentItem, indicator, contentItem]
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth) + __contentIndent
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
+    // When Positioner hasn't had the opportunity yet to perform the layout, we
+    // would end up with an implicit size of 0. TableView doesn't like that and
+    // will complain, so in that case, fall back to just querying the implicit
+    // size of the content directly.
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth > 0 ? Union.Positioner.implicitWidth : contentItem.implicitWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight > 0 ? Union.Positioner.implicitHeight : contentItem.implicitHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
