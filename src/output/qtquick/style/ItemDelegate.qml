@@ -12,12 +12,8 @@ import org.kde.union.impl as Union
 T.ItemDelegate {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Math.max(Union.Positioner.implicitWidth, implicitContentWidth + leftPadding + rightPadding))
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Math.max(Union.Positioner.implicitHeight, implicitContentHeight + topPadding + bottomPadding))
-
-    hoverEnabled: Application.styleHints.useHoverEffects
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
     Union.Element.type: "ItemDelegate"
     Union.Element.states {
