@@ -10,7 +10,7 @@
 namespace Union
 {
 
-class Theme;
+class Style;
 /*!
  * \class Union::InputPlugin
  * \inmodule core
@@ -30,12 +30,12 @@ public:
     InputPlugin(QObject *parent = nullptr);
 
     /*!
-     * Create an instance of a theme by name.
+     * Create an instance of a style by name.
      *
      * This should be reimplemented by subclasses and create a new instance of
-     * Theme using an appropriate ThemeLoader and other input specific data.
+     * Style using an appropriate StyleLoader and other input specific data.
      */
-    virtual std::shared_ptr<Theme> createTheme(const QString &themeName) const = 0;
+    virtual std::shared_ptr<Style> createStyle(const QString &styleName) const = 0;
 };
 
 }

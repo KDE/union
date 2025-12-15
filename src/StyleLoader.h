@@ -10,19 +10,19 @@
 namespace Union
 {
 
-class Theme;
+class Style;
 
 /*!
- * \class Union::ThemeLoader
+ * \class Union::StyleLoader
  * \inmodule core
  * \ingroup core-classes
  *
- * \brief An interface that is used by Theme to allow input plugins to load style rules.
+ * \brief An interface that is used by Style to allow input plugins to load style rules.
  */
-class UNION_EXPORT ThemeLoader
+class UNION_EXPORT StyleLoader
 {
 public:
-    virtual ~ThemeLoader()
+    virtual ~StyleLoader()
     {
     }
 
@@ -31,7 +31,7 @@ public:
      *
      * \a theme The theme the rules should be added to.
      */
-    virtual bool load(std::shared_ptr<Theme> theme) = 0;
+    virtual bool load(std::shared_ptr<Style> theme) = 0;
 };
 
 }

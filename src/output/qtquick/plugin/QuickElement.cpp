@@ -8,9 +8,9 @@
 
 #include "Element.h"
 #include "EventHelper.h"
+#include "Style.h"
+#include "StyleRegistry.h"
 #include "StyleRule.h"
-#include "Theme.h"
-#include "ThemeRegistry.h"
 
 #include "QuickStyle.h"
 
@@ -287,9 +287,9 @@ void QuickElement::update()
         return;
     }
 
-    auto theme = ThemeRegistry::instance()->defaultTheme();
+    auto style = StyleRegistry::instance()->defaultStyle();
 
-    m_query = std::make_unique<Union::ElementQuery>(theme);
+    m_query = std::make_unique<Union::ElementQuery>(style);
 
     QList<Element::Ptr> elements;
     elements.append(m_element);

@@ -4,7 +4,7 @@
 #pragma once
 
 #include <Element.h>
-#include <Theme.h>
+#include <Style.h>
 
 #include <QCommonStyle>
 

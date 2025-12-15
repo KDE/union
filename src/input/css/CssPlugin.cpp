@@ -3,7 +3,7 @@
 
 #include "CssPlugin.h"
 
-#include <Theme.h>
+#include <Style.h>
 
 #include "CssLoader.h"
 
@@ -14,7 +14,7 @@ CssPlugin::CssPlugin(QObject *parent)
 {
 }
 
-std::shared_ptr<Union::Theme> CssPlugin::createTheme(const QString &themeName) const
+std::shared_ptr<Union::Style> CssPlugin::createStyle(const QString &styleName) const
 {
-    return Union::Theme::create(u"css"_s, themeName, std::make_unique<CssLoader>());
+    return Union::Style::create(u"css"_s, styleName, std::make_unique<CssLoader>());
 }

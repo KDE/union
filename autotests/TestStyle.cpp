@@ -3,49 +3,49 @@
 
 #include <QtTest>
 
-#include <Theme.h>
-#include <ThemeLoader.h>
+#include <Style.h>
+#include <StyleLoader.h>
 
 using namespace Union;
 using namespace Qt::StringLiterals;
 
-struct TestLoader : public ThemeLoader {
-    bool load(std::shared_ptr<Theme> theme) override
+struct TestLoader : public StyleLoader {
+    bool load(std::shared_ptr<Style> style) override
     {
         auto testRule = StyleRule::create();
         testRule->setSelectors({Selector::create<SelectorType::Id>(u"test"_s)});
-        theme->insert(testRule);
+        style->insert(testRule);
 
         return true;
     }
 };
 
-class TestTheme : public QObject
+class TestStyle : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
     void testLoad()
     {
-        auto theme = Theme::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
+        auto style = Style::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
 
-        QVERIFY(theme->load());
+        QVERIFY(style->load());
 
-        const auto rules = theme->rules();
+        const auto rules = style->rules();
 
         QCOMPARE(rules.size(), 1);
     }
 
     void testMatches()
     {
-        auto theme = Theme::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
-        QVERIFY(theme->load());
+        auto style = Style::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
+        QVERIFY(style->load());
 
         QList<Element::Ptr> elements;
         auto element = Element::create();
         element->setId(u"test"_s);
         elements.append(element);
 
-        auto result = theme->matches(elements);
+        auto result = style->matches(elements);
         QCOMPARE(result.size(), 1);
 
         elements.clear();
@@ -53,11 +53,11 @@ private Q_SLOTS:
         element->setType(u"test"_s);
         elements.append(element);
 
-        result = theme->matches(elements);
+        result = style->matches(elements);
         QCOMPARE(result.size(), 0);
     }
 };
 
-QTEST_MAIN(TestTheme)
+QTEST_MAIN(TestStyle)
 
-#include "TestTheme.moc"
+#include "TestStyle.moc"

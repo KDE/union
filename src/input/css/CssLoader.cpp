@@ -11,8 +11,8 @@
 #include <QStandardPaths>
 
 #include <Color.h>
+#include <Style.h>
 #include <StyleRule.h>
-#include <Theme.h>
 
 #include <CssParser.h>
 
@@ -344,7 +344,7 @@ inline CornerProperty setCornerRadius(const std::optional<CornerProperty> &corne
     return property;
 }
 
-bool CssLoader::load(Theme::Ptr theme)
+bool CssLoader::load(Style::Ptr theme)
 {
     auto defaultsPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults"_s, QStandardPaths::LocateDirectory);
 

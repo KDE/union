@@ -7,7 +7,7 @@
 
 namespace Union
 {
-class Theme;
+class Style;
 }
 
 class CssPlugin : public Union::InputPlugin
@@ -18,5 +18,5 @@ class CssPlugin : public Union::InputPlugin
 public:
     CssPlugin(QObject *parent = nullptr);
 
-    std::shared_ptr<Union::Theme> createTheme(const QString &themeName) const override;
+    std::shared_ptr<Union::Style> createStyle(const QString &styleName) const override;
 };

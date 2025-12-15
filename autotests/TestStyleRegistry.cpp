@@ -3,18 +3,18 @@
 
 #include <QtTest>
 
-#include <ThemeRegistry.h>
+#include <StyleRegistry.h>
 
 using namespace Union;
 using namespace Qt::StringLiterals;
 
-class TestThemeRegistry : public QObject
+class TestStyleRegistry : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
     // TODO: Test plugin loading functionality
 };
 
-QTEST_MAIN(TestThemeRegistry)
+QTEST_MAIN(TestStyleRegistry)
 
-#include "TestThemeRegistry.moc"
+#include "TestStyleRegistry.moc"

@@ -8,7 +8,7 @@
 #include <Selector.h>
 #include <StyleRule.h>
 
-#include "ThemeLoader.h"
+#include "StyleLoader.h"
 
 namespace cssparser
 {
@@ -20,10 +20,10 @@ struct SelectorPart;
 using namespace Union;
 using namespace Union::Properties;
 
-class CssLoader : public ThemeLoader
+class CssLoader : public StyleLoader
 {
 public:
-    bool load(std::shared_ptr<Theme> theme) override;
+    bool load(std::shared_ptr<Style> theme) override;
 
 private:
     SelectorList createSelectorList(const cssparser::Selector &selector);

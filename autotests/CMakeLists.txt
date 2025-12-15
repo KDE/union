@@ -6,8 +6,8 @@ add_subdirectory(properties)
 ecm_add_tests(
     TestStyleRule.cpp
     TestSelector.cpp
-    TestTheme.cpp
-    TestThemeRegistry.cpp
+    TestStyle.cpp
+    TestStyleRegistry.cpp
     TestColor.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )
@@ -18,8 +18,8 @@ endif()
 
 # TestTheme requires properly working selectors for it to function
 set_tests_properties(TestSelector PROPERTIES FIXTURES_SETUP Selector)
-set_tests_properties(TestTheme PROPERTIES FIXTURES_REQUIRED Selector)
+set_tests_properties(TestStyle PROPERTIES FIXTURES_REQUIRED Selector)
 
 # TestThemeRegistry requires properly working themes
-set_tests_properties(TestTheme PROPERTIES FIXTURES_SETUP Theme)
-set_tests_properties(TestThemeRegistry PROPERTIES FIXTURES_REQUIRED Theme)
+set_tests_properties(TestStyle PROPERTIES FIXTURES_SETUP Style)
+set_tests_properties(TestStyleRegistry PROPERTIES FIXTURES_REQUIRED Style)

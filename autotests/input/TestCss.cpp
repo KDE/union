@@ -5,7 +5,7 @@
 
 #include <QStandardPaths>
 
-#include <Theme.h>
+#include <Style.h>
 
 #include <CssParser.h>
 

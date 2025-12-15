@@ -10,8 +10,8 @@
 
 #include <Element.h>
 #include <ElementQuery.h>
-#include <Theme.h>
-#include <ThemeRegistry.h>
+#include <Style.h>
+#include <StyleRegistry.h>
 #include <properties/Formatter.h>
 
 using namespace Qt::StringLiterals;
@@ -37,22 +37,22 @@ int main(int argc, char **argv)
 
     parser.process(app);
 
-    auto registry = Union::ThemeRegistry::instance();
+    auto registry = Union::StyleRegistry::instance();
     registry->load();
 
-    Union::Theme::Ptr theme;
+    Union::Style::Ptr style;
     if (parser.isSet(u"theme"_s)) {
-        theme = registry->theme(parser.value(u"theme"_s));
+        style = registry->style(parser.value(u"theme"_s));
     } else {
-        theme = registry->defaultTheme();
+        style = registry->defaultStyle();
     }
 
-    if (!theme) {
-        std::cout << "No usable theme found!\n";
+    if (!style) {
+        std::cout << "No usable style found!\n";
         exit(1);
     }
 
-    Union::ElementQuery query(theme);
+    Union::ElementQuery query(style);
 
     Union::Element::Ptr queryElement = Union::Element::create();
     queryElement->setType(parser.value(u"type"_s));

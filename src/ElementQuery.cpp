@@ -4,7 +4,7 @@
 #include "ElementQuery.h"
 
 #include "LruCache.h"
-#include "Theme.h"
+#include "Style.h"
 
 #include "union_query_logging.h"
 
@@ -13,7 +13,7 @@ using namespace Union;
 class Union::ElementQueryPrivate
 {
 public:
-    std::shared_ptr<Theme> theme;
+    std::shared_ptr<Style> style;
     QList<Element::Ptr> elements;
     QList<StyleRule::Ptr> styles;
     std::optional<Properties::StyleProperty> properties = std::nullopt;
@@ -23,10 +23,10 @@ public:
     inline static LruCache<std::size_t, std::optional<Properties::StyleProperty>, 500> s_matchesCache;
 };
 
-ElementQuery::ElementQuery(std::shared_ptr<Theme> theme)
+ElementQuery::ElementQuery(std::shared_ptr<Style> style)
     : d(std::make_unique<ElementQueryPrivate>())
 {
-    d->theme = theme;
+    d->style = style;
 }
 
 ElementQuery::~ElementQuery() noexcept = default;
@@ -52,7 +52,7 @@ bool ElementQuery::execute()
         return true;
     }
 
-    d->styles = d->theme->matches(d->elements);
+    d->styles = d->style->matches(d->elements);
 
     if (d->styles.isEmpty()) {
         qCInfo(UNION_QUERY) << "Did not match any style rules!";

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
-#include "Theme.h"
+#include "Style.h"
 
 #include <filesystem>
 
@@ -14,7 +14,7 @@
 #include <QUrl>
 
 #include "InputPlugin.h"
-#include "ThemeLoader.h"
+#include "StyleLoader.h"
 
 #include "union_logging.h"
 #include "union_query_logging.h"
@@ -22,70 +22,70 @@
 using namespace Union;
 using namespace Qt::StringLiterals;
 
-class Union::ThemePrivate
+class Union::StylePrivate
 {
 public:
-    ThemePrivate(const QString &_pluginName, const QString &_themeName, std::unique_ptr<ThemeLoader> &&_loader)
+    StylePrivate(const QString &_pluginName, const QString &_styleName, std::unique_ptr<StyleLoader> &&_loader)
         : pluginName(_pluginName)
-        , themeName(_themeName)
+        , styleName(_styleName)
         , loader(std::move(_loader))
     {
     }
 
     QString pluginName;
-    QString themeName;
+    QString styleName;
 
-    std::unique_ptr<ThemeLoader> loader;
+    std::unique_ptr<StyleLoader> loader;
 
     QList<StyleRule::Ptr> styles;
 };
 
-Theme::Theme(std::unique_ptr<ThemePrivate> &&d)
+Style::Style(std::unique_ptr<StylePrivate> &&d)
     : QObject(nullptr)
     , d(std::move(d))
 {
 }
 
-Theme::~Theme() = default;
+Style::~Style() = default;
 
-QString Theme::name() const
+QString Style::name() const
 {
-    return d->themeName;
+    return d->styleName;
 }
 
-QString Theme::pluginName() const
+QString Style::pluginName() const
 {
     return d->pluginName;
 }
 
-ThemeLoader *Theme::loader() const
+StyleLoader *Style::loader() const
 {
     return d->loader.get();
 }
 
-bool Theme::load()
+bool Style::load()
 {
-    Q_ASSERT_X(d->loader, "Union::Theme", "Theme requires a ThemeLoader instance to function");
+    Q_ASSERT_X(d->loader, "Union::Style", "Style requires a StyleLoader instance to function");
     return d->loader->load(shared_from_this());
 }
 
-void Theme::insert(StyleRule::Ptr style)
+void Style::insert(StyleRule::Ptr style)
 {
     qCInfo(UNION_QUERY) << "Insert" << style;
     d->styles.append(style);
 }
 
-QList<StyleRule::Ptr> Theme::rules()
+QList<StyleRule::Ptr> Style::rules()
 {
     return d->styles;
 }
 
-QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
+QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
 {
     QList<StyleRule::Ptr> result;
 
     if (d->styles.isEmpty()) {
-        qCInfo(UNION_QUERY) << "No style rules found for theme" << d->themeName << "so we will never match anything!";
+        qCInfo(UNION_QUERY) << "No style rules found for theme" << d->styleName << "so we will never match anything!";
     }
 
     for (auto style : d->styles) {
@@ -105,7 +105,7 @@ QList<StyleRule::Ptr> Union::Theme::matches(const QList<Element::Ptr> &elements)
     return result;
 }
 
-std::shared_ptr<Theme> Theme::create(const QString &pluginName, const QString &themeName, std::unique_ptr<ThemeLoader> &&loader)
+std::shared_ptr<Style> Style::create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader)
 {
-    return std::make_shared<Theme>(std::make_unique<ThemePrivate>(pluginName, themeName, std::move(loader)));
+    return std::make_shared<Style>(std::make_unique<StylePrivate>(pluginName, styleName, std::move(loader)));
 }

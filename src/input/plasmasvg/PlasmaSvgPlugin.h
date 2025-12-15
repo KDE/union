@@ -7,7 +7,7 @@
 
 namespace Union
 {
-class Theme;
+class Style;
 }
 
 class PlasmaSvgPlugin : public Union::InputPlugin

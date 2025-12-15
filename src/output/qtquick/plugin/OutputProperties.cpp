@@ -10,7 +10,6 @@
 #include <Element.h>
 #include <EventHelper.h>
 #include <StyleRule.h>
-#include <Theme.h>
 
 using namespace Union;
 

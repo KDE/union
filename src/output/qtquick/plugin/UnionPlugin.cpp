@@ -3,7 +3,7 @@
 
 #include "UnionPlugin.h"
 
-#include <ThemeRegistry.h>
+#include <StyleRegistry.h>
 
 UnionPlugin::UnionPlugin(QObject *parent)
     : QQmlEngineExtensionPlugin(parent)
@@ -15,5 +15,5 @@ void UnionPlugin::initializeEngine(QQmlEngine *, const char *)
     volatile auto registration = &qml_register_types_org_kde_union_impl;
     Q_UNUSED(registration);
 
-    Union::ThemeRegistry::instance()->load();
+    Union::StyleRegistry::instance()->load();
 }

@@ -7,7 +7,7 @@
 
 #include <ElementQuery.h>
 #include <QApplication>
-#include <ThemeRegistry.h>
+#include <StyleRegistry.h>
 
 #include <QPainter>
 #include <QPushButton>
@@ -16,7 +16,7 @@
 
 UnionStyle::UnionStyle()
 {
-    Union::ThemeRegistry::instance()->load();
+    Union::StyleRegistry::instance()->load();
 }
 
 void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
@@ -33,8 +33,8 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         element->setColorSet(Union::Element::ColorSet::Button);
         element->setHint(QStringLiteral("flat"), buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat));
 
-        const auto theme = Union::ThemeRegistry::instance()->defaultTheme();
-        const auto query = std::make_unique<Union::ElementQuery>(theme);
+        const auto style = Union::StyleRegistry::instance()->defaultStyle();
+        const auto query = std::make_unique<Union::ElementQuery>(style);
 
         query->setElements({element});
         query->execute();
@@ -77,8 +77,8 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         element->setType(QStringLiteral("Button"));
         element->setColorSet(Union::Element::ColorSet::Button);
 
-        const auto theme = Union::ThemeRegistry::instance()->defaultTheme();
-        const auto matches = theme->matches({element});
+        const auto style = Union::StyleRegistry::instance()->defaultStyle();
+        const auto matches = style->matches({element});
         const auto properties = matches.first()->properties();
 
         if (const auto layout = properties.layout()) {
@@ -114,8 +114,8 @@ void UnionStyle::polish(QApplication *application)
     auto element = Union::Element::create();
     element->setType(QStringLiteral("ApplicationWindow"));
 
-    const auto theme = Union::ThemeRegistry::instance()->defaultTheme();
-    const auto matches = theme->matches({element});
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto matches = style->matches({element});
     const auto properties = matches.first()->properties();
 
     QPalette palette;

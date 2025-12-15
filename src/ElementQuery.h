@@ -15,7 +15,7 @@
 namespace Union
 {
 
-class Theme;
+class Style;
 class ElementQueryPrivate;
 
 /*!
@@ -42,7 +42,7 @@ public:
      *
      * \a theme An instance of Theme that is used to get the style rules from.
      */
-    explicit ElementQuery(std::shared_ptr<Theme> theme = nullptr);
+    ElementQuery(std::shared_ptr<Union::Style> style);
     ~ElementQuery() noexcept;
 
     /*!

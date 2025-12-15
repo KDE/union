@@ -15,54 +15,54 @@
 namespace Union
 {
 
-class ThemeLoader;
-class ThemePrivate;
+class StyleLoader;
+class StylePrivate;
 
 /*!
- * \class Union::Theme
+ * \class Union::Style
  * \inmodule core
  * \ingroup core-classes
  *
  * \brief A collection of StyleRule instances.
  */
-class UNION_EXPORT Theme : public QObject, public std::enable_shared_from_this<Theme>
+class UNION_EXPORT Style : public QObject, public std::enable_shared_from_this<Style>
 {
     Q_OBJECT
 
 public:
     /*!
-     * \typealias Union::Theme::Ptr
+     * \typealias Union::Style::Ptr
      *
-     * Shorthand for \c{std::shared_ptr<Theme>}
+     * Shorthand for \c{std::shared_ptr<Style>}
      */
-    using Ptr = std::shared_ptr<Theme>;
+    using Ptr = std::shared_ptr<Style>;
 
-    Theme(std::unique_ptr<ThemePrivate> &&d);
-    ~Theme() override;
+    Style(std::unique_ptr<StylePrivate> &&d);
+    ~Style() override;
 
     /*!
-     * \property Union::Theme::name
+     * \property Union::Style::name
      *
-     * The name of the theme.
+     * The name of the style.
      */
     Q_PROPERTY(QString name READ name CONSTANT)
     QString name() const;
 
     /*!
-     * \property Union::Theme::pluginName
+     * \property Union::Style::pluginName
      *
-     * The name of the plugin used to load rules for this Theme.
+     * The name of the plugin used to load rules for this Style.
      */
     Q_PROPERTY(QString pluginName READ pluginName CONSTANT)
     QString pluginName() const;
 
     /*!
-     * Returns the ThemeLoader of this theme.
+     * Returns the StyleLoader of this style.
      */
-    ThemeLoader *loader() const;
+    StyleLoader *loader() const;
 
     /*!
-     * Load the theme.
+     * Load the style.
      *
      * Returns true on success or false if an error occurred.
      */
@@ -75,29 +75,29 @@ public:
     QList<StyleRule::Ptr> matches(const QList<Element::Ptr> &elements);
 
     /*!
-     * Insert a new rule into the theme.
+     * Insert a new rule into the style.
      *
      * \a style The new rule to add.
      */
     void insert(StyleRule::Ptr style);
 
     /*!
-     * Returns the list of all StyleRule instances contained in this theme.
+     * Returns the list of all StyleRule instances contained in this style.
      */
     QList<StyleRule::Ptr> rules();
 
     /*!
-     * Create a new instance of Theme.
+     * Create a new instance of Style.
      *
-     * \a pluginName The name of the plugin responsible for creating this theme.
-     * \a themeName The name of this theme.
-     * \a loader An instance of ThemeLoader responsible for loading the actual
-     *           data of this theme.
+     * \a pluginName The name of the plugin responsible for creating this style.
+     * \a styleName The name of this style.
+     * \a loader An instance of StyleLoader responsible for loading the actual
+     *           data of this style.
      */
-    static Ptr create(const QString &pluginName, const QString &themeName, std::unique_ptr<ThemeLoader> &&loader);
+    static Ptr create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader);
 
 private:
-    const std::unique_ptr<ThemePrivate> d;
+    const std::unique_ptr<StylePrivate> d;
 };
 
 }
