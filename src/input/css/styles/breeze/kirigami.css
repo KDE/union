@@ -154,6 +154,20 @@ inlinemessage
         background-color: var(--negative-background);
         border: 1px solid var(--negative-text);
     }
+
+    &[position="header"] {
+        border-radius: 0px;
+        border-left: none;
+        border-right: none;
+        border-top: none;
+    }
+
+    &[position="footer"] {
+        border-radius: 0px;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+    }
 }
 
 overlaydrawer
