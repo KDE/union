@@ -65,6 +65,7 @@ toolbutton.raised
     padding: var(--button-padding);
     border-radius: var(--corner-radius);
 
+    layout-alignment: content fill fill 0;
     text-alignment-horizontal: center;
     icon-alignment-horizontal: center;
 
