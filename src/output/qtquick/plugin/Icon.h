@@ -33,6 +33,15 @@ public:
     Q_SIGNAL void nameChanged();
 
     /*!
+     * \qmlproperty url Icon::source
+     */
+    Q_PROPERTY(QUrl source READ source WRITE setSource RESET resetSource NOTIFY sourceChanged)
+    QUrl source() const;
+    void setSource(const QUrl &newSource);
+    void resetSource();
+    Q_SIGNAL void sourceChanged();
+
+    /*!
      * \qmlproperty color Icon::color
      *
      * A color to use to tint the icon.
@@ -63,6 +72,7 @@ private:
     Q_SLOT void onControlIconChanged();
 
     QString m_name;
+    QUrl m_source;
     QColor m_color = Qt::transparent;
     QIcon m_icon;
     bool m_iconChanged = true;

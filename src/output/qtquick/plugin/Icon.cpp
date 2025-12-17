@@ -8,6 +8,8 @@
 
 #include <KIconColors>
 
+#include "qtquick_logging.h"
+
 using namespace Qt::StringLiterals;
 
 // Get the smallest of the icon's availableSizes that fits in size
@@ -58,6 +60,37 @@ void Icon::setName(const QString &newName)
 void Icon::resetName()
 {
     setName(QString{});
+}
+
+QUrl Icon::source() const
+{
+    return m_source;
+}
+
+void Icon::setSource(const QUrl &newSource)
+{
+    if (newSource == m_source) {
+        return;
+    }
+
+    if (!newSource.isLocalFile()) {
+        if (newSource.isRelative()) {
+            // Some code might incorrectly set icon.source to an icon name, in that case
+            // treat the URL as a name.
+            qCWarning(UNION_QTQUICK) << "Relative URL used as Icon source, this is wrong, interpreting it as icon name instead";
+            setName(newSource.toString());
+        } else {
+            qCDebug(UNION_QTQUICK) << "Non-local source URL" << newSource << "used as Icon source is unsupported";
+        }
+    }
+
+    m_source = newSource;
+    Q_EMIT sourceChanged();
+}
+
+void Icon::resetSource()
+{
+    setSource(QUrl{});
 }
 
 QColor Icon::color() const
@@ -145,18 +178,22 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
 
 void Icon::updatePolish()
 {
-    // TODO Move this into some sort of platform plugin
-#ifdef WITH_KICONTHEMES
-    if (m_color != Qt::transparent) {
-        KIconColors colors;
-        colors.setText(m_color);
-        m_icon = KDE::icon(m_name, colors);
+    if (!m_source.isEmpty() && m_source.isLocalFile()) {
+        m_icon = QIcon(m_source.toLocalFile());
     } else {
-        m_icon = KDE::icon(m_name);
-    }
+        // TODO Move this into some sort of platform plugin
+#ifdef WITH_KICONTHEMES
+        if (m_color != Qt::transparent) {
+            KIconColors colors;
+            colors.setText(m_color);
+            m_icon = KDE::icon(m_name, colors);
+        } else {
+            m_icon = KDE::icon(m_name);
+        }
 #else
-    m_icon = QIcon::fromTheme(m_name);
+        m_icon = QIcon::fromTheme(m_name);
 #endif
+    }
 
     m_iconChanged = true;
     update();
@@ -168,6 +205,7 @@ void Icon::onControlIconChanged()
     static auto widthProperty = iconType->property(iconType->indexOfProperty("width"));
     static auto heightProperty = iconType->property(iconType->indexOfProperty("height"));
     static auto nameProperty = iconType->property(iconType->indexOfProperty("name"));
+    static auto sourceProperty = iconType->property(iconType->indexOfProperty("source"));
     static auto colorProperty = iconType->property(iconType->indexOfProperty("color"));
 
     auto icon = m_control->property("icon");
@@ -178,5 +216,6 @@ void Icon::onControlIconChanged()
     auto data = icon.constData();
     setImplicitSize(widthProperty.readOnGadget(data).toReal(), heightProperty.readOnGadget(data).toReal());
     setName(nameProperty.readOnGadget(data).toString());
+    setSource(sourceProperty.readOnGadget(data).toUrl());
     setColor(colorProperty.readOnGadget(data).value<QColor>());
 }
