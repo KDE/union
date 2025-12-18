@@ -32,7 +32,7 @@ T.ComboBox {
     }
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
     leftPadding: Union.Positioner.padding.left
@@ -47,6 +47,8 @@ T.ComboBox {
 
     font: Union.Style.properties.text.font
     spacing: Union.Style.properties.layout.spacing
+
+    implicitContentWidthPolicy: T.ComboBox.WidestText
 
     delegate: ItemDelegate {
         required property var model
@@ -75,6 +77,7 @@ T.ComboBox {
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
+
         selectByMouse: control.selectTextByMouse
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
@@ -90,14 +93,7 @@ T.ComboBox {
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
         contentItem: ListView {
-            clip: true
-            implicitWidth: {
-                let max = 0
-                for (let i of contentItem.visibleChildren) {
-                    max = Math.max(i.implicitWidth, max)
-                }
-                return max
-            }
+            implicitWidth: contentItem.visibleChildren.reduce((acc, item) => Math.max(acc, item.implicitWidth), 0)
             implicitHeight: contentHeight
             model: control.delegateModel
             currentIndex: control.highlightedIndex
