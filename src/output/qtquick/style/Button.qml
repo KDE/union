@@ -8,6 +8,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.Button {
     id: control
 
@@ -86,25 +88,7 @@ T.Button {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    contentItem: Item {
-        Union.PositionedItem.positionChildren: true
-
-        Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
-            control: control
-            visible: name && control.display != T.AbstractButton.TextOnly
-        }
-
-        Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
-
-            text: control.text
-            font: control.font
-            color: Union.Style.properties.text.color
-
-            visible: control.display != T.AbstractButton.IconOnly
-        }
-    }
+    contentItem: P.DefaultContentItem { control: control }
 
     indicator: Union.Icon {
         Union.Element.type: "Indicator"

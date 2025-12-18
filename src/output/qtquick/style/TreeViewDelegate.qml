@@ -3,10 +3,11 @@
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+
+import "private" as P
 
 T.TreeViewDelegate {
     id: control
@@ -92,24 +93,9 @@ T.TreeViewDelegate {
         visible: control.isTreeNode && control.hasChildren
     }
 
-    contentItem: Item {
-        Union.PositionedItem.positionChildren: true
-
-        Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
-            control: control
-            visible: name && control.display !== T.AbstractButton.TextOnly && !control.editing
-        }
-
-        Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
-            text: control.text
-            font: control.font
-            color: Union.Style.properties.text.color ?? "black"
-            visible: control.display !== T.AbstractButton.IconOnly && !control.editing
-        }
-
-        Union.PositionedItem.source: Union.PositionerSource.Text
+    contentItem: P.DefaultContentItem {
+        control: control
+        visible: !control.editing
     }
 
     background: Union.StyledRectangle { }
