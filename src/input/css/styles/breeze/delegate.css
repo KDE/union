@@ -41,7 +41,7 @@ swipedelegate
     &:hovered
     {
         border: 1px solid var(--highlight-color);
-        background-color: var(--window-highlight-color);
+        background-color: var(--highlight-hover-color);
     }
 
     &:pressed,

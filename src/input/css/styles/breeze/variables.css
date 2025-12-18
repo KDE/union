@@ -31,7 +31,7 @@
     /* Colors */
     --highlight-color: custom-color("kcolorscheme", "active", "selection", "background", "normal");
     --highlight-text-color: custom-color("kcolorscheme", "active", "selection", "foreground", "text");
-
+    --highlight-hover-color: modify-color(var(--highlight-color) set-alpha 0.3);
 
     --window-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
     --window-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
