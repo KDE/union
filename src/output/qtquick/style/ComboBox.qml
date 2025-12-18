@@ -92,13 +92,18 @@ T.ComboBox {
         width: Math.max(control.width, contentItem.implicitWidth)
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
+        rightPadding: contentItem.ScrollBar.vertical.visible ? contentItem.ScrollBar.vertical.width : 0
+
         contentItem: ListView {
             implicitWidth: contentItem.visibleChildren.reduce((acc, item) => Math.max(acc, item.implicitWidth), 0)
             implicitHeight: contentHeight
             model: control.delegateModel
             currentIndex: control.highlightedIndex
             highlightMoveDuration: 0
-            T.ScrollIndicator.vertical: ScrollIndicator {}
+
+            ScrollBar.vertical: ScrollBar {
+                anchors.left: parent.right
+            }
         }
     }
 }
