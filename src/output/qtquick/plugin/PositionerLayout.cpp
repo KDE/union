@@ -298,7 +298,7 @@ void PositionerLayout::updatePolish()
     auto implicitHeight = std::max({itemRelative.implicitSize.height(),
                                     backgroundRelative.implicitSize.height() + inset.top() + inset.bottom(),
                                     contentRelative.implicitSize.height() + padding.top() + padding.bottom()});
-    auto newImplicitSize = QSizeF{std::round(implicitWidth), std::round(implicitHeight)};
+    auto newImplicitSize = QSizeF{std::ceil(implicitWidth), std::ceil(implicitHeight)};
     if (newImplicitSize != m_implicitSize) {
         m_implicitSize = newImplicitSize;
         Q_EMIT implicitSizeChanged();
@@ -441,8 +441,8 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
         maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
     }
 
-    bucket.implicitSize.setWidth(std::round(std::max(bucket.stacked ? maxWidth : x, 0.0)));
-    bucket.implicitSize.setHeight(std::round(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
+    bucket.implicitSize.setWidth(std::ceil(std::max(bucket.stacked ? maxWidth : x, 0.0)));
+    bucket.implicitSize.setHeight(std::ceil(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
 }
 
 void PositionerLayout::onParentSizeChanged()
