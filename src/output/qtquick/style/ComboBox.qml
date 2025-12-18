@@ -70,6 +70,9 @@ T.ComboBox {
 
     contentItem: TextInput {
         Union.PositionedItem.source: Union.PositionerSource.Text
+
+        clip: true
+
         color: Union.Style.properties.text.color
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
