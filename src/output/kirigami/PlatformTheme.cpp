@@ -4,6 +4,7 @@
 #include "PlatformTheme.h"
 
 #include <KIconColors>
+#include <Style.h>
 
 #include <Color.h>
 
@@ -23,6 +24,7 @@ inline QString enumToString(T value)
 PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
+    qApp->installEventFilter(this);
     setSupportsIconColoring(true);
     // TODO Find some way of maintaining inherit while using the correct colors.
     syncColorSchemeColors();
@@ -78,6 +80,10 @@ bool PlatformTheme::event(QEvent *event)
         syncColorSchemeColors();
     }
 
+    if (event->type() == Kirigami::Platform::PlatformThemeEvents::ColorChangedEvent::type) {
+        syncColorSchemeColors();
+    }
+
     if (event->type() == Kirigami::Platform::PlatformThemeEvents::ColorSetChangedEvent::type) {
         syncColorSchemeColors();
     }
@@ -91,6 +97,11 @@ bool PlatformTheme::event(QEvent *event)
 
 bool PlatformTheme::eventFilter(QObject *target, QEvent *event)
 {
+    if (event->type() == StyleChangedEvent::s_type) {
+        syncColorSchemeColors();
+        return true;
+    }
+
     if (event->type() == QuickStyleUpdatedEvent::s_type) {
         syncColors();
         return false;

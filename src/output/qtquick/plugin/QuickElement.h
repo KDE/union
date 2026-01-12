@@ -308,6 +308,8 @@ public:
 
     static QuickElement *qmlAttachedProperties(QObject *parent);
 
+    std::shared_ptr<Union::Style> style() const;
+
 protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
@@ -325,6 +327,7 @@ private:
     std::unique_ptr<StatesGroup> m_statesGroup;
 
     std::unique_ptr<Union::ElementQuery> m_query;
+    std::shared_ptr<Union::Style> m_style;
 
     bool m_completed = false;
 };

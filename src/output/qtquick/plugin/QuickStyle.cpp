@@ -8,6 +8,7 @@
 
 #include <Element.h>
 #include <EventHelper.h>
+#include <Style.h>
 #include <StyleRule.h>
 
 #include "QuickElement.h"
@@ -69,6 +70,11 @@ bool QuickStyle::event(QEvent *event)
 
 bool QuickStyle::eventFilter(QObject *watched, QEvent *event)
 {
+    if (event->type() == StyleChangedEvent::s_type) {
+        update();
+        return false;
+    }
+
     if (watched == m_element && event->type() == QuickElementUpdatedEvent::s_type) {
         update();
         // Allow the event to be processed by other event filters.
@@ -96,12 +102,14 @@ void QuickStyle::setElement(QuickElement *newElement)
 
     if (m_element) {
         m_element->removeEventFilter(this);
+        m_element->style()->removeEventFilter(this);
     }
 
     m_element = newElement;
 
     if (m_element) {
         m_element->installEventFilter(this);
+        m_element->style()->installEventFilter(this);
     }
 }
 

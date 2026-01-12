@@ -96,8 +96,18 @@ public:
      */
     static Ptr create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader);
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
     const std::unique_ptr<StylePrivate> d;
 };
 
+class StyleChangedEvent : public QEvent
+{
+public:
+    StyleChangedEvent();
+
+    static QEvent::Type s_type;
+};
 }

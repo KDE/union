@@ -157,6 +157,7 @@ QuickElement::QuickElement(QObject *parent)
     m_element->installEventFilter(this);
 
     m_statesGroup = std::make_unique<StatesGroup>(this);
+    m_style = StyleRegistry::instance()->defaultStyle();
 
     initialize();
 
@@ -281,15 +282,18 @@ void QuickElement::setActiveStates(Union::Element::States newActiveStates)
     m_element->setStates(newActiveStates);
 }
 
+std::shared_ptr<Union::Style> QuickElement::style() const
+{
+    return m_style;
+}
+
 void QuickElement::update()
 {
     if (!m_completed) {
         return;
     }
 
-    auto style = StyleRegistry::instance()->defaultStyle();
-
-    m_query = std::make_unique<Union::ElementQuery>(style);
+    m_query = std::make_unique<Union::ElementQuery>(m_style);
 
     QList<Element::Ptr> elements;
     elements.append(m_element);

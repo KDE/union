@@ -21,6 +21,9 @@ public:
 
     std::optional<Union::ColorProvider::Rgba> color(const QStringList &arguments) const override;
 
+protected:
+    bool eventFilter(QObject *obj, QEvent *event) override;
+
 private:
     mutable Union::LruCache<qsizetype, Union::ColorProvider::Rgba> m_cache;
 };
