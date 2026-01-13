@@ -15,7 +15,10 @@
 
 using namespace Union;
 
-static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleRegistration;
+UNION_EXPORT QEvent::Type QuickStyleUpdatedEvent::s_type = QEvent::None;
+static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleUpdatedRegistration;
+UNION_EXPORT QEvent::Type QuickStyleColorsChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<QuickStyleColorsChangedEvent> quickStyleColorsChangedRegistration;
 
 QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
@@ -59,7 +62,7 @@ void QuickStyle::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuick
 
 bool QuickStyle::event(QEvent *event)
 {
-    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+    if (event->type() == QuickStyleUpdatedEvent::s_type || event->type() == QuickStyleColorsChangedEvent::s_type) {
         // Propagate to parent to also enable event filters on the parent to
         // notify of changes.
         QCoreApplication::sendEvent(parent(), event);
@@ -71,7 +74,12 @@ bool QuickStyle::event(QEvent *event)
 bool QuickStyle::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == StyleChangedEvent::s_type) {
-        update();
+        m_properties->refreshColors();
+
+        QuickStyleColorsChangedEvent event;
+        // Send to self to allow event filtering on this instance to react to changes.
+        QCoreApplication::sendEvent(this, &event);
+
         return false;
     }
 
@@ -148,6 +156,11 @@ void QuickStyle::update()
 }
 
 QuickStyleUpdatedEvent::QuickStyleUpdatedEvent()
+    : QEvent(s_type)
+{
+}
+
+QuickStyleColorsChangedEvent::QuickStyleColorsChangedEvent()
     : QEvent(s_type)
 {
 }

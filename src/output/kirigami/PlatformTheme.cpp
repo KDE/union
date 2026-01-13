@@ -30,6 +30,11 @@ PlatformTheme::PlatformTheme(QObject *parent)
     syncUseAlternateBackground();
     connect(this, &PlatformTheme::useAlternateBackgroundColorChanged, this, &PlatformTheme::syncUseAlternateBackground);
     // TODO set spellcheck enabled/disabled
+
+    auto style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parent));
+    if (style) {
+        style->installEventFilter(this);
+    }
 }
 
 PlatformTheme::~PlatformTheme()
@@ -101,8 +106,8 @@ bool PlatformTheme::eventFilter(QObject *target, QEvent *event)
         return true;
     }
 
-    if (event->type() == QuickStyleUpdatedEvent::s_type) {
-        syncColors();
+    if (event->type() == QuickStyleColorsChangedEvent::s_type) {
+        syncColorSchemeColors();
         return false;
     }
 

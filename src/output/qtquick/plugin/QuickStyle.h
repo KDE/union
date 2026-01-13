@@ -103,5 +103,13 @@ class QuickStyleUpdatedEvent : public QEvent
 public:
     QuickStyleUpdatedEvent();
 
-    inline static QEvent::Type s_type = QEvent::None;
+    static QEvent::Type s_type;
+};
+
+class QuickStyleColorsChangedEvent : public QEvent
+{
+public:
+    QuickStyleColorsChangedEvent();
+
+    static QEvent::Type s_type;
 };

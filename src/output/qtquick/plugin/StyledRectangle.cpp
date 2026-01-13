@@ -42,6 +42,11 @@ bool StyledRectangle::event(QEvent *event)
         return false;
     }
 
+    if (event->type() == QuickStyleColorsChangedEvent::s_type) {
+        update();
+        return false;
+    }
+
     return QQuickItem::event(event);
 }
 
