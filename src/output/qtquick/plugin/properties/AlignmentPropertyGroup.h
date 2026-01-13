@@ -37,6 +37,8 @@ public:
     void update(const std::optional<Union::Properties::AlignmentProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty Union::Properties::AlignmentContainer AlignmentPropertyGroup::container
      *

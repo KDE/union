@@ -45,6 +45,8 @@ public:
     void update(const std::optional<Union::Properties::StyleProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty LayoutPropertyGroup StylePropertyGroup::layout
      *

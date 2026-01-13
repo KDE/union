@@ -38,6 +38,12 @@ void BackgroundPropertyGroup::update(const std::optional<BackgroundProperty> &ne
     Q_EMIT updated();
 }
 
+void BackgroundPropertyGroup::refreshColors()
+{
+    Q_EMIT colorChanged();
+    m_image->refreshColors();
+}
+
 QJSValue BackgroundPropertyGroup::color() const
 {
     if (!m_state) {

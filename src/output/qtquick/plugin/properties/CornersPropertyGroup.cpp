@@ -46,6 +46,14 @@ void CornersPropertyGroup::update(const std::optional<CornersProperty> &newState
     Q_EMIT updated();
 }
 
+void CornersPropertyGroup::refreshColors()
+{
+    m_topLeft->refreshColors();
+    m_topRight->refreshColors();
+    m_bottomLeft->refreshColors();
+    m_bottomRight->refreshColors();
+}
+
 CornerPropertyGroup *CornersPropertyGroup::topLeft() const
 {
     return m_topLeft.get();

@@ -40,6 +40,12 @@ void LinePropertyGroup::update(const std::optional<LineProperty> &newState)
     Q_EMIT updated();
 }
 
+void LinePropertyGroup::refreshColors()
+{
+    Q_EMIT colorChanged();
+    m_image->refreshColors();
+}
+
 QJSValue LinePropertyGroup::size() const
 {
     if (!m_state) {

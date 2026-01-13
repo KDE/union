@@ -41,6 +41,12 @@ void CornerPropertyGroup::update(const std::optional<CornerProperty> &newState)
     Q_EMIT updated();
 }
 
+void CornerPropertyGroup::refreshColors()
+{
+    Q_EMIT colorChanged();
+    m_image->refreshColors();
+}
+
 QJSValue CornerPropertyGroup::radius() const
 {
     if (!m_state) {

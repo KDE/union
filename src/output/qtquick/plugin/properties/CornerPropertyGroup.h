@@ -38,6 +38,8 @@ public:
     void update(const std::optional<Union::Properties::CornerProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty qreal CornerPropertyGroup::radius
      *

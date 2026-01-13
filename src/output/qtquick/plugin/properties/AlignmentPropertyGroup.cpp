@@ -38,6 +38,10 @@ void AlignmentPropertyGroup::update(const std::optional<AlignmentProperty> &newS
     Q_EMIT updated();
 }
 
+void AlignmentPropertyGroup::refreshColors()
+{
+}
+
 QJSValue AlignmentPropertyGroup::container() const
 {
     if (!m_state) {

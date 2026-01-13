@@ -41,6 +41,8 @@ public:
     void update(const std::optional<Union::Properties::CornersProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty CornerPropertyGroup CornersPropertyGroup::topLeft
      *

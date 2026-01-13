@@ -36,6 +36,10 @@ void OffsetPropertyGroup::update(const std::optional<OffsetProperty> &newState)
     Q_EMIT updated();
 }
 
+void OffsetPropertyGroup::refreshColors()
+{
+}
+
 QJSValue OffsetPropertyGroup::horizontal() const
 {
     if (!m_state) {

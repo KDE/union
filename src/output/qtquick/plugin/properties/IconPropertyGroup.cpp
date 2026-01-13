@@ -42,6 +42,12 @@ void IconPropertyGroup::update(const std::optional<IconProperty> &newState)
     Q_EMIT updated();
 }
 
+void IconPropertyGroup::refreshColors()
+{
+    m_alignment->refreshColors();
+    Q_EMIT colorChanged();
+}
+
 AlignmentPropertyGroup *IconPropertyGroup::alignment() const
 {
     return m_alignment.get();

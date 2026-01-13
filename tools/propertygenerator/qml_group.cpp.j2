@@ -67,6 +67,17 @@ void {{ group_name }}::update(const std::optional<{{ type_name }}> &newState)
     Q_EMIT updated();
 }
 
+void {{ group_name }}::refreshColors()
+{
+{% for property in properties %}
+{% if property.is_group %}
+    m_{{ property.name }}->refreshColors();
+{% elif property.type == "Union::Color" %}
+    Q_EMIT {{ property.name }}Changed();
+{% endif %}
+{% endfor %}
+}
+
 {% for property in properties %}
 {% if property.is_group %}
 {{ property.type }}Group *{{ group_name }}::{{ property.name }}() const

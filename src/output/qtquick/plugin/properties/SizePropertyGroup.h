@@ -37,6 +37,8 @@ public:
     void update(const std::optional<Union::Properties::SizeProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty qreal SizePropertyGroup::left
      *

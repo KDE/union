@@ -39,6 +39,12 @@ void TextPropertyGroup::update(const std::optional<TextProperty> &newState)
     Q_EMIT updated();
 }
 
+void TextPropertyGroup::refreshColors()
+{
+    m_alignment->refreshColors();
+    Q_EMIT colorChanged();
+}
+
 AlignmentPropertyGroup *TextPropertyGroup::alignment() const
 {
     return m_alignment.get();

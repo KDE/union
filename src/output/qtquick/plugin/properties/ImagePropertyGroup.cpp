@@ -41,6 +41,11 @@ void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
     Q_EMIT updated();
 }
 
+void ImagePropertyGroup::refreshColors()
+{
+    Q_EMIT maskColorChanged();
+}
+
 QJSValue ImagePropertyGroup::imageData() const
 {
     if (!m_state) {

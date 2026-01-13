@@ -46,6 +46,14 @@ void OutlinePropertyGroup::update(const std::optional<OutlineProperty> &newState
     Q_EMIT updated();
 }
 
+void OutlinePropertyGroup::refreshColors()
+{
+    m_left->refreshColors();
+    m_right->refreshColors();
+    m_top->refreshColors();
+    m_bottom->refreshColors();
+}
+
 LinePropertyGroup *OutlinePropertyGroup::left() const
 {
     return m_left.get();

@@ -49,6 +49,14 @@ void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
     Q_EMIT updated();
 }
 
+void LayoutPropertyGroup::refreshColors()
+{
+    m_alignment->refreshColors();
+    m_padding->refreshColors();
+    m_inset->refreshColors();
+    m_margins->refreshColors();
+}
+
 AlignmentPropertyGroup *LayoutPropertyGroup::alignment() const
 {
     return m_alignment.get();

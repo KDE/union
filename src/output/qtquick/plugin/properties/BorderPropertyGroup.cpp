@@ -46,6 +46,14 @@ void BorderPropertyGroup::update(const std::optional<BorderProperty> &newState)
     Q_EMIT updated();
 }
 
+void BorderPropertyGroup::refreshColors()
+{
+    m_left->refreshColors();
+    m_right->refreshColors();
+    m_top->refreshColors();
+    m_bottom->refreshColors();
+}
+
 LinePropertyGroup *BorderPropertyGroup::left() const
 {
     return m_left.get();

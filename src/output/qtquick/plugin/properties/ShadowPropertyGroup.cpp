@@ -64,6 +64,20 @@ void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
     Q_EMIT updated();
 }
 
+void ShadowPropertyGroup::refreshColors()
+{
+    m_offset->refreshColors();
+    Q_EMIT colorChanged();
+    m_left->refreshColors();
+    m_right->refreshColors();
+    m_top->refreshColors();
+    m_bottom->refreshColors();
+    m_topLeft->refreshColors();
+    m_topRight->refreshColors();
+    m_bottomLeft->refreshColors();
+    m_bottomRight->refreshColors();
+}
+
 OffsetPropertyGroup *ShadowPropertyGroup::offset() const
 {
     return m_offset.get();

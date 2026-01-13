@@ -37,6 +37,8 @@ public:
     void update(const std::optional<Union::Properties::ImageProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty QImage ImagePropertyGroup::imageData
      *

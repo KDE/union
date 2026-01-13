@@ -38,6 +38,8 @@ public:
     void update(const std::optional<Union::Properties::TextProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty AlignmentPropertyGroup TextPropertyGroup::alignment
      *

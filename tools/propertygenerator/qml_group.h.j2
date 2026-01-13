@@ -58,6 +58,8 @@ public:
     void update(const std::optional<Union::Properties::{{ type_name }}> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
 {% for property in properties %}
 {% if property.is_group %}
     /*!

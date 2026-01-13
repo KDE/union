@@ -58,6 +58,18 @@ void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
     Q_EMIT updated();
 }
 
+void StylePropertyGroup::refreshColors()
+{
+    m_layout->refreshColors();
+    m_text->refreshColors();
+    m_icon->refreshColors();
+    m_background->refreshColors();
+    m_border->refreshColors();
+    m_outline->refreshColors();
+    m_corners->refreshColors();
+    m_shadow->refreshColors();
+}
+
 LayoutPropertyGroup *StylePropertyGroup::layout() const
 {
     return m_layout.get();

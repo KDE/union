@@ -38,6 +38,10 @@ void SizePropertyGroup::update(const std::optional<SizeProperty> &newState)
     Q_EMIT updated();
 }
 
+void SizePropertyGroup::refreshColors()
+{
+}
+
 QJSValue SizePropertyGroup::left() const
 {
     if (!m_state) {

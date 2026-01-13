@@ -41,6 +41,8 @@ public:
     void update(const std::optional<Union::Properties::OutlineProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty LinePropertyGroup OutlinePropertyGroup::left
      *

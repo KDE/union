@@ -38,6 +38,8 @@ public:
     void update(const std::optional<Union::Properties::BackgroundProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty Union::Color BackgroundPropertyGroup::color
      *

@@ -46,6 +46,8 @@ public:
     void update(const std::optional<Union::Properties::ShadowProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty OffsetPropertyGroup ShadowPropertyGroup::offset
      *

@@ -38,6 +38,8 @@ public:
     void update(const std::optional<Union::Properties::LineProperty> &newState);
     Q_SIGNAL void updated();
 
+    void refreshColors();
+
     /*!
      * \qmlproperty qreal LinePropertyGroup::size
      *
