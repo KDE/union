@@ -105,12 +105,17 @@ KColorSchemeProvider::KColorSchemeProvider(QObject *parent)
     : ColorProvider(parent)
 {
     qApp->installEventFilter(this);
+
+    m_colorConfig = KSharedConfig::openConfig();
 }
 
 bool KColorSchemeProvider::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::ApplicationPaletteChange) {
         m_cache.clear();
+        // Important: If we don't reparse the global configuration, we will not
+        // get any new colors.
+        m_colorConfig->reparseConfiguration();
     }
     return QObject::eventFilter(obj, event);
 }
@@ -139,7 +144,7 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
         return std::nullopt;
     }
 
-    KColorScheme colorScheme(group.value(), colorSet.value());
+    KColorScheme colorScheme(group.value(), colorSet.value(), m_colorConfig);
 
     auto rgbaFromQColor = [](const QColor &qcolor) {
         return Rgba{

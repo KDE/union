@@ -26,4 +26,5 @@ protected:
 
 private:
     mutable Union::LruCache<qsizetype, Union::ColorProvider::Rgba> m_cache;
+    KSharedConfigPtr m_colorConfig;
 };
