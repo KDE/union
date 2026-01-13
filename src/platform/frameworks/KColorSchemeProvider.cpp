@@ -111,7 +111,7 @@ KColorSchemeProvider::KColorSchemeProvider(QObject *parent)
 
 bool KColorSchemeProvider::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::ApplicationPaletteChange) {
+    if (obj == qApp && event->type() == QEvent::ApplicationPaletteChange) {
         m_cache.clear();
         // Important: If we don't reparse the global configuration, we will not
         // get any new colors.

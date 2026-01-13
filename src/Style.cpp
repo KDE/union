@@ -55,7 +55,7 @@ Style::~Style() = default;
 
 bool Style::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::ApplicationPaletteChange) {
+    if (obj == qApp && event->type() == QEvent::ApplicationPaletteChange) {
         StyleChangedEvent event;
         QCoreApplication::sendEvent(this, &event);
     }

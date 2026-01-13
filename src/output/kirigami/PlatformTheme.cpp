@@ -24,7 +24,6 @@ inline QString enumToString(T value)
 PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
-    qApp->installEventFilter(this);
     setSupportsIconColoring(true);
     // TODO Find some way of maintaining inherit while using the correct colors.
     syncColorSchemeColors();
