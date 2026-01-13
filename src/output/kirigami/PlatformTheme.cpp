@@ -25,7 +25,6 @@ PlatformTheme::PlatformTheme(QObject *parent)
     : Kirigami::Platform::PlatformTheme(parent)
 {
     setSupportsIconColoring(true);
-    // TODO Find some way of maintaining inherit while using the correct colors.
     syncColorSchemeColors();
     syncUseAlternateBackground();
     connect(this, &PlatformTheme::useAlternateBackgroundColorChanged, this, &PlatformTheme::syncUseAlternateBackground);
