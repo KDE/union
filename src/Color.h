@@ -236,4 +236,5 @@ struct std::formatter<Union::Color, char> : public std::formatter<std::string, c
     }
 };
 
+Q_DECLARE_TYPEINFO(Union::Color, Q_RELOCATABLE_TYPE);
 Q_DECLARE_METATYPE(Union::Color)
