@@ -327,9 +327,20 @@ Color::Color(const Color &other)
     *this = other;
 }
 
+Color::Color(Color &&other)
+{
+    std::swap(data, other.data);
+}
+
 Color &Color::operator=(const Color &other)
 {
     data = other.data;
+    return *this;
+}
+
+Color &Color::operator=(Color &&other)
+{
+    std::swap(data, other.data);
     return *this;
 }
 

@@ -75,7 +75,11 @@ public:
 
     Color(const Color &other);
 
+    Color(Color &&other);
+
     Color &operator=(const Color &other);
+
+    Color &operator=(Color &&other);
 
     bool operator==(const Color &other) const;
 
