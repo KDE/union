@@ -16,11 +16,9 @@ public:
     std::shared_ptr<Style> style;
     QList<Element::Ptr> elements;
     QList<StyleRule::Ptr> styles;
-    std::optional<Properties::StyleProperty> properties = std::nullopt;
+    std::shared_ptr<Properties::StyleProperty> properties = nullptr;
 
-    inline static const Properties::StyleProperty emptyProperties;
-
-    inline static LruCache<std::size_t, std::optional<Properties::StyleProperty>, 500> s_matchesCache;
+    inline static LruCache<std::size_t, std::shared_ptr<Properties::StyleProperty>, 500> s_matchesCache;
 };
 
 ElementQuery::ElementQuery(std::shared_ptr<Style> style)
@@ -56,8 +54,8 @@ bool ElementQuery::execute()
 
     if (d->styles.isEmpty()) {
         qCInfo(UNION_QUERY) << "Did not match any style rules!";
-        d->properties = std::nullopt;
-        ElementQueryPrivate::s_matchesCache.insert(cacheKey, std::nullopt);
+        d->properties = nullptr;
+        ElementQueryPrivate::s_matchesCache.insert(cacheKey, nullptr);
         return false;
     }
 
@@ -68,10 +66,10 @@ bool ElementQuery::execute()
         }
     }
 
-    d->properties = Properties::StyleProperty();
+    d->properties = std::make_shared<Properties::StyleProperty>();
 
     for (auto style : std::as_const(d->styles)) {
-        Properties::StyleProperty::resolveProperties(style->properties(), d->properties.value());
+        Properties::StyleProperty::resolveProperties(style->properties(), d->properties.get());
     }
 
     ElementQueryPrivate::s_matchesCache.insert(cacheKey, d->properties);
@@ -81,10 +79,10 @@ bool ElementQuery::execute()
 
 bool ElementQuery::hasMatches() const
 {
-    return d->properties.has_value();
+    return bool(d->properties);
 }
 
-const Properties::StyleProperty &ElementQuery::properties() const
+Properties::StyleProperty *ElementQuery::properties() const
 {
-    return d->properties.has_value() ? d->properties.value() : d->emptyProperties;
+    return d->properties.get();
 }
