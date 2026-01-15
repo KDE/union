@@ -44,8 +44,8 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         // Shrink the widget rect by the insets
         // TODO: we may have to keep it as a QRectF here
         QRect rect = option->rect;
-        if (const auto layout = properties.layout()) {
-            rect -= layout->inset_or_new().toMargins().toMargins();
+        if (const auto layout = properties->layout()) {
+            rect -= layout->inset()->toMargins().toMargins();
         }
 
         // Make sure to take out the space left for the visual focus rect
@@ -57,7 +57,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
-        labelOption.palette.setColor(QPalette::ButtonText, properties.text()->color().value().toQColor());
+        labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
 
         // Draw label
         // TODO: union-ize better
@@ -81,8 +81,8 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         const auto matches = style->matches({element});
         const auto properties = matches.first()->properties();
 
-        if (const auto layout = properties.layout()) {
-            const QMargins padding = layout->padding_or_new().toMargins().toMargins();
+        if (const auto layout = properties->layout()) {
+            const QMargins padding = layout->padding()->toMargins().toMargins();
             size = size.grownBy(padding / 2.0f);
         }
 
@@ -119,7 +119,7 @@ void UnionStyle::polish(QApplication *application)
     const auto properties = matches.first()->properties();
 
     QPalette palette;
-    palette.setColor(QPalette::Window, properties.background()->color().value().toQColor());
+    palette.setColor(QPalette::Window, properties->background()->color().value().toQColor());
 
     application->setPalette(palette);
 }

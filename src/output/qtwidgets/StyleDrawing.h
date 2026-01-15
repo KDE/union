@@ -21,7 +21,7 @@ enum class SubNodeIndex {
 /*!
  * \brief Draw a Union StyleProperty, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty &style);
+void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style);
 
 /*!
  * \brief Draw a Union LineProperty.
@@ -30,8 +30,8 @@ void drawLineProperty(QPainter *painter,
                       const QRect &rect,
                       SubNodeIndex subNodeIndex,
                       const QMarginsF &borderSizes,
-                      const Union::Properties::LineProperty &line,
-                      const Union::Properties::CornersProperty &corners);
+                      const Union::Properties::LineProperty *line,
+                      const Union::Properties::CornersProperty *corners);
 
 /*!
  * \brief Draw a Union CornerProperty.
@@ -40,4 +40,4 @@ void drawCornerProperty(QPainter *painter,
                         const QRect &rect,
                         SubNodeIndex subNodeIndex,
                         const QMarginsF &borderSizes,
-                        const Union::Properties::CornerProperty &corner);
+                        const Union::Properties::CornerProperty *corner);
