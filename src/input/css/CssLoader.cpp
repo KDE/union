@@ -23,6 +23,47 @@ using namespace std::string_literals;
 
 namespace fs = std::filesystem;
 
+template<typename Target, typename Getter, typename Setter>
+struct PropertyGroupBuilder {
+    using PropertyGroup = std::remove_pointer_t<std::invoke_result_t<Getter, Target *>>;
+
+    PropertyGroupBuilder(Target *_target, Getter _getter, Setter _setter)
+        : target(_target)
+        , getter(_getter)
+        , setter(_setter)
+    {
+        instance = std::invoke(getter, target);
+        if (!instance) {
+            temporary = std::make_unique<PropertyGroup>();
+            instance = temporary.get();
+        }
+    }
+
+    ~PropertyGroupBuilder()
+    {
+        if (temporary && temporary->hasAnyValue()) {
+            std::invoke(setter, target, std::move(temporary));
+        }
+    }
+
+    inline PropertyGroup *operator->()
+    {
+        return instance;
+    }
+
+    PropertyGroupBuilder &operator=(const PropertyGroup &group)
+    {
+        *instance = group;
+        return *this;
+    }
+
+    std::unique_ptr<PropertyGroup> temporary;
+    PropertyGroup *instance;
+    Target *target;
+    Getter getter;
+    Setter setter;
+};
+
 inline float to_px(const cssparser::Dimension &value)
 {
     switch (value.unit) {
@@ -162,8 +203,10 @@ inline T toEnumValue(const std::string &value)
 }
 
 template<typename T>
-inline void setImage(T &output, const fs::path &rootPath, const cssparser::Property &property)
+inline void setImage(T *output, const fs::path &rootPath, const cssparser::Property &property)
 {
+    PropertyGroupBuilder image(output, &T::image, &T::setImage);
+
     QImage imageData;
     std::filesystem::path path = rootPath / to_path(property.value());
 
@@ -172,96 +215,92 @@ inline void setImage(T &output, const fs::path &rootPath, const cssparser::Prope
         return;
     }
 
-    auto image = output.image_or_new();
-    image.setImageData(imageData);
-    image.setWidth(imageData.width());
-    image.setHeight(imageData.height());
+    image->setImageData(imageData);
+    image->setWidth(imageData.width());
+    image->setHeight(imageData.height());
     if (property.values.size() > 1) {
         auto value = property.values.at(1);
         if (matches_keyword(value, u"mask"_s)) {
-            image.setFlags(ImageFlag::Mask);
+            image->setFlags(ImageFlag::Mask);
         } else if (matches_keyword(value, u"inverted-mask"_s)) {
-            image.setFlags(ImageFlag::InvertedMask);
+            image->setFlags(ImageFlag::InvertedMask);
         }
-        image.setMaskColor(to_color(property.values.at(2)));
+        image->setMaskColor(to_color(property.values.at(2)));
     }
-
-    output.setImage(image);
 }
 
 template<typename T>
-inline void setAlignment(T &output, const cssparser::Property &property)
+inline void setAlignment(T *output, const cssparser::Property &property)
 {
-    auto alignment = output.alignment().value_or(AlignmentProperty{});
-
-    if (property.name.ends_with("alignment-container"s)) {
-        alignment.setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>()));
-    } else if (property.name.ends_with("alignment-horizontal"s)) {
-        alignment.setHorizontal(toEnumValue<Alignment>(property.value<std::string>()));
-    } else if (property.name.ends_with("alignment-vertical"s)) {
-        alignment.setVertical(toEnumValue<Alignment>(property.value<std::string>()));
-    } else if (property.name.ends_with("alignment-order"s)) {
-        alignment.setOrder(property.value<int>(0));
-    } else if (property.values.size() == 4) {
-        alignment.setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>(0)));
-        alignment.setHorizontal(toEnumValue<Alignment>(property.value<std::string>(1)));
-        alignment.setVertical(toEnumValue<Alignment>(property.value<std::string>(2)));
-        alignment.setOrder(property.value<int>(3));
+    std::unique_ptr<AlignmentProperty> tempAlignment;
+    AlignmentProperty *alignment;
+    if (output->alignment()) {
+        alignment = output->alignment();
+    } else {
+        tempAlignment = std::make_unique<AlignmentProperty>();
+        alignment = tempAlignment.get();
     }
 
-    if (alignment.hasAnyValue()) {
-        output.setAlignment(alignment);
+    if (property.name.ends_with("alignment-container"s)) {
+        alignment->setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>()));
+    } else if (property.name.ends_with("alignment-horizontal"s)) {
+        alignment->setHorizontal(toEnumValue<Alignment>(property.value<std::string>()));
+    } else if (property.name.ends_with("alignment-vertical"s)) {
+        alignment->setVertical(toEnumValue<Alignment>(property.value<std::string>()));
+    } else if (property.name.ends_with("alignment-order"s)) {
+        alignment->setOrder(property.value<int>(0));
+    } else if (property.values.size() == 4) {
+        alignment->setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>(0)));
+        alignment->setHorizontal(toEnumValue<Alignment>(property.value<std::string>(1)));
+        alignment->setVertical(toEnumValue<Alignment>(property.value<std::string>(2)));
+        alignment->setOrder(property.value<int>(3));
+    }
+
+    if (tempAlignment && tempAlignment->hasAnyValue()) {
+        output->setAlignment(std::move(tempAlignment));
     }
 }
 
-inline std::optional<SizeProperty> sizeFromProperty(const std::optional<SizeProperty> &input, const cssparser::Property &property)
+inline void sizeFromProperty(SizeProperty *output, const cssparser::Property &property)
 {
-    auto result = input.value_or(SizeProperty{});
-
     if (property.name.ends_with("left")) {
-        result.setLeft(to_px(property.value()));
+        output->setLeft(to_px(property.value()));
     } else if (property.name.ends_with("right")) {
-        result.setRight(to_px(property.value()));
+        output->setRight(to_px(property.value()));
     } else if (property.name.ends_with("top")) {
-        result.setTop(to_px(property.value()));
+        output->setTop(to_px(property.value()));
     } else if (property.name.ends_with("bottom")) {
-        result.setBottom(to_px(property.value()));
+        output->setBottom(to_px(property.value()));
     } else {
         if (property.values.size() == 1) {
             auto value = to_px(property.value());
-            result.setLeft(value);
-            result.setRight(value);
-            result.setTop(value);
-            result.setBottom(value);
+            output->setLeft(value);
+            output->setRight(value);
+            output->setTop(value);
+            output->setBottom(value);
         } else if (property.values.size() == 2) {
             auto horizontal = to_px(property.value(0));
             auto vertical = to_px(property.value(1));
-            result.setLeft(horizontal);
-            result.setRight(horizontal);
-            result.setTop(vertical);
-            result.setBottom(vertical);
+            output->setLeft(horizontal);
+            output->setRight(horizontal);
+            output->setTop(vertical);
+            output->setBottom(vertical);
         } else if (property.values.size() == 3) {
-            result.setTop(to_px(property.value(0)));
-            result.setRight(to_px(property.value(1)));
-            result.setBottom(to_px(property.value(2)));
-            result.setLeft(to_px(property.value(1)));
+            output->setTop(to_px(property.value(0)));
+            output->setRight(to_px(property.value(1)));
+            output->setBottom(to_px(property.value(2)));
+            output->setLeft(to_px(property.value(1)));
         } else if (property.values.size() == 4) {
-            result.setTop(to_px(property.value(0)));
-            result.setRight(to_px(property.value(1)));
-            result.setBottom(to_px(property.value(2)));
-            result.setLeft(to_px(property.value(3)));
+            output->setTop(to_px(property.value(0)));
+            output->setRight(to_px(property.value(1)));
+            output->setBottom(to_px(property.value(2)));
+            output->setLeft(to_px(property.value(3)));
         }
-    }
-
-    if (result.hasAnyValue()) {
-        return result;
-    } else {
-        return std::nullopt;
     }
 }
 
 template<typename T>
-inline void setDirectionValue(T &output, const std::string &baseName, const cssparser::Property &property)
+inline void setDirectionValue(T *output, const std::string &baseName, const cssparser::Property &property)
 {
     QList<QByteArray> directions;
     QList<QByteArray> properties;
@@ -304,44 +343,31 @@ inline void setDirectionValue(T &output, const std::string &baseName, const cssp
         values = {property.value()};
     }
 
-    auto setLineValue = [](LineProperty &line, const QByteArray &property, const cssparser::Value &value) -> LineProperty {
+    auto setLineValue = [](auto &&line, const QByteArray &property, const cssparser::Value &value) {
         if (property == "width" || property == "size") {
-            line.setSize(to_px(value));
+            line->setSize(to_px(value));
         } else if (property == "style") {
-            line.setStyle(toEnumValue<Union::Properties::LineStyle>(std::get<std::string>(value)));
+            line->setStyle(toEnumValue<Union::Properties::LineStyle>(std::get<std::string>(value)));
         } else if (property == "color") {
-            line.setColor(to_color(value));
+            line->setColor(to_color(value));
         }
-        return line;
     };
 
     for (const auto &direction : std::as_const(directions)) {
         for (qsizetype i = 0; i < properties.size(); ++i) {
             auto property = properties.at(i);
             auto value = values.at(i);
-            LineProperty line;
             if (direction == "left") {
-                auto line = output.left_or_new();
-                output.setLeft(setLineValue(line, property, value));
+                setLineValue(PropertyGroupBuilder(output, &T::left, &T::setLeft), property, value);
             } else if (direction == "right") {
-                auto line = output.right_or_new();
-                output.setRight(setLineValue(line, property, value));
+                setLineValue(PropertyGroupBuilder(output, &T::right, &T::setRight), property, value);
             } else if (direction == "top") {
-                auto line = output.top_or_new();
-                output.setTop(setLineValue(line, property, value));
+                setLineValue(PropertyGroupBuilder(output, &T::top, &T::setTop), property, value);
             } else if (direction == "bottom") {
-                auto line = output.bottom_or_new();
-                output.setBottom(setLineValue(line, property, value));
+                setLineValue(PropertyGroupBuilder(output, &T::bottom, &T::setBottom), property, value);
             }
         }
     }
-}
-
-inline CornerProperty setCornerRadius(const std::optional<CornerProperty> &corner, qreal radius)
-{
-    auto property = corner.value_or(CornerProperty{});
-    property.setRadius(radius);
-    return property;
 }
 
 bool CssLoader::load(Style::Ptr theme)
@@ -375,7 +401,10 @@ bool CssLoader::load(Style::Ptr theme)
 
         auto styleRule = StyleRule::create();
         styleRule->setSelectors(createSelectorList(rule.selector));
-        styleRule->setProperties(createProperties(rule.properties));
+
+        auto properties = std::make_unique<StyleProperty>();
+        createProperties(properties.get(), rule.properties);
+        styleRule->setProperties(std::move(properties));
         theme->insert(styleRule);
     }
 
@@ -445,170 +474,154 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     return Union::Selector::create();
 }
 
-StyleProperty CssLoader::createProperties(const std::vector<cssparser::Property> &properties)
+void CssLoader::createProperties(StyleProperty *output, const std::vector<cssparser::Property> &properties)
 {
-    StyleProperty result;
-
     for (auto property : properties) {
         if (property.name == "width"s || property.name == "height"s || property.name == "spacing"s) {
-            setLayoutProperty(result, property);
+            setLayoutProperty(output, property);
         } else if (property.name.starts_with("padding")) {
-            setLayoutProperty(result, property);
+            setLayoutProperty(output, property);
         } else if (property.name.starts_with("inset")) {
-            setLayoutProperty(result, property);
+            setLayoutProperty(output, property);
         } else if (property.name.starts_with("margin")) {
-            setLayoutProperty(result, property);
+            setLayoutProperty(output, property);
         } else if (property.name.starts_with("layout")) {
-            setLayoutProperty(result, property);
+            setLayoutProperty(output, property);
         } else if (property.name.starts_with("background")) {
-            setBackgroundProperty(result, property);
+            setBackgroundProperty(output, property);
         } else if (property.name.starts_with("border")) {
-            setBorderProperty(result, property);
+            setBorderProperty(output, property);
         } else if (property.name.starts_with("outline")) {
-            setOutlineProperty(result, property);
+            setOutlineProperty(output, property);
         } else if (property.name.starts_with("text") || property.name.starts_with("font")) {
-            setTextProperty(result, property);
+            setTextProperty(output, property);
         } else if (property.name.starts_with("icon")) {
-            setIconProperty(result, property);
+            setIconProperty(output, property);
         } else if (property.name == "color"s) {
-            setTextProperty(result, property);
-            setIconProperty(result, property);
+            setTextProperty(output, property);
+            setIconProperty(output, property);
         } else if (property.name.starts_with("shadow") || property.name.starts_with("box-shadow")) {
-            setShadowProperty(result, property);
+            setShadowProperty(output, property);
         }
     }
-
-    return result;
 }
 
-void CssLoader::setLayoutProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setLayoutProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto layout = output.layout().value_or(LayoutProperty{});
+    PropertyGroupBuilder layout(output, &StyleProperty::layout, &StyleProperty::setLayout);
 
     if (property.name == "width"s) {
-        layout.setWidth(to_px(property.value()));
+        layout->setWidth(to_px(property.value()));
     } else if (property.name == "height"s) {
-        layout.setHeight(to_px(property.value()));
+        layout->setHeight(to_px(property.value()));
     } else if (property.name == "spacing"s) {
-        layout.setSpacing(to_px(property.value()));
+        layout->setSpacing(to_px(property.value()));
     } else if (property.name.starts_with("layout-alignment")) {
-        setAlignment(layout, property);
+        setAlignment(layout.instance, property);
     } else if (property.name.starts_with("padding")) {
-        layout.setPadding(sizeFromProperty(layout.padding(), property));
+        PropertyGroupBuilder padding(layout.instance, &LayoutProperty::padding, &LayoutProperty::setPadding);
+        sizeFromProperty(padding.instance, property);
     } else if (property.name.starts_with("inset")) {
-        layout.setInset(sizeFromProperty(layout.inset(), property));
+        PropertyGroupBuilder inset(layout.instance, &LayoutProperty::inset, &LayoutProperty::setInset);
+        sizeFromProperty(inset.instance, property);
     } else if (property.name.starts_with("margin")) {
-        layout.setMargins(sizeFromProperty(layout.margins(), property));
-    }
-
-    if (layout.hasAnyValue()) {
-        output.setLayout(layout);
+        PropertyGroupBuilder margins(layout.instance, &LayoutProperty::margins, &LayoutProperty::setMargins);
+        sizeFromProperty(margins.instance, property);
     }
 }
 
-void CssLoader::setBackgroundProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setBackgroundProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto background = output.background_or_new();
+    PropertyGroupBuilder background(output, &StyleProperty::background, &StyleProperty::setBackground);
 
     if (property.name == "background"s) {
         auto value = property.value();
         if (matches_keyword(value, u"none"_s)) {
-            background.setColor(Union::Color{});
-            background.setImage(ImageProperty::empty());
+            background->setColor(Union::Color{});
+            background->setImage(ImageProperty::empty());
         } else if (std::holds_alternative<cssparser::Color::Color>(value)) {
-            background.setColor(to_color(value));
+            background->setColor(to_color(value));
         } else if (std::holds_alternative<cssparser::Url>(value)) {
-            setImage(background, m_stylePath, property);
+            setImage(background.instance, m_stylePath, property);
         }
     }
 
     if (property.name == "background-color"s) {
-        background.setColor(to_color(property.value()));
+        background->setColor(to_color(property.value()));
     }
 
     if (property.name == "background-image") {
         if (matches_keyword(property.value(), u"none"_s)) {
-            background.setImage(ImageProperty::empty());
+            background->setImage(ImageProperty::empty());
         } else {
-            setImage(background, m_stylePath, property);
+            setImage(background.instance, m_stylePath, property);
         }
     }
 
     if (property.name == "background-image-mask-color") {
-        auto image = background.image_or_new();
-        image.setMaskColor(to_color(property.value()));
-        background.setImage(image);
-    }
-
-    if (background.hasAnyValue()) {
-        output.setBackground(background);
+        PropertyGroupBuilder image(background.instance, &BackgroundProperty::image, &BackgroundProperty::setImage);
+        image->setMaskColor(to_color(property.value()));
     }
 }
 
-void CssLoader::setBorderProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setBorderProperty(StyleProperty *output, const cssparser::Property &property)
 {
+    PropertyGroupBuilder border(output, &StyleProperty::border, &StyleProperty::setBorder);
+
     if (property.name.ends_with("radius")) {
-        auto corners = output.corners().value_or(CornersProperty{});
+        PropertyGroupBuilder corners(output, &StyleProperty::corners, &StyleProperty::setCorners);
+
+        auto setCornerRadius = [](auto &&corner, qreal radius) {
+            corner->setRadius(radius);
+        };
 
         if (property.name == "border-radius"s) {
             if (property.values.size() == 1) {
                 auto radius = to_px(property.value());
-                corners.setTopLeft(setCornerRadius(corners.topLeft(), radius));
-                corners.setTopRight(setCornerRadius(corners.topRight(), radius));
-                corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), radius));
-                corners.setBottomRight(setCornerRadius(corners.bottomRight(), radius));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight), radius);
             } else if (property.values.size() == 4) {
-                corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value(0))));
-                corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value(1))));
-                corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value(2))));
-                corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value(3))));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), to_px(property.value(0)));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), to_px(property.value(1)));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight),
+                                to_px(property.value(2)));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft),
+                                to_px(property.value(3)));
             }
         } else if (property.name == "border-top-left-radius") {
-            corners.setTopLeft(setCornerRadius(corners.topLeft(), to_px(property.value())));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), to_px(property.value()));
         } else if (property.name == "border-top-right-radius") {
-            corners.setTopRight(setCornerRadius(corners.topRight(), to_px(property.value())));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), to_px(property.value()));
         } else if (property.name == "border-bottom-left-radius") {
-            corners.setBottomLeft(setCornerRadius(corners.bottomLeft(), to_px(property.value())));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft), to_px(property.value()));
         } else if (property.name == "border-bottom-right-radius") {
-            corners.setBottomRight(setCornerRadius(corners.bottomRight(), to_px(property.value())));
-        }
-
-        if (corners.hasAnyValue()) {
-            output.setCorners(corners);
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight), to_px(property.value()));
         }
 
         return;
     }
 
-    auto border = output.border_or_new();
-    setDirectionValue(border, "border"s, property);
-
-    if (border.hasAnyValue()) {
-        output.setBorder(border);
-    }
+    setDirectionValue(border.instance, "border"s, property);
 }
 
-void CssLoader::setOutlineProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setOutlineProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto outline = output.outline_or_new();
-
-    setDirectionValue(outline, "outline"s, property);
-
-    if (outline.hasAnyValue()) {
-        output.setOutline(outline);
-    }
+    PropertyGroupBuilder outline(output, &StyleProperty::outline, &StyleProperty::setOutline);
+    setDirectionValue(outline.instance, "outline"s, property);
 }
 
-void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setTextProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto text = output.text_or_new();
+    PropertyGroupBuilder text(output, &StyleProperty::text, &StyleProperty::setText);
 
     if (property.name.starts_with("text-alignment")) {
-        setAlignment(text, property);
+        setAlignment(text.instance, property);
     }
 
     if (property.name.starts_with("font")) {
-        auto font = text.font().value_or(QFont{});
+        auto font = text->font().value_or(QFont{});
 
         if (property.name == "font-family") {
             font.setFamily(QString::fromStdString(property.value<std::string>()));
@@ -645,64 +658,51 @@ void CssLoader::setTextProperty(StyleProperty &output, const cssparser::Property
             }
         }
 
-        text.setFont(font);
+        text->setFont(font);
     }
 
     if (property.name == "color" || property.name == "text-color") {
-        text.setColor(to_color(property.value()));
-    }
-
-    if (text.hasAnyValue()) {
-        output.setText(text);
+        text->setColor(to_color(property.value()));
     }
 }
 
-void CssLoader::setIconProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setIconProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto icon = output.icon_or_new();
+    PropertyGroupBuilder icon(output, &StyleProperty::icon, &StyleProperty::setIcon);
 
     if (property.name.starts_with("icon-alignment")) {
-        setAlignment(icon, property);
+        setAlignment(icon.instance, property);
     }
 
     if (property.name == "icon-name") {
-        icon.setName(QString::fromStdString(property.value<std::string>()));
+        icon->setName(QString::fromStdString(property.value<std::string>()));
     } else if (property.name == "icon-width") {
-        icon.setWidth(to_px(property.value()));
+        icon->setWidth(to_px(property.value()));
     } else if (property.name == "icon-height") {
-        icon.setHeight(to_px(property.value()));
+        icon->setHeight(to_px(property.value()));
     } else if (property.name == "icon-size") {
-        icon.setWidth(to_px(property.value()));
-        icon.setHeight(to_px(property.value()));
+        icon->setWidth(to_px(property.value()));
+        icon->setHeight(to_px(property.value()));
     } else if (property.name == "color" || property.name == "icon-color") {
-        icon.setColor(to_color(property.value()));
-    }
-
-    if (icon.hasAnyValue()) {
-        output.setIcon(icon);
+        icon->setColor(to_color(property.value()));
     }
 }
 
-void CssLoader::setShadowProperty(StyleProperty &output, const cssparser::Property &property)
+void CssLoader::setShadowProperty(StyleProperty *output, const cssparser::Property &property)
 {
-    auto shadow = output.shadow_or_new();
-
     if (property.name == "box-shadow") {
         if (matches_keyword(property.value(), u"none"_s)) {
-            shadow = ShadowProperty::empty();
+            output->setShadow(ShadowProperty::empty());
         } else {
-            auto offset = shadow.offset_or_new();
-            offset.setHorizontal(to_px(property.value(0)));
-            offset.setVertical(to_px(property.value(1)));
-            shadow.setOffset(offset);
+            PropertyGroupBuilder shadow(output, &StyleProperty::shadow, &StyleProperty::setShadow);
 
-            shadow.setBlur(to_px(property.value(2)));
-            shadow.setSize(to_px(property.value(3)));
-            shadow.setColor(to_color(property.value(4)));
+            PropertyGroupBuilder offset(shadow.instance, &ShadowProperty::offset, &ShadowProperty::setOffset);
+            offset->setHorizontal(to_px(property.value(0)));
+            offset->setVertical(to_px(property.value(1)));
+
+            shadow->setBlur(to_px(property.value(2)));
+            shadow->setSize(to_px(property.value(3)));
+            shadow->setColor(to_color(property.value(4)));
         }
-    }
-
-    if (shadow.hasAnyValue()) {
-        output.setShadow(shadow);
     }
 }
