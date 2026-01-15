@@ -15,9 +15,9 @@ public:
     OutlineBorderRectangleNode();
 
     QRectF m_itemRect;
-    Union::Properties::BackgroundProperty m_background;
-    std::optional<Union::Properties::BorderProperty> m_border;
-    std::optional<Union::Properties::OutlineProperty> m_outline;
+    Union::Properties::BackgroundProperty *m_background;
+    Union::Properties::BorderProperty *m_border;
+    Union::Properties::OutlineProperty *m_outline;
     QVector4D m_radius;
     QQuickWindow *m_window = nullptr;
 
@@ -35,8 +35,8 @@ private:
     };
 
     void updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize);
-    void updateBorderColors(const Union::Properties::BorderProperty &border, const QColor &center);
-    void updateOutlineColors(const Union::Properties::OutlineProperty &border, const QColor &center);
+    void updateBorderColors(const Union::Properties::BorderProperty *border, const QColor &center);
+    void updateOutlineColors(const Union::Properties::OutlineProperty *border, const QColor &center);
     void updateColors(QColor(Vertex::*destination), const QColor &left, const QColor &right, const QColor &top, const QColor &bottom, const QColor &center);
 
     std::array<Vertex, 28> m_vertices;

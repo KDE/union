@@ -19,37 +19,23 @@ inline QColor mix(const QColor &first, const QColor &second, float amount = 0.5)
 }
 
 template<typename T>
-inline QVector4D toVector4D(const T &property)
+inline QVector4D toVector4D(const T *property)
 {
     QVector4D result;
 
-    if (property.left().has_value()) {
-        auto left = property.left().value();
-        if (left.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
-            result.setX(left.size().value_or(0.0));
+    auto directionValue = [](LineProperty *line) {
+        if (line) {
+            if (line->style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
+                return line->size().value_or(0.0);
+            }
         }
-    }
+        return 0.0;
+    };
 
-    if (property.right().has_value()) {
-        auto right = property.right().value();
-        if (right.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
-            result.setZ(right.size().value_or(0.0));
-        }
-    }
-
-    if (property.top().has_value()) {
-        auto top = property.top().value();
-        if (top.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
-            result.setY(top.size().value_or(0.0));
-        }
-    }
-
-    if (property.bottom().has_value()) {
-        auto bottom = property.bottom().value();
-        if (bottom.style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
-            result.setW(bottom.size().value_or(0.0));
-        }
-    }
+    result.setX(directionValue(property->left()));
+    result.setZ(directionValue(property->right()));
+    result.setY(directionValue(property->top()));
+    result.setW(directionValue(property->bottom()));
 
     return result;
 }
@@ -121,34 +107,34 @@ void OutlineBorderRectangleNode::update()
     auto shaderName = u"styledrectangle"_s;
 
     QVector4D borderSize;
-    if (m_border.has_value()) {
-        borderSize = toVector4D(m_border.value());
+    if (m_border) {
+        borderSize = toVector4D(m_border);
         if (!borderSize.isNull()) {
             shaderName += u"-border"_s;
         }
     }
 
     QVector4D outlineSize;
-    if (m_outline.has_value()) {
-        outlineSize = toVector4D(m_outline.value());
+    if (m_outline) {
+        outlineSize = toVector4D(m_outline);
         if (!outlineSize.isNull()) {
             shaderName += u"-outline"_s;
         }
     }
 
     auto maskColor = QColor(Qt::GlobalColor::transparent);
-    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
-        auto imageProperties = m_background.image_or_new();
-        auto image = imageProperties.imageData();
+    if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
+        auto imageProperties = m_background->image();
+        auto image = imageProperties->imageData();
         if (image.has_value()) {
             shaderName += u"-texture"_s;
-            if (imageProperties.flags().has_value()) {
-                if (imageProperties.flags().value().testFlag(ImageFlag::Mask)) {
+            if (imageProperties->flags().has_value()) {
+                if (imageProperties->flags().value().testFlag(ImageFlag::Mask)) {
                     shaderName += u"-mask"_s;
-                } else if (imageProperties.flags().value().testFlag(ImageFlag::InvertedMask)) {
+                } else if (imageProperties->flags().value().testFlag(ImageFlag::InvertedMask)) {
                     shaderName += u"-invertedmask"_s;
                 }
-                maskColor = imageProperties.maskColor().value_or(Color{}).toQColor();
+                maskColor = imageProperties->maskColor().value_or(Color{}).toQColor();
             }
         }
     }
@@ -160,14 +146,14 @@ void OutlineBorderRectangleNode::update()
                                                            : QVector2D{1.0, float(m_itemRect.height() / m_itemRect.width())};
     auto minDimension = float(std::min(m_itemRect.width(), m_itemRect.height()));
 
-    auto backgroundColor = m_background.color().value_or(Color{}).toQColor();
+    auto backgroundColor = (m_background ? m_background->color().value_or(Color{}) : Color{}).toQColor();
 
-    if (m_border.has_value() && !borderSize.isNull()) {
-        updateBorderColors(m_border.value(), backgroundColor);
+    if (m_border && !borderSize.isNull()) {
+        updateBorderColors(m_border, backgroundColor);
     }
 
-    if (m_outline.has_value() && !outlineSize.isNull()) {
-        updateOutlineColors(m_outline.value(), backgroundColor);
+    if (m_outline && !outlineSize.isNull()) {
+        updateOutlineColors(m_outline, backgroundColor);
     }
 
     updateVertices(m_itemRect, m_radius, borderSize, outlineSize);
@@ -182,8 +168,8 @@ void OutlineBorderRectangleNode::update()
            << ShaderNode::toPremultiplied(backgroundColor) // color
            << ShaderNode::toPremultiplied(maskColor); // mask-color
 
-    if (m_background.image().has_value() && !m_background.image()->isEmpty()) {
-        setTexture(0, m_background.image()->imageData().value(), m_window);
+    if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
+        setTexture(0, m_background->image()->imageData().value(), m_window);
     }
 
     markDirty(QSGNode::DirtyMaterial);
@@ -341,22 +327,30 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[27].texture = QVector2D(rightBottomU, rightBottomV);
 }
 
-void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderProperty &border, const QColor &center)
+void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderProperty *border, const QColor &center)
 {
-    auto left = ShaderNode::toPremultiplied(border.left_or_new().color().value_or(Union::Color{}).toQColor());
-    auto right = ShaderNode::toPremultiplied(border.right_or_new().color().value_or(Union::Color{}).toQColor());
-    auto top = ShaderNode::toPremultiplied(border.top_or_new().color().value_or(Union::Color{}).toQColor());
-    auto bottom = ShaderNode::toPremultiplied(border.bottom_or_new().color().value_or(Union::Color{}).toQColor());
+    auto borderColor = [](auto border) {
+        return (border ? border->color().value_or(Union::Color{}) : Union::Color{}).toQColor();
+    };
+
+    auto left = ShaderNode::toPremultiplied(borderColor(border->left()));
+    auto right = ShaderNode::toPremultiplied(borderColor(border->right()));
+    auto top = ShaderNode::toPremultiplied(borderColor(border->top()));
+    auto bottom = ShaderNode::toPremultiplied(borderColor(border->bottom()));
 
     updateColors(&Vertex::border, left, right, top, bottom, center);
 }
 
-void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlineProperty &outline, const QColor &center)
+void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlineProperty *outline, const QColor &center)
 {
-    auto left = ShaderNode::toPremultiplied(outline.left_or_new().color().value_or(Union::Color{}).toQColor());
-    auto right = ShaderNode::toPremultiplied(outline.right_or_new().color().value_or(Union::Color{}).toQColor());
-    auto top = ShaderNode::toPremultiplied(outline.top_or_new().color().value_or(Union::Color{}).toQColor());
-    auto bottom = ShaderNode::toPremultiplied(outline.bottom_or_new().color().value_or(Union::Color{}).toQColor());
+    auto outlineColor = [](auto outline) {
+        return (outline ? outline->color().value_or(Union::Color{}) : Union::Color{}).toQColor();
+    };
+
+    auto left = ShaderNode::toPremultiplied(outlineColor(outline->left()));
+    auto right = ShaderNode::toPremultiplied(outlineColor(outline->right()));
+    auto top = ShaderNode::toPremultiplied(outlineColor(outline->top()));
+    auto bottom = ShaderNode::toPremultiplied(outlineColor(outline->bottom()));
 
     updateColors(&Vertex::outline, left, right, top, bottom, center);
 }

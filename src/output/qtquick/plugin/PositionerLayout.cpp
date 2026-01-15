@@ -159,16 +159,19 @@ void PositionerLayout::updatePolish()
             break;
         }
 
-        std::optional<Union::Properties::AlignmentProperty> alignment;
+        auto properties = query->properties();
+        auto layout = properties->layout();
+
+        Union::Properties::AlignmentProperty *alignment;
         switch (source) {
         case PositionerSource::Source::Layout:
-            alignment = query->properties().layout().value_or(LayoutProperty{}).alignment();
+            alignment = layout ? layout->alignment() : nullptr;
             break;
         case PositionerSource::Source::Icon:
-            alignment = query->properties().icon().value_or(IconProperty{}).alignment();
+            alignment = properties->icon() ? properties->icon()->alignment() : nullptr;
             break;
         case PositionerSource::Source::Text:
-            alignment = query->properties().text().value_or(TextProperty{}).alignment();
+            alignment = properties->text() ? properties->text()->alignment() : nullptr;
             break;
         }
 
@@ -198,10 +201,9 @@ void PositionerLayout::updatePolish()
             .item = item,
         };
 
-        if (source == PositionerSource::Source::Layout) {
-            auto margins = query->properties().layout().value_or(LayoutProperty{}).margins().value_or(SizeProperty{});
-            layoutItem.margins =
-                QMarginsF(margins.left().value_or(0.0), margins.top().value_or(0.0), margins.right().value_or(0.0), margins.bottom().value_or(0.0));
+        if (source == PositionerSource::Source::Layout && layout && layout->margins()) {
+            auto margins = layout->margins()->toMargins();
+            layoutItem.margins = QMarginsF(margins.left(), margins.top(), margins.right(), margins.bottom());
         }
 
         LayoutContainer *container = &itemRelative;
@@ -251,11 +253,13 @@ void PositionerLayout::updatePolish()
 
     const auto containerItem = parentItem();
     const auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(containerItem, true))->query();
-    if (!query) {
+    if (!query || !query->properties()) {
         polish();
         return;
     }
-    qreal spacing = query->properties().layout().value_or(LayoutProperty{}).spacing().value_or(0.0);
+    auto properties = query->properties();
+
+    qreal spacing = properties->layout() ? properties->layout()->spacing().value_or(0.0) : 0.0;
 
     auto sort = [](auto &container) {
         std::stable_sort(container.begin(), container.end(), [](auto first, auto second) {
@@ -282,12 +286,12 @@ void PositionerLayout::updatePolish()
     auto remainingPosition = QPointF{spacedSize(itemRelative.start.size.width(), spacing), 0.0};
     auto remainingSize = itemRelative.size - QSizeF{spacedSize({itemRelative.start.size.width(), itemRelative.end.size.width()}, spacing), 0.0};
 
-    auto inset = query->properties().layout().value_or(LayoutProperty{}).inset().value_or(SizeProperty{}).toMargins();
+    auto inset = properties->layout() && properties->layout()->inset() ? properties->layout()->inset()->toMargins() : QMarginsF{};
     backgroundRelative.position = remainingPosition + QPointF{inset.left(), inset.top()};
     backgroundRelative.size = remainingSize - QSizeF{inset.left() + inset.right(), inset.top() + inset.bottom()};
     layoutContainer(backgroundRelative);
 
-    auto padding = query->properties().layout().value_or(LayoutProperty{}).padding().value_or(SizeProperty{}).toMargins();
+    auto padding = properties->layout() && properties->layout()->padding() ? properties->layout()->padding()->toMargins() : QMarginsF{};
     contentRelative.position = remainingPosition + QPointF{padding.left(), padding.top()};
     contentRelative.size = remainingSize - QSizeF{padding.left() + padding.right(), padding.top() + padding.bottom()};
     layoutContainer(contentRelative);
