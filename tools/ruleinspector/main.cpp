@@ -21,13 +21,13 @@ int main(int argc, char **argv)
     QGuiApplication app(argc, argv);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription(u"A tool to inspect Union's theme rules"_s);
+    parser.setApplicationDescription(u"A tool to inspect Union's style rules"_s);
     parser.addHelpOption();
     parser.addVersionOption();
 
     parser.addOptions({
         // {u"plugin"_s, u"The input plugin to use"_s},
-        {u"theme"_s, u"The theme to use"_s, u"theme"_s},
+        {u"style"_s, u"The style to use"_s, u"style"_s},
         {u"type"_s, u"The type to match"_s, u"type"_s},
         {u"id"_s, u"The ID to match"_s, u"id"_s},
         {u"states"_s, u"The states to match"_s, u"states"_s},
@@ -41,15 +41,15 @@ int main(int argc, char **argv)
     registry->load();
 
     Union::Style::Ptr style;
-    if (parser.isSet(u"theme"_s)) {
-        style = registry->style(parser.value(u"theme"_s));
+    if (parser.isSet(u"style"_s)) {
+        style = registry->style(parser.value(u"style"_s));
     } else {
         style = registry->defaultStyle();
     }
 
     if (!style) {
         std::cout << "No usable style found!\n";
-        exit(1);
+        return 1;
     }
 
     Union::ElementQuery query(style);
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
 
     if (!query.hasMatches()) {
         std::cout << "Query had no result!\n";
-        exit(2);
+        return 2;
     }
 
     std::cout << "Matched properties:\n";
@@ -86,5 +86,5 @@ int main(int argc, char **argv)
 
     std::cout << std::format("{:nl}", query.properties());
 
-    exit(0);
+    return 0;
 }
