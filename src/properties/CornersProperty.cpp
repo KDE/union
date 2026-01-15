@@ -183,6 +183,26 @@ std::unique_ptr<CornersProperty> CornersProperty::empty()
     return result;
 }
 
+CornersProperty::CornerRadii CornersProperty::radii() const
+{
+    CornerRadii result;
+
+    if (d->topLeft) {
+        result.topLeft = d->topLeft->radius().value_or(0.0);
+    }
+    if (d->topRight) {
+        result.topRight = d->topRight->radius().value_or(0.0);
+    }
+    if (d->bottomLeft) {
+        result.bottomLeft = d->bottomLeft->radius().value_or(0.0);
+    }
+    if (d->bottomRight) {
+        result.bottomRight = d->bottomRight->radius().value_or(0.0);
+    }
+
+    return result;
+}
+
 bool Union::Properties::operator==(const CornersProperty &left, const CornersProperty &right)
 {
     if (left.topLeft() && right.topLeft()) {

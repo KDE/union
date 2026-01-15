@@ -145,6 +145,16 @@ public:
      */
     static std::unique_ptr<CornersProperty> empty();
 
+    struct CornerRadii {
+        qreal topLeft = 0.0;
+        qreal topRight = 0.0;
+        qreal bottomLeft = 0.0;
+        qreal bottomRight = 0.0;
+    };
+
+    /*! Returns the radii of all corners */
+    CornerRadii radii() const;
+
 private:
     std::unique_ptr<CornersPropertyPrivate> d;
 };

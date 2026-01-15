@@ -183,6 +183,26 @@ std::unique_ptr<BorderProperty> BorderProperty::empty()
     return result;
 }
 
+QMarginsF BorderProperty::sizes() const
+{
+    QMarginsF result;
+
+    if (d->left) {
+        result.setLeft(d->left->size().value_or(0.0));
+    }
+    if (d->right) {
+        result.setRight(d->right->size().value_or(0.0));
+    }
+    if (d->top) {
+        result.setTop(d->top->size().value_or(0.0));
+    }
+    if (d->bottom) {
+        result.setBottom(d->bottom->size().value_or(0.0));
+    }
+
+    return result;
+}
+
 bool Union::Properties::operator==(const BorderProperty &left, const BorderProperty &right)
 {
     if (left.left() && right.left()) {

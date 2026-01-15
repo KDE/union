@@ -146,6 +146,9 @@ public:
      */
     static std::unique_ptr<BorderProperty> empty();
 
+    /*! Returns the size of all borders */
+    QMarginsF sizes() const;
+
 private:
     std::unique_ptr<BorderPropertyPrivate> d;
 };

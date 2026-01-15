@@ -98,6 +98,38 @@ border:
     top: *line
     bottom: *line
 
+    _extra_system_includes:
+        "property.h.j2":
+        -   "QMarginsF"
+
+    _extra_code:
+        "property.h.j2":
+            public: |4
+                    /*! Returns the size of all borders */
+                    QMarginsF sizes() const;
+
+        "property.cpp.j2":
+            global: |4
+                QMarginsF BorderProperty::sizes() const
+                {
+                    QMarginsF result;
+
+                    if (d->left) {
+                        result.setLeft(d->left->size().value_or(0.0));
+                    }
+                    if (d->right) {
+                        result.setRight(d->right->size().value_or(0.0));
+                    }
+                    if (d->top) {
+                        result.setTop(d->top->size().value_or(0.0));
+                    }
+                    if (d->bottom) {
+                        result.setBottom(d->bottom->size().value_or(0.0));
+                    }
+
+                    return result;
+                }
+
 outline:
     # \brief A property group containing properties of an element's outline.
 
@@ -121,6 +153,41 @@ corners:
     topRight: *corner
     bottomLeft: *corner
     bottomRight: *corner
+
+    _extra_code:
+        "property.h.j2":
+            public: |4
+                    struct CornerRadii {
+                        qreal topLeft = 0.0;
+                        qreal topRight = 0.0;
+                        qreal bottomLeft = 0.0;
+                        qreal bottomRight = 0.0;
+                    };
+
+                    /*! Returns the radii of all corners */
+                    CornerRadii radii() const;
+
+        "property.cpp.j2":
+            global: |4
+                CornersProperty::CornerRadii CornersProperty::radii() const
+                {
+                    CornerRadii result;
+
+                    if (d->topLeft) {
+                        result.topLeft = d->topLeft->radius().value_or(0.0);
+                    }
+                    if (d->topRight) {
+                        result.topRight = d->topRight->radius().value_or(0.0);
+                    }
+                    if (d->bottomLeft) {
+                        result.bottomLeft = d->bottomLeft->radius().value_or(0.0);
+                    }
+                    if (d->bottomRight) {
+                        result.bottomRight = d->bottomRight->radius().value_or(0.0);
+                    }
+
+                    return result;
+                }
 
 shadow:
     # \brief A property group containing properties relating to an element's shadow.
