@@ -25,18 +25,18 @@ target_sources(UnionQuickImpl PRIVATE
     OutputProperties.cpp
     OutputProperties.h
 
-    scenegraph/UnionNode.cpp
-    scenegraph/UnionNode.h
-    scenegraph/AreaNode.cpp
-    scenegraph/AreaNode.h
-    scenegraph/LineNode.cpp
-    scenegraph/LineNode.h
-    scenegraph/CornerNode.cpp
-    scenegraph/CornerNode.h
-    scenegraph/ShadowNode.cpp
-    scenegraph/ShadowNode.h
-    scenegraph/RectangleNode.cpp
-    scenegraph/RectangleNode.h
+    # scenegraph/UnionNode.cpp
+    # scenegraph/UnionNode.h
+    # scenegraph/AreaNode.cpp
+    # scenegraph/AreaNode.h
+    # scenegraph/LineNode.cpp
+    # scenegraph/LineNode.h
+    # scenegraph/CornerNode.cpp
+    # scenegraph/CornerNode.h
+    # scenegraph/ShadowNode.cpp
+    # scenegraph/ShadowNode.h
+    # scenegraph/RectangleNode.cpp
+    # scenegraph/RectangleNode.h
 
     scenegraph/ShaderNode.cpp
     scenegraph/ShaderNode.h
