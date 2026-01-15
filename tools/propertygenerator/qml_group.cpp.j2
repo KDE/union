@@ -34,7 +34,7 @@ using namespace Qt::StringLiterals;
 {% endfor %}
 }
 
-void {{ group_name }}::update(const std::optional<{{ type_name }}> &newState)
+void {{ group_name }}::update({{ type_name }} *newState)
 {
     if (newState == m_state) {
         return;
@@ -45,13 +45,13 @@ void {{ group_name }}::update(const std::optional<{{ type_name }}> &newState)
     if (!newState) {
 {% for property in properties %}
     {% if property.is_group %}
-        m_{{ property.name }}->update(std::nullopt);
+        m_{{ property.name }}->update(nullptr);
     {% endif %}
 {% endfor %}
     } else {
 {% for property in properties %}
     {% if property.is_group %}
-        m_{{ property.name }}->update(newState.value().{{ property.name }}());
+        m_{{ property.name }}->update(newState->{{ property.name }}());
     {% endif %}
 {% endfor %}
     }
@@ -92,7 +92,7 @@ QJSValue {{ group_name }}::{{ property.name }}() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().{{ property.name }}();
+    auto value = m_state->{{ property.name }}();
     if (value) {
 {% if property.type == "Union::Color" %}
         return m_style->engine()->toScriptValue(value.value().toQColor());

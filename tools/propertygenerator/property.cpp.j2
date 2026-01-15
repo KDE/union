@@ -24,7 +24,11 @@ class Union::Properties::{{ type_name }}Private
 {
 public:
 {% for property in properties %}
+{% if property.is_group %}
+    std::unique_ptr<{{ property.type }}> {{ property.name }};
+{% else %}
     std::optional<{{ property.type }}> {{ property.name }};
+{% endif %}
 {% endfor %}
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
@@ -40,7 +44,12 @@ public:
     : d(std::make_unique<{{ type_name }}Private>())
 {
 {% for property in properties %}
+{% if property.is_group %}
+    d->{{ property.name }} = std::make_unique<{{ property.type }}>();
+    *(d->{{ property.name }}) = *(other.d->{{ property.name }});
+{% else %}
     d->{{ property.name }} = other.d->{{ property.name }};
+{% endif %}
 {% endfor %}
 }
 
@@ -55,7 +64,11 @@ public:
 {
     if (this != &other) {
 {% for property in properties %}
+{% if property.is_group %}
+        *(d->{{ property.name }}) = *(other.d->{{ property.name }});
+{% else %}
         d->{{ property.name }} = other.d->{{ property.name }};
+{% endif %}
 {% endfor %}
     }
     return *this;
@@ -68,18 +81,23 @@ public:
 }
 
 {% for property in properties %}
+{% if property.is_group %}
+{{ property.type }} *{{ type_name }}::{{ property.name }}() const
+{
+    return d->{{ property.name }}.get();
+}
+
+void {{ type_name }}::set{{ property.name | ucfirst }}(std::unique_ptr<{{ property.type }}> &&newValue)
+{
+    d->{{ property.name }} = std::move(newValue);
+}
+
+{% else %}
 std::optional<{{ property.type }}> {{ type_name }}::{{ property.name }}() const
 {
     return d->{{ property.name }};
 }
 
-{% if property.is_group %}
-{{ property.type }} {{ type_name }}::{{ property.name }}_or_new() const
-{
-    return d->{{ property.name }}.value_or({{ property.type }}{});
-}
-
-{% endif %}
 void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
 {
     if (newValue == d->{{ property.name }}) {
@@ -88,13 +106,14 @@ void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ pr
 
     d->{{ property.name }} = newValue;
 }
-{% endfor %}
 
+{% endif %}
+{% endfor %}
 bool {{ type_name }}::hasAnyValue() const
 {
 {% for property in properties %}
 {% if property.is_group %}
-    if (d->{{ property.name }}.has_value() && d->{{ property.name }}->hasAnyValue()) {
+    if (d->{{ property.name }} && d->{{ property.name }}->hasAnyValue()) {
         return true;
     }
 {% else %}
@@ -114,7 +133,7 @@ bool {{ type_name }}::isEmpty() const
 
 {% for property in properties %}
 {% if property.is_group %}
-    if (d->{{ property.name }}.has_value() && !d->{{ property.name }}->isEmpty()) {
+    if (d->{{ property.name }} && !d->{{ property.name }}->isEmpty()) {
         return false;
     }
 {% else %}
@@ -127,36 +146,36 @@ bool {{ type_name }}::isEmpty() const
     return true;
 }
 
-void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination)
+void {{ type_name }}::resolveProperties(const {{ type_name }} *source, {{ type_name }} *destination)
 {
+    if (!source || !destination) {
+        return;
+    }
+
 {% for property in properties %}
 {% if property.is_group %}
-    if (source.d->{{ property.name }}.has_value()) {
-        {{ property.type }} property;
-        if (destination.d->{{ property.name }}.has_value()) {
-            property = destination.d->{{ property.name }}.value();
+    if (source->d->{{ property.name }}) {
+        if (!destination->d->{{ property.name }}) {
+            destination->d->{{ property.name }} = std::make_unique<{{ property.type }}>();
         }
-        {{ property.type }}::resolveProperties(source.d->{{ property.name }}.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->{{ property.name }} = property;
-        }
+        {{ property.type }}::resolveProperties(source->d->{{ property.name }}.get(), destination->d->{{ property.name }}.get());
     }
 {% else %}
-    if (!destination.d->{{ property.name }}.has_value()) {
-        destination.d->{{ property.name }} = source.d->{{ property.name }};
+    if (!destination->d->{{ property.name }}.has_value()) {
+        destination->d->{{ property.name }} = source->d->{{ property.name }};
     }
 {% endif %}
 {% endfor %}
 }
 
-{{ type_name }} {{ type_name }}::empty()
+std::unique_ptr<{{ type_name }}> {{ type_name }}::empty()
 {
-    {{ type_name }} result;
+    auto result = std::make_unique<{{ type_name }}>();
 {% for property in properties %}
-{% if property.is_property %}
-    result.d->{{ property.name }} = {{ property.type }}::empty();
+{% if property.is_group %}
+    result->d->{{ property.name }} = {{ property.type }}::empty();
 {% else %}
-    result.d->{{ property.name }} = emptyValue<{{ property.type }}>();
+    result->d->{{ property.name }} = emptyValue<{{ property.type }}>();
 {% endif %}
 {% endfor %}
     return result;
@@ -169,9 +188,19 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} &source, {{ type_n
 bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_name}} &right)
 {
 {% for property in properties %}
+{% if property.is_group %}
+    if (left.{{ property.name }}() && right.{{ property.name }}()) {
+        if (*(left.{{ property.name }}()) != *(right.{{ property.name }}())) {
+            return false;
+        }
+    } else if (left.{{ property.name }}() != right.{{ property.name }}()) {
+        return false;
+    }
+{% else %}
     if (left.{{ property.name }}() != right.{{ property.name }}()) {
         return false;
     }
+{% endif %}
 {% endfor %}
     return true;
 }
@@ -179,14 +208,22 @@ bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_na
 QDebug operator<<(QDebug debug, const Union::Properties::{{ type_name }} &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "{{ type_name }}(" //
+    debug.nospace() << "{{ type_name }}(";
 {% for property in properties %}
+{% set property_name = ", " + property.name + ": " %}
 {% if property == properties[0] %}
-                    << "{{property.name}}: " << type.{{ property.name }}() //
+{% set property_name = property.name + ": " %}
+{% endif %}
+{% if property.is_group %}
+    if (type.{{ property.name }}()) {
+        debug.nospace() << "{{property_name}}" << *type.{{ property.name }}();
+    } else {
+        debug.nospace() << "{{property_name}}(empty)";
+    }
 {% else %}
-                    << ", {{property.name}}: " << type.{{ property.name }}() //
+    debug.nospace() << "{{property_name}}" << type.{{ property.name }}();
 {% endif %}
 {% endfor %}
-                    << ")";
+    debug.nospace() << ")";
     return debug;
 }

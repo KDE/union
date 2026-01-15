@@ -44,31 +44,30 @@ QFont testQFontInstance()
 }
 
 {% for type in types %}
-{{ type.type_name }} test{{ type.type_name }}Instance();
+std::unique_ptr<{{ type.type_name }}> test{{ type.type_name }}Instance();
 {% endfor %}
-
 {% for type in types %}
-{{ type.type_name }} test{{type.type_name}}Instance()
+
+std::unique_ptr<{{ type.type_name }}> test{{type.type_name}}Instance()
 {
-    {{ type.type_name }} instance;
+    auto instance = std::make_unique<{{ type.type_name }}>();
 
 {% for property in type.properties %}
 {% if property.is_group %}
-    instance.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
+    instance->set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
 {% elif property.type == "QColor" %}
-    instance.set{{ property.name | ucfirst }}(testQColorInstance());
+    instance->set{{ property.name | ucfirst }}(testQColorInstance());
 {% elif property.type == "qreal" %}
-    instance.set{{ property.name | ucfirst }}(testQrealInstance());
+    instance->set{{ property.name | ucfirst }}(testQrealInstance());
 {% elif property.type == "QFont" %}
-    instance.set{{ property.name | ucfirst }}(testQFontInstance());
+    instance->set{{ property.name | ucfirst }}(testQFontInstance());
 {% else %}
-    instance.set{{ property.name | ucfirst }}({{ property.type }}{});
+    instance->set{{ property.name | ucfirst }}({{ property.type }}{});
 {% endif %}
 {% endfor %}
 
     return instance;
 }
-
 {% endfor %}
 }
 }

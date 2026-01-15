@@ -138,7 +138,7 @@ struct std::formatter<QFlags<T>, char> : public std::formatter<std::string, char
 
 {% for type in types %}
 template<>
-struct std::formatter<Union::Properties::{{ type.type_name }}, char> {
+struct std::formatter<Union::Properties::{{ type.type_name }} *, char> {
     bool use_newlines = false;
     int indentation = 0;
 
@@ -164,7 +164,7 @@ struct std::formatter<Union::Properties::{{ type.type_name }}, char> {
     }
 
     template<class FormatContext>
-    FormatContext::iterator format(const Union::Properties::{{ type.type_name }} &group, FormatContext &context) const
+    FormatContext::iterator format(Union::Properties::{{ type.type_name }} *group, FormatContext &context) const
     {
         std::ostringstream out;
 
@@ -172,10 +172,10 @@ struct std::formatter<Union::Properties::{{ type.type_name }}, char> {
         out << indent(indentation);
         out << "{{ property.name }}: ";
         {
-            auto value = group.{{ property.name }}();
+            auto value = group->{{ property.name }}();
             if (use_newlines) {
 {% if property.is_group %}
-                if (value.has_value()) {
+                if (value) {
                     auto format_string = "\n{0:nl" + std::to_string(indentation + 2) + "}";
                     out << std::vformat(format_string, std::make_format_args(value));
                 } else {

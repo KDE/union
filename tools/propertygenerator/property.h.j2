@@ -79,16 +79,25 @@ public:
     {{ type_name }} &operator=({{ type_name }} &&other);
 
 {% for property in properties %}
+{% if property.is_group %}
+    /*!
+     * Returns {{ property.name }} if set or nullptr if not.
+     */
+    {{ property.type }} *{{ property.name }}() const;
+
+    /*!
+     * Set the value of {{ property.name }}.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void set{{ property.name | ucfirst }}(std::unique_ptr<{{ property.type }}> &&newValue);
+
+{% else %}
     /*!
      * Returns the value of {{ property.name }}.
      */
     std::optional<{{ property.type }}> {{ property.name }}() const;
-{% if property.is_group %}
-    /*!
-     * Returns {{ property.name }} if set or a new {{ property.type }} if not.
-     */
-    {{ property.type }} {{ property.name }}_or_new() const;
-{% endif %}
+
     /*!
      * Set the value of {{ property.name }}.
      *
@@ -96,6 +105,7 @@ public:
      */
     void set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue);
 
+{% endif %}
 {% endfor %}
     /*!
      * Returns if this property group has any value set.
@@ -121,7 +131,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const {{ type_name }} &source, {{ type_name }} &destination);
+    static void resolveProperties(const {{ type_name }} *source, {{ type_name }} *destination);
 
     /*!
      * Create and return an empty {{ type_name }} instance.
@@ -131,7 +141,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static {{ type_name }} empty();
+    static std::unique_ptr<{{ type_name }}> empty();
 
 {% if extra_code and "public" in extra_code %}
 {{ extra_code["public"] | render }}

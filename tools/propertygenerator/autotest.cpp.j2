@@ -26,43 +26,61 @@ class Test{{ type_name }} : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<{{ type_name }}>();
+
+        // A null instance should not have any values for its properties.
+{% for property in properties %}
+{% if property.is_group %}
+        QVERIFY(!property->{{ property.name }}());
+{% else %}
+        QVERIFY(!property->{{ property.name }}().has_value());
+{% endif %}
+{% endfor %}
+    }
+
     void testEmpty()
     {
-        {{ type_name }} property;
+        auto property = {{ type_name }}::empty();
 
-        // An empty instance should not have any values for its properties.
+        // An empty instance should only have values that are considered "empty".
 {% for property in properties %}
-        QVERIFY(!property.{{ property.name }}().has_value());
+{% if property.is_group %}
+        QCOMPARE(*property->{{ property.name }}(), *{{ property.type }}::empty());
+{% else %}
+        QCOMPARE(property->{{ property.name }}().value(), emptyValue<{{ property.type }}>());
+{% endif %}
 {% endfor %}
     }
 
     void testHasAnyValue()
     {
-        {{ type_name }} property;
+        auto property = std::make_unique<{{ type_name }}>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
 {% for property in properties %}
 {% if not property.is_group %}
         {
             {{ property.type }} value;
-            property.set{{ property.name | ucfirst }}(value);
-            QVERIFY(property.hasAnyValue());
-            property.set{{ property.name | ucfirst }}(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->set{{ property.name | ucfirst }}(value);
+            QVERIFY(property->hasAnyValue());
+            property->set{{ property.name | ucfirst }}(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
 {% else %}
         {
             // Assigning an empty value to a property should have no effect.
-            property.set{{ property.name | ucfirst }}({{ property.type }}{});
-            QVERIFY(!property.hasAnyValue());
+            property->set{{ property.name | ucfirst }}(std::make_unique<{{ property.type }}>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
-            QVERIFY(property.hasAnyValue());
+            property->set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
+            QVERIFY(property->hasAnyValue());
 
-            property.set{{ property.name | ucfirst }}(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->set{{ property.name | ucfirst }}(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
 {% endif %}
 {% endfor %}
@@ -70,34 +88,38 @@ private Q_SLOTS:
 
     void testResolveProperties()
     {
-        {{ type_name }} source;
-        {{ type_name }} destination;
+        auto source = std::make_unique<{{ type_name }}>();
+        auto destination = std::make_unique<{{ type_name }}>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        {{ type_name }}::resolveProperties(source, destination);
+        {{ type_name }}::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
 {% for property in properties %}
 {% if not property.is_group %}
-        source.set{{ property.name | ucfirst }}({{ property.type }}{});
+        source->set{{ property.name | ucfirst }}({{ property.type }}{});
 {% else %}
-        source.set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
+        source->set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
 {% endif %}
 {% endfor %}
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        {{ type_name }}::resolveProperties(source, destination);
+        {{ type_name }}::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
 {% for property in properties %}
-        QCOMPARE(destination.{{ property.name }}(), source.{{ property.name }}());
+{% if property.is_group %}
+        QCOMPARE(*destination->{{ property.name }}(), *source->{{ property.name }}());
+{% else %}
+        QCOMPARE(destination->{{ property.name }}(), source->{{ property.name }}());
+{% endif %}
 {% endfor %}
     }
 };

@@ -55,7 +55,7 @@ class {{ type_name }}Group : public QObject
 public:
     explicit {{ type_name }}Group(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::{{ type_name }}> &newState);
+    void update(Union::Properties::{{ type_name }} *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -99,7 +99,7 @@ private:
 {% endif %}
 {% endfor %}
 
-    std::optional<Union::Properties::{{ type_name }}> m_state = std::nullopt;
+    Union::Properties::{{ type_name }} *m_state = nullptr;
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
 {% endif %}
