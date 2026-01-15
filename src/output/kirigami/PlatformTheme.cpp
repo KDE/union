@@ -68,12 +68,12 @@ void PlatformTheme::syncColors()
 
     Kirigami::Platform::PlatformThemeChangeTracker tracker(this);
 
-    if (query->properties().background_or_new().color().has_value()) {
-        setBackgroundColor(query->properties().background().value().color().value().toQColor());
+    if (query->properties()->background()->color().has_value()) {
+        setBackgroundColor(query->properties()->background()->color().value().toQColor());
     }
 
-    if (query->properties().text_or_new().color().has_value()) {
-        setTextColor(query->properties().text().value().color().value().toQColor());
+    if (query->properties()->text()->color().has_value()) {
+        setTextColor(query->properties()->text()->color().value().toQColor());
     }
 }
 
