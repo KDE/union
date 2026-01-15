@@ -17,87 +17,98 @@ class TestLineProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<LineProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->size().has_value());
+        QVERIFY(!property->color().has_value());
+        QVERIFY(!property->style().has_value());
+        QVERIFY(!property->image());
+    }
+
     void testEmpty()
     {
-        LineProperty property;
+        auto property = LineProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.size().has_value());
-        QVERIFY(!property.color().has_value());
-        QVERIFY(!property.style().has_value());
-        QVERIFY(!property.image().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->size().value(), emptyValue<qreal>());
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(property->style().value(), emptyValue<Union::Properties::LineStyle>());
+        QCOMPARE(*property->image(), *ImageProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        LineProperty property;
+        auto property = std::make_unique<LineProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             qreal value;
-            property.setSize(value);
-            QVERIFY(property.hasAnyValue());
-            property.setSize(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setSize(value);
+            QVERIFY(property->hasAnyValue());
+            property->setSize(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Color value;
-            property.setColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Properties::LineStyle value;
-            property.setStyle(value);
-            QVERIFY(property.hasAnyValue());
-            property.setStyle(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setStyle(value);
+            QVERIFY(property->hasAnyValue());
+            property->setStyle(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setImage(ImageProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setImage(std::make_unique<ImageProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setImage(testImagePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setImage(testImagePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setImage(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setImage(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        LineProperty source;
-        LineProperty destination;
+        auto source = std::make_unique<LineProperty>();
+        auto destination = std::make_unique<LineProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        LineProperty::resolveProperties(source, destination);
+        LineProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setSize(qreal{});
-        source.setColor(Union::Color{});
-        source.setStyle(Union::Properties::LineStyle{});
-        source.setImage(testImagePropertyInstance());
+        source->setSize(qreal{});
+        source->setColor(Union::Color{});
+        source->setStyle(Union::Properties::LineStyle{});
+        source->setImage(testImagePropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        LineProperty::resolveProperties(source, destination);
+        LineProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.size(), source.size());
-        QCOMPARE(destination.color(), source.color());
-        QCOMPARE(destination.style(), source.style());
-        QCOMPARE(destination.image(), source.image());
+        QCOMPARE(destination->size(), source->size());
+        QCOMPARE(destination->color(), source->color());
+        QCOMPARE(destination->style(), source->style());
+        QCOMPARE(*destination->image(), *source->image());
     }
 };
 

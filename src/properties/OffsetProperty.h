@@ -64,6 +64,7 @@ public:
      * Returns the value of horizontal.
      */
     std::optional<qreal> horizontal() const;
+
     /*!
      * Set the value of horizontal.
      *
@@ -75,6 +76,7 @@ public:
      * Returns the value of vertical.
      */
     std::optional<qreal> vertical() const;
+
     /*!
      * Set the value of vertical.
      *
@@ -106,7 +108,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const OffsetProperty &source, OffsetProperty &destination);
+    static void resolveProperties(const OffsetProperty *source, OffsetProperty *destination);
 
     /*!
      * Create and return an empty OffsetProperty instance.
@@ -116,7 +118,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static OffsetProperty empty();
+    static std::unique_ptr<OffsetProperty> empty();
 
     /*!
        Convert an Offset property to QVector2D.

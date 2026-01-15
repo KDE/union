@@ -43,7 +43,7 @@ class ShadowPropertyGroup : public QObject
 public:
     explicit ShadowPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::ShadowProperty> &newState);
+    void update(Union::Properties::ShadowProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -159,5 +159,5 @@ private:
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;
     std::unique_ptr<CornerPropertyGroup> m_bottomRight;
 
-    std::optional<Union::Properties::ShadowProperty> m_state = std::nullopt;
+    Union::Properties::ShadowProperty *m_state = nullptr;
 };

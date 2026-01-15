@@ -17,67 +17,76 @@ class TestBackgroundProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<BackgroundProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->color().has_value());
+        QVERIFY(!property->image());
+    }
+
     void testEmpty()
     {
-        BackgroundProperty property;
+        auto property = BackgroundProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.color().has_value());
-        QVERIFY(!property.image().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(*property->image(), *ImageProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        BackgroundProperty property;
+        auto property = std::make_unique<BackgroundProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             Union::Color value;
-            property.setColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setImage(ImageProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setImage(std::make_unique<ImageProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setImage(testImagePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setImage(testImagePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setImage(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setImage(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        BackgroundProperty source;
-        BackgroundProperty destination;
+        auto source = std::make_unique<BackgroundProperty>();
+        auto destination = std::make_unique<BackgroundProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        BackgroundProperty::resolveProperties(source, destination);
+        BackgroundProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setColor(Union::Color{});
-        source.setImage(testImagePropertyInstance());
+        source->setColor(Union::Color{});
+        source->setImage(testImagePropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        BackgroundProperty::resolveProperties(source, destination);
+        BackgroundProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.color(), source.color());
-        QCOMPARE(destination.image(), source.image());
+        QCOMPARE(destination->color(), source->color());
+        QCOMPARE(*destination->image(), *source->image());
     }
 };
 

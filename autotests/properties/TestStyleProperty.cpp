@@ -17,155 +17,170 @@ class TestStyleProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<StyleProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->layout());
+        QVERIFY(!property->text());
+        QVERIFY(!property->icon());
+        QVERIFY(!property->background());
+        QVERIFY(!property->border());
+        QVERIFY(!property->outline());
+        QVERIFY(!property->corners());
+        QVERIFY(!property->shadow());
+    }
+
     void testEmpty()
     {
-        StyleProperty property;
+        auto property = StyleProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.layout().has_value());
-        QVERIFY(!property.text().has_value());
-        QVERIFY(!property.icon().has_value());
-        QVERIFY(!property.background().has_value());
-        QVERIFY(!property.border().has_value());
-        QVERIFY(!property.outline().has_value());
-        QVERIFY(!property.corners().has_value());
-        QVERIFY(!property.shadow().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->layout(), *LayoutProperty::empty());
+        QCOMPARE(*property->text(), *TextProperty::empty());
+        QCOMPARE(*property->icon(), *IconProperty::empty());
+        QCOMPARE(*property->background(), *BackgroundProperty::empty());
+        QCOMPARE(*property->border(), *BorderProperty::empty());
+        QCOMPARE(*property->outline(), *OutlineProperty::empty());
+        QCOMPARE(*property->corners(), *CornersProperty::empty());
+        QCOMPARE(*property->shadow(), *ShadowProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        StyleProperty property;
+        auto property = std::make_unique<StyleProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setLayout(LayoutProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setLayout(std::make_unique<LayoutProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setLayout(testLayoutPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setLayout(testLayoutPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setLayout(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setLayout(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setText(TextProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setText(std::make_unique<TextProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setText(testTextPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setText(testTextPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setText(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setText(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setIcon(IconProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setIcon(std::make_unique<IconProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setIcon(testIconPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setIcon(testIconPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setIcon(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setIcon(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBackground(BackgroundProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBackground(std::make_unique<BackgroundProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBackground(testBackgroundPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBackground(testBackgroundPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBackground(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBackground(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBorder(BorderProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBorder(std::make_unique<BorderProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBorder(testBorderPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBorder(testBorderPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBorder(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBorder(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setOutline(OutlineProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setOutline(std::make_unique<OutlineProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setOutline(testOutlinePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setOutline(testOutlinePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setOutline(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setOutline(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setCorners(CornersProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setCorners(std::make_unique<CornersProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setCorners(testCornersPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setCorners(testCornersPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setCorners(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setCorners(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setShadow(ShadowProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setShadow(std::make_unique<ShadowProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setShadow(testShadowPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setShadow(testShadowPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setShadow(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setShadow(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        StyleProperty source;
-        StyleProperty destination;
+        auto source = std::make_unique<StyleProperty>();
+        auto destination = std::make_unique<StyleProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        StyleProperty::resolveProperties(source, destination);
+        StyleProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setLayout(testLayoutPropertyInstance());
-        source.setText(testTextPropertyInstance());
-        source.setIcon(testIconPropertyInstance());
-        source.setBackground(testBackgroundPropertyInstance());
-        source.setBorder(testBorderPropertyInstance());
-        source.setOutline(testOutlinePropertyInstance());
-        source.setCorners(testCornersPropertyInstance());
-        source.setShadow(testShadowPropertyInstance());
+        source->setLayout(testLayoutPropertyInstance());
+        source->setText(testTextPropertyInstance());
+        source->setIcon(testIconPropertyInstance());
+        source->setBackground(testBackgroundPropertyInstance());
+        source->setBorder(testBorderPropertyInstance());
+        source->setOutline(testOutlinePropertyInstance());
+        source->setCorners(testCornersPropertyInstance());
+        source->setShadow(testShadowPropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        StyleProperty::resolveProperties(source, destination);
+        StyleProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.layout(), source.layout());
-        QCOMPARE(destination.text(), source.text());
-        QCOMPARE(destination.icon(), source.icon());
-        QCOMPARE(destination.background(), source.background());
-        QCOMPARE(destination.border(), source.border());
-        QCOMPARE(destination.outline(), source.outline());
-        QCOMPARE(destination.corners(), source.corners());
-        QCOMPARE(destination.shadow(), source.shadow());
+        QCOMPARE(*destination->layout(), *source->layout());
+        QCOMPARE(*destination->text(), *source->text());
+        QCOMPARE(*destination->icon(), *source->icon());
+        QCOMPARE(*destination->background(), *source->background());
+        QCOMPARE(*destination->border(), *source->border());
+        QCOMPARE(*destination->outline(), *source->outline());
+        QCOMPARE(*destination->corners(), *source->corners());
+        QCOMPARE(*destination->shadow(), *source->shadow());
     }
 };
 

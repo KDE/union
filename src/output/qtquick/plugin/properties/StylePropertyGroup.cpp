@@ -27,7 +27,7 @@ StylePropertyGroup::StylePropertyGroup(QuickStyle *style)
     m_shadow = std::make_unique<ShadowPropertyGroup>(m_style);
 }
 
-void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
+void StylePropertyGroup::update(StyleProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -36,23 +36,23 @@ void StylePropertyGroup::update(const std::optional<StyleProperty> &newState)
     m_state = newState;
 
     if (!newState) {
-        m_layout->update(std::nullopt);
-        m_text->update(std::nullopt);
-        m_icon->update(std::nullopt);
-        m_background->update(std::nullopt);
-        m_border->update(std::nullopt);
-        m_outline->update(std::nullopt);
-        m_corners->update(std::nullopt);
-        m_shadow->update(std::nullopt);
+        m_layout->update(nullptr);
+        m_text->update(nullptr);
+        m_icon->update(nullptr);
+        m_background->update(nullptr);
+        m_border->update(nullptr);
+        m_outline->update(nullptr);
+        m_corners->update(nullptr);
+        m_shadow->update(nullptr);
     } else {
-        m_layout->update(newState.value().layout());
-        m_text->update(newState.value().text());
-        m_icon->update(newState.value().icon());
-        m_background->update(newState.value().background());
-        m_border->update(newState.value().border());
-        m_outline->update(newState.value().outline());
-        m_corners->update(newState.value().corners());
-        m_shadow->update(newState.value().shadow());
+        m_layout->update(newState->layout());
+        m_text->update(newState->text());
+        m_icon->update(newState->icon());
+        m_background->update(newState->background());
+        m_border->update(newState->border());
+        m_outline->update(newState->outline());
+        m_corners->update(newState->corners());
+        m_shadow->update(newState->shadow());
     }
 
     Q_EMIT updated();

@@ -62,64 +62,52 @@ public:
     CornersProperty &operator=(CornersProperty &&other);
 
     /*!
-     * Returns the value of topLeft.
+     * Returns topLeft if set or nullptr if not.
      */
-    std::optional<CornerProperty> topLeft() const;
-    /*!
-     * Returns topLeft if set or a new CornerProperty if not.
-     */
-    CornerProperty topLeft_or_new() const;
+    CornerProperty *topLeft() const;
+
     /*!
      * Set the value of topLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTopLeft(const std::optional<CornerProperty> &newValue);
+    void setTopLeft(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of topRight.
+     * Returns topRight if set or nullptr if not.
      */
-    std::optional<CornerProperty> topRight() const;
-    /*!
-     * Returns topRight if set or a new CornerProperty if not.
-     */
-    CornerProperty topRight_or_new() const;
+    CornerProperty *topRight() const;
+
     /*!
      * Set the value of topRight.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTopRight(const std::optional<CornerProperty> &newValue);
+    void setTopRight(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of bottomLeft.
+     * Returns bottomLeft if set or nullptr if not.
      */
-    std::optional<CornerProperty> bottomLeft() const;
-    /*!
-     * Returns bottomLeft if set or a new CornerProperty if not.
-     */
-    CornerProperty bottomLeft_or_new() const;
+    CornerProperty *bottomLeft() const;
+
     /*!
      * Set the value of bottomLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottomLeft(const std::optional<CornerProperty> &newValue);
+    void setBottomLeft(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of bottomRight.
+     * Returns bottomRight if set or nullptr if not.
      */
-    std::optional<CornerProperty> bottomRight() const;
-    /*!
-     * Returns bottomRight if set or a new CornerProperty if not.
-     */
-    CornerProperty bottomRight_or_new() const;
+    CornerProperty *bottomRight() const;
+
     /*!
      * Set the value of bottomRight.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottomRight(const std::optional<CornerProperty> &newValue);
+    void setBottomRight(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -145,7 +133,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const CornersProperty &source, CornersProperty &destination);
+    static void resolveProperties(const CornersProperty *source, CornersProperty *destination);
 
     /*!
      * Create and return an empty CornersProperty instance.
@@ -155,7 +143,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static CornersProperty empty();
+    static std::unique_ptr<CornersProperty> empty();
 
 private:
     std::unique_ptr<CornersPropertyPrivate> d;

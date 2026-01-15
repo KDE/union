@@ -80,6 +80,7 @@ void ImageProperty::setImageData(const std::optional<QImage> &newValue)
 
     d->imageData = newValue;
 }
+
 std::optional<qreal> ImageProperty::width() const
 {
     return d->width;
@@ -93,6 +94,7 @@ void ImageProperty::setWidth(const std::optional<qreal> &newValue)
 
     d->width = newValue;
 }
+
 std::optional<qreal> ImageProperty::height() const
 {
     return d->height;
@@ -106,6 +108,7 @@ void ImageProperty::setHeight(const std::optional<qreal> &newValue)
 
     d->height = newValue;
 }
+
 std::optional<qreal> ImageProperty::xOffset() const
 {
     return d->xOffset;
@@ -119,6 +122,7 @@ void ImageProperty::setXOffset(const std::optional<qreal> &newValue)
 
     d->xOffset = newValue;
 }
+
 std::optional<qreal> ImageProperty::yOffset() const
 {
     return d->yOffset;
@@ -132,6 +136,7 @@ void ImageProperty::setYOffset(const std::optional<qreal> &newValue)
 
     d->yOffset = newValue;
 }
+
 std::optional<Union::Properties::ImageFlags> ImageProperty::flags() const
 {
     return d->flags;
@@ -145,6 +150,7 @@ void ImageProperty::setFlags(const std::optional<Union::Properties::ImageFlags> 
 
     d->flags = newValue;
 }
+
 std::optional<Union::Color> ImageProperty::maskColor() const
 {
     return d->maskColor;
@@ -216,41 +222,45 @@ bool ImageProperty::isEmpty() const
     return true;
 }
 
-void ImageProperty::resolveProperties(const ImageProperty &source, ImageProperty &destination)
+void ImageProperty::resolveProperties(const ImageProperty *source, ImageProperty *destination)
 {
-    if (!destination.d->imageData.has_value()) {
-        destination.d->imageData = source.d->imageData;
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->width.has_value()) {
-        destination.d->width = source.d->width;
+
+    if (!destination->d->imageData.has_value()) {
+        destination->d->imageData = source->d->imageData;
     }
-    if (!destination.d->height.has_value()) {
-        destination.d->height = source.d->height;
+    if (!destination->d->width.has_value()) {
+        destination->d->width = source->d->width;
     }
-    if (!destination.d->xOffset.has_value()) {
-        destination.d->xOffset = source.d->xOffset;
+    if (!destination->d->height.has_value()) {
+        destination->d->height = source->d->height;
     }
-    if (!destination.d->yOffset.has_value()) {
-        destination.d->yOffset = source.d->yOffset;
+    if (!destination->d->xOffset.has_value()) {
+        destination->d->xOffset = source->d->xOffset;
     }
-    if (!destination.d->flags.has_value()) {
-        destination.d->flags = source.d->flags;
+    if (!destination->d->yOffset.has_value()) {
+        destination->d->yOffset = source->d->yOffset;
     }
-    if (!destination.d->maskColor.has_value()) {
-        destination.d->maskColor = source.d->maskColor;
+    if (!destination->d->flags.has_value()) {
+        destination->d->flags = source->d->flags;
+    }
+    if (!destination->d->maskColor.has_value()) {
+        destination->d->maskColor = source->d->maskColor;
     }
 }
 
-ImageProperty ImageProperty::empty()
+std::unique_ptr<ImageProperty> ImageProperty::empty()
 {
-    ImageProperty result;
-    result.d->imageData = emptyValue<QImage>();
-    result.d->width = emptyValue<qreal>();
-    result.d->height = emptyValue<qreal>();
-    result.d->xOffset = emptyValue<qreal>();
-    result.d->yOffset = emptyValue<qreal>();
-    result.d->flags = emptyValue<Union::Properties::ImageFlags>();
-    result.d->maskColor = emptyValue<Union::Color>();
+    auto result = std::make_unique<ImageProperty>();
+    result->d->imageData = emptyValue<QImage>();
+    result->d->width = emptyValue<qreal>();
+    result->d->height = emptyValue<qreal>();
+    result->d->xOffset = emptyValue<qreal>();
+    result->d->yOffset = emptyValue<qreal>();
+    result->d->flags = emptyValue<Union::Properties::ImageFlags>();
+    result->d->maskColor = emptyValue<Union::Color>();
     return result;
 }
 
@@ -283,14 +293,14 @@ bool Union::Properties::operator==(const ImageProperty &left, const ImagePropert
 QDebug operator<<(QDebug debug, const Union::Properties::ImageProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "ImageProperty(" //
-                    << "imageData: " << type.imageData() //
-                    << ", width: " << type.width() //
-                    << ", height: " << type.height() //
-                    << ", xOffset: " << type.xOffset() //
-                    << ", yOffset: " << type.yOffset() //
-                    << ", flags: " << type.flags() //
-                    << ", maskColor: " << type.maskColor() //
-                    << ")";
+    debug.nospace() << "ImageProperty(";
+    debug.nospace() << "imageData: " << type.imageData();
+    debug.nospace() << ", width: " << type.width();
+    debug.nospace() << ", height: " << type.height();
+    debug.nospace() << ", xOffset: " << type.xOffset();
+    debug.nospace() << ", yOffset: " << type.yOffset();
+    debug.nospace() << ", flags: " << type.flags();
+    debug.nospace() << ", maskColor: " << type.maskColor();
+    debug.nospace() << ")";
     return debug;
 }

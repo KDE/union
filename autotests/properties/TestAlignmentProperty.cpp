@@ -17,83 +17,94 @@ class TestAlignmentProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<AlignmentProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->container().has_value());
+        QVERIFY(!property->horizontal().has_value());
+        QVERIFY(!property->vertical().has_value());
+        QVERIFY(!property->order().has_value());
+    }
+
     void testEmpty()
     {
-        AlignmentProperty property;
+        auto property = AlignmentProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.container().has_value());
-        QVERIFY(!property.horizontal().has_value());
-        QVERIFY(!property.vertical().has_value());
-        QVERIFY(!property.order().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->container().value(), emptyValue<Union::Properties::AlignmentContainer>());
+        QCOMPARE(property->horizontal().value(), emptyValue<Union::Properties::Alignment>());
+        QCOMPARE(property->vertical().value(), emptyValue<Union::Properties::Alignment>());
+        QCOMPARE(property->order().value(), emptyValue<int>());
     }
 
     void testHasAnyValue()
     {
-        AlignmentProperty property;
+        auto property = std::make_unique<AlignmentProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             Union::Properties::AlignmentContainer value;
-            property.setContainer(value);
-            QVERIFY(property.hasAnyValue());
-            property.setContainer(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setContainer(value);
+            QVERIFY(property->hasAnyValue());
+            property->setContainer(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Properties::Alignment value;
-            property.setHorizontal(value);
-            QVERIFY(property.hasAnyValue());
-            property.setHorizontal(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setHorizontal(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHorizontal(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Properties::Alignment value;
-            property.setVertical(value);
-            QVERIFY(property.hasAnyValue());
-            property.setVertical(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setVertical(value);
+            QVERIFY(property->hasAnyValue());
+            property->setVertical(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             int value;
-            property.setOrder(value);
-            QVERIFY(property.hasAnyValue());
-            property.setOrder(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setOrder(value);
+            QVERIFY(property->hasAnyValue());
+            property->setOrder(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        AlignmentProperty source;
-        AlignmentProperty destination;
+        auto source = std::make_unique<AlignmentProperty>();
+        auto destination = std::make_unique<AlignmentProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        AlignmentProperty::resolveProperties(source, destination);
+        AlignmentProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setContainer(Union::Properties::AlignmentContainer{});
-        source.setHorizontal(Union::Properties::Alignment{});
-        source.setVertical(Union::Properties::Alignment{});
-        source.setOrder(int{});
+        source->setContainer(Union::Properties::AlignmentContainer{});
+        source->setHorizontal(Union::Properties::Alignment{});
+        source->setVertical(Union::Properties::Alignment{});
+        source->setOrder(int{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        AlignmentProperty::resolveProperties(source, destination);
+        AlignmentProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.container(), source.container());
-        QCOMPARE(destination.horizontal(), source.horizontal());
-        QCOMPARE(destination.vertical(), source.vertical());
-        QCOMPARE(destination.order(), source.order());
+        QCOMPARE(destination->container(), source->container());
+        QCOMPARE(destination->horizontal(), source->horizontal());
+        QCOMPARE(destination->vertical(), source->vertical());
+        QCOMPARE(destination->order(), source->order());
     }
 };
 

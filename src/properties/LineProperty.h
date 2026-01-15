@@ -67,6 +67,7 @@ public:
      * Returns the value of size.
      */
     std::optional<qreal> size() const;
+
     /*!
      * Set the value of size.
      *
@@ -78,6 +79,7 @@ public:
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -89,6 +91,7 @@ public:
      * Returns the value of style.
      */
     std::optional<Union::Properties::LineStyle> style() const;
+
     /*!
      * Set the value of style.
      *
@@ -97,19 +100,16 @@ public:
     void setStyle(const std::optional<Union::Properties::LineStyle> &newValue);
 
     /*!
-     * Returns the value of image.
+     * Returns image if set or nullptr if not.
      */
-    std::optional<ImageProperty> image() const;
-    /*!
-     * Returns image if set or a new ImageProperty if not.
-     */
-    ImageProperty image_or_new() const;
+    ImageProperty *image() const;
+
     /*!
      * Set the value of image.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setImage(const std::optional<ImageProperty> &newValue);
+    void setImage(std::unique_ptr<ImageProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -135,7 +135,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const LineProperty &source, LineProperty &destination);
+    static void resolveProperties(const LineProperty *source, LineProperty *destination);
 
     /*!
      * Create and return an empty LineProperty instance.
@@ -145,7 +145,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static LineProperty empty();
+    static std::unique_ptr<LineProperty> empty();
 
 private:
     std::unique_ptr<LinePropertyPrivate> d;

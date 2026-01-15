@@ -71,124 +71,100 @@ public:
     StyleProperty &operator=(StyleProperty &&other);
 
     /*!
-     * Returns the value of layout.
+     * Returns layout if set or nullptr if not.
      */
-    std::optional<LayoutProperty> layout() const;
-    /*!
-     * Returns layout if set or a new LayoutProperty if not.
-     */
-    LayoutProperty layout_or_new() const;
+    LayoutProperty *layout() const;
+
     /*!
      * Set the value of layout.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setLayout(const std::optional<LayoutProperty> &newValue);
+    void setLayout(std::unique_ptr<LayoutProperty> &&newValue);
 
     /*!
-     * Returns the value of text.
+     * Returns text if set or nullptr if not.
      */
-    std::optional<TextProperty> text() const;
-    /*!
-     * Returns text if set or a new TextProperty if not.
-     */
-    TextProperty text_or_new() const;
+    TextProperty *text() const;
+
     /*!
      * Set the value of text.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setText(const std::optional<TextProperty> &newValue);
+    void setText(std::unique_ptr<TextProperty> &&newValue);
 
     /*!
-     * Returns the value of icon.
+     * Returns icon if set or nullptr if not.
      */
-    std::optional<IconProperty> icon() const;
-    /*!
-     * Returns icon if set or a new IconProperty if not.
-     */
-    IconProperty icon_or_new() const;
+    IconProperty *icon() const;
+
     /*!
      * Set the value of icon.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setIcon(const std::optional<IconProperty> &newValue);
+    void setIcon(std::unique_ptr<IconProperty> &&newValue);
 
     /*!
-     * Returns the value of background.
+     * Returns background if set or nullptr if not.
      */
-    std::optional<BackgroundProperty> background() const;
-    /*!
-     * Returns background if set or a new BackgroundProperty if not.
-     */
-    BackgroundProperty background_or_new() const;
+    BackgroundProperty *background() const;
+
     /*!
      * Set the value of background.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBackground(const std::optional<BackgroundProperty> &newValue);
+    void setBackground(std::unique_ptr<BackgroundProperty> &&newValue);
 
     /*!
-     * Returns the value of border.
+     * Returns border if set or nullptr if not.
      */
-    std::optional<BorderProperty> border() const;
-    /*!
-     * Returns border if set or a new BorderProperty if not.
-     */
-    BorderProperty border_or_new() const;
+    BorderProperty *border() const;
+
     /*!
      * Set the value of border.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBorder(const std::optional<BorderProperty> &newValue);
+    void setBorder(std::unique_ptr<BorderProperty> &&newValue);
 
     /*!
-     * Returns the value of outline.
+     * Returns outline if set or nullptr if not.
      */
-    std::optional<OutlineProperty> outline() const;
-    /*!
-     * Returns outline if set or a new OutlineProperty if not.
-     */
-    OutlineProperty outline_or_new() const;
+    OutlineProperty *outline() const;
+
     /*!
      * Set the value of outline.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setOutline(const std::optional<OutlineProperty> &newValue);
+    void setOutline(std::unique_ptr<OutlineProperty> &&newValue);
 
     /*!
-     * Returns the value of corners.
+     * Returns corners if set or nullptr if not.
      */
-    std::optional<CornersProperty> corners() const;
-    /*!
-     * Returns corners if set or a new CornersProperty if not.
-     */
-    CornersProperty corners_or_new() const;
+    CornersProperty *corners() const;
+
     /*!
      * Set the value of corners.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setCorners(const std::optional<CornersProperty> &newValue);
+    void setCorners(std::unique_ptr<CornersProperty> &&newValue);
 
     /*!
-     * Returns the value of shadow.
+     * Returns shadow if set or nullptr if not.
      */
-    std::optional<ShadowProperty> shadow() const;
-    /*!
-     * Returns shadow if set or a new ShadowProperty if not.
-     */
-    ShadowProperty shadow_or_new() const;
+    ShadowProperty *shadow() const;
+
     /*!
      * Set the value of shadow.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setShadow(const std::optional<ShadowProperty> &newValue);
+    void setShadow(std::unique_ptr<ShadowProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -214,7 +190,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const StyleProperty &source, StyleProperty &destination);
+    static void resolveProperties(const StyleProperty *source, StyleProperty *destination);
 
     /*!
      * Create and return an empty StyleProperty instance.
@@ -224,7 +200,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static StyleProperty empty();
+    static std::unique_ptr<StyleProperty> empty();
 
 private:
     std::unique_ptr<StylePropertyPrivate> d;

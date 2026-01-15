@@ -66,6 +66,7 @@ public:
      * Returns the value of radius.
      */
     std::optional<qreal> radius() const;
+
     /*!
      * Set the value of radius.
      *
@@ -77,6 +78,7 @@ public:
      * Returns the value of width.
      */
     std::optional<qreal> width() const;
+
     /*!
      * Set the value of width.
      *
@@ -88,6 +90,7 @@ public:
      * Returns the value of height.
      */
     std::optional<qreal> height() const;
+
     /*!
      * Set the value of height.
      *
@@ -99,6 +102,7 @@ public:
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -107,19 +111,16 @@ public:
     void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
-     * Returns the value of image.
+     * Returns image if set or nullptr if not.
      */
-    std::optional<ImageProperty> image() const;
-    /*!
-     * Returns image if set or a new ImageProperty if not.
-     */
-    ImageProperty image_or_new() const;
+    ImageProperty *image() const;
+
     /*!
      * Set the value of image.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setImage(const std::optional<ImageProperty> &newValue);
+    void setImage(std::unique_ptr<ImageProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -145,7 +146,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const CornerProperty &source, CornerProperty &destination);
+    static void resolveProperties(const CornerProperty *source, CornerProperty *destination);
 
     /*!
      * Create and return an empty CornerProperty instance.
@@ -155,7 +156,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static CornerProperty empty();
+    static std::unique_ptr<CornerProperty> empty();
 
 private:
     std::unique_ptr<CornerPropertyPrivate> d;

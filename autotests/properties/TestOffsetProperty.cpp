@@ -17,63 +17,72 @@ class TestOffsetProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<OffsetProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->horizontal().has_value());
+        QVERIFY(!property->vertical().has_value());
+    }
+
     void testEmpty()
     {
-        OffsetProperty property;
+        auto property = OffsetProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.horizontal().has_value());
-        QVERIFY(!property.vertical().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->horizontal().value(), emptyValue<qreal>());
+        QCOMPARE(property->vertical().value(), emptyValue<qreal>());
     }
 
     void testHasAnyValue()
     {
-        OffsetProperty property;
+        auto property = std::make_unique<OffsetProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             qreal value;
-            property.setHorizontal(value);
-            QVERIFY(property.hasAnyValue());
-            property.setHorizontal(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setHorizontal(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHorizontal(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setVertical(value);
-            QVERIFY(property.hasAnyValue());
-            property.setVertical(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setVertical(value);
+            QVERIFY(property->hasAnyValue());
+            property->setVertical(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        OffsetProperty source;
-        OffsetProperty destination;
+        auto source = std::make_unique<OffsetProperty>();
+        auto destination = std::make_unique<OffsetProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        OffsetProperty::resolveProperties(source, destination);
+        OffsetProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setHorizontal(qreal{});
-        source.setVertical(qreal{});
+        source->setHorizontal(qreal{});
+        source->setVertical(qreal{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        OffsetProperty::resolveProperties(source, destination);
+        OffsetProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.horizontal(), source.horizontal());
-        QCOMPARE(destination.vertical(), source.vertical());
+        QCOMPARE(destination->horizontal(), source->horizontal());
+        QCOMPARE(destination->vertical(), source->vertical());
     }
 };
 

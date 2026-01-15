@@ -34,7 +34,7 @@ class ImagePropertyGroup : public QObject
 public:
     explicit ImagePropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::ImageProperty> &newState);
+    void update(Union::Properties::ImageProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -105,5 +105,5 @@ public:
 private:
     QuickStyle *m_style = nullptr;
 
-    std::optional<Union::Properties::ImageProperty> m_state = std::nullopt;
+    Union::Properties::ImageProperty *m_state = nullptr;
 };

@@ -23,7 +23,7 @@ OutlinePropertyGroup::OutlinePropertyGroup(QuickStyle *style)
     m_bottom = std::make_unique<LinePropertyGroup>(m_style);
 }
 
-void OutlinePropertyGroup::update(const std::optional<OutlineProperty> &newState)
+void OutlinePropertyGroup::update(OutlineProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -32,15 +32,15 @@ void OutlinePropertyGroup::update(const std::optional<OutlineProperty> &newState
     m_state = newState;
 
     if (!newState) {
-        m_left->update(std::nullopt);
-        m_right->update(std::nullopt);
-        m_top->update(std::nullopt);
-        m_bottom->update(std::nullopt);
+        m_left->update(nullptr);
+        m_right->update(nullptr);
+        m_top->update(nullptr);
+        m_bottom->update(nullptr);
     } else {
-        m_left->update(newState.value().left());
-        m_right->update(newState.value().right());
-        m_top->update(newState.value().top());
-        m_bottom->update(newState.value().bottom());
+        m_left->update(newState->left());
+        m_right->update(newState->right());
+        m_top->update(newState->top());
+        m_bottom->update(newState->bottom());
     }
 
     Q_EMIT updated();

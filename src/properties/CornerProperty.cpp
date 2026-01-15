@@ -18,7 +18,7 @@ public:
     std::optional<qreal> width;
     std::optional<qreal> height;
     std::optional<Union::Color> color;
-    std::optional<ImageProperty> image;
+    std::unique_ptr<ImageProperty> image;
 };
 
 CornerProperty::CornerProperty()
@@ -33,7 +33,8 @@ CornerProperty::CornerProperty(const CornerProperty &other)
     d->width = other.d->width;
     d->height = other.d->height;
     d->color = other.d->color;
-    d->image = other.d->image;
+    d->image = std::make_unique<ImageProperty>();
+    *(d->image) = *(other.d->image);
 }
 
 CornerProperty::CornerProperty(CornerProperty &&other)
@@ -50,7 +51,7 @@ CornerProperty &CornerProperty::operator=(const CornerProperty &other)
         d->width = other.d->width;
         d->height = other.d->height;
         d->color = other.d->color;
-        d->image = other.d->image;
+        *(d->image) = *(other.d->image);
     }
     return *this;
 }
@@ -74,6 +75,7 @@ void CornerProperty::setRadius(const std::optional<qreal> &newValue)
 
     d->radius = newValue;
 }
+
 std::optional<qreal> CornerProperty::width() const
 {
     return d->width;
@@ -87,6 +89,7 @@ void CornerProperty::setWidth(const std::optional<qreal> &newValue)
 
     d->width = newValue;
 }
+
 std::optional<qreal> CornerProperty::height() const
 {
     return d->height;
@@ -100,6 +103,7 @@ void CornerProperty::setHeight(const std::optional<qreal> &newValue)
 
     d->height = newValue;
 }
+
 std::optional<Union::Color> CornerProperty::color() const
 {
     return d->color;
@@ -113,23 +117,15 @@ void CornerProperty::setColor(const std::optional<Union::Color> &newValue)
 
     d->color = newValue;
 }
-std::optional<ImageProperty> CornerProperty::image() const
+
+ImageProperty *CornerProperty::image() const
 {
-    return d->image;
+    return d->image.get();
 }
 
-ImageProperty CornerProperty::image_or_new() const
+void CornerProperty::setImage(std::unique_ptr<ImageProperty> &&newValue)
 {
-    return d->image.value_or(ImageProperty{});
-}
-
-void CornerProperty::setImage(const std::optional<ImageProperty> &newValue)
-{
-    if (newValue == d->image) {
-        return;
-    }
-
-    d->image = newValue;
+    d->image = std::move(newValue);
 }
 
 bool CornerProperty::hasAnyValue() const
@@ -146,7 +142,7 @@ bool CornerProperty::hasAnyValue() const
     if (d->color.has_value()) {
         return true;
     }
-    if (d->image.has_value() && d->image->hasAnyValue()) {
+    if (d->image && d->image->hasAnyValue()) {
         return true;
     }
     return false;
@@ -170,47 +166,47 @@ bool CornerProperty::isEmpty() const
     if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
         return false;
     }
-    if (d->image.has_value() && !d->image->isEmpty()) {
+    if (d->image && !d->image->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void CornerProperty::resolveProperties(const CornerProperty &source, CornerProperty &destination)
+void CornerProperty::resolveProperties(const CornerProperty *source, CornerProperty *destination)
 {
-    if (!destination.d->radius.has_value()) {
-        destination.d->radius = source.d->radius;
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->width.has_value()) {
-        destination.d->width = source.d->width;
+
+    if (!destination->d->radius.has_value()) {
+        destination->d->radius = source->d->radius;
     }
-    if (!destination.d->height.has_value()) {
-        destination.d->height = source.d->height;
+    if (!destination->d->width.has_value()) {
+        destination->d->width = source->d->width;
     }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+    if (!destination->d->height.has_value()) {
+        destination->d->height = source->d->height;
     }
-    if (source.d->image.has_value()) {
-        ImageProperty property;
-        if (destination.d->image.has_value()) {
-            property = destination.d->image.value();
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
+    }
+    if (source->d->image) {
+        if (!destination->d->image) {
+            destination->d->image = std::make_unique<ImageProperty>();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->image = property;
-        }
+        ImageProperty::resolveProperties(source->d->image.get(), destination->d->image.get());
     }
 }
 
-CornerProperty CornerProperty::empty()
+std::unique_ptr<CornerProperty> CornerProperty::empty()
 {
-    CornerProperty result;
-    result.d->radius = emptyValue<qreal>();
-    result.d->width = emptyValue<qreal>();
-    result.d->height = emptyValue<qreal>();
-    result.d->color = emptyValue<Union::Color>();
-    result.d->image = emptyValue<ImageProperty>();
+    auto result = std::make_unique<CornerProperty>();
+    result->d->radius = emptyValue<qreal>();
+    result->d->width = emptyValue<qreal>();
+    result->d->height = emptyValue<qreal>();
+    result->d->color = emptyValue<Union::Color>();
+    result->d->image = ImageProperty::empty();
     return result;
 }
 
@@ -228,7 +224,11 @@ bool Union::Properties::operator==(const CornerProperty &left, const CornerPrope
     if (left.color() != right.color()) {
         return false;
     }
-    if (left.image() != right.image()) {
+    if (left.image() && right.image()) {
+        if (*(left.image()) != *(right.image())) {
+            return false;
+        }
+    } else if (left.image() != right.image()) {
         return false;
     }
     return true;
@@ -237,12 +237,16 @@ bool Union::Properties::operator==(const CornerProperty &left, const CornerPrope
 QDebug operator<<(QDebug debug, const Union::Properties::CornerProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "CornerProperty(" //
-                    << "radius: " << type.radius() //
-                    << ", width: " << type.width() //
-                    << ", height: " << type.height() //
-                    << ", color: " << type.color() //
-                    << ", image: " << type.image() //
-                    << ")";
+    debug.nospace() << "CornerProperty(";
+    debug.nospace() << "radius: " << type.radius();
+    debug.nospace() << ", width: " << type.width();
+    debug.nospace() << ", height: " << type.height();
+    debug.nospace() << ", color: " << type.color();
+    if (type.image()) {
+        debug.nospace() << ", image: " << *type.image();
+    } else {
+        debug.nospace() << ", image: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

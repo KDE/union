@@ -14,13 +14,13 @@ using namespace Qt::StringLiterals;
 class Union::Properties::LayoutPropertyPrivate
 {
 public:
-    std::optional<AlignmentProperty> alignment;
+    std::unique_ptr<AlignmentProperty> alignment;
     std::optional<qreal> width;
     std::optional<qreal> height;
     std::optional<qreal> spacing;
-    std::optional<SizeProperty> padding;
-    std::optional<SizeProperty> inset;
-    std::optional<SizeProperty> margins;
+    std::unique_ptr<SizeProperty> padding;
+    std::unique_ptr<SizeProperty> inset;
+    std::unique_ptr<SizeProperty> margins;
 };
 
 LayoutProperty::LayoutProperty()
@@ -31,13 +31,17 @@ LayoutProperty::LayoutProperty()
 LayoutProperty::LayoutProperty(const LayoutProperty &other)
     : d(std::make_unique<LayoutPropertyPrivate>())
 {
-    d->alignment = other.d->alignment;
+    d->alignment = std::make_unique<AlignmentProperty>();
+    *(d->alignment) = *(other.d->alignment);
     d->width = other.d->width;
     d->height = other.d->height;
     d->spacing = other.d->spacing;
-    d->padding = other.d->padding;
-    d->inset = other.d->inset;
-    d->margins = other.d->margins;
+    d->padding = std::make_unique<SizeProperty>();
+    *(d->padding) = *(other.d->padding);
+    d->inset = std::make_unique<SizeProperty>();
+    *(d->inset) = *(other.d->inset);
+    d->margins = std::make_unique<SizeProperty>();
+    *(d->margins) = *(other.d->margins);
 }
 
 LayoutProperty::LayoutProperty(LayoutProperty &&other)
@@ -50,13 +54,13 @@ LayoutProperty::~LayoutProperty() = default;
 LayoutProperty &LayoutProperty::operator=(const LayoutProperty &other)
 {
     if (this != &other) {
-        d->alignment = other.d->alignment;
+        *(d->alignment) = *(other.d->alignment);
         d->width = other.d->width;
         d->height = other.d->height;
         d->spacing = other.d->spacing;
-        d->padding = other.d->padding;
-        d->inset = other.d->inset;
-        d->margins = other.d->margins;
+        *(d->padding) = *(other.d->padding);
+        *(d->inset) = *(other.d->inset);
+        *(d->margins) = *(other.d->margins);
     }
     return *this;
 }
@@ -67,24 +71,16 @@ LayoutProperty &LayoutProperty::operator=(LayoutProperty &&other)
     return *this;
 }
 
-std::optional<AlignmentProperty> LayoutProperty::alignment() const
+AlignmentProperty *LayoutProperty::alignment() const
 {
-    return d->alignment;
+    return d->alignment.get();
 }
 
-AlignmentProperty LayoutProperty::alignment_or_new() const
+void LayoutProperty::setAlignment(std::unique_ptr<AlignmentProperty> &&newValue)
 {
-    return d->alignment.value_or(AlignmentProperty{});
+    d->alignment = std::move(newValue);
 }
 
-void LayoutProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
-{
-    if (newValue == d->alignment) {
-        return;
-    }
-
-    d->alignment = newValue;
-}
 std::optional<qreal> LayoutProperty::width() const
 {
     return d->width;
@@ -98,6 +94,7 @@ void LayoutProperty::setWidth(const std::optional<qreal> &newValue)
 
     d->width = newValue;
 }
+
 std::optional<qreal> LayoutProperty::height() const
 {
     return d->height;
@@ -111,6 +108,7 @@ void LayoutProperty::setHeight(const std::optional<qreal> &newValue)
 
     d->height = newValue;
 }
+
 std::optional<qreal> LayoutProperty::spacing() const
 {
     return d->spacing;
@@ -124,64 +122,40 @@ void LayoutProperty::setSpacing(const std::optional<qreal> &newValue)
 
     d->spacing = newValue;
 }
-std::optional<SizeProperty> LayoutProperty::padding() const
+
+SizeProperty *LayoutProperty::padding() const
 {
-    return d->padding;
+    return d->padding.get();
 }
 
-SizeProperty LayoutProperty::padding_or_new() const
+void LayoutProperty::setPadding(std::unique_ptr<SizeProperty> &&newValue)
 {
-    return d->padding.value_or(SizeProperty{});
+    d->padding = std::move(newValue);
 }
 
-void LayoutProperty::setPadding(const std::optional<SizeProperty> &newValue)
+SizeProperty *LayoutProperty::inset() const
 {
-    if (newValue == d->padding) {
-        return;
-    }
-
-    d->padding = newValue;
-}
-std::optional<SizeProperty> LayoutProperty::inset() const
-{
-    return d->inset;
+    return d->inset.get();
 }
 
-SizeProperty LayoutProperty::inset_or_new() const
+void LayoutProperty::setInset(std::unique_ptr<SizeProperty> &&newValue)
 {
-    return d->inset.value_or(SizeProperty{});
+    d->inset = std::move(newValue);
 }
 
-void LayoutProperty::setInset(const std::optional<SizeProperty> &newValue)
+SizeProperty *LayoutProperty::margins() const
 {
-    if (newValue == d->inset) {
-        return;
-    }
-
-    d->inset = newValue;
-}
-std::optional<SizeProperty> LayoutProperty::margins() const
-{
-    return d->margins;
+    return d->margins.get();
 }
 
-SizeProperty LayoutProperty::margins_or_new() const
+void LayoutProperty::setMargins(std::unique_ptr<SizeProperty> &&newValue)
 {
-    return d->margins.value_or(SizeProperty{});
-}
-
-void LayoutProperty::setMargins(const std::optional<SizeProperty> &newValue)
-{
-    if (newValue == d->margins) {
-        return;
-    }
-
-    d->margins = newValue;
+    d->margins = std::move(newValue);
 }
 
 bool LayoutProperty::hasAnyValue() const
 {
-    if (d->alignment.has_value() && d->alignment->hasAnyValue()) {
+    if (d->alignment && d->alignment->hasAnyValue()) {
         return true;
     }
     if (d->width.has_value()) {
@@ -193,13 +167,13 @@ bool LayoutProperty::hasAnyValue() const
     if (d->spacing.has_value()) {
         return true;
     }
-    if (d->padding.has_value() && d->padding->hasAnyValue()) {
+    if (d->padding && d->padding->hasAnyValue()) {
         return true;
     }
-    if (d->inset.has_value() && d->inset->hasAnyValue()) {
+    if (d->inset && d->inset->hasAnyValue()) {
         return true;
     }
-    if (d->margins.has_value() && d->margins->hasAnyValue()) {
+    if (d->margins && d->margins->hasAnyValue()) {
         return true;
     }
     return false;
@@ -211,7 +185,7 @@ bool LayoutProperty::isEmpty() const
         return true;
     }
 
-    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+    if (d->alignment && !d->alignment->isEmpty()) {
         return false;
     }
     if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
@@ -223,88 +197,80 @@ bool LayoutProperty::isEmpty() const
     if (d->spacing.has_value() && d->spacing.value() != emptyValue<qreal>()) {
         return false;
     }
-    if (d->padding.has_value() && !d->padding->isEmpty()) {
+    if (d->padding && !d->padding->isEmpty()) {
         return false;
     }
-    if (d->inset.has_value() && !d->inset->isEmpty()) {
+    if (d->inset && !d->inset->isEmpty()) {
         return false;
     }
-    if (d->margins.has_value() && !d->margins->isEmpty()) {
+    if (d->margins && !d->margins->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void LayoutProperty::resolveProperties(const LayoutProperty &source, LayoutProperty &destination)
+void LayoutProperty::resolveProperties(const LayoutProperty *source, LayoutProperty *destination)
 {
-    if (source.d->alignment.has_value()) {
-        AlignmentProperty property;
-        if (destination.d->alignment.has_value()) {
-            property = destination.d->alignment.value();
-        }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->alignment = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->width.has_value()) {
-        destination.d->width = source.d->width;
+
+    if (source->d->alignment) {
+        if (!destination->d->alignment) {
+            destination->d->alignment = std::make_unique<AlignmentProperty>();
+        }
+        AlignmentProperty::resolveProperties(source->d->alignment.get(), destination->d->alignment.get());
     }
-    if (!destination.d->height.has_value()) {
-        destination.d->height = source.d->height;
+    if (!destination->d->width.has_value()) {
+        destination->d->width = source->d->width;
     }
-    if (!destination.d->spacing.has_value()) {
-        destination.d->spacing = source.d->spacing;
+    if (!destination->d->height.has_value()) {
+        destination->d->height = source->d->height;
     }
-    if (source.d->padding.has_value()) {
-        SizeProperty property;
-        if (destination.d->padding.has_value()) {
-            property = destination.d->padding.value();
-        }
-        SizeProperty::resolveProperties(source.d->padding.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->padding = property;
-        }
+    if (!destination->d->spacing.has_value()) {
+        destination->d->spacing = source->d->spacing;
     }
-    if (source.d->inset.has_value()) {
-        SizeProperty property;
-        if (destination.d->inset.has_value()) {
-            property = destination.d->inset.value();
+    if (source->d->padding) {
+        if (!destination->d->padding) {
+            destination->d->padding = std::make_unique<SizeProperty>();
         }
-        SizeProperty::resolveProperties(source.d->inset.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->inset = property;
-        }
+        SizeProperty::resolveProperties(source->d->padding.get(), destination->d->padding.get());
     }
-    if (source.d->margins.has_value()) {
-        SizeProperty property;
-        if (destination.d->margins.has_value()) {
-            property = destination.d->margins.value();
+    if (source->d->inset) {
+        if (!destination->d->inset) {
+            destination->d->inset = std::make_unique<SizeProperty>();
         }
-        SizeProperty::resolveProperties(source.d->margins.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->margins = property;
+        SizeProperty::resolveProperties(source->d->inset.get(), destination->d->inset.get());
+    }
+    if (source->d->margins) {
+        if (!destination->d->margins) {
+            destination->d->margins = std::make_unique<SizeProperty>();
         }
+        SizeProperty::resolveProperties(source->d->margins.get(), destination->d->margins.get());
     }
 }
 
-LayoutProperty LayoutProperty::empty()
+std::unique_ptr<LayoutProperty> LayoutProperty::empty()
 {
-    LayoutProperty result;
-    result.d->alignment = emptyValue<AlignmentProperty>();
-    result.d->width = emptyValue<qreal>();
-    result.d->height = emptyValue<qreal>();
-    result.d->spacing = emptyValue<qreal>();
-    result.d->padding = emptyValue<SizeProperty>();
-    result.d->inset = emptyValue<SizeProperty>();
-    result.d->margins = emptyValue<SizeProperty>();
+    auto result = std::make_unique<LayoutProperty>();
+    result->d->alignment = AlignmentProperty::empty();
+    result->d->width = emptyValue<qreal>();
+    result->d->height = emptyValue<qreal>();
+    result->d->spacing = emptyValue<qreal>();
+    result->d->padding = SizeProperty::empty();
+    result->d->inset = SizeProperty::empty();
+    result->d->margins = SizeProperty::empty();
     return result;
 }
 
 bool Union::Properties::operator==(const LayoutProperty &left, const LayoutProperty &right)
 {
-    if (left.alignment() != right.alignment()) {
+    if (left.alignment() && right.alignment()) {
+        if (*(left.alignment()) != *(right.alignment())) {
+            return false;
+        }
+    } else if (left.alignment() != right.alignment()) {
         return false;
     }
     if (left.width() != right.width()) {
@@ -316,13 +282,25 @@ bool Union::Properties::operator==(const LayoutProperty &left, const LayoutPrope
     if (left.spacing() != right.spacing()) {
         return false;
     }
-    if (left.padding() != right.padding()) {
+    if (left.padding() && right.padding()) {
+        if (*(left.padding()) != *(right.padding())) {
+            return false;
+        }
+    } else if (left.padding() != right.padding()) {
         return false;
     }
-    if (left.inset() != right.inset()) {
+    if (left.inset() && right.inset()) {
+        if (*(left.inset()) != *(right.inset())) {
+            return false;
+        }
+    } else if (left.inset() != right.inset()) {
         return false;
     }
-    if (left.margins() != right.margins()) {
+    if (left.margins() && right.margins()) {
+        if (*(left.margins()) != *(right.margins())) {
+            return false;
+        }
+    } else if (left.margins() != right.margins()) {
         return false;
     }
     return true;
@@ -331,14 +309,30 @@ bool Union::Properties::operator==(const LayoutProperty &left, const LayoutPrope
 QDebug operator<<(QDebug debug, const Union::Properties::LayoutProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "LayoutProperty(" //
-                    << "alignment: " << type.alignment() //
-                    << ", width: " << type.width() //
-                    << ", height: " << type.height() //
-                    << ", spacing: " << type.spacing() //
-                    << ", padding: " << type.padding() //
-                    << ", inset: " << type.inset() //
-                    << ", margins: " << type.margins() //
-                    << ")";
+    debug.nospace() << "LayoutProperty(";
+    if (type.alignment()) {
+        debug.nospace() << "alignment: " << *type.alignment();
+    } else {
+        debug.nospace() << "alignment: (empty)";
+    }
+    debug.nospace() << ", width: " << type.width();
+    debug.nospace() << ", height: " << type.height();
+    debug.nospace() << ", spacing: " << type.spacing();
+    if (type.padding()) {
+        debug.nospace() << ", padding: " << *type.padding();
+    } else {
+        debug.nospace() << ", padding: (empty)";
+    }
+    if (type.inset()) {
+        debug.nospace() << ", inset: " << *type.inset();
+    } else {
+        debug.nospace() << ", inset: (empty)";
+    }
+    if (type.margins()) {
+        debug.nospace() << ", margins: " << *type.margins();
+    } else {
+        debug.nospace() << ", margins: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

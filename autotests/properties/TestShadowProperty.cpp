@@ -17,199 +17,218 @@ class TestShadowProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<ShadowProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->offset());
+        QVERIFY(!property->color().has_value());
+        QVERIFY(!property->size().has_value());
+        QVERIFY(!property->blur().has_value());
+        QVERIFY(!property->left());
+        QVERIFY(!property->right());
+        QVERIFY(!property->top());
+        QVERIFY(!property->bottom());
+        QVERIFY(!property->topLeft());
+        QVERIFY(!property->topRight());
+        QVERIFY(!property->bottomLeft());
+        QVERIFY(!property->bottomRight());
+    }
+
     void testEmpty()
     {
-        ShadowProperty property;
+        auto property = ShadowProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.offset().has_value());
-        QVERIFY(!property.color().has_value());
-        QVERIFY(!property.size().has_value());
-        QVERIFY(!property.blur().has_value());
-        QVERIFY(!property.left().has_value());
-        QVERIFY(!property.right().has_value());
-        QVERIFY(!property.top().has_value());
-        QVERIFY(!property.bottom().has_value());
-        QVERIFY(!property.topLeft().has_value());
-        QVERIFY(!property.topRight().has_value());
-        QVERIFY(!property.bottomLeft().has_value());
-        QVERIFY(!property.bottomRight().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->offset(), *OffsetProperty::empty());
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(property->size().value(), emptyValue<qreal>());
+        QCOMPARE(property->blur().value(), emptyValue<qreal>());
+        QCOMPARE(*property->left(), *LineProperty::empty());
+        QCOMPARE(*property->right(), *LineProperty::empty());
+        QCOMPARE(*property->top(), *LineProperty::empty());
+        QCOMPARE(*property->bottom(), *LineProperty::empty());
+        QCOMPARE(*property->topLeft(), *CornerProperty::empty());
+        QCOMPARE(*property->topRight(), *CornerProperty::empty());
+        QCOMPARE(*property->bottomLeft(), *CornerProperty::empty());
+        QCOMPARE(*property->bottomRight(), *CornerProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        ShadowProperty property;
+        auto property = std::make_unique<ShadowProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setOffset(OffsetProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setOffset(std::make_unique<OffsetProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setOffset(testOffsetPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setOffset(testOffsetPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setOffset(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setOffset(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Color value;
-            property.setColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setSize(value);
-            QVERIFY(property.hasAnyValue());
-            property.setSize(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setSize(value);
+            QVERIFY(property->hasAnyValue());
+            property->setSize(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setBlur(value);
-            QVERIFY(property.hasAnyValue());
-            property.setBlur(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBlur(value);
+            QVERIFY(property->hasAnyValue());
+            property->setBlur(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setLeft(LineProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setLeft(std::make_unique<LineProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setLeft(testLinePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setLeft(testLinePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setLeft(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setRight(LineProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setRight(std::make_unique<LineProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setRight(testLinePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setRight(testLinePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setRight(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setTop(LineProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setTop(std::make_unique<LineProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setTop(testLinePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setTop(testLinePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setTop(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTop(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBottom(LineProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBottom(std::make_unique<LineProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBottom(testLinePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBottom(testLinePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBottom(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottom(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setTopLeft(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setTopLeft(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setTopLeft(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setTopLeft(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setTopLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTopLeft(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setTopRight(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setTopRight(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setTopRight(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setTopRight(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setTopRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTopRight(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBottomLeft(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomLeft(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBottomLeft(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBottomLeft(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBottomLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomLeft(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBottomRight(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomRight(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBottomRight(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBottomRight(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBottomRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomRight(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        ShadowProperty source;
-        ShadowProperty destination;
+        auto source = std::make_unique<ShadowProperty>();
+        auto destination = std::make_unique<ShadowProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        ShadowProperty::resolveProperties(source, destination);
+        ShadowProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setOffset(testOffsetPropertyInstance());
-        source.setColor(Union::Color{});
-        source.setSize(qreal{});
-        source.setBlur(qreal{});
-        source.setLeft(testLinePropertyInstance());
-        source.setRight(testLinePropertyInstance());
-        source.setTop(testLinePropertyInstance());
-        source.setBottom(testLinePropertyInstance());
-        source.setTopLeft(testCornerPropertyInstance());
-        source.setTopRight(testCornerPropertyInstance());
-        source.setBottomLeft(testCornerPropertyInstance());
-        source.setBottomRight(testCornerPropertyInstance());
+        source->setOffset(testOffsetPropertyInstance());
+        source->setColor(Union::Color{});
+        source->setSize(qreal{});
+        source->setBlur(qreal{});
+        source->setLeft(testLinePropertyInstance());
+        source->setRight(testLinePropertyInstance());
+        source->setTop(testLinePropertyInstance());
+        source->setBottom(testLinePropertyInstance());
+        source->setTopLeft(testCornerPropertyInstance());
+        source->setTopRight(testCornerPropertyInstance());
+        source->setBottomLeft(testCornerPropertyInstance());
+        source->setBottomRight(testCornerPropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        ShadowProperty::resolveProperties(source, destination);
+        ShadowProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.offset(), source.offset());
-        QCOMPARE(destination.color(), source.color());
-        QCOMPARE(destination.size(), source.size());
-        QCOMPARE(destination.blur(), source.blur());
-        QCOMPARE(destination.left(), source.left());
-        QCOMPARE(destination.right(), source.right());
-        QCOMPARE(destination.top(), source.top());
-        QCOMPARE(destination.bottom(), source.bottom());
-        QCOMPARE(destination.topLeft(), source.topLeft());
-        QCOMPARE(destination.topRight(), source.topRight());
-        QCOMPARE(destination.bottomLeft(), source.bottomLeft());
-        QCOMPARE(destination.bottomRight(), source.bottomRight());
+        QCOMPARE(*destination->offset(), *source->offset());
+        QCOMPARE(destination->color(), source->color());
+        QCOMPARE(destination->size(), source->size());
+        QCOMPARE(destination->blur(), source->blur());
+        QCOMPARE(*destination->left(), *source->left());
+        QCOMPARE(*destination->right(), *source->right());
+        QCOMPARE(*destination->top(), *source->top());
+        QCOMPARE(*destination->bottom(), *source->bottom());
+        QCOMPARE(*destination->topLeft(), *source->topLeft());
+        QCOMPARE(*destination->topRight(), *source->topRight());
+        QCOMPARE(*destination->bottomLeft(), *source->bottomLeft());
+        QCOMPARE(*destination->bottomRight(), *source->bottomRight());
     }
 };
 

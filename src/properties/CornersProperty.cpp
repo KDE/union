@@ -14,10 +14,10 @@ using namespace Qt::StringLiterals;
 class Union::Properties::CornersPropertyPrivate
 {
 public:
-    std::optional<CornerProperty> topLeft;
-    std::optional<CornerProperty> topRight;
-    std::optional<CornerProperty> bottomLeft;
-    std::optional<CornerProperty> bottomRight;
+    std::unique_ptr<CornerProperty> topLeft;
+    std::unique_ptr<CornerProperty> topRight;
+    std::unique_ptr<CornerProperty> bottomLeft;
+    std::unique_ptr<CornerProperty> bottomRight;
 };
 
 CornersProperty::CornersProperty()
@@ -28,10 +28,14 @@ CornersProperty::CornersProperty()
 CornersProperty::CornersProperty(const CornersProperty &other)
     : d(std::make_unique<CornersPropertyPrivate>())
 {
-    d->topLeft = other.d->topLeft;
-    d->topRight = other.d->topRight;
-    d->bottomLeft = other.d->bottomLeft;
-    d->bottomRight = other.d->bottomRight;
+    d->topLeft = std::make_unique<CornerProperty>();
+    *(d->topLeft) = *(other.d->topLeft);
+    d->topRight = std::make_unique<CornerProperty>();
+    *(d->topRight) = *(other.d->topRight);
+    d->bottomLeft = std::make_unique<CornerProperty>();
+    *(d->bottomLeft) = *(other.d->bottomLeft);
+    d->bottomRight = std::make_unique<CornerProperty>();
+    *(d->bottomRight) = *(other.d->bottomRight);
 }
 
 CornersProperty::CornersProperty(CornersProperty &&other)
@@ -44,10 +48,10 @@ CornersProperty::~CornersProperty() = default;
 CornersProperty &CornersProperty::operator=(const CornersProperty &other)
 {
     if (this != &other) {
-        d->topLeft = other.d->topLeft;
-        d->topRight = other.d->topRight;
-        d->bottomLeft = other.d->bottomLeft;
-        d->bottomRight = other.d->bottomRight;
+        *(d->topLeft) = *(other.d->topLeft);
+        *(d->topRight) = *(other.d->topRight);
+        *(d->bottomLeft) = *(other.d->bottomLeft);
+        *(d->bottomRight) = *(other.d->bottomRight);
     }
     return *this;
 }
@@ -58,91 +62,58 @@ CornersProperty &CornersProperty::operator=(CornersProperty &&other)
     return *this;
 }
 
-std::optional<CornerProperty> CornersProperty::topLeft() const
+CornerProperty *CornersProperty::topLeft() const
 {
-    return d->topLeft;
+    return d->topLeft.get();
 }
 
-CornerProperty CornersProperty::topLeft_or_new() const
+void CornersProperty::setTopLeft(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->topLeft.value_or(CornerProperty{});
+    d->topLeft = std::move(newValue);
 }
 
-void CornersProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
+CornerProperty *CornersProperty::topRight() const
 {
-    if (newValue == d->topLeft) {
-        return;
-    }
-
-    d->topLeft = newValue;
-}
-std::optional<CornerProperty> CornersProperty::topRight() const
-{
-    return d->topRight;
+    return d->topRight.get();
 }
 
-CornerProperty CornersProperty::topRight_or_new() const
+void CornersProperty::setTopRight(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->topRight.value_or(CornerProperty{});
+    d->topRight = std::move(newValue);
 }
 
-void CornersProperty::setTopRight(const std::optional<CornerProperty> &newValue)
+CornerProperty *CornersProperty::bottomLeft() const
 {
-    if (newValue == d->topRight) {
-        return;
-    }
-
-    d->topRight = newValue;
-}
-std::optional<CornerProperty> CornersProperty::bottomLeft() const
-{
-    return d->bottomLeft;
+    return d->bottomLeft.get();
 }
 
-CornerProperty CornersProperty::bottomLeft_or_new() const
+void CornersProperty::setBottomLeft(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->bottomLeft.value_or(CornerProperty{});
+    d->bottomLeft = std::move(newValue);
 }
 
-void CornersProperty::setBottomLeft(const std::optional<CornerProperty> &newValue)
+CornerProperty *CornersProperty::bottomRight() const
 {
-    if (newValue == d->bottomLeft) {
-        return;
-    }
-
-    d->bottomLeft = newValue;
-}
-std::optional<CornerProperty> CornersProperty::bottomRight() const
-{
-    return d->bottomRight;
+    return d->bottomRight.get();
 }
 
-CornerProperty CornersProperty::bottomRight_or_new() const
+void CornersProperty::setBottomRight(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->bottomRight.value_or(CornerProperty{});
-}
-
-void CornersProperty::setBottomRight(const std::optional<CornerProperty> &newValue)
-{
-    if (newValue == d->bottomRight) {
-        return;
-    }
-
-    d->bottomRight = newValue;
+    d->bottomRight = std::move(newValue);
 }
 
 bool CornersProperty::hasAnyValue() const
 {
-    if (d->topLeft.has_value() && d->topLeft->hasAnyValue()) {
+    if (d->topLeft && d->topLeft->hasAnyValue()) {
         return true;
     }
-    if (d->topRight.has_value() && d->topRight->hasAnyValue()) {
+    if (d->topRight && d->topRight->hasAnyValue()) {
         return true;
     }
-    if (d->bottomLeft.has_value() && d->bottomLeft->hasAnyValue()) {
+    if (d->bottomLeft && d->bottomLeft->hasAnyValue()) {
         return true;
     }
-    if (d->bottomRight.has_value() && d->bottomRight->hasAnyValue()) {
+    if (d->bottomRight && d->bottomRight->hasAnyValue()) {
         return true;
     }
     return false;
@@ -154,88 +125,92 @@ bool CornersProperty::isEmpty() const
         return true;
     }
 
-    if (d->topLeft.has_value() && !d->topLeft->isEmpty()) {
+    if (d->topLeft && !d->topLeft->isEmpty()) {
         return false;
     }
-    if (d->topRight.has_value() && !d->topRight->isEmpty()) {
+    if (d->topRight && !d->topRight->isEmpty()) {
         return false;
     }
-    if (d->bottomLeft.has_value() && !d->bottomLeft->isEmpty()) {
+    if (d->bottomLeft && !d->bottomLeft->isEmpty()) {
         return false;
     }
-    if (d->bottomRight.has_value() && !d->bottomRight->isEmpty()) {
+    if (d->bottomRight && !d->bottomRight->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void CornersProperty::resolveProperties(const CornersProperty &source, CornersProperty &destination)
+void CornersProperty::resolveProperties(const CornersProperty *source, CornersProperty *destination)
 {
-    if (source.d->topLeft.has_value()) {
-        CornerProperty property;
-        if (destination.d->topLeft.has_value()) {
-            property = destination.d->topLeft.value();
-        }
-        CornerProperty::resolveProperties(source.d->topLeft.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->topLeft = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (source.d->topRight.has_value()) {
-        CornerProperty property;
-        if (destination.d->topRight.has_value()) {
-            property = destination.d->topRight.value();
+
+    if (source->d->topLeft) {
+        if (!destination->d->topLeft) {
+            destination->d->topLeft = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->topRight.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->topRight = property;
-        }
+        CornerProperty::resolveProperties(source->d->topLeft.get(), destination->d->topLeft.get());
     }
-    if (source.d->bottomLeft.has_value()) {
-        CornerProperty property;
-        if (destination.d->bottomLeft.has_value()) {
-            property = destination.d->bottomLeft.value();
+    if (source->d->topRight) {
+        if (!destination->d->topRight) {
+            destination->d->topRight = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->bottomLeft.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottomLeft = property;
-        }
+        CornerProperty::resolveProperties(source->d->topRight.get(), destination->d->topRight.get());
     }
-    if (source.d->bottomRight.has_value()) {
-        CornerProperty property;
-        if (destination.d->bottomRight.has_value()) {
-            property = destination.d->bottomRight.value();
+    if (source->d->bottomLeft) {
+        if (!destination->d->bottomLeft) {
+            destination->d->bottomLeft = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->bottomRight.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottomRight = property;
+        CornerProperty::resolveProperties(source->d->bottomLeft.get(), destination->d->bottomLeft.get());
+    }
+    if (source->d->bottomRight) {
+        if (!destination->d->bottomRight) {
+            destination->d->bottomRight = std::make_unique<CornerProperty>();
         }
+        CornerProperty::resolveProperties(source->d->bottomRight.get(), destination->d->bottomRight.get());
     }
 }
 
-CornersProperty CornersProperty::empty()
+std::unique_ptr<CornersProperty> CornersProperty::empty()
 {
-    CornersProperty result;
-    result.d->topLeft = emptyValue<CornerProperty>();
-    result.d->topRight = emptyValue<CornerProperty>();
-    result.d->bottomLeft = emptyValue<CornerProperty>();
-    result.d->bottomRight = emptyValue<CornerProperty>();
+    auto result = std::make_unique<CornersProperty>();
+    result->d->topLeft = CornerProperty::empty();
+    result->d->topRight = CornerProperty::empty();
+    result->d->bottomLeft = CornerProperty::empty();
+    result->d->bottomRight = CornerProperty::empty();
     return result;
 }
 
 bool Union::Properties::operator==(const CornersProperty &left, const CornersProperty &right)
 {
-    if (left.topLeft() != right.topLeft()) {
+    if (left.topLeft() && right.topLeft()) {
+        if (*(left.topLeft()) != *(right.topLeft())) {
+            return false;
+        }
+    } else if (left.topLeft() != right.topLeft()) {
         return false;
     }
-    if (left.topRight() != right.topRight()) {
+    if (left.topRight() && right.topRight()) {
+        if (*(left.topRight()) != *(right.topRight())) {
+            return false;
+        }
+    } else if (left.topRight() != right.topRight()) {
         return false;
     }
-    if (left.bottomLeft() != right.bottomLeft()) {
+    if (left.bottomLeft() && right.bottomLeft()) {
+        if (*(left.bottomLeft()) != *(right.bottomLeft())) {
+            return false;
+        }
+    } else if (left.bottomLeft() != right.bottomLeft()) {
         return false;
     }
-    if (left.bottomRight() != right.bottomRight()) {
+    if (left.bottomRight() && right.bottomRight()) {
+        if (*(left.bottomRight()) != *(right.bottomRight())) {
+            return false;
+        }
+    } else if (left.bottomRight() != right.bottomRight()) {
         return false;
     }
     return true;
@@ -244,11 +219,27 @@ bool Union::Properties::operator==(const CornersProperty &left, const CornersPro
 QDebug operator<<(QDebug debug, const Union::Properties::CornersProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "CornersProperty(" //
-                    << "topLeft: " << type.topLeft() //
-                    << ", topRight: " << type.topRight() //
-                    << ", bottomLeft: " << type.bottomLeft() //
-                    << ", bottomRight: " << type.bottomRight() //
-                    << ")";
+    debug.nospace() << "CornersProperty(";
+    if (type.topLeft()) {
+        debug.nospace() << "topLeft: " << *type.topLeft();
+    } else {
+        debug.nospace() << "topLeft: (empty)";
+    }
+    if (type.topRight()) {
+        debug.nospace() << ", topRight: " << *type.topRight();
+    } else {
+        debug.nospace() << ", topRight: (empty)";
+    }
+    if (type.bottomLeft()) {
+        debug.nospace() << ", bottomLeft: " << *type.bottomLeft();
+    } else {
+        debug.nospace() << ", bottomLeft: (empty)";
+    }
+    if (type.bottomRight()) {
+        debug.nospace() << ", bottomRight: " << *type.bottomRight();
+    } else {
+        debug.nospace() << ", bottomRight: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

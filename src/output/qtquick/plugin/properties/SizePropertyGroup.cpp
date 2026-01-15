@@ -19,7 +19,7 @@ SizePropertyGroup::SizePropertyGroup(QuickStyle *style)
 {
 }
 
-void SizePropertyGroup::update(const std::optional<SizeProperty> &newState)
+void SizePropertyGroup::update(SizeProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -48,7 +48,7 @@ QJSValue SizePropertyGroup::left() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().left();
+    auto value = m_state->left();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -62,7 +62,7 @@ QJSValue SizePropertyGroup::right() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().right();
+    auto value = m_state->right();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -76,7 +76,7 @@ QJSValue SizePropertyGroup::top() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().top();
+    auto value = m_state->top();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -90,7 +90,7 @@ QJSValue SizePropertyGroup::bottom() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().bottom();
+    auto value = m_state->bottom();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

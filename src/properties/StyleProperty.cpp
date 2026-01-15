@@ -14,14 +14,14 @@ using namespace Qt::StringLiterals;
 class Union::Properties::StylePropertyPrivate
 {
 public:
-    std::optional<LayoutProperty> layout;
-    std::optional<TextProperty> text;
-    std::optional<IconProperty> icon;
-    std::optional<BackgroundProperty> background;
-    std::optional<BorderProperty> border;
-    std::optional<OutlineProperty> outline;
-    std::optional<CornersProperty> corners;
-    std::optional<ShadowProperty> shadow;
+    std::unique_ptr<LayoutProperty> layout;
+    std::unique_ptr<TextProperty> text;
+    std::unique_ptr<IconProperty> icon;
+    std::unique_ptr<BackgroundProperty> background;
+    std::unique_ptr<BorderProperty> border;
+    std::unique_ptr<OutlineProperty> outline;
+    std::unique_ptr<CornersProperty> corners;
+    std::unique_ptr<ShadowProperty> shadow;
 };
 
 StyleProperty::StyleProperty()
@@ -32,14 +32,22 @@ StyleProperty::StyleProperty()
 StyleProperty::StyleProperty(const StyleProperty &other)
     : d(std::make_unique<StylePropertyPrivate>())
 {
-    d->layout = other.d->layout;
-    d->text = other.d->text;
-    d->icon = other.d->icon;
-    d->background = other.d->background;
-    d->border = other.d->border;
-    d->outline = other.d->outline;
-    d->corners = other.d->corners;
-    d->shadow = other.d->shadow;
+    d->layout = std::make_unique<LayoutProperty>();
+    *(d->layout) = *(other.d->layout);
+    d->text = std::make_unique<TextProperty>();
+    *(d->text) = *(other.d->text);
+    d->icon = std::make_unique<IconProperty>();
+    *(d->icon) = *(other.d->icon);
+    d->background = std::make_unique<BackgroundProperty>();
+    *(d->background) = *(other.d->background);
+    d->border = std::make_unique<BorderProperty>();
+    *(d->border) = *(other.d->border);
+    d->outline = std::make_unique<OutlineProperty>();
+    *(d->outline) = *(other.d->outline);
+    d->corners = std::make_unique<CornersProperty>();
+    *(d->corners) = *(other.d->corners);
+    d->shadow = std::make_unique<ShadowProperty>();
+    *(d->shadow) = *(other.d->shadow);
 }
 
 StyleProperty::StyleProperty(StyleProperty &&other)
@@ -52,14 +60,14 @@ StyleProperty::~StyleProperty() = default;
 StyleProperty &StyleProperty::operator=(const StyleProperty &other)
 {
     if (this != &other) {
-        d->layout = other.d->layout;
-        d->text = other.d->text;
-        d->icon = other.d->icon;
-        d->background = other.d->background;
-        d->border = other.d->border;
-        d->outline = other.d->outline;
-        d->corners = other.d->corners;
-        d->shadow = other.d->shadow;
+        *(d->layout) = *(other.d->layout);
+        *(d->text) = *(other.d->text);
+        *(d->icon) = *(other.d->icon);
+        *(d->background) = *(other.d->background);
+        *(d->border) = *(other.d->border);
+        *(d->outline) = *(other.d->outline);
+        *(d->corners) = *(other.d->corners);
+        *(d->shadow) = *(other.d->shadow);
     }
     return *this;
 }
@@ -70,175 +78,110 @@ StyleProperty &StyleProperty::operator=(StyleProperty &&other)
     return *this;
 }
 
-std::optional<LayoutProperty> StyleProperty::layout() const
+LayoutProperty *StyleProperty::layout() const
 {
-    return d->layout;
+    return d->layout.get();
 }
 
-LayoutProperty StyleProperty::layout_or_new() const
+void StyleProperty::setLayout(std::unique_ptr<LayoutProperty> &&newValue)
 {
-    return d->layout.value_or(LayoutProperty{});
+    d->layout = std::move(newValue);
 }
 
-void StyleProperty::setLayout(const std::optional<LayoutProperty> &newValue)
+TextProperty *StyleProperty::text() const
 {
-    if (newValue == d->layout) {
-        return;
-    }
-
-    d->layout = newValue;
-}
-std::optional<TextProperty> StyleProperty::text() const
-{
-    return d->text;
+    return d->text.get();
 }
 
-TextProperty StyleProperty::text_or_new() const
+void StyleProperty::setText(std::unique_ptr<TextProperty> &&newValue)
 {
-    return d->text.value_or(TextProperty{});
+    d->text = std::move(newValue);
 }
 
-void StyleProperty::setText(const std::optional<TextProperty> &newValue)
+IconProperty *StyleProperty::icon() const
 {
-    if (newValue == d->text) {
-        return;
-    }
-
-    d->text = newValue;
-}
-std::optional<IconProperty> StyleProperty::icon() const
-{
-    return d->icon;
+    return d->icon.get();
 }
 
-IconProperty StyleProperty::icon_or_new() const
+void StyleProperty::setIcon(std::unique_ptr<IconProperty> &&newValue)
 {
-    return d->icon.value_or(IconProperty{});
+    d->icon = std::move(newValue);
 }
 
-void StyleProperty::setIcon(const std::optional<IconProperty> &newValue)
+BackgroundProperty *StyleProperty::background() const
 {
-    if (newValue == d->icon) {
-        return;
-    }
-
-    d->icon = newValue;
-}
-std::optional<BackgroundProperty> StyleProperty::background() const
-{
-    return d->background;
+    return d->background.get();
 }
 
-BackgroundProperty StyleProperty::background_or_new() const
+void StyleProperty::setBackground(std::unique_ptr<BackgroundProperty> &&newValue)
 {
-    return d->background.value_or(BackgroundProperty{});
+    d->background = std::move(newValue);
 }
 
-void StyleProperty::setBackground(const std::optional<BackgroundProperty> &newValue)
+BorderProperty *StyleProperty::border() const
 {
-    if (newValue == d->background) {
-        return;
-    }
-
-    d->background = newValue;
-}
-std::optional<BorderProperty> StyleProperty::border() const
-{
-    return d->border;
+    return d->border.get();
 }
 
-BorderProperty StyleProperty::border_or_new() const
+void StyleProperty::setBorder(std::unique_ptr<BorderProperty> &&newValue)
 {
-    return d->border.value_or(BorderProperty{});
+    d->border = std::move(newValue);
 }
 
-void StyleProperty::setBorder(const std::optional<BorderProperty> &newValue)
+OutlineProperty *StyleProperty::outline() const
 {
-    if (newValue == d->border) {
-        return;
-    }
-
-    d->border = newValue;
-}
-std::optional<OutlineProperty> StyleProperty::outline() const
-{
-    return d->outline;
+    return d->outline.get();
 }
 
-OutlineProperty StyleProperty::outline_or_new() const
+void StyleProperty::setOutline(std::unique_ptr<OutlineProperty> &&newValue)
 {
-    return d->outline.value_or(OutlineProperty{});
+    d->outline = std::move(newValue);
 }
 
-void StyleProperty::setOutline(const std::optional<OutlineProperty> &newValue)
+CornersProperty *StyleProperty::corners() const
 {
-    if (newValue == d->outline) {
-        return;
-    }
-
-    d->outline = newValue;
-}
-std::optional<CornersProperty> StyleProperty::corners() const
-{
-    return d->corners;
+    return d->corners.get();
 }
 
-CornersProperty StyleProperty::corners_or_new() const
+void StyleProperty::setCorners(std::unique_ptr<CornersProperty> &&newValue)
 {
-    return d->corners.value_or(CornersProperty{});
+    d->corners = std::move(newValue);
 }
 
-void StyleProperty::setCorners(const std::optional<CornersProperty> &newValue)
+ShadowProperty *StyleProperty::shadow() const
 {
-    if (newValue == d->corners) {
-        return;
-    }
-
-    d->corners = newValue;
-}
-std::optional<ShadowProperty> StyleProperty::shadow() const
-{
-    return d->shadow;
+    return d->shadow.get();
 }
 
-ShadowProperty StyleProperty::shadow_or_new() const
+void StyleProperty::setShadow(std::unique_ptr<ShadowProperty> &&newValue)
 {
-    return d->shadow.value_or(ShadowProperty{});
-}
-
-void StyleProperty::setShadow(const std::optional<ShadowProperty> &newValue)
-{
-    if (newValue == d->shadow) {
-        return;
-    }
-
-    d->shadow = newValue;
+    d->shadow = std::move(newValue);
 }
 
 bool StyleProperty::hasAnyValue() const
 {
-    if (d->layout.has_value() && d->layout->hasAnyValue()) {
+    if (d->layout && d->layout->hasAnyValue()) {
         return true;
     }
-    if (d->text.has_value() && d->text->hasAnyValue()) {
+    if (d->text && d->text->hasAnyValue()) {
         return true;
     }
-    if (d->icon.has_value() && d->icon->hasAnyValue()) {
+    if (d->icon && d->icon->hasAnyValue()) {
         return true;
     }
-    if (d->background.has_value() && d->background->hasAnyValue()) {
+    if (d->background && d->background->hasAnyValue()) {
         return true;
     }
-    if (d->border.has_value() && d->border->hasAnyValue()) {
+    if (d->border && d->border->hasAnyValue()) {
         return true;
     }
-    if (d->outline.has_value() && d->outline->hasAnyValue()) {
+    if (d->outline && d->outline->hasAnyValue()) {
         return true;
     }
-    if (d->corners.has_value() && d->corners->hasAnyValue()) {
+    if (d->corners && d->corners->hasAnyValue()) {
         return true;
     }
-    if (d->shadow.has_value() && d->shadow->hasAnyValue()) {
+    if (d->shadow && d->shadow->hasAnyValue()) {
         return true;
     }
     return false;
@@ -250,156 +193,160 @@ bool StyleProperty::isEmpty() const
         return true;
     }
 
-    if (d->layout.has_value() && !d->layout->isEmpty()) {
+    if (d->layout && !d->layout->isEmpty()) {
         return false;
     }
-    if (d->text.has_value() && !d->text->isEmpty()) {
+    if (d->text && !d->text->isEmpty()) {
         return false;
     }
-    if (d->icon.has_value() && !d->icon->isEmpty()) {
+    if (d->icon && !d->icon->isEmpty()) {
         return false;
     }
-    if (d->background.has_value() && !d->background->isEmpty()) {
+    if (d->background && !d->background->isEmpty()) {
         return false;
     }
-    if (d->border.has_value() && !d->border->isEmpty()) {
+    if (d->border && !d->border->isEmpty()) {
         return false;
     }
-    if (d->outline.has_value() && !d->outline->isEmpty()) {
+    if (d->outline && !d->outline->isEmpty()) {
         return false;
     }
-    if (d->corners.has_value() && !d->corners->isEmpty()) {
+    if (d->corners && !d->corners->isEmpty()) {
         return false;
     }
-    if (d->shadow.has_value() && !d->shadow->isEmpty()) {
+    if (d->shadow && !d->shadow->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void StyleProperty::resolveProperties(const StyleProperty &source, StyleProperty &destination)
+void StyleProperty::resolveProperties(const StyleProperty *source, StyleProperty *destination)
 {
-    if (source.d->layout.has_value()) {
-        LayoutProperty property;
-        if (destination.d->layout.has_value()) {
-            property = destination.d->layout.value();
-        }
-        LayoutProperty::resolveProperties(source.d->layout.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->layout = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (source.d->text.has_value()) {
-        TextProperty property;
-        if (destination.d->text.has_value()) {
-            property = destination.d->text.value();
+
+    if (source->d->layout) {
+        if (!destination->d->layout) {
+            destination->d->layout = std::make_unique<LayoutProperty>();
         }
-        TextProperty::resolveProperties(source.d->text.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->text = property;
-        }
+        LayoutProperty::resolveProperties(source->d->layout.get(), destination->d->layout.get());
     }
-    if (source.d->icon.has_value()) {
-        IconProperty property;
-        if (destination.d->icon.has_value()) {
-            property = destination.d->icon.value();
+    if (source->d->text) {
+        if (!destination->d->text) {
+            destination->d->text = std::make_unique<TextProperty>();
         }
-        IconProperty::resolveProperties(source.d->icon.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->icon = property;
-        }
+        TextProperty::resolveProperties(source->d->text.get(), destination->d->text.get());
     }
-    if (source.d->background.has_value()) {
-        BackgroundProperty property;
-        if (destination.d->background.has_value()) {
-            property = destination.d->background.value();
+    if (source->d->icon) {
+        if (!destination->d->icon) {
+            destination->d->icon = std::make_unique<IconProperty>();
         }
-        BackgroundProperty::resolveProperties(source.d->background.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->background = property;
-        }
+        IconProperty::resolveProperties(source->d->icon.get(), destination->d->icon.get());
     }
-    if (source.d->border.has_value()) {
-        BorderProperty property;
-        if (destination.d->border.has_value()) {
-            property = destination.d->border.value();
+    if (source->d->background) {
+        if (!destination->d->background) {
+            destination->d->background = std::make_unique<BackgroundProperty>();
         }
-        BorderProperty::resolveProperties(source.d->border.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->border = property;
-        }
+        BackgroundProperty::resolveProperties(source->d->background.get(), destination->d->background.get());
     }
-    if (source.d->outline.has_value()) {
-        OutlineProperty property;
-        if (destination.d->outline.has_value()) {
-            property = destination.d->outline.value();
+    if (source->d->border) {
+        if (!destination->d->border) {
+            destination->d->border = std::make_unique<BorderProperty>();
         }
-        OutlineProperty::resolveProperties(source.d->outline.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->outline = property;
-        }
+        BorderProperty::resolveProperties(source->d->border.get(), destination->d->border.get());
     }
-    if (source.d->corners.has_value()) {
-        CornersProperty property;
-        if (destination.d->corners.has_value()) {
-            property = destination.d->corners.value();
+    if (source->d->outline) {
+        if (!destination->d->outline) {
+            destination->d->outline = std::make_unique<OutlineProperty>();
         }
-        CornersProperty::resolveProperties(source.d->corners.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->corners = property;
-        }
+        OutlineProperty::resolveProperties(source->d->outline.get(), destination->d->outline.get());
     }
-    if (source.d->shadow.has_value()) {
-        ShadowProperty property;
-        if (destination.d->shadow.has_value()) {
-            property = destination.d->shadow.value();
+    if (source->d->corners) {
+        if (!destination->d->corners) {
+            destination->d->corners = std::make_unique<CornersProperty>();
         }
-        ShadowProperty::resolveProperties(source.d->shadow.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->shadow = property;
+        CornersProperty::resolveProperties(source->d->corners.get(), destination->d->corners.get());
+    }
+    if (source->d->shadow) {
+        if (!destination->d->shadow) {
+            destination->d->shadow = std::make_unique<ShadowProperty>();
         }
+        ShadowProperty::resolveProperties(source->d->shadow.get(), destination->d->shadow.get());
     }
 }
 
-StyleProperty StyleProperty::empty()
+std::unique_ptr<StyleProperty> StyleProperty::empty()
 {
-    StyleProperty result;
-    result.d->layout = emptyValue<LayoutProperty>();
-    result.d->text = emptyValue<TextProperty>();
-    result.d->icon = emptyValue<IconProperty>();
-    result.d->background = emptyValue<BackgroundProperty>();
-    result.d->border = emptyValue<BorderProperty>();
-    result.d->outline = emptyValue<OutlineProperty>();
-    result.d->corners = emptyValue<CornersProperty>();
-    result.d->shadow = emptyValue<ShadowProperty>();
+    auto result = std::make_unique<StyleProperty>();
+    result->d->layout = LayoutProperty::empty();
+    result->d->text = TextProperty::empty();
+    result->d->icon = IconProperty::empty();
+    result->d->background = BackgroundProperty::empty();
+    result->d->border = BorderProperty::empty();
+    result->d->outline = OutlineProperty::empty();
+    result->d->corners = CornersProperty::empty();
+    result->d->shadow = ShadowProperty::empty();
     return result;
 }
 
 bool Union::Properties::operator==(const StyleProperty &left, const StyleProperty &right)
 {
-    if (left.layout() != right.layout()) {
+    if (left.layout() && right.layout()) {
+        if (*(left.layout()) != *(right.layout())) {
+            return false;
+        }
+    } else if (left.layout() != right.layout()) {
         return false;
     }
-    if (left.text() != right.text()) {
+    if (left.text() && right.text()) {
+        if (*(left.text()) != *(right.text())) {
+            return false;
+        }
+    } else if (left.text() != right.text()) {
         return false;
     }
-    if (left.icon() != right.icon()) {
+    if (left.icon() && right.icon()) {
+        if (*(left.icon()) != *(right.icon())) {
+            return false;
+        }
+    } else if (left.icon() != right.icon()) {
         return false;
     }
-    if (left.background() != right.background()) {
+    if (left.background() && right.background()) {
+        if (*(left.background()) != *(right.background())) {
+            return false;
+        }
+    } else if (left.background() != right.background()) {
         return false;
     }
-    if (left.border() != right.border()) {
+    if (left.border() && right.border()) {
+        if (*(left.border()) != *(right.border())) {
+            return false;
+        }
+    } else if (left.border() != right.border()) {
         return false;
     }
-    if (left.outline() != right.outline()) {
+    if (left.outline() && right.outline()) {
+        if (*(left.outline()) != *(right.outline())) {
+            return false;
+        }
+    } else if (left.outline() != right.outline()) {
         return false;
     }
-    if (left.corners() != right.corners()) {
+    if (left.corners() && right.corners()) {
+        if (*(left.corners()) != *(right.corners())) {
+            return false;
+        }
+    } else if (left.corners() != right.corners()) {
         return false;
     }
-    if (left.shadow() != right.shadow()) {
+    if (left.shadow() && right.shadow()) {
+        if (*(left.shadow()) != *(right.shadow())) {
+            return false;
+        }
+    } else if (left.shadow() != right.shadow()) {
         return false;
     }
     return true;
@@ -408,15 +355,47 @@ bool Union::Properties::operator==(const StyleProperty &left, const StylePropert
 QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "StyleProperty(" //
-                    << "layout: " << type.layout() //
-                    << ", text: " << type.text() //
-                    << ", icon: " << type.icon() //
-                    << ", background: " << type.background() //
-                    << ", border: " << type.border() //
-                    << ", outline: " << type.outline() //
-                    << ", corners: " << type.corners() //
-                    << ", shadow: " << type.shadow() //
-                    << ")";
+    debug.nospace() << "StyleProperty(";
+    if (type.layout()) {
+        debug.nospace() << "layout: " << *type.layout();
+    } else {
+        debug.nospace() << "layout: (empty)";
+    }
+    if (type.text()) {
+        debug.nospace() << ", text: " << *type.text();
+    } else {
+        debug.nospace() << ", text: (empty)";
+    }
+    if (type.icon()) {
+        debug.nospace() << ", icon: " << *type.icon();
+    } else {
+        debug.nospace() << ", icon: (empty)";
+    }
+    if (type.background()) {
+        debug.nospace() << ", background: " << *type.background();
+    } else {
+        debug.nospace() << ", background: (empty)";
+    }
+    if (type.border()) {
+        debug.nospace() << ", border: " << *type.border();
+    } else {
+        debug.nospace() << ", border: (empty)";
+    }
+    if (type.outline()) {
+        debug.nospace() << ", outline: " << *type.outline();
+    } else {
+        debug.nospace() << ", outline: (empty)";
+    }
+    if (type.corners()) {
+        debug.nospace() << ", corners: " << *type.corners();
+    } else {
+        debug.nospace() << ", corners: (empty)";
+    }
+    if (type.shadow()) {
+        debug.nospace() << ", shadow: " << *type.shadow();
+    } else {
+        debug.nospace() << ", shadow: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

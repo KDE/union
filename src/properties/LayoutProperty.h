@@ -63,24 +63,22 @@ public:
     LayoutProperty &operator=(LayoutProperty &&other);
 
     /*!
-     * Returns the value of alignment.
+     * Returns alignment if set or nullptr if not.
      */
-    std::optional<AlignmentProperty> alignment() const;
-    /*!
-     * Returns alignment if set or a new AlignmentProperty if not.
-     */
-    AlignmentProperty alignment_or_new() const;
+    AlignmentProperty *alignment() const;
+
     /*!
      * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setAlignment(const std::optional<AlignmentProperty> &newValue);
+    void setAlignment(std::unique_ptr<AlignmentProperty> &&newValue);
 
     /*!
      * Returns the value of width.
      */
     std::optional<qreal> width() const;
+
     /*!
      * Set the value of width.
      *
@@ -92,6 +90,7 @@ public:
      * Returns the value of height.
      */
     std::optional<qreal> height() const;
+
     /*!
      * Set the value of height.
      *
@@ -103,6 +102,7 @@ public:
      * Returns the value of spacing.
      */
     std::optional<qreal> spacing() const;
+
     /*!
      * Set the value of spacing.
      *
@@ -111,49 +111,40 @@ public:
     void setSpacing(const std::optional<qreal> &newValue);
 
     /*!
-     * Returns the value of padding.
+     * Returns padding if set or nullptr if not.
      */
-    std::optional<SizeProperty> padding() const;
-    /*!
-     * Returns padding if set or a new SizeProperty if not.
-     */
-    SizeProperty padding_or_new() const;
+    SizeProperty *padding() const;
+
     /*!
      * Set the value of padding.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setPadding(const std::optional<SizeProperty> &newValue);
+    void setPadding(std::unique_ptr<SizeProperty> &&newValue);
 
     /*!
-     * Returns the value of inset.
+     * Returns inset if set or nullptr if not.
      */
-    std::optional<SizeProperty> inset() const;
-    /*!
-     * Returns inset if set or a new SizeProperty if not.
-     */
-    SizeProperty inset_or_new() const;
+    SizeProperty *inset() const;
+
     /*!
      * Set the value of inset.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setInset(const std::optional<SizeProperty> &newValue);
+    void setInset(std::unique_ptr<SizeProperty> &&newValue);
 
     /*!
-     * Returns the value of margins.
+     * Returns margins if set or nullptr if not.
      */
-    std::optional<SizeProperty> margins() const;
-    /*!
-     * Returns margins if set or a new SizeProperty if not.
-     */
-    SizeProperty margins_or_new() const;
+    SizeProperty *margins() const;
+
     /*!
      * Set the value of margins.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setMargins(const std::optional<SizeProperty> &newValue);
+    void setMargins(std::unique_ptr<SizeProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -179,7 +170,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const LayoutProperty &source, LayoutProperty &destination);
+    static void resolveProperties(const LayoutProperty *source, LayoutProperty *destination);
 
     /*!
      * Create and return an empty LayoutProperty instance.
@@ -189,7 +180,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static LayoutProperty empty();
+    static std::unique_ptr<LayoutProperty> empty();
 
 private:
     std::unique_ptr<LayoutPropertyPrivate> d;

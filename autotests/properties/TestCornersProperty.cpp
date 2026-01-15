@@ -17,99 +17,110 @@ class TestCornersProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<CornersProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->topLeft());
+        QVERIFY(!property->topRight());
+        QVERIFY(!property->bottomLeft());
+        QVERIFY(!property->bottomRight());
+    }
+
     void testEmpty()
     {
-        CornersProperty property;
+        auto property = CornersProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.topLeft().has_value());
-        QVERIFY(!property.topRight().has_value());
-        QVERIFY(!property.bottomLeft().has_value());
-        QVERIFY(!property.bottomRight().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->topLeft(), *CornerProperty::empty());
+        QCOMPARE(*property->topRight(), *CornerProperty::empty());
+        QCOMPARE(*property->bottomLeft(), *CornerProperty::empty());
+        QCOMPARE(*property->bottomRight(), *CornerProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        CornersProperty property;
+        auto property = std::make_unique<CornersProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setTopLeft(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setTopLeft(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setTopLeft(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setTopLeft(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setTopLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTopLeft(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setTopRight(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setTopRight(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setTopRight(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setTopRight(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setTopRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTopRight(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBottomLeft(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomLeft(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBottomLeft(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBottomLeft(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBottomLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomLeft(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setBottomRight(CornerProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomRight(std::make_unique<CornerProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setBottomRight(testCornerPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setBottomRight(testCornerPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setBottomRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottomRight(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        CornersProperty source;
-        CornersProperty destination;
+        auto source = std::make_unique<CornersProperty>();
+        auto destination = std::make_unique<CornersProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        CornersProperty::resolveProperties(source, destination);
+        CornersProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setTopLeft(testCornerPropertyInstance());
-        source.setTopRight(testCornerPropertyInstance());
-        source.setBottomLeft(testCornerPropertyInstance());
-        source.setBottomRight(testCornerPropertyInstance());
+        source->setTopLeft(testCornerPropertyInstance());
+        source->setTopRight(testCornerPropertyInstance());
+        source->setBottomLeft(testCornerPropertyInstance());
+        source->setBottomRight(testCornerPropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        CornersProperty::resolveProperties(source, destination);
+        CornersProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.topLeft(), source.topLeft());
-        QCOMPARE(destination.topRight(), source.topRight());
-        QCOMPARE(destination.bottomLeft(), source.bottomLeft());
-        QCOMPARE(destination.bottomRight(), source.bottomRight());
+        QCOMPARE(*destination->topLeft(), *source->topLeft());
+        QCOMPARE(*destination->topRight(), *source->topRight());
+        QCOMPARE(*destination->bottomLeft(), *source->bottomLeft());
+        QCOMPARE(*destination->bottomRight(), *source->bottomRight());
     }
 };
 

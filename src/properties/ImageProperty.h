@@ -67,6 +67,7 @@ public:
      * Returns the value of imageData.
      */
     std::optional<QImage> imageData() const;
+
     /*!
      * Set the value of imageData.
      *
@@ -78,6 +79,7 @@ public:
      * Returns the value of width.
      */
     std::optional<qreal> width() const;
+
     /*!
      * Set the value of width.
      *
@@ -89,6 +91,7 @@ public:
      * Returns the value of height.
      */
     std::optional<qreal> height() const;
+
     /*!
      * Set the value of height.
      *
@@ -100,6 +103,7 @@ public:
      * Returns the value of xOffset.
      */
     std::optional<qreal> xOffset() const;
+
     /*!
      * Set the value of xOffset.
      *
@@ -111,6 +115,7 @@ public:
      * Returns the value of yOffset.
      */
     std::optional<qreal> yOffset() const;
+
     /*!
      * Set the value of yOffset.
      *
@@ -122,6 +127,7 @@ public:
      * Returns the value of flags.
      */
     std::optional<Union::Properties::ImageFlags> flags() const;
+
     /*!
      * Set the value of flags.
      *
@@ -133,6 +139,7 @@ public:
      * Returns the value of maskColor.
      */
     std::optional<Union::Color> maskColor() const;
+
     /*!
      * Set the value of maskColor.
      *
@@ -164,7 +171,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const ImageProperty &source, ImageProperty &destination);
+    static void resolveProperties(const ImageProperty *source, ImageProperty *destination);
 
     /*!
      * Create and return an empty ImageProperty instance.
@@ -174,7 +181,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static ImageProperty empty();
+    static std::unique_ptr<ImageProperty> empty();
 
 private:
     std::unique_ptr<ImagePropertyPrivate> d;

@@ -64,24 +64,22 @@ public:
     TextProperty &operator=(TextProperty &&other);
 
     /*!
-     * Returns the value of alignment.
+     * Returns alignment if set or nullptr if not.
      */
-    std::optional<AlignmentProperty> alignment() const;
-    /*!
-     * Returns alignment if set or a new AlignmentProperty if not.
-     */
-    AlignmentProperty alignment_or_new() const;
+    AlignmentProperty *alignment() const;
+
     /*!
      * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setAlignment(const std::optional<AlignmentProperty> &newValue);
+    void setAlignment(std::unique_ptr<AlignmentProperty> &&newValue);
 
     /*!
      * Returns the value of font.
      */
     std::optional<QFont> font() const;
+
     /*!
      * Set the value of font.
      *
@@ -93,6 +91,7 @@ public:
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -124,7 +123,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const TextProperty &source, TextProperty &destination);
+    static void resolveProperties(const TextProperty *source, TextProperty *destination);
 
     /*!
      * Create and return an empty TextProperty instance.
@@ -134,7 +133,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static TextProperty empty();
+    static std::unique_ptr<TextProperty> empty();
 
 private:
     std::unique_ptr<TextPropertyPrivate> d;

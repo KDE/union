@@ -34,7 +34,7 @@ class AlignmentPropertyGroup : public QObject
 public:
     explicit AlignmentPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::AlignmentProperty> &newState);
+    void update(Union::Properties::AlignmentProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -78,5 +78,5 @@ public:
 private:
     QuickStyle *m_style = nullptr;
 
-    std::optional<Union::Properties::AlignmentProperty> m_state = std::nullopt;
+    Union::Properties::AlignmentProperty *m_state = nullptr;
 };

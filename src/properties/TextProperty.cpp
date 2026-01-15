@@ -14,7 +14,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::TextPropertyPrivate
 {
 public:
-    std::optional<AlignmentProperty> alignment;
+    std::unique_ptr<AlignmentProperty> alignment;
     std::optional<QFont> font;
     std::optional<Union::Color> color;
 };
@@ -27,7 +27,8 @@ TextProperty::TextProperty()
 TextProperty::TextProperty(const TextProperty &other)
     : d(std::make_unique<TextPropertyPrivate>())
 {
-    d->alignment = other.d->alignment;
+    d->alignment = std::make_unique<AlignmentProperty>();
+    *(d->alignment) = *(other.d->alignment);
     d->font = other.d->font;
     d->color = other.d->color;
 }
@@ -42,7 +43,7 @@ TextProperty::~TextProperty() = default;
 TextProperty &TextProperty::operator=(const TextProperty &other)
 {
     if (this != &other) {
-        d->alignment = other.d->alignment;
+        *(d->alignment) = *(other.d->alignment);
         d->font = other.d->font;
         d->color = other.d->color;
     }
@@ -55,24 +56,16 @@ TextProperty &TextProperty::operator=(TextProperty &&other)
     return *this;
 }
 
-std::optional<AlignmentProperty> TextProperty::alignment() const
+AlignmentProperty *TextProperty::alignment() const
 {
-    return d->alignment;
+    return d->alignment.get();
 }
 
-AlignmentProperty TextProperty::alignment_or_new() const
+void TextProperty::setAlignment(std::unique_ptr<AlignmentProperty> &&newValue)
 {
-    return d->alignment.value_or(AlignmentProperty{});
+    d->alignment = std::move(newValue);
 }
 
-void TextProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
-{
-    if (newValue == d->alignment) {
-        return;
-    }
-
-    d->alignment = newValue;
-}
 std::optional<QFont> TextProperty::font() const
 {
     return d->font;
@@ -86,6 +79,7 @@ void TextProperty::setFont(const std::optional<QFont> &newValue)
 
     d->font = newValue;
 }
+
 std::optional<Union::Color> TextProperty::color() const
 {
     return d->color;
@@ -102,7 +96,7 @@ void TextProperty::setColor(const std::optional<Union::Color> &newValue)
 
 bool TextProperty::hasAnyValue() const
 {
-    if (d->alignment.has_value() && d->alignment->hasAnyValue()) {
+    if (d->alignment && d->alignment->hasAnyValue()) {
         return true;
     }
     if (d->font.has_value()) {
@@ -120,7 +114,7 @@ bool TextProperty::isEmpty() const
         return true;
     }
 
-    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+    if (d->alignment && !d->alignment->isEmpty()) {
         return false;
     }
     if (d->font.has_value() && d->font.value() != emptyValue<QFont>()) {
@@ -133,38 +127,42 @@ bool TextProperty::isEmpty() const
     return true;
 }
 
-void TextProperty::resolveProperties(const TextProperty &source, TextProperty &destination)
+void TextProperty::resolveProperties(const TextProperty *source, TextProperty *destination)
 {
-    if (source.d->alignment.has_value()) {
-        AlignmentProperty property;
-        if (destination.d->alignment.has_value()) {
-            property = destination.d->alignment.value();
-        }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->alignment = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->font.has_value()) {
-        destination.d->font = source.d->font;
+
+    if (source->d->alignment) {
+        if (!destination->d->alignment) {
+            destination->d->alignment = std::make_unique<AlignmentProperty>();
+        }
+        AlignmentProperty::resolveProperties(source->d->alignment.get(), destination->d->alignment.get());
     }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+    if (!destination->d->font.has_value()) {
+        destination->d->font = source->d->font;
+    }
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
     }
 }
 
-TextProperty TextProperty::empty()
+std::unique_ptr<TextProperty> TextProperty::empty()
 {
-    TextProperty result;
-    result.d->alignment = emptyValue<AlignmentProperty>();
-    result.d->font = emptyValue<QFont>();
-    result.d->color = emptyValue<Union::Color>();
+    auto result = std::make_unique<TextProperty>();
+    result->d->alignment = AlignmentProperty::empty();
+    result->d->font = emptyValue<QFont>();
+    result->d->color = emptyValue<Union::Color>();
     return result;
 }
 
 bool Union::Properties::operator==(const TextProperty &left, const TextProperty &right)
 {
-    if (left.alignment() != right.alignment()) {
+    if (left.alignment() && right.alignment()) {
+        if (*(left.alignment()) != *(right.alignment())) {
+            return false;
+        }
+    } else if (left.alignment() != right.alignment()) {
         return false;
     }
     if (left.font() != right.font()) {
@@ -179,10 +177,14 @@ bool Union::Properties::operator==(const TextProperty &left, const TextProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::TextProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "TextProperty(" //
-                    << "alignment: " << type.alignment() //
-                    << ", font: " << type.font() //
-                    << ", color: " << type.color() //
-                    << ")";
+    debug.nospace() << "TextProperty(";
+    if (type.alignment()) {
+        debug.nospace() << "alignment: " << *type.alignment();
+    } else {
+        debug.nospace() << "alignment: (empty)";
+    }
+    debug.nospace() << ", font: " << type.font();
+    debug.nospace() << ", color: " << type.color();
+    debug.nospace() << ")";
     return debug;
 }

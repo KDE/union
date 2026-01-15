@@ -19,7 +19,7 @@ ImagePropertyGroup::ImagePropertyGroup(QuickStyle *style)
 {
 }
 
-void ImagePropertyGroup::update(const std::optional<ImageProperty> &newState)
+void ImagePropertyGroup::update(ImageProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -52,7 +52,7 @@ QJSValue ImagePropertyGroup::imageData() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().imageData();
+    auto value = m_state->imageData();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -66,7 +66,7 @@ QJSValue ImagePropertyGroup::width() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().width();
+    auto value = m_state->width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -80,7 +80,7 @@ QJSValue ImagePropertyGroup::height() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().height();
+    auto value = m_state->height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -94,7 +94,7 @@ QJSValue ImagePropertyGroup::xOffset() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().xOffset();
+    auto value = m_state->xOffset();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -108,7 +108,7 @@ QJSValue ImagePropertyGroup::yOffset() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().yOffset();
+    auto value = m_state->yOffset();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -122,7 +122,7 @@ QJSValue ImagePropertyGroup::flags() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().flags();
+    auto value = m_state->flags();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -136,7 +136,7 @@ QJSValue ImagePropertyGroup::maskColor() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().maskColor();
+    auto value = m_state->maskColor();
     if (value) {
         return m_style->engine()->toScriptValue(value.value().toQColor());
     }

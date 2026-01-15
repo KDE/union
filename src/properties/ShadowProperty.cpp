@@ -14,18 +14,18 @@ using namespace Qt::StringLiterals;
 class Union::Properties::ShadowPropertyPrivate
 {
 public:
-    std::optional<OffsetProperty> offset;
+    std::unique_ptr<OffsetProperty> offset;
     std::optional<Union::Color> color;
     std::optional<qreal> size;
     std::optional<qreal> blur;
-    std::optional<LineProperty> left;
-    std::optional<LineProperty> right;
-    std::optional<LineProperty> top;
-    std::optional<LineProperty> bottom;
-    std::optional<CornerProperty> topLeft;
-    std::optional<CornerProperty> topRight;
-    std::optional<CornerProperty> bottomLeft;
-    std::optional<CornerProperty> bottomRight;
+    std::unique_ptr<LineProperty> left;
+    std::unique_ptr<LineProperty> right;
+    std::unique_ptr<LineProperty> top;
+    std::unique_ptr<LineProperty> bottom;
+    std::unique_ptr<CornerProperty> topLeft;
+    std::unique_ptr<CornerProperty> topRight;
+    std::unique_ptr<CornerProperty> bottomLeft;
+    std::unique_ptr<CornerProperty> bottomRight;
 };
 
 ShadowProperty::ShadowProperty()
@@ -36,18 +36,27 @@ ShadowProperty::ShadowProperty()
 ShadowProperty::ShadowProperty(const ShadowProperty &other)
     : d(std::make_unique<ShadowPropertyPrivate>())
 {
-    d->offset = other.d->offset;
+    d->offset = std::make_unique<OffsetProperty>();
+    *(d->offset) = *(other.d->offset);
     d->color = other.d->color;
     d->size = other.d->size;
     d->blur = other.d->blur;
-    d->left = other.d->left;
-    d->right = other.d->right;
-    d->top = other.d->top;
-    d->bottom = other.d->bottom;
-    d->topLeft = other.d->topLeft;
-    d->topRight = other.d->topRight;
-    d->bottomLeft = other.d->bottomLeft;
-    d->bottomRight = other.d->bottomRight;
+    d->left = std::make_unique<LineProperty>();
+    *(d->left) = *(other.d->left);
+    d->right = std::make_unique<LineProperty>();
+    *(d->right) = *(other.d->right);
+    d->top = std::make_unique<LineProperty>();
+    *(d->top) = *(other.d->top);
+    d->bottom = std::make_unique<LineProperty>();
+    *(d->bottom) = *(other.d->bottom);
+    d->topLeft = std::make_unique<CornerProperty>();
+    *(d->topLeft) = *(other.d->topLeft);
+    d->topRight = std::make_unique<CornerProperty>();
+    *(d->topRight) = *(other.d->topRight);
+    d->bottomLeft = std::make_unique<CornerProperty>();
+    *(d->bottomLeft) = *(other.d->bottomLeft);
+    d->bottomRight = std::make_unique<CornerProperty>();
+    *(d->bottomRight) = *(other.d->bottomRight);
 }
 
 ShadowProperty::ShadowProperty(ShadowProperty &&other)
@@ -60,18 +69,18 @@ ShadowProperty::~ShadowProperty() = default;
 ShadowProperty &ShadowProperty::operator=(const ShadowProperty &other)
 {
     if (this != &other) {
-        d->offset = other.d->offset;
+        *(d->offset) = *(other.d->offset);
         d->color = other.d->color;
         d->size = other.d->size;
         d->blur = other.d->blur;
-        d->left = other.d->left;
-        d->right = other.d->right;
-        d->top = other.d->top;
-        d->bottom = other.d->bottom;
-        d->topLeft = other.d->topLeft;
-        d->topRight = other.d->topRight;
-        d->bottomLeft = other.d->bottomLeft;
-        d->bottomRight = other.d->bottomRight;
+        *(d->left) = *(other.d->left);
+        *(d->right) = *(other.d->right);
+        *(d->top) = *(other.d->top);
+        *(d->bottom) = *(other.d->bottom);
+        *(d->topLeft) = *(other.d->topLeft);
+        *(d->topRight) = *(other.d->topRight);
+        *(d->bottomLeft) = *(other.d->bottomLeft);
+        *(d->bottomRight) = *(other.d->bottomRight);
     }
     return *this;
 }
@@ -82,24 +91,16 @@ ShadowProperty &ShadowProperty::operator=(ShadowProperty &&other)
     return *this;
 }
 
-std::optional<OffsetProperty> ShadowProperty::offset() const
+OffsetProperty *ShadowProperty::offset() const
 {
-    return d->offset;
+    return d->offset.get();
 }
 
-OffsetProperty ShadowProperty::offset_or_new() const
+void ShadowProperty::setOffset(std::unique_ptr<OffsetProperty> &&newValue)
 {
-    return d->offset.value_or(OffsetProperty{});
+    d->offset = std::move(newValue);
 }
 
-void ShadowProperty::setOffset(const std::optional<OffsetProperty> &newValue)
-{
-    if (newValue == d->offset) {
-        return;
-    }
-
-    d->offset = newValue;
-}
 std::optional<Union::Color> ShadowProperty::color() const
 {
     return d->color;
@@ -113,6 +114,7 @@ void ShadowProperty::setColor(const std::optional<Union::Color> &newValue)
 
     d->color = newValue;
 }
+
 std::optional<qreal> ShadowProperty::size() const
 {
     return d->size;
@@ -126,6 +128,7 @@ void ShadowProperty::setSize(const std::optional<qreal> &newValue)
 
     d->size = newValue;
 }
+
 std::optional<qreal> ShadowProperty::blur() const
 {
     return d->blur;
@@ -139,154 +142,90 @@ void ShadowProperty::setBlur(const std::optional<qreal> &newValue)
 
     d->blur = newValue;
 }
-std::optional<LineProperty> ShadowProperty::left() const
+
+LineProperty *ShadowProperty::left() const
 {
-    return d->left;
+    return d->left.get();
 }
 
-LineProperty ShadowProperty::left_or_new() const
+void ShadowProperty::setLeft(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->left.value_or(LineProperty{});
+    d->left = std::move(newValue);
 }
 
-void ShadowProperty::setLeft(const std::optional<LineProperty> &newValue)
+LineProperty *ShadowProperty::right() const
 {
-    if (newValue == d->left) {
-        return;
-    }
-
-    d->left = newValue;
-}
-std::optional<LineProperty> ShadowProperty::right() const
-{
-    return d->right;
+    return d->right.get();
 }
 
-LineProperty ShadowProperty::right_or_new() const
+void ShadowProperty::setRight(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->right.value_or(LineProperty{});
+    d->right = std::move(newValue);
 }
 
-void ShadowProperty::setRight(const std::optional<LineProperty> &newValue)
+LineProperty *ShadowProperty::top() const
 {
-    if (newValue == d->right) {
-        return;
-    }
-
-    d->right = newValue;
-}
-std::optional<LineProperty> ShadowProperty::top() const
-{
-    return d->top;
+    return d->top.get();
 }
 
-LineProperty ShadowProperty::top_or_new() const
+void ShadowProperty::setTop(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->top.value_or(LineProperty{});
+    d->top = std::move(newValue);
 }
 
-void ShadowProperty::setTop(const std::optional<LineProperty> &newValue)
+LineProperty *ShadowProperty::bottom() const
 {
-    if (newValue == d->top) {
-        return;
-    }
-
-    d->top = newValue;
-}
-std::optional<LineProperty> ShadowProperty::bottom() const
-{
-    return d->bottom;
+    return d->bottom.get();
 }
 
-LineProperty ShadowProperty::bottom_or_new() const
+void ShadowProperty::setBottom(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->bottom.value_or(LineProperty{});
+    d->bottom = std::move(newValue);
 }
 
-void ShadowProperty::setBottom(const std::optional<LineProperty> &newValue)
+CornerProperty *ShadowProperty::topLeft() const
 {
-    if (newValue == d->bottom) {
-        return;
-    }
-
-    d->bottom = newValue;
-}
-std::optional<CornerProperty> ShadowProperty::topLeft() const
-{
-    return d->topLeft;
+    return d->topLeft.get();
 }
 
-CornerProperty ShadowProperty::topLeft_or_new() const
+void ShadowProperty::setTopLeft(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->topLeft.value_or(CornerProperty{});
+    d->topLeft = std::move(newValue);
 }
 
-void ShadowProperty::setTopLeft(const std::optional<CornerProperty> &newValue)
+CornerProperty *ShadowProperty::topRight() const
 {
-    if (newValue == d->topLeft) {
-        return;
-    }
-
-    d->topLeft = newValue;
-}
-std::optional<CornerProperty> ShadowProperty::topRight() const
-{
-    return d->topRight;
+    return d->topRight.get();
 }
 
-CornerProperty ShadowProperty::topRight_or_new() const
+void ShadowProperty::setTopRight(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->topRight.value_or(CornerProperty{});
+    d->topRight = std::move(newValue);
 }
 
-void ShadowProperty::setTopRight(const std::optional<CornerProperty> &newValue)
+CornerProperty *ShadowProperty::bottomLeft() const
 {
-    if (newValue == d->topRight) {
-        return;
-    }
-
-    d->topRight = newValue;
-}
-std::optional<CornerProperty> ShadowProperty::bottomLeft() const
-{
-    return d->bottomLeft;
+    return d->bottomLeft.get();
 }
 
-CornerProperty ShadowProperty::bottomLeft_or_new() const
+void ShadowProperty::setBottomLeft(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->bottomLeft.value_or(CornerProperty{});
+    d->bottomLeft = std::move(newValue);
 }
 
-void ShadowProperty::setBottomLeft(const std::optional<CornerProperty> &newValue)
+CornerProperty *ShadowProperty::bottomRight() const
 {
-    if (newValue == d->bottomLeft) {
-        return;
-    }
-
-    d->bottomLeft = newValue;
-}
-std::optional<CornerProperty> ShadowProperty::bottomRight() const
-{
-    return d->bottomRight;
+    return d->bottomRight.get();
 }
 
-CornerProperty ShadowProperty::bottomRight_or_new() const
+void ShadowProperty::setBottomRight(std::unique_ptr<CornerProperty> &&newValue)
 {
-    return d->bottomRight.value_or(CornerProperty{});
-}
-
-void ShadowProperty::setBottomRight(const std::optional<CornerProperty> &newValue)
-{
-    if (newValue == d->bottomRight) {
-        return;
-    }
-
-    d->bottomRight = newValue;
+    d->bottomRight = std::move(newValue);
 }
 
 bool ShadowProperty::hasAnyValue() const
 {
-    if (d->offset.has_value() && d->offset->hasAnyValue()) {
+    if (d->offset && d->offset->hasAnyValue()) {
         return true;
     }
     if (d->color.has_value()) {
@@ -298,28 +237,28 @@ bool ShadowProperty::hasAnyValue() const
     if (d->blur.has_value()) {
         return true;
     }
-    if (d->left.has_value() && d->left->hasAnyValue()) {
+    if (d->left && d->left->hasAnyValue()) {
         return true;
     }
-    if (d->right.has_value() && d->right->hasAnyValue()) {
+    if (d->right && d->right->hasAnyValue()) {
         return true;
     }
-    if (d->top.has_value() && d->top->hasAnyValue()) {
+    if (d->top && d->top->hasAnyValue()) {
         return true;
     }
-    if (d->bottom.has_value() && d->bottom->hasAnyValue()) {
+    if (d->bottom && d->bottom->hasAnyValue()) {
         return true;
     }
-    if (d->topLeft.has_value() && d->topLeft->hasAnyValue()) {
+    if (d->topLeft && d->topLeft->hasAnyValue()) {
         return true;
     }
-    if (d->topRight.has_value() && d->topRight->hasAnyValue()) {
+    if (d->topRight && d->topRight->hasAnyValue()) {
         return true;
     }
-    if (d->bottomLeft.has_value() && d->bottomLeft->hasAnyValue()) {
+    if (d->bottomLeft && d->bottomLeft->hasAnyValue()) {
         return true;
     }
-    if (d->bottomRight.has_value() && d->bottomRight->hasAnyValue()) {
+    if (d->bottomRight && d->bottomRight->hasAnyValue()) {
         return true;
     }
     return false;
@@ -331,7 +270,7 @@ bool ShadowProperty::isEmpty() const
         return true;
     }
 
-    if (d->offset.has_value() && !d->offset->isEmpty()) {
+    if (d->offset && !d->offset->isEmpty()) {
         return false;
     }
     if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
@@ -343,158 +282,130 @@ bool ShadowProperty::isEmpty() const
     if (d->blur.has_value() && d->blur.value() != emptyValue<qreal>()) {
         return false;
     }
-    if (d->left.has_value() && !d->left->isEmpty()) {
+    if (d->left && !d->left->isEmpty()) {
         return false;
     }
-    if (d->right.has_value() && !d->right->isEmpty()) {
+    if (d->right && !d->right->isEmpty()) {
         return false;
     }
-    if (d->top.has_value() && !d->top->isEmpty()) {
+    if (d->top && !d->top->isEmpty()) {
         return false;
     }
-    if (d->bottom.has_value() && !d->bottom->isEmpty()) {
+    if (d->bottom && !d->bottom->isEmpty()) {
         return false;
     }
-    if (d->topLeft.has_value() && !d->topLeft->isEmpty()) {
+    if (d->topLeft && !d->topLeft->isEmpty()) {
         return false;
     }
-    if (d->topRight.has_value() && !d->topRight->isEmpty()) {
+    if (d->topRight && !d->topRight->isEmpty()) {
         return false;
     }
-    if (d->bottomLeft.has_value() && !d->bottomLeft->isEmpty()) {
+    if (d->bottomLeft && !d->bottomLeft->isEmpty()) {
         return false;
     }
-    if (d->bottomRight.has_value() && !d->bottomRight->isEmpty()) {
+    if (d->bottomRight && !d->bottomRight->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void ShadowProperty::resolveProperties(const ShadowProperty &source, ShadowProperty &destination)
+void ShadowProperty::resolveProperties(const ShadowProperty *source, ShadowProperty *destination)
 {
-    if (source.d->offset.has_value()) {
-        OffsetProperty property;
-        if (destination.d->offset.has_value()) {
-            property = destination.d->offset.value();
-        }
-        OffsetProperty::resolveProperties(source.d->offset.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->offset = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+
+    if (source->d->offset) {
+        if (!destination->d->offset) {
+            destination->d->offset = std::make_unique<OffsetProperty>();
+        }
+        OffsetProperty::resolveProperties(source->d->offset.get(), destination->d->offset.get());
     }
-    if (!destination.d->size.has_value()) {
-        destination.d->size = source.d->size;
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
     }
-    if (!destination.d->blur.has_value()) {
-        destination.d->blur = source.d->blur;
+    if (!destination->d->size.has_value()) {
+        destination->d->size = source->d->size;
     }
-    if (source.d->left.has_value()) {
-        LineProperty property;
-        if (destination.d->left.has_value()) {
-            property = destination.d->left.value();
-        }
-        LineProperty::resolveProperties(source.d->left.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->left = property;
-        }
+    if (!destination->d->blur.has_value()) {
+        destination->d->blur = source->d->blur;
     }
-    if (source.d->right.has_value()) {
-        LineProperty property;
-        if (destination.d->right.has_value()) {
-            property = destination.d->right.value();
+    if (source->d->left) {
+        if (!destination->d->left) {
+            destination->d->left = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->right.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->right = property;
-        }
+        LineProperty::resolveProperties(source->d->left.get(), destination->d->left.get());
     }
-    if (source.d->top.has_value()) {
-        LineProperty property;
-        if (destination.d->top.has_value()) {
-            property = destination.d->top.value();
+    if (source->d->right) {
+        if (!destination->d->right) {
+            destination->d->right = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->top.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->top = property;
-        }
+        LineProperty::resolveProperties(source->d->right.get(), destination->d->right.get());
     }
-    if (source.d->bottom.has_value()) {
-        LineProperty property;
-        if (destination.d->bottom.has_value()) {
-            property = destination.d->bottom.value();
+    if (source->d->top) {
+        if (!destination->d->top) {
+            destination->d->top = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->bottom.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottom = property;
-        }
+        LineProperty::resolveProperties(source->d->top.get(), destination->d->top.get());
     }
-    if (source.d->topLeft.has_value()) {
-        CornerProperty property;
-        if (destination.d->topLeft.has_value()) {
-            property = destination.d->topLeft.value();
+    if (source->d->bottom) {
+        if (!destination->d->bottom) {
+            destination->d->bottom = std::make_unique<LineProperty>();
         }
-        CornerProperty::resolveProperties(source.d->topLeft.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->topLeft = property;
-        }
+        LineProperty::resolveProperties(source->d->bottom.get(), destination->d->bottom.get());
     }
-    if (source.d->topRight.has_value()) {
-        CornerProperty property;
-        if (destination.d->topRight.has_value()) {
-            property = destination.d->topRight.value();
+    if (source->d->topLeft) {
+        if (!destination->d->topLeft) {
+            destination->d->topLeft = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->topRight.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->topRight = property;
-        }
+        CornerProperty::resolveProperties(source->d->topLeft.get(), destination->d->topLeft.get());
     }
-    if (source.d->bottomLeft.has_value()) {
-        CornerProperty property;
-        if (destination.d->bottomLeft.has_value()) {
-            property = destination.d->bottomLeft.value();
+    if (source->d->topRight) {
+        if (!destination->d->topRight) {
+            destination->d->topRight = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->bottomLeft.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottomLeft = property;
-        }
+        CornerProperty::resolveProperties(source->d->topRight.get(), destination->d->topRight.get());
     }
-    if (source.d->bottomRight.has_value()) {
-        CornerProperty property;
-        if (destination.d->bottomRight.has_value()) {
-            property = destination.d->bottomRight.value();
+    if (source->d->bottomLeft) {
+        if (!destination->d->bottomLeft) {
+            destination->d->bottomLeft = std::make_unique<CornerProperty>();
         }
-        CornerProperty::resolveProperties(source.d->bottomRight.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottomRight = property;
+        CornerProperty::resolveProperties(source->d->bottomLeft.get(), destination->d->bottomLeft.get());
+    }
+    if (source->d->bottomRight) {
+        if (!destination->d->bottomRight) {
+            destination->d->bottomRight = std::make_unique<CornerProperty>();
         }
+        CornerProperty::resolveProperties(source->d->bottomRight.get(), destination->d->bottomRight.get());
     }
 }
 
-ShadowProperty ShadowProperty::empty()
+std::unique_ptr<ShadowProperty> ShadowProperty::empty()
 {
-    ShadowProperty result;
-    result.d->offset = emptyValue<OffsetProperty>();
-    result.d->color = emptyValue<Union::Color>();
-    result.d->size = emptyValue<qreal>();
-    result.d->blur = emptyValue<qreal>();
-    result.d->left = emptyValue<LineProperty>();
-    result.d->right = emptyValue<LineProperty>();
-    result.d->top = emptyValue<LineProperty>();
-    result.d->bottom = emptyValue<LineProperty>();
-    result.d->topLeft = emptyValue<CornerProperty>();
-    result.d->topRight = emptyValue<CornerProperty>();
-    result.d->bottomLeft = emptyValue<CornerProperty>();
-    result.d->bottomRight = emptyValue<CornerProperty>();
+    auto result = std::make_unique<ShadowProperty>();
+    result->d->offset = OffsetProperty::empty();
+    result->d->color = emptyValue<Union::Color>();
+    result->d->size = emptyValue<qreal>();
+    result->d->blur = emptyValue<qreal>();
+    result->d->left = LineProperty::empty();
+    result->d->right = LineProperty::empty();
+    result->d->top = LineProperty::empty();
+    result->d->bottom = LineProperty::empty();
+    result->d->topLeft = CornerProperty::empty();
+    result->d->topRight = CornerProperty::empty();
+    result->d->bottomLeft = CornerProperty::empty();
+    result->d->bottomRight = CornerProperty::empty();
     return result;
 }
 
 bool Union::Properties::operator==(const ShadowProperty &left, const ShadowProperty &right)
 {
-    if (left.offset() != right.offset()) {
+    if (left.offset() && right.offset()) {
+        if (*(left.offset()) != *(right.offset())) {
+            return false;
+        }
+    } else if (left.offset() != right.offset()) {
         return false;
     }
     if (left.color() != right.color()) {
@@ -506,28 +417,60 @@ bool Union::Properties::operator==(const ShadowProperty &left, const ShadowPrope
     if (left.blur() != right.blur()) {
         return false;
     }
-    if (left.left() != right.left()) {
+    if (left.left() && right.left()) {
+        if (*(left.left()) != *(right.left())) {
+            return false;
+        }
+    } else if (left.left() != right.left()) {
         return false;
     }
-    if (left.right() != right.right()) {
+    if (left.right() && right.right()) {
+        if (*(left.right()) != *(right.right())) {
+            return false;
+        }
+    } else if (left.right() != right.right()) {
         return false;
     }
-    if (left.top() != right.top()) {
+    if (left.top() && right.top()) {
+        if (*(left.top()) != *(right.top())) {
+            return false;
+        }
+    } else if (left.top() != right.top()) {
         return false;
     }
-    if (left.bottom() != right.bottom()) {
+    if (left.bottom() && right.bottom()) {
+        if (*(left.bottom()) != *(right.bottom())) {
+            return false;
+        }
+    } else if (left.bottom() != right.bottom()) {
         return false;
     }
-    if (left.topLeft() != right.topLeft()) {
+    if (left.topLeft() && right.topLeft()) {
+        if (*(left.topLeft()) != *(right.topLeft())) {
+            return false;
+        }
+    } else if (left.topLeft() != right.topLeft()) {
         return false;
     }
-    if (left.topRight() != right.topRight()) {
+    if (left.topRight() && right.topRight()) {
+        if (*(left.topRight()) != *(right.topRight())) {
+            return false;
+        }
+    } else if (left.topRight() != right.topRight()) {
         return false;
     }
-    if (left.bottomLeft() != right.bottomLeft()) {
+    if (left.bottomLeft() && right.bottomLeft()) {
+        if (*(left.bottomLeft()) != *(right.bottomLeft())) {
+            return false;
+        }
+    } else if (left.bottomLeft() != right.bottomLeft()) {
         return false;
     }
-    if (left.bottomRight() != right.bottomRight()) {
+    if (left.bottomRight() && right.bottomRight()) {
+        if (*(left.bottomRight()) != *(right.bottomRight())) {
+            return false;
+        }
+    } else if (left.bottomRight() != right.bottomRight()) {
         return false;
     }
     return true;
@@ -536,19 +479,55 @@ bool Union::Properties::operator==(const ShadowProperty &left, const ShadowPrope
 QDebug operator<<(QDebug debug, const Union::Properties::ShadowProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "ShadowProperty(" //
-                    << "offset: " << type.offset() //
-                    << ", color: " << type.color() //
-                    << ", size: " << type.size() //
-                    << ", blur: " << type.blur() //
-                    << ", left: " << type.left() //
-                    << ", right: " << type.right() //
-                    << ", top: " << type.top() //
-                    << ", bottom: " << type.bottom() //
-                    << ", topLeft: " << type.topLeft() //
-                    << ", topRight: " << type.topRight() //
-                    << ", bottomLeft: " << type.bottomLeft() //
-                    << ", bottomRight: " << type.bottomRight() //
-                    << ")";
+    debug.nospace() << "ShadowProperty(";
+    if (type.offset()) {
+        debug.nospace() << "offset: " << *type.offset();
+    } else {
+        debug.nospace() << "offset: (empty)";
+    }
+    debug.nospace() << ", color: " << type.color();
+    debug.nospace() << ", size: " << type.size();
+    debug.nospace() << ", blur: " << type.blur();
+    if (type.left()) {
+        debug.nospace() << ", left: " << *type.left();
+    } else {
+        debug.nospace() << ", left: (empty)";
+    }
+    if (type.right()) {
+        debug.nospace() << ", right: " << *type.right();
+    } else {
+        debug.nospace() << ", right: (empty)";
+    }
+    if (type.top()) {
+        debug.nospace() << ", top: " << *type.top();
+    } else {
+        debug.nospace() << ", top: (empty)";
+    }
+    if (type.bottom()) {
+        debug.nospace() << ", bottom: " << *type.bottom();
+    } else {
+        debug.nospace() << ", bottom: (empty)";
+    }
+    if (type.topLeft()) {
+        debug.nospace() << ", topLeft: " << *type.topLeft();
+    } else {
+        debug.nospace() << ", topLeft: (empty)";
+    }
+    if (type.topRight()) {
+        debug.nospace() << ", topRight: " << *type.topRight();
+    } else {
+        debug.nospace() << ", topRight: (empty)";
+    }
+    if (type.bottomLeft()) {
+        debug.nospace() << ", bottomLeft: " << *type.bottomLeft();
+    } else {
+        debug.nospace() << ", bottomLeft: (empty)";
+    }
+    if (type.bottomRight()) {
+        debug.nospace() << ", bottomRight: " << *type.bottomRight();
+    } else {
+        debug.nospace() << ", bottomRight: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

@@ -10,6 +10,7 @@
 
 #include <QDebug>
 
+#include <QMarginsF>
 
 #include "LineProperty.h"
 
@@ -62,64 +63,52 @@ public:
     BorderProperty &operator=(BorderProperty &&other);
 
     /*!
-     * Returns the value of left.
+     * Returns left if set or nullptr if not.
      */
-    std::optional<LineProperty> left() const;
-    /*!
-     * Returns left if set or a new LineProperty if not.
-     */
-    LineProperty left_or_new() const;
+    LineProperty *left() const;
+
     /*!
      * Set the value of left.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setLeft(const std::optional<LineProperty> &newValue);
+    void setLeft(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of right.
+     * Returns right if set or nullptr if not.
      */
-    std::optional<LineProperty> right() const;
-    /*!
-     * Returns right if set or a new LineProperty if not.
-     */
-    LineProperty right_or_new() const;
+    LineProperty *right() const;
+
     /*!
      * Set the value of right.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setRight(const std::optional<LineProperty> &newValue);
+    void setRight(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of top.
+     * Returns top if set or nullptr if not.
      */
-    std::optional<LineProperty> top() const;
-    /*!
-     * Returns top if set or a new LineProperty if not.
-     */
-    LineProperty top_or_new() const;
+    LineProperty *top() const;
+
     /*!
      * Set the value of top.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTop(const std::optional<LineProperty> &newValue);
+    void setTop(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of bottom.
+     * Returns bottom if set or nullptr if not.
      */
-    std::optional<LineProperty> bottom() const;
-    /*!
-     * Returns bottom if set or a new LineProperty if not.
-     */
-    LineProperty bottom_or_new() const;
+    LineProperty *bottom() const;
+
     /*!
      * Set the value of bottom.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottom(const std::optional<LineProperty> &newValue);
+    void setBottom(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -145,7 +134,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const BorderProperty &source, BorderProperty &destination);
+    static void resolveProperties(const BorderProperty *source, BorderProperty *destination);
 
     /*!
      * Create and return an empty BorderProperty instance.
@@ -155,7 +144,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static BorderProperty empty();
+    static std::unique_ptr<BorderProperty> empty();
 
 private:
     std::unique_ptr<BorderPropertyPrivate> d;

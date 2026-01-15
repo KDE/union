@@ -17,7 +17,7 @@ public:
     std::optional<qreal> size;
     std::optional<Union::Color> color;
     std::optional<Union::Properties::LineStyle> style;
-    std::optional<ImageProperty> image;
+    std::unique_ptr<ImageProperty> image;
 };
 
 LineProperty::LineProperty()
@@ -31,7 +31,8 @@ LineProperty::LineProperty(const LineProperty &other)
     d->size = other.d->size;
     d->color = other.d->color;
     d->style = other.d->style;
-    d->image = other.d->image;
+    d->image = std::make_unique<ImageProperty>();
+    *(d->image) = *(other.d->image);
 }
 
 LineProperty::LineProperty(LineProperty &&other)
@@ -47,7 +48,7 @@ LineProperty &LineProperty::operator=(const LineProperty &other)
         d->size = other.d->size;
         d->color = other.d->color;
         d->style = other.d->style;
-        d->image = other.d->image;
+        *(d->image) = *(other.d->image);
     }
     return *this;
 }
@@ -71,6 +72,7 @@ void LineProperty::setSize(const std::optional<qreal> &newValue)
 
     d->size = newValue;
 }
+
 std::optional<Union::Color> LineProperty::color() const
 {
     return d->color;
@@ -84,6 +86,7 @@ void LineProperty::setColor(const std::optional<Union::Color> &newValue)
 
     d->color = newValue;
 }
+
 std::optional<Union::Properties::LineStyle> LineProperty::style() const
 {
     return d->style;
@@ -97,23 +100,15 @@ void LineProperty::setStyle(const std::optional<Union::Properties::LineStyle> &n
 
     d->style = newValue;
 }
-std::optional<ImageProperty> LineProperty::image() const
+
+ImageProperty *LineProperty::image() const
 {
-    return d->image;
+    return d->image.get();
 }
 
-ImageProperty LineProperty::image_or_new() const
+void LineProperty::setImage(std::unique_ptr<ImageProperty> &&newValue)
 {
-    return d->image.value_or(ImageProperty{});
-}
-
-void LineProperty::setImage(const std::optional<ImageProperty> &newValue)
-{
-    if (newValue == d->image) {
-        return;
-    }
-
-    d->image = newValue;
+    d->image = std::move(newValue);
 }
 
 bool LineProperty::hasAnyValue() const
@@ -127,7 +122,7 @@ bool LineProperty::hasAnyValue() const
     if (d->style.has_value()) {
         return true;
     }
-    if (d->image.has_value() && d->image->hasAnyValue()) {
+    if (d->image && d->image->hasAnyValue()) {
         return true;
     }
     return false;
@@ -148,43 +143,43 @@ bool LineProperty::isEmpty() const
     if (d->style.has_value() && d->style.value() != emptyValue<Union::Properties::LineStyle>()) {
         return false;
     }
-    if (d->image.has_value() && !d->image->isEmpty()) {
+    if (d->image && !d->image->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void LineProperty::resolveProperties(const LineProperty &source, LineProperty &destination)
+void LineProperty::resolveProperties(const LineProperty *source, LineProperty *destination)
 {
-    if (!destination.d->size.has_value()) {
-        destination.d->size = source.d->size;
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+
+    if (!destination->d->size.has_value()) {
+        destination->d->size = source->d->size;
     }
-    if (!destination.d->style.has_value()) {
-        destination.d->style = source.d->style;
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
     }
-    if (source.d->image.has_value()) {
-        ImageProperty property;
-        if (destination.d->image.has_value()) {
-            property = destination.d->image.value();
+    if (!destination->d->style.has_value()) {
+        destination->d->style = source->d->style;
+    }
+    if (source->d->image) {
+        if (!destination->d->image) {
+            destination->d->image = std::make_unique<ImageProperty>();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->image = property;
-        }
+        ImageProperty::resolveProperties(source->d->image.get(), destination->d->image.get());
     }
 }
 
-LineProperty LineProperty::empty()
+std::unique_ptr<LineProperty> LineProperty::empty()
 {
-    LineProperty result;
-    result.d->size = emptyValue<qreal>();
-    result.d->color = emptyValue<Union::Color>();
-    result.d->style = emptyValue<Union::Properties::LineStyle>();
-    result.d->image = emptyValue<ImageProperty>();
+    auto result = std::make_unique<LineProperty>();
+    result->d->size = emptyValue<qreal>();
+    result->d->color = emptyValue<Union::Color>();
+    result->d->style = emptyValue<Union::Properties::LineStyle>();
+    result->d->image = ImageProperty::empty();
     return result;
 }
 
@@ -199,7 +194,11 @@ bool Union::Properties::operator==(const LineProperty &left, const LineProperty 
     if (left.style() != right.style()) {
         return false;
     }
-    if (left.image() != right.image()) {
+    if (left.image() && right.image()) {
+        if (*(left.image()) != *(right.image())) {
+            return false;
+        }
+    } else if (left.image() != right.image()) {
         return false;
     }
     return true;
@@ -208,11 +207,15 @@ bool Union::Properties::operator==(const LineProperty &left, const LineProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::LineProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "LineProperty(" //
-                    << "size: " << type.size() //
-                    << ", color: " << type.color() //
-                    << ", style: " << type.style() //
-                    << ", image: " << type.image() //
-                    << ")";
+    debug.nospace() << "LineProperty(";
+    debug.nospace() << "size: " << type.size();
+    debug.nospace() << ", color: " << type.color();
+    debug.nospace() << ", style: " << type.style();
+    if (type.image()) {
+        debug.nospace() << ", image: " << *type.image();
+    } else {
+        debug.nospace() << ", image: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

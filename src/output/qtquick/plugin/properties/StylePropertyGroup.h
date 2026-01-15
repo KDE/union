@@ -42,7 +42,7 @@ class StylePropertyGroup : public QObject
 public:
     explicit StylePropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::StyleProperty> &newState);
+    void update(Union::Properties::StyleProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -122,5 +122,5 @@ private:
     std::unique_ptr<CornersPropertyGroup> m_corners;
     std::unique_ptr<ShadowPropertyGroup> m_shadow;
 
-    std::optional<Union::Properties::StyleProperty> m_state = std::nullopt;
+    Union::Properties::StyleProperty *m_state = nullptr;
 };

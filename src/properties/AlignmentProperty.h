@@ -65,6 +65,7 @@ public:
      * Returns the value of container.
      */
     std::optional<Union::Properties::AlignmentContainer> container() const;
+
     /*!
      * Set the value of container.
      *
@@ -76,6 +77,7 @@ public:
      * Returns the value of horizontal.
      */
     std::optional<Union::Properties::Alignment> horizontal() const;
+
     /*!
      * Set the value of horizontal.
      *
@@ -87,6 +89,7 @@ public:
      * Returns the value of vertical.
      */
     std::optional<Union::Properties::Alignment> vertical() const;
+
     /*!
      * Set the value of vertical.
      *
@@ -98,6 +101,7 @@ public:
      * Returns the value of order.
      */
     std::optional<int> order() const;
+
     /*!
      * Set the value of order.
      *
@@ -129,7 +133,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const AlignmentProperty &source, AlignmentProperty &destination);
+    static void resolveProperties(const AlignmentProperty *source, AlignmentProperty *destination);
 
     /*!
      * Create and return an empty AlignmentProperty instance.
@@ -139,7 +143,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static AlignmentProperty empty();
+    static std::unique_ptr<AlignmentProperty> empty();
 
 private:
     std::unique_ptr<AlignmentPropertyPrivate> d;

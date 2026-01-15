@@ -17,77 +17,87 @@ class TestTextProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<TextProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->alignment());
+        QVERIFY(!property->font().has_value());
+        QVERIFY(!property->color().has_value());
+    }
+
     void testEmpty()
     {
-        TextProperty property;
+        auto property = TextProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.alignment().has_value());
-        QVERIFY(!property.font().has_value());
-        QVERIFY(!property.color().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->alignment(), *AlignmentProperty::empty());
+        QCOMPARE(property->font().value(), emptyValue<QFont>());
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
     }
 
     void testHasAnyValue()
     {
-        TextProperty property;
+        auto property = std::make_unique<TextProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setAlignment(AlignmentProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(std::make_unique<AlignmentProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setAlignment(testAlignmentPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setAlignment(testAlignmentPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setAlignment(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             QFont value;
-            property.setFont(value);
-            QVERIFY(property.hasAnyValue());
-            property.setFont(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setFont(value);
+            QVERIFY(property->hasAnyValue());
+            property->setFont(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Color value;
-            property.setColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        TextProperty source;
-        TextProperty destination;
+        auto source = std::make_unique<TextProperty>();
+        auto destination = std::make_unique<TextProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        TextProperty::resolveProperties(source, destination);
+        TextProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setAlignment(testAlignmentPropertyInstance());
-        source.setFont(QFont{});
-        source.setColor(Union::Color{});
+        source->setAlignment(testAlignmentPropertyInstance());
+        source->setFont(QFont{});
+        source->setColor(Union::Color{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        TextProperty::resolveProperties(source, destination);
+        TextProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.alignment(), source.alignment());
-        QCOMPARE(destination.font(), source.font());
-        QCOMPARE(destination.color(), source.color());
+        QCOMPARE(*destination->alignment(), *source->alignment());
+        QCOMPARE(destination->font(), source->font());
+        QCOMPARE(destination->color(), source->color());
     }
 };
 

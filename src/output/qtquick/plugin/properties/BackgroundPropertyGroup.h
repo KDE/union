@@ -35,7 +35,7 @@ class BackgroundPropertyGroup : public QObject
 public:
     explicit BackgroundPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::BackgroundProperty> &newState);
+    void update(Union::Properties::BackgroundProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -61,5 +61,5 @@ private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<ImagePropertyGroup> m_image;
 
-    std::optional<Union::Properties::BackgroundProperty> m_state = std::nullopt;
+    Union::Properties::BackgroundProperty *m_state = nullptr;
 };

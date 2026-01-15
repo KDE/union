@@ -65,24 +65,22 @@ public:
     IconProperty &operator=(IconProperty &&other);
 
     /*!
-     * Returns the value of alignment.
+     * Returns alignment if set or nullptr if not.
      */
-    std::optional<AlignmentProperty> alignment() const;
-    /*!
-     * Returns alignment if set or a new AlignmentProperty if not.
-     */
-    AlignmentProperty alignment_or_new() const;
+    AlignmentProperty *alignment() const;
+
     /*!
      * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setAlignment(const std::optional<AlignmentProperty> &newValue);
+    void setAlignment(std::unique_ptr<AlignmentProperty> &&newValue);
 
     /*!
      * Returns the value of width.
      */
     std::optional<qreal> width() const;
+
     /*!
      * Set the value of width.
      *
@@ -94,6 +92,7 @@ public:
      * Returns the value of height.
      */
     std::optional<qreal> height() const;
+
     /*!
      * Set the value of height.
      *
@@ -105,6 +104,7 @@ public:
      * Returns the value of name.
      */
     std::optional<QString> name() const;
+
     /*!
      * Set the value of name.
      *
@@ -116,6 +116,7 @@ public:
      * Returns the value of source.
      */
     std::optional<QUrl> source() const;
+
     /*!
      * Set the value of source.
      *
@@ -127,6 +128,7 @@ public:
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -158,7 +160,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const IconProperty &source, IconProperty &destination);
+    static void resolveProperties(const IconProperty *source, IconProperty *destination);
 
     /*!
      * Create and return an empty IconProperty instance.
@@ -168,7 +170,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static IconProperty empty();
+    static std::unique_ptr<IconProperty> empty();
 
 private:
     std::unique_ptr<IconPropertyPrivate> d;

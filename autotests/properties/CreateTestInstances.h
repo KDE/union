@@ -46,214 +46,214 @@ QFont testQFontInstance()
     return QFont{u"Noto Sans"_s, 12};
 }
 
-StyleProperty testStylePropertyInstance();
-LayoutProperty testLayoutPropertyInstance();
-AlignmentProperty testAlignmentPropertyInstance();
-SizeProperty testSizePropertyInstance();
-TextProperty testTextPropertyInstance();
-IconProperty testIconPropertyInstance();
-BackgroundProperty testBackgroundPropertyInstance();
-ImageProperty testImagePropertyInstance();
-BorderProperty testBorderPropertyInstance();
-LineProperty testLinePropertyInstance();
-OutlineProperty testOutlinePropertyInstance();
-CornersProperty testCornersPropertyInstance();
-CornerProperty testCornerPropertyInstance();
-ShadowProperty testShadowPropertyInstance();
-OffsetProperty testOffsetPropertyInstance();
+std::unique_ptr<StyleProperty> testStylePropertyInstance();
+std::unique_ptr<LayoutProperty> testLayoutPropertyInstance();
+std::unique_ptr<AlignmentProperty> testAlignmentPropertyInstance();
+std::unique_ptr<SizeProperty> testSizePropertyInstance();
+std::unique_ptr<TextProperty> testTextPropertyInstance();
+std::unique_ptr<IconProperty> testIconPropertyInstance();
+std::unique_ptr<BackgroundProperty> testBackgroundPropertyInstance();
+std::unique_ptr<ImageProperty> testImagePropertyInstance();
+std::unique_ptr<BorderProperty> testBorderPropertyInstance();
+std::unique_ptr<LineProperty> testLinePropertyInstance();
+std::unique_ptr<OutlineProperty> testOutlinePropertyInstance();
+std::unique_ptr<CornersProperty> testCornersPropertyInstance();
+std::unique_ptr<CornerProperty> testCornerPropertyInstance();
+std::unique_ptr<ShadowProperty> testShadowPropertyInstance();
+std::unique_ptr<OffsetProperty> testOffsetPropertyInstance();
 
-StyleProperty testStylePropertyInstance()
+std::unique_ptr<StyleProperty> testStylePropertyInstance()
 {
-    StyleProperty instance;
+    auto instance = std::make_unique<StyleProperty>();
 
-    instance.setLayout(testLayoutPropertyInstance());
-    instance.setText(testTextPropertyInstance());
-    instance.setIcon(testIconPropertyInstance());
-    instance.setBackground(testBackgroundPropertyInstance());
-    instance.setBorder(testBorderPropertyInstance());
-    instance.setOutline(testOutlinePropertyInstance());
-    instance.setCorners(testCornersPropertyInstance());
-    instance.setShadow(testShadowPropertyInstance());
+    instance->setLayout(testLayoutPropertyInstance());
+    instance->setText(testTextPropertyInstance());
+    instance->setIcon(testIconPropertyInstance());
+    instance->setBackground(testBackgroundPropertyInstance());
+    instance->setBorder(testBorderPropertyInstance());
+    instance->setOutline(testOutlinePropertyInstance());
+    instance->setCorners(testCornersPropertyInstance());
+    instance->setShadow(testShadowPropertyInstance());
 
     return instance;
 }
 
-LayoutProperty testLayoutPropertyInstance()
+std::unique_ptr<LayoutProperty> testLayoutPropertyInstance()
 {
-    LayoutProperty instance;
+    auto instance = std::make_unique<LayoutProperty>();
 
-    instance.setAlignment(testAlignmentPropertyInstance());
-    instance.setWidth(testQrealInstance());
-    instance.setHeight(testQrealInstance());
-    instance.setSpacing(testQrealInstance());
-    instance.setPadding(testSizePropertyInstance());
-    instance.setInset(testSizePropertyInstance());
-    instance.setMargins(testSizePropertyInstance());
+    instance->setAlignment(testAlignmentPropertyInstance());
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setSpacing(testQrealInstance());
+    instance->setPadding(testSizePropertyInstance());
+    instance->setInset(testSizePropertyInstance());
+    instance->setMargins(testSizePropertyInstance());
 
     return instance;
 }
 
-AlignmentProperty testAlignmentPropertyInstance()
+std::unique_ptr<AlignmentProperty> testAlignmentPropertyInstance()
 {
-    AlignmentProperty instance;
+    auto instance = std::make_unique<AlignmentProperty>();
 
-    instance.setContainer(Union::Properties::AlignmentContainer{});
-    instance.setHorizontal(Union::Properties::Alignment{});
-    instance.setVertical(Union::Properties::Alignment{});
-    instance.setOrder(int{});
+    instance->setContainer(Union::Properties::AlignmentContainer{});
+    instance->setHorizontal(Union::Properties::Alignment{});
+    instance->setVertical(Union::Properties::Alignment{});
+    instance->setOrder(int{});
 
     return instance;
 }
 
-SizeProperty testSizePropertyInstance()
+std::unique_ptr<SizeProperty> testSizePropertyInstance()
 {
-    SizeProperty instance;
+    auto instance = std::make_unique<SizeProperty>();
 
-    instance.setLeft(testQrealInstance());
-    instance.setRight(testQrealInstance());
-    instance.setTop(testQrealInstance());
-    instance.setBottom(testQrealInstance());
+    instance->setLeft(testQrealInstance());
+    instance->setRight(testQrealInstance());
+    instance->setTop(testQrealInstance());
+    instance->setBottom(testQrealInstance());
 
     return instance;
 }
 
-TextProperty testTextPropertyInstance()
+std::unique_ptr<TextProperty> testTextPropertyInstance()
 {
-    TextProperty instance;
+    auto instance = std::make_unique<TextProperty>();
 
-    instance.setAlignment(testAlignmentPropertyInstance());
-    instance.setFont(testQFontInstance());
-    instance.setColor(Union::Color{});
+    instance->setAlignment(testAlignmentPropertyInstance());
+    instance->setFont(testQFontInstance());
+    instance->setColor(Union::Color{});
 
     return instance;
 }
 
-IconProperty testIconPropertyInstance()
+std::unique_ptr<IconProperty> testIconPropertyInstance()
 {
-    IconProperty instance;
+    auto instance = std::make_unique<IconProperty>();
 
-    instance.setAlignment(testAlignmentPropertyInstance());
-    instance.setWidth(testQrealInstance());
-    instance.setHeight(testQrealInstance());
-    instance.setName(QString{});
-    instance.setSource(QUrl{});
-    instance.setColor(Union::Color{});
+    instance->setAlignment(testAlignmentPropertyInstance());
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setName(QString{});
+    instance->setSource(QUrl{});
+    instance->setColor(Union::Color{});
 
     return instance;
 }
 
-BackgroundProperty testBackgroundPropertyInstance()
+std::unique_ptr<BackgroundProperty> testBackgroundPropertyInstance()
 {
-    BackgroundProperty instance;
+    auto instance = std::make_unique<BackgroundProperty>();
 
-    instance.setColor(Union::Color{});
-    instance.setImage(testImagePropertyInstance());
+    instance->setColor(Union::Color{});
+    instance->setImage(testImagePropertyInstance());
 
     return instance;
 }
 
-ImageProperty testImagePropertyInstance()
+std::unique_ptr<ImageProperty> testImagePropertyInstance()
 {
-    ImageProperty instance;
+    auto instance = std::make_unique<ImageProperty>();
 
-    instance.setImageData(QImage{});
-    instance.setWidth(testQrealInstance());
-    instance.setHeight(testQrealInstance());
-    instance.setXOffset(testQrealInstance());
-    instance.setYOffset(testQrealInstance());
-    instance.setFlags(Union::Properties::ImageFlags{});
-    instance.setMaskColor(Union::Color{});
+    instance->setImageData(QImage{});
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setXOffset(testQrealInstance());
+    instance->setYOffset(testQrealInstance());
+    instance->setFlags(Union::Properties::ImageFlags{});
+    instance->setMaskColor(Union::Color{});
 
     return instance;
 }
 
-BorderProperty testBorderPropertyInstance()
+std::unique_ptr<BorderProperty> testBorderPropertyInstance()
 {
-    BorderProperty instance;
+    auto instance = std::make_unique<BorderProperty>();
 
-    instance.setLeft(testLinePropertyInstance());
-    instance.setRight(testLinePropertyInstance());
-    instance.setTop(testLinePropertyInstance());
-    instance.setBottom(testLinePropertyInstance());
+    instance->setLeft(testLinePropertyInstance());
+    instance->setRight(testLinePropertyInstance());
+    instance->setTop(testLinePropertyInstance());
+    instance->setBottom(testLinePropertyInstance());
 
     return instance;
 }
 
-LineProperty testLinePropertyInstance()
+std::unique_ptr<LineProperty> testLinePropertyInstance()
 {
-    LineProperty instance;
+    auto instance = std::make_unique<LineProperty>();
 
-    instance.setSize(testQrealInstance());
-    instance.setColor(Union::Color{});
-    instance.setStyle(Union::Properties::LineStyle{});
-    instance.setImage(testImagePropertyInstance());
+    instance->setSize(testQrealInstance());
+    instance->setColor(Union::Color{});
+    instance->setStyle(Union::Properties::LineStyle{});
+    instance->setImage(testImagePropertyInstance());
 
     return instance;
 }
 
-OutlineProperty testOutlinePropertyInstance()
+std::unique_ptr<OutlineProperty> testOutlinePropertyInstance()
 {
-    OutlineProperty instance;
+    auto instance = std::make_unique<OutlineProperty>();
 
-    instance.setLeft(testLinePropertyInstance());
-    instance.setRight(testLinePropertyInstance());
-    instance.setTop(testLinePropertyInstance());
-    instance.setBottom(testLinePropertyInstance());
+    instance->setLeft(testLinePropertyInstance());
+    instance->setRight(testLinePropertyInstance());
+    instance->setTop(testLinePropertyInstance());
+    instance->setBottom(testLinePropertyInstance());
 
     return instance;
 }
 
-CornersProperty testCornersPropertyInstance()
+std::unique_ptr<CornersProperty> testCornersPropertyInstance()
 {
-    CornersProperty instance;
+    auto instance = std::make_unique<CornersProperty>();
 
-    instance.setTopLeft(testCornerPropertyInstance());
-    instance.setTopRight(testCornerPropertyInstance());
-    instance.setBottomLeft(testCornerPropertyInstance());
-    instance.setBottomRight(testCornerPropertyInstance());
+    instance->setTopLeft(testCornerPropertyInstance());
+    instance->setTopRight(testCornerPropertyInstance());
+    instance->setBottomLeft(testCornerPropertyInstance());
+    instance->setBottomRight(testCornerPropertyInstance());
 
     return instance;
 }
 
-CornerProperty testCornerPropertyInstance()
+std::unique_ptr<CornerProperty> testCornerPropertyInstance()
 {
-    CornerProperty instance;
+    auto instance = std::make_unique<CornerProperty>();
 
-    instance.setRadius(testQrealInstance());
-    instance.setWidth(testQrealInstance());
-    instance.setHeight(testQrealInstance());
-    instance.setColor(Union::Color{});
-    instance.setImage(testImagePropertyInstance());
+    instance->setRadius(testQrealInstance());
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setColor(Union::Color{});
+    instance->setImage(testImagePropertyInstance());
 
     return instance;
 }
 
-ShadowProperty testShadowPropertyInstance()
+std::unique_ptr<ShadowProperty> testShadowPropertyInstance()
 {
-    ShadowProperty instance;
+    auto instance = std::make_unique<ShadowProperty>();
 
-    instance.setOffset(testOffsetPropertyInstance());
-    instance.setColor(Union::Color{});
-    instance.setSize(testQrealInstance());
-    instance.setBlur(testQrealInstance());
-    instance.setLeft(testLinePropertyInstance());
-    instance.setRight(testLinePropertyInstance());
-    instance.setTop(testLinePropertyInstance());
-    instance.setBottom(testLinePropertyInstance());
-    instance.setTopLeft(testCornerPropertyInstance());
-    instance.setTopRight(testCornerPropertyInstance());
-    instance.setBottomLeft(testCornerPropertyInstance());
-    instance.setBottomRight(testCornerPropertyInstance());
+    instance->setOffset(testOffsetPropertyInstance());
+    instance->setColor(Union::Color{});
+    instance->setSize(testQrealInstance());
+    instance->setBlur(testQrealInstance());
+    instance->setLeft(testLinePropertyInstance());
+    instance->setRight(testLinePropertyInstance());
+    instance->setTop(testLinePropertyInstance());
+    instance->setBottom(testLinePropertyInstance());
+    instance->setTopLeft(testCornerPropertyInstance());
+    instance->setTopRight(testCornerPropertyInstance());
+    instance->setBottomLeft(testCornerPropertyInstance());
+    instance->setBottomRight(testCornerPropertyInstance());
 
     return instance;
 }
 
-OffsetProperty testOffsetPropertyInstance()
+std::unique_ptr<OffsetProperty> testOffsetPropertyInstance()
 {
-    OffsetProperty instance;
+    auto instance = std::make_unique<OffsetProperty>();
 
-    instance.setHorizontal(testQrealInstance());
-    instance.setVertical(testQrealInstance());
+    instance->setHorizontal(testQrealInstance());
+    instance->setVertical(testQrealInstance());
 
     return instance;
 }

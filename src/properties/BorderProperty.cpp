@@ -14,10 +14,10 @@ using namespace Qt::StringLiterals;
 class Union::Properties::BorderPropertyPrivate
 {
 public:
-    std::optional<LineProperty> left;
-    std::optional<LineProperty> right;
-    std::optional<LineProperty> top;
-    std::optional<LineProperty> bottom;
+    std::unique_ptr<LineProperty> left;
+    std::unique_ptr<LineProperty> right;
+    std::unique_ptr<LineProperty> top;
+    std::unique_ptr<LineProperty> bottom;
 };
 
 BorderProperty::BorderProperty()
@@ -28,10 +28,14 @@ BorderProperty::BorderProperty()
 BorderProperty::BorderProperty(const BorderProperty &other)
     : d(std::make_unique<BorderPropertyPrivate>())
 {
-    d->left = other.d->left;
-    d->right = other.d->right;
-    d->top = other.d->top;
-    d->bottom = other.d->bottom;
+    d->left = std::make_unique<LineProperty>();
+    *(d->left) = *(other.d->left);
+    d->right = std::make_unique<LineProperty>();
+    *(d->right) = *(other.d->right);
+    d->top = std::make_unique<LineProperty>();
+    *(d->top) = *(other.d->top);
+    d->bottom = std::make_unique<LineProperty>();
+    *(d->bottom) = *(other.d->bottom);
 }
 
 BorderProperty::BorderProperty(BorderProperty &&other)
@@ -44,10 +48,10 @@ BorderProperty::~BorderProperty() = default;
 BorderProperty &BorderProperty::operator=(const BorderProperty &other)
 {
     if (this != &other) {
-        d->left = other.d->left;
-        d->right = other.d->right;
-        d->top = other.d->top;
-        d->bottom = other.d->bottom;
+        *(d->left) = *(other.d->left);
+        *(d->right) = *(other.d->right);
+        *(d->top) = *(other.d->top);
+        *(d->bottom) = *(other.d->bottom);
     }
     return *this;
 }
@@ -58,91 +62,58 @@ BorderProperty &BorderProperty::operator=(BorderProperty &&other)
     return *this;
 }
 
-std::optional<LineProperty> BorderProperty::left() const
+LineProperty *BorderProperty::left() const
 {
-    return d->left;
+    return d->left.get();
 }
 
-LineProperty BorderProperty::left_or_new() const
+void BorderProperty::setLeft(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->left.value_or(LineProperty{});
+    d->left = std::move(newValue);
 }
 
-void BorderProperty::setLeft(const std::optional<LineProperty> &newValue)
+LineProperty *BorderProperty::right() const
 {
-    if (newValue == d->left) {
-        return;
-    }
-
-    d->left = newValue;
-}
-std::optional<LineProperty> BorderProperty::right() const
-{
-    return d->right;
+    return d->right.get();
 }
 
-LineProperty BorderProperty::right_or_new() const
+void BorderProperty::setRight(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->right.value_or(LineProperty{});
+    d->right = std::move(newValue);
 }
 
-void BorderProperty::setRight(const std::optional<LineProperty> &newValue)
+LineProperty *BorderProperty::top() const
 {
-    if (newValue == d->right) {
-        return;
-    }
-
-    d->right = newValue;
-}
-std::optional<LineProperty> BorderProperty::top() const
-{
-    return d->top;
+    return d->top.get();
 }
 
-LineProperty BorderProperty::top_or_new() const
+void BorderProperty::setTop(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->top.value_or(LineProperty{});
+    d->top = std::move(newValue);
 }
 
-void BorderProperty::setTop(const std::optional<LineProperty> &newValue)
+LineProperty *BorderProperty::bottom() const
 {
-    if (newValue == d->top) {
-        return;
-    }
-
-    d->top = newValue;
-}
-std::optional<LineProperty> BorderProperty::bottom() const
-{
-    return d->bottom;
+    return d->bottom.get();
 }
 
-LineProperty BorderProperty::bottom_or_new() const
+void BorderProperty::setBottom(std::unique_ptr<LineProperty> &&newValue)
 {
-    return d->bottom.value_or(LineProperty{});
-}
-
-void BorderProperty::setBottom(const std::optional<LineProperty> &newValue)
-{
-    if (newValue == d->bottom) {
-        return;
-    }
-
-    d->bottom = newValue;
+    d->bottom = std::move(newValue);
 }
 
 bool BorderProperty::hasAnyValue() const
 {
-    if (d->left.has_value() && d->left->hasAnyValue()) {
+    if (d->left && d->left->hasAnyValue()) {
         return true;
     }
-    if (d->right.has_value() && d->right->hasAnyValue()) {
+    if (d->right && d->right->hasAnyValue()) {
         return true;
     }
-    if (d->top.has_value() && d->top->hasAnyValue()) {
+    if (d->top && d->top->hasAnyValue()) {
         return true;
     }
-    if (d->bottom.has_value() && d->bottom->hasAnyValue()) {
+    if (d->bottom && d->bottom->hasAnyValue()) {
         return true;
     }
     return false;
@@ -154,88 +125,92 @@ bool BorderProperty::isEmpty() const
         return true;
     }
 
-    if (d->left.has_value() && !d->left->isEmpty()) {
+    if (d->left && !d->left->isEmpty()) {
         return false;
     }
-    if (d->right.has_value() && !d->right->isEmpty()) {
+    if (d->right && !d->right->isEmpty()) {
         return false;
     }
-    if (d->top.has_value() && !d->top->isEmpty()) {
+    if (d->top && !d->top->isEmpty()) {
         return false;
     }
-    if (d->bottom.has_value() && !d->bottom->isEmpty()) {
+    if (d->bottom && !d->bottom->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void BorderProperty::resolveProperties(const BorderProperty &source, BorderProperty &destination)
+void BorderProperty::resolveProperties(const BorderProperty *source, BorderProperty *destination)
 {
-    if (source.d->left.has_value()) {
-        LineProperty property;
-        if (destination.d->left.has_value()) {
-            property = destination.d->left.value();
-        }
-        LineProperty::resolveProperties(source.d->left.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->left = property;
-        }
+    if (!source || !destination) {
+        return;
     }
-    if (source.d->right.has_value()) {
-        LineProperty property;
-        if (destination.d->right.has_value()) {
-            property = destination.d->right.value();
+
+    if (source->d->left) {
+        if (!destination->d->left) {
+            destination->d->left = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->right.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->right = property;
-        }
+        LineProperty::resolveProperties(source->d->left.get(), destination->d->left.get());
     }
-    if (source.d->top.has_value()) {
-        LineProperty property;
-        if (destination.d->top.has_value()) {
-            property = destination.d->top.value();
+    if (source->d->right) {
+        if (!destination->d->right) {
+            destination->d->right = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->top.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->top = property;
-        }
+        LineProperty::resolveProperties(source->d->right.get(), destination->d->right.get());
     }
-    if (source.d->bottom.has_value()) {
-        LineProperty property;
-        if (destination.d->bottom.has_value()) {
-            property = destination.d->bottom.value();
+    if (source->d->top) {
+        if (!destination->d->top) {
+            destination->d->top = std::make_unique<LineProperty>();
         }
-        LineProperty::resolveProperties(source.d->bottom.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->bottom = property;
+        LineProperty::resolveProperties(source->d->top.get(), destination->d->top.get());
+    }
+    if (source->d->bottom) {
+        if (!destination->d->bottom) {
+            destination->d->bottom = std::make_unique<LineProperty>();
         }
+        LineProperty::resolveProperties(source->d->bottom.get(), destination->d->bottom.get());
     }
 }
 
-BorderProperty BorderProperty::empty()
+std::unique_ptr<BorderProperty> BorderProperty::empty()
 {
-    BorderProperty result;
-    result.d->left = emptyValue<LineProperty>();
-    result.d->right = emptyValue<LineProperty>();
-    result.d->top = emptyValue<LineProperty>();
-    result.d->bottom = emptyValue<LineProperty>();
+    auto result = std::make_unique<BorderProperty>();
+    result->d->left = LineProperty::empty();
+    result->d->right = LineProperty::empty();
+    result->d->top = LineProperty::empty();
+    result->d->bottom = LineProperty::empty();
     return result;
 }
 
 bool Union::Properties::operator==(const BorderProperty &left, const BorderProperty &right)
 {
-    if (left.left() != right.left()) {
+    if (left.left() && right.left()) {
+        if (*(left.left()) != *(right.left())) {
+            return false;
+        }
+    } else if (left.left() != right.left()) {
         return false;
     }
-    if (left.right() != right.right()) {
+    if (left.right() && right.right()) {
+        if (*(left.right()) != *(right.right())) {
+            return false;
+        }
+    } else if (left.right() != right.right()) {
         return false;
     }
-    if (left.top() != right.top()) {
+    if (left.top() && right.top()) {
+        if (*(left.top()) != *(right.top())) {
+            return false;
+        }
+    } else if (left.top() != right.top()) {
         return false;
     }
-    if (left.bottom() != right.bottom()) {
+    if (left.bottom() && right.bottom()) {
+        if (*(left.bottom()) != *(right.bottom())) {
+            return false;
+        }
+    } else if (left.bottom() != right.bottom()) {
         return false;
     }
     return true;
@@ -244,11 +219,27 @@ bool Union::Properties::operator==(const BorderProperty &left, const BorderPrope
 QDebug operator<<(QDebug debug, const Union::Properties::BorderProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "BorderProperty(" //
-                    << "left: " << type.left() //
-                    << ", right: " << type.right() //
-                    << ", top: " << type.top() //
-                    << ", bottom: " << type.bottom() //
-                    << ")";
+    debug.nospace() << "BorderProperty(";
+    if (type.left()) {
+        debug.nospace() << "left: " << *type.left();
+    } else {
+        debug.nospace() << "left: (empty)";
+    }
+    if (type.right()) {
+        debug.nospace() << ", right: " << *type.right();
+    } else {
+        debug.nospace() << ", right: (empty)";
+    }
+    if (type.top()) {
+        debug.nospace() << ", top: " << *type.top();
+    } else {
+        debug.nospace() << ", top: (empty)";
+    }
+    if (type.bottom()) {
+        debug.nospace() << ", bottom: " << *type.bottom();
+    } else {
+        debug.nospace() << ", bottom: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

@@ -38,7 +38,7 @@ class BorderPropertyGroup : public QObject
 public:
     explicit BorderPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::BorderProperty> &newState);
+    void update(Union::Properties::BorderProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -82,5 +82,5 @@ private:
     std::unique_ptr<LinePropertyGroup> m_top;
     std::unique_ptr<LinePropertyGroup> m_bottom;
 
-    std::optional<Union::Properties::BorderProperty> m_state = std::nullopt;
+    Union::Properties::BorderProperty *m_state = nullptr;
 };

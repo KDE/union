@@ -38,7 +38,7 @@ class CornersPropertyGroup : public QObject
 public:
     explicit CornersPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::CornersProperty> &newState);
+    void update(Union::Properties::CornersProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -82,5 +82,5 @@ private:
     std::unique_ptr<CornerPropertyGroup> m_bottomLeft;
     std::unique_ptr<CornerPropertyGroup> m_bottomRight;
 
-    std::optional<Union::Properties::CornersProperty> m_state = std::nullopt;
+    Union::Properties::CornersProperty *m_state = nullptr;
 };

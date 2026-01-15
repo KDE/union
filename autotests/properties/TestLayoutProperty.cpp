@@ -17,129 +17,143 @@ class TestLayoutProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<LayoutProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->alignment());
+        QVERIFY(!property->width().has_value());
+        QVERIFY(!property->height().has_value());
+        QVERIFY(!property->spacing().has_value());
+        QVERIFY(!property->padding());
+        QVERIFY(!property->inset());
+        QVERIFY(!property->margins());
+    }
+
     void testEmpty()
     {
-        LayoutProperty property;
+        auto property = LayoutProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.alignment().has_value());
-        QVERIFY(!property.width().has_value());
-        QVERIFY(!property.height().has_value());
-        QVERIFY(!property.spacing().has_value());
-        QVERIFY(!property.padding().has_value());
-        QVERIFY(!property.inset().has_value());
-        QVERIFY(!property.margins().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->alignment(), *AlignmentProperty::empty());
+        QCOMPARE(property->width().value(), emptyValue<qreal>());
+        QCOMPARE(property->height().value(), emptyValue<qreal>());
+        QCOMPARE(property->spacing().value(), emptyValue<qreal>());
+        QCOMPARE(*property->padding(), *SizeProperty::empty());
+        QCOMPARE(*property->inset(), *SizeProperty::empty());
+        QCOMPARE(*property->margins(), *SizeProperty::empty());
     }
 
     void testHasAnyValue()
     {
-        LayoutProperty property;
+        auto property = std::make_unique<LayoutProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setAlignment(AlignmentProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(std::make_unique<AlignmentProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setAlignment(testAlignmentPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setAlignment(testAlignmentPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setAlignment(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setWidth(value);
-            QVERIFY(property.hasAnyValue());
-            property.setWidth(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setWidth(value);
+            QVERIFY(property->hasAnyValue());
+            property->setWidth(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setHeight(value);
-            QVERIFY(property.hasAnyValue());
-            property.setHeight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setHeight(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHeight(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setSpacing(value);
-            QVERIFY(property.hasAnyValue());
-            property.setSpacing(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setSpacing(value);
+            QVERIFY(property->hasAnyValue());
+            property->setSpacing(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setPadding(SizeProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setPadding(std::make_unique<SizeProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setPadding(testSizePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setPadding(testSizePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setPadding(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setPadding(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setInset(SizeProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setInset(std::make_unique<SizeProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setInset(testSizePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setInset(testSizePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setInset(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setInset(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             // Assigning an empty value to a property should have no effect.
-            property.setMargins(SizeProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setMargins(std::make_unique<SizeProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setMargins(testSizePropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setMargins(testSizePropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setMargins(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setMargins(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        LayoutProperty source;
-        LayoutProperty destination;
+        auto source = std::make_unique<LayoutProperty>();
+        auto destination = std::make_unique<LayoutProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        LayoutProperty::resolveProperties(source, destination);
+        LayoutProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setAlignment(testAlignmentPropertyInstance());
-        source.setWidth(qreal{});
-        source.setHeight(qreal{});
-        source.setSpacing(qreal{});
-        source.setPadding(testSizePropertyInstance());
-        source.setInset(testSizePropertyInstance());
-        source.setMargins(testSizePropertyInstance());
+        source->setAlignment(testAlignmentPropertyInstance());
+        source->setWidth(qreal{});
+        source->setHeight(qreal{});
+        source->setSpacing(qreal{});
+        source->setPadding(testSizePropertyInstance());
+        source->setInset(testSizePropertyInstance());
+        source->setMargins(testSizePropertyInstance());
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        LayoutProperty::resolveProperties(source, destination);
+        LayoutProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.alignment(), source.alignment());
-        QCOMPARE(destination.width(), source.width());
-        QCOMPARE(destination.height(), source.height());
-        QCOMPARE(destination.spacing(), source.spacing());
-        QCOMPARE(destination.padding(), source.padding());
-        QCOMPARE(destination.inset(), source.inset());
-        QCOMPARE(destination.margins(), source.margins());
+        QCOMPARE(*destination->alignment(), *source->alignment());
+        QCOMPARE(destination->width(), source->width());
+        QCOMPARE(destination->height(), source->height());
+        QCOMPARE(destination->spacing(), source->spacing());
+        QCOMPARE(*destination->padding(), *source->padding());
+        QCOMPARE(*destination->inset(), *source->inset());
+        QCOMPARE(*destination->margins(), *source->margins());
     }
 };
 

@@ -65,6 +65,7 @@ public:
      * Returns the value of left.
      */
     std::optional<qreal> left() const;
+
     /*!
      * Set the value of left.
      *
@@ -76,6 +77,7 @@ public:
      * Returns the value of right.
      */
     std::optional<qreal> right() const;
+
     /*!
      * Set the value of right.
      *
@@ -87,6 +89,7 @@ public:
      * Returns the value of top.
      */
     std::optional<qreal> top() const;
+
     /*!
      * Set the value of top.
      *
@@ -98,6 +101,7 @@ public:
      * Returns the value of bottom.
      */
     std::optional<qreal> bottom() const;
+
     /*!
      * Set the value of bottom.
      *
@@ -129,7 +133,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const SizeProperty &source, SizeProperty &destination);
+    static void resolveProperties(const SizeProperty *source, SizeProperty *destination);
 
     /*!
      * Create and return an empty SizeProperty instance.
@@ -139,7 +143,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static SizeProperty empty();
+    static std::unique_ptr<SizeProperty> empty();
 
     /*!
        Convert a Size property to QMarginsF.

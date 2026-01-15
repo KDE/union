@@ -17,83 +17,94 @@ class TestSizeProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<SizeProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->left().has_value());
+        QVERIFY(!property->right().has_value());
+        QVERIFY(!property->top().has_value());
+        QVERIFY(!property->bottom().has_value());
+    }
+
     void testEmpty()
     {
-        SizeProperty property;
+        auto property = SizeProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.left().has_value());
-        QVERIFY(!property.right().has_value());
-        QVERIFY(!property.top().has_value());
-        QVERIFY(!property.bottom().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->left().value(), emptyValue<qreal>());
+        QCOMPARE(property->right().value(), emptyValue<qreal>());
+        QCOMPARE(property->top().value(), emptyValue<qreal>());
+        QCOMPARE(property->bottom().value(), emptyValue<qreal>());
     }
 
     void testHasAnyValue()
     {
-        SizeProperty property;
+        auto property = std::make_unique<SizeProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             qreal value;
-            property.setLeft(value);
-            QVERIFY(property.hasAnyValue());
-            property.setLeft(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setLeft(value);
+            QVERIFY(property->hasAnyValue());
+            property->setLeft(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setRight(value);
-            QVERIFY(property.hasAnyValue());
-            property.setRight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setRight(value);
+            QVERIFY(property->hasAnyValue());
+            property->setRight(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setTop(value);
-            QVERIFY(property.hasAnyValue());
-            property.setTop(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setTop(value);
+            QVERIFY(property->hasAnyValue());
+            property->setTop(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setBottom(value);
-            QVERIFY(property.hasAnyValue());
-            property.setBottom(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setBottom(value);
+            QVERIFY(property->hasAnyValue());
+            property->setBottom(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        SizeProperty source;
-        SizeProperty destination;
+        auto source = std::make_unique<SizeProperty>();
+        auto destination = std::make_unique<SizeProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        SizeProperty::resolveProperties(source, destination);
+        SizeProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setLeft(qreal{});
-        source.setRight(qreal{});
-        source.setTop(qreal{});
-        source.setBottom(qreal{});
+        source->setLeft(qreal{});
+        source->setRight(qreal{});
+        source->setTop(qreal{});
+        source->setBottom(qreal{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        SizeProperty::resolveProperties(source, destination);
+        SizeProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.left(), source.left());
-        QCOMPARE(destination.right(), source.right());
-        QCOMPARE(destination.top(), source.top());
-        QCOMPARE(destination.bottom(), source.bottom());
+        QCOMPARE(destination->left(), source->left());
+        QCOMPARE(destination->right(), source->right());
+        QCOMPARE(destination->top(), source->top());
+        QCOMPARE(destination->bottom(), source->bottom());
     }
 };
 

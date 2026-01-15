@@ -28,7 +28,7 @@ ShadowPropertyGroup::ShadowPropertyGroup(QuickStyle *style)
     m_bottomRight = std::make_unique<CornerPropertyGroup>(m_style);
 }
 
-void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
+void ShadowPropertyGroup::update(ShadowProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -37,25 +37,25 @@ void ShadowPropertyGroup::update(const std::optional<ShadowProperty> &newState)
     m_state = newState;
 
     if (!newState) {
-        m_offset->update(std::nullopt);
-        m_left->update(std::nullopt);
-        m_right->update(std::nullopt);
-        m_top->update(std::nullopt);
-        m_bottom->update(std::nullopt);
-        m_topLeft->update(std::nullopt);
-        m_topRight->update(std::nullopt);
-        m_bottomLeft->update(std::nullopt);
-        m_bottomRight->update(std::nullopt);
+        m_offset->update(nullptr);
+        m_left->update(nullptr);
+        m_right->update(nullptr);
+        m_top->update(nullptr);
+        m_bottom->update(nullptr);
+        m_topLeft->update(nullptr);
+        m_topRight->update(nullptr);
+        m_bottomLeft->update(nullptr);
+        m_bottomRight->update(nullptr);
     } else {
-        m_offset->update(newState.value().offset());
-        m_left->update(newState.value().left());
-        m_right->update(newState.value().right());
-        m_top->update(newState.value().top());
-        m_bottom->update(newState.value().bottom());
-        m_topLeft->update(newState.value().topLeft());
-        m_topRight->update(newState.value().topRight());
-        m_bottomLeft->update(newState.value().bottomLeft());
-        m_bottomRight->update(newState.value().bottomRight());
+        m_offset->update(newState->offset());
+        m_left->update(newState->left());
+        m_right->update(newState->right());
+        m_top->update(newState->top());
+        m_bottom->update(newState->bottom());
+        m_topLeft->update(newState->topLeft());
+        m_topRight->update(newState->topRight());
+        m_bottomLeft->update(newState->bottomLeft());
+        m_bottomRight->update(newState->bottomRight());
     }
 
     Q_EMIT colorChanged();
@@ -89,7 +89,7 @@ QJSValue ShadowPropertyGroup::color() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().color();
+    auto value = m_state->color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value().toQColor());
     }
@@ -103,7 +103,7 @@ QJSValue ShadowPropertyGroup::size() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().size();
+    auto value = m_state->size();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -117,7 +117,7 @@ QJSValue ShadowPropertyGroup::blur() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().blur();
+    auto value = m_state->blur();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

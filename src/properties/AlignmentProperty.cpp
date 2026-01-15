@@ -71,6 +71,7 @@ void AlignmentProperty::setContainer(const std::optional<Union::Properties::Alig
 
     d->container = newValue;
 }
+
 std::optional<Union::Properties::Alignment> AlignmentProperty::horizontal() const
 {
     return d->horizontal;
@@ -84,6 +85,7 @@ void AlignmentProperty::setHorizontal(const std::optional<Union::Properties::Ali
 
     d->horizontal = newValue;
 }
+
 std::optional<Union::Properties::Alignment> AlignmentProperty::vertical() const
 {
     return d->vertical;
@@ -97,6 +99,7 @@ void AlignmentProperty::setVertical(const std::optional<Union::Properties::Align
 
     d->vertical = newValue;
 }
+
 std::optional<int> AlignmentProperty::order() const
 {
     return d->order;
@@ -150,29 +153,33 @@ bool AlignmentProperty::isEmpty() const
     return true;
 }
 
-void AlignmentProperty::resolveProperties(const AlignmentProperty &source, AlignmentProperty &destination)
+void AlignmentProperty::resolveProperties(const AlignmentProperty *source, AlignmentProperty *destination)
 {
-    if (!destination.d->container.has_value()) {
-        destination.d->container = source.d->container;
+    if (!source || !destination) {
+        return;
     }
-    if (!destination.d->horizontal.has_value()) {
-        destination.d->horizontal = source.d->horizontal;
+
+    if (!destination->d->container.has_value()) {
+        destination->d->container = source->d->container;
     }
-    if (!destination.d->vertical.has_value()) {
-        destination.d->vertical = source.d->vertical;
+    if (!destination->d->horizontal.has_value()) {
+        destination->d->horizontal = source->d->horizontal;
     }
-    if (!destination.d->order.has_value()) {
-        destination.d->order = source.d->order;
+    if (!destination->d->vertical.has_value()) {
+        destination->d->vertical = source->d->vertical;
+    }
+    if (!destination->d->order.has_value()) {
+        destination->d->order = source->d->order;
     }
 }
 
-AlignmentProperty AlignmentProperty::empty()
+std::unique_ptr<AlignmentProperty> AlignmentProperty::empty()
 {
-    AlignmentProperty result;
-    result.d->container = emptyValue<Union::Properties::AlignmentContainer>();
-    result.d->horizontal = emptyValue<Union::Properties::Alignment>();
-    result.d->vertical = emptyValue<Union::Properties::Alignment>();
-    result.d->order = emptyValue<int>();
+    auto result = std::make_unique<AlignmentProperty>();
+    result->d->container = emptyValue<Union::Properties::AlignmentContainer>();
+    result->d->horizontal = emptyValue<Union::Properties::Alignment>();
+    result->d->vertical = emptyValue<Union::Properties::Alignment>();
+    result->d->order = emptyValue<int>();
     return result;
 }
 
@@ -196,11 +203,11 @@ bool Union::Properties::operator==(const AlignmentProperty &left, const Alignmen
 QDebug operator<<(QDebug debug, const Union::Properties::AlignmentProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "AlignmentProperty(" //
-                    << "container: " << type.container() //
-                    << ", horizontal: " << type.horizontal() //
-                    << ", vertical: " << type.vertical() //
-                    << ", order: " << type.order() //
-                    << ")";
+    debug.nospace() << "AlignmentProperty(";
+    debug.nospace() << "container: " << type.container();
+    debug.nospace() << ", horizontal: " << type.horizontal();
+    debug.nospace() << ", vertical: " << type.vertical();
+    debug.nospace() << ", order: " << type.order();
+    debug.nospace() << ")";
     return debug;
 }

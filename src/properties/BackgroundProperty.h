@@ -66,6 +66,7 @@ public:
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -74,19 +75,16 @@ public:
     void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
-     * Returns the value of image.
+     * Returns image if set or nullptr if not.
      */
-    std::optional<ImageProperty> image() const;
-    /*!
-     * Returns image if set or a new ImageProperty if not.
-     */
-    ImageProperty image_or_new() const;
+    ImageProperty *image() const;
+
     /*!
      * Set the value of image.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setImage(const std::optional<ImageProperty> &newValue);
+    void setImage(std::unique_ptr<ImageProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -112,7 +110,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const BackgroundProperty &source, BackgroundProperty &destination);
+    static void resolveProperties(const BackgroundProperty *source, BackgroundProperty *destination);
 
     /*!
      * Create and return an empty BackgroundProperty instance.
@@ -122,7 +120,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static BackgroundProperty empty();
+    static std::unique_ptr<BackgroundProperty> empty();
 
 private:
     std::unique_ptr<BackgroundPropertyPrivate> d;

@@ -17,113 +17,127 @@ class TestImageProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<ImageProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->imageData().has_value());
+        QVERIFY(!property->width().has_value());
+        QVERIFY(!property->height().has_value());
+        QVERIFY(!property->xOffset().has_value());
+        QVERIFY(!property->yOffset().has_value());
+        QVERIFY(!property->flags().has_value());
+        QVERIFY(!property->maskColor().has_value());
+    }
+
     void testEmpty()
     {
-        ImageProperty property;
+        auto property = ImageProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.imageData().has_value());
-        QVERIFY(!property.width().has_value());
-        QVERIFY(!property.height().has_value());
-        QVERIFY(!property.xOffset().has_value());
-        QVERIFY(!property.yOffset().has_value());
-        QVERIFY(!property.flags().has_value());
-        QVERIFY(!property.maskColor().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(property->imageData().value(), emptyValue<QImage>());
+        QCOMPARE(property->width().value(), emptyValue<qreal>());
+        QCOMPARE(property->height().value(), emptyValue<qreal>());
+        QCOMPARE(property->xOffset().value(), emptyValue<qreal>());
+        QCOMPARE(property->yOffset().value(), emptyValue<qreal>());
+        QCOMPARE(property->flags().value(), emptyValue<Union::Properties::ImageFlags>());
+        QCOMPARE(property->maskColor().value(), emptyValue<Union::Color>());
     }
 
     void testHasAnyValue()
     {
-        ImageProperty property;
+        auto property = std::make_unique<ImageProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             QImage value;
-            property.setImageData(value);
-            QVERIFY(property.hasAnyValue());
-            property.setImageData(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setImageData(value);
+            QVERIFY(property->hasAnyValue());
+            property->setImageData(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setWidth(value);
-            QVERIFY(property.hasAnyValue());
-            property.setWidth(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setWidth(value);
+            QVERIFY(property->hasAnyValue());
+            property->setWidth(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setHeight(value);
-            QVERIFY(property.hasAnyValue());
-            property.setHeight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setHeight(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHeight(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setXOffset(value);
-            QVERIFY(property.hasAnyValue());
-            property.setXOffset(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setXOffset(value);
+            QVERIFY(property->hasAnyValue());
+            property->setXOffset(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setYOffset(value);
-            QVERIFY(property.hasAnyValue());
-            property.setYOffset(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setYOffset(value);
+            QVERIFY(property->hasAnyValue());
+            property->setYOffset(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Properties::ImageFlags value;
-            property.setFlags(value);
-            QVERIFY(property.hasAnyValue());
-            property.setFlags(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setFlags(value);
+            QVERIFY(property->hasAnyValue());
+            property->setFlags(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Color value;
-            property.setMaskColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setMaskColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setMaskColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setMaskColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        ImageProperty source;
-        ImageProperty destination;
+        auto source = std::make_unique<ImageProperty>();
+        auto destination = std::make_unique<ImageProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        ImageProperty::resolveProperties(source, destination);
+        ImageProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setImageData(QImage{});
-        source.setWidth(qreal{});
-        source.setHeight(qreal{});
-        source.setXOffset(qreal{});
-        source.setYOffset(qreal{});
-        source.setFlags(Union::Properties::ImageFlags{});
-        source.setMaskColor(Union::Color{});
+        source->setImageData(QImage{});
+        source->setWidth(qreal{});
+        source->setHeight(qreal{});
+        source->setXOffset(qreal{});
+        source->setYOffset(qreal{});
+        source->setFlags(Union::Properties::ImageFlags{});
+        source->setMaskColor(Union::Color{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        ImageProperty::resolveProperties(source, destination);
+        ImageProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.imageData(), source.imageData());
-        QCOMPARE(destination.width(), source.width());
-        QCOMPARE(destination.height(), source.height());
-        QCOMPARE(destination.xOffset(), source.xOffset());
-        QCOMPARE(destination.yOffset(), source.yOffset());
-        QCOMPARE(destination.flags(), source.flags());
-        QCOMPARE(destination.maskColor(), source.maskColor());
+        QCOMPARE(destination->imageData(), source->imageData());
+        QCOMPARE(destination->width(), source->width());
+        QCOMPARE(destination->height(), source->height());
+        QCOMPARE(destination->xOffset(), source->xOffset());
+        QCOMPARE(destination->yOffset(), source->yOffset());
+        QCOMPARE(destination->flags(), source->flags());
+        QCOMPARE(destination->maskColor(), source->maskColor());
     }
 };
 

@@ -14,7 +14,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::IconPropertyPrivate
 {
 public:
-    std::optional<AlignmentProperty> alignment;
+    std::unique_ptr<AlignmentProperty> alignment;
     std::optional<qreal> width;
     std::optional<qreal> height;
     std::optional<QString> name;
@@ -30,7 +30,8 @@ IconProperty::IconProperty()
 IconProperty::IconProperty(const IconProperty &other)
     : d(std::make_unique<IconPropertyPrivate>())
 {
-    d->alignment = other.d->alignment;
+    d->alignment = std::make_unique<AlignmentProperty>();
+    *(d->alignment) = *(other.d->alignment);
     d->width = other.d->width;
     d->height = other.d->height;
     d->name = other.d->name;
@@ -48,7 +49,7 @@ IconProperty::~IconProperty() = default;
 IconProperty &IconProperty::operator=(const IconProperty &other)
 {
     if (this != &other) {
-        d->alignment = other.d->alignment;
+        *(d->alignment) = *(other.d->alignment);
         d->width = other.d->width;
         d->height = other.d->height;
         d->name = other.d->name;
@@ -64,24 +65,16 @@ IconProperty &IconProperty::operator=(IconProperty &&other)
     return *this;
 }
 
-std::optional<AlignmentProperty> IconProperty::alignment() const
+AlignmentProperty *IconProperty::alignment() const
 {
-    return d->alignment;
+    return d->alignment.get();
 }
 
-AlignmentProperty IconProperty::alignment_or_new() const
+void IconProperty::setAlignment(std::unique_ptr<AlignmentProperty> &&newValue)
 {
-    return d->alignment.value_or(AlignmentProperty{});
+    d->alignment = std::move(newValue);
 }
 
-void IconProperty::setAlignment(const std::optional<AlignmentProperty> &newValue)
-{
-    if (newValue == d->alignment) {
-        return;
-    }
-
-    d->alignment = newValue;
-}
 std::optional<qreal> IconProperty::width() const
 {
     return d->width;
@@ -95,6 +88,7 @@ void IconProperty::setWidth(const std::optional<qreal> &newValue)
 
     d->width = newValue;
 }
+
 std::optional<qreal> IconProperty::height() const
 {
     return d->height;
@@ -108,6 +102,7 @@ void IconProperty::setHeight(const std::optional<qreal> &newValue)
 
     d->height = newValue;
 }
+
 std::optional<QString> IconProperty::name() const
 {
     return d->name;
@@ -121,6 +116,7 @@ void IconProperty::setName(const std::optional<QString> &newValue)
 
     d->name = newValue;
 }
+
 std::optional<QUrl> IconProperty::source() const
 {
     return d->source;
@@ -134,6 +130,7 @@ void IconProperty::setSource(const std::optional<QUrl> &newValue)
 
     d->source = newValue;
 }
+
 std::optional<Union::Color> IconProperty::color() const
 {
     return d->color;
@@ -150,7 +147,7 @@ void IconProperty::setColor(const std::optional<Union::Color> &newValue)
 
 bool IconProperty::hasAnyValue() const
 {
-    if (d->alignment.has_value() && d->alignment->hasAnyValue()) {
+    if (d->alignment && d->alignment->hasAnyValue()) {
         return true;
     }
     if (d->width.has_value()) {
@@ -177,7 +174,7 @@ bool IconProperty::isEmpty() const
         return true;
     }
 
-    if (d->alignment.has_value() && !d->alignment->isEmpty()) {
+    if (d->alignment && !d->alignment->isEmpty()) {
         return false;
     }
     if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
@@ -199,50 +196,54 @@ bool IconProperty::isEmpty() const
     return true;
 }
 
-void IconProperty::resolveProperties(const IconProperty &source, IconProperty &destination)
+void IconProperty::resolveProperties(const IconProperty *source, IconProperty *destination)
 {
-    if (source.d->alignment.has_value()) {
-        AlignmentProperty property;
-        if (destination.d->alignment.has_value()) {
-            property = destination.d->alignment.value();
+    if (!source || !destination) {
+        return;
+    }
+
+    if (source->d->alignment) {
+        if (!destination->d->alignment) {
+            destination->d->alignment = std::make_unique<AlignmentProperty>();
         }
-        AlignmentProperty::resolveProperties(source.d->alignment.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->alignment = property;
-        }
+        AlignmentProperty::resolveProperties(source->d->alignment.get(), destination->d->alignment.get());
     }
-    if (!destination.d->width.has_value()) {
-        destination.d->width = source.d->width;
+    if (!destination->d->width.has_value()) {
+        destination->d->width = source->d->width;
     }
-    if (!destination.d->height.has_value()) {
-        destination.d->height = source.d->height;
+    if (!destination->d->height.has_value()) {
+        destination->d->height = source->d->height;
     }
-    if (!destination.d->name.has_value()) {
-        destination.d->name = source.d->name;
+    if (!destination->d->name.has_value()) {
+        destination->d->name = source->d->name;
     }
-    if (!destination.d->source.has_value()) {
-        destination.d->source = source.d->source;
+    if (!destination->d->source.has_value()) {
+        destination->d->source = source->d->source;
     }
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
     }
 }
 
-IconProperty IconProperty::empty()
+std::unique_ptr<IconProperty> IconProperty::empty()
 {
-    IconProperty result;
-    result.d->alignment = emptyValue<AlignmentProperty>();
-    result.d->width = emptyValue<qreal>();
-    result.d->height = emptyValue<qreal>();
-    result.d->name = emptyValue<QString>();
-    result.d->source = emptyValue<QUrl>();
-    result.d->color = emptyValue<Union::Color>();
+    auto result = std::make_unique<IconProperty>();
+    result->d->alignment = AlignmentProperty::empty();
+    result->d->width = emptyValue<qreal>();
+    result->d->height = emptyValue<qreal>();
+    result->d->name = emptyValue<QString>();
+    result->d->source = emptyValue<QUrl>();
+    result->d->color = emptyValue<Union::Color>();
     return result;
 }
 
 bool Union::Properties::operator==(const IconProperty &left, const IconProperty &right)
 {
-    if (left.alignment() != right.alignment()) {
+    if (left.alignment() && right.alignment()) {
+        if (*(left.alignment()) != *(right.alignment())) {
+            return false;
+        }
+    } else if (left.alignment() != right.alignment()) {
         return false;
     }
     if (left.width() != right.width()) {
@@ -266,13 +267,17 @@ bool Union::Properties::operator==(const IconProperty &left, const IconProperty 
 QDebug operator<<(QDebug debug, const Union::Properties::IconProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "IconProperty(" //
-                    << "alignment: " << type.alignment() //
-                    << ", width: " << type.width() //
-                    << ", height: " << type.height() //
-                    << ", name: " << type.name() //
-                    << ", source: " << type.source() //
-                    << ", color: " << type.color() //
-                    << ")";
+    debug.nospace() << "IconProperty(";
+    if (type.alignment()) {
+        debug.nospace() << "alignment: " << *type.alignment();
+    } else {
+        debug.nospace() << "alignment: (empty)";
+    }
+    debug.nospace() << ", width: " << type.width();
+    debug.nospace() << ", height: " << type.height();
+    debug.nospace() << ", name: " << type.name();
+    debug.nospace() << ", source: " << type.source();
+    debug.nospace() << ", color: " << type.color();
+    debug.nospace() << ")";
     return debug;
 }

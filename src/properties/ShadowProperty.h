@@ -65,24 +65,22 @@ public:
     ShadowProperty &operator=(ShadowProperty &&other);
 
     /*!
-     * Returns the value of offset.
+     * Returns offset if set or nullptr if not.
      */
-    std::optional<OffsetProperty> offset() const;
-    /*!
-     * Returns offset if set or a new OffsetProperty if not.
-     */
-    OffsetProperty offset_or_new() const;
+    OffsetProperty *offset() const;
+
     /*!
      * Set the value of offset.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setOffset(const std::optional<OffsetProperty> &newValue);
+    void setOffset(std::unique_ptr<OffsetProperty> &&newValue);
 
     /*!
      * Returns the value of color.
      */
     std::optional<Union::Color> color() const;
+
     /*!
      * Set the value of color.
      *
@@ -94,6 +92,7 @@ public:
      * Returns the value of size.
      */
     std::optional<qreal> size() const;
+
     /*!
      * Set the value of size.
      *
@@ -105,6 +104,7 @@ public:
      * Returns the value of blur.
      */
     std::optional<qreal> blur() const;
+
     /*!
      * Set the value of blur.
      *
@@ -113,124 +113,100 @@ public:
     void setBlur(const std::optional<qreal> &newValue);
 
     /*!
-     * Returns the value of left.
+     * Returns left if set or nullptr if not.
      */
-    std::optional<LineProperty> left() const;
-    /*!
-     * Returns left if set or a new LineProperty if not.
-     */
-    LineProperty left_or_new() const;
+    LineProperty *left() const;
+
     /*!
      * Set the value of left.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setLeft(const std::optional<LineProperty> &newValue);
+    void setLeft(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of right.
+     * Returns right if set or nullptr if not.
      */
-    std::optional<LineProperty> right() const;
-    /*!
-     * Returns right if set or a new LineProperty if not.
-     */
-    LineProperty right_or_new() const;
+    LineProperty *right() const;
+
     /*!
      * Set the value of right.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setRight(const std::optional<LineProperty> &newValue);
+    void setRight(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of top.
+     * Returns top if set or nullptr if not.
      */
-    std::optional<LineProperty> top() const;
-    /*!
-     * Returns top if set or a new LineProperty if not.
-     */
-    LineProperty top_or_new() const;
+    LineProperty *top() const;
+
     /*!
      * Set the value of top.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTop(const std::optional<LineProperty> &newValue);
+    void setTop(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of bottom.
+     * Returns bottom if set or nullptr if not.
      */
-    std::optional<LineProperty> bottom() const;
-    /*!
-     * Returns bottom if set or a new LineProperty if not.
-     */
-    LineProperty bottom_or_new() const;
+    LineProperty *bottom() const;
+
     /*!
      * Set the value of bottom.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottom(const std::optional<LineProperty> &newValue);
+    void setBottom(std::unique_ptr<LineProperty> &&newValue);
 
     /*!
-     * Returns the value of topLeft.
+     * Returns topLeft if set or nullptr if not.
      */
-    std::optional<CornerProperty> topLeft() const;
-    /*!
-     * Returns topLeft if set or a new CornerProperty if not.
-     */
-    CornerProperty topLeft_or_new() const;
+    CornerProperty *topLeft() const;
+
     /*!
      * Set the value of topLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTopLeft(const std::optional<CornerProperty> &newValue);
+    void setTopLeft(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of topRight.
+     * Returns topRight if set or nullptr if not.
      */
-    std::optional<CornerProperty> topRight() const;
-    /*!
-     * Returns topRight if set or a new CornerProperty if not.
-     */
-    CornerProperty topRight_or_new() const;
+    CornerProperty *topRight() const;
+
     /*!
      * Set the value of topRight.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTopRight(const std::optional<CornerProperty> &newValue);
+    void setTopRight(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of bottomLeft.
+     * Returns bottomLeft if set or nullptr if not.
      */
-    std::optional<CornerProperty> bottomLeft() const;
-    /*!
-     * Returns bottomLeft if set or a new CornerProperty if not.
-     */
-    CornerProperty bottomLeft_or_new() const;
+    CornerProperty *bottomLeft() const;
+
     /*!
      * Set the value of bottomLeft.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottomLeft(const std::optional<CornerProperty> &newValue);
+    void setBottomLeft(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
-     * Returns the value of bottomRight.
+     * Returns bottomRight if set or nullptr if not.
      */
-    std::optional<CornerProperty> bottomRight() const;
-    /*!
-     * Returns bottomRight if set or a new CornerProperty if not.
-     */
-    CornerProperty bottomRight_or_new() const;
+    CornerProperty *bottomRight() const;
+
     /*!
      * Set the value of bottomRight.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottomRight(const std::optional<CornerProperty> &newValue);
+    void setBottomRight(std::unique_ptr<CornerProperty> &&newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -256,7 +232,7 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const ShadowProperty &source, ShadowProperty &destination);
+    static void resolveProperties(const ShadowProperty *source, ShadowProperty *destination);
 
     /*!
      * Create and return an empty ShadowProperty instance.
@@ -266,7 +242,7 @@ public:
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static ShadowProperty empty();
+    static std::unique_ptr<ShadowProperty> empty();
 
 private:
     std::unique_ptr<ShadowPropertyPrivate> d;

@@ -23,7 +23,7 @@ LayoutPropertyGroup::LayoutPropertyGroup(QuickStyle *style)
     m_margins = std::make_unique<SizePropertyGroup>(m_style);
 }
 
-void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
+void LayoutPropertyGroup::update(LayoutProperty *newState)
 {
     if (newState == m_state) {
         return;
@@ -32,15 +32,15 @@ void LayoutPropertyGroup::update(const std::optional<LayoutProperty> &newState)
     m_state = newState;
 
     if (!newState) {
-        m_alignment->update(std::nullopt);
-        m_padding->update(std::nullopt);
-        m_inset->update(std::nullopt);
-        m_margins->update(std::nullopt);
+        m_alignment->update(nullptr);
+        m_padding->update(nullptr);
+        m_inset->update(nullptr);
+        m_margins->update(nullptr);
     } else {
-        m_alignment->update(newState.value().alignment());
-        m_padding->update(newState.value().padding());
-        m_inset->update(newState.value().inset());
-        m_margins->update(newState.value().margins());
+        m_alignment->update(newState->alignment());
+        m_padding->update(newState->padding());
+        m_inset->update(newState->inset());
+        m_margins->update(newState->margins());
     }
 
     Q_EMIT widthChanged();
@@ -68,7 +68,7 @@ QJSValue LayoutPropertyGroup::width() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().width();
+    auto value = m_state->width();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -82,7 +82,7 @@ QJSValue LayoutPropertyGroup::height() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().height();
+    auto value = m_state->height();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
@@ -96,7 +96,7 @@ QJSValue LayoutPropertyGroup::spacing() const
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state.value().spacing();
+    auto value = m_state->spacing();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

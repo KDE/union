@@ -15,7 +15,7 @@ class Union::Properties::BackgroundPropertyPrivate
 {
 public:
     std::optional<Union::Color> color;
-    std::optional<ImageProperty> image;
+    std::unique_ptr<ImageProperty> image;
 };
 
 BackgroundProperty::BackgroundProperty()
@@ -27,7 +27,8 @@ BackgroundProperty::BackgroundProperty(const BackgroundProperty &other)
     : d(std::make_unique<BackgroundPropertyPrivate>())
 {
     d->color = other.d->color;
-    d->image = other.d->image;
+    d->image = std::make_unique<ImageProperty>();
+    *(d->image) = *(other.d->image);
 }
 
 BackgroundProperty::BackgroundProperty(BackgroundProperty &&other)
@@ -41,7 +42,7 @@ BackgroundProperty &BackgroundProperty::operator=(const BackgroundProperty &othe
 {
     if (this != &other) {
         d->color = other.d->color;
-        d->image = other.d->image;
+        *(d->image) = *(other.d->image);
     }
     return *this;
 }
@@ -65,23 +66,15 @@ void BackgroundProperty::setColor(const std::optional<Union::Color> &newValue)
 
     d->color = newValue;
 }
-std::optional<ImageProperty> BackgroundProperty::image() const
+
+ImageProperty *BackgroundProperty::image() const
 {
-    return d->image;
+    return d->image.get();
 }
 
-ImageProperty BackgroundProperty::image_or_new() const
+void BackgroundProperty::setImage(std::unique_ptr<ImageProperty> &&newValue)
 {
-    return d->image.value_or(ImageProperty{});
-}
-
-void BackgroundProperty::setImage(const std::optional<ImageProperty> &newValue)
-{
-    if (newValue == d->image) {
-        return;
-    }
-
-    d->image = newValue;
+    d->image = std::move(newValue);
 }
 
 bool BackgroundProperty::hasAnyValue() const
@@ -89,7 +82,7 @@ bool BackgroundProperty::hasAnyValue() const
     if (d->color.has_value()) {
         return true;
     }
-    if (d->image.has_value() && d->image->hasAnyValue()) {
+    if (d->image && d->image->hasAnyValue()) {
         return true;
     }
     return false;
@@ -104,35 +97,35 @@ bool BackgroundProperty::isEmpty() const
     if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
         return false;
     }
-    if (d->image.has_value() && !d->image->isEmpty()) {
+    if (d->image && !d->image->isEmpty()) {
         return false;
     }
 
     return true;
 }
 
-void BackgroundProperty::resolveProperties(const BackgroundProperty &source, BackgroundProperty &destination)
+void BackgroundProperty::resolveProperties(const BackgroundProperty *source, BackgroundProperty *destination)
 {
-    if (!destination.d->color.has_value()) {
-        destination.d->color = source.d->color;
+    if (!source || !destination) {
+        return;
     }
-    if (source.d->image.has_value()) {
-        ImageProperty property;
-        if (destination.d->image.has_value()) {
-            property = destination.d->image.value();
+
+    if (!destination->d->color.has_value()) {
+        destination->d->color = source->d->color;
+    }
+    if (source->d->image) {
+        if (!destination->d->image) {
+            destination->d->image = std::make_unique<ImageProperty>();
         }
-        ImageProperty::resolveProperties(source.d->image.value(), property);
-        if (property.hasAnyValue()) {
-            destination.d->image = property;
-        }
+        ImageProperty::resolveProperties(source->d->image.get(), destination->d->image.get());
     }
 }
 
-BackgroundProperty BackgroundProperty::empty()
+std::unique_ptr<BackgroundProperty> BackgroundProperty::empty()
 {
-    BackgroundProperty result;
-    result.d->color = emptyValue<Union::Color>();
-    result.d->image = emptyValue<ImageProperty>();
+    auto result = std::make_unique<BackgroundProperty>();
+    result->d->color = emptyValue<Union::Color>();
+    result->d->image = ImageProperty::empty();
     return result;
 }
 
@@ -141,7 +134,11 @@ bool Union::Properties::operator==(const BackgroundProperty &left, const Backgro
     if (left.color() != right.color()) {
         return false;
     }
-    if (left.image() != right.image()) {
+    if (left.image() && right.image()) {
+        if (*(left.image()) != *(right.image())) {
+            return false;
+        }
+    } else if (left.image() != right.image()) {
         return false;
     }
     return true;
@@ -150,9 +147,13 @@ bool Union::Properties::operator==(const BackgroundProperty &left, const Backgro
 QDebug operator<<(QDebug debug, const Union::Properties::BackgroundProperty &type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "BackgroundProperty(" //
-                    << "color: " << type.color() //
-                    << ", image: " << type.image() //
-                    << ")";
+    debug.nospace() << "BackgroundProperty(";
+    debug.nospace() << "color: " << type.color();
+    if (type.image()) {
+        debug.nospace() << ", image: " << *type.image();
+    } else {
+        debug.nospace() << ", image: (empty)";
+    }
+    debug.nospace() << ")";
     return debug;
 }

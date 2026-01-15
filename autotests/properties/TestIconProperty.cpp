@@ -17,107 +17,120 @@ class TestIconProperty : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testNull()
+    {
+        auto property = std::make_unique<IconProperty>();
+
+        // A null instance should not have any values for its properties.
+        QVERIFY(!property->alignment());
+        QVERIFY(!property->width().has_value());
+        QVERIFY(!property->height().has_value());
+        QVERIFY(!property->name().has_value());
+        QVERIFY(!property->source().has_value());
+        QVERIFY(!property->color().has_value());
+    }
+
     void testEmpty()
     {
-        IconProperty property;
+        auto property = IconProperty::empty();
 
-        // An empty instance should not have any values for its properties.
-        QVERIFY(!property.alignment().has_value());
-        QVERIFY(!property.width().has_value());
-        QVERIFY(!property.height().has_value());
-        QVERIFY(!property.name().has_value());
-        QVERIFY(!property.source().has_value());
-        QVERIFY(!property.color().has_value());
+        // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->alignment(), *AlignmentProperty::empty());
+        QCOMPARE(property->width().value(), emptyValue<qreal>());
+        QCOMPARE(property->height().value(), emptyValue<qreal>());
+        QCOMPARE(property->name().value(), emptyValue<QString>());
+        QCOMPARE(property->source().value(), emptyValue<QUrl>());
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
     }
 
     void testHasAnyValue()
     {
-        IconProperty property;
+        auto property = std::make_unique<IconProperty>();
 
         // An empty instance should not have any values for its properties.
-        QVERIFY(!property.hasAnyValue());
+        QVERIFY(!property->hasAnyValue());
 
         {
             // Assigning an empty value to a property should have no effect.
-            property.setAlignment(AlignmentProperty{});
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(std::make_unique<AlignmentProperty>());
+            QVERIFY(!property->hasAnyValue());
 
-            property.setAlignment(testAlignmentPropertyInstance());
-            QVERIFY(property.hasAnyValue());
+            property->setAlignment(testAlignmentPropertyInstance());
+            QVERIFY(property->hasAnyValue());
 
-            property.setAlignment(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setAlignment(nullptr);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setWidth(value);
-            QVERIFY(property.hasAnyValue());
-            property.setWidth(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setWidth(value);
+            QVERIFY(property->hasAnyValue());
+            property->setWidth(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             qreal value;
-            property.setHeight(value);
-            QVERIFY(property.hasAnyValue());
-            property.setHeight(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setHeight(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHeight(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             QString value;
-            property.setName(value);
-            QVERIFY(property.hasAnyValue());
-            property.setName(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setName(value);
+            QVERIFY(property->hasAnyValue());
+            property->setName(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             QUrl value;
-            property.setSource(value);
-            QVERIFY(property.hasAnyValue());
-            property.setSource(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setSource(value);
+            QVERIFY(property->hasAnyValue());
+            property->setSource(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
         {
             Union::Color value;
-            property.setColor(value);
-            QVERIFY(property.hasAnyValue());
-            property.setColor(std::nullopt);
-            QVERIFY(!property.hasAnyValue());
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
         }
     }
 
     void testResolveProperties()
     {
-        IconProperty source;
-        IconProperty destination;
+        auto source = std::make_unique<IconProperty>();
+        auto destination = std::make_unique<IconProperty>();
 
-        QVERIFY(!source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        IconProperty::resolveProperties(source, destination);
+        IconProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        source.setAlignment(testAlignmentPropertyInstance());
-        source.setWidth(qreal{});
-        source.setHeight(qreal{});
-        source.setName(QString{});
-        source.setSource(QUrl{});
-        source.setColor(Union::Color{});
+        source->setAlignment(testAlignmentPropertyInstance());
+        source->setWidth(qreal{});
+        source->setHeight(qreal{});
+        source->setName(QString{});
+        source->setSource(QUrl{});
+        source->setColor(Union::Color{});
 
-        QVERIFY(source.hasAnyValue());
-        QVERIFY(!destination.hasAnyValue());
+        QVERIFY(source->hasAnyValue());
+        QVERIFY(!destination->hasAnyValue());
 
-        IconProperty::resolveProperties(source, destination);
+        IconProperty::resolveProperties(source.get(), destination.get());
 
-        QVERIFY(destination.hasAnyValue());
+        QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination.alignment(), source.alignment());
-        QCOMPARE(destination.width(), source.width());
-        QCOMPARE(destination.height(), source.height());
-        QCOMPARE(destination.name(), source.name());
-        QCOMPARE(destination.source(), source.source());
-        QCOMPARE(destination.color(), source.color());
+        QCOMPARE(*destination->alignment(), *source->alignment());
+        QCOMPARE(destination->width(), source->width());
+        QCOMPARE(destination->height(), source->height());
+        QCOMPARE(destination->name(), source->name());
+        QCOMPARE(destination->source(), source->source());
+        QCOMPARE(destination->color(), source->color());
     }
 };
 

@@ -34,7 +34,7 @@ class OffsetPropertyGroup : public QObject
 public:
     explicit OffsetPropertyGroup(QuickStyle *style);
 
-    void update(const std::optional<Union::Properties::OffsetProperty> &newState);
+    void update(Union::Properties::OffsetProperty *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
@@ -60,5 +60,5 @@ public:
 private:
     QuickStyle *m_style = nullptr;
 
-    std::optional<Union::Properties::OffsetProperty> m_state = std::nullopt;
+    Union::Properties::OffsetProperty *m_state = nullptr;
 };
