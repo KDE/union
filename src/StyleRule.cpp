@@ -11,7 +11,7 @@ class Union::StyleRulePrivate
 {
 public:
     SelectorList selectors;
-    Properties::StyleProperty properties;
+    std::unique_ptr<Properties::StyleProperty> properties;
 };
 
 StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)
@@ -32,14 +32,14 @@ void StyleRule::setSelectors(const SelectorList &selectors)
     d->selectors = selectors;
 }
 
-const Properties::StyleProperty &StyleRule::properties() const
+Properties::StyleProperty *StyleRule::properties() const
 {
-    return d->properties;
+    return d->properties.get();
 }
 
-void StyleRule::setProperties(const Properties::StyleProperty &newProperties)
+void StyleRule::setProperties(std::unique_ptr<Properties::StyleProperty> &&newProperties)
 {
-    d->properties = newProperties;
+    d->properties = std::move(newProperties);
 }
 
 StyleRule::Ptr StyleRule::create()

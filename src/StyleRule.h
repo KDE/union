@@ -42,8 +42,8 @@ public:
     SelectorList selectors() const;
     void setSelectors(const SelectorList &selectors);
 
-    const Properties::StyleProperty &properties() const;
-    void setProperties(const Properties::StyleProperty &newProperties);
+    Properties::StyleProperty *properties() const;
+    void setProperties(std::unique_ptr<Properties::StyleProperty> &&newProperties);
 
     static Ptr create();
 
