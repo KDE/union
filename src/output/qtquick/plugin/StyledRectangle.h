@@ -34,9 +34,7 @@ protected:
 
 private:
     void updateImplicitSize();
-    QSGNode *updateRectangleNode(QSGNode *node, const Union::Properties::StyleProperty *style);
     QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::StyleProperty *style);
-    QSizeF minimumSize(const Union::Properties::StyleProperty *background);
 
     QuickStyle *m_style = nullptr;
 };
