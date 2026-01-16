@@ -6,6 +6,8 @@
 
 #include "ImageProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -222,6 +224,91 @@ bool ImageProperty::isEmpty() const
     return true;
 }
 
+QString ImageProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "ImageProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "imageData: ";
+    if (d->imageData) {
+        auto image = d->imageData.value();
+        out << "QImage(fmt=" << image.format() << ", width=" << image.width() << ", height=" << image.height() << ")" << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "width: ";
+    if (d->width) {
+        out << d->width.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "height: ";
+    if (d->height) {
+        out << d->height.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "xOffset: ";
+    if (d->xOffset) {
+        out << d->xOffset.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "yOffset: ";
+    if (d->yOffset) {
+        out << d->yOffset.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "flags: ";
+    if (d->flags) {
+        out << d->flags.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "maskColor: ";
+    if (d->maskColor) {
+        out << d->maskColor->toString() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void ImageProperty::resolveProperties(const ImageProperty *source, ImageProperty *destination)
 {
     if (!source || !destination) {
@@ -290,17 +377,9 @@ bool Union::Properties::operator==(const ImageProperty &left, const ImagePropert
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::ImageProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::ImageProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "ImageProperty(";
-    debug.nospace() << "imageData: " << type.imageData();
-    debug.nospace() << ", width: " << type.width();
-    debug.nospace() << ", height: " << type.height();
-    debug.nospace() << ", xOffset: " << type.xOffset();
-    debug.nospace() << ", yOffset: " << type.yOffset();
-    debug.nospace() << ", flags: " << type.flags();
-    debug.nospace() << ", maskColor: " << type.maskColor();
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

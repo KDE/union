@@ -6,6 +6,8 @@
 
 #include "AlignmentProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -153,6 +155,72 @@ bool AlignmentProperty::isEmpty() const
     return true;
 }
 
+QString AlignmentProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "AlignmentProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "container: ";
+    if (d->container) {
+        out << d->container.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "horizontal: ";
+    if (d->horizontal) {
+        out << d->horizontal.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "vertical: ";
+    if (d->vertical) {
+        out << d->vertical.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "order: ";
+    if (d->order) {
+        out << d->order.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void AlignmentProperty::resolveProperties(const AlignmentProperty *source, AlignmentProperty *destination)
 {
     if (!source || !destination) {
@@ -200,14 +268,9 @@ bool Union::Properties::operator==(const AlignmentProperty &left, const Alignmen
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::AlignmentProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::AlignmentProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "AlignmentProperty(";
-    debug.nospace() << "container: " << type.container();
-    debug.nospace() << ", horizontal: " << type.horizontal();
-    debug.nospace() << ", vertical: " << type.vertical();
-    debug.nospace() << ", order: " << type.order();
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

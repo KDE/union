@@ -6,6 +6,8 @@
 
 #include "BackgroundProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -104,6 +106,60 @@ bool BackgroundProperty::isEmpty() const
     return true;
 }
 
+QString BackgroundProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "BackgroundProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "color: ";
+    if (d->color) {
+        out << d->color->toString() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "image: ";
+    if (d->image) {
+        out << d->image->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void BackgroundProperty::resolveProperties(const BackgroundProperty *source, BackgroundProperty *destination)
 {
     if (!source || !destination) {
@@ -144,16 +200,9 @@ bool Union::Properties::operator==(const BackgroundProperty &left, const Backgro
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::BackgroundProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::BackgroundProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "BackgroundProperty(";
-    debug.nospace() << "color: " << type.color();
-    if (type.image()) {
-        debug.nospace() << ", image: " << *type.image();
-    } else {
-        debug.nospace() << ", image: (empty)";
-    }
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

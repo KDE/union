@@ -6,6 +6,8 @@
 
 #include "ShadowProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -310,6 +312,120 @@ bool ShadowProperty::isEmpty() const
     return true;
 }
 
+QString ShadowProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "ShadowProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "offset: ";
+    if (d->offset) {
+        out << d->offset->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "color: ";
+    if (d->color) {
+        out << d->color->toString() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "size: ";
+    if (d->size) {
+        out << d->size.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "blur: ";
+    if (d->blur) {
+        out << d->blur.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "left: ";
+    if (d->left) {
+        out << d->left->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "right: ";
+    if (d->right) {
+        out << d->right->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "top: ";
+    if (d->top) {
+        out << d->top->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottom: ";
+    if (d->bottom) {
+        out << d->bottom->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "topLeft: ";
+    if (d->topLeft) {
+        out << d->topLeft->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "topRight: ";
+    if (d->topRight) {
+        out << d->topRight->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottomLeft: ";
+    if (d->bottomLeft) {
+        out << d->bottomLeft->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottomRight: ";
+    if (d->bottomRight) {
+        out << d->bottomRight->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void ShadowProperty::resolveProperties(const ShadowProperty *source, ShadowProperty *destination)
 {
     if (!source || !destination) {
@@ -476,58 +592,9 @@ bool Union::Properties::operator==(const ShadowProperty &left, const ShadowPrope
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::ShadowProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::ShadowProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "ShadowProperty(";
-    if (type.offset()) {
-        debug.nospace() << "offset: " << *type.offset();
-    } else {
-        debug.nospace() << "offset: (empty)";
-    }
-    debug.nospace() << ", color: " << type.color();
-    debug.nospace() << ", size: " << type.size();
-    debug.nospace() << ", blur: " << type.blur();
-    if (type.left()) {
-        debug.nospace() << ", left: " << *type.left();
-    } else {
-        debug.nospace() << ", left: (empty)";
-    }
-    if (type.right()) {
-        debug.nospace() << ", right: " << *type.right();
-    } else {
-        debug.nospace() << ", right: (empty)";
-    }
-    if (type.top()) {
-        debug.nospace() << ", top: " << *type.top();
-    } else {
-        debug.nospace() << ", top: (empty)";
-    }
-    if (type.bottom()) {
-        debug.nospace() << ", bottom: " << *type.bottom();
-    } else {
-        debug.nospace() << ", bottom: (empty)";
-    }
-    if (type.topLeft()) {
-        debug.nospace() << ", topLeft: " << *type.topLeft();
-    } else {
-        debug.nospace() << ", topLeft: (empty)";
-    }
-    if (type.topRight()) {
-        debug.nospace() << ", topRight: " << *type.topRight();
-    } else {
-        debug.nospace() << ", topRight: (empty)";
-    }
-    if (type.bottomLeft()) {
-        debug.nospace() << ", bottomLeft: " << *type.bottomLeft();
-    } else {
-        debug.nospace() << ", bottomLeft: (empty)";
-    }
-    if (type.bottomRight()) {
-        debug.nospace() << ", bottomRight: " << *type.bottomRight();
-    } else {
-        debug.nospace() << ", bottomRight: (empty)";
-    }
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

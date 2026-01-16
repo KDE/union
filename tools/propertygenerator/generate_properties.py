@@ -245,7 +245,6 @@ if __name__ == "__main__":
 
     data = {"types": types.values()}
 
-    render_template("formatter.h.j2", src_directory / "Formatter.h", jinja_env, data)
     render_template("CreateTestInstances.h.j2", tests_directory / "CreateTestInstances.h", jinja_env, data)
     render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)
     render_template("CMakeLists.tests.txt.j2", tests_directory / "CMakeLists.txt", jinja_env, data)

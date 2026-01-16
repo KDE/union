@@ -6,6 +6,8 @@
 
 #include "StyleProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -221,6 +223,96 @@ bool StyleProperty::isEmpty() const
     return true;
 }
 
+QString StyleProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "StyleProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "layout: ";
+    if (d->layout) {
+        out << d->layout->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "text: ";
+    if (d->text) {
+        out << d->text->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "icon: ";
+    if (d->icon) {
+        out << d->icon->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "background: ";
+    if (d->background) {
+        out << d->background->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "border: ";
+    if (d->border) {
+        out << d->border->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "outline: ";
+    if (d->outline) {
+        out << d->outline->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "corners: ";
+    if (d->corners) {
+        out << d->corners->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "shadow: ";
+    if (d->shadow) {
+        out << d->shadow->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void StyleProperty::resolveProperties(const StyleProperty *source, StyleProperty *destination)
 {
     if (!source || !destination) {
@@ -352,50 +444,9 @@ bool Union::Properties::operator==(const StyleProperty &left, const StylePropert
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::StyleProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::StyleProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "StyleProperty(";
-    if (type.layout()) {
-        debug.nospace() << "layout: " << *type.layout();
-    } else {
-        debug.nospace() << "layout: (empty)";
-    }
-    if (type.text()) {
-        debug.nospace() << ", text: " << *type.text();
-    } else {
-        debug.nospace() << ", text: (empty)";
-    }
-    if (type.icon()) {
-        debug.nospace() << ", icon: " << *type.icon();
-    } else {
-        debug.nospace() << ", icon: (empty)";
-    }
-    if (type.background()) {
-        debug.nospace() << ", background: " << *type.background();
-    } else {
-        debug.nospace() << ", background: (empty)";
-    }
-    if (type.border()) {
-        debug.nospace() << ", border: " << *type.border();
-    } else {
-        debug.nospace() << ", border: (empty)";
-    }
-    if (type.outline()) {
-        debug.nospace() << ", outline: " << *type.outline();
-    } else {
-        debug.nospace() << ", outline: (empty)";
-    }
-    if (type.corners()) {
-        debug.nospace() << ", corners: " << *type.corners();
-    } else {
-        debug.nospace() << ", corners: (empty)";
-    }
-    if (type.shadow()) {
-        debug.nospace() << ", shadow: " << *type.shadow();
-    } else {
-        debug.nospace() << ", shadow: (empty)";
-    }
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

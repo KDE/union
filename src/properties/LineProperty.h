@@ -15,6 +15,8 @@
 #include "../PropertiesTypes.h"
 #include "ImageProperty.h"
 
+#include "PropertiesTypes.h"
+
 #include "union_export.h"
 
 // clang-format on
@@ -128,6 +130,16 @@ public:
     bool isEmpty() const;
 
     /*!
+     * Returns a string representation of this property group.
+     *
+     * This is intended for debugging.
+     *
+     * \a indentation The amount of indentation to apply. Defaults to 0.
+     * \a flags A set of flags that control conversion behavior.
+     */
+    QString toString(int indentation = 0, ToStringFlags flags = ToStringFlags{}) const;
+
+    /*!
      * Copy property values from source to destination if destination does not have a property value.
      *
      * This will recursively copy property values of grouped properties.
@@ -163,4 +175,4 @@ UNION_EXPORT bool operator==(const LineProperty &left, const LineProperty &right
  * \relates Union::Properties::LineProperty
  * QDebug support for LineProperty.
  */
-UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Properties::LineProperty &type);
+UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::LineProperty *type);

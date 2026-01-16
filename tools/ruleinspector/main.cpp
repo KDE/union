@@ -12,7 +12,7 @@
 #include <ElementQuery.h>
 #include <Style.h>
 #include <StyleRegistry.h>
-#include <properties/Formatter.h>
+// #include <properties/Formatter.h>
 
 using namespace Qt::StringLiterals;
 
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     query.setElements({queryElement});
     query.execute();
 
-    if (!query.hasMatches()) {
+    if (!query.hasMatches() || !query.properties()) {
         std::cout << "Query had no result!\n";
         return 2;
     }
@@ -84,7 +84,7 @@ int main(int argc, char **argv)
     std::cout << "Matched properties:\n";
     std::cout << std::endl;
 
-    std::cout << std::format("{:nl}", query.properties());
+    std::cout << qPrintable(query.properties()->toString(0, Union::Properties::ToStringFlag::MultiLine));
 
     return 0;
 }

@@ -6,6 +6,8 @@
 
 #include "BorderProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -141,6 +143,72 @@ bool BorderProperty::isEmpty() const
     return true;
 }
 
+QString BorderProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "BorderProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "left: ";
+    if (d->left) {
+        out << d->left->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "right: ";
+    if (d->right) {
+        out << d->right->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "top: ";
+    if (d->top) {
+        out << d->top->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottom: ";
+    if (d->bottom) {
+        out << d->bottom->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void BorderProperty::resolveProperties(const BorderProperty *source, BorderProperty *destination)
 {
     if (!source || !destination) {
@@ -236,30 +304,9 @@ bool Union::Properties::operator==(const BorderProperty &left, const BorderPrope
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::BorderProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::BorderProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "BorderProperty(";
-    if (type.left()) {
-        debug.nospace() << "left: " << *type.left();
-    } else {
-        debug.nospace() << "left: (empty)";
-    }
-    if (type.right()) {
-        debug.nospace() << ", right: " << *type.right();
-    } else {
-        debug.nospace() << ", right: (empty)";
-    }
-    if (type.top()) {
-        debug.nospace() << ", top: " << *type.top();
-    } else {
-        debug.nospace() << ", top: (empty)";
-    }
-    if (type.bottom()) {
-        debug.nospace() << ", bottom: " << *type.bottom();
-    } else {
-        debug.nospace() << ", bottom: (empty)";
-    }
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

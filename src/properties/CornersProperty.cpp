@@ -6,6 +6,8 @@
 
 #include "CornersProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -141,6 +143,72 @@ bool CornersProperty::isEmpty() const
     return true;
 }
 
+QString CornersProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "CornersProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "topLeft: ";
+    if (d->topLeft) {
+        out << d->topLeft->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "topRight: ";
+    if (d->topRight) {
+        out << d->topRight->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottomLeft: ";
+    if (d->bottomLeft) {
+        out << d->bottomLeft->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "bottomRight: ";
+    if (d->bottomRight) {
+        out << d->bottomRight->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void CornersProperty::resolveProperties(const CornersProperty *source, CornersProperty *destination)
 {
     if (!source || !destination) {
@@ -236,30 +304,9 @@ bool Union::Properties::operator==(const CornersProperty &left, const CornersPro
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::CornersProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::CornersProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "CornersProperty(";
-    if (type.topLeft()) {
-        debug.nospace() << "topLeft: " << *type.topLeft();
-    } else {
-        debug.nospace() << "topLeft: (empty)";
-    }
-    if (type.topRight()) {
-        debug.nospace() << ", topRight: " << *type.topRight();
-    } else {
-        debug.nospace() << ", topRight: (empty)";
-    }
-    if (type.bottomLeft()) {
-        debug.nospace() << ", bottomLeft: " << *type.bottomLeft();
-    } else {
-        debug.nospace() << ", bottomLeft: (empty)";
-    }
-    if (type.bottomRight()) {
-        debug.nospace() << ", bottomRight: " << *type.bottomRight();
-    } else {
-        debug.nospace() << ", bottomRight: (empty)";
-    }
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

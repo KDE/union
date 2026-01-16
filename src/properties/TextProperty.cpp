@@ -6,6 +6,8 @@
 
 #include "TextProperty.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -127,6 +129,66 @@ bool TextProperty::isEmpty() const
     return true;
 }
 
+QString TextProperty::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "TextProperty(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+    out << indent(indentation, multiline, true) << "alignment: ";
+    if (d->alignment) {
+        out << d->alignment->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "font: ";
+    if (d->font) {
+        out << d->font->toString() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "color: ";
+    if (d->color) {
+        out << d->color->toString() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void TextProperty::resolveProperties(const TextProperty *source, TextProperty *destination)
 {
     if (!source || !destination) {
@@ -174,17 +236,9 @@ bool Union::Properties::operator==(const TextProperty &left, const TextProperty 
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::TextProperty &type)
+QDebug operator<<(QDebug debug, Union::Properties::TextProperty *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "TextProperty(";
-    if (type.alignment()) {
-        debug.nospace() << "alignment: " << *type.alignment();
-    } else {
-        debug.nospace() << "alignment: (empty)";
-    }
-    debug.nospace() << ", font: " << type.font();
-    debug.nospace() << ", color: " << type.color();
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }

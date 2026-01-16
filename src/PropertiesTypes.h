@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QColor>
+#include <QMetaEnum>
 #include <QMetaObject>
 
 #include "union_export.h"
@@ -97,6 +98,15 @@ enum class Alignment {
 };
 Q_ENUM_NS(Alignment)
 
+/*!
+ * \enum Union::Properties::StringRepresentation
+ */
+enum class ToStringFlag {
+    MultiLine = 1 << 0,
+    Types = 1 << 1,
+};
+Q_DECLARE_FLAGS(ToStringFlags, ToStringFlag)
+
 /*
  * A template method to get an empty value of a certain type.
  *
@@ -133,3 +143,23 @@ inline QColor emptyValue<QColor>()
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Properties::ImageFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Properties::ToStringFlags)
+
+// Helper templates to more easily use enums with QTextStream
+template<typename T>
+    requires std::is_enum_v<T>
+QTextStream &operator<<(QTextStream &stream, T value)
+{
+    auto metaEnum = QMetaEnum::fromType<T>();
+    stream << metaEnum.valueToKeys(quint64(value));
+    return stream;
+}
+
+template<typename T>
+    requires std::is_enum_v<T>
+QTextStream &operator<<(QTextStream &stream, QFlags<T> value)
+{
+    auto metaEnum = QMetaEnum::fromType<T>();
+    stream << metaEnum.valueToKeys(quint64(value));
+    return stream;
+}

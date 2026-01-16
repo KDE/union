@@ -15,6 +15,8 @@ REUSE-IgnoreStart
 
 #include "{{ type_name }}.h"
 
+#include <QRegularExpression>
+
 #include "PropertiesTypes.h"
 
 using namespace Union::Properties;
@@ -146,6 +148,65 @@ bool {{ type_name }}::isEmpty() const
     return true;
 }
 
+QString {{ type_name }}::toString(int indentation, ToStringFlags flags) const
+{
+    if (!hasAnyValue()) {
+        return u"(empty)"_s;
+    }
+
+    const bool multiline = flags & ToStringFlag::MultiLine;
+    const bool types = flags & ToStringFlag::Types;
+
+    QString result;
+    QTextStream out(&result);
+
+    constexpr auto indent = [](int amount, bool multiline, bool first) {
+        if (multiline) {
+            return QByteArray(amount, ' ');
+        } else if (!first) {
+            return QByteArray(", ");
+        } else {
+            return QByteArray(" ");
+        }
+    };
+
+    const QByteArray maybeNewLine = multiline ? "\n" : "";
+    const QByteArray empty = "(empty)";
+
+    if (types) {
+        out << "{{ type_name }}(" << maybeNewLine;
+    } else if (indentation > 0) {
+        out << maybeNewLine;
+    }
+
+{% for property in properties %}
+    out << indent(indentation, multiline, {{ "true" if property == properties[0] else "false" }}) << "{{ property.name }}: ";
+    if (d->{{ property.name }}) {
+{% if property.is_group %}
+        out << d->{{ property.name }}->toString(indentation + 2, flags);
+{% elif property.type in ("QFont", "QUrl", "Union::Color") %}
+        out << d->{{ property.name }}->toString() << maybeNewLine;
+{% elif property.type in ("QImage") %}
+        auto image = d->{{ property.name }}.value();
+        out << "QImage(fmt=" << image.format() << ", width=" << image.width() << ", height=" << image.height() << ")" << maybeNewLine;
+{% else %}
+        out << d->{{ property.name }}.value() << maybeNewLine;
+{% endif %}
+    } else {
+        out << empty << maybeNewLine;
+    }
+{% endfor %}
+
+    if (types) {
+        out << indent(indentation - 2, multiline, true) << ")";
+    }
+    out << maybeNewLine;
+
+    out.flush();
+
+    return result;
+}
+
 void {{ type_name }}::resolveProperties(const {{ type_name }} *source, {{ type_name }} *destination)
 {
     if (!source || !destination) {
@@ -205,25 +266,9 @@ bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_na
     return true;
 }
 
-QDebug operator<<(QDebug debug, const Union::Properties::{{ type_name }} &type)
+QDebug operator<<(QDebug debug, Union::Properties::{{ type_name }} *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << "{{ type_name }}(";
-{% for property in properties %}
-{% set property_name = ", " + property.name + ": " %}
-{% if property == properties[0] %}
-{% set property_name = property.name + ": " %}
-{% endif %}
-{% if property.is_group %}
-    if (type.{{ property.name }}()) {
-        debug.nospace() << "{{property_name}}" << *type.{{ property.name }}();
-    } else {
-        debug.nospace() << "{{property_name}}(empty)";
-    }
-{% else %}
-    debug.nospace() << "{{property_name}}" << type.{{ property.name }}();
-{% endif %}
-{% endfor %}
-    debug.nospace() << ")";
+    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }
