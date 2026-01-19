@@ -175,7 +175,7 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
         if (arguments.at(3) == u"frame") {
             QColor framecolor = KColorUtils::mix(colorScheme.background(KColorScheme::BackgroundRole::NormalBackground).color(),
                                                  colorScheme.foreground(KColorScheme::ForegroundRole::NormalText).color(),
-                                                 KColorScheme::frameContrast());
+                                                 KColorScheme::frameContrast(m_colorConfig));
             value = rgbaFromQColor(framecolor);
         } else {
             auto role = decorationRoleFromString(arguments.at(3));

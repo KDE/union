@@ -95,6 +95,10 @@ bool PlatformTheme::event(QEvent *event)
         syncColorSchemeColors();
     }
 
+    if (event->type() == Kirigami::Platform::PlatformThemeEvents::FrameContrastChangedEvent::type) {
+        syncColorSchemeColors();
+    }
+
     return Kirigami::Platform::PlatformTheme::event(event);
 }
 
