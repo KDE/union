@@ -45,7 +45,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         // TODO: we may have to keep it as a QRectF here
         QRect rect = option->rect;
         if (const auto layout = properties->layout()) {
-            rect -= layout->inset()->toMargins().toMargins();
+            if (layout->inset()) {
+                rect -= layout->inset()->toMargins().toMargins();
+            }
         }
 
         // Make sure to take out the space left for the visual focus rect
