@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -22,7 +23,19 @@ T.SpinBox {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    Union.Element.hints: control.editable ? ["editable"] : []
+    Union.Element.hints: {
+        let result = []
+
+        if (control.editable) {
+            result.push("editable")
+        }
+
+        if (priv.constrained) {
+            result.push("constrained")
+        }
+
+        return result
+    }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -112,4 +125,44 @@ T.SpinBox {
     }
 
     background: Union.StyledRectangle { }
+
+    QtObject {
+        id: priv
+
+        // Measure what the maximum length of text is that needs to fit.
+        property TextMetrics metrics: TextMetrics {
+            font: control.font
+            text: control.textFromValue(control.to, Qt.locale())
+        }
+
+        // Helper to retrieve the size of indicators when not constrained.
+        // Since the indicator size may changed based on the constrained hint,
+        // we need a baseline to use in comparisons.
+        property Item unconstrained: Item {
+            Union.Element.type: "SpinBox"
+
+            Item {
+                id: unconstrainedIndicator
+                Union.Element.type: "Indicator"
+                width: Union.Style.properties.layout.width
+            }
+        }
+
+        // Determine if we are "space constrained", that is, the text that gets
+        // displayed wouldn't fit if both indicators are displayed next to each
+        // other. This can be used by styles to switch to a more compact layout
+        // in that case.
+        property bool constrained: {
+            let constrained = Infinity
+
+            // Use preferredWidth if set, or maximumWidth if preferred is not set.
+            if (control.Layout.preferredWidth > 0) {
+                constrained = control.Layout.preferredWidth
+            } else if (control.Layout.maximumWidth < Infinity) {
+                constrained = control.Layout.maximumWidth
+            }
+
+            return (metrics.width + unconstrainedIndicator.width * 2 + control.spacing * 2) > constrained
+        }
+    }
 }
