@@ -176,11 +176,16 @@ roundbutton.flat
     }
 }
 
-toolbutton,
-toolbutton.raised
+toolbutton
 {
     icon-size: var(--icon-size-smallmedium);
     padding: var(--toolbutton-padding);
+}
+
+toolbutton.raised
+{
+    icon-size: var(--icon-size-small);
+    padding: var(--button-padding);
 }
 
 roundbutton
