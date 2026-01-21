@@ -202,7 +202,7 @@ QStringList QuickElement::hints() const
 
 void QuickElement::setHints(const QStringList &newHints)
 {
-    m_element->setHints(QSet<QString>(newHints.begin(), newHints.end()));
+    m_element->setHints(newHints);
 }
 
 QVariantMap QuickElement::attributes() const

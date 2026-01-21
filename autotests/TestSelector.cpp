@@ -88,7 +88,7 @@ ElementList structureFromJson(const QJsonArray &json)
         element->setType(properties.type);
         element->setId(properties.id);
         element->setStates(properties.states);
-        element->setHints(QSet<QString>(properties.hints.begin(), properties.hints.end()));
+        element->setHints(QStringList(properties.hints.begin(), properties.hints.end()));
         element->setAttributes(properties.attributes);
 
         result.append(element);

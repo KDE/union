@@ -24,7 +24,7 @@ public:
     QString id;
     Element::States states;
     Element::ColorSet colorSet;
-    QSet<QString> hints;
+    QStringList hints;
     QVariantMap attributes;
 };
 
@@ -110,12 +110,12 @@ void Element::setColorSet(ColorSet newColorSet)
     Q_EMIT updated();
 }
 
-QSet<QString> Element::hints() const
+QStringList Element::hints() const
 {
     return d->hints;
 }
 
-void Element::setHints(const QSet<QString> &newHints)
+void Element::setHints(const QStringList &newHints)
 {
     if (d->hints == newHints) {
         return;
@@ -132,9 +132,9 @@ void Element::setHints(const QSet<QString> &newHints)
 void Element::setHint(const QString &name, bool present)
 {
     if (present) {
-        d->hints.insert(name);
+        d->hints.append(name);
     } else {
-        d->hints.remove(name);
+        d->hints.removeAll(name);
     }
 
     sendChangeEvent(Change::Hints);
@@ -145,7 +145,10 @@ void Element::setHint(const QString &name, bool present)
 
 bool Union::Element::hasHint(const QString &name)
 {
-    return d->hints.contains(name);
+    // Case insensitive matching
+    return std::any_of(d->hints.constBegin(), d->hints.constEnd(), [name](const QString &hint) {
+        return name.compare(hint, Qt::CaseInsensitive) == 0;
+    });
 }
 
 QVariantMap Element::attributes() const
