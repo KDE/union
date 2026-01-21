@@ -69,5 +69,12 @@ Kirigami.Page {
             to: 1000
             stepSize: 1
         }
+
+        Controls.SpinBox {
+            Layout.preferredWidth: 50
+            from: 10
+            to: 1000
+            stepSize: 10
+        }
     }
 }
