@@ -33,9 +33,20 @@ swipedelegate
         layout-alignment: content fill fill 0;
     }
 
-    &.useAlternateBackgroundColor
+    &.usealternatebackgroundcolor
     {
-        background-color: var(--window-background-alternate-color);
+        background-color: var(--view-background-alternate-color);
+    }
+
+    &.insidetable,
+    &.insidelist
+    {
+        inset: 0px;
+        border-radius: 0px;
+        &.hoverenabled {
+            inset: var(--small-spacing);
+            border-radius: var(--corner-radius);
+        }
     }
 
     &:hovered
