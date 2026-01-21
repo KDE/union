@@ -88,4 +88,6 @@ T.Switch {
         control: control
         wrapMode: Text.Wrap
     }
+
+    background: Union.StyledRectangle { }
 }
