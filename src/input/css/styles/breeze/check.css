@@ -46,6 +46,8 @@ switch
     spacing: var(--small-spacing);
 
     color: var(--window-text-color);
+
+    text-alignment: content fill center 0;
 }
 
 checkbox,
