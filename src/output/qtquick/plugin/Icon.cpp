@@ -168,12 +168,23 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
     imageNode->setFiltering(QSGTexture::Linear);
 
     if (m_iconChanged || !imageNode->texture()) {
-        imageNode->setTexture(
-            window()->createTextureFromImage(m_icon.pixmap(iconSize, window()->devicePixelRatio()).toImage(), QQuickWindow::TextureCanUseAtlas));
+        const auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
+        auto image = m_icon.pixmap(iconSize, window()->devicePixelRatio(), mode).toImage();
+        imageNode->setTexture(window()->createTextureFromImage(image, QQuickWindow::TextureCanUseAtlas));
         m_iconChanged = false;
     }
 
     return node;
+}
+
+void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
+{
+    if (change == QQuickItem::ItemChange::ItemEnabledHasChanged) {
+        m_iconChanged = true;
+        update();
+    }
+
+    QQuickItem::itemChange(change, value);
 }
 
 void Icon::updatePolish()

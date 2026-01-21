@@ -65,6 +65,7 @@ public:
     Q_SIGNAL void controlChanged();
 
 protected:
+    void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
     void updatePolish() override;
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *) override;
 
