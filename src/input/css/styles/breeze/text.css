@@ -72,73 +72,104 @@ spinbox
     padding-bottom: var(--small-spacing);
 
     color: var(--button-active-text-color);
-}
 
-spinbox indicator
-{
-    width: var(--large-element-size);
-    height: var(--small-element-size);
-    border-radius: var(--corner-radius);
-    color: var(--button-active-text-color);
+    indicator
+    {
+        width: var(--large-element-size);
+        height: var(--small-element-size);
+        border-radius: var(--corner-radius);
+        color: var(--button-active-text-color);
 
-    margin-top: var(--corner-radius);
-    margin-bottom: var(--corner-radius);
+        margin-top: var(--corner-radius);
+        margin-bottom: var(--corner-radius);
 
-    layout-alignment-container: item;
-    layout-alignment-vertical: fill;
-}
+        layout-alignment-container: item;
+        layout-alignment-vertical: fill;
 
-spinbox indicator:hovered,
-spinbox indicator:pressed
-{
-    height: var(--medium-element-size);
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
+        &:hovered,
+        &:pressed
+        {
+            height: var(--medium-element-size);
+            margin-top: 0px;
+            margin-bottom: 0px;
+        }
 
-spinbox indicator:hovered {
-    border: 1px solid var(--highlight-color);
-}
+        &:hovered
+        {
+            border: 1px solid var(--highlight-color);
+        }
 
-spinbox indicator:pressed {
-    background-color: var(--button-active-highlight-color);
-    border: 1px solid var(--highlight-color);
-}
+        &:pressed
+        {
+            background-color: var(--button-active-highlight-color);
+            border: 1px solid var(--highlight-color);
+        }
 
-spinbox indicator:disabled {
-    color: var(--button-disabled-text-color);
-}
+        &:disabled
+        {
+            color: var(--button-disabled-text-color);
+        }
 
-spinbox indicator.decrease
-{
-    layout-alignment-horizontal: start;
-    icon-name: "spinbox-decrease";
-    border-top-right-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-right: 1px solid var(--button-active-border-color);
-}
+        &.decrease
+        {
+            layout-alignment-horizontal: start;
+            icon-name: "spinbox-decrease";
+            border-top-right-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border-right: 1px solid var(--button-active-border-color);
 
-spinbox indicator.decrease:hovered,
-spinbox indicator.decrease:pressed
-{
-    border-right: 1px solid var(--highlight-color);
-    border-top-right-radius: var(--corner-radius);
-    border-bottom-right-radius: var(--corner-radius);
-}
+            &:hovered,
+            &:pressed
+            {
+                border-right: 1px solid var(--highlight-color);
+                border-top-right-radius: var(--corner-radius);
+                border-bottom-right-radius: var(--corner-radius);
+            }
+        }
 
-spinbox indicator.increase
-{
-    layout-alignment-horizontal: end;
-    icon-name: "spinbox-increase";
-    border-top-left-radius: 0px;
-    border-bottom-left-radius: 0px;
-    border-left: 1px solid var(--button-active-border-color);
-}
+        &.increase
+        {
+            layout-alignment-horizontal: end;
+            icon-name: "spinbox-increase";
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-left: 1px solid var(--button-active-border-color);
 
-spinbox indicator.increase:hovered,
-spinbox indicator.increase:pressed
-{
-    border-left: 1px solid var(--highlight-color);
-    border-top-left-radius: var(--corner-radius);
-    border-bottom-left-radius: var(--corner-radius);
+            &:hovered,
+            &:pressed
+            {
+                border-left: 1px solid var(--highlight-color);
+                border-top-left-radius: var(--corner-radius);
+                border-bottom-left-radius: var(--corner-radius);
+            }
+        }
+    }
+
+    &.constrained indicator {
+        layout-alignment: item end stack 0;
+
+        width: var(--medium-element-size);
+        height: var(--small-element-size);
+
+        border: none;
+        margin: 0px;
+        margin-right: 2px;
+
+        &:hover,
+        &:pressed
+        {
+            border: none;
+            background: none;
+            icon-color: var(--highlight-color);
+        }
+
+        &.decrease {
+            layout-alignment-order: 1;
+            icon-name: "arrow-down";
+        }
+
+        &.increase {
+            icon-name: "arrow-up";
+        }
+    }
 }
