@@ -11,6 +11,8 @@ Item {
 
     required property T.AbstractButton control
 
+    property int wrapMode: Text.NoWrap
+
     Union.PositionedItem.positionChildren: true
 
     Union.Icon {
@@ -25,7 +27,8 @@ Item {
         text: root.control.text
         font: root.control.font
         color: Union.Style.properties.text.color ?? "black"
-        elide: Text.ElideRight
+        elide: root.wrapMode == Text.NoWrap ? Text.ElideRight : Text.ElideNone
+        wrapMode: root.wrapMode
 
         visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0
     }
