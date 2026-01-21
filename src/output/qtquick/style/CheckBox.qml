@@ -75,7 +75,10 @@ T.CheckBox {
         Union.Element.type: "Indicator"
     }
 
-    contentItem: P.DefaultContentItem { control: control }
+    contentItem: P.DefaultContentItem {
+        control: control
+        wrapMode: Text.Wrap
+    }
 
     background: Union.StyledRectangle {}
 }
