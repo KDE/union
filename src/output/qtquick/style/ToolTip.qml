@@ -43,7 +43,7 @@ T.ToolTip {
     // Never time out while being hovered; it's annoying
     timeout: -1
 
-    popupType: T.Popup.Window
+    popupType: T.Popup.Item
 
     contentItem: Text {
         text: control.text
