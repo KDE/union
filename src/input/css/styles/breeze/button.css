@@ -73,6 +73,12 @@ toolbutton.raised
     border: var(--button-border);
     background-color: var(--button-active-background-color);
 
+    &:checked
+    {
+        border: var(--button-border);
+        background-color: var(--button-active-checked-color);
+    }
+
     &:hovered
     {
         border-color: var(--button-active-border-highlight-color);
@@ -82,12 +88,6 @@ toolbutton.raised
     {
         border-color: var(--button-active-border-highlight-color);
         outline: var(--button-focus);
-    }
-
-    &:checked
-    {
-        border: var(--button-border);
-        background-color: var(--button-active-checked-color);
     }
 
     &:disabled
