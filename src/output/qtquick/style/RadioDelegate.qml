@@ -28,6 +28,7 @@ T.RadioDelegate {
         highlighted: control.highlighted
     }
 
+    hoverEnabled: Application.styleHints.useHoverEffects
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
     topPadding: Union.Positioner.padding.top

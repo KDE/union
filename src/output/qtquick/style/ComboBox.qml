@@ -31,6 +31,8 @@ T.ComboBox {
         return result;
     }
     Union.Positioner.positionItems: [contentItem, indicator]
+    hoverEnabled: Application.styleHints.useHoverEffects
+    wheelEnabled: true
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)

@@ -34,6 +34,8 @@ T.Slider {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     handle: Union.StyledRectangle {
         Union.Element.type: "Handle"
         Union.Element.states {

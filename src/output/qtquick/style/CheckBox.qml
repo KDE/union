@@ -61,6 +61,8 @@ T.CheckBox {
 
     font: Union.Style.properties.text.font
 
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     icon {
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width

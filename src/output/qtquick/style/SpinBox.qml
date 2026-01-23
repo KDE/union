@@ -14,7 +14,7 @@ T.SpinBox {
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
-    hoverEnabled: true
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     Union.Element.type: "SpinBox"
     Union.Element.states {

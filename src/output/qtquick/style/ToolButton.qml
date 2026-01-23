@@ -30,6 +30,8 @@ T.ToolButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     Union.Element.hints: {
         let result = []
         if (!flat) {

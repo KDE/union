@@ -38,7 +38,7 @@ T.Switch {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     spacing: Union.Style.properties.layout.spacing
-
+    hoverEnabled: Application.styleHints.useHoverEffects
     icon {
         color: palette.buttonText
         width: Union.Style.properties.icon.width

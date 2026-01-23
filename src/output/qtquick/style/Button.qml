@@ -78,6 +78,12 @@ T.Button {
 
     spacing: Union.Style.properties.layout.spacing
 
+    // hoverEnabled is an inherited property if it is not explicitly set.
+    // hoverEnabled is used to disable hover effects of delegates when they're not interactive.
+    // This also means any interactive children of those delegates will inherit hoverEnabled,
+    // and their effects are disabled. For this reason we need to explicitly set it in some delegates.
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     icon {
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width

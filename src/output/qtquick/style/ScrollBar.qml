@@ -31,6 +31,7 @@ T.ScrollBar {
         }
     }
 
+    hoverEnabled: Application.styleHints.useHoverEffects
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top

@@ -27,6 +27,9 @@ T.ItemDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     Union.Element.hints: {
         let result = icon.name || icon.source.toString() ? ["with-icon"] : [];
         if (control.hoverEnabled) {

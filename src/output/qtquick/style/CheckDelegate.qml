@@ -62,6 +62,8 @@ T.CheckDelegate {
 
     spacing: Union.Style.properties.layout.spacing
 
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     icon {
         color: palette.text
         width: Union.Style.properties.icon.width

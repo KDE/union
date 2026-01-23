@@ -20,6 +20,8 @@ T.MenuSeparator {
         enabled: control.enabled
     }
 
+    hoverEnabled: false
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top

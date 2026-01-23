@@ -26,6 +26,8 @@ T.RadioButton {
         checked: control.checked
         enabled: control.enabled
     }
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
     Union.Element.attributes: {
         let result = {}
