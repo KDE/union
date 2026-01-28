@@ -23,5 +23,14 @@ KT.AbstractApplicationHeader {
         }
     }
 
-    background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {
+        DragHandler {
+            target: null
+            onActiveChanged: {
+                if (active) {
+                    root.Window.window.startSystemMove()
+                }
+            }
+        }
+    }
 }

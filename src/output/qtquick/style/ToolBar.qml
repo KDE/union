@@ -44,5 +44,14 @@ T.ToolBar {
 
     font: Union.Style.properties.text.font
 
-    background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {
+        DragHandler {
+            target: null
+            onActiveChanged: {
+                if (active && control.position == T.ToolBar.Header) {
+                    control.Window.window.startSystemMove()
+                }
+            }
+        }
+    }
 }
