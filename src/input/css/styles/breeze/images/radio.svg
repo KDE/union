@@ -3,13 +3,16 @@
 SPDX-License-Identifier: BSD-2-Clause
 SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 -->
+
 <svg
    fill="none"
-   viewBox="0 0 24 24"
+   viewBox="0 0 16 16"
    version="1.1"
    id="svg1"
    sodipodi:docname="radio.svg"
-   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   width="16"
+   height="16"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +26,9 @@ SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="15.531371"
-     inkscape:cx="27.267393"
-     inkscape:cy="17.094434"
+     inkscape:zoom="37.496046"
+     inkscape:cx="0.70674118"
+     inkscape:cy="7.2674329"
      inkscape:window-width="2508"
      inkscape:window-height="1404"
      inkscape:window-x="0"
@@ -55,9 +58,9 @@ SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
        id="current-color-scheme" />
   </defs>
   <circle
-     style="fill:#000000;stroke:none;stroke-width:4;stroke-linecap:square;fill-opacity:1"
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:3;stroke-linecap:square"
      id="path2"
-     cx="12"
-     cy="12"
-     r="4" />
+     cx="8"
+     cy="8"
+     r="3" />
 </svg>

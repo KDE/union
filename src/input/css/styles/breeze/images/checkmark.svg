@@ -3,13 +3,16 @@
 SPDX-License-Identifier: BSD-2-Clause
 SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 -->
+
 <svg
    fill="none"
-   viewBox="0 0 24 24"
+   viewBox="0 0 16 16"
    version="1.1"
    id="svg1"
    sodipodi:docname="checkmark.svg"
-   inkscape:version="1.4.2 (ebf0e940d0, 2025-05-08)"
+   inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
+   width="16"
+   height="16"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -23,9 +26,9 @@ SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
      inkscape:pageopacity="0.0"
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#d1d1d1"
-     inkscape:zoom="15.531371"
-     inkscape:cx="27.203008"
-     inkscape:cy="17.094434"
+     inkscape:zoom="36.851054"
+     inkscape:cx="2.3744232"
+     inkscape:cy="12.089206"
      inkscape:window-width="2508"
      inkscape:window-height="1404"
      inkscape:window-x="0"
@@ -59,8 +62,8 @@ SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
      stroke-linecap="round"
      stroke-linejoin="round"
      stroke-width="2.53157"
-     d="m 6,12 5,5 8,-8"
+     d="m 4,8 3,3 6,-6"
      id="path1"
-     style="stroke-width:4;stroke-dasharray:none;stroke-linejoin:miter;stroke-linecap:square"
+     style="stroke-width:2.5;stroke-linecap:round;stroke-linejoin:miter;stroke-dasharray:none"
      sodipodi:nodetypes="ccc" />
 </svg>
