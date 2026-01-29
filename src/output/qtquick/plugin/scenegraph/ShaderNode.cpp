@@ -164,12 +164,27 @@ void ShaderNode::setTextureChannels(unsigned char count)
 
 void ShaderNode::setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
 {
-    if (!m_shaderMaterial) {
-        return;
-    }
-
     auto texture = TextureCache::loadTexture(window, image, options);
-    if (!texture) {
+    if (texture) {
+        setTexture(channel, texture, options);
+    }
+}
+
+void ShaderNode::setTexture(Channel channel,
+                            const std::filesystem::path &path,
+                            QQuickWindow *window,
+                            const QSizeF &size,
+                            QQuickWindow::CreateTextureOptions options)
+{
+    auto texture = TextureCache::loadTexture(window, path, size, options);
+    if (texture) {
+        setTexture(channel, texture, options);
+    }
+}
+
+void ShaderNode::setTexture(Channel channel, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options)
+{
+    if (!m_shaderMaterial) {
         return;
     }
 

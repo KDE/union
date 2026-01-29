@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <span>
 
 #include <QSGGeometryNode>
@@ -106,6 +107,27 @@ public:
      * ID as a previous call to setTexture(), no new texture will be created.
      */
     void setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
+
+    /*!
+     * Set the texture for a channel to an image loaded from disk.
+     *
+     * This will load the image at \p path and create a texture from its image
+     * using \p window, \p size and \p options, then assign it to texture
+     * channel \p channel.
+     */
+    void setTexture(Channel channel,
+                    const std::filesystem::path &path,
+                    QQuickWindow *window,
+                    const QSizeF &size = {},
+                    QQuickWindow::CreateTextureOptions options = {});
+
+    /*!
+     * Set the texture for a channel to a texture.
+     *
+     * This will assign \p texture to texture channel \p channel. \p options is
+     * needed so we know if the given texture can use a texture atlas or not.
+     */
+    void setTexture(Channel channel, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options = {});
 
     /*!
      * Set the texture for a channel to a texture provider.
