@@ -207,17 +207,14 @@ inline void setImage(T *output, const fs::path &rootPath, const cssparser::Prope
 {
     PropertyGroupBuilder image(output, &T::image, &T::setImage);
 
-    QImage imageData;
-    std::filesystem::path path = rootPath / to_path(property.value());
-
-    if (!imageData.load(QString::fromStdString(path))) {
+    fs::path path = rootPath / to_path(property.value());
+    if (!fs::exists(path)) {
         qCWarning(UNION_CSS) << "Could not load image" << path.string();
         return;
     }
 
-    image->setImageData(imageData);
-    image->setWidth(imageData.width());
-    image->setHeight(imageData.height());
+    image->setSource(path);
+
     if (property.values.size() > 1) {
         auto value = property.values.at(1);
         if (matches_keyword(value, u"mask"_s)) {

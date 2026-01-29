@@ -31,7 +31,7 @@ void ImagePropertyGroup::update(ImageProperty *newState)
     } else {
     }
 
-    Q_EMIT imageDataChanged();
+    Q_EMIT sourceChanged();
     Q_EMIT widthChanged();
     Q_EMIT heightChanged();
     Q_EMIT xOffsetChanged();
@@ -46,13 +46,13 @@ void ImagePropertyGroup::refreshColors()
     Q_EMIT maskColorChanged();
 }
 
-QJSValue ImagePropertyGroup::imageData() const
+QJSValue ImagePropertyGroup::source() const
 {
     if (!m_state) {
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state->imageData();
+    auto value = m_state->source();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }

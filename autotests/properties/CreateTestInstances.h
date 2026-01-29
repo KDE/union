@@ -156,7 +156,7 @@ std::unique_ptr<ImageProperty> testImagePropertyInstance()
 {
     auto instance = std::make_unique<ImageProperty>();
 
-    instance->setImageData(QImage{});
+    instance->setSource(std::filesystem::path{});
     instance->setWidth(testQrealInstance());
     instance->setHeight(testQrealInstance());
     instance->setXOffset(testQrealInstance());

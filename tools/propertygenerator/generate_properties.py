@@ -22,6 +22,7 @@ quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin
 include_patterns = [
     {"pattern": "qreal", "use_include": None},
     {"pattern": "int", "use_include": None},
+    {"pattern": "std::filesystem::path", "use_include": "filesystem", "system_include": True},
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "Q", "system_include": True},
     {"pattern": "Union::Properties::", "use_include": "../PropertiesTypes.h"},

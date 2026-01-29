@@ -40,13 +40,13 @@ public:
     void refreshColors();
 
     /*!
-     * \qmlproperty QImage ImagePropertyGroup::imageData
+     * \qmlproperty std::filesystem::path ImagePropertyGroup::source
      *
-     * Exposes ImageProperty::imageData to QML.
+     * Exposes ImageProperty::source to QML.
      */
-    Q_PROPERTY(QJSValue imageData READ imageData NOTIFY imageDataChanged)
-    QJSValue imageData() const;
-    Q_SIGNAL void imageDataChanged();
+    Q_PROPERTY(QJSValue source READ source NOTIFY sourceChanged)
+    QJSValue source() const;
+    Q_SIGNAL void sourceChanged();
 
     /*!
      * \qmlproperty qreal ImagePropertyGroup::width

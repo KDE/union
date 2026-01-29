@@ -5,6 +5,10 @@
 
 #include <QPainter>
 
+#include "LruCache.h"
+
+static Union::LruImageCache imageCache;
+
 void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style)
 {
     QMarginsF borderSizes;
@@ -13,13 +17,14 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
     }
 
     if (const auto background = style->background()) {
-        if (const auto image = background->image()) {
-            painter->drawImage(rect - borderSizes, image->imageData().value());
+        auto innerRect = rect - borderSizes;
+        if (const auto image = background->image(); image && image->source()) {
+            painter->drawImage(innerRect, imageCache.load(image->source().value(), innerRect.size()));
         }
         if (const auto color = background->color()) {
             painter->setPen(Qt::transparent);
             painter->setBrush(color.value().toQColor());
-            painter->drawRect(rect - borderSizes);
+            painter->drawRect(innerRect);
         }
     }
 
@@ -108,8 +113,8 @@ void drawLineProperty(QPainter *painter,
         Q_UNREACHABLE();
     }
 
-    if (auto image = line->image()) {
-        painter->drawImage(lineRect, image->imageData().value());
+    if (auto image = line->image(); image && image->source()) {
+        painter->drawImage(lineRect, imageCache.load(image->source().value(), lineRect.size()));
     }
     if (auto color = line->color()) {
         painter->setPen(Qt::transparent);
@@ -165,7 +170,7 @@ void drawCornerProperty(QPainter *painter,
                         const QMarginsF &borderSizes,
                         const Union::Properties::CornerProperty *corner)
 {
-    if (auto image = corner->image()) {
+    if (auto image = corner->image(); image && image->source()) {
         QRectF cornerRect;
         switch (subNodeIndex) {
         case SubNodeIndex::TopLeft: {
@@ -192,6 +197,6 @@ void drawCornerProperty(QPainter *painter,
             Q_UNREACHABLE();
         }
 
-        painter->drawImage(cornerRect, image->imageData().value());
+        painter->drawImage(cornerRect, imageCache.load(image->source().value(), cornerRect.size()));
     }
 }

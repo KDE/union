@@ -16,7 +16,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::ImagePropertyPrivate
 {
 public:
-    std::optional<QImage> imageData;
+    std::optional<std::filesystem::path> source;
     std::optional<qreal> width;
     std::optional<qreal> height;
     std::optional<qreal> xOffset;
@@ -33,7 +33,7 @@ ImageProperty::ImageProperty()
 ImageProperty::ImageProperty(const ImageProperty &other)
     : d(std::make_unique<ImagePropertyPrivate>())
 {
-    d->imageData = other.d->imageData;
+    d->source = other.d->source;
     d->width = other.d->width;
     d->height = other.d->height;
     d->xOffset = other.d->xOffset;
@@ -52,7 +52,7 @@ ImageProperty::~ImageProperty() = default;
 ImageProperty &ImageProperty::operator=(const ImageProperty &other)
 {
     if (this != &other) {
-        d->imageData = other.d->imageData;
+        d->source = other.d->source;
         d->width = other.d->width;
         d->height = other.d->height;
         d->xOffset = other.d->xOffset;
@@ -69,18 +69,18 @@ ImageProperty &ImageProperty::operator=(ImageProperty &&other)
     return *this;
 }
 
-std::optional<QImage> ImageProperty::imageData() const
+std::optional<std::filesystem::path> ImageProperty::source() const
 {
-    return d->imageData;
+    return d->source;
 }
 
-void ImageProperty::setImageData(const std::optional<QImage> &newValue)
+void ImageProperty::setSource(const std::optional<std::filesystem::path> &newValue)
 {
-    if (newValue == d->imageData) {
+    if (newValue == d->source) {
         return;
     }
 
-    d->imageData = newValue;
+    d->source = newValue;
 }
 
 std::optional<qreal> ImageProperty::width() const
@@ -169,7 +169,7 @@ void ImageProperty::setMaskColor(const std::optional<Union::Color> &newValue)
 
 bool ImageProperty::hasAnyValue() const
 {
-    if (d->imageData.has_value()) {
+    if (d->source.has_value()) {
         return true;
     }
     if (d->width.has_value()) {
@@ -199,7 +199,7 @@ bool ImageProperty::isEmpty() const
         return true;
     }
 
-    if (d->imageData.has_value() && d->imageData.value() != emptyValue<QImage>()) {
+    if (d->source.has_value() && d->source.value() != emptyValue<std::filesystem::path>()) {
         return false;
     }
     if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
@@ -255,10 +255,9 @@ QString ImageProperty::toString(int indentation, ToStringFlags flags) const
         out << maybeNewLine;
     }
 
-    out << indent(indentation, multiline, true) << "imageData: ";
-    if (d->imageData) {
-        auto image = d->imageData.value();
-        out << "QImage(fmt=" << image.format() << ", width=" << image.width() << ", height=" << image.height() << ")" << maybeNewLine;
+    out << indent(indentation, multiline, true) << "source: ";
+    if (d->source) {
+        out << d->source->c_str() << maybeNewLine;
     } else {
         out << empty << maybeNewLine;
     }
@@ -315,8 +314,8 @@ void ImageProperty::resolveProperties(const ImageProperty *source, ImageProperty
         return;
     }
 
-    if (!destination->d->imageData.has_value()) {
-        destination->d->imageData = source->d->imageData;
+    if (!destination->d->source.has_value()) {
+        destination->d->source = source->d->source;
     }
     if (!destination->d->width.has_value()) {
         destination->d->width = source->d->width;
@@ -341,7 +340,7 @@ void ImageProperty::resolveProperties(const ImageProperty *source, ImageProperty
 std::unique_ptr<ImageProperty> ImageProperty::empty()
 {
     auto result = std::make_unique<ImageProperty>();
-    result->d->imageData = emptyValue<QImage>();
+    result->d->source = emptyValue<std::filesystem::path>();
     result->d->width = emptyValue<qreal>();
     result->d->height = emptyValue<qreal>();
     result->d->xOffset = emptyValue<qreal>();
@@ -353,7 +352,7 @@ std::unique_ptr<ImageProperty> ImageProperty::empty()
 
 bool Union::Properties::operator==(const ImageProperty &left, const ImageProperty &right)
 {
-    if (left.imageData() != right.imageData()) {
+    if (left.source() != right.source()) {
         return false;
     }
     if (left.width() != right.width()) {

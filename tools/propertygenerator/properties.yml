@@ -75,7 +75,7 @@ background:
     image: &image
         # \brief A property group describing properties of an image.
 
-        imageData: QImage
+        source: std::filesystem::path
         width: qreal
         height: qreal
         xOffset: qreal

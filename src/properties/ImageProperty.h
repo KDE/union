@@ -10,7 +10,7 @@
 
 #include <QDebug>
 
-#include <QImage>
+#include <filesystem>
 
 #include "../Color.h"
 #include "../PropertiesTypes.h"
@@ -66,16 +66,16 @@ public:
     ImageProperty &operator=(ImageProperty &&other);
 
     /*!
-     * Returns the value of imageData.
+     * Returns the value of source.
      */
-    std::optional<QImage> imageData() const;
+    std::optional<std::filesystem::path> source() const;
 
     /*!
-     * Set the value of imageData.
+     * Set the value of source.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setImageData(const std::optional<QImage> &newValue);
+    void setSource(const std::optional<std::filesystem::path> &newValue);
 
     /*!
      * Returns the value of width.

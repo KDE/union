@@ -22,7 +22,7 @@ private Q_SLOTS:
         auto property = std::make_unique<ImageProperty>();
 
         // A null instance should not have any values for its properties.
-        QVERIFY(!property->imageData().has_value());
+        QVERIFY(!property->source().has_value());
         QVERIFY(!property->width().has_value());
         QVERIFY(!property->height().has_value());
         QVERIFY(!property->xOffset().has_value());
@@ -36,7 +36,7 @@ private Q_SLOTS:
         auto property = ImageProperty::empty();
 
         // An empty instance should only have values that are considered "empty".
-        QCOMPARE(property->imageData().value(), emptyValue<QImage>());
+        QCOMPARE(property->source().value(), emptyValue<std::filesystem::path>());
         QCOMPARE(property->width().value(), emptyValue<qreal>());
         QCOMPARE(property->height().value(), emptyValue<qreal>());
         QCOMPARE(property->xOffset().value(), emptyValue<qreal>());
@@ -53,10 +53,10 @@ private Q_SLOTS:
         QVERIFY(!property->hasAnyValue());
 
         {
-            QImage value;
-            property->setImageData(value);
+            std::filesystem::path value;
+            property->setSource(value);
             QVERIFY(property->hasAnyValue());
-            property->setImageData(std::nullopt);
+            property->setSource(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
         {
@@ -116,7 +116,7 @@ private Q_SLOTS:
 
         QVERIFY(!destination->hasAnyValue());
 
-        source->setImageData(QImage{});
+        source->setSource(std::filesystem::path{});
         source->setWidth(qreal{});
         source->setHeight(qreal{});
         source->setXOffset(qreal{});
@@ -131,7 +131,7 @@ private Q_SLOTS:
 
         QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(destination->imageData(), source->imageData());
+        QCOMPARE(destination->source(), source->source());
         QCOMPARE(destination->width(), source->width());
         QCOMPARE(destination->height(), source->height());
         QCOMPARE(destination->xOffset(), source->xOffset());

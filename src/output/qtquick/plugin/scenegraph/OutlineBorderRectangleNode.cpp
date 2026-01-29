@@ -125,8 +125,9 @@ void OutlineBorderRectangleNode::update()
     auto maskColor = QColor(Qt::GlobalColor::transparent);
     if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
         auto imageProperties = m_background->image();
-        auto image = imageProperties->imageData();
-        if (image.has_value()) {
+
+        auto source = imageProperties->source();
+        if (source.has_value()) {
             shaderName += u"-texture"_s;
             if (imageProperties->flags().has_value()) {
                 if (imageProperties->flags().value().testFlag(ImageFlag::Mask)) {
@@ -169,7 +170,7 @@ void OutlineBorderRectangleNode::update()
            << ShaderNode::toPremultiplied(maskColor); // mask-color
 
     if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
-        setTexture(0, m_background->image()->imageData().value(), m_window);
+        setTexture(0, m_background->image()->source().value(), m_window, m_itemRect.size());
     }
 
     markDirty(QSGNode::DirtyMaterial);

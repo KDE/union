@@ -189,6 +189,8 @@ QString {{ type_name }}::toString(int indentation, ToStringFlags flags) const
 {% elif property.type in ("QImage") %}
         auto image = d->{{ property.name }}.value();
         out << "QImage(fmt=" << image.format() << ", width=" << image.width() << ", height=" << image.height() << ")" << maybeNewLine;
+{% elif property.type in ("std::filesystem::path") %}
+        out << d->{{ property.name }}->c_str() << maybeNewLine;
 {% else %}
         out << d->{{ property.name }}.value() << maybeNewLine;
 {% endif %}
