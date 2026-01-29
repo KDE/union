@@ -10,6 +10,10 @@
 
 #include <QImage>
 
+#include "qtquick_logging.h"
+
+namespace fs = std::filesystem;
+
 std::shared_ptr<QSGTexture> TextureCache::loadTexture(QQuickWindow *window, const QImage &image, QQuickWindow::CreateTextureOptions options)
 {
     if (image.isNull()) {
@@ -38,7 +42,13 @@ std::shared_ptr<QSGTexture> TextureCache::loadTexture(QQuickWindow *window, cons
     return texture;
 }
 
-std::shared_ptr<QSGTexture> TextureCache::loadTexture(QQuickWindow *window, const QImage &image)
+std::shared_ptr<QSGTexture>
+TextureCache::loadTexture(QQuickWindow *window, const std::filesystem::path &source, const QSizeF &size, QQuickWindow::CreateTextureOptions options)
 {
-    return loadTexture(window, image, {});
+    auto image = s_imageCache.load(source, size);
+    if (image.isNull()) {
+        return nullptr;
+    }
+
+    return loadTexture(window, image, options);
 }
