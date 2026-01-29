@@ -51,6 +51,10 @@
     --tab-disabled-background-color: var(--button-disabled-background-color);
 
     --tab-highlight-size: 3px;
+
+    /* Match Breeze QStyle color */
+    --combobox-popup-background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
+    --combobox-popup-highlight-color: mix(var(--combobox-popup-background-color), var(--highlight-color), 0.333);
 }
 
 button,
@@ -231,7 +235,13 @@ combobox
 
 popup.combobox
 {
-    background-color: var(--view-background-color);
+    background-color: var(--combobox-popup-background-color);
+
+    itemdelegate:highlight
+    {
+        background-color: var(--combobox-popup-highlight-color);
+        border-color: var(--highlight-color);
+    }
 }
 
 toolseparator {
