@@ -96,8 +96,6 @@ public:
      */
     void setTextureChannels(unsigned char count);
 
-    void setColorChannels(unsigned char count);
-
     /*!
      * Set the texture for a channel to an image.
      *
