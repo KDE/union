@@ -29,7 +29,8 @@ protected:
 private:
     struct Vertex {
         QVector2D position;
-        QVector2D texture;
+        QVector2D texture0;
+        QVector2D texture1;
         QColor border;
         QColor outline;
     };

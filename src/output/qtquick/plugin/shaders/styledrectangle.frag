@@ -17,9 +17,10 @@
 layout(binding = 1) uniform sampler2D textureSource;
 #endif
 
-layout(location = 0) in lowp vec2 uv;
-layout(location = 1) in mediump vec4 border_color;
-layout(location = 2) in mediump vec4 outline_color;
+layout(location = 0) in highp vec2 uv0;
+layout(location = 1) in mediump vec2 uv1;
+layout(location = 2) in mediump vec4 border_color;
+layout(location = 3) in mediump vec4 outline_color;
 
 layout(location = 0) out lowp vec4 out_color;
 
@@ -44,7 +45,7 @@ void main()
 
     mediump vec4 col = vec4(0.0);
 
-    mediump vec4 rect = vec4(uv, ubuf.aspect);
+    mediump vec4 rect = vec4(uv0, ubuf.aspect);
 
     highp vec4 corner_radius = clamped_radius;
 
@@ -63,7 +64,7 @@ void main()
     // Adjust corner radius for the amount the border makes the inner rectangle
     // smaller. Add a correction factor based on the scale of what we're
     // rendering, otherwise the corners end up being drawn slightly too small.
-    corner_radius = adjusted_radius(corner_radius, ubuf.borderWidth + fwidth(uv.x));
+    corner_radius = adjusted_radius(corner_radius, ubuf.borderWidth + fwidth(uv0.x));
 #endif
     // Finally, render the inner rectangle.
     mediump float sdf = sdf_rounded_rectangle(rect.xy, rect.zw, corner_radius);
@@ -71,8 +72,7 @@ void main()
 
 #ifdef ENABLE_TEXTURE
     // Sample the texture, then blend it on top of the background color.
-    highp vec2 texture_uv = uv / (ubuf.aspect * 2.0) + 0.5;
-    mediump vec4 texture_color = texture(textureSource, texture_uv);
+    mediump vec4 texture_color = texture(textureSource, uv1);
 #ifdef ENABLE_MASK
     texture_color = vec4(ubuf.mask_color.xyz * texture_color.a, texture_color.a);
 #endif
