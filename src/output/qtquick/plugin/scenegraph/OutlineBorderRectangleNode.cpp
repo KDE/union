@@ -98,7 +98,7 @@ OutlineBorderRectangleNode::OutlineBorderRectangleNode()
     setVertexCount(m_vertices.size());
     setIndexCount(Indices.size());
 
-    setTextureChannels(1);
+    setUvChannels(2);
     setExtraDataChannels(2);
 }
 
@@ -170,7 +170,7 @@ void OutlineBorderRectangleNode::update()
            << ShaderNode::toPremultiplied(maskColor); // mask-color
 
     if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
-        setTexture(0, m_background->image()->source().value(), m_window, m_itemRect.size());
+        setTexture(0, 1, m_background->image()->source().value(), m_window, m_itemRect.size());
     }
 
     markDirty(QSGNode::DirtyMaterial);

@@ -81,13 +81,13 @@ void ShaderNode::setRect(const QRectF &newRect)
 
 QRectF ShaderNode::uvs(Channel channel) const
 {
-    Q_ASSERT(channel < m_textureChannels);
+    Q_ASSERT(channel < m_uvChannels);
     return m_uvs[channel];
 }
 
 void ShaderNode::setUVs(Channel channel, const QRectF &newUvs)
 {
-    Q_ASSERT(channel < m_textureChannels);
+    Q_ASSERT(channel < m_uvChannels);
 
     if (newUvs == m_uvs[channel]) {
         return;
@@ -141,13 +141,13 @@ std::span<char> ShaderNode::uniformData()
     return m_shaderMaterial->uniformData();
 }
 
-void ShaderNode::setTextureChannels(unsigned char count)
+void ShaderNode::setUvChannels(unsigned char count)
 {
-    if (count == m_textureChannels) {
+    if (count == m_uvChannels) {
         return;
     }
 
-    m_textureChannels = std::clamp(count, uint8_t(1), uint8_t(16));
+    m_uvChannels = std::clamp(count, uint8_t(1), uint8_t(16));
 
     if (geometry()) {
         setGeometry(nullptr);
@@ -162,15 +162,16 @@ void ShaderNode::setTextureChannels(unsigned char count)
     m_geometryUpdateNeeded = true;
 }
 
-void ShaderNode::setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
 {
     auto texture = TextureCache::loadTexture(window, image, options);
     if (texture) {
-        setTexture(channel, texture, options);
+        setTexture(channel, binding, texture, options);
     }
 }
 
 void ShaderNode::setTexture(Channel channel,
+                            Binding sampler,
                             const std::filesystem::path &path,
                             QQuickWindow *window,
                             const QSizeF &size,
@@ -178,11 +179,11 @@ void ShaderNode::setTexture(Channel channel,
 {
     auto texture = TextureCache::loadTexture(window, path, size, options);
     if (texture) {
-        setTexture(channel, texture, options);
+        setTexture(channel, sampler, texture, options);
     }
 }
 
-void ShaderNode::setTexture(Channel channel, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options)
 {
     if (!m_shaderMaterial) {
         return;
@@ -190,14 +191,15 @@ void ShaderNode::setTexture(Channel channel, const std::shared_ptr<QSGTexture> &
 
     auto info = TextureInfo{
         .channel = channel,
+        .binding = binding,
         .options = options,
         .texture = texture,
         .provider = nullptr,
         .providerConnection = {},
     };
 
-    auto itr = std::find_if(m_textures.begin(), m_textures.end(), [channel](auto info) {
-        return info.channel == channel;
+    auto itr = std::find_if(m_textures.begin(), m_textures.end(), [channel, binding](auto info) {
+        return info.channel == channel && info.binding == binding;
     });
     if (itr != m_textures.end()) {
         *itr = info;
@@ -207,11 +209,11 @@ void ShaderNode::setTexture(Channel channel, const std::shared_ptr<QSGTexture> &
 
     setUVs(channel, texture->normalizedTextureSubRect());
 
-    m_shaderMaterial->setTexture(channel + 1, texture.get());
+    m_shaderMaterial->setTexture(binding, texture.get());
     markDirty(QSGNode::DirtyMaterial);
 }
 
-void ShaderNode::setTexture(Channel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options)
 {
     if (!m_shaderMaterial) {
         return;
@@ -223,14 +225,15 @@ void ShaderNode::setTexture(Channel channel, QSGTextureProvider *provider, QQuic
 
     auto info = TextureInfo{
         .channel = channel,
+        .binding = binding,
         .options = options,
         .texture = nullptr,
         .provider = provider,
         .providerConnection = connection,
     };
 
-    auto itr = std::find_if(m_textures.begin(), m_textures.end(), [channel](auto info) {
-        return info.channel == channel;
+    auto itr = std::find_if(m_textures.begin(), m_textures.end(), [channel, binding](auto info) {
+        return info.channel == channel && info.binding == binding;
     });
     if (itr != m_textures.end()) {
         if (itr->provider) {
@@ -301,7 +304,7 @@ void ShaderNode::setExtraDataChannelData(Channel channel, //
 void ShaderNode::update()
 {
     if (m_geometryUpdateNeeded) {
-        const auto attributeCount = 1 + m_textureChannels + m_extraChannels;
+        const auto attributeCount = 1 + m_uvChannels + m_extraChannels;
 
         if (!geometry()) {
             QSGGeometry::Attribute *attributes = new QSGGeometry::Attribute[attributeCount];
@@ -309,17 +312,17 @@ void ShaderNode::update()
 
             int start = 1;
 
-            for (int i = 0; i < m_textureChannels; ++i) {
+            for (int i = 0; i < m_uvChannels; ++i) {
                 attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 2, QSGGeometry::FloatType, QSGGeometry::TexCoordAttribute);
             }
 
-            start += m_textureChannels;
+            start += m_uvChannels;
 
             for (int i = 0; i < m_extraChannels; ++i) {
                 attributes[i + start] = QSGGeometry::Attribute::createWithAttributeType(i + start, 4, QSGGeometry::FloatType, QSGGeometry::UnknownAttribute);
             }
 
-            int stride = sizeof(float) * 2 * (m_textureChannels + 1) + sizeof(float) * 4 * m_extraChannels;
+            int stride = sizeof(float) * 2 * (m_uvChannels + 1) + sizeof(float) * 4 * m_extraChannels;
             m_attributeSet = new QSGGeometry::AttributeSet{.count = attributeCount, .stride = stride, .attributes = attributes};
 
             setGeometry(new QSGGeometry{*m_attributeSet, m_vertexCount});
@@ -375,7 +378,7 @@ void ShaderNode::updateGeometry(QSGGeometry *geometry)
         *vertexData++ = (m_rect.*layout.x)();
         *vertexData++ = (m_rect.*layout.y)();
 
-        for (int channel = 0; channel < m_textureChannels; ++channel) {
+        for (int channel = 0; channel < m_uvChannels; ++channel) {
             auto uv = uvs(channel);
             *vertexData++ = (uv.*layout.x)();
             *vertexData++ = (uv.*layout.y)();
@@ -401,9 +404,9 @@ void ShaderNode::preprocessTexture(const TextureInfo &info)
     }
 
     if (provider->texture()->isAtlasTexture() && !info.options.testFlag(QQuickWindow::TextureCanUseAtlas)) {
-        m_shaderMaterial->setTexture(info.channel + 1, provider->texture()->removedFromAtlas());
+        m_shaderMaterial->setTexture(info.binding, provider->texture()->removedFromAtlas());
     } else {
-        m_shaderMaterial->setTexture(info.channel + 1, provider->texture());
+        m_shaderMaterial->setTexture(info.binding, provider->texture());
     }
     if (QSGDynamicTexture *dynamic_texture = qobject_cast<QSGDynamicTexture *>(provider->texture())) {
         dynamic_texture->updateTexture();

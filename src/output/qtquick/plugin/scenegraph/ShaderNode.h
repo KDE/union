@@ -19,10 +19,12 @@ class ShaderMaterial;
 class ShaderNode : public QSGGeometryNode
 {
 public:
-    using Channel = unsigned char;
+    using Channel = uint8_t;
+    using Binding = uint8_t;
 
     struct TextureInfo {
         Channel channel = 0;
+        Binding binding = 0;
         QQuickWindow::CreateTextureOptions options;
         std::shared_ptr<QSGTexture> texture = nullptr;
         QPointer<QSGTextureProvider> provider = nullptr;
@@ -87,54 +89,77 @@ public:
     std::span<char> uniformData();
 
     /*!
-     * Set the number of texture channels.
+     * Set the number of UV channels.
      *
-     * Each texture channel gets its own set of UV coordinates and texture. By
-     * default, the UVs will be set to (0, 0, 1, 1) unless the texture is an
-     * atlas texture, in which case coordinates matching the atlas will be used.
-     * Use setTexture() to set the texture to use for a channel.
+     * Each UV channel gets its own set of coordinates. By default, the UVs will
+     * be set to (0, 0, 1, 1).
      */
-    void setTextureChannels(unsigned char count);
+    void setUvChannels(unsigned char count);
 
     /*!
      * Set the texture for a channel to an image.
      *
      * This will create a texture from \p image using \p window and the options
-     * specified by \p options, then assign it to texture channel \p channel.
+     * specified by \p options. It will use UV coordinates from UV channel
+     * \p channel and will be assigned to texture binding \p binding of the
+     * material.
+     *
      * Textures created from images are cached, if an image has the same cache
      * ID as a previous call to setTexture(), no new texture will be created.
+     *
+     * The UV coordinates of \p channel will be updated to match the expected
+     * coordinates for the texture, such that textures from a texture atlas work
+     * correctly.
      */
-    void setTexture(Channel channel, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
 
     /*!
      * Set the texture for a channel to an image loaded from disk.
      *
-     * This will load the image at \p path and create a texture from its image
-     * using \p window, \p size and \p options, then assign it to texture
-     * channel \p channel.
+     * This will load the image at \p path at size \p size and create a texture
+     * from its image using \p window, and \p options. It will use UV
+     * coordinates from UV channel \p channel and will be assigned to texture
+     * binding \p binding of the material.
+     *
+     * Both the image and texture will be cached, so repeated calls to this
+     * method with the same arguments will be significantly faster.
+     *
+     * The UV coordinates of \p channel will be updated to match the expected
+     * coordinates for the texture, such that textures from a texture atlas work
+     * correctly.
      */
     void setTexture(Channel channel,
+                    Binding binding,
                     const std::filesystem::path &path,
                     QQuickWindow *window,
                     const QSizeF &size = {},
                     QQuickWindow::CreateTextureOptions options = {});
 
     /*!
-     * Set the texture for a channel to a texture.
+     * Set the texture for a binding to a texture.
      *
-     * This will assign \p texture to texture channel \p channel. \p options is
-     * needed so we know if the given texture can use a texture atlas or not.
+     * This will assign \p texture to binding \p binding of the material. The
+     * texture will use UV coordinates from \p channel. \p options is used to
+     * determine if the texture is part of an atlas.
+     *
+     * The UV coordinates of \p channel will be updated to match the expected
+     * coordinates for the texture, such that textures from a texture atlas work
+     * correctly.
      */
-    void setTexture(Channel channel, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options = {});
 
     /*!
      * Set the texture for a channel to a texture provider.
      *
-     * This will use \p provider to provide the texture for channel \p channel.
+     * This will use \p provider to provide the texture for binding \p binding
      * \p options will be used whenever a new texture is created from
-     * \p provider.
+     * \p provider. The texture will use UV coordinates from channel \p channel.
+     *
+     * The UV coordinates of \p channel will be updated to match the expected
+     * coordinates for the texture, such that textures from a texture atlas work
+     * correctly.
      */
-    void setTexture(Channel channel, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options = {});
 
     /*!
      * Set the number of extra vertex data channels to \p count.
@@ -227,7 +252,7 @@ private:
     QRectF m_rect;
     bool m_geometryUpdateNeeded = true;
 
-    unsigned char m_textureChannels = 1;
+    unsigned char m_uvChannels = 1;
     QVarLengthArray<QRectF, 16> m_uvs;
 
     unsigned char m_extraChannels = 0;

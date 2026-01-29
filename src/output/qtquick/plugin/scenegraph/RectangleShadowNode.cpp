@@ -14,7 +14,7 @@ RectangleShadowNode::RectangleShadowNode()
     setShader(u"rectangleshadow"_s);
 
     setUniformBufferSize(sizeof(float) * 32);
-    setTextureChannels(1);
+    setUvChannels(1);
 }
 
 void RectangleShadowNode::setItemRect(const QRectF &newItemRect)
