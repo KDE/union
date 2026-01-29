@@ -3,9 +3,12 @@
 
 #pragma once
 
+#include <filesystem>
 #include <list>
 #include <optional>
 #include <unordered_map>
+
+#include <QImage>
 
 #include "union_export.h"
 
@@ -106,4 +109,37 @@ private:
     std::unordered_map<Key, std::pair<Value, typename std::list<Key>::iterator>> m_values;
 };
 
+/*!
+ * \class Union::LruImageCache
+ * \inmodule core
+ * \ingroup core-classes
+ *
+ * \brief An adaptation of LruCache for caching images.
+ *
+ * This adds a load() method that makes it simple to use for caching images.
+ */
+class LruImageCache : public LruCache<int, QImage>
+{
+public:
+    /*!
+     * Load an image at a given size.
+     *
+     * This will return the image from \p path at \p size. The image will be
+     * cached and future calls to load() for the same path and size will return
+     * the cached image.
+     */
+    QImage load(const std::filesystem::path &path, const QSizeF &size)
+    {
+        auto key = qHashMulti(QHashSeed::globalSeed(), path.string(), size.width(), size.height());
+        if (contains(key)) {
+            return value(key).value();
+        }
+
+        QImage image(size.toSize(), QImage::Format_ARGB32_Premultiplied);
+        image.load(QString::fromStdString(path));
+        insert(key, image);
+
+        return image;
+    }
+};
 }
