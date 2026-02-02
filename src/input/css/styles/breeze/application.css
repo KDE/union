@@ -8,27 +8,50 @@
  */
 
 :root {
+    --window-active-background-color: custom-color("kcolorscheme", "active", "window", "background", "normal");
+    --window-active-text-color: custom-color("kcolorscheme", "active", "window", "foreground", "text");
+    --window-active-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
+
+    --window-inactive-background-color: custom-color("kcolorscheme", "inactive", "window", "background", "normal");
+    --window-inactive-text-color: custom-color("kcolorscheme", "inactive", "window", "foreground", "text");
+    --window-inactive-border-color: custom-color("kcolorscheme", "inactive", "window", "decoration", "frame");
+
     --header-active-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
     --header-active-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
     --header-active-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
+
+    --header-inactive-background-color: custom-color("kcolorscheme", "inactive", "header", "background", "normal");
+    --header-inactive-text-color: custom-color("kcolorscheme", "inactive", "header", "foreground", "text");
+    --header-inactive-border-color: custom-color("kcolorscheme", "inactive", "header", "decoration", "frame");
 }
 
 applicationwindow
 {
-    background-color: var(--window-background-color);
-    color: var(--window-text-color);
+    background-color: var(--window-active-background-color);
+    color: var(--window-active-text-color);
+
+    &.inactive {
+        background-color: var(--window-inactive-background-color);
+        color: var(--window-inactive-text-color);
+    }
 }
 
 page
 {
     background-color: var(--window-background-color);
     color: var(--window-text-color);
+
+    .inactive & {
+        background-color: var(--window-inactive-background-color);
+        color: var(--window-inactive-text-color);
+    }
 }
 
 toolbar
 {
     padding: var(--small-spacing);
-    background-color: var(--window-background-color);
+    color: var(--window-active-text-color);
+    background-color: var(--window-active-background-color);
 
     &.header {
         border-bottom: 1px solid var(--header-active-border-color);
@@ -36,7 +59,17 @@ toolbar
     }
 
     &.footer {
-        border-top: 1px solid var(--window-border-color);
+        border-top: 1px solid var(--window-active-border-color);
+    }
+
+    .inactive & {
+        background-color: var(--window-inactive-background-color);
+        border-color: var(--window-inactive-border-color);
+
+        &.header {
+            background-color: var(--header-inactive-background-color);
+            border-color: var(--header-inactive-border-color);
+        }
     }
 }
 
@@ -47,7 +80,11 @@ drawer
 
     &.modal {
         color: var(--window-text-color);
-        background-color: var(--window-background-color);
+        background-color: var(--window-active-background-color);
+
+        .inactive & {
+            background-color: var(--window-inactive-background-color);
+        }
     }
 }
 

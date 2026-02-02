@@ -16,6 +16,13 @@ applicationheader
     {
         border-bottom: 1px solid var(--header-active-border-color);
     }
+
+    .inactive &
+    {
+        background-color: var(--header-inactive-background-color);
+        border-color: var(--header-inactive-border-color);
+        color: var(--header-inactive-text-color);
+    }
 }
 
 card
