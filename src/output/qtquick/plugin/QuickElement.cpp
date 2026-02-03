@@ -150,6 +150,89 @@ void StatesGroup::emitStateChange(Union::Element::States states)
     }
 }
 
+ElementHint::ElementHint(QObject *parent)
+    : QObject(parent)
+{
+}
+
+QString ElementHint::name() const
+{
+    return m_name;
+}
+
+void ElementHint::setName(const QString &newName)
+{
+    if (newName == m_name) {
+        return;
+    }
+
+    m_name = newName;
+    update();
+    Q_EMIT nameChanged();
+}
+
+bool ElementHint::when() const
+{
+    return m_when;
+}
+
+void ElementHint::setWhen(bool newWhen)
+{
+    if (newWhen == m_when) {
+        return;
+    }
+
+    m_when = newWhen;
+    update();
+    Q_EMIT whenChanged();
+}
+
+void ElementHint::setElement(QuickElement *element)
+{
+    m_element = element;
+    update();
+}
+
+void ElementHint::update()
+{
+    if (m_element) {
+        m_element->updateHints();
+    }
+}
+
+ElementAttribute::ElementAttribute(QObject *parent)
+    : ElementHint(parent)
+{
+}
+
+QVariant ElementAttribute::value() const
+{
+    return m_value;
+}
+
+void ElementAttribute::setValue(const QVariant &newValue)
+{
+    if (newValue == m_value) {
+        return;
+    }
+
+    m_value = newValue;
+    update();
+    Q_EMIT valueChanged();
+}
+
+void ElementAttribute::update()
+{
+    if (m_element) {
+        m_element->updateAttributes();
+    }
+}
+
+void ElementAttribute::resetValue()
+{
+    setValue(QVariant{});
+}
+
 QuickElement::QuickElement(QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
 {

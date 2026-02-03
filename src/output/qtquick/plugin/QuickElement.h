@@ -5,7 +5,7 @@
 
 #include <QEvent>
 #include <QObject>
-#include <QProperty>
+#include <QQmlListProperty>
 #include <QQmlParserStatus>
 #include <QQuickAttachedPropertyPropagator>
 #include <qqmlregistration.h>
@@ -145,6 +145,114 @@ private:
 
     QuickElement *m_parent = nullptr;
     Union::Element::States m_activeStates;
+};
+
+/*!
+ * \qmltype ElementHint
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief A QtQuick representation of a hint on an Element.
+ *
+ * QuickElement::hints needs some way of extending the style-declared hints with
+ * application overrides. The only way of doing that with public QtQuick API is
+ * by using a list property. This type is used to represent hints of
+ * QuickElement.
+ *
+ * QuickElement will use its list of ElementHint instances to build its internal
+ * list of hints, using the name property as the hint name. The when property
+ * determines whether a hint gets added. Duplicate elements in the list of
+ * ElementHints can be used to override previously declared hints.
+ *
+ * \sa QuickElement
+ * \sa ElementAttribute
+ */
+class ElementHint : public QObject
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    explicit ElementHint(QObject *parent = nullptr);
+
+    /*!
+     * \qmlproperty string ElementHint::name
+     *
+     * The name of the hint to set or remove.
+     */
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged)
+    QString name() const;
+    void setName(const QString &newName);
+    Q_SIGNAL void nameChanged();
+
+    /*!
+     * \qmlproperty bool ElementHint::when
+     *
+     * If true, set the hint on the element. If false, remove the hint.
+     *
+     * The default is true.
+     */
+    Q_PROPERTY(bool when READ when WRITE setWhen NOTIFY whenChanged)
+    bool when() const;
+    void setWhen(bool newWhen);
+    Q_SIGNAL void whenChanged();
+
+    void setElement(QuickElement *element);
+
+protected:
+    virtual void update();
+    QuickElement *m_element = nullptr;
+
+private:
+    QString m_name;
+    bool m_when = true;
+};
+
+/*!
+ * \qmltype ElementAttribute
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief A QtQuick representation of an attribute on an Element.
+ *
+ * This type represents an attribute as a combination of name and value. Similar
+ * to ElementHint this is used as part of QuickElement's API to provide a list
+ * of attributes that apply to the element.
+ *
+ * Note that, next to using the when property to disable an attribute, if an
+ * ElementAttribute's value is null or undefined, it will also be removed from
+ * the element's list of attributes.
+ *
+ * \sa QuickElement
+ * \sa ElementHint
+ */
+class ElementAttribute : public ElementHint
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+public:
+    explicit ElementAttribute(QObject *parent = nullptr);
+
+    /*!
+     * \qmlproperty var Attribute::value
+     *
+     * The value of the attribute.
+     *
+     * If this is null or undefined, the attribute will be considered as
+     * removed.
+     */
+    Q_PROPERTY(QVariant value READ value WRITE setValue RESET resetValue NOTIFY valueChanged)
+    QVariant value() const;
+    void setValue(const QVariant &newValue);
+    void resetValue();
+    Q_SIGNAL void valueChanged();
+
+protected:
+    void update() override;
+
+private:
+    QVariant m_value;
 };
 
 /*!
