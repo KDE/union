@@ -16,19 +16,6 @@ T.TreeViewDelegate {
     required property int row
 
     Union.Element.type: "TreeViewDelegate"
-    Union.Element.hints: {
-        let result = [];
-        if (control.treeView.alternatingRows && control.row % 2 !== 0) {
-            result.push("alternatingRows");
-        }
-        if (control.expanded) {
-            result.push("expanded");
-        }
-        if (control.editing) {
-            result.push("editing");
-        }
-        return result;
-    }
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -37,6 +24,12 @@ T.TreeViewDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "alternating-colors"; when: control.treeView.alternatingRows && control.row % 2 !== 0 },
+        Union.ElementHint { name: "expanded"; when: control.expanded },
+        Union.ElementHint { name: "editing"; when: control.editing },
+    ]
+
     Union.Positioner.positionItems: [indentItem, indicator, contentItem]
 
     // When Positioner hasn't had the opportunity yet to perform the layout, we

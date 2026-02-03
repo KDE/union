@@ -12,7 +12,6 @@ T.Slider {
     id: control
 
     Union.Element.type: "Slider"
-    Union.Element.hints: control.horizontal ? ["horizontal"] : ["vertical"]
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -20,6 +19,12 @@ T.Slider {
         pressed: control.pressed
         enabled: control.enabled
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal"; when: control.horizontal },
+        Union.ElementHint { name: "vertical"; when: !control.horizontal },
+    ]
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitHandleWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitHandleHeight + topPadding + bottomPadding)
@@ -33,8 +38,6 @@ T.Slider {
     rightInset: Union.Style.properties.layout.inset.right
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
-
-    hoverEnabled: Application.styleHints.useHoverEffects
 
     handle: Union.StyledRectangle {
         Union.Element.type: "Handle"

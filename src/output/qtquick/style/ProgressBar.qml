@@ -10,16 +10,16 @@ import org.kde.union.impl as Union
 T.ProgressBar {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
-
     Union.Element.type: "ProgressBar"
     Union.Element.states {
         enabled: control.enabled
     }
-    Union.Element.hints: control.indeterminate ? ["indeterminate"] : []
+    Union.Element.hints: Union.ElementHint { name: "indeterminate"; when: control.indeterminate }
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     hoverEnabled: false
 

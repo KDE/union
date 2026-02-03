@@ -23,25 +23,10 @@ T.RoundButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: flat ? ["flat"] : []
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-            case T.AbstractButton.IconOnly:
-                result.display = "icon-only"
-                break
-            case T.AbstractButton.TextOnly:
-                result.display = "text-only"
-                break
-            case T.AbstractButton.TextBesideIcon:
-                result.display = "text-beside-icon"
-                break
-            case T.AbstractButton.TextUnderIcon:
-                result.display = "text-under-icon"
-                break
-        }
-        return result
-    }
+    Union.Element.hints: Union.ElementHint { name: "flat"; when: control.flat }
+    Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)

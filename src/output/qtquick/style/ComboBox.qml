@@ -20,17 +20,13 @@ T.ComboBox {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: {
-        let result = [];
-        if (flat) {
-            result.push("flat");
-        }
-        if (editable) {
-            result.push("editable");
-        }
-        return result;
-    }
+    Union.Element.hints: [
+        Union.ElementHint { name: "flat"; when: control.flat },
+        Union.ElementHint { name: "editable"; when: control.editable },
+    ]
+
     Union.Positioner.positionItems: [contentItem, indicator]
+
     hoverEnabled: Application.styleHints.useHoverEffects
     wheelEnabled: true
 

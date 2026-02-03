@@ -13,13 +13,7 @@ import "private" as P
 T.Button {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
     Union.Element.type: "Button"
-    Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -29,40 +23,25 @@ T.Button {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: {
-        let result = []
-        if (icon.name || icon.source.toString()) {
-            result.push("with-icon")
-        }
-        if (flat) {
-            result.push("flat")
-        }
+    Union.Element.hints: [
+        Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "flat"; when: control.flat },
         // Match qqc2-desktop-style's logic.
-        // TODO: Figure out how much sense this actually makes, I don't like the
-        // text condition here.
-        if (Accessible.role === Accessible.ButtonMenu && text) {
-            result.push("with-menu")
-        }
-        return result
-    }
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-        case T.AbstractButton.IconOnly:
-            result.display = "icon-only"
-            break
-        case T.AbstractButton.TextOnly:
-            result.display = "text-only"
-            break
-        case T.AbstractButton.TextBesideIcon:
-            result.display = "text-beside-icon"
-            break
-        case T.AbstractButton.TextUnderIcon:
-            result.display = "text-under-icon"
-            break
-        }
-        return result
-    }
+        // TODO: Figure out how much sense this actually makes, I don't like the text condition here.
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text },
+    ]
+    Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    // hoverEnabled is an inherited property if it is not explicitly set.
+    // hoverEnabled is used to disable hover effects of delegates when they're not interactive.
+    // This also means any interactive children of those delegates will inherit hoverEnabled,
+    // and their effects are disabled. For this reason we need to explicitly set it in some delegates.
+    hoverEnabled: Application.styleHints.useHoverEffects
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -77,12 +56,6 @@ T.Button {
     font: Union.Style.properties.text.font
 
     spacing: Union.Style.properties.layout.spacing
-
-    // hoverEnabled is an inherited property if it is not explicitly set.
-    // hoverEnabled is used to disable hover effects of delegates when they're not interactive.
-    // This also means any interactive children of those delegates will inherit hoverEnabled,
-    // and their effects are disabled. For this reason we need to explicitly set it in some delegates.
-    hoverEnabled: Application.styleHints.useHoverEffects
 
     icon {
         color: Union.Style.properties.icon.color

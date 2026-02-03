@@ -10,18 +10,6 @@ import org.kde.union.impl as Union
 T.MenuItem {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: {
-        if (visible) {
-            return Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                            implicitIndicatorHeight + topPadding + bottomPadding,
-                            implicitContentHeight + topPadding + bottomPadding)
-        } else {
-            return 0
-        }
-    }
-
     Union.Element.type: "MenuItem"
     Union.Element.states {
         hovered: control.hovered
@@ -32,24 +20,33 @@ T.MenuItem {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-
-    hoverEnabled: Application.styleHints.useHoverEffects
-    Union.Element.hints: {
-        let result = []
-        if (autoExclusive) {
-            result.push("exclusive")
-        } else if (action) {
-            let group = action.T.ActionGroup.group
-            if (group && group.exclusive) {
-                result.push("exclusive")
-            }
-        } else {
-            let group = T.ButtonGroup.group
-            if (group && group.exclusive) {
-                result.push("exclusive")
+    Union.Element.hints: Union.ElementHint {
+        name: "exclusive";
+        when: {
+            if (control.autoExclusive) {
+                return true
+            } else if (control.action) {
+                let group = control.action.T.ActionGroup.group
+                return group.exclusive
+            } else {
+                let group = control.T.ButtonGroup.group
+                return group.exclusive
             }
         }
-        return result
+    }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: {
+        if (visible) {
+            return Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                            implicitIndicatorHeight + topPadding + bottomPadding,
+                            implicitContentHeight + topPadding + bottomPadding)
+        } else {
+            return 0
+        }
     }
 
     leftPadding: Union.Style.properties.layout.padding.left

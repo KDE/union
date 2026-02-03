@@ -15,16 +15,6 @@ T.TableViewDelegate {
     required property var model
 
     Union.Element.type: "TableViewDelegate"
-    Union.Element.hints: {
-        let result = [];
-        if (control.tableView.alternatingRows && control.row % 2 !== 0) {
-            result.push("alternatingRows");
-        }
-        if (control.editing){
-            result.push("editing");
-        }
-        return result;
-    }
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus || control.current
@@ -33,6 +23,10 @@ T.TableViewDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "alternating-colors"; when: control.tableView?.alternatingRows && control.row % 2 !== 0 },
+        Union.ElementHint { name: "editing"; when: control.editing }
+    ]
     
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -50,7 +44,6 @@ T.TableViewDelegate {
                             implicitContentHeight + topPadding + bottomPadding)
     
     highlighted: control.selected
-    
     
     background: Union.StyledRectangle {}
 

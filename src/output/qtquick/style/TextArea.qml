@@ -5,11 +5,26 @@
 import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
+
 import org.kde.union.impl as Union
-import "private"
+
+import "private" as P
 
 T.TextArea {
     id: control
+
+    Union.Element.type: "TextArea"
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.activeFocus
+                     && (control.focusReason === Qt.TabFocusReason
+                         || control.focusReason === Qt.BacktabFocusReason
+                         || control.focusReason === Qt.ShortcutFocusReason)
+        enabled: control.enabled
+    }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(contentWidth + leftPadding + rightPadding,
                             implicitBackgroundWidth + leftInset + rightInset,
@@ -17,20 +32,6 @@ T.TextArea {
     implicitHeight: Math.max(contentHeight + topPadding + bottomPadding,
                              implicitBackgroundHeight + topInset + bottomInset,
                              placeholder.implicitHeight + topPadding + bottomPadding)
-
-    hoverEnabled: Application.styleHints.useHoverEffects
-
-    Union.Element.type: "TextArea"
-    Union.Element.colorSet: Union.ColorSet.View
-    Union.Element.states {
-        hovered: control.hovered
-        activeFocus: control.activeFocus
-        visualFocus: control.activeFocus
-            && (control.focusReason === Qt.TabFocusReason
-            || control.focusReason === Qt.BacktabFocusReason
-            || control.focusReason === Qt.ShortcutFocusReason)
-        enabled: control.enabled
-    }
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -54,7 +55,7 @@ T.TextArea {
     PlaceholderText {
         id: placeholder
 
-        Union.Element.hints: ["placeholder"]
+        Union.Element.hints: Union.ElementHint { name: "placeholder" }
 
         x: control.leftPadding
         y: control.topPadding
@@ -73,7 +74,7 @@ T.TextArea {
 
     background: Union.StyledRectangle {}
 
-    T.ContextMenu.menu: TextFieldContextMenu {
+    T.ContextMenu.menu: P.TextFieldContextMenu {
         target: control
     }
 }

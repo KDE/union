@@ -10,27 +10,22 @@ import org.kde.union.impl as Union
 T.ToolBar {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            contentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             contentHeight + topPadding + bottomPadding)
-
     Union.Element.type: "ToolBar"
-    Union.Element.colorSet: Union.ColorSet.Window
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    Union.Element.hints: {
-        if (position == T.ToolBar.Header) {
-            return ["header"]
-        } else if (position == T.ToolBar.Footer) {
-            return ["footer"]
-        }
-        return []
-    }
+    Union.Element.hints: [
+        Union.ElementHint { name: "header"; when: control.position === T.ToolBar.Header },
+        Union.ElementHint { name: "footer"; when: control.position === T.ToolBar.Footer },
+    ]
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            contentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             contentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

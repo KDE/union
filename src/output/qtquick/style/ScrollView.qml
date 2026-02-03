@@ -10,11 +10,6 @@ import org.kde.union.impl as Union
 T.ScrollView {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
-
     Union.Element.type: "ScrollView"
     Union.Element.states {
         hovered: control.hovered
@@ -22,16 +17,15 @@ T.ScrollView {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    Union.Element.hints: {
-        let result = []
-        if (ScrollBar.vertical.visible) {
-            result.push("vertical-scroll")
-        }
-        if (ScrollBar.horizontal.visible) {
-            result.push("horizontal-scroll")
-        }
-        return result
-    }
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal-scroll"; when: control.ScrollBar.horizontal.visible },
+        Union.ElementHint { name: "vertical-scroll"; when: control.ScrollBar.vertical.visible },
+    ]
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

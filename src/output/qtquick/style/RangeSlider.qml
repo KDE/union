@@ -10,14 +10,20 @@ import org.kde.union.impl as Union
 
 T.RangeSlider {
     id: control
+
     Union.Element.type: "RangeSlider"
-    Union.Element.hints: control.horizontal ? ["horizontal"] : ["vertical"]
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal"; when: control.horizontal },
+        Union.ElementHint { name: "vertical"; when: !control.horizontal },
+    ]
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, first.implicitHandleWidth + leftPadding + rightPadding, second.implicitHandleWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, first.implicitHandleHeight + topPadding + bottomPadding, second.implicitHandleHeight + topPadding + bottomPadding)
@@ -34,26 +40,28 @@ T.RangeSlider {
 
     first.handle: Union.StyledRectangle {
         Union.Element.type: "Handle"
-        Union.Element.hints: ["first"]
         Union.Element.states {
             hovered: control.first.hovered
             activeFocus: control.first.handle.activeFocus
             enabled: control.enabled
             pressed: control.first.pressed
         }
+        Union.Element.hints: Union.ElementHint { name: "first" }
+
         x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
     }
 
     second.handle: Union.StyledRectangle {
         Union.Element.type: "Handle"
-        Union.Element.hints: ["second"]
         Union.Element.states {
             hovered: control.second.hovered
             activeFocus: control.second.handle.activeFocus
             enabled: control.enabled
             pressed: control.second.pressed
         }
+        Union.Element.hints: Union.ElementHint { name: "second" }
+
         x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
     }

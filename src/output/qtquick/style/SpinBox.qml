@@ -11,11 +11,6 @@ import org.kde.union.impl as Union
 T.SpinBox {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
-
-    hoverEnabled: Application.styleHints.useHoverEffects
-
     Union.Element.type: "SpinBox"
     Union.Element.states {
         hovered: control.hovered
@@ -23,19 +18,15 @@ T.SpinBox {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    Union.Element.hints: {
-        let result = []
+    Union.Element.hints: [
+        Union.ElementHint { name: "editable"; when: control.editable },
+        Union.ElementHint { name: "constrained"; when: priv.constrained },
+    ]
 
-        if (control.editable) {
-            result.push("editable")
-        }
+    hoverEnabled: Application.styleHints.useHoverEffects
 
-        if (priv.constrained) {
-            result.push("constrained")
-        }
-
-        return result
-    }
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -86,13 +77,12 @@ T.SpinBox {
         id: upIndicator
 
         Union.Element.type: "Indicator"
-        Union.Element.hints: ["increase"]
-
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
             enabled: upIndicator.enabled
         }
+        Union.Element.hints: Union.ElementHint { name: "increase" }
 
         Union.Icon {
             anchors.centerIn: parent
@@ -107,13 +97,12 @@ T.SpinBox {
         id: downIndicator
 
         Union.Element.type: "Indicator"
-        Union.Element.hints: ["decrease"]
-
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
             enabled: downIndicator.enabled
         }
+        Union.Element.hints: Union.ElementHint { name: "decrease" }
 
         Union.Icon {
             anchors.centerIn: parent

@@ -10,16 +10,19 @@ import org.kde.union.impl as Union
 T.ToolSeparator {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
-
     Union.Element.type: "ToolSeparator"
     Union.Element.states {
         enabled: control.enabled
     }
-    Union.Element.hints: horizontal ? ["horizontal"] : ["vertical"]
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal"; when: control.horizontal },
+        Union.ElementHint { name: "vertical"; when: !control.horizontal },
+    ]
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

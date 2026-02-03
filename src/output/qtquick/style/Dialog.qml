@@ -37,10 +37,10 @@ T.Dialog {
     background: Union.StyledRectangle { }
 
     header: Label {
-        Union.Element.hints: ["header"]
+        Union.Element.hints: Union.ElementHint { name: "header" }
         text: control.title
         visible: control.title
-        font: Union.Style.properties.text.font
+        font: Union.Style.properties.text.font ?? Application.font
         topPadding: Union.Style.properties.layout.padding.top
         bottomPadding: Union.Style.properties.layout.padding.bottom
         leftPadding: Union.Style.properties.layout.padding.left

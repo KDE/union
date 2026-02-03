@@ -11,15 +11,7 @@ import "private" as P
 T.TabButton {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
-    hoverEnabled: Application.styleHints.useHoverEffects
-
     Union.Element.type: "TabButton"
-    Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -28,39 +20,24 @@ T.TabButton {
         checked: control.checked
         enabled: control.enabled
     }
-    Union.Element.hints: {
-        let result = []
-        if (icon.name || icon.source.toString()) {
-            result.push("with-icon");
+    Union.Element.hints: [
+        Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "itemview-highlight"; when: control.ListView?.view?.highlightItem },
+    ]
+    Union.Element.attributes: [
+        P.DisplayAttribute { control: control },
+        Union.ElementAttribute {
+            name: "direction"
+            value: control.T.TabBar.position === T.TabBar.Footer ? "bottom" : "top"
         }
-        if (control.ListView?.view?.highlightItem) {
-            result.push("itemview-highlight");
-        }
-        return result
-    }
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-            case T.AbstractButton.IconOnly:
-                result.display = "icon-only"
-                break
-            case T.AbstractButton.TextOnly:
-                result.display = "text-only"
-                break
-            case T.AbstractButton.TextBesideIcon:
-                result.display = "text-beside-icon"
-                break
-            case T.AbstractButton.TextUnderIcon:
-                result.display = "text-under-icon"
-                break
-        }
-        if (control.T.TabBar.position === T.TabBar.Footer){
-            result.direction = "bottom"
-        } else {
-            result.direction = "top"
-        }
-        return result
-    }
+    ]
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right

@@ -12,6 +12,10 @@ T.DialogButtonBox {
     id: control
 
     Union.Element.type: "DialogButtonBox"
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "position"
+        value: control.position === T.DialogButtonBox.Header ? "header" : "footer"
+    }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
@@ -27,19 +31,6 @@ T.DialogButtonBox {
     rightPadding: Union.Style.properties.layout.padding.right
 
     alignment: Qt.AlignRight
-
-    Union.Element.attributes: {
-        let result = {}
-        switch (position) {
-            case T.DialogButtonBox.Header:
-                result.position = "header"
-                break
-            case T.DialogButtonBox.Footer:
-                result.position = "footer"
-                break
-        }
-        return result
-    }
 
     delegate: Button {
         width: implicitWidth

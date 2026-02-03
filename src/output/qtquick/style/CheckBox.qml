@@ -13,11 +13,6 @@ import "private" as P
 T.CheckBox {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
     Union.Element.type: "CheckBox"
     Union.Element.states {
         hovered: control.hovered
@@ -27,25 +22,15 @@ T.CheckBox {
         checked: control.checked
         enabled: control.enabled
     }
-    Union.Element.hints: icon.name || icon.source.toString() ? ["with-icon"] : []
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-        case T.AbstractButton.IconOnly:
-            result.display = "icon-only"
-            break
-        case T.AbstractButton.TextOnly:
-            result.display = "text-only"
-            break
-        case T.AbstractButton.TextBesideIcon:
-            result.display = "text-beside-icon"
-            break
-        case T.AbstractButton.TextUnderIcon:
-            result.display = "text-under-icon"
-            break
-        }
-        return result
-    }
+    Union.Element.hints: Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() }
+    Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
@@ -60,8 +45,6 @@ T.CheckBox {
     spacing: Union.Style.properties.layout.spacing
 
     font: Union.Style.properties.text.font
-
-    hoverEnabled: Application.styleHints.useHoverEffects
 
     icon {
         color: Union.Style.properties.icon.color

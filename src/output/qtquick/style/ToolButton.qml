@@ -14,13 +14,7 @@ import "private" as P
 T.ToolButton {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
     Union.Element.type: "ToolButton"
-    Union.Element.colorSet: Union.ColorSet.Button
     Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
@@ -30,36 +24,30 @@ T.ToolButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "raised"; when: !control.flat },
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text },
+    ]
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "display"
+        value: switch (control.display) {
+            case T.AbstractButton.IconOnly:
+                return "icon-only"
+            case T.AbstractButton.TextOnly:
+                return "text-only"
+            case T.AbstractButton.TextBesideIcon:
+                return "text-beside-icon"
+            case T.AbstractButton.TextUnderIcon:
+                return "text-under-icon"
+        }
+    }
+
     hoverEnabled: Application.styleHints.useHoverEffects
 
-    Union.Element.hints: {
-        let result = []
-        if (!flat) {
-            result.push("raised")
-        }
-        if (Accessible.role === Accessible.ButtonMenu && text) {
-            result.push("with-menu")
-        }
-        return result
-    }
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-            case T.AbstractButton.IconOnly:
-                result.display = "icon-only"
-                break
-            case T.AbstractButton.TextOnly:
-                result.display = "text-only"
-                break
-            case T.AbstractButton.TextBesideIcon:
-                result.display = "text-beside-icon"
-                break
-            case T.AbstractButton.TextUnderIcon:
-                result.display = "text-under-icon"
-                break
-        }
-        return result
-    }
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right

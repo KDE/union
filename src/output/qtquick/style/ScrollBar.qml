@@ -10,11 +10,6 @@ import org.kde.union.impl as Union
 T.ScrollBar {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
-
     Union.Element.type: "ScrollBar"
     Union.Element.states {
         hovered: control.hovered
@@ -23,15 +18,18 @@ T.ScrollBar {
         pressed: control.pressed
         enabled: control.enabled
     }
-    Union.Element.hints: {
-        if (control.horizontal) {
-            return ["horizontal"]
-        } else {
-            return ["vertical"]
-        }
-    }
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal"; when: control.horizontal },
+        Union.ElementHint { name: "vertical"; when: !control.horizontal },
+    ]
 
     hoverEnabled: Application.styleHints.useHoverEffects
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top

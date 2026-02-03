@@ -2,17 +2,14 @@
 // SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
 // SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
 
+pragma ComponentBehavior: Bound;
+
 import QtQuick
 import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
 T.TabBar {
     id: control
-
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
 
     Union.Element.type: "TabBar"
     Union.Element.states {
@@ -21,8 +18,15 @@ T.TabBar {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    Union.Element.attributes: position === T.TabBar.Footer ?
-        {"tab-position": "bottom"} : {"tab-position": "top"}
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "tab-position"
+        value: control.position === T.TabBar.Footer ? "bottom" : "top"
+    }
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -62,8 +66,11 @@ T.TabBar {
                 highlighted: control.currentItem !== null
                 enabled: highlight.enabled
             }
-            Union.Element.hints: ["itemview-highlight"]
-            Union.Element.attributes: control.Union.Element.attributes
+            Union.Element.hints: Union.ElementHint { name: "itemview-highlight" }
+            Union.Element.attributes: Union.ElementAttribute {
+                name: "tab-position"
+                value: control.position === T.TabBar.Footer ? "bottom" : "top"
+            }
         }
     }
 

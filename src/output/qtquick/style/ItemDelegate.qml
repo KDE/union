@@ -14,9 +14,6 @@ import "private" as P
 T.ItemDelegate {
     id: control
 
-    implicitWidth: Math.max(implicitContentWidth + leftPadding + rightPadding, Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth))
-    implicitHeight: Math.max(implicitContentHeight + topPadding + bottomPadding, Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight))
-
     Union.Element.type: "ItemDelegate"
     Union.Element.states {
         hovered: control.hovered
@@ -27,45 +24,23 @@ T.ItemDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "hoverEnabled"; when: control.hoverEnabled },
+        Union.ElementHint { name: "insideList"; when: control.ListView?.view },
+        Union.ElementHint { name: "insideTable"; when: control.TableView?.view },
+        Union.ElementHint {
+            name: "useAlternateBackgroundColor"
+            when: (TableView.view?.alternatingRows && control.row % 2)
+                  || (Union.OutputProperties.useAlternatingColors && control.index % 2)
+        }
+    ]
+    Union.Element.attributes: P.DisplayAttribute { control: control }
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
-    Union.Element.hints: {
-        let result = icon.name || icon.source.toString() ? ["with-icon"] : [];
-        if (control.hoverEnabled) {
-            result.push("hoverEnabled");
-        }
-        if (ListView?.view) {
-            result.push("insideList");
-        }
-        if (TableView?.view) {
-            result.push("insideTable");
-        }
-        if (TableView.view?.alternatingRows && row % 2) {
-            result.push("useAlternateBackgroundColor");
-        } else if (Union.OutputProperties.useAlternatingColors && index % 2) {
-            result.push("useAlternateBackgroundColor");
-        }
-        return result;
-    }
-    Union.Element.attributes: {
-        let result = {}
-        switch (display) {
-        case T.AbstractButton.IconOnly:
-            result.display = "icon-only"
-            break
-        case T.AbstractButton.TextOnly:
-            result.display = "text-only"
-            break
-        case T.AbstractButton.TextBesideIcon:
-            result.display = "text-beside-icon"
-            break
-        case T.AbstractButton.TextUnderIcon:
-            result.display = "text-under-icon"
-            break
-        }
-        return result
-    }
+    implicitWidth: Math.max(implicitContentWidth + leftPadding + rightPadding, Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth))
+    implicitHeight: Math.max(implicitContentHeight + topPadding + bottomPadding, Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight))
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right

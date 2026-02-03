@@ -5,11 +5,24 @@
 import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
+
 import org.kde.union.impl as Union
-import "private"
+
+import "private" as P
 
 T.TextField {
     id: control
+
+    Union.Element.type: "TextField"
+    Union.Element.states {
+        hovered: control.hovered
+        activeFocus: control.activeFocus
+        visualFocus: control.activeFocus
+                     && (control.focusReason === Qt.TabFocusReason
+                         || control.focusReason === Qt.BacktabFocusReason
+                         || control.focusReason === Qt.ShortcutFocusReason)
+        enabled: control.enabled
+    }
 
     implicitWidth: implicitBackgroundWidth + leftInset + rightInset
                    || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding
@@ -18,18 +31,6 @@ T.TextField {
                              placeholder.implicitHeight + topPadding + bottomPadding)
 
     hoverEnabled: Application.styleHints.useHoverEffects
-
-    Union.Element.type: "TextField"
-    Union.Element.colorSet: Union.ColorSet.View
-    Union.Element.states {
-        hovered: control.hovered
-        activeFocus: control.activeFocus
-        visualFocus: control.activeFocus
-            && (control.focusReason === Qt.TabFocusReason
-            || control.focusReason === Qt.BacktabFocusReason
-            || control.focusReason === Qt.ShortcutFocusReason)
-        enabled: control.enabled
-    }
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -53,7 +54,7 @@ T.TextField {
     PlaceholderText {
         id: placeholder
 
-        Union.Element.hints: ["placeholder"]
+        Union.Element.hints: Union.ElementHint { name: "placeholder" }
 
         x: control.leftPadding
         y: control.topPadding
@@ -72,7 +73,7 @@ T.TextField {
 
     background: Union.StyledRectangle {}
 
-    T.ContextMenu.menu: TextFieldContextMenu {
+    T.ContextMenu.menu: P.TextFieldContextMenu {
         target: control
     }
 

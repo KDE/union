@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Templates as T
 
@@ -37,16 +39,7 @@ T.PageIndicator {
         id: delegate
         required property int index
         Union.Element.type: "PageIndicatorDelegate"
-        Union.Element.states {
-            pressed: pressed
-        }
-        Union.Element.hints: {
-            if (index === control.currentIndex) {
-                return ["current"];
-            } else {
-                return [];
-            }
-        }
+        Union.Element.hints: Union.ElementHint { name: "current"; when: delegate.index === control.currentIndex }
     }
 
     contentItem: Row {

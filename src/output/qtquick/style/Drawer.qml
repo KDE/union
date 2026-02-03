@@ -12,23 +12,14 @@ T.Drawer {
 
     Union.Element.type: "Drawer"
     Union.Element.hints: modal ? ["modal"] : []
-    Union.Element.attributes: {
-        let result = {}
-        switch (edge) {
-            case Qt.LeftEdge:
-                result.edge = "left"
-                break
-            case Qt.RightEdge:
-                result.edge = "right"
-                break
-            case Qt.TopEdge:
-                result.edge = "top"
-                break
-            case Qt.BottomEdge:
-                result.edge = "bottom"
-                break
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "edge"
+        value: switch (control.edge) {
+            case Qt.LeftEdge: return "left"
+            case Qt.RightEdge: return "right"
+            case Qt.TopEdge: return "top"
+            case Qt.BottomEdge: return "bottom"
         }
-        return result
     }
 
     parent: T.Overlay.overlay
@@ -59,11 +50,17 @@ T.Drawer {
 
     T.Overlay.modal: Union.StyledRectangle {
         Union.Element.type: "Overlay"
-        Union.Element.hints: ["drawer", "modal"]
+        Union.Element.hints: [
+            Union.ElementHint { name: "drawer" },
+            Union.ElementHint { name: "modal" },
+        ]
     }
 
     T.Overlay.modeless: Union.StyledRectangle {
         Union.Element.type: "Overlay"
-        Union.Element.hints: ["drawer", "modeless"]
+        Union.Element.hints: [
+            Union.ElementHint { name: "drawer" },
+            Union.ElementHint { name: "modeless" },
+        ]
     }
 }
