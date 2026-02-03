@@ -18,6 +18,62 @@ using namespace Union;
 
 static EventTypeRegistration<QuickElementUpdatedEvent> quickElementRegistration;
 
+template<typename T, QList<T *> QuickElement::*member, void (QuickElement::*changeSignal)()>
+struct ListFunctions {
+    static void append(QQmlListProperty<T> *property, T *value)
+    {
+        if (!value) {
+            return;
+        }
+
+        auto element = static_cast<QuickElement *>(property->object);
+        auto list = &(element->*member);
+        list->append(value);
+        value->setElement(element);
+        (element->*changeSignal)();
+    }
+
+    static qsizetype count(QQmlListProperty<T> *property)
+    {
+        auto list = static_cast<QuickElement *>(property->object)->*member;
+        return list.count();
+    }
+
+    static T *at(QQmlListProperty<T> *property, qsizetype index)
+    {
+        auto list = static_cast<QuickElement *>(property->object)->*member;
+        return list.at(index);
+    }
+
+    static void clear(QQmlListProperty<T> *property)
+    {
+        auto element = static_cast<QuickElement *>(property->object);
+        auto list = &(element->*member);
+        list->clear();
+        (element->*changeSignal)();
+    }
+
+    static void replace(QQmlListProperty<T> *property, qsizetype index, T *value)
+    {
+        if (!value) {
+            return;
+        }
+
+        auto element = static_cast<QuickElement *>(property->object);
+        auto list = &(element->*member);
+        list->replace(index, value);
+        (element->*changeSignal)();
+    }
+
+    static void removeLast(QQmlListProperty<T> *property)
+    {
+        auto element = static_cast<QuickElement *>(property->object);
+        auto list = &(element->*member);
+        list->removeLast();
+        (element->*changeSignal)();
+    }
+};
+
 StatesGroup::StatesGroup(QuickElement *parent)
     : m_parent(parent)
 {
