@@ -3,7 +3,6 @@
 // SPDX-FileCopyrightText: 2024 Noah Davis <noahadvs@gmail.com>
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -51,7 +50,7 @@ T.TextField {
     horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
     verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
 
-    PlaceholderText {
+    Text {
         id: placeholder
 
         Union.Element.hints: Union.ElementHint { name: "placeholder" }
