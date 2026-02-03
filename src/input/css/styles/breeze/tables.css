@@ -22,7 +22,7 @@ tableviewdelegate {
     color: var(--view-text-color);
     background-color: var(--view-background-color);
 
-    &.alternatingRows {
+    &.alternating-colors {
         background-color: var(--view-background-alternate-color);
     }
 
