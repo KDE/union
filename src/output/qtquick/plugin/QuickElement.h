@@ -359,42 +359,35 @@ public:
     StatesGroup *states() const;
 
     /*!
-     * \qmlattachedproperty ColorSet Element::colorSet
+     * \qmlattachedproperty list<Hint> Element::hints
+     * A list of hints to provide to the element.
      *
-     * The color set to use for this element.
+     * This is a list of ElementHint instances that is used to build the
+     * internal list of hints of the element.
      *
-     * The color set determines a specific set of system colors that should be
-     * used in the appropriate context.
+     * Hints are extra information that can be used by a style to adjust how a
+     * certain element is styled. An example is info/warning/error variants of a
+     * button.
      *
-     * \sa Union::Element::ColorSet
+     * \sa ElementHint
      */
-    Q_PROPERTY(Union::Element::ColorSet colorSet READ colorSet WRITE setColorSet NOTIFY colorSetChanged)
-    Union::Element::ColorSet colorSet() const;
-    void setColorSet(Union::Element::ColorSet newColorSet);
-    Q_SIGNAL void colorSetChanged();
-
-    /**
-     * A list of extra hints to provide to the theme.
-     *
-     * These should be set if there are extra criteria to be used to style an
-     * element, for example error/warning/information variants.
-     */
-    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged)
-    QStringList hints() const;
-    void setHints(const QStringList &newHints);
+    Q_PROPERTY(QQmlListProperty<ElementHint> hints READ hints NOTIFY hintsChanged)
+    QQmlListProperty<ElementHint> hints();
     Q_SIGNAL void hintsChanged();
 
     /*!
-     * \qmlattachedproperty QVariantMap Element::attributes
-     * A map of extra attributes to provide to the theme.
+     * \qmlattachedproperty list<Attribute> Element::attributes
+     * A list of attributes to provide to the element.
      *
-     * These can be used to provide extra criteria to be used to style an
-     * element. They can be used to do things like select a specific theme to
-     * use for an element.
+     * This is a list of ElementAttribute instances that is used to build the
+     * internal list of attributes of the element.
+     *
+     * Attributes are extra information that can be used by a style to adjust
+     * how an element is styled. An example is Button's \c display property,
+     * which adjusts what elements of a button should be visible.
      */
-    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
-    QVariantMap attributes() const;
-    void setAttributes(const QVariantMap &newAttributes);
+    Q_PROPERTY(QQmlListProperty<ElementAttribute> attributes READ attributes NOTIFY attributesChanged)
+    QQmlListProperty<ElementAttribute> attributes();
     Q_SIGNAL void attributesChanged();
 
     /**
@@ -427,12 +420,19 @@ protected:
 
 private:
     friend class StatesGroup;
+    friend class ElementHint;
+    friend class ElementAttribute;
 
     void setActiveStates(Union::Element::States newActiveStates);
+    void updateHints();
+    void updateAttributes();
     void update();
 
     std::shared_ptr<Union::Element> m_element;
     std::unique_ptr<StatesGroup> m_statesGroup;
+
+    QList<ElementHint *> m_hints;
+    QList<ElementAttribute *> m_attributes;
 
     std::unique_ptr<Union::ElementQuery> m_query;
     std::shared_ptr<Union::Style> m_style;
@@ -445,7 +445,5 @@ class QuickElementUpdatedEvent : public QEvent
 public:
     QuickElementUpdatedEvent();
 
-    // Todo: Use registerEventType() instead of a hardcoded random offset
-    // inline static QEvent::Type s_type = QEvent::Type(QEvent::User + 21860);
     inline static QEvent::Type s_type = QEvent::None;
 };
