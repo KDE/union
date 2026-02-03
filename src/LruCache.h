@@ -135,8 +135,15 @@ public:
             return value(key).value();
         }
 
-        QImage image(size.toSize(), QImage::Format_ARGB32_Premultiplied);
-        image.load(QString::fromStdString(path));
+        QImage image;
+        if (std::filesystem::exists(path)) {
+            image = QImage(size.toSize(), QImage::Format_ARGB32_Premultiplied);
+            image.load(QString::fromStdString(path));
+        }
+
+        // Always insert the image. If the file does not exist, it means we
+        // insert an invalid image into the cache, but subsequent calls will not
+        // need to do filesystem calls again.
         insert(key, image);
 
         return image;
