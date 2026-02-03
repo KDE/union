@@ -80,6 +80,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
 ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES
     style/private/DefaultContentItem.qml
     style/private/TextFieldContextMenu.qml
+    style/private/DisplayAttribute.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)
