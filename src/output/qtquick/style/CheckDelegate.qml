@@ -25,6 +25,14 @@ T.CheckDelegate {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "hover-enabled"; when: control.hoverEnabled },
+        Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
+        Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
+        Union.ElementHint {
+            name: "alternating-colors"
+            when: (TableView.view?.alternatingRows && control.row % 2)
+                  || (Union.OutputProperties.useAlternatingColors && control.index % 2)
+        }
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
