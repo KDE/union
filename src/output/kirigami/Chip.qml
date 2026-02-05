@@ -20,6 +20,19 @@ KT.Chip {
         checked: control.checked
         enabled: control.enabled
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "closable"; when: control.closable },
+        Union.ElementHint { name: "interactive"; when: control.interactive },
+    ]
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "display"
+        value: switch (control.display) {
+            case KT.Chip.IconOnly: return "icon-only"
+            case KT.Chip.TextOnly: return "text-only"
+            case KT.Chip.TextBesideIcon: return "text-beside-icon"
+            case KT.Chip.TextUnderIcon: return "text-under-icon"
+        }
+    }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
