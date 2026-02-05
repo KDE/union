@@ -187,4 +187,10 @@ overlaydrawer
         background-color: var(--window-background-color);
         color: var(--window-text-color);
     }
+
+    /* Collapsible sidebar expects 32px in Kirigami by default */
+    itemdelegate {
+        width: var(--icon-size-medium);
+        height: var(--icon-size-medium);
+    }
 }
