@@ -56,7 +56,7 @@ menuitem,
 radiobutton,
 radiodelegate
 {
-    indicator
+    & > indicator
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -71,18 +71,18 @@ radiodelegate
         border-radius: var(--corner-radius);
     }
 
-    &:hovered indicator
+    &:hovered > indicator
     {
         border-color: var(--checkable-indicator-active-highlight-border-color);
     }
 
-    &:checked indicator
+    &:checked > indicator
     {
         background-color: var(--checkable-indicator-active-highlight-color);
         border-color: var(--checkable-indicator-active-highlight-border-color);
     }
 
-    &:visual-focus indicator
+    &:visual-focus > indicator
     {
         outline: var(--focus-outline);
         border-color: var(--checkable-indicator-active-highlight-border-color);
@@ -92,7 +92,7 @@ radiodelegate
     {
         color: var(--checkable-disabled-text-color);
 
-        indicator
+        & > indicator
         {
             border: 1px solid var(--checkable-indicator-disabled-border-color);
             color: var(--checkable-indicator-disabled-text-color);
@@ -100,7 +100,7 @@ radiodelegate
         }
     }
 
-    &:checked:disabled indicator
+    &:checked:disabled > indicator
     {
         background-color: var(--checkable-indicator-disabled-background-color);
         background-image-mask-color: var(--checkable-indicator-disabled-text-color);
@@ -121,12 +121,12 @@ radiobutton,
 radiodelegate,
 menuitem.exclusive
 {
-    indicator
+    & > indicator
     {
         border-radius: 8px;
     }
 
-    &:checked indicator
+    &:checked > indicator
     {
         background-image: url("images/radio.svg") mask var(--checkable-indicator-active-text-color);
     }
@@ -135,7 +135,7 @@ menuitem.exclusive
 switch,
 switchdelegate
 {
-    indicator
+    & > indicator
     {
         layout-alignment-container: content;
         layout-alignment-horizontal: start;
@@ -146,38 +146,38 @@ switchdelegate
 
         background-color: var(--switch-indicator-active-background-color);
         border: 1px solid var(--switch-indicator-active-border-color);
-    }
 
-    handle
-    {
-        width: var(--grid-unit);
-        height: var(--grid-unit);
-        border-radius: 9px; /* grid-unit / 2 */
+        & > handle
+        {
+            width: var(--grid-unit);
+            height: var(--grid-unit);
+            border-radius: 9px; /* grid-unit / 2 */
 
-        background-color: var(--switch-handle-active-background-color);
-        border: 1px solid var(--switch-handle-active-border-color);
+            background-color: var(--switch-handle-active-background-color);
+            border: 1px solid var(--switch-handle-active-border-color);
+        }
     }
 
     &:hovered
     {
-        indicator
+        & > indicator
         {
             border-color: var(--switch-indicator-active-highlight-border-color);
 
-            handle
+            & > handle
             {
                 border-color: var(--switch-handle-active-highlight-border-color);
             }
         }
     }
 
-    &:checked indicator
+    &:checked > indicator
     {
         background-color: var(--switch-indicator-active-highlight-color);
         border-color: var(--switch-indicator-active-highlight-border-color);
     }
 
-    &:visual-focus indicator handle
+    &:visual-focus > indicator > handle
     {
         outline: var(--focus-outline);
     }
@@ -186,11 +186,11 @@ switchdelegate
     {
         color: var(--switch-disabled-text-color);
 
-        indicator {
+        & > indicator {
             border-color: var(--switch-indicator-disabled-border-color);
             background-color: var(--switch-indicator-disabled-background-color);
 
-            handle {
+            & > handle {
                 border-color: var(--switch-handle-disabled-border-color);
                 background-color: var(--switch-handle-disabled-background-color);
             }

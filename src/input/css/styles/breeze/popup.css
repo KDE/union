@@ -62,7 +62,7 @@ menuitem
         color: var(--window-disabled-text-color);
     }
 
-    & indicator
+    & > indicator
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -70,7 +70,7 @@ menuitem
         layout-alignment: content start center -1;
     }
 
-    & arrow
+    & > arrow
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);

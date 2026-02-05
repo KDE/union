@@ -78,7 +78,7 @@ swipedelegate
         height: var(--icon-size-large);
     }
 
-    indicator
+    & > indicator
     {
         layout-alignment: content start center -1;
     }

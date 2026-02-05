@@ -36,7 +36,7 @@ spinbox
         outline: 2px solid var(--focus-color);
     }
 
-    .placeholder
+    & > .placeholder
     {
         color: mix(var(--view-text-color), var(--view-background-color), 0.3);
     }
@@ -46,7 +46,7 @@ spinbox
         background-color: var(--view-disabled-background-color);
         border: 1px solid var(--view-disabled-border-color);
 
-        .placeholder
+        & > .placeholder
         {
             color: mix(var(--view-text-color), var(--view-background-color), 0.7);
         }
@@ -73,7 +73,7 @@ spinbox
 
     color: var(--button-active-text-color);
 
-    indicator
+    & > indicator
     {
         width: var(--large-element-size);
         height: var(--small-element-size);
@@ -145,7 +145,7 @@ spinbox
         }
     }
 
-    &.constrained indicator {
+    &.constrained > indicator {
         layout-alignment: item end stack 0;
 
         width: var(--medium-element-size);

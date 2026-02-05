@@ -59,12 +59,12 @@ treeviewdelegate {
         layout-alignment: content fill fill 0;
     }
 
-    & indentation {
+    & > indentation {
         width: var(--medium-element-size);
         layout-alignment: item start center 0;
     }
 
-    & indicator {
+    & > indicator {
         width: var(--medium-element-size);
         height: var(--icon-size-small);
         color: var(--view-text-color);
@@ -72,7 +72,7 @@ treeviewdelegate {
         layout-alignment: item start center 1;
     }
 
-    &.expanded indicator {
+    &.expanded > indicator {
         icon-name: "arrow-down-symbolic"
     }
 
@@ -80,7 +80,7 @@ treeviewdelegate {
         color: var(--view-disabled-text-color);
         background-color: var(--view-disabled-background-color);
 
-        indicator {
+        & > indicator {
             color: var(--view-disabled-text-color);
         }
     }

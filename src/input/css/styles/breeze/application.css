@@ -126,7 +126,8 @@ groupbox {
     color: var(--window-text-color);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
-    header {
+
+    & > header {
         color: var(--window-text-color);
     }
 }

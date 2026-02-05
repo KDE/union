@@ -107,7 +107,7 @@ toolbutton.raised
         icon-alignment-vertical: stack;
     }
 
-    &.with-menu indicator {
+    &.with-menu > indicator {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);

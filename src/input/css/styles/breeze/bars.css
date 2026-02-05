@@ -45,7 +45,7 @@ progressbar
     border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
 
-    track {
+    & > track {
         background-color: var(--bar-track-active-background-color);
         border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--corner-radius);
@@ -55,7 +55,7 @@ progressbar
         background-color: var(--bar-disabled-background-color);
         border-color: var(--bar-disabled-border-color);
 
-        track {
+        & > track {
             background-color: var(--bar-track-disabled-background-color);
             border-color: var(--bar-track-disabled-border-color);
         }
@@ -81,13 +81,13 @@ rangeslider
     border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
 
-    & fill {
+    & > fill {
         background-color: var(--bar-track-active-background-color);
         border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--corner-radius);
     }
 
-    & handle {
+    & > handle {
         width: var(--medium-element-size);
         height: var(--medium-element-size);
         background-color: var(--bar-handle-active-background-color);
@@ -104,27 +104,27 @@ rangeslider
         background-color: var(--bar-disabled-background-color);
         border: 1px solid var(--bar-disabled-border-color);
 
-        & fill {
+        & > fill {
             background-color: var(--bar-track-disabled-background-color);
             border-color: var(--bar-track-disabled-border-color);
         }
 
-        & handle {
+        & > handle {
             background-color: var(--bar-handle-disabled-background-color);
             border-color: var(--bar-handle-disabled-border-color);
         }
     }
 }
 
-slider:visual-focus handle,
-rangeslider handle:active-focus
+slider:visual-focus > handle,
+rangeslider > handle:active-focus
 {
     border-color: var(--bar-handle-active-highlight-border-color);
     outline: var(--focus-outline);
 }
 
-slider:pressed handle,
-rangeslider handle:pressed
+slider:pressed > handle,
+rangeslider > handle:pressed
 {
     background-color: var(--bar-handle-active-highlight-color);
     border-color: var(--bar-handle-active-highlight-border-color);
@@ -147,7 +147,7 @@ scrollbar
         border-left: 1px solid var(--bar-active-border-color);
     }
 
-    handle {
+    & > handle {
         background-color: var(--bar-active-background-color);
         border: 1px solid var(--bar-active-border-color);
         border-radius: var(--small-element-size);
