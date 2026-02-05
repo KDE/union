@@ -12,6 +12,8 @@ import "private" as P
 T.RadioDelegate {
     id: control
 
+    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.OutputProperties.useAlternatingColors && index % 2)
+
     Union.Element.type: "RadioDelegate"
     Union.Element.states {
         hovered: control.hovered
@@ -27,11 +29,7 @@ T.RadioDelegate {
         Union.ElementHint { name: "hover-enabled"; when: control.hoverEnabled },
         Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
         Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
-        Union.ElementHint {
-            name: "alternating-colors"
-            when: (TableView.view?.alternatingRows && control.row % 2)
-                  || (Union.OutputProperties.useAlternatingColors && control.index % 2)
-        },
+        Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 

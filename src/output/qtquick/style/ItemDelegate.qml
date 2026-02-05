@@ -14,6 +14,10 @@ import "private" as P
 T.ItemDelegate {
     id: control
 
+    // HACK: This is sadly relying on unqualified lookups, so we have to look for the row/index in here.
+    // The "row" and "index" values are lost when done inside Union.Element.hints.
+    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.OutputProperties.useAlternatingColors && index % 2)
+
     Union.Element.type: "ItemDelegate"
     Union.Element.states {
         hovered: control.hovered
@@ -29,11 +33,7 @@ T.ItemDelegate {
         Union.ElementHint { name: "hover-enabled"; when: control.hoverEnabled },
         Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
         Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
-        Union.ElementHint {
-            name: "alternating-colors"
-            when: (TableView.view?.alternatingRows && control.row % 2)
-                  || (Union.OutputProperties.useAlternatingColors && control.index % 2)
-        }
+        Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 

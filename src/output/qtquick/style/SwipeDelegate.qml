@@ -12,6 +12,8 @@ import "private" as P
 T.SwipeDelegate {
     id: control
 
+    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.OutputProperties.useAlternatingColors && index % 2)
+
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
@@ -27,6 +29,14 @@ T.SwipeDelegate {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "hover-enabled"; when: control.hoverEnabled },
+        Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
+        Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
+        Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
+    ]
+    Union.Element.attributes: P.DisplayAttribute { control: control }
 
     leftPadding: Union.Positioner.padding.left
     rightPadding: Union.Positioner.padding.right
