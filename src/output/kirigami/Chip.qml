@@ -3,23 +3,16 @@
 
 import QtQuick
 
-import QtQuick.Controls.impl as QQCImpl
-
 import org.kde.kirigami.templates as KT
 
-import org.kde.union as Union
-import org.kde.union.impl as Impl
+import org.kde.union as Controls
+import org.kde.union.impl as Union
 
 KT.Chip {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Impl.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Impl.Positioner.implicitHeight)
-
-    Impl.Element.type: "Chip"
-    Impl.Element.states {
+    Union.Element.type: "Chip"
+    Union.Element.states {
         hovered: control.hovered
         activeFocus: control.activeFocus
         visualFocus: control.visualFocus
@@ -28,76 +21,51 @@ KT.Chip {
         enabled: control.enabled
     }
 
-    Impl.Element.hints: {
-        let result = []
-        if (control.closable) {
-            result.push("closable")
-        }
-        if (control.interactive) {
-            result.push("interactive")
-        }
-        return result
-    }
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
 
-    Impl.Element.attributes: {
-        let result = {}
-        switch (control.display) {
-        case KT.Chip.IconOnly:
-            result.display = "icon-only"
-            break
-        case KT.Chip.TextOnly:
-            result.display = "text-only"
-            break
-        case KT.Chip.TextBesideIcon:
-            result.display = "text-beside-icon"
-            break
-        case KT.Chip.TextUnderIcon:
-            result.display = "text-under-icon"
-            break
-        }
-        return result
-    }
+    leftPadding: Union.Positioner.padding.left
+    rightPadding: Union.Positioner.padding.right
+    topPadding: Union.Positioner.padding.top
+    bottomPadding:  Union.Positioner.padding.bottom
 
-    leftPadding: Impl.Positioner.padding.left
-    rightPadding: Impl.Positioner.padding.right
-    topPadding: Impl.Positioner.padding.top
-    bottomPadding:  Impl.Positioner.padding.bottom
+    leftInset: Union.Style.properties.layout.inset.left
+    rightInset: Union.Style.properties.layout.inset.right
+    topInset: Union.Style.properties.layout.inset.top
+    bottomInset: Union.Style.properties.layout.inset.bottom
 
-    leftInset: Impl.Style.properties.layout.inset.left
-    rightInset: Impl.Style.properties.layout.inset.right
-    topInset: Impl.Style.properties.layout.inset.top
-    bottomInset: Impl.Style.properties.layout.inset.bottom
+    font: Union.Style.properties.text.font
 
-    font: Impl.Style.properties.text.font
-
-    spacing: Impl.Style.properties.layout.spacing
+    spacing: Union.Style.properties.layout.spacing
 
     icon {
         color: palette.buttonText
-        width: Impl.Style.properties.icon.width
-        height: Impl.Style.properties.icon.height
-        name: Impl.Style.properties.icon.name
-        source: Impl.Style.properties.icon.source
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: Union.Style.properties.icon.name
+        source: Union.Style.properties.icon.source
     }
 
-    Impl.Positioner.positionItems: [contentItem, indicator]
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     contentItem: Item {
-        Impl.PositionedItem.positionChildren: true
+        Union.PositionedItem.positionChildren: true
 
-        QQCImpl.IconImage {
-            Impl.PositionedItem.source: Impl.PositionerSource.Icon
+        Union.Icon {
+            Union.PositionedItem.source: Union.PositionerSource.Icon
+
+            width: control.icon.width
+            height: control.icon.height
 
             name: control.icon.name
             color: control.icon.color
             visible: name.length > 0 && control.display != KT.Chip.TextOnly
-
-            sourceSize.width: control.icon.width
-            sourceSize.height: control.icon.height
         }
 
         Text {
-            Impl.PositionedItem.source: Impl.PositionerSource.Text
+            Union.PositionedItem.source: Union.PositionerSource.Text
 
             text: control.text
             font: control.font
@@ -107,13 +75,15 @@ KT.Chip {
         }
     }
 
-    indicator: Union.ToolButton {
+    indicator: Controls.ToolButton {
         id: indicator
 
-        Union.Element.hints: ["indicator"]
+        Union.Element.hints: [
+            Union.ElementHint { name: "indicator" }
+        ]
 
         visible: control.closable
     }
 
-    background: Impl.StyledRectangle { }
+    background: Union.StyledRectangle { }
 }
