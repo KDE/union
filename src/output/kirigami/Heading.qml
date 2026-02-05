@@ -22,20 +22,11 @@ T.Label {
     property int type: Heading.Type.Normal
 
     Union.Element.type: "Heading"
-    Union.Element.hints: {
-        let result = ["level-" + control.level]
-        switch (control.type) {
-        case Heading.Primary:
-            result.push("primary")
-            break
-        case Heading.Secondary:
-            result.push("secondary")
-            break
-        default:
-            break
-        }
-        return result
-    }
+    Union.Element.hints: [
+        Union.ElementHint { name: "level-" + control.level },
+        Union.ElementHint { name: "primary"; when: control.type === Heading.Primary },
+        Union.ElementHint { name: "secondary"; when: control.type === Heading.Secondary },
+    ]
 
     Accessible.role: Accessible.Heading
 

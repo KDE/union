@@ -16,24 +16,15 @@ KT.OverlayDrawer {
     id: control
 
     Union.Element.type: "OverlayDrawer"
-    Union.Element.hints: modal ? ["modal"] : []
-    Union.Element.attributes: {
-        let result = {}
-        switch (edge) {
-        case Qt.LeftEdge:
-            result.edge = "left"
-            break
-        case Qt.RightEdge:
-            result.edge = "right"
-            break
-        case Qt.TopEdge:
-            result.edge = "top"
-            break
-        case Qt.BottomEdge:
-            result.edge = "bottom"
-            break
+    Union.Element.hints: Union.ElementHint { name: "modal"; when: control.modal }
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "edge"
+        value: switch (control.edge) {
+            case Qt.LeftEdge: return "left"
+            case Qt.RightEdge: return "right"
+            case Qt.TopEdge: return "top"
+            case Qt.BottomEdge: return "bottom"
         }
-        return result
     }
 
     //BEGIN Properties

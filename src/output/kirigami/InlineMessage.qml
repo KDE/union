@@ -17,34 +17,26 @@ KT.InlineMessage {
     id: control
 
     Union.Element.type: "InlineMessage"
-    Union.Element.attributes: {
-        let result = {}
-        switch (control.type) {
-        case Kirigami.MessageType.Positive:
-            result.type = "positive"
-            break
-        case Kirigami.MessageType.Warning:
-            result.type = "warning"
-            break
-        case Kirigami.MessageType.Error:
-            result.type = "error"
-            break
-        }
-
-        switch (control.position) {
-        case KT.InlineMessage.Position.Inline:
-            result.position = "inline"
-            break
-        case KT.InlineMessage.Position.Header:
-            result.position = "header"
-            break
-        case KT.InlineMessage.Position.Footer:
-            result.position = "footer"
-            break
-        }
-
-        return result
-    }
+    Union.Element.attributes: [
+        Union.ElementAttribute {
+            name: "type";
+            value: switch (control.type) {
+                case Kirigami.MessageType.Positive: return "positive"
+                case Kirigami.MessageType.Warning: return "warning"
+                case Kirigami.MessageType.Error: return "error"
+                default: return undefined
+            }
+        },
+        Union.ElementAttribute {
+            name: "position"
+            value: switch (control.position) {
+                case KT.InlineMessage.Position.Inline: return "inline"
+                case KT.InlineMessage.Position.Header: return "header"
+                case KT.InlineMessage.Position.Footer: return "footer"
+                default: return undefined
+            }
+        },
+    ]
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

@@ -15,13 +15,12 @@ KT.AbstractApplicationHeader {
     id: root
 
     Union.Element.type: "ApplicationHeader"
-    Union.Element.hints: {
-        if (root.separatorVisible && (!root.page || !root.page.header || !root.page.header.visible || !(root.page.header instanceof T.ToolBar))) {
-            return ["with-separator"]
-        } else {
-            return []
+    Union.Element.hints: [
+        Union.ElementHint {
+            name: "with-separator";
+            when: root.separatorVisible && (!root.page || !root.page.header || !root.page.header.visible || !(root.page.header instanceof T.ToolBar))
         }
-    }
+    ]
 
     background: Union.StyledRectangle {
         DragHandler {
