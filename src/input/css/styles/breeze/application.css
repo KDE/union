@@ -120,12 +120,17 @@ pageindicatordelegate {
     }
 }
 
-groupbox {
+frame,
+groupbox
+{
     padding: var(--small-spacing);
-    background-color: var(--window-background-color);
-    color: var(--window-text-color);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
+}
+
+groupbox {
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
 
     & > header {
         color: var(--window-text-color);
