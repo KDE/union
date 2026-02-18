@@ -20,6 +20,7 @@ T.ScrollView {
     Union.Element.hints: [
         Union.ElementHint { name: "horizontal-scroll"; when: control.ScrollBar.horizontal.visible },
         Union.ElementHint { name: "vertical-scroll"; when: control.ScrollBar.vertical.visible },
+        Union.ElementHint { name: "framed-background"; when: control.Union.StyleHints.showFramedBackground },
     ]
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
@@ -36,6 +37,8 @@ T.ScrollView {
     rightInset: Union.Style.properties.layout.inset.right
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
+
+    background: Union.StyledRectangle { }
 
     ScrollBar.vertical: ScrollBar {
         parent: control
