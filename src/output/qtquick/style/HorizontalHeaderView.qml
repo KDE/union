@@ -31,8 +31,8 @@ T.HorizontalHeaderView {
             enabled: delegate.enabled
         }
         Union.Element.hints: [
-            Union.ElementHint { name: "sort-ascending"; when: delegate.model.hasOwnProperty("sort") && delegate.model.sort == Qt.AscendingOrder },
-            Union.ElementHint { name: "sort-descending"; when: delegate.model.hasOwnProperty("sort") && delegate.model.sort != Qt.AscendingOrder },
+            Union.ElementHint { name: "sort-ascending"; when: delegate.model.sort !== undefined && delegate.model.sort == Qt.AscendingOrder },
+            Union.ElementHint { name: "sort-descending"; when: delegate.model.sort !== undefined && delegate.model.sort != Qt.AscendingOrder },
         ]
 
         implicitWidth: Math.max(Union.Style.properties.layout.width, Union.Positioner.implicitWidth)
