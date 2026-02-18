@@ -106,7 +106,7 @@ T.ComboBox {
     background: Union.StyledRectangle { }
 
     popup: Popup {
-        Union.Element.hints: ["combobox"]
+        Union.Element.hints: Union.ElementHint { name: "combobox" }
 
         y: control.height
         width: Math.max(control.width, contentItem.implicitWidth)

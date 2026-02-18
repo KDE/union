@@ -11,7 +11,7 @@ T.ApplicationWindow {
     id: window
 
     Union.Element.type: "ApplicationWindow"
-    Union.Element.hints: active ? [] : ["inactive"]
+    Union.Element.hints: Union.ElementHint { name: "inactive"; when: !window.active }
 
     color: Union.Style.properties.background.color ?? "white"
 }
