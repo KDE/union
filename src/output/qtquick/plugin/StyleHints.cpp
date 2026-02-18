@@ -2,7 +2,7 @@
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
-#include "OutputProperties.h"
+#include "StyleHints.h"
 
 #include <QCoreApplication>
 #include <QQmlEngine>
@@ -13,21 +13,21 @@
 
 using namespace Union;
 
-static EventTypeRegistration<OutputPropertiesUpdatedEvent> quickStyleRegistration;
+QEvent::Type StyleHintsChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<StyleHintsChangedEvent> styleHintsRegistration;
 
-OutputProperties::OutputProperties(QQmlEngine *engine, QObject *parent)
+StyleHints::StyleHints(QObject *parent)
     : QObject(parent)
-    , m_engine(engine)
 {
     update();
 }
 
-bool OutputProperties::useAlternatingColors() const
+bool StyleHints::useAlternatingColors() const
 {
     return m_useAlternatingColors;
 }
 
-void OutputProperties::setUseAlternatingColors(bool newUseAlternatingColors)
+void StyleHints::setUseAlternatingColors(bool newUseAlternatingColors)
 {
     if (m_useAlternatingColors != newUseAlternatingColors) {
         m_useAlternatingColors = newUseAlternatingColors;
@@ -36,34 +36,34 @@ void OutputProperties::setUseAlternatingColors(bool newUseAlternatingColors)
     }
 }
 
-bool OutputProperties::spellCheckEnabled() const
+bool StyleHints::spellCheckEnabled() const
 {
     return m_spellCheckEnabled;
 }
 
-void OutputProperties::setSpellCheckEnabled(const bool &enabled)
+void StyleHints::setSpellCheckEnabled(const bool &enabled)
 {
     if (m_spellCheckEnabled != enabled) {
         m_spellCheckEnabled = enabled;
+        update();
         Q_EMIT spellCheckEnabledChanged();
     }
 }
 
-OutputProperties *OutputProperties::qmlAttachedProperties(QObject *parent)
+StyleHints *StyleHints::qmlAttachedProperties(QObject *parent)
 {
-    return new OutputProperties(qmlEngine(parent), parent);
+    return new StyleHints(parent);
 }
 
-void OutputProperties::update()
+void StyleHints::update()
 {
-    OutputPropertiesUpdatedEvent event;
-    // Send to self to allow event filtering on this instance to react to changes.
+    StyleHintsChangedEvent event;
     QCoreApplication::sendEvent(this, &event);
 
     Q_EMIT updated();
 }
 
-OutputPropertiesUpdatedEvent::OutputPropertiesUpdatedEvent()
+StyleHintsChangedEvent::StyleHintsChangedEvent()
     : QEvent(s_type)
 {
 }

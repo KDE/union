@@ -16,25 +16,25 @@
 class QuickElement;
 
 /*!
- * \qmltype OutputProperties
+ * \qmltype StyleHints
  * \inqmlmodule org.kde.union.impl
  * \ingroup qtquick-core
  *
- * \brief An attached property that exposes properties from output.
+ * \brief An attached property with hints.
  *
  */
-class UNIONQUICKIMPL_EXPORT OutputProperties : public QObject
+class UNIONQUICKIMPL_EXPORT StyleHints : public QObject
 {
     Q_OBJECT
-    QML_NAMED_ELEMENT(OutputProperties)
+    QML_ELEMENT
     QML_UNCREATABLE("Attached Property")
-    QML_ATTACHED(OutputProperties)
+    QML_ATTACHED(StyleHints)
 
 public:
-    OutputProperties(QQmlEngine *engine, QObject *parent = nullptr);
+    explicit StyleHints(QObject *parent = nullptr);
 
     /*!
-     * \qmlattachedproperty bool OutputProperties::useAlternatingColors
+     * \qmlattachedproperty bool StyleHints::useAlternatingColors
      *
      * Provide backwards compatibility for `Kirigami.Theme.useAlternateBackgroundColor`.
      */
@@ -44,7 +44,7 @@ public:
     Q_SIGNAL void useAlternatingColorsChanged();
 
     /*!
-     * \qmlattachedproperty bool OutputProperties::SpellCheckEnabled
+     * \qmlattachedproperty bool StyleHints::SpellCheckEnabled
      *
      * TODO: Provide backwards compatibility for `Kirigami.SpellCheck.enabled`.
      * NOTE: Currently this is just a stub!
@@ -55,37 +55,24 @@ public:
     Q_SIGNAL void spellCheckEnabledChanged();
 
     /*!
-     * \qmlattachedsignal OutputProperties::updated
+     * \qmlattachedsignal StyleHints::updated
      *
-     * Emitted whenever something in OutputProperties changes.
+     * Emitted whenever something in StyleHints changes.
      */
     Q_SIGNAL void updated();
-    /**
-     * The QML engine associated with this instance.
-     *
-     * Unfortunately, due to some internal workings of the QML engine,
-     * `qmlEngine()` of an attached property returns nullptr. So instead, we
-     * have to manually handle it.
-     */
-    QQmlEngine *engine() const;
 
-    static OutputProperties *qmlAttachedProperties(QObject *parent);
+    static StyleHints *qmlAttachedProperties(QObject *parent);
 
 private:
     void update();
 
-    std::unique_ptr<StylePropertyGroup> m_properties;
     bool m_useAlternatingColors = false;
-    bool m_spellCheckEnabled = false;
-    QQmlEngine *m_engine = nullptr;
-
-    bool m_completed = false;
 };
 
-class OutputPropertiesUpdatedEvent : public QEvent
+class StyleHintsChangedEvent : public QEvent
 {
 public:
-    OutputPropertiesUpdatedEvent();
+    StyleHintsChangedEvent();
 
-    inline static QEvent::Type s_type = QEvent::None;
+    static QEvent::Type s_type;
 };
