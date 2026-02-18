@@ -18,7 +18,7 @@ Item {
     Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
         control: root.control
-        visible: name && root.control.display != T.AbstractButton.TextOnly
+        visible: (name || source.toString()) && root.control.display != T.AbstractButton.TextOnly
     }
 
     Text {
