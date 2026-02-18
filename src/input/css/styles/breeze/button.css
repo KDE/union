@@ -201,9 +201,16 @@ combobox
 {
     layout-alignment: content fill center 0;
     text-alignment: content fill center 0;
-    icon-alignment: content end center 0;
-    icon-name: "arrow-down-symbolic";
+    icon-alignment: content start center 0;
     box-shadow: var(--button-shadow);
+
+    & > indicator {
+        layout-alignment: content end center 0;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "arrow-down-symbolic";
+        icon-color: var(--button-active-text-color);
+    }
 
     &.editable,
     &.flat.editable
@@ -218,7 +225,10 @@ combobox
 
         &:pressed {
             border-color: var(--button-active-border-highlight-color);
-            icon-color: var(--button-active-border-highlight-color);
+
+            & > indicator {
+                icon-color: var(--button-active-border-highlight-color);
+            }
         }
 
         &:visual-focus {
