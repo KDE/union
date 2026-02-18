@@ -105,6 +105,24 @@ scrollview {
     }
 }
 
+splitview {
+    & handle {
+        width: 1px;
+        height: 1px;
+        background-color: var(--window-border-color);
+    }
+
+    &.horizontal handle {
+        margin-left: 6px;
+        margin-right: 6px;
+    }
+
+    &.vertical handle {
+        margin-top: 6px;
+        margin-bottom: 6px;
+    }
+}
+
 pageindicator {
     spacing: var(--small-spacing);
 }
