@@ -59,30 +59,49 @@ T.ComboBox {
     }
 
     indicator: Union.Icon {
-        Union.PositionedItem.source: Union.PositionerSource.Icon
-        implicitWidth: Union.Style.properties.icon.width ?? 0
-        implicitHeight: Union.Style.properties.icon.height ?? 0
+        Union.Element.type: "Indicator"
+
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
     }
 
-    contentItem: TextInput {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+    contentItem: Item {
+        Union.PositionedItem.positionChildren: true
 
-        clip: true
+        Union.Icon {
+            id: arrow
 
-        color: Union.Style.properties.text.color ?? control.palette.text
-        text: control.editable ? control.editText : control.displayText
-        enabled: control.editable
-        autoScroll: control.editable
-        readOnly: control.down
-        inputMethodHints: control.inputMethodHints
-        validator: control.validator
+            Union.PositionedItem.source: Union.PositionerSource.Icon
 
-        selectByMouse: control.selectTextByMouse
-        selectionColor: control.palette.highlight
-        selectedTextColor: control.palette.highlightedText
-   }
+            implicitWidth: Union.Style.properties.icon.width ?? 0
+            implicitHeight: Union.Style.properties.icon.height ?? 0
+            name: control.Union.StyleHints.iconName
+            source: control.Union.StyleHints.iconSource
+            color: Union.Style.properties.icon.color
+
+            visible: name || source.toString()
+        }
+
+        TextInput {
+            Union.PositionedItem.source: Union.PositionerSource.Text
+
+            clip: true
+
+            color: Union.Style.properties.text.color ?? control.palette.text
+            text: control.editable ? control.editText : control.displayText
+            enabled: control.editable
+            autoScroll: control.editable
+            readOnly: control.down
+            inputMethodHints: control.inputMethodHints
+            validator: control.validator
+
+            selectByMouse: control.selectTextByMouse
+            selectionColor: control.palette.highlight
+            selectedTextColor: control.palette.highlightedText
+        }
+    }
 
     background: Union.StyledRectangle { }
 
