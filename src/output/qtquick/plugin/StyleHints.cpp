@@ -36,6 +36,70 @@ void StyleHints::setUseAlternatingColors(bool newUseAlternatingColors)
     }
 }
 
+bool StyleHints::showFramedBackground() const
+{
+    return m_showFramedBackground;
+}
+
+void StyleHints::setShowFramedBackground(bool newShowFramedBackground)
+{
+    if (newShowFramedBackground == m_showFramedBackground) {
+        return;
+    }
+
+    m_showFramedBackground = newShowFramedBackground;
+    update();
+    Q_EMIT showFramedBackgroundChanged();
+}
+
+int StyleHints::tickMarkStepSize() const
+{
+    return m_tickMarkStepSize;
+}
+
+void StyleHints::setTickMarkStepSize(int newTickMarkStepSize)
+{
+    if (newTickMarkStepSize == m_tickMarkStepSize) {
+        return;
+    }
+
+    m_tickMarkStepSize = newTickMarkStepSize;
+    update();
+    Q_EMIT tickMarkStepSizeChanged();
+}
+
+QString StyleHints::iconName() const
+{
+    return m_iconName;
+}
+
+void StyleHints::setIconName(const QString &newIconName)
+{
+    if (newIconName == m_iconName) {
+        return;
+    }
+
+    m_iconName = newIconName;
+    update();
+    Q_EMIT iconNameChanged();
+}
+
+QUrl StyleHints::iconSource() const
+{
+    return m_iconSource;
+}
+
+void StyleHints::setIconSource(const QUrl &newIconSource)
+{
+    if (newIconSource == m_iconSource) {
+        return;
+    }
+
+    m_iconSource = newIconSource;
+    update();
+    Q_EMIT iconSourceChanged();
+}
+
 bool StyleHints::spellCheckEnabled() const
 {
     return m_spellCheckEnabled;
