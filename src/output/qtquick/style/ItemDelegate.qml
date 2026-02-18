@@ -16,7 +16,7 @@ T.ItemDelegate {
 
     // HACK: This is sadly relying on unqualified lookups, so we have to look for the row/index in here.
     // The "row" and "index" values are lost when done inside Union.Element.hints.
-    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.OutputProperties.useAlternatingColors && index % 2)
+    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.StyleHints.useAlternatingColors && index % 2)
 
     Union.Element.type: "ItemDelegate"
     Union.Element.states {
