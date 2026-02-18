@@ -30,11 +30,11 @@ T.Popup {
 
     T.Overlay.modal: Union.StyledRectangle {
         Union.Element.type: "Overlay"
-        Union.Element.hints: ["modal"]
+        Union.Element.hints: Union.ElementHint { name: "modal" }
     }
 
     T.Overlay.modeless: Union.StyledRectangle {
         Union.Element.type: "Overlay"
-        Union.Element.hints: ["modeless"]
+        Union.Element.hints: Union.ElementHint { name: "modeless" }
     }
 }
