@@ -248,8 +248,10 @@ protected:
 
 private:
     void preprocessTexture(const TextureInfo &texture);
+    void cleanupGeometry();
 
     QRectF m_rect;
+    bool m_geometryRebuildNeeded = true;
     bool m_geometryUpdateNeeded = true;
 
     unsigned char m_uvChannels = 1;
