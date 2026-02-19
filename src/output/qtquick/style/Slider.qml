@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
 // SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
@@ -54,14 +56,55 @@ T.Slider {
     }
 
     background: Union.StyledRectangle {
-        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
-        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+        x: control.leftInset + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+        y: control.topInset + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+
+        width: control.horizontal ? control.width : Union.Style.properties.layout.width
+        height: control.horizontal ? Union.Style.properties.layout.height : control.height
 
         Union.StyledRectangle {
             Union.Element.type: "Fill"
             y: control.horizontal ? 0 : control.visualPosition * parent.height
             width: control.horizontal ? control.position * parent.width : control.implicitBackgroundWidth
             height: control.horizontal ? control.implicitBackgroundHeight : control.position * parent.height
+        }
+
+        // TODO: Creating a bunch of items just to render some small lines is not
+        // very efficient. We should turn this into a more proper styled item.
+        Item {
+            id: tickMarks
+
+            property int tickMarkCount: control.Union.StyleHints.tickMarkStepSize > 0 ? Math.round((control.to - control.from) / control.Union.StyleHints.tickMarkStepSize) + 1 : 0
+            property real tickMarkSpacing: tickMarkCount > 1 ? (control.horizontal ? width / (tickMarkCount - 1) : height / (tickMarkCount - 1)) : 0
+
+            x: control.horizontal ? control.handle.width / 2 : parent.width
+            y: control.horizontal ? parent.height : control.handle.height / 2
+
+            width: control.horizontal ? parent.width - control.handle.width : childrenRect.width
+            height: control.horizontal ? childrenRect.height : parent.height - control.handle.height
+
+            visible: tickMarkCount > 0
+
+            Repeater {
+                model: tickMarks.tickMarkCount
+
+                Union.StyledRectangle {
+                    id: tick
+
+                    required property int index
+
+                    readonly property real value: control.from + control.Union.StyleHints.tickMarkStepSize * index
+
+                    Union.Element.type: "TickMark"
+                    Union.Element.hints: Union.ElementHint { name: "active"; when: control.value >= tick.value }
+
+                    x: control.horizontal ? Math.round(index * tickMarks.tickMarkSpacing - width / 2) : (Union.Style.properties.layout.margins.left ?? 0)
+                    y: control.horizontal ? (Union.Style.properties.layout.margins.top ?? 0) : tickMarks.height - Math.round(index * tickMarks.tickMarkSpacing - height / 2)
+
+                    width: Union.Style.properties.layout.width
+                    height: Union.Style.properties.layout.height
+                }
+            }
         }
     }
 }
