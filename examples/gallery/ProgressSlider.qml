@@ -8,6 +8,8 @@ import QtQuick.Controls as Controls
 
 import org.kde.kirigami as Kirigami
 
+import org.kde.union as Union
+
 Kirigami.Page {
     title: "Progress Bar & Slider QtQuick.Controls"
 
@@ -56,7 +58,7 @@ Kirigami.Page {
 
             from: 0
             to: 100
-            stepSize: 1
+            stepSize: 10
             value: 50
         }
 
@@ -64,8 +66,20 @@ Kirigami.Page {
             enabled: false
             from: 0
             to: 100
-            stepSize: 1
             value: horizontalSlider.value
+        }
+
+        Controls.Slider {
+            from: 0
+            to: 100
+            stepSize: 10
+            value: 50
+
+            // Note that we're setting both stylehints here as we cannot be sure
+            // the Union platform plugin for Kirigami is loaded so these may not
+            // be forwarded to Union correctly.
+            Union.StyleHints.tickMarkStepSize: 20
+            Kirigami.StyleHints.tickMarkStepSize: 20
         }
 
 
@@ -91,7 +105,7 @@ Kirigami.Page {
             Controls.Slider {
                 from: 0
                 to: 100
-                stepSize: 1
+                stepSize: 10
                 value: 50
                 orientation: Qt.Vertical
             }
@@ -103,6 +117,17 @@ Kirigami.Page {
                 stepSize: 1
                 value: 50
                 orientation: Qt.Vertical
+            }
+
+            Controls.Slider {
+                from: 0
+                to: 100
+                stepSize: 10
+                value: 50
+                orientation: Qt.Vertical
+
+                Kirigami.StyleHints.tickMarkStepSize: 20
+                Union.StyleHints.tickMarkStepSize: 20
             }
 
             Controls.RangeSlider {
