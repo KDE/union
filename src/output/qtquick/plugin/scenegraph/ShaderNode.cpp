@@ -3,6 +3,7 @@
 
 #include "ShaderNode.h"
 
+#include <QSGFlatColorMaterial>
 #include <QSGTextureProvider>
 #include <QVariant>
 
@@ -39,6 +40,11 @@ ShaderNode::ShaderNode()
     : m_rect(QRectF{0.0, 0.0, 1.0, 1.0})
     , m_uvs(16, QRectF{0.0, 0.0, 1.0, 1.0})
 {
+    // Use a dummy geometry and material rather than nullptr, to prevent
+    // QSGNode::addChildNode() from asserting.
+    setGeometry(new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), 0));
+    setMaterial(new QSGFlatColorMaterial{});
+
     setFlags(QSGNode::OwnsGeometry | QSGNode::OwnsMaterial | QSGNode::UsePreprocess);
 }
 
@@ -51,8 +57,10 @@ ShaderNode::~ShaderNode() noexcept
     }
 
     setGeometry(nullptr);
-    delete[] m_attributeSet->attributes;
-    delete m_attributeSet;
+    if (m_attributeSet) {
+        delete[] m_attributeSet->attributes;
+        delete m_attributeSet;
+    }
 }
 
 void ShaderNode::preprocess()
@@ -149,17 +157,11 @@ void ShaderNode::setUvChannels(unsigned char count)
 
     m_uvChannels = std::clamp(count, uint8_t(1), uint8_t(16));
 
-    if (geometry()) {
-        setGeometry(nullptr);
-        delete[] m_attributeSet->attributes;
-        delete m_attributeSet;
-    }
-
     while (m_textures.size() > count) {
         m_textures.removeLast();
     }
 
-    m_geometryUpdateNeeded = true;
+    m_geometryRebuildNeeded = true;
 }
 
 void ShaderNode::setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
@@ -254,13 +256,7 @@ void ShaderNode::setExtraDataChannels(unsigned char count)
     m_extraChannels = count;
     m_extraChannelData.resize(count);
 
-    if (geometry()) {
-        setGeometry(nullptr);
-        delete[] m_attributeSet->attributes;
-        delete m_attributeSet;
-    }
-
-    m_geometryUpdateNeeded = true;
+    m_geometryRebuildNeeded = true;
 }
 
 void ShaderNode::setExtraDataChannelData(Channel channel,
@@ -303,10 +299,20 @@ void ShaderNode::setExtraDataChannelData(Channel channel, //
 
 void ShaderNode::update()
 {
-    if (m_geometryUpdateNeeded) {
+    if (m_geometryUpdateNeeded || m_geometryRebuildNeeded) {
         const auto attributeCount = 1 + m_uvChannels + m_extraChannels;
 
-        if (!geometry()) {
+        if (m_geometryRebuildNeeded) {
+            // Cleanup any existing geometry before building new.
+            if (geometry()) {
+                setGeometry(nullptr);
+            }
+
+            if (m_attributeSet) {
+                delete[] m_attributeSet->attributes;
+                delete m_attributeSet;
+            }
+
             QSGGeometry::Attribute *attributes = new QSGGeometry::Attribute[attributeCount];
             attributes[0] = QSGGeometry::Attribute::createWithAttributeType(0, 2, QSGGeometry::FloatType, QSGGeometry::PositionAttribute);
 
