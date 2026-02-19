@@ -25,6 +25,11 @@
     --bar-track-disabled-border-color: var(--window-disabled-border-color);
     --bar-handle-disabled-background-color: var(--button-disabled-background-color);
     --bar-handle-disabled-border-color: var(--button-disabled-border-color);
+
+    --bar-handle-size: 20px;
+    --bar-tickmark-thickness: 2px;
+    --bar-tickmark-length: 8px;
+    --bar-tickmark-margin: 1px;
 }
 
 busyindicator
@@ -65,18 +70,6 @@ progressbar
 slider,
 rangeslider
 {
-    &.horizontal
-    {
-        width: 200px;
-        height: 6px;
-    }
-
-    &.vertical
-    {
-        width: 6px;
-        height: 200px;
-    }
-
     background-color: var(--bar-active-background-color);
     border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
@@ -88,15 +81,54 @@ rangeslider
     }
 
     & > handle {
-        width: var(--medium-element-size);
-        height: var(--medium-element-size);
+        width: var(--bar-handle-size);
+        height: var(--bar-handle-size);
         background-color: var(--bar-handle-active-background-color);
         border: 1px solid var(--bar-handle-active-border-color);
-        border-radius: var(--small-element-size);
+        border-radius: 10px;
+        box-shadow: var(--button-shadow);
 
         &:hovered
         {
             border-color: var(--bar-handle-active-highlight-border-color);
+        }
+
+        &:pressed
+        {
+            box-shadow: none;
+        }
+    }
+
+    & > tickmark
+    {
+        background-color: var(--bar-active-border-color);
+
+        &.active {
+            background-color: var(--bar-track-active-border-color);
+        }
+    }
+
+    &.horizontal
+    {
+        width: 200px;
+        height: 6px;
+
+        & > tickmark {
+            width: var(--bar-tickmark-thickness);
+            height: var(--bar-tickmark-length);
+            margin-top: var(--bar-tickmark-margin);
+        }
+    }
+
+    &.vertical
+    {
+        width: 6px;
+        height: 200px;
+
+        & > tickmark {
+            width: var(--bar-tickmark-length);
+            height: var(--bar-tickmark-thickness);
+            margin-left: var(--bar-tickmark-margin);
         }
     }
 
@@ -112,6 +144,12 @@ rangeslider
         & > handle {
             background-color: var(--bar-handle-disabled-background-color);
             border-color: var(--bar-handle-disabled-border-color);
+            box-shadow: none;
+        }
+
+        & > tickmark,
+        & > tickmark.active {
+            background-color: var(--bar-disabled-border-color);
         }
     }
 }
