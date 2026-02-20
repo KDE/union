@@ -33,6 +33,11 @@ public:
             return styles.value(styleId);
         }
 
+        static const bool DisablePlugins = qEnvironmentVariableIsSet("UNION_DISABLE_INPUT_PLUGINS");
+        if (DisablePlugins) {
+            return nullptr;
+        }
+
         auto plugin = pluginRegistry->pluginObject(pluginName);
         if (!plugin) {
             qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but the plugin could not be found!";
