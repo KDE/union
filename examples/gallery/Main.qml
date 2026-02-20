@@ -15,10 +15,10 @@ Kirigami.ApplicationWindow {
     height: width * (9/16)
 
     property var pagePatterns: [
-        "%1_org.kde.union.qml",
-        "%1_org.kde.breeze.qml",
-        "%1_org.kde.desktop.qml",
-        "%1_org.kde.plasma.components.qml"
+        "%1_org_kde_union.qml",
+        "%1_org_kde_breeze.qml",
+        "%1_org_kde_desktop.qml",
+        "%1_org_kde_plasma_components.qml"
     ]
 
     function pushPage(page) {
