@@ -24,7 +24,7 @@ T.TableViewDelegate {
         highlighted: control.highlighted
     }
     Union.Element.hints: [
-        Union.ElementHint { name: "alternating-colors"; when: control.tableView?.alternatingRows && control.row % 2 !== 0 },
+        Union.ElementHint { name: "alternating-colors"; when: (control.tableView?.alternatingRows && control.row % 2 !== 0) ?? false },
         Union.ElementHint { name: "editing"; when: control.editing }
     ]
     
@@ -52,7 +52,7 @@ T.TableViewDelegate {
         text: control.model.display ?? ""
         elide: Text.ElideRight
         visible: !control.editing
-        color: Union.Style.properties.text.color
+        color: Union.Style.properties.text.color ?? control.palette.text
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }

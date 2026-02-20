@@ -44,7 +44,7 @@ T.GroupBox {
 
             text: control.title
             font: Union.Style.properties.text.font ?? Application.font
-            color: Union.Style.properties.text.color
+            color: Union.Style.properties.text.color ?? control.palette.text
             elide: Text.ElideRight
 
             horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
