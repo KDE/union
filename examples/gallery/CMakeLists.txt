@@ -35,11 +35,18 @@ set(_styles
 
 foreach(_file ${_configured_files})
     foreach(_style ${_styles})
-        get_filename_component(_filename "${_file}" NAME_WE)
+        # Read the source file and replace all occurrences of "QtQuick.Controls"
+        # with the style module.
         file(READ "${_file}" _file_contents)
         string(REPLACE "QtQuick.Controls" "${_style}" _file_contents "${_file_contents}")
-        file(GENERATE OUTPUT "${_filename}_${_style}.qml" CONTENT "${_file_contents}")
-        ecm_target_qml_sources(union-gallery SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${_filename}_${_style}.qml")
+
+        # Use the new content for a new file with the style name as a suffix.
+        # The style name has . replaced with _ so Qt doesn't warn about that.
+        get_filename_component(_filename "${_file}" NAME_WE)
+        string(REPLACE "." "_" _style_underscore "${_style}")
+        file(GENERATE OUTPUT "${_filename}_${_style_underscore}.qml" CONTENT "${_file_contents}")
+
+        ecm_target_qml_sources(union-gallery SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${_filename}_${_style_underscore}.qml")
     endforeach()
 endforeach()
 
