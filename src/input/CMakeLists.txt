@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
-if (WITH_PLASMASVG_INPUT)
-    add_subdirectory(plasmasvg)
+if (BUILD_INPUT_CSS)
+    add_subdirectory(css)
 endif()
 
-if (WITH_CSS_INPUT)
-    add_subdirectory(css)
+if (BUILD_INPUT_PLASMASVG)
+    add_subdirectory(plasmasvg)
 endif()
