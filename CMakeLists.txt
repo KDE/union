@@ -25,30 +25,37 @@ include(ECMSetupVersion)
 include(ECMQtDeclareLoggingCategory)
 include(ECMQmlModule)
 include(ECMGenerateQDoc)
+include(CMakeDependentOption)
 
+# General build options
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
-option(WITH_FRAMEWORKS "Build features dependant on KDE frameworks" ON)
-option(WITH_KIRIGAMI "Build with Kirigami integration" ON)
 
-if (WITH_KIRIGAMI AND NOT WITH_KICONTHEMES)
-    message(STATUS "KIconThemes was disabled but Kirigami enabled, forcing KIconThemes as it is required for Kirigami output")
-    set(WITH_KICONTHEMES ON)
-endif()
+# Options to control building platform integrations
+option(BUILD_PLATFORM_FRAMEWORKS "Build KDE frameworks platform integration" ON)
+
+# Options to control building inputs
+option(BUILD_INPUT_CSS "Build the CSS input plugin" ON)
+option(BUILD_INPUT_PLASMASVG "Build the PlasmaSVG input plugin" OFF)
+
+# Options to control building outputs
+option(BUILD_OUTPUT_QTQUICK "Build the QtQuick output" ON)
+cmake_dependent_option(BUILD_OUTPUT_KIRIGAMI "Build the Kirigami output. Requires QtQuick output and Frameworks" ON "BUILD_QTQUICK;BUILD_PLATFORM_FRAMEWORKS" OFF)
+# Temporarily disabled by default until we have more complete coverage
+option(BUILD_OUTPUT_QTWIDGETS "Build the QtWidgets output" OFF)
+
+set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(REQUIRED_QT_VERSION 6.8.0)
-find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui Quick QuickControls2 Widgets ShaderTools)
+# Find required packages
 
-if (WITH_FRAMEWORKS)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme GuiAddons)
-    set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
-    set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
-endif()
+set(REQUIRED_QT_VERSION 6.9.0)
+find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui)
 
-if (WITH_KIRIGAMI)
-    find_package(KF6KirigamiPlatform ${KF_DEP_VERSION} CONFIG REQUIRED)
+if (BUILD_TESTING)
+    find_package(Qt6Test REQUIRED)
+    find_package(Qt6QuickTest REQUIRED)
 endif()
 
 if (BUILD_EXAMPLES)
@@ -56,24 +63,36 @@ if (BUILD_EXAMPLES)
     set_package_properties(KF6Kirigami PROPERTIES TYPE REQUIRED PURPOSE "The gallery example uses Kirigami for its UI.")
 endif()
 
-if (BUILD_TESTING)
-    find_package(Qt6Test REQUIRED)
-    find_package(Qt6QuickTest REQUIRED)
+if (BUILD_PLATFORM_FRAMEWORKS)
+    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme GuiAddons)
+    set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
+    set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
 endif()
 
-set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
+if (BUILD_OUTPUT_QTQUICK)
+    find_package(Qt6Quick ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6QuickControls2 ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6ShaderTools ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+endif()
 
-option(WITH_PLASMASVG_INPUT "Enable Plasma SVG input plugin" OFF)
-if (WITH_PLASMASVG_INPUT)
+if (BUILD_OUTPUT_QTWIDGETS)
+    find_package(Qt6Widgets ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+endif()
+
+if (BUILD_OUTPUT_KIRIGAMI)
+    find_package(KF6KirigamiPlatform ${KF_DEP_VERSION} CONFIG REQUIRED)
+    set_package_properties(KF6KirigamiPlatform PROPERTIES TYPE REQUIRED PURPOSE "KirigamiPlatform provides the integration interface required by the Kirigami output")
+endif()
+
+if (BUILD_INPUT_CSS)
+    find_package(cxx-rust-cssparser REQUIRED)
+endif()
+
+if (BUILD_INPUT_PLASMASVG)
     find_package(Qt6Svg ${REQUIRED_QT_VERSION} REQUIRED CONFIG)
     find_package(KF6 COMPONENTS Archive ColorScheme Config REQUIRED)
     find_package(Plasma REQUIRED)
     find_package(ryml REQUIRED)
-endif()
-
-option(WITH_CSS_INPUT "Enable CSS input plugin" ON)
-if (WITH_CSS_INPUT)
-    find_package(cxx-rust-cssparser REQUIRED)
 endif()
 
 add_subdirectory(src)
