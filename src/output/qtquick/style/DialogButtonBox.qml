@@ -35,41 +35,20 @@ T.DialogButtonBox {
     delegate: Button {
         width: implicitWidth
 
-        Union.Element.attributes: {
-            let result = {}
-            switch (DialogButtonBox.buttonRole) {
-                case T.DialogButtonBox.InvalidRole:
-                    result.role = "invalid"
-                    break
-                case T.DialogButtonBox.AcceptRole:
-                    result.role = "accept"
-                    break
-                case T.DialogButtonBox.RejectRole:
-                    result.role = "reject"
-                    break
-                case T.DialogButtonBox.DestructiveRole:
-                    result.role = "destructive"
-                    break
-                case T.DialogButtonBox.ActionRole:
-                    result.role = "action"
-                    break
-                case T.DialogButtonBox.HelpRole:
-                    result.role = "help"
-                    break
-                case T.DialogButtonBox.YesRole:
-                    result.role = "yes"
-                    break
-                case T.DialogButtonBox.NoRole:
-                    result.role = "no"
-                    break
-                case T.DialogButtonBox.ResetRole:
-                    result.role = "reset"
-                    break
-                case T.DialogButtonBox.ApplyRole:
-                    result.role = "apply"
-                    break
+        Union.Element.attributes: Union.ElementAttribute {
+            name: "role"
+            value: switch (DialogButtonBox.buttonRole) {
+                case T.DialogButtonBox.InvalidRole: return "invalid"
+                case T.DialogButtonBox.AcceptRole: return "accept"
+                case T.DialogButtonBox.RejectRole: return "reject"
+                case T.DialogButtonBox.DestructiveRole: return "destructive"
+                case T.DialogButtonBox.ActionRole: return "action"
+                case T.DialogButtonBox.HelpRole: return "help"
+                case T.DialogButtonBox.YesRole: return "yes"
+                case T.DialogButtonBox.NoRole: return "no"
+                case T.DialogButtonBox.ResetRole: return "reset"
+                case T.DialogButtonBox.ApplyRole: return "apply"
             }
-            return result
         }
     }
 
