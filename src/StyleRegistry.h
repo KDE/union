@@ -61,6 +61,13 @@ public:
     std::shared_ptr<Style> style(const QString &styleName, const QString &pluginName = QString{});
 
     /*!
+     * Programatically add a style to the registry.
+     *
+     * \a style The style to add.
+     */
+    void addStyle(const std::shared_ptr<Style> &style);
+
+    /*!
      * Returns the global instance of StyleRegistry.
      */
     static std::shared_ptr<StyleRegistry> instance();
