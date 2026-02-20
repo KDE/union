@@ -124,6 +124,17 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleName, const QStr
     return nullptr;
 }
 
+void Union::StyleRegistry::addStyle(const std::shared_ptr<Style> &style)
+{
+    auto styleId = qMakePair(style->pluginName(), style->name());
+    if (d->styles.contains(styleId)) {
+        qCWarning(UNION_GENERAL) << "A style from plugin" << style->pluginName() << "with name" << style->name() << "is already registered";
+        return;
+    }
+
+    d->styles.insert(styleId, style);
+}
+
 void StyleRegistry::cleanup()
 {
     auto instance = StyleRegistry::instance();
