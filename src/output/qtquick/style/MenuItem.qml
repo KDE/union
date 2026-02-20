@@ -128,8 +128,8 @@ T.MenuItem {
             verticalCenter: parent.verticalCenter
         }
 
-        implicitWidth: Union.Style.properties.layout.width
-        implicitHeight: Union.Style.properties.layout.height
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
 
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color

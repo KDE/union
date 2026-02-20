@@ -13,5 +13,5 @@ T.ApplicationWindow {
     Union.Element.type: "ApplicationWindow"
     Union.Element.hints: active ? [] : ["inactive"]
 
-    color: Union.Style.properties.background.color
+    color: Union.Style.properties.background.color ?? "white"
 }

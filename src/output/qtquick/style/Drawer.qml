@@ -11,7 +11,7 @@ T.Drawer {
     id: control
 
     Union.Element.type: "Drawer"
-    Union.Element.hints: modal ? ["modal"] : []
+    Union.Element.hints: Union.ElementHint { name: "modal"; when: control.modal }
     Union.Element.attributes: Union.ElementAttribute {
         name: "edge"
         value: switch (control.edge) {

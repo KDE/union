@@ -60,8 +60,8 @@ T.ComboBox {
 
     indicator: Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
+        implicitWidth: Union.Style.properties.icon.width ?? 0
+        implicitHeight: Union.Style.properties.icon.height ?? 0
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
     }
@@ -71,7 +71,7 @@ T.ComboBox {
 
         clip: true
 
-        color: Union.Style.properties.text.color
+        color: Union.Style.properties.text.color ?? control.palette.text
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
         autoScroll: control.editable

@@ -25,7 +25,7 @@ T.TreeViewDelegate {
         highlighted: control.highlighted
     }
     Union.Element.hints: [
-        Union.ElementHint { name: "alternating-colors"; when: control.treeView.alternatingRows && control.row % 2 !== 0 },
+        Union.ElementHint { name: "alternating-colors"; when: (control.treeView?.alternatingRows && control.row % 2 !== 0) ?? false },
         Union.ElementHint { name: "expanded"; when: control.expanded },
         Union.ElementHint { name: "editing"; when: control.editing },
     ]
@@ -53,9 +53,20 @@ T.TreeViewDelegate {
 
     spacing: Union.Style.properties.layout.spacing
 
-    highlighted: control.selected || control.current || ((control.treeView.selectionBehavior === TableView.SelectRows || control.treeView.selectionBehavior === TableView.SelectionDisabled) && control.row === control.treeView.currentRow)
+    highlighted: {
+        if (control.selected || control.current) {
+            return true
+        }
 
-    indentation: indentItem.Union.Style.properties.layout.width
+        if (!control.treeView) {
+            return false
+        }
+
+        const selectionBehavior = control.treeView.selectionBehavior
+        return (selectionBehavior === TableView.SelectRows || selectionBehavior === TableView.SelectionDisabled) && control.row === control.treeView.currentRow
+    }
+
+    indentation: indentItem.Union.Style.properties.layout.width ?? 0
 
     text: model.display ?? ""
 
@@ -79,8 +90,8 @@ T.TreeViewDelegate {
 
     indicator: Union.Icon {
         Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width
-        implicitHeight: Union.Style.properties.layout.height
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
         color: Union.Style.properties.icon.color
         name: Union.Style.properties.icon.name
         visible: control.isTreeNode && control.hasChildren

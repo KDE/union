@@ -28,8 +28,8 @@ T.BusyIndicator {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     contentItem: Item {
-        implicitWidth: Union.Style.properties.layout.width
-        implicitHeight: Union.Style.properties.layout.height
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
 
         Union.Icon {
             anchors.centerIn: parent
