@@ -23,8 +23,9 @@ T.ScrollIndicator {
         pressed: control.active
         enabled: control.enabled
     }
-    Union.Element.attributes: {
-        "orientation": control.horizontal ? "horizontal" : "vertical"
+    Union.Element.attributes: Union.ElementAttribute {
+        name: "orientation"
+        value: control.horizontal ? "horizontal" : "vertical"
     }
 
     leftPadding: Union.Style.properties.layout.padding.left
