@@ -12,5 +12,5 @@ Dependencies:
 Options:
   test-before-installing: True
   require-passing-tests-on: [ 'Linux' ]
-  # Disable PlasmaSVG for now so we do not need RYML in the CI image yet.
-  cmake-options: "-DWITH_PLASMASVG_INPUT=OFF"
+  # Explicitly enable QtWidgets output to make sure we verify it builds
+  cmake-options: "-DBUILD_OUTPUT_QTWIDGETS=ON"
