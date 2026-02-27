@@ -216,7 +216,6 @@ public:
 
 }
 
-Q_DECLARE_INTERFACE(Union::ColorProvider, "org.kde.union.ColorProvider")
 Q_DECLARE_METATYPE(Union::ColorProvider)
 
 UNION_EXPORT QDebug &operator<<(QDebug &stream, const Union::Color &color);
