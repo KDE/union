@@ -1,0 +1,10 @@
+{
+    "union-plugintype": "platform",
+    "union-supported-platforms": [
+        "wayland",
+        "xcb"
+    ],
+    "union-supported-sessions": [
+        "kde"
+    ]
+}

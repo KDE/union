@@ -35,7 +35,7 @@ option(BUILD_EXAMPLES "Build example applications" OFF)
 option(BUILD_WITH_KDEFRAMEWORKS "Build parts depending on KDE Frameworks" ON)
 
 # Options to control building platform integrations
-option(BUILD_PLATFORM_FRAMEWORKS "Build KDE frameworks platform integration" ON)
+cmake_dependent_option(BUILD_PLATFORM_PLASMA "Build the Plasma platform integration plugin. Requires KDE Frameworks." ON "BUILD_WITH_KDEFRAMEWORKS" OFF)
 
 # Options to control building inputs
 option(BUILD_INPUT_CSS "Build the CSS input plugin" ON)
