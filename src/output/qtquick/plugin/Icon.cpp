@@ -6,7 +6,7 @@
 #include <QQmlProperty>
 #include <QSGImageNode>
 
-#include <KIconColors>
+#include <StyleRegistry.h>
 
 #include "qtquick_logging.h"
 
@@ -192,18 +192,7 @@ void Icon::updatePolish()
     if (!m_source.isEmpty() && m_source.isLocalFile()) {
         m_icon = QIcon(m_source.toLocalFile());
     } else {
-        // TODO Move this into some sort of platform plugin
-#ifdef WITH_KICONTHEMES
-        if (m_color != Qt::transparent) {
-            KIconColors colors;
-            colors.setText(m_color);
-            m_icon = KDE::icon(m_name, colors);
-        } else {
-            m_icon = KDE::icon(m_name);
-        }
-#else
-        m_icon = QIcon::fromTheme(m_name);
-#endif
+        m_icon = Union::StyleRegistry::instance()->platform()->platformIcon(m_name, m_color);
     }
 
     m_iconChanged = true;
