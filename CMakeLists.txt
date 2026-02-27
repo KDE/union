@@ -31,6 +31,9 @@ include(CMakeDependentOption)
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
 option(BUILD_EXAMPLES "Build example applications" OFF)
 
+# Build parts depending on certain KDE frameworks
+option(BUILD_WITH_KDEFRAMEWORKS "Build parts depending on KDE Frameworks" ON)
+
 # Options to control building platform integrations
 option(BUILD_PLATFORM_FRAMEWORKS "Build KDE frameworks platform integration" ON)
 
@@ -63,7 +66,7 @@ if (BUILD_EXAMPLES)
     set_package_properties(KF6Kirigami PROPERTIES TYPE REQUIRED PURPOSE "The gallery example uses Kirigami for its UI.")
 endif()
 
-if (BUILD_PLATFORM_FRAMEWORKS)
+if (BUILD_WITH_KDEFRAMEWORKS)
     find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme GuiAddons)
     set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
     set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")

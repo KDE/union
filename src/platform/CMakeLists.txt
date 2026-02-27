@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 
-if (BUILD_PLATFORM_FRAMEWORKS)
-    add_subdirectory(frameworks)
+if (BUILD_WITH_KDEFRAMEWORKS)
+    add_subdirectory(shared)
 endif()
