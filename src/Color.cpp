@@ -5,7 +5,9 @@
 
 #include <QSharedData>
 
+#include "PlatformPlugin.h"
 #include "PluginRegistry.h"
+#include "StyleRegistry.h"
 
 #include "union_logging.h"
 
@@ -59,9 +61,6 @@ struct CustomData : ColorData {
         , source(_source)
         , arguments(_arguments)
     {
-        if (!s_colorProviderRegistry) {
-            s_colorProviderRegistry = std::make_shared<PluginRegistry<ColorProvider>>(QJsonObject{{u"union-plugintype"_s, u"colorprovider"_s}});
-        }
     }
 
     CustomData(const CustomData &other)
@@ -75,11 +74,12 @@ struct CustomData : ColorData {
     {
         auto provider = s_knownProviders.value(source);
         if (!provider) {
-            provider = s_colorProviderRegistry->pluginObject(u"union-colorprovider-"_s + source);
+            provider = StyleRegistry::instance()->platform()->createColorProvider(source);
             if (!provider) {
                 qCWarning(UNION_GENERAL) << "No provider" << source << "found";
                 return nullptr;
             }
+            s_knownProviders.insert(source, provider);
         }
 
         auto colorValue = provider->color(arguments);
@@ -105,7 +105,6 @@ struct CustomData : ColorData {
     QString source;
     QStringList arguments;
 
-    inline static std::shared_ptr<PluginRegistry<ColorProvider>> s_colorProviderRegistry;
     inline static QHash<QString, ColorProvider *> s_knownProviders;
 };
 
