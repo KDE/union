@@ -3,10 +3,9 @@
 
 #include "PlatformTheme.h"
 
-#include <KIconColors>
-#include <Style.h>
-
 #include <Color.h>
+#include <Style.h>
+#include <StyleRegistry.h>
 
 #include "../qtquick/plugin/QuickStyle.h"
 
@@ -39,13 +38,7 @@ PlatformTheme::~PlatformTheme()
 
 QIcon PlatformTheme::iconFromTheme(const QString &name, const QColor &customColor)
 {
-    if (customColor != Qt::transparent) {
-        KIconColors colors;
-        colors.setText(customColor);
-        return KDE::icon(name, colors);
-    } else {
-        return KDE::icon(name);
-    }
+    return Union::StyleRegistry::instance()->platform()->platformIcon(name, customColor);
 }
 
 void PlatformTheme::syncColors()

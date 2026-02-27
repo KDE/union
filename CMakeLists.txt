@@ -43,7 +43,7 @@ option(BUILD_INPUT_PLASMASVG "Build the PlasmaSVG input plugin" OFF)
 
 # Options to control building outputs
 option(BUILD_OUTPUT_QTQUICK "Build the QtQuick output" ON)
-cmake_dependent_option(BUILD_OUTPUT_KIRIGAMI "Build the Kirigami output. Requires QtQuick output and Frameworks" ON "BUILD_QTQUICK;BUILD_PLATFORM_FRAMEWORKS" OFF)
+cmake_dependent_option(BUILD_OUTPUT_KIRIGAMI "Build the Kirigami output. Requires QtQuick output." ON "BUILD_QTQUICK" OFF)
 # Temporarily disabled by default until we have more complete coverage
 option(BUILD_OUTPUT_QTWIDGETS "Build the QtWidgets output" OFF)
 
