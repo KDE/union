@@ -24,6 +24,8 @@ target_sources(Union PRIVATE
     Color.cpp
     Color.h
     PluginRegistry.h
+    PlatformPlugin.cpp
+    PlatformPlugin.h
 )
 
 ecm_qt_declare_logging_category(Union
