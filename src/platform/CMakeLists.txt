@@ -4,3 +4,7 @@
 if (BUILD_WITH_KDEFRAMEWORKS)
     add_subdirectory(shared)
 endif()
+
+if (BUILD_PLATFORM_PLASMA)
+    add_subdirectory(plasma)
+endif()
