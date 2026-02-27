@@ -7,6 +7,9 @@
 
 #include <QObject>
 
+#include "InputPlugin.h"
+#include "PlatformPlugin.h"
+
 #include "union_export.h"
 
 namespace Union
@@ -66,7 +69,10 @@ public:
      * \a style The style to add.
      */
     void addStyle(const std::shared_ptr<Style> &style);
-
+    /*!
+     * Returns the platform integration plugin for the current platform.
+     */
+    std::shared_ptr<PlatformPlugin> platform() const;
     /*!
      * Returns the global instance of StyleRegistry.
      */
