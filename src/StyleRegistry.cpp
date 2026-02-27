@@ -22,7 +22,7 @@ class Union::StyleRegistryPrivate
 {
 public:
     StyleRegistryPrivate()
-        : pluginRegistry{std::make_shared<PluginRegistry<InputPlugin>>(QJsonObject{{u"union-plugintype"_s, u"input"_s}})}
+        : inputRegistry{std::make_shared<PluginRegistry<InputPlugin>>(QJsonObject{{u"union-plugintype"_s, u"input"_s}})}
     {
     }
 
@@ -38,7 +38,7 @@ public:
             return nullptr;
         }
 
-        auto plugin = pluginRegistry->pluginObject(pluginName);
+        auto plugin = inputRegistry->pluginObject(pluginName);
         if (!plugin) {
             qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but the plugin could not be found!";
             return nullptr;
@@ -59,7 +59,7 @@ public:
         return style;
     }
 
-    std::shared_ptr<PluginRegistry<InputPlugin>> pluginRegistry;
+    std::shared_ptr<PluginRegistry<InputPlugin>> inputRegistry;
     QHash<QPair<QString, QString>, std::shared_ptr<Style>> styles;
 };
 
@@ -104,7 +104,7 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleName, const QStr
     // returns a valid style for styleName.
 
     // First search through already-loaded plugins
-    const auto objects = d->pluginRegistry->pluginObjects();
+    const auto objects = d->inputRegistry->pluginObjects();
     for (const auto &object : objects) {
         if (auto style = d->loadStyle(styleName, object); style) {
             return style;
@@ -113,7 +113,7 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleName, const QStr
 
     // Nothing found in loaded plugins, try and load each available plugin and
     // see if that returns something.
-    const auto plugins = d->pluginRegistry->plugins();
+    const auto plugins = d->inputRegistry->plugins();
     for (const auto &plugin : plugins) {
         if (auto style = d->loadStyle(styleName, plugin.name); style) {
             return style;
@@ -142,7 +142,7 @@ void StyleRegistry::cleanup()
     instance->save();
 
     instance->d->styles.clear();
-    instance->d->pluginRegistry.reset();
+    instance->d->inputRegistry.reset();
 }
 
 std::shared_ptr<StyleRegistry> StyleRegistry::instance()
