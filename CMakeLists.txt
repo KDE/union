@@ -126,6 +126,8 @@ configure_package_config_file(
     INSTALL_DESTINATION ${KDE_INSTALL_CMAKEPACKAGEDIR}/Union
 )
 
+install(EXPORT UnionTargets DESTINATION ${KDE_INSTALL_CMAKEPACKAGEDIR}/Union)
+
 install(FILES
     "${CMAKE_CURRENT_BINARY_DIR}/UnionConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/UnionConfigVersion.cmake"
