@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <QPainterPath>
 #include <properties/StyleProperty.h>
 
 class QPainter;
@@ -24,6 +25,16 @@ enum class SubNodeIndex {
 void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style);
 
 /*!
+ * \brief Generates a QPainterPath to use with outlines and rounded corners.
+ */
+QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
+
+/*!
+ * \brief Constrains the corner radii to not go over the rectangle's size or under zero.
+ */
+Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
+
+/*!
  * \brief Draw a Union LineProperty.
  */
 void drawLineProperty(QPainter *painter,
@@ -39,5 +50,5 @@ void drawLineProperty(QPainter *painter,
 void drawCornerProperty(QPainter *painter,
                         const QRect &rect,
                         SubNodeIndex subNodeIndex,
-                        const QMarginsF &borderSizes,
+                        const Union::Properties::BorderProperty *border,
                         const Union::Properties::CornerProperty *corner);
