@@ -6,25 +6,30 @@ add_library(Union::Union ALIAS Union)
 
 target_sources(Union PRIVATE
     StyleRegistry.cpp
-    StyleRegistry.h
     Style.cpp
+    StyleRule.cpp
+    Element.cpp
+    ElementQuery.cpp
+    InputPlugin.cpp
+    Selector.cpp
+    Color.cpp
+    PlatformPlugin.cpp
+)
+
+target_sources(Union PUBLIC
+    FILE_SET HEADERS
+    FILES
+    StyleRegistry.h
     Style.h
     StyleLoader.h
-    StyleRule.cpp
     StyleRule.h
-    Element.cpp
     Element.h
-    ElementQuery.cpp
     ElementQuery.h
-    InputPlugin.cpp
     InputPlugin.h
-    Selector.cpp
     Selector.h
     PropertiesTypes.h
-    Color.cpp
     Color.h
     PluginRegistry.h
-    PlatformPlugin.cpp
     PlatformPlugin.h
 )
 
@@ -65,8 +70,7 @@ target_link_libraries(Union PUBLIC
 )
 
 target_include_directories(Union PUBLIC
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>"
-    "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/Union>"
+    "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR}/union>"
 )
 
 add_subdirectory(properties)
@@ -79,4 +83,8 @@ ecm_qt_install_logging_categories(EXPORT Union DESTINATION ${KDE_INSTALL_LOGGING
 
 ecm_generate_qdoc(Union ../doc/union.qdocconf)
 
-install(TARGETS Union DESTINATION ${KDE_INSTALL_LIBDIR})
+install(TARGETS Union
+    EXPORT UnionTargets
+    FILE_SET HEADERS DESTINATION ${KDE_INSTALL_INCLUDEDIR}/union/Union
+    ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
+)
