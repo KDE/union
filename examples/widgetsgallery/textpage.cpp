@@ -79,3 +79,5 @@ QString TextPage::title()
 {
     return QStringLiteral("Text");
 }
+
+#include "moc_textpage.cpp"

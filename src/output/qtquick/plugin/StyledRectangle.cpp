@@ -162,3 +162,5 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty *s
 
     return node;
 }
+
+#include "moc_StyledRectangle.cpp"

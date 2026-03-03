@@ -97,3 +97,5 @@ QString NumberPage::title()
 {
     return QStringLiteral("Numeric Editors");
 }
+
+#include "moc_numberpage.cpp"

@@ -83,3 +83,5 @@ QString ButtonsPage::title()
 {
     return QStringLiteral("Buttons");
 }
+
+#include "moc_buttonspage.cpp"

@@ -107,3 +107,5 @@ bool operator==(const Sizes &first, const Sizes &second)
 {
     return first.m_margins == second.m_margins;
 }
+
+#include "moc_Types.cpp"

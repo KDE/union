@@ -9,3 +9,5 @@ InputPlugin::InputPlugin(QObject *parent)
     : QObject(parent)
 {
 }
+
+#include "moc_InputPlugin.cpp"

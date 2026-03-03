@@ -504,3 +504,5 @@ QuickElementUpdatedEvent::QuickElementUpdatedEvent()
     : QEvent(QuickElementUpdatedEvent::s_type)
 {
 }
+
+#include "moc_QuickElement.cpp"

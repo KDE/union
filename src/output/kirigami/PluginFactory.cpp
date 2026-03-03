@@ -68,3 +68,5 @@ Kirigami::Platform::Units *PluginFactory::createUnits(QObject *parent)
 {
     return new Units(parent);
 }
+
+#include "moc_PluginFactory.cpp"

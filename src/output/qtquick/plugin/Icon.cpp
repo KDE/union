@@ -230,3 +230,5 @@ void Icon::onControlIconChanged()
     setSource(sourceProperty.readOnGadget(data).toUrl());
     setColor(colorProperty.readOnGadget(data).value<QColor>());
 }
+
+#include "moc_Icon.cpp"

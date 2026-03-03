@@ -156,3 +156,5 @@ std::shared_ptr<StyleRegistry> StyleRegistry::instance()
     }
     return inst;
 }
+
+#include "moc_StyleRegistry.cpp"

@@ -125,3 +125,5 @@ QString ListPage::title()
 {
     return QStringLiteral("Lists");
 }
+
+#include "moc_listpage.cpp"

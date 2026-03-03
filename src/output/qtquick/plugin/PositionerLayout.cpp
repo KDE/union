@@ -459,3 +459,5 @@ void PositionerLayout::onParentSizeChanged()
     m_parentSize = newSize;
     markDirty();
 }
+
+#include "moc_PositionerLayout.cpp"

@@ -195,3 +195,5 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
 
     return value;
 }
+
+#include "moc_KColorSchemeProvider.cpp"

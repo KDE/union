@@ -173,3 +173,5 @@ void PlatformTheme::syncColorSchemeColors()
     setHoverColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"hover"_s}).toQColor());
     setFocusColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"focus"_s}).toQColor());
 }
+
+#include "moc_PlatformTheme.cpp"

@@ -209,3 +209,5 @@ PositionedItem *PositionedItem::qmlAttachedProperties(QObject *parent)
 {
     return new PositionedItem(parent);
 }
+
+#include "moc_Positioner.cpp"

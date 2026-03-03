@@ -269,3 +269,5 @@ ElementChangedEvent::ElementChangedEvent(Element::Changes _changes)
     , changes(_changes)
 {
 }
+
+#include "moc_Element.cpp"

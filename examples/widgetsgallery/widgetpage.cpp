@@ -7,3 +7,5 @@ WidgetPage::WidgetPage(QWidget *parent)
     : QWidget(parent)
 {
 }
+
+#include "moc_widgetpage.cpp"

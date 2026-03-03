@@ -128,3 +128,4 @@ StyleChangedEvent::StyleChangedEvent()
     : QEvent(s_type)
 {
 }
+#include "moc_Style.cpp"

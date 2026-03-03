@@ -481,3 +481,5 @@ QDebug &operator<<(QDebug &stream, const Union::Color &color)
     stream << color.toString();
     return stream;
 }
+
+#include "moc_Color.cpp"

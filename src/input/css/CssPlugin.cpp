@@ -18,3 +18,5 @@ std::shared_ptr<Union::Style> CssPlugin::createStyle(const QString &styleName) c
 {
     return Union::Style::create(u"css"_s, styleName, std::make_unique<CssLoader>());
 }
+
+#include "moc_CssPlugin.cpp"

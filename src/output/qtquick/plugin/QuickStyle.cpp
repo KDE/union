@@ -164,3 +164,5 @@ QuickStyleColorsChangedEvent::QuickStyleColorsChangedEvent()
     : QEvent(s_type)
 {
 }
+
+#include "moc_QuickStyle.cpp"

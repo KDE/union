@@ -131,3 +131,5 @@ StyleHintsChangedEvent::StyleHintsChangedEvent()
     : QEvent(s_type)
 {
 }
+
+#include "moc_StyleHints.cpp"

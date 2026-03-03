@@ -54,3 +54,5 @@ MainWindow::MainWindow(QWidget *parent)
     mainLayout->addWidget(tabList);
     mainLayout->addWidget(contents, 1);
 }
+
+#include "moc_mainwindow.cpp"

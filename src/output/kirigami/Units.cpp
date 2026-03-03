@@ -24,3 +24,5 @@ Units::Units(QObject *parent)
     setLongDuration(200);
     setVeryLongDuration(400);
 }
+
+#include "moc_Units.cpp"

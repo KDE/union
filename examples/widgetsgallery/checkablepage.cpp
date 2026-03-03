@@ -62,3 +62,5 @@ QString CheckablePage::title()
 {
     return QStringLiteral("Checkable");
 }
+
+#include "moc_checkablepage.cpp"

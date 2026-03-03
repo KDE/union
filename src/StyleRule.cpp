@@ -53,3 +53,5 @@ QDebug operator<<(QDebug debug, std::shared_ptr<Union::StyleRule> style)
     debug.nospace() << "StyleRule(" << style->selectors() << ")";
     return debug;
 }
+
+#include "moc_StyleRule.cpp"

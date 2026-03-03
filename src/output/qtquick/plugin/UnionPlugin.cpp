@@ -17,3 +17,5 @@ void UnionPlugin::initializeEngine(QQmlEngine *, const char *)
 
     Union::StyleRegistry::instance()->load();
 }
+
+#include "moc_UnionPlugin.cpp"
