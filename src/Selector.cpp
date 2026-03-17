@@ -86,29 +86,6 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::State, Element::State>::
 }
 
 template<>
-UNION_EXPORT int SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::weight() const
-{
-    return 10;
-}
-
-template<>
-UNION_EXPORT bool SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::matches(Element *element) const
-{
-    if (data == Element::ColorSet::None) {
-        return false;
-    }
-
-    return element->colorSet() == data;
-}
-
-template<>
-UNION_EXPORT QString SelectorPrivateModel<SelectorType::ColorSet, Element::ColorSet>::toString() const
-{
-    auto e = Element::staticMetaObject.enumerator(Element::staticMetaObject.indexOfEnumerator("ColorSet"));
-    return u"ColorSet(%1)"_s.arg(QString::fromUtf8(e.valueToKeys(int(data))));
-}
-
-template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::Hint, QString>::weight() const
 {
     return 10;

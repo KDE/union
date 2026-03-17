@@ -36,28 +36,37 @@ class SelectorList;
  * \value State
  *      A selector matching on the \l{Union::Element::state}{state} property.
  *      Checks if the specified state is set in the property.
- * \value ColorSet
- *
  * \value Hint
- *
- * \value Attribute
+ *      A selector matching on the \l{Union::Element::hints}{hints} property.
+ *      Checks if the specified string matches any of the hints set in the
+ *      property.
+ * \value AttributeExists
  *      A selector matching on an attribute in the
- *      \l{Union::Element::attributes}{attributes} property. Checks if the value
- *      of the attribute matches the specified value.
+ *      \l{Union::Element::attributes}{attributes} property. Checks if the
+ *      provided attribute name exists in the property.
+ * \value AttributeEquals
+ *      A selector matching on an attribute in the
+ *      \l{Union::Element::attributes}{attributes} property. Checks if the
+ *      provided attribute's value is the same as the property's value.
+ * \value AttributeSubstringMatch
+ *      A selector matching on an attribute in the
+ *      \l{Union::Element::attributes}{attributes} property. Checks if the
+ *      provided attribute's value is a substring match of the property's value.
  * \value AnyElement
  *      A selector that matches anything.
  *      Note that this has a low weight and most other selectors will override it.
- * \value AnyOf
- *      A selector that will match if any of the specified selectors match.
- * \value AllOf
- *      A selector that will match only if all of the specified selectors match.
+ * \value ChildCombinator
+ *      A combinator that will match if the element is a direct child of the
+ *      parent.
+ * \value DescendantCombinator
+ *      A combinator that will match if the element is a descendant at any level
+ *      of the parent.
  */
 enum class SelectorType {
     Empty,
     Type,
     Id,
     State,
-    ColorSet,
     Hint,
     AttributeExists,
     AttributeEquals,
@@ -87,7 +96,6 @@ template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCom
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::ColorSet, T> = std::is_same_v<T, Element::ColorSet>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
