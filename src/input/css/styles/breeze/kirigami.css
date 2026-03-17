@@ -177,6 +177,21 @@ inlinemessage
     }
 }
 
+navigationtabbar {
+    padding: var(--small-spacing);
+    color: var(--window-text-color);
+    background-color: var(--window-background-color);
+
+    &.header {
+        border-bottom: 1px solid var(--window-border-color);
+    }
+
+    &.footer {
+        border-top: 1px solid var(--window-border-color);
+    }
+
+}
+
 overlaydrawer
 {
     background-color: var(--view-background-color);
