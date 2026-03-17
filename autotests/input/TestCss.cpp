@@ -27,14 +27,14 @@ private Q_SLOTS:
         // style doesn't need to care about. Ultimately we want to do something
         // cleaner here.
         cssparser::StyleSheet styleSheet;
-        styleSheet.set_root_path(fs::path(defaultsPath.toStdString()));
-        styleSheet.parse_file("default.css"s);
+        styleSheet.setRootPath(fs::path(defaultsPath.toStdString()));
+        styleSheet.parseFile("default.css"s);
 
         auto path = QFINDTESTDATA("../../src/input/css/styles/breeze");
         auto stylePath = fs::path(path.toStdString());
 
-        styleSheet.set_root_path(stylePath);
-        styleSheet.parse_file("style.css");
+        styleSheet.setRootPath(stylePath);
+        styleSheet.parseFile("style.css");
 
         if (styleSheet.errors().size() > 0) {
             qWarning() << "Errors encountered while parsing CSS:";

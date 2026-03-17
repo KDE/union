@@ -29,7 +29,7 @@ private:
     SelectorList createSelectorList(const cssparser::Selector &selector);
     Selector createSelector(const cssparser::SelectorPart &part);
 
-    void createProperties(StyleProperty *output, const std::vector<cssparser::Property> &properties);
+    void createProperties(StyleProperty *output, std::span<const cssparser::Property> properties);
 
     void setLayoutProperty(StyleProperty *output, const cssparser::Property &property);
     void setBackgroundProperty(StyleProperty *output, const cssparser::Property &property);
