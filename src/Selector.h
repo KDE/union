@@ -76,7 +76,14 @@ struct Empty {
 
 // Clang-format insists on moving the template declarations to their own line which makes this utterly unreadable.
 /* clang-format off */
+
+// Helper templates for handling overload resolution for Selector::create().
+// These ensure that, depending on selector type, we require the right list of
+// arguments.
 template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = false;
+template <> inline constexpr bool ArgumentTypesMatch<SelectorType::AnyElement, Empty> = true;
+template <> inline constexpr bool ArgumentTypesMatch<SelectorType::ChildCombinator, Empty> = true;
+template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCombinator, Empty> = true;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
@@ -186,19 +193,10 @@ public:
      * Create a new selector of a specific type, that doesn't need any data.
      */
     template<SelectorType type>
+        requires detail::ArgumentTypesMatch<type, detail::Empty>
     inline static Selector create([[maybe_unused]] SelectorType _t = type)
     {
-        switch (type) {
-        case SelectorType::Empty:
-            return Selector(nullptr);
-        case SelectorType::AnyElement:
-        case SelectorType::ChildCombinator:
-        case SelectorType::DescendantCombinator:
-            return Selector(std::make_shared<detail::SelectorPrivateModel<type, detail::Empty>>(detail::Empty{}));
-        default:
-            static_assert("Selector type requires data, use create(DataType) instead");
-            return Selector(nullptr);
-        }
+        return Selector(std::make_shared<detail::SelectorPrivateModel<type, detail::Empty>>(detail::Empty{}));
     }
 
     /*!
