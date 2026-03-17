@@ -178,9 +178,10 @@ inlinemessage
 }
 
 navigationtabbar {
-    padding: var(--small-spacing);
-    color: var(--window-text-color);
     background-color: var(--window-background-color);
+    padding: var(--small-spacing);
+    spacing: var(--small-spacing);
+    height: 64px;
 
     &.header {
         border-bottom: 1px solid var(--window-border-color);
@@ -189,7 +190,43 @@ navigationtabbar {
     &.footer {
         border-top: 1px solid var(--window-border-color);
     }
+}
 
+navigationtabbutton {
+    border-radius: var(--corner-radius);
+    color: var(--window-text-color);
+    icon-size: var(--icon-size-small);
+
+    text-alignment-horizontal: center;
+    icon-alignment-horizontal: center;
+
+    &:disabled {
+        color: var(--window-disabled-text-color);
+    }
+
+    &:hovered
+    {
+        background-color: var(--highlight-hover-color);
+    }
+
+    &:pressed
+    {
+        background-color: var(--highlight-hover-color);
+        border-color: var(--highlight-color);
+        box-shadow: none;
+    }
+
+    &:checked
+    {
+        color: var(--window-text-color);
+        background-color: var(--highlight-hover-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    &[display="text-under-icon"] {
+        icon-alignment-vertical: stack;
+        text-alignment-vertical: stack;
+    }
 }
 
 overlaydrawer

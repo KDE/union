@@ -29,6 +29,7 @@ install(FILES
     Heading.qml
     InlineMessage.qml
     NavigationTabBar.qml
+    NavigationTabButton.qml
     OverlayDrawer.qml
     DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
 )
