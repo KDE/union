@@ -211,3 +211,6 @@ UNION_EXPORT bool operator==(const LayoutProperty &left, const LayoutProperty &r
  * QDebug support for LayoutProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::LayoutProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::LayoutProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::LayoutProperty> &type);

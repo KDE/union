@@ -212,3 +212,6 @@ UNION_EXPORT bool operator==(const ImageProperty &left, const ImageProperty &rig
  * QDebug support for ImageProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::ImageProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::ImageProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::ImageProperty> &type);

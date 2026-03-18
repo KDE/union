@@ -182,6 +182,25 @@ private Q_SLOTS:
         QCOMPARE(*destination->corners(), *source->corners());
         QCOMPARE(*destination->shadow(), *source->shadow());
     }
+
+    void testDataStream()
+    {
+        auto group = testStylePropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<StyleProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestStyleProperty)

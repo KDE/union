@@ -181,3 +181,6 @@ UNION_EXPORT bool operator==(const SizeProperty &left, const SizeProperty &right
  * QDebug support for SizeProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::SizeProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::SizeProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::SizeProperty> &type);

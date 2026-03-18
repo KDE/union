@@ -122,6 +122,25 @@ private Q_SLOTS:
         QCOMPARE(*destination->top(), *source->top());
         QCOMPARE(*destination->bottom(), *source->bottom());
     }
+
+    void testDataStream()
+    {
+        auto group = testBorderPropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<BorderProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestBorderProperty)

@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -449,4 +450,151 @@ QDebug operator<<(QDebug debug, Union::Properties::StyleProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::StyleProperty *type)
+{
+    {
+        auto data = type->layout();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->text();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->icon();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->background();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->border();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->outline();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->corners();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->shadow();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::StyleProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LayoutProperty>();
+            stream >> data;
+            type->setLayout(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<TextProperty>();
+            stream >> data;
+            type->setText(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<IconProperty>();
+            stream >> data;
+            type->setIcon(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<BackgroundProperty>();
+            stream >> data;
+            type->setBackground(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<BorderProperty>();
+            stream >> data;
+            type->setBorder(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<OutlineProperty>();
+            stream >> data;
+            type->setOutline(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornersProperty>();
+            stream >> data;
+            type->setCorners(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<ShadowProperty>();
+            stream >> data;
+            type->setShadow(std::move(data));
+        }
+    }
+
+    return stream;
 }

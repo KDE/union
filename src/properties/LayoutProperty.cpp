@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -397,4 +398,101 @@ QDebug operator<<(QDebug debug, Union::Properties::LayoutProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::LayoutProperty *type)
+{
+    {
+        auto data = type->alignment();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    stream << type->width();
+    stream << type->height();
+    stream << type->spacing();
+    {
+        auto data = type->padding();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->inset();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->margins();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::LayoutProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<AlignmentProperty>();
+            stream >> data;
+            type->setAlignment(std::move(data));
+        }
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setWidth(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setHeight(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setSpacing(data);
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<SizeProperty>();
+            stream >> data;
+            type->setPadding(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<SizeProperty>();
+            stream >> data;
+            type->setInset(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<SizeProperty>();
+            stream >> data;
+            type->setMargins(std::move(data));
+        }
+    }
+
+    return stream;
 }

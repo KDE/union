@@ -201,3 +201,6 @@ UNION_EXPORT bool operator==(const IconProperty &left, const IconProperty &right
  * QDebug support for IconProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::IconProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::IconProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::IconProperty> &type);

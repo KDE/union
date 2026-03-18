@@ -178,3 +178,6 @@ UNION_EXPORT bool operator==(const BorderProperty &left, const BorderProperty &r
  * QDebug support for BorderProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::BorderProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::BorderProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::BorderProperty> &type);

@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -278,4 +279,39 @@ QDebug operator<<(QDebug debug, Union::Properties::SizeProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::SizeProperty *type)
+{
+    stream << type->left();
+    stream << type->right();
+    stream << type->top();
+    stream << type->bottom();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::SizeProperty> &type)
+{
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setLeft(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setRight(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setTop(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setBottom(data);
+    }
+
+    return stream;
 }

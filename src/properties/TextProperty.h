@@ -164,3 +164,6 @@ UNION_EXPORT bool operator==(const TextProperty &left, const TextProperty &right
  * QDebug support for TextProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::TextProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::TextProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::TextProperty> &type);

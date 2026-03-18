@@ -176,3 +176,6 @@ UNION_EXPORT bool operator==(const LineProperty &left, const LineProperty &right
  * QDebug support for LineProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::LineProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::LineProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::LineProperty> &type);

@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -277,4 +278,50 @@ QDebug operator<<(QDebug debug, Union::Properties::LineProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::LineProperty *type)
+{
+    stream << type->size();
+    stream << type->color();
+    stream << type->style();
+    {
+        auto data = type->image();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::LineProperty> &type)
+{
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setSize(data);
+    }
+    {
+        std::optional<Union::Color> data;
+        stream >> data;
+        type->setColor(data);
+    }
+    {
+        std::optional<Union::Properties::LineStyle> data;
+        stream >> data;
+        type->setStyle(data);
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<ImageProperty>();
+            stream >> data;
+            type->setImage(std::move(data));
+        }
+    }
+
+    return stream;
 }

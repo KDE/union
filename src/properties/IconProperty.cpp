@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -349,4 +350,62 @@ QDebug operator<<(QDebug debug, Union::Properties::IconProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::IconProperty *type)
+{
+    {
+        auto data = type->alignment();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    stream << type->width();
+    stream << type->height();
+    stream << type->name();
+    stream << type->source();
+    stream << type->color();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::IconProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<AlignmentProperty>();
+            stream >> data;
+            type->setAlignment(std::move(data));
+        }
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setWidth(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setHeight(data);
+    }
+    {
+        std::optional<QString> data;
+        stream >> data;
+        type->setName(data);
+    }
+    {
+        std::optional<QUrl> data;
+        stream >> data;
+        type->setSource(data);
+    }
+    {
+        std::optional<Union::Color> data;
+        stream >> data;
+        type->setColor(data);
+    }
+
+    return stream;
 }

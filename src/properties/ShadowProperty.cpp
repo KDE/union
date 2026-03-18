@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -597,4 +598,186 @@ QDebug operator<<(QDebug debug, Union::Properties::ShadowProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::ShadowProperty *type)
+{
+    {
+        auto data = type->offset();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    stream << type->color();
+    stream << type->size();
+    stream << type->blur();
+    {
+        auto data = type->left();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->right();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->top();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottom();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->topLeft();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->topRight();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottomLeft();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottomRight();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::ShadowProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<OffsetProperty>();
+            stream >> data;
+            type->setOffset(std::move(data));
+        }
+    }
+    {
+        std::optional<Union::Color> data;
+        stream >> data;
+        type->setColor(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setSize(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setBlur(data);
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setRight(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setTop(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setBottom(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setTopLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setTopRight(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setBottomLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setBottomRight(std::move(data));
+        }
+    }
+
+    return stream;
 }

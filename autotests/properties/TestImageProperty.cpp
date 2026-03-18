@@ -139,6 +139,25 @@ private Q_SLOTS:
         QCOMPARE(destination->flags(), source->flags());
         QCOMPARE(destination->maskColor(), source->maskColor());
     }
+
+    void testDataStream()
+    {
+        auto group = testImagePropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<ImageProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestImageProperty)

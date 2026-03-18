@@ -231,3 +231,6 @@ UNION_EXPORT bool operator==(const StyleProperty &left, const StyleProperty &rig
  * QDebug support for StyleProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::StyleProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::StyleProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::StyleProperty> &type);

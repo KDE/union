@@ -273,3 +273,6 @@ UNION_EXPORT bool operator==(const ShadowProperty &left, const ShadowProperty &r
  * QDebug support for ShadowProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::ShadowProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::ShadowProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::ShadowProperty> &type);

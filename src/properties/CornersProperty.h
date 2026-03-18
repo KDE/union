@@ -184,3 +184,6 @@ UNION_EXPORT bool operator==(const CornersProperty &left, const CornersProperty 
  * QDebug support for CornersProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::CornersProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::CornersProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::CornersProperty> &type);

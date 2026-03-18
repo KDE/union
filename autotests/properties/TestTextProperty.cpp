@@ -99,6 +99,25 @@ private Q_SLOTS:
         QCOMPARE(destination->font(), source->font());
         QCOMPARE(destination->color(), source->color());
     }
+
+    void testDataStream()
+    {
+        auto group = testTextPropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<TextProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestTextProperty)

@@ -151,3 +151,6 @@ UNION_EXPORT bool operator==(const BackgroundProperty &left, const BackgroundPro
  * QDebug support for BackgroundProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::BackgroundProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::BackgroundProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::BackgroundProperty> &type);

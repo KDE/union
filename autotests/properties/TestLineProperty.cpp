@@ -110,6 +110,25 @@ private Q_SLOTS:
         QCOMPARE(destination->style(), source->style());
         QCOMPARE(*destination->image(), *source->image());
     }
+
+    void testDataStream()
+    {
+        auto group = testLinePropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<LineProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestLineProperty)

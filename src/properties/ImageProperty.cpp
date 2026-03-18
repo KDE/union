@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -381,4 +382,57 @@ QDebug operator<<(QDebug debug, Union::Properties::ImageProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::ImageProperty *type)
+{
+    stream << type->source();
+    stream << type->width();
+    stream << type->height();
+    stream << type->xOffset();
+    stream << type->yOffset();
+    stream << type->flags();
+    stream << type->maskColor();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::ImageProperty> &type)
+{
+    {
+        std::optional<std::filesystem::path> data;
+        stream >> data;
+        type->setSource(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setWidth(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setHeight(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setXOffset(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setYOffset(data);
+    }
+    {
+        std::optional<Union::Properties::ImageFlags> data;
+        stream >> data;
+        type->setFlags(data);
+    }
+    {
+        std::optional<Union::Color> data;
+        stream >> data;
+        type->setMaskColor(data);
+    }
+
+    return stream;
 }

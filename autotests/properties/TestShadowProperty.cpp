@@ -230,6 +230,25 @@ private Q_SLOTS:
         QCOMPARE(*destination->bottomLeft(), *source->bottomLeft());
         QCOMPARE(*destination->bottomRight(), *source->bottomRight());
     }
+
+    void testDataStream()
+    {
+        auto group = testShadowPropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<ShadowProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestShadowProperty)

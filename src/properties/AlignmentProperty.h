@@ -174,3 +174,6 @@ UNION_EXPORT bool operator==(const AlignmentProperty &left, const AlignmentPrope
  * QDebug support for AlignmentProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::AlignmentProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::AlignmentProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::AlignmentProperty> &type);

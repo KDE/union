@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -309,4 +310,83 @@ QDebug operator<<(QDebug debug, Union::Properties::BorderProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::BorderProperty *type)
+{
+    {
+        auto data = type->left();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->right();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->top();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottom();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::BorderProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setRight(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setTop(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<LineProperty>();
+            stream >> data;
+            type->setBottom(std::move(data));
+        }
+    }
+
+    return stream;
 }

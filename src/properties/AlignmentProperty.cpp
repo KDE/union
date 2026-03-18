@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -273,4 +274,39 @@ QDebug operator<<(QDebug debug, Union::Properties::AlignmentProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::AlignmentProperty *type)
+{
+    stream << type->container();
+    stream << type->horizontal();
+    stream << type->vertical();
+    stream << type->order();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::AlignmentProperty> &type)
+{
+    {
+        std::optional<Union::Properties::AlignmentContainer> data;
+        stream >> data;
+        type->setContainer(data);
+    }
+    {
+        std::optional<Union::Properties::Alignment> data;
+        stream >> data;
+        type->setHorizontal(data);
+    }
+    {
+        std::optional<Union::Properties::Alignment> data;
+        stream >> data;
+        type->setVertical(data);
+    }
+    {
+        std::optional<int> data;
+        stream >> data;
+        type->setOrder(data);
+    }
+
+    return stream;
 }

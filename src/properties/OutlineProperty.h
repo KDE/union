@@ -174,3 +174,6 @@ UNION_EXPORT bool operator==(const OutlineProperty &left, const OutlineProperty 
  * QDebug support for OutlineProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::OutlineProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::OutlineProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::OutlineProperty> &type);

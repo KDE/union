@@ -156,3 +156,6 @@ UNION_EXPORT bool operator==(const OffsetProperty &left, const OffsetProperty &r
  * QDebug support for OffsetProperty.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::OffsetProperty *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::OffsetProperty *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::OffsetProperty> &type);

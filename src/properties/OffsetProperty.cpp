@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -206,4 +207,27 @@ QDebug operator<<(QDebug debug, Union::Properties::OffsetProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::OffsetProperty *type)
+{
+    stream << type->horizontal();
+    stream << type->vertical();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::OffsetProperty> &type)
+{
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setHorizontal(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setVertical(data);
+    }
+
+    return stream;
 }

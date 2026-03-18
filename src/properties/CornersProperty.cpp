@@ -9,6 +9,7 @@
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -309,4 +310,83 @@ QDebug operator<<(QDebug debug, Union::Properties::CornersProperty *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::CornersProperty *type)
+{
+    {
+        auto data = type->topLeft();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->topRight();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottomLeft();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
+        auto data = type->bottomRight();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::CornersProperty> &type)
+{
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setTopLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setTopRight(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setBottomLeft(std::move(data));
+        }
+    }
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<CornerProperty>();
+            stream >> data;
+            type->setBottomRight(std::move(data));
+        }
+    }
+
+    return stream;
 }

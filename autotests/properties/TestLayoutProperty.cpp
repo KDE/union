@@ -155,6 +155,25 @@ private Q_SLOTS:
         QCOMPARE(*destination->inset(), *source->inset());
         QCOMPARE(*destination->margins(), *source->margins());
     }
+
+    void testDataStream()
+    {
+        auto group = testLayoutPropertyInstance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<LayoutProperty>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(TestLayoutProperty)
