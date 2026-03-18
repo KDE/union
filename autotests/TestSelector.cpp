@@ -317,6 +317,41 @@ private Q_SLOTS:
         }
     }
 
+    void testDataStream()
+    {
+        const auto list = SelectorList{
+            Selector::create<SelectorType::Type>(u"type"_s),
+            Selector::create<SelectorType::Id>(u"id"_s),
+            Selector::create<SelectorType::ChildCombinator>(),
+            Selector::create<SelectorType::State>(Element::State::Highlighted),
+            Selector::create<SelectorType::Hint>(u"hint"_s),
+            Selector::create<SelectorType::DescendantCombinator>(),
+            Selector::create<SelectorType::AttributeExists>(u"attribute"_s),
+            Selector::create<SelectorType::AttributeEquals>(std::pair(u"attribute"_s, QVariant::fromValue(1.234))),
+            Selector::create<SelectorType::AttributeSubstringMatch>(std::pair(u"other-attribute"_s, u"val"_s)),
+            Selector::create<SelectorType::ChildCombinator>(),
+            Selector::create<SelectorType::AnyElement>(),
+        };
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << list;
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        SelectorList readList;
+        readStream >> readList;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QVERIFY(readList.size() == list.size());
+
+        for (int i = 0; i < readList.size(); ++i) {
+            QCOMPARE(readList.at(i).toString(), list.at(i).toString());
+        }
+    }
+
     void benchmarkSelectors_data()
     {
         QTest::addColumn<QJsonArray>("structure");

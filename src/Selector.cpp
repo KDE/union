@@ -89,7 +89,7 @@ void appendFromStream<SelectorType::Id>(QDataStream &stream, Union::SelectorList
 {
     QString id;
     stream >> id;
-    destination.append(Selector::create<SelectorType::Type>(id));
+    destination.append(Selector::create<SelectorType::Id>(id));
 }
 
 /***** SelectorType::State *****/
