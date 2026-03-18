@@ -54,3 +54,6 @@ private:
 }
 
 UNION_EXPORT QDebug operator<<(QDebug debug, std::shared_ptr<Union::StyleRule> style);
+
+QDataStream &operator<<(QDataStream &stream, const std::shared_ptr<Union::StyleRule> &rule);
+QDataStream &operator>>(QDataStream &stream, std::shared_ptr<Union::StyleRule> &rule);

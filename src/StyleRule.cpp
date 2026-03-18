@@ -54,4 +54,35 @@ QDebug operator<<(QDebug debug, std::shared_ptr<Union::StyleRule> style)
     return debug;
 }
 
+QDataStream &operator<<(QDataStream &stream, const std::shared_ptr<Union::StyleRule> &rule)
+{
+    stream << rule->selectors();
+
+    stream << (rule->properties() ? true : false);
+
+    if (rule->properties()) {
+        stream << rule->properties();
+    }
+
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::shared_ptr<Union::StyleRule> &rule)
+{
+    Union::SelectorList selectors;
+    stream >> selectors;
+    rule->setSelectors(selectors);
+
+    bool hasProperties;
+    stream >> hasProperties;
+
+    if (hasProperties) {
+        auto properties = std::make_unique<Union::Properties::StyleProperty>();
+        stream >> properties;
+        rule->setProperties(std::move(properties));
+    }
+
+    return stream;
+}
+
 #include "moc_StyleRule.cpp"
