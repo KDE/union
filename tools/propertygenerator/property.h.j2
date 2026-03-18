@@ -179,3 +179,6 @@ UNION_EXPORT bool operator==(const {{ type_name }} &left, const {{ type_name}} &
  * QDebug support for {{ type_name }}.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::{{ type_name }} *type);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type_name }} *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type_name }}> &type);

@@ -122,6 +122,25 @@ private Q_SLOTS:
 {% endif %}
 {% endfor %}
     }
+
+    void testDataStream()
+    {
+        auto group = test{{ type_name }}Instance();
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << group.get();
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        auto readGroup = std::make_unique<{{ type_name }}>();
+        readStream >> readGroup;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(*readGroup, *group);
+    }
 };
 
 QTEST_MAIN(Test{{ type_name }})

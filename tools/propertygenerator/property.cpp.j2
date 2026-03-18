@@ -18,6 +18,7 @@ REUSE-IgnoreStart
 #include <QRegularExpression>
 
 #include "PropertiesTypes.h"
+#include "QDataStreamExtras.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
@@ -273,4 +274,48 @@ QDebug operator<<(QDebug debug, Union::Properties::{{ type_name }} *type)
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type_name }} *type)
+{
+{% for property in properties %}
+{% if property.is_group %}
+    {
+        auto data = type->{{ property.name }}();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+{% else %}
+    stream << type->{{ property.name }}();
+{% endif %}
+{% endfor %}
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type_name }}> &type)
+{
+{% for property in properties %}
+{% if property.is_group %}
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<{{ property.type }}>();
+            stream >> data;
+            type->set{{ property.name | ucfirst }}(std::move(data));
+        }
+    }
+{% else %}
+    {
+        std::optional<{{ property.type }}> data;
+        stream >> data;
+        type->set{{ property.name | ucfirst }}(data);
+    }
+{% endif %}
+{% endfor %}
+
+    return stream;
 }
