@@ -116,6 +116,7 @@ struct UNION_EXPORT SelectorPrivateConcept {
     virtual QString toString() const = 0;
     virtual SelectorType type() const = 0;
     virtual bool isCombinator() const = 0;
+    virtual void writeToDataStream(QDataStream &stream) const = 0;
 };
 
 template<SelectorType _type, typename T>
@@ -137,6 +138,13 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
     inline bool isCombinator() const override
     {
         return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator;
+    }
+
+    inline void writeToDataStream(QDataStream &stream) const override
+    {
+        if constexpr (!std::is_same_v<T, Empty>) {
+            stream << data;
+        }
     }
 
     T data;
@@ -186,6 +194,14 @@ public:
      * Return whether this selector is a combinator.
      */
     bool isCombinator() const;
+
+    /*
+     * Internal.
+     *
+     * Writes the contents of the selector a QDataStream.
+     * Don't use this directly, instead write the SelectorList to the stream.
+     */
+    void writeToDataStream(QDataStream &stream) const;
 
     /*!
      * Create an empty, invalid selector.
@@ -275,6 +291,9 @@ UNION_EXPORT QDebug operator<<(QDebug debug, const Union::Selector &selector);
  * QDebug support for SelectorList.
  */
 UNION_EXPORT QDebug operator<<(QDebug debug, const Union::SelectorList &selectors);
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::SelectorList &selectors);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, Union::SelectorList &selectors);
 
 /*!
  * \relates Union::SelectorList

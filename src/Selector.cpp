@@ -16,8 +16,21 @@ using namespace Qt::StringLiterals;
 
 namespace Union::detail
 {
+template<SelectorType type>
+void appendFromStream([[maybe_unused]] QDataStream &stream, [[maybe_unused]] Union::SelectorList &destination)
+{
+    destination.append(Selector::create<type>());
+}
+
+template<>
+void appendFromStream<SelectorType::Empty>([[maybe_unused]] QDataStream &stream, Union::SelectorList &destination)
+{
+    destination.append(Selector::create());
+}
+
 SelectorPrivateConcept::~SelectorPrivateConcept() = default;
 
+/***** SelectorType::Type *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::Type, QString>::weight() const
 {
@@ -41,6 +54,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Type, QString>::toString
 }
 
 template<>
+void appendFromStream<SelectorType::Type>(QDataStream &stream, Union::SelectorList &destination)
+{
+    QString type;
+    stream >> type;
+    destination.append(Selector::create<SelectorType::Type>(type));
+}
+
+/***** SelectorType::Id *****/
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::Id, QString>::weight() const
 {
     return 100;
@@ -62,6 +84,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Id, QString>::toString()
     return u"Id(%1)"_s.arg(data);
 }
 
+template<>
+void appendFromStream<SelectorType::Id>(QDataStream &stream, Union::SelectorList &destination)
+{
+    QString id;
+    stream >> id;
+    destination.append(Selector::create<SelectorType::Type>(id));
+}
+
+/***** SelectorType::State *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::State, Element::State>::weight() const
 {
@@ -86,6 +117,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::State, Element::State>::
 }
 
 template<>
+void appendFromStream<SelectorType::State>(QDataStream &stream, Union::SelectorList &destination)
+{
+    Element::State state;
+    stream >> state;
+    destination.append(Selector::create<SelectorType::State>(state));
+}
+
+/***** SelectorType::Hint *****/
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::Hint, QString>::weight() const
 {
     return 10;
@@ -107,6 +147,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::Hint, QString>::toString
     return u"Hint(%1)"_s.arg(data);
 }
 
+template<>
+void appendFromStream<SelectorType::Hint>(QDataStream &stream, Union::SelectorList &destination)
+{
+    QString hint;
+    stream >> hint;
+    destination.append(Selector::create<SelectorType::Hint>(hint));
+}
+
+/***** SelectorType::AttributeExists *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeExists, QString>::weight() const
 {
@@ -130,6 +179,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeExists, QString
 }
 
 template<>
+void appendFromStream<SelectorType::AttributeExists>(QDataStream &stream, Union::SelectorList &destination)
+{
+    QString name;
+    stream >> name;
+    destination.append(Selector::create<SelectorType::AttributeExists>(name));
+}
+
+/***** SelectorType::AttributeEquals *****/
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<QString, QVariant>>::weight() const
 {
     return 10;
@@ -151,6 +209,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeEquals, std::pa
     return u"AttributeEquals(key=%1, value=%2)"_s.arg(data.first, data.second.toString());
 }
 
+template<>
+void appendFromStream<SelectorType::AttributeEquals>(QDataStream &stream, Union::SelectorList &destination)
+{
+    std::pair<QString, QVariant> data;
+    stream >> data;
+    destination.append(Selector::create<SelectorType::AttributeEquals>(data));
+}
+
+/***** SelectorType::AttributeSubstringMatch *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AttributeSubstringMatch, std::pair<QString, QString>>::weight() const
 {
@@ -177,6 +244,15 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::AttributeSubstringMatch,
 }
 
 template<>
+void appendFromStream<SelectorType::AttributeSubstringMatch>(QDataStream &stream, Union::SelectorList &destination)
+{
+    std::pair<QString, QString> data;
+    stream >> data;
+    destination.append(Selector::create<SelectorType::AttributeSubstringMatch>(data));
+}
+
+/***** SelectorType::AnyElement *****/
+template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::AnyElement, Empty>::weight() const
 {
     return 0;
@@ -194,6 +270,7 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::AnyElement, Empty>::toSt
     return u"AnyElement"_s;
 }
 
+/***** SelectorType::ChildCombinator *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::weight() const
 {
@@ -212,6 +289,7 @@ UNION_EXPORT QString SelectorPrivateModel<SelectorType::ChildCombinator, Empty>:
     return u"Child"_s;
 }
 
+/***** SelectorType::DescendantCombinator *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::DescendantCombinator, Empty>::weight() const
 {
@@ -270,6 +348,17 @@ QString Selector::toString() const
     }
 
     return d->toString();
+}
+
+void Selector::writeToDataStream(QDataStream &stream) const
+{
+    if (!d) {
+        stream << SelectorType::Empty;
+        return;
+    }
+
+    stream << d->type();
+    d->writeToDataStream(stream);
 }
 
 bool Selector::isCombinator() const
@@ -353,4 +442,52 @@ QDebug operator<<(QDebug debug, const Union::SelectorList &selectors)
     QDebugStateSaver saver(debug);
     debug << selectors.toString();
     return debug;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::SelectorList &selectors)
+{
+    stream << selectors.size();
+    for (const auto &selector : selectors) {
+        selector.writeToDataStream(stream);
+    }
+
+    return stream;
+}
+
+template<SelectorType... types>
+void appendSelector(SelectorType type, QDataStream &stream, Union::SelectorList &output)
+{
+    (
+        [&] {
+            if (type == types) {
+                detail::appendFromStream<types>(stream, output);
+            }
+        }(),
+        ... //
+    );
+}
+
+QDataStream &operator>>(QDataStream &stream, Union::SelectorList &selectors)
+{
+    qsizetype size;
+    stream >> size;
+
+    for (qsizetype i = 0; i < size; ++i) {
+        SelectorType selectorType;
+        stream >> selectorType;
+
+        appendSelector<SelectorType::Empty,
+                       SelectorType::Type,
+                       SelectorType::Id,
+                       SelectorType::State,
+                       SelectorType::Hint,
+                       SelectorType::AttributeExists,
+                       SelectorType::AttributeEquals,
+                       SelectorType::AttributeSubstringMatch,
+                       SelectorType::AnyElement,
+                       SelectorType::ChildCombinator,
+                       SelectorType::DescendantCombinator>(selectorType, stream, selectors);
+    }
+
+    return stream;
 }
