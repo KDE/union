@@ -7,6 +7,7 @@
 
 #include "PlatformPlugin.h"
 #include "PluginRegistry.h"
+#include "QDataStreamExtras.h"
 #include "StyleRegistry.h"
 
 #include "union_logging.h"
@@ -54,6 +55,26 @@ struct RgbaData : ColorData {
     uint8_t b = 0;
     uint8_t a = 0;
 };
+
+QDataStream &operator<<(QDataStream &stream, const RgbaData *data)
+{
+    stream << data->r;
+    stream << data->g;
+    stream << data->b;
+    stream << data->a;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, RgbaData *&data)
+{
+    uint8_t r, g, b, a;
+    stream >> r;
+    stream >> g;
+    stream >> b;
+    stream >> a;
+    data = new RgbaData{r, g, b, a};
+    return stream;
+}
 
 struct CustomData : ColorData {
     CustomData(const QString &_source, const QStringList &_arguments)
@@ -108,6 +129,23 @@ struct CustomData : ColorData {
     inline static QHash<QString, ColorProvider *> s_knownProviders;
 };
 
+QDataStream &operator<<(QDataStream &stream, const CustomData *data)
+{
+    stream << data->source;
+    stream << data->arguments;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, CustomData *&data)
+{
+    QString source;
+    stream >> source;
+    QStringList arguments;
+    stream >> arguments;
+    data = new CustomData{source, arguments};
+    return stream;
+}
+
 struct ColorOperationData : ColorData {
     ColorOperationData(ColorData::Type type, const Color &_color, const Color &_other)
         : ColorData(type)
@@ -132,6 +170,25 @@ struct ColorOperationData : ColorData {
     Color color;
     Color other;
 };
+
+QDataStream &operator<<(QDataStream &stream, const ColorOperationData *data)
+{
+    stream << data->color;
+    stream << data->other;
+    return stream;
+}
+
+template<typename T>
+    requires std::is_base_of_v<ColorOperationData, T>
+QDataStream &operator>>(QDataStream &stream, T *&data)
+{
+    Color color;
+    stream >> color;
+    Color other;
+    stream >> other;
+    data = new T{color, other};
+    return stream;
+}
 
 struct AddOperationData : ColorOperationData {
     AddOperationData(const Color &_color, const Color &_other)
@@ -264,6 +321,29 @@ struct SetOperationData : ColorData {
     std::optional<uint8_t> a;
 };
 
+QDataStream &operator<<(QDataStream &stream, const SetOperationData *data)
+{
+    stream << data->color;
+    stream << data->r;
+    stream << data->g;
+    stream << data->b;
+    stream << data->a;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, SetOperationData *&data)
+{
+    Color color;
+    stream >> color;
+    std::optional<uint8_t> r, g, b, a;
+    stream >> r;
+    stream >> g;
+    stream >> b;
+    stream >> a;
+    data = new SetOperationData(color, r, g, b, a);
+    return stream;
+}
+
 struct MixOperationData : ColorData {
     MixOperationData(const Color &_color, const Color &_other, qreal _amount)
         : ColorData(Type::MixOperation)
@@ -311,6 +391,26 @@ struct MixOperationData : ColorData {
     Color other;
     qreal amount;
 };
+
+QDataStream &operator<<(QDataStream &stream, const MixOperationData *data)
+{
+    stream << data->color;
+    stream << data->other;
+    stream << data->amount;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, MixOperationData *&data)
+{
+    Color color;
+    stream >> color;
+    Color other;
+    stream >> other;
+    qreal amount;
+    stream >> amount;
+    data = new MixOperationData(color, other, amount);
+    return stream;
+}
 
 Color::Color()
 {
@@ -432,6 +532,10 @@ QColor Color::toQColor() const
 
 QString Color::toString() const
 {
+    if (!data) {
+        return u"Color(Empty)"_s;
+    }
+
     return u"Color("_s + data->toString() + u")"_s;
 }
 
@@ -478,6 +582,96 @@ void ColorProvider::registerProvider(const QString &name, ColorProvider *provide
 QDebug &operator<<(QDebug &stream, const Union::Color &color)
 {
     stream << color.toString();
+    return stream;
+}
+
+QDataStream &operator<<(QDataStream &stream, const Union::Color &color)
+{
+    if (!color.data) {
+        stream << ColorData::Type::Empty;
+        return stream;
+    }
+
+    stream << color.data->type;
+
+    switch (color.data->type) {
+    case ColorData::Type::Empty:
+        break;
+    case ColorData::Type::RGBA:
+        stream << static_cast<const RgbaData *>(color.data.get());
+        break;
+    case ColorData::Type::Custom:
+        stream << static_cast<const CustomData *>(color.data.get());
+        break;
+    case ColorData::Type::AddOperation:
+    case ColorData::Type::SubtractOperation:
+    case ColorData::Type::MultiplyOperation:
+        stream << static_cast<const ColorOperationData *>(color.data.get());
+        break;
+    case ColorData::Type::SetOperation:
+        stream << static_cast<const SetOperationData *>(color.data.get());
+        break;
+    case ColorData::Type::MixOperation:
+        stream << static_cast<const MixOperationData *>(color.data.get());
+        break;
+    }
+
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, Union::Color &color)
+{
+    ColorData::Type type;
+    stream >> type;
+
+    switch (type) {
+    case ColorData::Type::Empty:
+        color = Union::Color();
+        break;
+    case ColorData::Type::RGBA: {
+        RgbaData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::Custom: {
+        CustomData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::AddOperation: {
+        AddOperationData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::SubtractOperation: {
+        SubtractOperationData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::MultiplyOperation: {
+        MultiplyOperationData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::SetOperation: {
+        SetOperationData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    case ColorData::Type::MixOperation: {
+        MixOperationData *data = nullptr;
+        stream >> data;
+        color = Union::Color(data);
+        break;
+    }
+    }
+
     return stream;
 }
 

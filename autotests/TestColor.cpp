@@ -178,6 +178,39 @@ private Q_SLOTS:
 
         QCOMPARE(first == second, expected);
     }
+
+    void testDataStream_data()
+    {
+        QTest::addColumn<Union::Color>("color");
+
+        QTest::addRow("empty") << Color{};
+        QTest::addRow("rgba") << Color::rgba(255, 128, 64, 255);
+        QTest::addRow("custom") << Color::custom(u"test"_s, {u"green"_s});
+        QTest::addRow("add operation") << Color::add(Color::rgba(255, 0, 0, 255), Color::rgba(0, 255, 0, 255));
+        QTest::addRow("subtract operation") << Color::subtract(Color::rgba(255, 0, 0, 255), Color::rgba(0, 255, 0, 255));
+        QTest::addRow("multiply operation") << Color::multiply(Color::rgba(255, 0, 0, 255), Color::rgba(0, 255, 0, 255));
+        QTest::addRow("set operation") << Color::set(Color::rgba(255, 0, 0, 255), std::nullopt, 255, std::nullopt, 0);
+        QTest::addRow("mix operation") << Color::mix(Color::rgba(255, 0, 0, 255), Color::rgba(0, 255, 0, 255), 0.5);
+    }
+
+    void testDataStream()
+    {
+        QFETCH(Union::Color, color);
+
+        QByteArray data;
+        QDataStream writeStream(&data, QIODevice::WriteOnly);
+        writeStream << color;
+
+        QCOMPARE(writeStream.status(), QDataStream::Status::Ok);
+        QVERIFY(data.size() > 0);
+
+        QDataStream readStream(data);
+        Color readColor;
+        readStream >> readColor;
+
+        QCOMPARE(readStream.status(), QDataStream::Status::Ok);
+        QCOMPARE(readColor, color);
+    }
 };
 
 QTEST_MAIN(TestColor)

@@ -14,6 +14,14 @@
 
 namespace Union
 {
+class Color;
+}
+
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Color &color);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, Union::Color &color);
+
+namespace Union
+{
 
 // Private data for Color
 struct ColorData : public QSharedData {
@@ -176,6 +184,9 @@ public:
     static Color mix(const Color &first, const Color &second, qreal amount);
 
 private:
+    friend QDataStream & ::operator<<(QDataStream &stream, const Union::Color &color);
+    friend QDataStream & ::operator>>(QDataStream &stream, Union::Color &color);
+
     Color(ColorData *_data);
 
     QSharedDataPointer<ColorData> data;
