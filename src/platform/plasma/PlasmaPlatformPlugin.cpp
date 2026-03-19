@@ -16,6 +16,11 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
 {
 }
 
+QString PlasmaPlatformPlugin::defaultInputPlugin()
+{
+    return u"union-input-css"_s;
+}
+
 QString PlasmaPlatformPlugin::defaultStyleName()
 {
     // TODO: Read from config
