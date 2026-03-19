@@ -36,15 +36,6 @@ Style::Style(std::unique_ptr<StylePrivate> &&d)
 
 Style::~Style() = default;
 
-bool Style::eventFilter(QObject *obj, QEvent *event)
-{
-    if (obj == qApp && event->type() == QEvent::ApplicationPaletteChange) {
-        StyleChangedEvent event;
-        QCoreApplication::sendEvent(this, &event);
-    }
-    return QObject::eventFilter(obj, event);
-}
-
 QString Style::name() const
 {
     return d->styleName;
@@ -109,6 +100,15 @@ std::shared_ptr<Style> Style::create(const QString &pluginName, const QString &s
     d->styleName = styleName;
     d->loader = std::move(loader);
     return std::make_shared<Style>(std::move(d));
+}
+
+bool Style::eventFilter(QObject *obj, QEvent *event)
+{
+    if (obj == qApp && event->type() == QEvent::ApplicationPaletteChange) {
+        StyleChangedEvent event;
+        QCoreApplication::sendEvent(this, &event);
+    }
+    return QObject::eventFilter(obj, event);
 }
 
 StyleChangedEvent::StyleChangedEvent()
