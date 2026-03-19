@@ -12,6 +12,8 @@
 
 #include "PluginRegistry.h"
 #include "Style.h"
+#include "StyleCache_p.h"
+#include "Style_p.h"
 
 #include "union_logging.h"
 
@@ -44,9 +46,19 @@ public:
 
     Style::Ptr loadStyle(const QString &styleName, const QString &pluginName)
     {
-        auto styleId = qMakePair(pluginName, styleName);
+        auto styleId = std::make_pair(pluginName.toStdString(), styleName.toStdString());
         if (styles.contains(styleId)) {
             return styles.value(styleId);
+        }
+
+        if (styleCache->hasEntry(styleId)) {
+            auto data = styleCache->load(styleId);
+            if (data) {
+                auto style = std::make_shared<Style>(std::move(data));
+                qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from cached data.";
+                styles.insert(styleId, style);
+                return style;
+            }
         }
 
         static const bool DisablePlugins = qEnvironmentVariableIsSet("UNION_DISABLE_INPUT_PLUGINS");
@@ -118,8 +130,10 @@ public:
         }
     }
 
+    std::unique_ptr<StyleCache> styleCache;
+
     std::shared_ptr<PluginRegistry<InputPlugin>> inputRegistry;
-    QHash<QPair<QString, QString>, std::shared_ptr<Style>> styles;
+    QHash<StyleCache::StyleId, std::shared_ptr<Style>> styles;
 
     std::shared_ptr<PluginRegistry<PlatformPlugin>> platformRegistry;
     std::shared_ptr<PlatformPlugin> platform;
@@ -139,13 +153,16 @@ StyleRegistry::~StyleRegistry() = default;
 
 void StyleRegistry::load()
 {
-    // Does nothing currently, styles and plugins are loaded on demand.
-    // TODO: Load cached data.
+    d->styleCache = std::make_unique<StyleCache>();
 }
 
 void StyleRegistry::save()
 {
-    // TODO: Implement caching of loaded styles.
+    for (auto style : d->styles) {
+        if (style->d->modified) {
+            d->styleCache->save(style->d.get());
+        }
+    }
 }
 
 std::shared_ptr<Style> StyleRegistry::defaultStyle()
@@ -199,7 +216,7 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleName, const QStr
 
 void Union::StyleRegistry::addStyle(const std::shared_ptr<Style> &style)
 {
-    auto styleId = qMakePair(style->pluginName(), style->name());
+    auto styleId = std::make_pair(style->pluginName().toStdString(), style->name().toStdString());
     if (d->styles.contains(styleId)) {
         qCWarning(UNION_GENERAL) << "A style from plugin" << style->pluginName() << "with name" << style->name() << "is already registered";
         return;

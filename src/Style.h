@@ -105,6 +105,9 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
 
 private:
+    friend class StyleRegistry;
+    friend class StyleRegistryPrivate;
+
     const std::unique_ptr<StylePrivate> d;
 };
 
