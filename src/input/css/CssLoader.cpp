@@ -387,6 +387,11 @@ bool CssLoader::load(Style::Ptr theme)
     styleSheet.setRootPath(m_stylePath);
     styleSheet.parseFile("style.css"s);
 
+    const auto parsedFiles = styleSheet.parsedFiles();
+    for (const auto &path : parsedFiles) {
+        theme->addCachePath(path);
+    }
+
     if (styleSheet.errors().size() > 0) {
         qCWarning(UNION_CSS) << "Errors encountered while parsing CSS:";
         for (const auto &error : styleSheet.errors()) {
