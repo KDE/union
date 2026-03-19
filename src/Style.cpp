@@ -16,6 +16,7 @@
 
 #include "InputPlugin.h"
 #include "StyleLoader.h"
+#include "Style_p.h"
 
 #include "union_logging.h"
 #include "union_query_logging.h"
@@ -25,24 +26,6 @@ using namespace Qt::StringLiterals;
 
 UNION_EXPORT QEvent::Type StyleChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<StyleChangedEvent> styleChangedEventRegistration;
-
-class Union::StylePrivate
-{
-public:
-    StylePrivate(const QString &_pluginName, const QString &_styleName, std::unique_ptr<StyleLoader> &&_loader)
-        : pluginName(_pluginName)
-        , styleName(_styleName)
-        , loader(std::move(_loader))
-    {
-    }
-
-    QString pluginName;
-    QString styleName;
-
-    std::unique_ptr<StyleLoader> loader;
-
-    QList<StyleRule::Ptr> styles;
-};
 
 Style::Style(std::unique_ptr<StylePrivate> &&d)
     : QObject(nullptr)
@@ -86,27 +69,27 @@ bool Style::load()
 void Style::insert(StyleRule::Ptr style)
 {
     qCInfo(UNION_QUERY) << "Insert" << style;
-    d->styles.append(style);
+    d->rules.append(style);
 }
 
 QList<StyleRule::Ptr> Style::rules()
 {
-    return d->styles;
+    return d->rules;
 }
 
 QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
 {
     QList<StyleRule::Ptr> result;
 
-    if (d->styles.isEmpty()) {
+    if (d->rules.isEmpty()) {
         qCInfo(UNION_QUERY) << "No style rules found for theme" << d->styleName << "so we will never match anything!";
     }
 
-    for (auto style : d->styles) {
-        const auto selectors = style->selectors();
+    for (auto rule : d->rules) {
+        const auto selectors = rule->selectors();
         if (selectors.matches(elements)) {
             qCDebug(UNION_QUERY) << "Matches selector" << selectors;
-            result.prepend(style);
+            result.prepend(rule);
         } else {
             qCDebug(UNION_QUERY) << "Does not match selectors" << selectors;
         }
@@ -121,7 +104,11 @@ QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
 
 std::shared_ptr<Style> Style::create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader)
 {
-    return std::make_shared<Style>(std::make_unique<StylePrivate>(pluginName, styleName, std::move(loader)));
+    auto d = std::make_unique<StylePrivate>();
+    d->pluginName = pluginName;
+    d->styleName = styleName;
+    d->loader = std::move(loader);
+    return std::make_shared<Style>(std::move(d));
 }
 
 StyleChangedEvent::StyleChangedEvent()
