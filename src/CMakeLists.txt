@@ -14,6 +14,7 @@ target_sources(Union PRIVATE
     Selector.cpp
     Color.cpp
     PlatformPlugin.cpp
+    StyleCache.cpp
 )
 
 target_sources(Union PUBLIC
