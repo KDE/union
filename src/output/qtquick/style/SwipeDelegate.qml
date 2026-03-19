@@ -12,7 +12,7 @@ import "private" as P
 T.SwipeDelegate {
     id: control
 
-    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.OutputProperties.useAlternatingColors && index % 2)
+    property bool __alternatingColors: (TableView.view?.alternatingRows && row % 2) || (Union.StyleHints.useAlternatingColors && index % 2)
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
