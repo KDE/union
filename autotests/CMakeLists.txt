@@ -22,6 +22,7 @@ set_tests_properties(TestStyleRegistry PROPERTIES FIXTURES_REQUIRED Style)
 
 if (BUILD_INPUT_CSS)
     ecm_add_test(input/TestCss.cpp LINK_LIBRARIES Qt6::Test Union::Union cxx-rust-cssparser)
+    set_tests_properties(TestCss PROPERTIES ENVIRONMENT "UNION_DISABLE_CACHE=1")
 endif()
 
 if (BUILD_OUTPUT_QTQUICK)
