@@ -21,6 +21,11 @@ public:
     QString pluginName;
     QString styleName;
 
+    bool modified = false;
+
+    QList<std::filesystem::path> cachePaths;
+    QList<std::filesystem::file_time_type> modificationTimes;
+
     QList<StyleRule::Ptr> rules;
 };
 

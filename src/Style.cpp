@@ -3,8 +3,6 @@
 
 #include "Style.h"
 
-#include <filesystem>
-
 #include <EventHelper.h>
 #include <QCoreApplication>
 #include <QGlobalStatic>
@@ -54,7 +52,18 @@ StyleLoader *Style::loader() const
 bool Style::load()
 {
     Q_ASSERT_X(d->loader, "Union::Style", "Style requires a StyleLoader instance to function");
+    d->modified = true;
     return d->loader->load(shared_from_this());
+}
+
+void Style::addCachePath(const std::filesystem::path &path)
+{
+    if (!std::filesystem::exists(path)) {
+        qCWarning(UNION_GENERAL) << "Ignoring non-existing cache path" << path.string();
+    }
+
+    d->cachePaths.append(path);
+    d->modificationTimes.append(std::filesystem::last_write_time(path));
 }
 
 void Style::insert(StyleRule::Ptr style)

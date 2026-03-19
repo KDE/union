@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include <QObject>
@@ -14,7 +15,6 @@
 
 namespace Union
 {
-
 class StyleLoader;
 class StylePrivate;
 
@@ -67,6 +67,11 @@ public:
      * Returns true on success or false if an error occurred.
      */
     bool load();
+
+    /*!
+     * Add a path to the list of files that should be considered for caching.
+     */
+    void addCachePath(const std::filesystem::path &path);
 
     /*!
      * Returns the list of StyleRule instances that matches a given list of
