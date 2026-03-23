@@ -98,7 +98,7 @@ public:
         }
 
         const auto platformName = QGuiApplication::platformName();
-        const auto sessionName = qEnvironmentVariable("XDG_SESSION_DESKTOP", QString{});
+        const auto desktopNames = qEnvironmentVariable("XDG_CURRENT_DESKTOP", QString{}).split(u':');
 
         const auto plugins = platformRegistry->plugins();
         for (const auto &plugin : plugins) {
@@ -112,8 +112,8 @@ public:
 
             const auto supportedSessions = plugin.metaData.value(u"union-supported-sessions").toArray().toVariantList();
             if (!supportedSessions.isEmpty()) {
-                auto sessionItr = std::ranges::find_if(supportedSessions, [sessionName](const QVariant &session) {
-                    return sessionName.compare(session.toString(), Qt::CaseInsensitive) == 0;
+                auto sessionItr = std::ranges::find_if(supportedSessions, [&desktopNames](const QVariant &session) {
+                    return desktopNames.contains(session.toString(), Qt::CaseSensitivity::CaseInsensitive);
                 });
                 if (sessionItr == supportedSessions.end()) {
                     continue;
@@ -124,7 +124,7 @@ public:
         }
 
         if (!platform) {
-            qCCritical(UNION_GENERAL) << "Could not find a supported platform plugin for platform" << platformName << "and session" << sessionName;
+            qCCritical(UNION_GENERAL) << "Could not find a supported platform plugin for platform" << platformName << "and session names" << desktopNames;
             qCCritical(UNION_GENERAL) << "Creating a default fallback platform plugin";
             platform = std::make_shared<FallbackPlatformPlugin>();
         }
