@@ -76,7 +76,7 @@ public:
     Sizes(qreal left, qreal right, qreal top, qreal bottom);
     explicit Sizes(const QMarginsF &margins);
 
-    bool operator==(const Sizes &other);
+    bool operator==(const Sizes &other) const;
 
     Q_PROPERTY(qreal left READ left WRITE setLeft)
     qreal left() const;

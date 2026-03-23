@@ -55,7 +55,7 @@ Sizes::Sizes(const QMarginsF &margins)
 {
 }
 
-bool Sizes::operator==(const Sizes &other)
+bool Sizes::operator==(const Sizes &other) const
 {
     return m_margins == other.m_margins;
 }
