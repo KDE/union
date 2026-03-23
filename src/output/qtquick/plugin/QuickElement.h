@@ -16,6 +16,11 @@
 
 #include "unionquickimpl_export.h"
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickElement;
 
 class StatesGroup : public QObject
@@ -447,3 +452,6 @@ public:
 
     inline static QEvent::Type s_type = QEvent::None;
 };
+
+}
+}

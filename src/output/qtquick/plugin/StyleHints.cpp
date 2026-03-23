@@ -12,6 +12,7 @@
 #include <StyleRule.h>
 
 using namespace Union;
+using namespace Union::Quick;
 
 QEvent::Type StyleHintsChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<StyleHintsChangedEvent> styleHintsRegistration;

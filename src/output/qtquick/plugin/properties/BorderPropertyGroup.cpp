@@ -11,6 +11,7 @@
 #include "QuickStyle.h"
 
 using namespace Union::Properties;
+using namespace Union::Quick;
 using namespace Qt::StringLiterals;
 
 BorderPropertyGroup::BorderPropertyGroup(QuickStyle *style)

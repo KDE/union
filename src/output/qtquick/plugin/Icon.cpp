@@ -10,6 +10,7 @@
 
 #include "qtquick_logging.h"
 
+using namespace Union::Quick;
 using namespace Qt::StringLiterals;
 
 // Get the smallest of the icon's availableSizes that fits in size

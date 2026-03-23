@@ -18,6 +18,11 @@
 #include "AlignmentPropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -99,3 +104,6 @@ private:
 
     Union::Properties::IconProperty *m_state = nullptr;
 };
+
+}
+}

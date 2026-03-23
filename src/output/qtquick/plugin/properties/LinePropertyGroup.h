@@ -18,6 +18,11 @@
 #include "ImagePropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -81,3 +86,6 @@ private:
 
     Union::Properties::LineProperty *m_state = nullptr;
 };
+
+}
+}

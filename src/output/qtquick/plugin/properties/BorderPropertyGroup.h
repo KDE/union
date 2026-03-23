@@ -21,6 +21,11 @@
 #include "LinePropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -84,3 +89,6 @@ private:
 
     Union::Properties::BorderProperty *m_state = nullptr;
 };
+
+}
+}

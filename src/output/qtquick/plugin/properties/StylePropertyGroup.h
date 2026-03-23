@@ -25,6 +25,11 @@
 #include "ShadowPropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -124,3 +129,6 @@ private:
 
     Union::Properties::StyleProperty *m_state = nullptr;
 };
+
+}
+}

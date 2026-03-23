@@ -8,6 +8,11 @@
 
 #include "QuickStyle.h"
 
+namespace Union
+{
+namespace Quick
+{
+
 /*!
  * \qmltype StyledRectangle
  * \inqmlmodule org.kde.union.impl
@@ -38,3 +43,6 @@ private:
 
     QuickStyle *m_style = nullptr;
 };
+
+}
+}

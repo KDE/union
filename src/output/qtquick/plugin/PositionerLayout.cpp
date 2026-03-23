@@ -11,6 +11,7 @@
 #include "qtquick_logging.h"
 
 using namespace Union::Properties;
+using namespace Union::Quick;
 
 inline qreal spacedSize(const std::initializer_list<qreal> &sizes, qreal spacing)
 {

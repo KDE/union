@@ -21,6 +21,11 @@
 #include "SizePropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -111,3 +116,6 @@ private:
 
     Union::Properties::LayoutProperty *m_state = nullptr;
 };
+
+}
+}

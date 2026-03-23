@@ -18,6 +18,11 @@
 #include "ImagePropertyGroup.h"
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -90,3 +95,6 @@ private:
 
     Union::Properties::CornerProperty *m_state = nullptr;
 };
+
+}
+}

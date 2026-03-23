@@ -14,6 +14,11 @@
 #include "Types.h"
 #include "properties/AlignmentPropertyGroup.h"
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickElement;
 class QuickStyle;
 
@@ -223,3 +228,6 @@ private:
     Union::Properties::Alignment m_horizontalAlignment = Union::Properties::Alignment::Unspecified;
     Union::Properties::Alignment m_verticalAlignment = Union::Properties::Alignment::Unspecified;
 };
+
+}
+}
