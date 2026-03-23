@@ -16,7 +16,10 @@ using namespace Qt::StringLiterals;
 // Get the smallest of the icon's availableSizes that fits in size
 QSize iconSizeForSize(const QIcon &icon, const QSize &size)
 {
-    const auto availableSizes = icon.availableSizes();
+    auto availableSizes = icon.availableSizes();
+    std::ranges::sort(availableSizes, [](const QSize &first, const QSize &second) {
+        return first.width() < second.width();
+    });
     auto smallest = availableSizes.end();
     for (auto itr = availableSizes.begin(); itr != availableSizes.end(); ++itr) {
         if (itr->width() > size.width() || itr->height() > size.height()) {
@@ -159,18 +162,17 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
     auto imageNode = static_cast<QSGImageNode *>(node);
 
     auto bounds = boundingRect();
-    auto iconSize = iconSizeForSize(m_icon, bounds.size().toSize());
 
-    imageNode->setRect(QRectF{std::round(bounds.x() + (bounds.width() - iconSize.width()) / 2.0),
-                              std::round(bounds.y() + (bounds.height() - iconSize.height()) / 2.0),
-                              qreal(iconSize.width()),
-                              qreal(iconSize.height())});
+    imageNode->setRect(QRectF{std::round(bounds.x() + (bounds.width() - m_iconSize.width()) / 2.0),
+                              std::round(bounds.y() + (bounds.height() - m_iconSize.height()) / 2.0),
+                              qreal(m_iconSize.width()),
+                              qreal(m_iconSize.height())});
     imageNode->setOwnsTexture(true);
     imageNode->setFiltering(QSGTexture::Linear);
 
     if (m_iconChanged || !imageNode->texture()) {
         const auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
-        auto image = m_icon.pixmap(iconSize, window()->devicePixelRatio(), mode).toImage();
+        auto image = m_icon.pixmap(m_iconSize, window()->devicePixelRatio(), mode).toImage();
         imageNode->setTexture(window()->createTextureFromImage(image, QQuickWindow::TextureCanUseAtlas));
         m_iconChanged = false;
     }
@@ -188,6 +190,12 @@ void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChang
     QQuickItem::itemChange(change, value);
 }
 
+void Icon::geometryChange(const QRectF &newGeometry, [[maybe_unused]] const QRectF &oldGeometry)
+{
+    m_iconSize = iconSizeForSize(m_icon, newGeometry.size().toSize());
+    update();
+}
+
 void Icon::updatePolish()
 {
     if (!m_source.isEmpty() && m_source.isLocalFile()) {
@@ -196,6 +204,7 @@ void Icon::updatePolish()
         m_icon = Union::StyleRegistry::instance()->platform()->platformIcon(m_name, m_color);
     }
 
+    m_iconSize = iconSizeForSize(m_icon, boundingRect().size().toSize());
     m_iconChanged = true;
     update();
 }

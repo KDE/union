@@ -71,6 +71,7 @@ public:
 
 protected:
     void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
+    void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void updatePolish() override;
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *) override;
 
@@ -82,6 +83,7 @@ private:
     QColor m_color = Qt::transparent;
     QIcon m_icon;
     bool m_iconChanged = true;
+    QSize m_iconSize;
 
     QPointer<QQuickItem> m_control;
 };
