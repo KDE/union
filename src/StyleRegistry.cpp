@@ -28,11 +28,6 @@ class FallbackPlatformPlugin : public PlatformPlugin
     {
         return u"breeze"_s;
     }
-
-    ColorProvider *createColorProvider([[maybe_unused]] const QString &providerName) override
-    {
-        return nullptr;
-    }
 };
 
 class Union::StyleRegistryPrivate

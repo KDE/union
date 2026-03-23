@@ -46,10 +46,6 @@ public:
      * recoloring.
      */
     virtual QIcon platformIcon(const QString &name, const QColor &color);
-    /*!
-     * Returns a color provider instance with the given provider name.
-     */
-    virtual ColorProvider *createColorProvider(const QString &providerName) = 0;
 };
 
 }

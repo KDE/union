@@ -7,8 +7,6 @@
 
 #include <KIconColors>
 
-#include "KColorSchemeProvider.h"
-
 using namespace Qt::StringLiterals;
 
 PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
@@ -36,13 +34,4 @@ QIcon PlasmaPlatformPlugin::platformIcon(const QString &name, const QColor &colo
     } else {
         return KDE::icon(name);
     }
-}
-
-Union::ColorProvider *PlasmaPlatformPlugin::createColorProvider(const QString &providerName)
-{
-    if (providerName == u"kcolorscheme"_s) {
-        return new KColorSchemeProvider{};
-    }
-
-    return nullptr;
 }

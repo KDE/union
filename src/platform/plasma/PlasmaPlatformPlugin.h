@@ -17,6 +17,4 @@ public:
     QString defaultStyleName() override;
 
     QIcon platformIcon(const QString &name, const QColor &color) override;
-
-    Union::ColorProvider *createColorProvider(const QString &providerName) override;
 };

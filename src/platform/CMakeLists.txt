@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 if (BUILD_WITH_KDEFRAMEWORKS)
-    add_subdirectory(shared)
+    add_subdirectory(kcolorschemeprovider)
 endif()
 
 if (BUILD_PLATFORM_PLASMA)
