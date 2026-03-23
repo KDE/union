@@ -9,7 +9,6 @@ import QtQuick.Templates as T
 import org.kde.kirigami.templates as KT
 
 import org.kde.union.impl as Union
-import "private" as P
 
 KT.NavigationTabButton {
 	id: control
@@ -25,7 +24,6 @@ KT.NavigationTabButton {
 	}
 
 	Union.Element.attributes: [
-		P.DisplayAttribute { control: control },
 		Union.ElementAttribute {
 			name: "direction"
 			value: control.T.TabBar.position === T.TabBar.Footer ? "bottom" : "top"
