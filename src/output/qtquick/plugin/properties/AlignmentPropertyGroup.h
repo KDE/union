@@ -17,6 +17,11 @@
 
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -80,3 +85,6 @@ private:
 
     Union::Properties::AlignmentProperty *m_state = nullptr;
 };
+
+}
+}

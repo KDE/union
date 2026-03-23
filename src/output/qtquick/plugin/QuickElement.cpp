@@ -15,6 +15,7 @@
 #include "QuickStyle.h"
 
 using namespace Union;
+using namespace Union::Quick;
 
 static EventTypeRegistration<QuickElementUpdatedEvent> quickElementRegistration;
 

@@ -14,6 +14,7 @@
 #include "QuickElement.h"
 
 using namespace Union;
+using namespace Union::Quick;
 
 UNION_EXPORT QEvent::Type QuickStyleUpdatedEvent::s_type = QEvent::None;
 static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleUpdatedRegistration;

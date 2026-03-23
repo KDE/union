@@ -9,6 +9,7 @@
 #include "qtquick_logging.h"
 
 using namespace Union;
+using namespace Union::Quick;
 
 Positioner::Positioner(QObject *parent)
     : QObject(parent)

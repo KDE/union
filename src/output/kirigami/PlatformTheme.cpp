@@ -26,7 +26,7 @@ PlatformTheme::PlatformTheme(QObject *parent)
     syncColorSchemeColors();
     // TODO set spellcheck enabled/disabled
 
-    auto style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parent));
+    auto style = static_cast<Union::Quick::QuickStyle *>(qmlAttachedPropertiesObject<Union::Quick::QuickStyle>(parent));
     if (style) {
         style->installEventFilter(this);
     }
@@ -44,7 +44,7 @@ QIcon PlatformTheme::iconFromTheme(const QString &name, const QColor &customColo
 void PlatformTheme::syncColors()
 {
     if (!m_style) {
-        m_style = static_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(parent()));
+        m_style = static_cast<Union::Quick::QuickStyle *>(qmlAttachedPropertiesObject<Union::Quick::QuickStyle>(parent()));
         if (!m_style) {
             return;
         }
@@ -99,7 +99,7 @@ bool PlatformTheme::eventFilter(QObject *target, QEvent *event)
         return true;
     }
 
-    if (event->type() == QuickStyleColorsChangedEvent::s_type) {
+    if (event->type() == Union::Quick::QuickStyleColorsChangedEvent::s_type) {
         syncColorSchemeColors();
         return false;
     }

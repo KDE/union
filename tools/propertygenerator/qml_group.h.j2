@@ -38,6 +38,11 @@ template but that clang format doesn't like, so disable format for that.
 {% endfor %}
 // clang-format on
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickStyle;
 
 /*!
@@ -104,3 +109,6 @@ private:
 {{ extra_code["private"] | render }}
 {% endif %}
 };
+
+}
+}

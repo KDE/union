@@ -10,16 +10,13 @@
 #include "PlatformTheme.h"
 #include "Units.h"
 
-// Avoid ambiguity between Kirigami StyleHints and Union StyleHints below.
-using UnionStyleHints = ::StyleHints;
-
 class KirigamiStyleHints : public Kirigami::Platform::StyleHints
 {
 public:
     KirigamiStyleHints(QObject *parent = nullptr)
         : Kirigami::Platform::StyleHints(parent)
     {
-        m_unionStyleHints = static_cast<UnionStyleHints *>(qmlAttachedPropertiesObject<UnionStyleHints>(parent));
+        m_unionStyleHints = static_cast<Union::Quick::StyleHints *>(qmlAttachedPropertiesObject<Union::Quick::StyleHints>(parent));
     }
 
     void propertyChanged(ChangedProperty change) override
@@ -48,7 +45,7 @@ public:
     }
 
 private:
-    UnionStyleHints *m_unionStyleHints = nullptr;
+    Union::Quick::StyleHints *m_unionStyleHints = nullptr;
 };
 
 PluginFactory::PluginFactory(QObject *parent)

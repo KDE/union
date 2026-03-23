@@ -17,6 +17,7 @@
 
 using namespace Union;
 using namespace Union::Properties;
+using namespace Union::Quick;
 using namespace Qt::StringLiterals;
 
 StyledRectangle::StyledRectangle(QQuickItem *parent)

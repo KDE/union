@@ -10,6 +10,11 @@
 
 #include "Types.h"
 
+namespace Union
+{
+namespace Quick
+{
+
 /**
  * An internal class that performs the actual layout of Positioner.
  *
@@ -123,3 +128,6 @@ private:
     bool m_requeuePolish : 1 = false;
     bool m_debugEnabled : 1 = false;
 };
+
+}
+}

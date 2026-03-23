@@ -7,7 +7,13 @@
 
 #include <QIcon>
 
+namespace Union
+{
+namespace Quick
+{
 class QuickStyle;
+}
+}
 
 class PlatformTheme : public Kirigami::Platform::PlatformTheme
 {
@@ -27,5 +33,5 @@ protected:
 private:
     void syncColorSchemeColors();
 
-    QuickStyle *m_style = nullptr;
+    Union::Quick::QuickStyle *m_style = nullptr;
 };

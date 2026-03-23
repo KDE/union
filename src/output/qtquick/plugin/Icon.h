@@ -6,6 +6,11 @@
 #include <QIcon>
 #include <QQuickItem>
 
+namespace Union
+{
+namespace Quick
+{
+
 /*!
  * \qmltype Icon
  * \inqmlmodule org.kde.union.impl
@@ -80,3 +85,6 @@ private:
 
     QPointer<QQuickItem> m_control;
 };
+
+}
+}

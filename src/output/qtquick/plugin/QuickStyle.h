@@ -19,6 +19,11 @@
 
 #include "unionquickimpl_export.h"
 
+namespace Union
+{
+namespace Quick
+{
+
 class QuickElement;
 
 /*!
@@ -113,3 +118,6 @@ public:
 
     static QEvent::Type s_type;
 };
+
+}
+}
