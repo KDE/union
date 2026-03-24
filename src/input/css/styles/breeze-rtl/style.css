@@ -1,0 +1,21 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+/*
+ * This is a workaround for missing media-query support in the CSS parser.
+ * Instead of media queries, the Plasma platform plugin will load this style
+ * instead of breeze as default style when the application is in right-to-left
+ * mode.
+ */
+
+/*
+ * Import the main breeze style first.
+ */
+@import "../breeze/style.css";
+
+/*
+ * RtL-specific overrides.
+ */
+@import "overrides.css";

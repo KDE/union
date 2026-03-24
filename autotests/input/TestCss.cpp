@@ -24,6 +24,8 @@ private Q_SLOTS:
         QTest::addColumn<std::string>("styleName");
 
         QTest::addRow("breeze") << "breeze"s;
+        QTest::addRow("breeze-mobile") << "breeze-mobile"s;
+        QTest::addRow("breeze-rtl") << "breeze-rtl"s;
     }
 
     void testLoad()
