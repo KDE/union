@@ -3,9 +3,11 @@
 
 #include "PlasmaPlatformPlugin.h"
 
+#include <QGuiApplication>
 #include <QIcon>
 
 #include <KIconColors>
+#include <KRuntimePlatform>
 
 using namespace Qt::StringLiterals;
 
@@ -21,6 +23,22 @@ QString PlasmaPlatformPlugin::defaultInputPlugin()
 
 QString PlasmaPlatformPlugin::defaultStyleName()
 {
+    // These values should really be queries by the CSS using media queries,
+    // however those are currently unimplemented in cxx-rust-cssparser and will
+    // take some time to implement. So until that time, we switch the default
+    // style based on these values.
+    if (KRuntimePlatform::runtimePlatform().contains(u"phone"_s)) {
+        return u"breeze-mobile"_s;
+    }
+
+    if (qEnvironmentVariableIsSet("QT_QUICK_CONTROLS_MOBILE")) {
+        return u"breeze-mobile"_s;
+    }
+
+    if (qGuiApp->layoutDirection() == Qt::LayoutDirection::RightToLeft) {
+        return u"breeze-rtl"_s;
+    }
+
     // TODO: Read from config
     return u"breeze"_s;
 }

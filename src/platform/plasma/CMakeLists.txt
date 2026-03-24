@@ -7,7 +7,7 @@ target_sources(union-platform-plasma PRIVATE
     PlasmaPlatformPlugin.h
 )
 
-target_link_libraries(union-platform-plasma PRIVATE Union KF6::IconThemes)
+target_link_libraries(union-platform-plasma PRIVATE Union KF6::CoreAddons KF6::IconThemes)
 
 set_target_properties(union-platform-plasma PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/union

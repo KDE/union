@@ -67,7 +67,7 @@ if (BUILD_EXAMPLES)
 endif()
 
 if (BUILD_WITH_KDEFRAMEWORKS)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS IconThemes ColorScheme GuiAddons)
+    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS CoreAddons GuiAddons IconThemes ColorScheme)
     set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
     set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
 endif()
