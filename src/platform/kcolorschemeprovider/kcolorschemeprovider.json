@@ -1,4 +1,5 @@
 {
-    "union-plugintype": "colorprovider"
+    "union-plugintype": "colorprovider",
+    "union-pluginname": "kcolorscheme"
 }
 

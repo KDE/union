@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <QObject>
+#include "PluginRegistry.h"
 
 #include "union_export.h"
 
@@ -19,7 +19,7 @@ class ColorProvider;
  * \brief Abstract base class for plugins providing platform integration.
  *
  */
-class UNION_EXPORT PlatformPlugin : public QObject
+class UNION_EXPORT PlatformPlugin : public Plugin
 {
     Q_OBJECT
 

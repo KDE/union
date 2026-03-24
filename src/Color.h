@@ -10,6 +10,8 @@
 #include <QString>
 #include <QVariant>
 
+#include "PluginRegistry.h"
+
 #include "union_export.h"
 
 namespace Union
@@ -199,7 +201,7 @@ private:
  *
  * \brief An interface for objects that can provide custom colors.
  */
-class UNION_EXPORT ColorProvider : public QObject
+class UNION_EXPORT ColorProvider : public Plugin
 {
     Q_OBJECT
 public:
@@ -210,7 +212,7 @@ public:
         uint8_t a = 0;
     };
 
-    using QObject::QObject;
+    using Plugin::Plugin;
 
     /*!
      * Returns a color matching the provided arguments.

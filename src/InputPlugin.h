@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <QObject>
+#include "PluginRegistry.h"
 
 #include "union_export.h"
 
@@ -22,7 +22,7 @@ class Style;
  * plugins are plugins providing Theme instances and other themeing specific
  * data to the system.
  */
-class UNION_EXPORT InputPlugin : public QObject
+class UNION_EXPORT InputPlugin : public Plugin
 {
     Q_OBJECT
 

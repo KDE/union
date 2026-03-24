@@ -16,7 +16,7 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
 
 QString PlasmaPlatformPlugin::defaultInputPlugin()
 {
-    return u"union-input-css"_s;
+    return u"css"_s;
 }
 
 QString PlasmaPlatformPlugin::defaultStyleName()

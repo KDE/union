@@ -6,7 +6,7 @@
 using namespace Union;
 
 InputPlugin::InputPlugin(QObject *parent)
-    : QObject(parent)
+    : Plugin(parent)
 {
 }
 

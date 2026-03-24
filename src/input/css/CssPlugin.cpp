@@ -16,7 +16,7 @@ CssPlugin::CssPlugin(QObject *parent)
 
 std::shared_ptr<Union::Style> CssPlugin::createStyle(const QString &styleName) const
 {
-    return Union::Style::create(u"union-input-css"_s, styleName, std::make_unique<CssLoader>());
+    return Union::Style::create(name(), styleName, std::make_unique<CssLoader>());
 }
 
 #include "moc_CssPlugin.cpp"

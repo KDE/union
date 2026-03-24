@@ -34,8 +34,8 @@ class Union::StyleRegistryPrivate
 {
 public:
     StyleRegistryPrivate()
-        : inputRegistry{std::make_shared<PluginRegistry<InputPlugin>>(QJsonObject{{u"union-plugintype"_s, u"input"_s}})}
-        , platformRegistry{std::make_shared<PluginRegistry<PlatformPlugin>>(QJsonObject{{u"union-plugintype"_s, u"platform"_s}})}
+        : inputRegistry{std::make_shared<PluginRegistry<InputPlugin>>(u"input"_s)}
+        , platformRegistry{std::make_shared<PluginRegistry<PlatformPlugin>>(u"platform"_s)}
     {
     }
 

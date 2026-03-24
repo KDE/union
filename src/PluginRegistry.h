@@ -16,6 +16,43 @@
 namespace Union
 {
 
+class UNION_EXPORT Plugin : public QObject
+{
+    Q_OBJECT
+public:
+    using QObject::QObject;
+
+    inline std::filesystem::path path() const
+    {
+        return m_path;
+    }
+
+    inline QString type() const
+    {
+        return m_type;
+    }
+
+    inline QString name() const
+    {
+        return m_name;
+    }
+
+    inline QJsonObject metaData() const
+    {
+        return m_metaData;
+    }
+
+private:
+    template<typename T>
+        requires std::derived_from<T, Plugin>
+    friend class PluginRegistry;
+
+    std::filesystem::path m_path;
+    QString m_type;
+    QString m_name;
+    QJsonObject m_metaData;
+};
+
 /*!
  * \class Union::PluginRegistry
  * \inmodule core
@@ -24,6 +61,7 @@ namespace Union
  * \brief Template class to simplify looking up and loading plugins.
  */
 template<typename T>
+    requires std::derived_from<T, Plugin>
 class UNION_EXPORT PluginRegistry
 {
 public:
@@ -33,8 +71,9 @@ public:
         QJsonObject metaData;
     };
 
-    PluginRegistry(const QJsonObject &matchMetaData)
-        : m_matchMetaData(matchMetaData)
+    PluginRegistry(const QString &type, const QJsonObject &matchMetaData = QJsonObject{})
+        : m_type(type)
+        , m_matchMetaData(matchMetaData)
     {
         findAllPlugins();
     }
@@ -92,9 +131,11 @@ private:
             for (const auto &entry : std::filesystem::directory_iterator(path)) {
                 QPluginLoader loader(QString::fromStdString(entry.path()));
                 const auto metaData = loader.metaData().value(u"MetaData").toObject();
+                const auto type = metaData.value(u"union-plugintype").toString();
+                const auto name = metaData.value(u"union-pluginname").toString();
 
-                if (metaDataMatch(metaData, m_matchMetaData)) {
-                    m_plugins.append(PluginInfo{.path = entry, .name = QString::fromStdString(entry.path().stem()), .metaData = metaData});
+                if (type == m_type && metaDataMatch(metaData, m_matchMetaData)) {
+                    m_plugins.append(PluginInfo{.path = entry, .name = name, .metaData = metaData});
                 }
             }
         }
@@ -105,7 +146,13 @@ private:
         QPluginLoader loader(QString::fromStdString(path));
 
         const auto metaData = loader.metaData().value(u"MetaData").toObject();
-        const auto name = path.stem().string();
+        auto type = metaData.value(u"union-plugintype").toString();
+        auto name = metaData.value(u"union-pluginname").toString();
+
+        if (type != m_type) {
+            qCWarning(UNION_GENERAL) << "Tried to load plugin" << name << "from" << path.string() << "which does not match type" << qPrintable(m_type);
+            return nullptr;
+        }
 
         if (!metaDataMatch(metaData, m_matchMetaData)) {
             qCWarning(UNION_GENERAL) << "Tried to load plugin" << name << "from" << path.string()
@@ -113,14 +160,21 @@ private:
             return nullptr;
         }
 
-        auto plugin = static_cast<T *>(loader.instance());
-        if (!plugin) {
+        auto object = loader.instance();
+        if (!object) {
             qCWarning(UNION_GENERAL).nospace() << "Failed loading plugin " << name << " from " << path.string() << ": " << loader.errorString();
             return nullptr;
         }
 
-        qCDebug(UNION_GENERAL) << "Loaded plugin" << name << "from" << path.string();
-        m_pluginObjects.insert(QString::fromStdString(name), plugin);
+        auto plugin = static_cast<T *>(loader.instance());
+        plugin->m_path = path;
+        plugin->m_name = name;
+        plugin->m_type = metaData.value(u"union-plugintype").toString();
+        plugin->m_metaData = metaData;
+
+        qCDebug(UNION_GENERAL) << "Loaded" << qPrintable(m_type) << "plugin" << name << "from" << path.string();
+        m_pluginObjects.insert(name, plugin);
+
         return plugin;
     }
 
@@ -139,6 +193,7 @@ private:
         return true;
     }
 
+    QString m_type;
     QJsonObject m_matchMetaData;
     QList<PluginInfo> m_plugins;
     QHash<QString, T *> m_pluginObjects;

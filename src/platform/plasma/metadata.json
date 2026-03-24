@@ -1,5 +1,6 @@
 {
     "union-plugintype": "platform",
+    "union-pluginname": "plasma",
     "union-supported-platforms": [
         "wayland",
         "xcb"

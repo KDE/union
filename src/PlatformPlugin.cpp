@@ -9,7 +9,7 @@ using namespace Union;
 using namespace Qt::StringLiterals;
 
 PlatformPlugin::PlatformPlugin(QObject *parent)
-    : QObject(parent)
+    : Plugin(parent)
 {
 }
 

@@ -5,7 +5,6 @@
 
 #include <QSharedData>
 
-#include "PluginRegistry.h"
 #include "QDataStreamExtras.h"
 
 #include "union_logging.h"
@@ -81,7 +80,7 @@ struct CustomData : ColorData {
         , arguments(_arguments)
     {
         if (!s_colorProviderRegistry) {
-            s_colorProviderRegistry = std::make_shared<PluginRegistry<ColorProvider>>(QJsonObject{{u"union-plugintype"_s, u"colorprovider"_s}});
+            s_colorProviderRegistry = std::make_shared<PluginRegistry<ColorProvider>>(u"colorprovider"_s);
         }
     }
 
@@ -96,7 +95,7 @@ struct CustomData : ColorData {
     {
         auto provider = s_knownProviders.value(source);
         if (!provider) {
-            provider = s_colorProviderRegistry->pluginObject(u"union-colorprovider-"_s + source);
+            provider = s_colorProviderRegistry->pluginObject(source);
             if (!provider) {
                 qCWarning(UNION_GENERAL) << "No provider" << source << "found";
                 return nullptr;
