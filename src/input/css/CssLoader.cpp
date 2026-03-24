@@ -371,24 +371,16 @@ inline void setDirectionValue(T *output, const std::string &baseName, const cssp
 
 bool CssLoader::load(Style::Ptr theme)
 {
-    auto defaultsPath =
-        fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults"_s, QStandardPaths::LocateDirectory).toStdString());
+    auto cssPath = fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css"_s, QStandardPaths::LocateDirectory).toStdString());
 
-    // This is a bit hacky but allows us to provide defaults that the actual
-    // style doesn't need to care about. Ultimately we want to do something
-    // cleaner here.
-    cssparser::StyleSheet styleSheet;
-    styleSheet.setRootPath(defaultsPath);
-    styleSheet.parseFile("default.css"s);
+    m_stylePath = cssPath / "styles"s / theme->name().toStdString();
+    cssparser::StyleSheet styleSheet(m_stylePath / "style.css"s);
 
-    auto path = QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/styles/"_s + theme->name(), QStandardPaths::LocateDirectory);
-    m_stylePath = fs::path(path.toStdString());
+    styleSheet.import(cssPath / "defaults"s / "default.css"s);
+    styleSheet.parse();
 
-    styleSheet.setRootPath(m_stylePath);
-    styleSheet.parseFile("style.css"s);
-
-    const auto parsedFiles = styleSheet.parsedFiles();
-    for (const auto &path : parsedFiles) {
+    const auto paths = styleSheet.paths();
+    for (const auto &path : paths) {
         theme->addCachePath(path);
     }
 

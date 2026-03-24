@@ -19,22 +19,22 @@ class TestCss : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void testLoad_data()
+    {
+        QTest::addColumn<std::string>("styleName");
+
+        QTest::addRow("breeze") << "breeze"s;
+    }
+
     void testLoad()
     {
-        auto defaultsPath = QFINDTESTDATA("../../src/input/css/defaults");
+        QFETCH(std::string, styleName);
 
-        // This is a bit hacky but allows us to provide defaults that the actual
-        // style doesn't need to care about. Ultimately we want to do something
-        // cleaner here.
-        cssparser::StyleSheet styleSheet;
-        styleSheet.setRootPath(fs::path(defaultsPath.toStdString()));
-        styleSheet.parseFile("default.css"s);
+        auto cssInputPath = fs::path(QFINDTESTDATA("../../src/input/css/").toStdString());
 
-        auto path = QFINDTESTDATA("../../src/input/css/styles/breeze");
-        auto stylePath = fs::path(path.toStdString());
-
-        styleSheet.setRootPath(stylePath);
-        styleSheet.parseFile("style.css");
+        cssparser::StyleSheet styleSheet(cssInputPath / "styles"s / styleName / "style.css"s);
+        styleSheet.import(cssInputPath / "defaults"s / "default.css"s);
+        styleSheet.parse();
 
         if (styleSheet.errors().size() > 0) {
             qWarning() << "Errors encountered while parsing CSS:";
