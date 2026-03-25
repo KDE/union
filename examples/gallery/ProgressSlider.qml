@@ -156,6 +156,8 @@ Kirigami.Page {
             size: 0.4
         }
 
+        Controls.Dial { }
+
         Item {
             Layout.fillHeight: true
         }

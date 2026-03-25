@@ -58,6 +58,7 @@ private Q_SLOTS:
         QTest::addRow("Container") << "Container" << QVariantMap{};
         QTest::addRow("Control") << "Control" << QVariantMap{};
         QTest::addRow("DialogButtonBox") << "DialogButtonBox" << QVariantMap{};
+        QTest::addRow("Dial") << "Dial" << QVariantMap{};
         QTest::addRow("Dialog") << "Dialog" << QVariantMap{};
         QTest::addRow("Drawer") << "Drawer" << QVariantMap{};
         QTest::addRow("Frame") << "Frame" << QVariantMap{};

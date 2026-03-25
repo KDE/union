@@ -30,6 +30,20 @@
     --bar-tickmark-thickness: 2px;
     --bar-tickmark-length: 8px;
     --bar-tickmark-margin: 1px;
+
+    --dial-inactive-background-color: mix(var(--button-inactive-background-color), var(--window-background-color), 0.5);
+    --dial-inactive-border-color: var(--button-inactive-border-color);
+    --dial-active-background-color: mix(var(--button-active-background-color), var(--window-background-color), 0.5);
+    --dial-active-border-color: var(--button-active-border-color);
+    --dial-disabled-background-color: mix(var(--button-disabled-background-color), var(--window-background-color), 0.5);
+    --dial-disabled-border-color: var(--button-disabled-border-color);
+
+    --dial-handle-inactive-background-color: var(--button-inactive-background-color);
+    --dial-handle-inactive-border-color: var(--button-inactive-border-color);
+    --dial-handle-active-background-color:  mix(var(--button-active-background-color), var(--highlight-color), 0.5);
+    --dial-handle-active-border-color: mix(var(--button-active-border-color), var(--highlight-color), 0.5);
+    --dial-handle-disabled-background-color: var(--button-disabled-background-color);
+    --dial-handle-disabled-border-color: var(--button-disabled-border-color);
 }
 
 busyindicator
@@ -68,7 +82,8 @@ progressbar
 }
 
 slider,
-rangeslider
+rangeslider,
+dial
 {
     background-color: var(--bar-active-background-color);
     border: 1px solid var(--bar-active-border-color);
@@ -200,6 +215,48 @@ scrollbar
         &:disabled {
             background-color: var(--bar-disabled-background-color);
             border: 1px solid var(--bar-disabled-border-color);
+        }
+    }
+}
+
+dial {
+    width: 128px;
+    height: 128px;
+    border-radius: 64px; /* use half of width */
+    background-color: var(--dial-inactive-background-color);
+    border-color: var(--dial-inactive-border-color);
+
+    &:hovered {
+        background-color: var(--dial-active-background-color);
+        border-color: var(--dial-active-border-color);
+    }
+
+    &:pressed {
+        border-color: var(--highlight-color);
+    }
+
+    &:disabled {
+        background-color: var(--dial-disabled-background-color);
+        border-color: var(--dial-disabled-border-color);
+    }
+
+    & > handle {
+        background-color: var(--dial-handle-inactive-background-color);
+        border-color: var(--dial-handle-inactive-border-color);
+
+        &:hovered {
+            background-color: var(--dial-handle-active-background-color);
+            border-color: var(--dial-handle-active-border-color);
+        }
+
+        &:pressed {
+            background-color: var(--highlight-color);
+            border-color: var(--highlight-color);
+        }
+
+        &:disabled {
+            background-color: var(--dial-handle-disabled-background-color);
+            border-color: var(--dial-handle-disabled-border-color);
         }
     }
 }
