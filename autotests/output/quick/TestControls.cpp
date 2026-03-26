@@ -57,6 +57,7 @@ private Q_SLOTS:
         QTest::addRow("ComboBox") << "ComboBox" << QVariantMap{};
         QTest::addRow("Container") << "Container" << QVariantMap{};
         QTest::addRow("Control") << "Control" << QVariantMap{};
+        QTest::addRow("DelayButton") << "DelayButton" << QVariantMap{};
         QTest::addRow("DialogButtonBox") << "DialogButtonBox" << QVariantMap{};
         QTest::addRow("Dial") << "Dial" << QVariantMap{};
         QTest::addRow("Dialog") << "Dialog" << QVariantMap{};

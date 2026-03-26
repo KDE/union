@@ -163,6 +163,10 @@ Kirigami.Page {
             selectTextByMouse: true
         }
 
+        Controls.DelayButton {
+            text: "Delay button"
+            icon.name: "document-save"
+        }
 
         Item {
             Layout.fillHeight: true
