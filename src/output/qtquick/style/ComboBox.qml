@@ -120,6 +120,8 @@ T.ComboBox {
             model: control.delegateModel
             currentIndex: control.highlightedIndex
             highlightMoveDuration: 0
+            clip: true
+            boundsBehavior: ListView.StopAtBounds
 
             ScrollBar.vertical: ScrollBar {
                 anchors.left: parent.right
