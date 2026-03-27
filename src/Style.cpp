@@ -44,6 +44,16 @@ QString Style::pluginName() const
     return d->pluginName;
 }
 
+bool Style::hasErrors() const
+{
+    return d->hasErrors;
+}
+
+void Style::setHasErrors(bool newHasErrors)
+{
+    d->hasErrors = newHasErrors;
+}
+
 StyleLoader *Style::loader() const
 {
     return d->loader.get();

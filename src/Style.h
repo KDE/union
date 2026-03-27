@@ -57,6 +57,15 @@ public:
     QString pluginName() const;
 
     /*!
+     * \property Union::Style::hasErrors
+     *
+     * Whether the style encountered any errors while loading.
+     */
+    Q_PROPERTY(bool hasErrors READ hasErrors WRITE setHasErrors)
+    bool hasErrors() const;
+    void setHasErrors(bool newHasErrors);
+
+    /*!
      * Returns the StyleLoader of this style.
      */
     StyleLoader *loader() const;

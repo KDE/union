@@ -22,6 +22,7 @@ public:
     QString styleName;
 
     bool modified = false;
+    bool hasErrors = false;
 
     QList<std::filesystem::path> cachePaths;
     QList<std::filesystem::file_time_type> modificationTimes;
