@@ -39,6 +39,12 @@ Kirigami.Page {
             text: "Disabled ItemDelegate with Text and Icon"
         }
 
+        Controls.ItemDelegate {
+            display: Controls.ItemDelegate.TextUnderIcon
+            icon.name: "document-save"
+            text: "ItemDelegate TextUnderIcon"
+        }
+
         Controls.CheckDelegate {
             text: "CheckDelegate with Text"
         }
@@ -47,6 +53,12 @@ Kirigami.Page {
         Controls.CheckDelegate {
             enabled: false
             text: "DisabledCheckDelegate with Text"
+        }
+
+        Controls.CheckDelegate {
+            display: Controls.ItemDelegate.TextUnderIcon
+            icon.name: "document-save"
+            text: "CheckDelegate TextUnderIcon"
         }
 
         Controls.RadioDelegate {
@@ -62,6 +74,12 @@ Kirigami.Page {
             text: "RadioDelegate n. 2 with Text"
         }
 
+        Controls.RadioDelegate {
+            display: Controls.ItemDelegate.TextUnderIcon
+            icon.name: "document-save"
+            text: "RadioDelegate TextUnderIcon"
+        }
+
         Controls.SwitchDelegate {
             text: "SwitchDelegate with Text"
         }
@@ -69,6 +87,12 @@ Kirigami.Page {
         Controls.SwitchDelegate {
             enabled: false
             text: "Disabled SwitchDelegate with Text"
+        }
+
+        Controls.SwitchDelegate {
+            display: Controls.ItemDelegate.TextUnderIcon
+            icon.name: "document-save"
+            text: "SwitchDelegate TextUnderIcon"
         }
 
         Controls.SwipeDelegate {
