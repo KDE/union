@@ -16,7 +16,7 @@
 
 @property --internal-alignment-syntax {
     syntax: "<string>";
-    initial-value: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack) <integer>";
+    initial-value: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
 }
 
 @property padding {

@@ -105,8 +105,8 @@ toolbutton.raised
     }
 
     &[display="text-under-icon"] {
-        text-alignment-vertical: stack;
-        icon-alignment-vertical: stack;
+        text-alignment-vertical: stack-center;
+        icon-alignment-vertical: stack-center;
     }
 
     &.with-menu > indicator {

@@ -14,11 +14,11 @@
 }
 
 @property layout-alignment-horizontal {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property layout-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property layout-alignment-order {
@@ -95,11 +95,11 @@
 }
 
 @property text-alignment-horizontal {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property text-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property text-alignment-order {
@@ -121,11 +121,11 @@
 }
 
 @property icon-alignment-horizontal {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property icon-alignment-vertical {
-    syntax: "start | center | end | fill | stack";
+    syntax: "start | center | end | fill | stack-center | stack-fill";
 }
 
 @property icon-alignment-order {

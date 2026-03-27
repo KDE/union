@@ -71,8 +71,9 @@ swipedelegate
 
     &[display="text-under-icon"]
     {
-        text-alignment-vertical: stack;
-        icon-alignment-vertical: stack;
+        icon-alignment: content center stack-center 0;
+        text-alignment: content center stack-center 1;
+
         icon-size: var(--icon-size-medium);
         width: var(--icon-size-large);
         height: var(--icon-size-large);

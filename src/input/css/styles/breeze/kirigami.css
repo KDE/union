@@ -224,8 +224,8 @@ navigationtabbutton {
     }
 
     &[display="text-under-icon"] {
-        icon-alignment-vertical: stack;
-        text-alignment-vertical: stack;
+        icon-alignment-vertical: stack-center;
+        text-alignment-vertical: stack-center;
     }
 }
 
