@@ -382,8 +382,8 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
                             std::max({container.start.size.height(), maxCenter.height(), container.end.size.height()})};
 
     for (auto bucket : {&container.start, &container.end, &container.center, &container.fill}) {
-        qreal stackedY = 0.0;
-        qreal stackedHeight = bucket->size.height() / bucket->items.count();
+        qreal stackedY = bucket->stackCenter ? std::max(0.0, (bucket->size.height() - bucket->implicitSize.height()) / 2.0) : 0.0;
+        qreal stackFillHeight = bucket->size.height() / bucket->items.count();
         qreal fillX = 0.0;
         qreal fillWidth = bucket->size.width() / bucket->items.count();
         for (auto &item : bucket->items) {
@@ -412,12 +412,17 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
                 item.size.setHeight(bucket->size.height() - item.margins.top() - item.margins.bottom());
                 break;
             case Union::Properties::Alignment::StackCenter:
+                stackedY += item.margins.top();
+                item.position.setY(stackedY);
+                item.size.setWidth(bucket->size.width());
+                stackedY += item.implicitSize.height() + item.margins.bottom();
+                break;
             case Union::Properties::Alignment::StackFill:
                 stackedY += item.margins.top();
                 item.position.setY(stackedY);
                 item.size.setWidth(bucket->size.width());
-                item.size.setHeight(stackedHeight - item.margins.top() - item.margins.bottom());
-                stackedY += stackedHeight + item.margins.bottom();
+                item.size.setHeight(stackFillHeight - item.margins.top() - item.margins.bottom());
+                stackedY += stackFillHeight + item.margins.bottom();
                 break;
             }
         }
