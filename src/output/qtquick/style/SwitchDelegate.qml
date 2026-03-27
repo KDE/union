@@ -31,6 +31,9 @@ T.SwitchDelegate {
         Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
         Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
     ]
+    Union.Element.attributes: [
+        P.DisplayAttribute { control: control }
+    ]
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
