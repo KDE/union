@@ -36,10 +36,15 @@ tableviewdelegate {
         outline: 1px solid var(--focus-color);
     }
 
-    &:highlighted {
+    &:highlighted,
+    &.selected {
         color: var(--highlight-text-color);
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
+    }
+
+    &.selected > label {
+        color: var(--highlight-text-color);
     }
 
     &.editing {
