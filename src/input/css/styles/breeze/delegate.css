@@ -84,3 +84,22 @@ swipedelegate
         layout-alignment: content start center -1;
     }
 }
+
+/* For delegates with known indicators, place the indicator at the top left and
+ * reduce the effective indicator size to 0. This ensures the indicator will be
+ * placed inside the content item. */
+checkdelegate,
+radiodelegate
+{
+    &[display="text-under-icon"] > indicator {
+        layout-alignment: content start start -1;
+        /* -(var(--icon-size-small)) */
+        margin-right: -16px;
+    }
+}
+
+switchdelegate[display="text-under-icon"] > indicator {
+    layout-alignment: content start start -1;
+    margin-right: -36px;
+    margin-top: var(--small-spacing);
+}
