@@ -43,7 +43,8 @@ public:
         Center = int(Union::Properties::Alignment::Center),
         End = int(Union::Properties::Alignment::End),
         Fill = int(Union::Properties::Alignment::Fill),
-        Stack = int(Union::Properties::Alignment::Stack),
+        StackCenter = int(Union::Properties::Alignment::StackCenter),
+        StackFill = int(Union::Properties::Alignment::StackFill),
     };
     Q_ENUM(AlignmentType)
 

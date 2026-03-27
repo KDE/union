@@ -94,7 +94,8 @@ enum class Alignment {
     Center,
     End,
     Fill,
-    Stack,
+    StackCenter,
+    StackFill,
 };
 Q_ENUM_NS(Alignment)
 

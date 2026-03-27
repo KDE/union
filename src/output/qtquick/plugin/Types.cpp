@@ -16,7 +16,8 @@ Qt::Alignment Alignment::toQtHorizontal(AlignmentType alignment)
     case Alignment::End:
         return Qt::AlignRight;
     case Alignment::Fill:
-    case Alignment::Stack:
+    case Alignment::StackCenter:
+    case Alignment::StackFill:
         return Qt::AlignJustify;
     }
 
@@ -33,7 +34,8 @@ Qt::Alignment Alignment::toQtVertical(AlignmentType alignment)
     case Alignment::Unspecified:
     case Alignment::Center:
     case Alignment::Fill:
-    case Alignment::Stack:
+    case Alignment::StackCenter:
+    case Alignment::StackFill:
         return Qt::AlignVCenter;
     }
 

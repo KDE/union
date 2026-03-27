@@ -219,29 +219,35 @@ void PositionerLayout::updatePolish()
             break;
         }
 
-        bool stacked = verticalAlignment == Union::Properties::Alignment::Stack;
+        bool stackCenter = verticalAlignment == Union::Properties::Alignment::StackCenter;
+        bool stackFill = verticalAlignment == Union::Properties::Alignment::StackFill;
 
         switch (horizontalAlignment) {
         case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Stack:
+        case Union::Properties::Alignment::StackCenter:
+        case Union::Properties::Alignment::StackFill:
             qCWarning(UNION_QTQUICK) << "Alignment" << horizontalAlignment << "not supported for horizontal alignment, item" << item
                                      << "will use Start alignment";
             [[fallthrough]];
         case Union::Properties::Alignment::Start:
             container->start.items.append(layoutItem);
-            container->start.stacked = container->start.stacked || stacked;
+            container->start.stackCenter = container->start.stackCenter || stackCenter;
+            container->start.stackFill = container->start.stackFill || stackFill;
             break;
         case Union::Properties::Alignment::Center:
             container->center.items.append(layoutItem);
-            container->center.stacked = container->center.stacked || stacked;
+            container->center.stackCenter = container->center.stackCenter || stackCenter;
+            container->center.stackFill = container->center.stackFill || stackFill;
             break;
         case Union::Properties::Alignment::End:
             container->end.items.append(layoutItem);
-            container->end.stacked = container->end.stacked || stacked;
+            container->end.stackCenter = container->end.stackCenter || stackCenter;
+            container->end.stackFill = container->end.stackFill || stackFill;
             break;
         case Union::Properties::Alignment::Fill:
             container->fill.items.append(layoutItem);
-            container->fill.stacked = container->fill.stacked || stacked;
+            container->fill.stackCenter = container->fill.stackCenter || stackCenter;
+            container->fill.stackFill = container->fill.stackFill || stackFill;
             break;
         }
 
@@ -405,7 +411,8 @@ void PositionerLayout::layoutContainer(LayoutContainer &container)
                 item.position.setY(item.margins.top());
                 item.size.setHeight(bucket->size.height() - item.margins.top() - item.margins.bottom());
                 break;
-            case Union::Properties::Alignment::Stack:
+            case Union::Properties::Alignment::StackCenter:
+            case Union::Properties::Alignment::StackFill:
                 stackedY += item.margins.top();
                 item.position.setY(stackedY);
                 item.size.setWidth(bucket->size.width());
@@ -425,7 +432,7 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
     qreal totalHeight = 0.0;
 
     for (auto &item : bucket.items) {
-        if (bucket.stacked) {
+        if (bucket.stackCenter || bucket.stackFill) {
             item.position.setX(0.0);
             totalHeight += item.margins.top() + item.margins.bottom() + item.implicitSize.height();
         } else {
@@ -446,8 +453,8 @@ void PositionerLayout::layoutBucket(LayoutBucket &bucket)
         maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
     }
 
-    bucket.implicitSize.setWidth(std::ceil(std::max(bucket.stacked ? maxWidth : x, 0.0)));
-    bucket.implicitSize.setHeight(std::ceil(std::max(bucket.stacked ? totalHeight : maxHeight, 0.0)));
+    bucket.implicitSize.setWidth(std::ceil(std::max(bucket.stackCenter || bucket.stackFill ? maxWidth : x, 0.0)));
+    bucket.implicitSize.setHeight(std::ceil(std::max(bucket.stackCenter || bucket.stackFill ? totalHeight : maxHeight, 0.0)));
 }
 
 void PositionerLayout::onParentSizeChanged()

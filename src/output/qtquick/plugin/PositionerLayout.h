@@ -67,7 +67,8 @@ public:
         QSizeF size = QSizeF{0.0, 0.0};
         QSizeF implicitSize = QSizeF{0.0, 0.0};
         qreal spacing = 0.0;
-        bool stacked = false;
+        bool stackCenter = false;
+        bool stackFill = false;
         QList<LayoutItem> items;
     };
 
