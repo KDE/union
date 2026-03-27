@@ -16,3 +16,7 @@ class QStyleOption;
  * \brief Translate the state from QStyleOption to Union::Element states.
  */
 Union::Element::States statesFromOption(const QStyleOption *option);
+
+Qt::Alignment toQtHorizontal(Union::Properties::Alignment alignment);
+
+Qt::Alignment toQtVertical(Union::Properties::Alignment alignment);

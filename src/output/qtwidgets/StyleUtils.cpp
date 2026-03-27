@@ -28,3 +28,38 @@ Union::Element::States statesFromOption(const QStyleOption *option)
     }
     return states;
 }
+
+Qt::Alignment toQtHorizontal(Union::Properties::Alignment alignment)
+{
+    switch (alignment) {
+    case Union::Properties::Alignment::Unspecified:
+    case Union::Properties::Alignment::Start:
+        return Qt::AlignLeft;
+    case Union::Properties::Alignment::Center:
+        return Qt::AlignHCenter;
+    case Union::Properties::Alignment::End:
+        return Qt::AlignRight;
+    case Union::Properties::Alignment::Fill:
+    case Union::Properties::Alignment::Stack:
+        return Qt::AlignJustify;
+    }
+
+    return Qt::AlignLeft;
+}
+
+Qt::Alignment toQtVertical(Union::Properties::Alignment alignment)
+{
+    switch (alignment) {
+    case Union::Properties::Alignment::Start:
+        return Qt::AlignTop;
+    case Union::Properties::Alignment::End:
+        return Qt::AlignBottom;
+    case Union::Properties::Alignment::Unspecified:
+    case Union::Properties::Alignment::Center:
+    case Union::Properties::Alignment::Fill:
+    case Union::Properties::Alignment::Stack:
+        return Qt::AlignVCenter;
+    }
+
+    return Qt::AlignVCenter;
+}
