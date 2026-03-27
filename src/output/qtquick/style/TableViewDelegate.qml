@@ -25,7 +25,9 @@ T.TableViewDelegate {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "alternating-colors"; when: (control.tableView?.alternatingRows && control.row % 2 !== 0) ?? false },
-        Union.ElementHint { name: "editing"; when: control.editing }
+        Union.ElementHint { name: "editing"; when: control.editing },
+        Union.ElementHint { name: "current"; when: control.current },
+        Union.ElementHint { name: "selected"; when: control.selected },
     ]
     
     leftPadding: Union.Positioner.padding.left

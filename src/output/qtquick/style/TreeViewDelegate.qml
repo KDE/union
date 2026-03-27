@@ -28,6 +28,8 @@ T.TreeViewDelegate {
         Union.ElementHint { name: "alternating-colors"; when: (control.treeView?.alternatingRows && control.row % 2 !== 0) ?? false },
         Union.ElementHint { name: "expanded"; when: control.expanded },
         Union.ElementHint { name: "editing"; when: control.editing },
+        Union.ElementHint { name: "current"; when: control.current },
+        Union.ElementHint { name: "selected"; when: control.selected },
     ]
 
     Union.Positioner.positionItems: [indentItem, indicator, contentItem]
