@@ -63,7 +63,32 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         // Draw label
         // TODO: union-ize better
-        QCommonStyle::drawControl(CE_PushButtonLabel, &labelOption, painter, widget);
+        UnionStyle::drawControl(CE_PushButtonLabel, &labelOption, painter, widget);
+
+        return;
+    } else if (controlElement == CE_PushButtonLabel) {
+        auto element = Union::Element::create();
+        element->setType(QStringLiteral("Button"));
+        element->setStates(statesFromOption(option));
+        element->setColorSet(Union::Element::ColorSet::Button);
+        const auto buttonOption = static_cast<const QStyleOptionButton *>(option);
+
+        const auto style = Union::StyleRegistry::instance()->defaultStyle();
+        const auto query = std::make_unique<Union::ElementQuery>(style);
+
+        query->setElements({element});
+        query->execute();
+        const auto properties = query->properties();
+
+        auto horizontalAlignment = toQtHorizontal(properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
+
+        auto verticalAlignment = toQtVertical(properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
+
+        QTextOption textOption;
+        textOption.setAlignment(horizontalAlignment | verticalAlignment);
+
+        painter->setPen(buttonOption->palette.buttonText().color());
+        painter->drawText(buttonOption->rect, buttonOption->text, textOption);
 
         return;
     }
