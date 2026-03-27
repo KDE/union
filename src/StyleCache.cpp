@@ -167,6 +167,10 @@ bool Union::StyleCache::save(const StylePrivate *style) const
         return false;
     }
 
+    if (style->hasErrors) {
+        return false;
+    }
+
     auto path = fs::path(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation).toStdString()) / "union" / style->pluginName.toStdString();
     if (!fs::exists(path)) {
         if (!fs::create_directories(path)) {
