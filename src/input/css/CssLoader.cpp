@@ -389,7 +389,7 @@ bool CssLoader::load(Style::Ptr theme)
 
         qCWarning(UNION_CSS) << "Errors encountered while parsing CSS:";
         for (const auto &error : styleSheet.errors()) {
-            qCWarning(UNION_CSS) << error.message.data();
+            qCWarning(UNION_CSS) << "In file" << error.file << "on line" << error.line << "column" << error.column << error.message.data();
         }
     }
 
