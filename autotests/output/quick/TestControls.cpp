@@ -101,6 +101,7 @@ private Q_SLOTS:
         QTest::addRow("ToolButton") << "ToolButton" << QVariantMap{};
         QTest::addRow("ToolSeparator") << "ToolSeparator" << QVariantMap{};
         QTest::addRow("ToolTip") << "ToolTip" << QVariantMap{};
+        QTest::addRow("Tumbler") << "Tumbler" << QVariantMap{};
         QTest::addRow("VerticalHeaderView") << "VerticalHeaderView" << QVariantMap{};
 
         // These have required properties and thus require initial properties

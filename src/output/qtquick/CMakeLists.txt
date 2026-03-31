@@ -76,6 +76,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ToolButton.qml
     style/ToolSeparator.qml
     style/ToolTip.qml
+    style/Tumbler.qml
     style/VerticalHeaderView.qml
 )
 
