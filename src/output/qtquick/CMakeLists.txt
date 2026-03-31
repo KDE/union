@@ -40,6 +40,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Frame.qml
     style/GroupBox.qml
     style/HorizontalHeaderView.qml
+    style/HorizontalHeaderViewDelegate.qml
     style/ItemDelegate.qml
     style/Label.qml
     style/Menu.qml
@@ -83,6 +84,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Tumbler.qml
     style/VerticalHeaderView.qml
     style/WeekNumberColumn.qml
+    style/VerticalHeaderViewDelegate.qml
 )
 
 ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES

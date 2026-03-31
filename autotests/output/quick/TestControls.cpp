@@ -135,6 +135,23 @@ private Q_SLOTS:
                                                  {u"model"_s, QVariantMap{}},
                                                  {u"treeView"_s, QVariant::fromValue(nullptr)},
                                              };
+
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        QTest::addRow("HorizontalHeaderViewDelegate") << "HorizontalHeaderViewDelegate"
+                                                      << QVariantMap{{u"headerView"_s, QVariant::fromValue(nullptr)},
+                                                                     {u"selected"_s, false},
+                                                                     {u"current"_s, false},
+                                                                     {u"editing"_s, false},
+                                                                     {u"model"_s, QVariantMap{}},
+                                                                     {u"tableView"_s, QVariant::fromValue(nullptr)}};
+        QTest::addRow("VerticalHeaderViewDelegate") << "VerticalHeaderViewDelegate"
+                                                    << QVariantMap{{u"headerView"_s, QVariant::fromValue(nullptr)},
+                                                                   {u"selected"_s, false},
+                                                                   {u"current"_s, false},
+                                                                   {u"editing"_s, false},
+                                                                   {u"model"_s, QVariantMap{}},
+                                                                   {u"tableView"_s, QVariant::fromValue(nullptr)}};
+#endif
     }
 
     void testControls()

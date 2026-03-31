@@ -42,4 +42,5 @@ T.VerticalHeaderView {
             color: Union.Style.properties.text.color
         }
     }
+
 }
