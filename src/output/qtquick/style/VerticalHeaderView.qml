@@ -40,6 +40,8 @@ T.VerticalHeaderView {
             verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             text: delegate.model[control.textRole]
             color: Union.Style.properties.text.color
+            wrapMode: Text.NoWrap
+            elide: Text.ElideRight
         }
     }
 
