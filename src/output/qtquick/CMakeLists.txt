@@ -25,11 +25,13 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ApplicationWindow.qml
     style/BusyIndicator.qml
     style/Button.qml
+    style/Calendar.qml
     style/CheckBox.qml
     style/CheckDelegate.qml
     style/ComboBox.qml
     style/Container.qml
     style/Control.qml
+    style/DayOfWeekRow.qml
     style/DelayButton.qml
     style/Dial.qml
     style/Dialog.qml
@@ -45,6 +47,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/MenuBarItem.qml
     style/MenuItem.qml
     style/MenuSeparator.qml
+    style/MonthGrid.qml
     style/Page.qml
     style/PageIndicator.qml
     style/Pane.qml
@@ -78,6 +81,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ToolTip.qml
     style/Tumbler.qml
     style/VerticalHeaderView.qml
+    style/WeekNumberColumn.qml
 )
 
 ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES

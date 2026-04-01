@@ -22,6 +22,7 @@ set(_configured_files
     Tabs.qml
     TreeView.qml
     SwipeView.qml
+    Calendar.qml
 )
 
 set_property(DIRECTORY PROPERTY CMAKE_CONFIGURE_DEPENDS "${_configured_files}")

@@ -87,6 +87,10 @@ Kirigami.ApplicationWindow {
             Kirigami.Action {
                 text: "SwipeView"
                 onTriggered: application.pushPage("SwipeView")
+            },
+            Kirigami.Action {
+                text: "Calendar"
+                onTriggered: application.pushPage("Calendar")
             }
         ]
     }

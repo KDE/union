@@ -57,6 +57,7 @@ private Q_SLOTS:
         QTest::addRow("ComboBox") << "ComboBox" << QVariantMap{};
         QTest::addRow("Container") << "Container" << QVariantMap{};
         QTest::addRow("Control") << "Control" << QVariantMap{};
+        QTest::addRow("DayOfWeekRow") << "DayOfWeekRow" << QVariantMap{};
         QTest::addRow("DelayButton") << "DelayButton" << QVariantMap{};
         QTest::addRow("DialogButtonBox") << "DialogButtonBox" << QVariantMap{};
         QTest::addRow("Dial") << "Dial" << QVariantMap{};
@@ -72,6 +73,7 @@ private Q_SLOTS:
         QTest::addRow("MenuItem") << "MenuItem" << QVariantMap{};
         QTest::addRow("Menu") << "Menu" << QVariantMap{};
         QTest::addRow("MenuSeparator") << "MenuSeparator" << QVariantMap{};
+        QTest::addRow("MonthGrid") << "MonthGrid" << QVariantMap{};
         QTest::addRow("PageIndicator") << "PageIndicator" << QVariantMap{};
         QTest::addRow("Page") << "Page" << QVariantMap{};
         QTest::addRow("Pane") << "Pane" << QVariantMap{};
@@ -103,6 +105,7 @@ private Q_SLOTS:
         QTest::addRow("ToolTip") << "ToolTip" << QVariantMap{};
         QTest::addRow("Tumbler") << "Tumbler" << QVariantMap{};
         QTest::addRow("VerticalHeaderView") << "VerticalHeaderView" << QVariantMap{};
+        QTest::addRow("WeekNumberColumn") << "WeekNumberColumn" << QVariantMap{};
 
         // These have required properties and thus require initial properties
         // auto testModel = new QStandardItemModel{};
