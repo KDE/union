@@ -190,10 +190,12 @@ void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChang
     QQuickItem::itemChange(change, value);
 }
 
-void Icon::geometryChange(const QRectF &newGeometry, [[maybe_unused]] const QRectF &oldGeometry)
+void Icon::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
     m_iconSize = iconSizeForSize(m_icon, newGeometry.size().toSize());
     update();
+
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
 }
 
 void Icon::updatePolish()
