@@ -92,10 +92,14 @@ if (BUILD_INPUT_CSS)
 endif()
 
 if (BUILD_INPUT_PLASMASVG)
-    find_package(Qt6Svg ${REQUIRED_QT_VERSION} REQUIRED CONFIG)
+    find_package(Qt6Svg ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
     find_package(KF6 COMPONENTS Archive ColorScheme Config REQUIRED)
     find_package(Plasma REQUIRED)
     find_package(ryml REQUIRED)
+endif()
+
+if (BUILD_PLATFORM_PLASMA)
+    find_package(Qt6DBus ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
 endif()
 
 add_subdirectory(src)

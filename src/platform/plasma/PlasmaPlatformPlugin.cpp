@@ -3,8 +3,12 @@
 
 #include "PlasmaPlatformPlugin.h"
 
+#include <QDBusConnection>
+#include <QFile>
 #include <QGuiApplication>
 #include <QIcon>
+#include <QSettings>
+#include <QStandardPaths>
 
 #include <KIconColors>
 #include <KRuntimePlatform>
@@ -14,6 +18,20 @@ using namespace Qt::StringLiterals;
 PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     : Union::PlatformPlugin(parent)
 {
+    const QString configPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kdeglobals"));
+    if (QFile::exists(configPath)) {
+        QSettings globals(configPath, QSettings::IniFormat);
+        globals.beginGroup(QStringLiteral("KDE"));
+        m_smoothScroll = globals.value(QStringLiteral("SmoothScroll"), true).toBool();
+    }
+
+    // Listen to smooth scroll changed events
+    QDBusConnection::sessionBus().connect(QStringLiteral(""),
+                                          QStringLiteral("/SmoothScroll"),
+                                          QStringLiteral("org.kde.SmoothScroll"),
+                                          QStringLiteral("notifyChange"),
+                                          this,
+                                          SLOT(setSmoothScroll(bool)));
 }
 
 QString PlasmaPlatformPlugin::defaultInputPlugin()
@@ -52,4 +70,14 @@ QIcon PlasmaPlatformPlugin::platformIcon(const QString &name, const QColor &colo
     } else {
         return KDE::icon(name);
     }
+}
+
+bool PlasmaPlatformPlugin::smoothScroll()
+{
+    return m_smoothScroll;
+}
+
+void PlasmaPlatformPlugin::setSmoothScroll(bool enabled)
+{
+    m_smoothScroll = enabled;
 }

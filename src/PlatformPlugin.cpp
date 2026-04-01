@@ -22,3 +22,8 @@ QIcon PlatformPlugin::platformIcon(const QString &name, [[maybe_unused]] const Q
 {
     return QIcon::fromTheme(name);
 }
+
+bool PlatformPlugin::smoothScroll()
+{
+    return true;
+}

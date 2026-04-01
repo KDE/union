@@ -46,6 +46,12 @@ public:
      * recoloring.
      */
     virtual QIcon platformIcon(const QString &name, const QColor &color);
+    /*!
+     * Returns whether smooth scrolling is enabled on this platform.
+     *
+     * Enables/disables tweened scrollbars and inertial scrolling. Defaults to true
+     */
+    virtual bool smoothScroll();
 };
 
 }

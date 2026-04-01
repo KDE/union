@@ -55,4 +55,10 @@ T.ScrollView {
         width: control.availableWidth
         active: control.ScrollBar.vertical.active
     }
+
+    data: [
+        Union.WheelHandler {
+            target: control.contentItem
+        }
+    ]
 }

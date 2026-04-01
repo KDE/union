@@ -17,4 +17,12 @@ public:
     QString defaultStyleName() override;
 
     QIcon platformIcon(const QString &name, const QColor &color) override;
+
+    bool smoothScroll() override;
+
+private:
+    bool m_smoothScroll = true;
+
+private Q_SLOTS:
+    void setSmoothScroll(bool enabled);
 };

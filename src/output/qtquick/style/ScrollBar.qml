@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+// SPDX-FileCopyrightText: 2017 Marco Martin <mart@kde.org>
 // SPDX-FileCopyrightText: 2017 The Qt Company Ltd.
+// SPDX-FileCopyrightText: 2023 ivan tkachenko <me@ratijas.tk>
 // SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 import QtQuick
@@ -60,4 +62,40 @@ T.ScrollBar {
     }
 
     background: Union.StyledRectangle { }
+
+    // Ported from qqc2-desktop-style
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.MiddleButton
+        onPressed: event => {
+            if (event.buttons & Qt.MiddleButton) {
+                control.position = positionFromMouse(event);
+                event.accepted = true;
+            } else {
+                // Let the QQuickScrollBar handle it
+                mouse.accepted = false;
+            }
+        }
+
+        onPositionChanged: event => {
+            if (event.buttons & Qt.MiddleButton) {
+                control.position = positionFromMouse(event);
+                event.accepted = true;
+            } else {
+                // Let the QQuickScrollBar handle it
+                event.accepted = false;
+            }
+        }
+
+        onReleased: event => event.accepted = false;
+
+        function positionFromMouse(mouse/*: MouseEvent*/): real {
+            return Math.min(1 - control.size, Math.max(0,
+                (control.horizontal
+                    ? mouse.x / width
+                    : mouse.y / height
+                ) - control.size / 2
+            ));
+        }
+    }
 }

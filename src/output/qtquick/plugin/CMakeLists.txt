@@ -24,6 +24,8 @@ target_sources(UnionQuickImpl PRIVATE
     Icon.cpp
     StyleHints.cpp
     StyleHints.h
+    WheelHandler.cpp
+    WheelHandler.h
 
     # scenegraph/UnionNode.cpp
     # scenegraph/UnionNode.h
