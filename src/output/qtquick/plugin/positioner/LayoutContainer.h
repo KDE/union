@@ -82,6 +82,7 @@ struct LayoutContainer {
         fill.position = centerPosition;
         fill.size = remainingSize;
 
+        center.size = QSizeF{std::min(remainingSize.width(), center.size.width()), std::min(remainingSize.height(), center.size.height())};
         center.position = centerPosition + QPointF{(remainingSize.width() - center.size.width()) / 2.0, 0.0};
 
         // qDebug() << fill.size << center.size;
