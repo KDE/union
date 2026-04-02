@@ -39,7 +39,7 @@ T.MenuBarItem {
     contentItem: T.Label {
         text: control.text
         font: control.font
-        color: control.palette.buttonText
+        color: Union.Style.properties.text.color
         visible: control.display != T.AbstractButton.IconOnly
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)

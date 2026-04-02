@@ -55,7 +55,7 @@ T.RadioDelegate {
     Union.Positioner.positionItems: [contentItem, indicator]
 
     icon {
-        color: palette.windowText
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name

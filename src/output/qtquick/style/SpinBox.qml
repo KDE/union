@@ -61,7 +61,7 @@ T.SpinBox {
 
         text: control.displayText
         font: control.font
-        color: control.palette.text
+        color: Union.Style.properties.text.color
 
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)

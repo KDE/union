@@ -99,7 +99,7 @@ T.MenuItem {
 
             text: control.text
             font: control.font
-            color: control.palette.buttonText
+            color: Union.Style.properties.text.color
             elide: Text.ElideRight
         }
     }

@@ -40,7 +40,7 @@ T.Switch {
     spacing: Union.Style.properties.layout.spacing
     hoverEnabled: Application.styleHints.useHoverEffects
     icon {
-        color: palette.buttonText
+        color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: Union.Style.properties.icon.name
