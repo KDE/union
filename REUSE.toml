@@ -24,6 +24,11 @@ SPDX-License-Identifier = "BSD-2-Clause"
 SPDX-FileCopyrightText = "2025 Arjen Hiemstra <ahiemstra@heimr.nl>"
 
 [[annotations]]
+path = "autotests/output/quick/TestPositionerLayoutData/*.json"
+SPDX-License-Identifier = "BSD-2-Clause"
+SPDX-FileCopyrightText = "2026 Arjen Hiemstra <ahiemstra@heimr.nl>"
+
+[[annotations]]
 path = "src/output/qtwidgets/Union.json"
 SPDX-License-Identifier = "BSD-2-Clause"
 SPDX-FileCopyrightText = "2025 Joshua Goins <josh@redstrate.com>"
