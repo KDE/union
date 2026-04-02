@@ -1,0 +1,94 @@
+
+{
+    "layout": {
+        "width": 200,
+        "height": 80,
+        "spacing": 4.0,
+        "padding": 8.0,
+
+        "content": {
+            "start": {
+                "items": [
+                    {
+                        "implicitWidth": 16.0,
+                        "implicitHeight": 16.0,
+                        "margins": {
+                            "left": 0.0,
+                            "right": -16.0,
+                            "top": 0.0,
+                            "bottom": 0.0
+                        },
+                        "verticalAlignment": "top"
+                    }
+                ]
+            },
+
+            "center": {
+                "items": [
+                    {
+                        "implicitWidth": 32.0,
+                        "implicitHeight": 32.0,
+                        "verticalAlignment": "stack-center",
+                        "margins": {
+                            "left": 0.0,
+                            "right": 0.0,
+                            "top": 0.0,
+                            "bottom": 4.0
+                        }
+                    },
+                    {
+                        "implicitWidth": 200.0,
+                        "implicitHeight": 22.0,
+                        "verticalAlignment": "stack-center"
+                    }
+                ]
+            }
+        }
+    },
+    "expected": {
+        "content": {
+            "x": 8.0,
+            "y": 8.0,
+            "width": 184.0,
+            "height": 64.0,
+
+            "start": {
+                "x": 8.0,
+                "y": 8.0,
+                "width": 0.0,
+                "height": 64.0,
+
+                "items": [
+                    {
+                        "x": 8.0,
+                        "y": 8.0,
+                        "width": 16.0,
+                        "height": 16.0
+                    }
+                ]
+            },
+
+            "center": {
+                "x": 8.0,
+                "y": 8.0,
+                "width": 184.0,
+                "height": 64.0,
+
+                "items": [
+                    {
+                        "x": 84.0,
+                        "y": 11.0,
+                        "width": 32.0,
+                        "height": 32.0
+                    },
+                    {
+                        "x": 8.0,
+                        "y": 47.0,
+                        "width": 184.0,
+                        "height": 22.0
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,157 @@
+{
+    "layout": {
+        "width": 150,
+        "height": 40,
+        "spacing": 5.0,
+        "padding": {
+            "left": 10.0,
+            "right": 20.0,
+            "top": 5.0,
+            "bottom": 10.0
+        },
+
+        "item": {
+            "start": {
+                "items": [
+                    {
+                        "implicitWidth": 15.0,
+                        "implicitHeight": 10.0,
+                        "verticalAlignment": "fill"
+                    }
+                ]
+            },
+
+            "end": {
+                "items": [
+                    {
+                        "implicitWidth": 10.0,
+                        "implicitHeight": 20.0,
+                        "verticalAlignment": "end"
+                    }
+                ]
+            }
+        },
+
+        "content": {
+            "start": {
+                "items": [
+                    {
+                        "implicitWidth": 5.0,
+                        "implicitHeight": 5.0,
+                        "verticalAlignment": "start"
+                    },
+                    {
+                        "implicitWidth": 10.0,
+                        "implicitHeight": 60.0,
+                        "verticalAlignment": "fill"
+                    }
+                ]
+            },
+
+            "center": {
+                "items": [
+                    {
+                        "implicitWidth": 10.0,
+                        "implicitHeight": 10.0
+                    },
+                    {
+                        "implicitWidth": 20.0,
+                        "implicitHeight": 10.0,
+                        "verticalAlignment": "fill"
+                    }
+                ]
+            }
+        }
+    },
+    "expected": {
+        "item": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 150.0,
+            "height": 40.0,
+
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "width": 15.0,
+                "height": 40.0,
+
+                "items": [
+                    {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "width": 15.0,
+                        "height": 40.0
+                    }
+                ]
+            },
+
+            "end": {
+                "x": 140.0,
+                "y": 0.0,
+                "width": 10.0,
+                "height": 40.0,
+
+                "items": [
+                    {
+                        "x": 140.0,
+                        "y": 20.0,
+                        "width": 10.0,
+                        "height": 20.0
+                    }
+                ]
+            }
+        },
+
+        "content": {
+            "x": 25.0,
+            "y": 5.0,
+            "width": 95.0,
+            "height": 25.0,
+
+            "start": {
+                "x": 25.0,
+                "y": 5.0,
+                "width": 20.0,
+                "height": 25.0,
+
+                "items": [
+                    {
+                        "x": 25.0,
+                        "y": 5.0,
+                        "width": 5.0,
+                        "height": 5.0
+                    },
+                    {
+                        "x": 35.0,
+                        "y": 5.0,
+                        "width": 10.0,
+                        "height": 25.0
+                    }
+                ]
+            },
+
+            "center": {
+                "x": 67.5,
+                "y": 5.0,
+                "width": 35.0,
+                "height": 25.0,
+
+                "items": [
+                    {
+                        "x": 67.5,
+                        "y": 12.5,
+                        "width": 10.0,
+                        "height": 10.0
+                    },
+                    {
+                        "x": 82.5,
+                        "y": 5.0,
+                        "width": 20.0,
+                        "height": 25.0
+                    }
+                ]
+            }
+        }
+    }
+}
