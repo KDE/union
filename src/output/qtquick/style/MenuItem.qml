@@ -74,7 +74,7 @@ T.MenuItem {
     implicitTextPadding: (checkable ? indicator.implicitWidth : 0) + (icon.name ? icon.width : 0) + (icon.name && checkable ? control.spacing * 2 : control.spacing)
 
     contentItem: Item {
-        implicitWidth: Math.ceil(text.implicitWidth) + control.textPadding + (control.menu?.contentItem?.hasAnySubmenu ? control.spacing + control.arrow.width : 0)
+        implicitWidth: Math.ceil(text.implicitWidth) + control.textPadding + (control.menu?.contentItem?.hasAnySubmenu ? control.spacing + control.arrow.width : 0) + shortcut.spacing + Math.ceil(shortcut.implicitWidth)
         implicitHeight: Math.max(icon.implicitHeight, text.implicitHeight)
 
         Union.Icon {
@@ -94,13 +94,47 @@ T.MenuItem {
             anchors {
                 fill: parent
                 leftMargin: control.textPadding
-                rightMargin: control.menu?.contentItem?.hasAnySubmenu ? control.arrow.implicitWidth + control.spacing : 0
+                rightMargin: control.menu?.contentItem?.hasAnySubmenu && !shortcut.visible ? control.arrow.implicitWidth + control.spacing : 0
             }
 
             text: control.text
             font: control.font
             color: Union.Style.properties.text.color
             elide: Text.ElideRight
+        }
+
+        Text {
+            id: shortcut
+            Union.Element.type: "ShortcutText"
+            Union.Element.states {
+                hovered: control.hovered
+                activeFocus: control.activeFocus
+                visualFocus: control.visualFocus
+                pressed: control.down
+                checked: control.checked
+                enabled: control.enabled
+                highlighted: control.highlighted
+            }
+
+            readonly property real spacing: Union.Style.properties.layout.spacing
+
+            anchors {
+                fill: parent
+                leftMargin: control.textPadding
+                rightMargin: control.menu?.contentItem?.hasAnySubmenu ? control.arrow.implicitWidth + control.spacing : 0
+            }
+
+            Shortcut {
+                id: itemShortcut
+                sequence: (shortcut.visible && control.action !== null) ? control.action.shortcut : ""
+            }
+
+            text: visible ? itemShortcut.nativeText : ""
+            font: control.font
+            color: Union.Style.properties.text.color
+            horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
+            visible: control.action && control.action.shortcut !== undefined
         }
     }
 

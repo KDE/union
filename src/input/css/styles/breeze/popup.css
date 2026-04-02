@@ -79,6 +79,14 @@ menuitem
 
         layout-alignment: content end center 0;
     }
+
+    & > shortcuttext {
+        spacing: 40px;
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        &:disabled {
+            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
+        }
+    }
 }
 
 menuseparator {
