@@ -3,8 +3,8 @@
 
 #include "Positioner.h"
 
-#include "PositionerLayout.h"
 #include "QuickStyle.h"
+#include "positioner/PositionerLayout.h"
 
 #include "qtquick_logging.h"
 

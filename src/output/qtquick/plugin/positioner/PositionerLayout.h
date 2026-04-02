@@ -15,6 +15,8 @@ namespace Union
 namespace Quick
 {
 
+struct LayoutContainer;
+
 /**
  * An internal class that performs the actual layout of Positioner.
  *
@@ -52,38 +54,6 @@ class PositionerLayout : public QQuickItem
     Q_OBJECT
 
 public:
-    struct LayoutItem {
-        QPointF position = QPointF{0.0, 0.0};
-        QSizeF size = QSizeF{0.0, 0.0};
-        QSizeF implicitSize = QSizeF{0.0, 0.0};
-        Union::Properties::Alignment verticalAlignment = Union::Properties::Alignment::Unspecified;
-        int order = 0;
-        QMarginsF margins;
-        QQuickItem *item = nullptr;
-    };
-
-    struct LayoutBucket {
-        QPointF position = QPointF{0.0, 0.0};
-        QSizeF size = QSizeF{0.0, 0.0};
-        QSizeF implicitSize = QSizeF{0.0, 0.0};
-        qreal spacing = 0.0;
-        bool stackCenter = false;
-        bool stackFill = false;
-        QList<LayoutItem> items;
-    };
-
-    struct LayoutContainer {
-        QPointF position = QPointF{0.0, 0.0};
-        QSizeF size = QSizeF{0.0, 0.0};
-        QSizeF implicitSize = QSizeF{0.0, 0.0};
-        qreal spacing = 0.0;
-
-        LayoutBucket start;
-        LayoutBucket center;
-        LayoutBucket end;
-        LayoutBucket fill;
-    };
-
     PositionerLayout(QQuickItem *parentItem);
 
     void markDirty();
@@ -107,8 +77,6 @@ protected:
     void updatePolish() override;
 
 private:
-    void layoutContainer(LayoutContainer &container);
-    void layoutBucket(LayoutBucket &bucket);
     void onParentSizeChanged();
 
     template<typename... Args>
