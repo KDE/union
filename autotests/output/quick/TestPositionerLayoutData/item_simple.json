@@ -1,0 +1,92 @@
+{
+    "layout": {
+        "width": -1,
+        "height": -1,
+        "spacing": 5.0,
+
+        "item": {
+            "start": {
+                "items": [
+                    {
+                        "implicitWidth": 10.0,
+                        "implicitHeight": 10.0
+                    }
+                ]
+            },
+
+            "center": {
+                "items": [
+                    {
+                        "implicitWidth": 20.0,
+                        "implicitHeight": 10.0
+                    }
+                ]
+            },
+
+            "end": {
+                "items": [
+                    {
+                        "implicitWidth": 10.0,
+                        "implicitHeight": 20.0
+                    }
+                ]
+            }
+        }
+    },
+    "expected": {
+        "item": {
+            "x": 0.0,
+            "y": 0.0,
+            "width": 50.0,
+            "height": 20.0,
+
+            "start": {
+                "x": 0.0,
+                "y": 0.0,
+                "width": 10.0,
+                "height": 20.0,
+
+                "items": [
+                    {
+                        "x": 0.0,
+                        "y": 5.0,
+                        "width": 10.0,
+                        "height": 10.0
+                    }
+                ]
+            },
+
+            "center": {
+                "x": 15.0,
+                "y": 0.0,
+                "width": 20.0,
+                "height": 20.0,
+
+                "items": [
+                    {
+                        "x": 15.0,
+                        "y": 5.0,
+                        "width": 20.0,
+                        "height": 10.0
+                    }
+                ]
+            },
+
+            "end": {
+                "x": 40.0,
+                "y": 0.0,
+                "width": 10.0,
+                "height": 20.0,
+
+                "items": [
+                    {
+                        "x": 40.0,
+                        "y": 0.0,
+                        "width": 10.0,
+                        "height": 20.0
+                    }
+                ]
+            }
+        }
+    }
+}
