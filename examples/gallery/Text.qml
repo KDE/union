@@ -76,5 +76,14 @@ Kirigami.Page {
             to: 1000
             stepSize: 10
         }
+
+        Loader {
+            Layout.fillWidth: true
+            source: "SearchField.qml"
+        }
+
+        Item {
+            Layout.fillHeight: true
+        }
     }
 }

@@ -8,6 +8,8 @@ target_sources(union-gallery PRIVATE main.cpp)
 
 ecm_target_qml_sources(union-gallery SOURCES
     Main.qml
+
+    SearchField.qml
 )
 
 set(_configured_files

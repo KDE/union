@@ -60,6 +60,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ScrollBar.qml
     style/ScrollIndicator.qml
     style/ScrollView.qml
+    style/SearchField.qml
     style/SelectionRectangle.qml
     style/Slider.qml
     style/SpinBox.qml
