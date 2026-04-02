@@ -85,14 +85,6 @@ struct LayoutContainer {
         center.size = QSizeF{std::min(remainingSize.width(), center.size.width()), std::min(remainingSize.height(), center.size.height())};
         center.position = centerPosition + QPointF{(remainingSize.width() - center.size.width()) / 2.0, 0.0};
 
-        // qDebug() << fill.size << center.size;
-
-        auto maxCenter = QSizeF{std::max(center.size.width(), fill.size.width()), //
-                                std::max(center.size.height(), fill.size.height())};
-
-        size = QSizeF{spacedSize(spacing, start.size.width(), maxCenter.width(), end.size.width()),
-                      std::max({start.size.height(), maxCenter.height(), end.size.height()})};
-
         for (auto bucket : buckets()) {
             qreal stackedY = bucket->stackCenter ? std::max(0.0, (bucket->size.height() - bucket->implicitSize.height()) / 2.0) : 0.0;
             qreal stackFillHeight = bucket->size.height() / bucket->items.count();
