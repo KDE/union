@@ -35,8 +35,8 @@ struct Layout {
         itemContainer.size = size;
         itemContainer.layout();
 
-        auto remainingPosition = QPointF{spacedSize(spacing, itemContainer.start.size.width()), 0.0};
-        auto remainingSize = itemContainer.size - QSizeF{spacedSize(spacing, itemContainer.start.size.width(), itemContainer.end.size.width()), 0.0};
+        auto remainingPosition = QPointF{itemContainer.start.size.width(), 0.0};
+        auto remainingSize = itemContainer.size - QSizeF{itemContainer.start.size.width() + itemContainer.end.size.width(), 0.0};
 
         backgroundContainer.position = remainingPosition + QPointF{inset.left(), inset.top()};
         backgroundContainer.size = remainingSize - QSizeF{inset.left() + inset.right(), inset.top() + inset.bottom()};
