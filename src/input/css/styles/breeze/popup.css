@@ -96,6 +96,8 @@ menubar, menubaritem
     spacing: var(--small-spacing);
 
     border-radius: var(--corner-radius);
+
+    color: var(--window-text-color);
 }
 
 menubaritem {
