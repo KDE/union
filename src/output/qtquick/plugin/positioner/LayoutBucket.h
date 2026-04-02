@@ -65,7 +65,7 @@ struct LayoutBucket {
     void positionItems(QQuickItem *parent)
     {
         for (auto item : items) {
-            item.setItemPosition(parent, position);
+            item.setItemPosition(parent);
         }
     }
 };
