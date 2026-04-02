@@ -49,12 +49,16 @@ struct LayoutContainer {
 
     void layout()
     {
-        for (auto bucket : {&start, &end, &center, &fill}) {
-            bucket->layout();
+        std::ranges::for_each(buckets(), &LayoutBucket::layout);
 
-            qreal height = size.isEmpty() ? bucket->implicitSize.height() : size.height();
+        auto maxImplicitHeight = std::ranges::max(buckets() | std::views::transform([](auto bucket) {
+                                                      return bucket->implicitSize.height();
+                                                  }));
+        qreal height = size.isEmpty() ? maxImplicitHeight : size.height();
+
+        std::ranges::for_each(buckets(), [height](LayoutBucket *bucket) {
             bucket->size = QSizeF{bucket->implicitSize.width(), height};
-        }
+        });
 
         auto maxImplicitCenter = QSizeF{std::max(center.implicitSize.width(), fill.implicitSize.width()), //
                                         std::max(center.implicitSize.height(), fill.implicitSize.height())};
