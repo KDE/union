@@ -65,6 +65,7 @@ T.Slider {
 
         Union.StyledRectangle {
             Union.Element.type: "Fill"
+            x: control.horizontal && LayoutMirroring.enabled ? control.visualPosition * parent.width : 0.0
             y: control.horizontal ? 0 : control.visualPosition * parent.height
             width: control.horizontal ? control.position * parent.width : control.implicitBackgroundWidth
             height: control.horizontal ? control.implicitBackgroundHeight : control.position * parent.height
@@ -78,7 +79,7 @@ T.Slider {
             property int tickMarkCount: control.Union.StyleHints.tickMarkStepSize > 0 ? Math.round((control.to - control.from) / control.Union.StyleHints.tickMarkStepSize) + 1 : 0
             property real tickMarkSpacing: tickMarkCount > 1 ? (control.horizontal ? width / (tickMarkCount - 1) : height / (tickMarkCount - 1)) : 0
 
-            x: control.horizontal ? control.handle.width / 2 : parent.width
+            x: control.horizontal ? control.handle.width / 2 : (control.mirrored ? -(width + 1) : parent.width)
             y: control.horizontal ? parent.height : control.handle.height / 2
 
             width: control.horizontal ? parent.width - control.handle.width : childrenRect.width
@@ -99,7 +100,18 @@ T.Slider {
                     Union.Element.type: "TickMark"
                     Union.Element.hints: Union.ElementHint { name: "active"; when: control.value >= tick.value }
 
-                    x: control.horizontal ? Math.round(index * tickMarks.tickMarkSpacing - width / 2) : (Union.Style.properties.layout.margins.left ?? 0)
+                    x: {
+                        if (!control.horizontal) {
+                            return Union.Style.properties.layout.margins.left ?? 0
+                        }
+
+                        let position = Math.round(index * tickMarks.tickMarkSpacing - width / 2)
+                        if (control.mirrored) {
+                            return parent.width - position
+                        }
+
+                        return position
+                    }
                     y: control.horizontal ? (Union.Style.properties.layout.margins.top ?? 0) : tickMarks.height - Math.round(index * tickMarks.tickMarkSpacing - height / 2)
 
                     width: Union.Style.properties.layout.width
