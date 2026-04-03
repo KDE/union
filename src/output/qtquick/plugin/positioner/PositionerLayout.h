@@ -64,6 +64,10 @@ public:
     bool isDebugEnabled() const;
     void setDebugEnabled(bool newDebug);
 
+    Qt::LayoutDirection layoutDirection() const;
+    void setLayoutDirection(Qt::LayoutDirection direction);
+    Q_SIGNAL void layoutDirectionChanged();
+
     QSizeF implicitSize() const;
     Q_SIGNAL void implicitSizeChanged();
 
@@ -91,6 +95,8 @@ private:
     QSizeF m_implicitSize;
     Sizes m_padding;
     QSizeF m_parentSize;
+
+    Qt::LayoutDirection m_layoutDirection = Qt::LayoutDirectionAuto;
 
     bool m_layoutDirty : 1 = true;
     bool m_layouting : 1 = false;

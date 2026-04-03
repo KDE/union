@@ -18,6 +18,7 @@ Positioner::Positioner(QObject *parent)
     connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitWidthChanged);
     connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitHeightChanged);
     connect(m_layout, &PositionerLayout::paddingChanged, this, &Positioner::paddingChanged);
+    connect(m_layout, &PositionerLayout::layoutDirectionChanged, this, &Positioner::layoutDirectionChanged);
 }
 
 Positioner::~Positioner() = default;
@@ -115,6 +116,16 @@ bool Positioner::debug() const
 void Positioner::setDebug(bool newDebug)
 {
     m_layout->setDebugEnabled(newDebug);
+}
+
+Qt::LayoutDirection Positioner::layoutDirection() const
+{
+    return m_layout->layoutDirection();
+}
+
+void Union::Quick::Positioner::setLayoutDirection(Qt::LayoutDirection newLayoutDirection)
+{
+    m_layout->setLayoutDirection(newLayoutDirection);
 }
 
 std::pair<Positioner::ItemList, Positioner::ItemList> Positioner::findPositionedItemChanges(const ItemList &currentItems, const ItemList &newItems)

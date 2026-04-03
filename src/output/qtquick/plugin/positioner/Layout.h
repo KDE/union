@@ -21,7 +21,6 @@ struct Layout {
     QMarginsF inset;
     QMarginsF padding;
     qreal spacing = 0.0;
-    Qt::LayoutDirection direction = Qt::LayoutDirection::LeftToRight;
 
     QSizeF implicitSize;
     QMarginsF itemPadding;
@@ -64,7 +63,7 @@ struct Layout {
                                 bottomRight.height() - contentContainer.position.y());
     }
 
-    void positionItems(QQuickItem *parent)
+    void positionItems(QQuickItem *parent, Qt::LayoutDirection direction)
     {
         for (auto container : {&itemContainer, &backgroundContainer, &contentContainer}) {
             container->positionItems(parent, direction);

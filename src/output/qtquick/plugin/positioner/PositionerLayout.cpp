@@ -75,6 +75,22 @@ void PositionerLayout::setDebugEnabled(bool newDebug)
     m_debugEnabled = newDebug;
 }
 
+Qt::LayoutDirection PositionerLayout::layoutDirection() const
+{
+    return m_layoutDirection;
+}
+
+void PositionerLayout::setLayoutDirection(Qt::LayoutDirection direction)
+{
+    if (direction == m_layoutDirection) {
+        return;
+    }
+
+    m_layoutDirection = direction;
+    markDirty();
+    Q_EMIT layoutDirectionChanged();
+}
+
 QSizeF PositionerLayout::implicitSize() const
 {
     return m_implicitSize;
@@ -262,7 +278,7 @@ void PositionerLayout::updatePolish()
         Q_EMIT paddingChanged();
     }
 
-    layout.positionItems(parentItem());
+    layout.positionItems(parentItem(), m_layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : m_layoutDirection);
 
     m_layouting = false;
 

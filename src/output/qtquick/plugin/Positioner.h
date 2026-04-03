@@ -127,6 +127,19 @@ public:
     void setDebug(bool newDebug);
     Q_SIGNAL void debugChanged();
 
+    /*!
+     * \qmlattachedproperty Qt::LayoutDirection Positioner::layoutDirection
+     *
+     * What direction the layout should use when performing the layout.
+     *
+     * By default, this is Qt::LayoutDirectionAuto, which means the layout will
+     * use the layout direction of the application.
+     */
+    Q_PROPERTY(Qt::LayoutDirection layoutDirection READ layoutDirection WRITE setLayoutDirection NOTIFY layoutDirectionChanged)
+    Qt::LayoutDirection layoutDirection() const;
+    void setLayoutDirection(Qt::LayoutDirection newLayoutDirection);
+    Q_SIGNAL void layoutDirectionChanged();
+
     static Positioner *qmlAttachedProperties(QObject *parent);
 
 private:
