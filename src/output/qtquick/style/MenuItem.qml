@@ -101,6 +101,8 @@ T.MenuItem {
             font: control.font
             color: Union.Style.properties.text.color
             elide: Text.ElideRight
+
+            horizontalAlignment: Text.AlignLeft
         }
 
         Text {

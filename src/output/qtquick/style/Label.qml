@@ -30,5 +30,9 @@ T.Label {
     color: Union.Style.properties.text.color ?? "black"
     linkColor: control.palette.link
 
+    // Explicitly set horizontalAlignment, so that Qt will automatically switch
+    // it when in right-to-left mode.
+    horizontalAlignment: Qt.AlignLeft
+
     background: Union.StyledRectangle { }
 }

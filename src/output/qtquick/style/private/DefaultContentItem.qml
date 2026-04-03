@@ -31,5 +31,7 @@ Item {
         wrapMode: root.wrapMode
 
         visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0
+
+        horizontalAlignment: Qt.AlignLeft
     }
 }
