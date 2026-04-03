@@ -62,10 +62,10 @@ struct LayoutBucket {
         implicitSize.setHeight(std::ceil(std::max(stackCenter || stackFill ? totalHeight : maxHeight, 0.0)));
     }
 
-    void positionItems(QQuickItem *parent)
+    void positionItems(QQuickItem *parent, Qt::LayoutDirection direction)
     {
         for (auto item : std::as_const(items)) {
-            item.setItemPosition(parent);
+            item.setItemPosition(parent, direction);
         }
     }
 };

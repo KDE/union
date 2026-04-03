@@ -20,9 +20,15 @@ struct LayoutItem {
     QMarginsF margins;
     QQuickItem *item = nullptr;
 
-    void setItemPosition(QQuickItem *parent)
+    void setItemPosition(QQuickItem *parent, Qt::LayoutDirection direction)
     {
-        auto mapped = parent->mapToItem(item->parentItem(), position);
+        auto positionInParent = position;
+        if (direction == Qt::RightToLeft) {
+            auto parentSize = parent->boundingRect().size();
+            positionInParent = QPointF{parentSize.width() - size.width() - position.x(), position.y()};
+        }
+
+        auto mapped = parent->mapToItem(item->parentItem(), positionInParent);
         item->setX(std::round(mapped.x()));
         item->setY(std::round(mapped.y()));
         item->setSize(QSizeF{std::ceil(size.width()), std::ceil(size.height())});

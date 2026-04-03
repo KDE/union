@@ -138,10 +138,10 @@ struct LayoutContainer {
         }
     }
 
-    void positionItems(QQuickItem *parent)
+    void positionItems(QQuickItem *parent, Qt::LayoutDirection direction)
     {
         for (auto bucket : buckets()) {
-            bucket->positionItems(parent);
+            bucket->positionItems(parent, direction);
         }
     }
 };
