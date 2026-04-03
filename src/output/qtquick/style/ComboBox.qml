@@ -56,6 +56,8 @@ T.ComboBox {
         text: model[control.textRole]
         highlighted: control.highlightedIndex === index
         hoverEnabled: control.hoverEnabled
+
+        LayoutMirroring.enabled: control.mirrored
     }
 
     indicator: Union.Icon {
@@ -96,6 +98,8 @@ T.ComboBox {
             readOnly: control.down
             inputMethodHints: control.inputMethodHints
             validator: control.validator
+
+            horizontalAlignment: Qt.AlignLeft
 
             selectByMouse: control.selectTextByMouse
             selectionColor: control.palette.highlight
