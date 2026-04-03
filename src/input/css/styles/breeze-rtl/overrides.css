@@ -3,3 +3,8 @@
  * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
+menuitem > arrow
+{
+    icon-name: "arrow-left-symbolic"
+}
+
