@@ -42,9 +42,17 @@ T.ProgressBar {
 
             property real indeterminatePosition: 0
 
-            x: control.indeterminate ? indeterminatePosition * (parent.width - width) : 0
+            x: {
+                if (control.indeterminate) {
+                    return indeterminatePosition * (parent.width - width)
+                }
+                if (control.mirrored) {
+                    return control.visualPosition * parent.width;
+                }
+                return 0.0;
+            }
             // TODO: Find a way to style the indeterminate width here
-            width: control.indeterminate ? 0.25 * parent.width : control.visualPosition * parent.width
+            width: control.indeterminate ? 0.25 * parent.width : control.position * parent.width
             height: parent.height
 
             // TODO: Some way of controlling what kind of animation to use from
