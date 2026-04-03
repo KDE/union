@@ -8,3 +8,14 @@ menuitem > arrow
     icon-name: "arrow-left-symbolic"
 }
 
+scrollview.vertical-scroll
+{
+    padding-right: 0px;
+    padding-left: var(--scrollbar-size);
+}
+
+scrollbar.vertical
+{
+    border-left: none;
+    border-right: 1px solid var(--bar-active-border-color);
+}
