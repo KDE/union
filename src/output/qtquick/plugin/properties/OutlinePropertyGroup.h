@@ -53,7 +53,7 @@ public:
      *
      * Exposes OutlineProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *left READ left CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *left READ left CONSTANT)
     LinePropertyGroup *left() const;
 
     /*!
@@ -61,7 +61,7 @@ public:
      *
      * Exposes OutlineProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *right READ right CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *right READ right CONSTANT)
     LinePropertyGroup *right() const;
 
     /*!
@@ -69,7 +69,7 @@ public:
      *
      * Exposes OutlineProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *top READ top CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *top READ top CONSTANT)
     LinePropertyGroup *top() const;
 
     /*!
@@ -77,7 +77,7 @@ public:
      *
      * Exposes OutlineProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *bottom READ bottom CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *bottom READ bottom CONSTANT)
     LinePropertyGroup *bottom() const;
 
 private:

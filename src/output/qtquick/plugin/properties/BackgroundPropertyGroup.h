@@ -59,7 +59,7 @@ public:
      *
      * Exposes BackgroundProperty::ImageProperty to QML.
      */
-    Q_PROPERTY(ImagePropertyGroup *image READ image CONSTANT)
+    Q_PROPERTY(Union::Quick::ImagePropertyGroup *image READ image CONSTANT)
     ImagePropertyGroup *image() const;
 
 private:

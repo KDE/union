@@ -113,7 +113,7 @@ public:
      * is also excluded from the content item, making it easier to override the
      * content item without needing to specify Positioner related properties.
      */
-    Q_PROPERTY(Sizes padding READ padding NOTIFY paddingChanged)
+    Q_PROPERTY(Union::Quick::Sizes padding READ padding NOTIFY paddingChanged)
     Sizes padding() const;
     Q_SIGNAL void paddingChanged();
 
@@ -186,7 +186,7 @@ public:
      * text element of the control and those alignment properties should be used
      * for aligning this item.
      */
-    Q_PROPERTY(PositionerSource::Source source READ source WRITE setSource NOTIFY sourceChanged)
+    Q_PROPERTY(Union::Quick::PositionerSource::Source source READ source WRITE setSource NOTIFY sourceChanged)
     PositionerSource::Source source() const;
     void setSource(PositionerSource::Source newSource);
     Q_SIGNAL void sourceChanged();

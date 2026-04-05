@@ -315,7 +315,7 @@ class UNIONQUICKIMPL_EXPORT QuickElement : public QQuickAttachedPropertyPropagat
     Q_OBJECT
     QML_NAMED_ELEMENT(Element)
     QML_UNCREATABLE("Attached property")
-    QML_ATTACHED(QuickElement)
+    QML_ATTACHED(Union::Quick::QuickElement)
     Q_INTERFACES(QQmlParserStatus)
 
 public:
@@ -360,7 +360,7 @@ public:
      *
      * Grouped property to set the states of the element.
      */
-    Q_PROPERTY(StatesGroup *states READ states CONSTANT)
+    Q_PROPERTY(Union::Quick::StatesGroup *states READ states CONSTANT)
     StatesGroup *states() const;
 
     /*!

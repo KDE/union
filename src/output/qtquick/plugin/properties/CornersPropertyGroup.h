@@ -53,7 +53,7 @@ public:
      *
      * Exposes CornersProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *topLeft READ topLeft CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *topLeft READ topLeft CONSTANT)
     CornerPropertyGroup *topLeft() const;
 
     /*!
@@ -61,7 +61,7 @@ public:
      *
      * Exposes CornersProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *topRight READ topRight CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *topRight READ topRight CONSTANT)
     CornerPropertyGroup *topRight() const;
 
     /*!
@@ -69,7 +69,7 @@ public:
      *
      * Exposes CornersProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
     CornerPropertyGroup *bottomLeft() const;
 
     /*!
@@ -77,7 +77,7 @@ public:
      *
      * Exposes CornersProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
     CornerPropertyGroup *bottomRight() const;
 
 private:

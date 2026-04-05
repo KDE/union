@@ -54,7 +54,7 @@ public:
      *
      * The properties that should be used to style the attached item.
      */
-    Q_PROPERTY(StylePropertyGroup *properties READ properties CONSTANT)
+    Q_PROPERTY(Union::Quick::StylePropertyGroup *properties READ properties CONSTANT)
     StylePropertyGroup *properties() const;
 
     /*!

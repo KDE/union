@@ -50,7 +50,7 @@ public:
      *
      * Exposes TextProperty::AlignmentProperty to QML.
      */
-    Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
+    Q_PROPERTY(Union::Quick::AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
     /*!

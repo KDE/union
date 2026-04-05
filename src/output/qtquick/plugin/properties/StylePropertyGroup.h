@@ -57,7 +57,7 @@ public:
      *
      * Exposes StyleProperty::LayoutProperty to QML.
      */
-    Q_PROPERTY(LayoutPropertyGroup *layout READ layout CONSTANT)
+    Q_PROPERTY(Union::Quick::LayoutPropertyGroup *layout READ layout CONSTANT)
     LayoutPropertyGroup *layout() const;
 
     /*!
@@ -65,7 +65,7 @@ public:
      *
      * Exposes StyleProperty::TextProperty to QML.
      */
-    Q_PROPERTY(TextPropertyGroup *text READ text CONSTANT)
+    Q_PROPERTY(Union::Quick::TextPropertyGroup *text READ text CONSTANT)
     TextPropertyGroup *text() const;
 
     /*!
@@ -73,7 +73,7 @@ public:
      *
      * Exposes StyleProperty::IconProperty to QML.
      */
-    Q_PROPERTY(IconPropertyGroup *icon READ icon CONSTANT)
+    Q_PROPERTY(Union::Quick::IconPropertyGroup *icon READ icon CONSTANT)
     IconPropertyGroup *icon() const;
 
     /*!
@@ -81,7 +81,7 @@ public:
      *
      * Exposes StyleProperty::BackgroundProperty to QML.
      */
-    Q_PROPERTY(BackgroundPropertyGroup *background READ background CONSTANT)
+    Q_PROPERTY(Union::Quick::BackgroundPropertyGroup *background READ background CONSTANT)
     BackgroundPropertyGroup *background() const;
 
     /*!
@@ -89,7 +89,7 @@ public:
      *
      * Exposes StyleProperty::BorderProperty to QML.
      */
-    Q_PROPERTY(BorderPropertyGroup *border READ border CONSTANT)
+    Q_PROPERTY(Union::Quick::BorderPropertyGroup *border READ border CONSTANT)
     BorderPropertyGroup *border() const;
 
     /*!
@@ -97,7 +97,7 @@ public:
      *
      * Exposes StyleProperty::OutlineProperty to QML.
      */
-    Q_PROPERTY(OutlinePropertyGroup *outline READ outline CONSTANT)
+    Q_PROPERTY(Union::Quick::OutlinePropertyGroup *outline READ outline CONSTANT)
     OutlinePropertyGroup *outline() const;
 
     /*!
@@ -105,7 +105,7 @@ public:
      *
      * Exposes StyleProperty::CornersProperty to QML.
      */
-    Q_PROPERTY(CornersPropertyGroup *corners READ corners CONSTANT)
+    Q_PROPERTY(Union::Quick::CornersPropertyGroup *corners READ corners CONSTANT)
     CornersPropertyGroup *corners() const;
 
     /*!
@@ -113,7 +113,7 @@ public:
      *
      * Exposes StyleProperty::ShadowProperty to QML.
      */
-    Q_PROPERTY(ShadowPropertyGroup *shadow READ shadow CONSTANT)
+    Q_PROPERTY(Union::Quick::ShadowPropertyGroup *shadow READ shadow CONSTANT)
     ShadowPropertyGroup *shadow() const;
 
 private:

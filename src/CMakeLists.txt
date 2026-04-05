@@ -4,6 +4,8 @@
 add_library(Union)
 add_library(Union::Union ALIAS Union)
 
+qt_extract_metatypes(Union)
+
 target_sources(Union PRIVATE
     StyleRegistry.cpp
     Style.cpp

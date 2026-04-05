@@ -72,7 +72,7 @@ public:
      *
      * Exposes {{ type_name }}::{{ property.type }} to QML.
      */
-    Q_PROPERTY({{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
+    Q_PROPERTY(Union::Quick::{{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
     {{ property.type }}Group *{{ property.name }}() const;
 {% else %}
 {#

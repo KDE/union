@@ -53,7 +53,7 @@ public:
      *
      * Exposes LayoutProperty::AlignmentProperty to QML.
      */
-    Q_PROPERTY(AlignmentPropertyGroup *alignment READ alignment CONSTANT)
+    Q_PROPERTY(Union::Quick::AlignmentPropertyGroup *alignment READ alignment CONSTANT)
     AlignmentPropertyGroup *alignment() const;
 
     /*!
@@ -88,7 +88,7 @@ public:
      *
      * Exposes LayoutProperty::SizeProperty to QML.
      */
-    Q_PROPERTY(SizePropertyGroup *padding READ padding CONSTANT)
+    Q_PROPERTY(Union::Quick::SizePropertyGroup *padding READ padding CONSTANT)
     SizePropertyGroup *padding() const;
 
     /*!
@@ -96,7 +96,7 @@ public:
      *
      * Exposes LayoutProperty::SizeProperty to QML.
      */
-    Q_PROPERTY(SizePropertyGroup *inset READ inset CONSTANT)
+    Q_PROPERTY(Union::Quick::SizePropertyGroup *inset READ inset CONSTANT)
     SizePropertyGroup *inset() const;
 
     /*!
@@ -104,7 +104,7 @@ public:
      *
      * Exposes LayoutProperty::SizeProperty to QML.
      */
-    Q_PROPERTY(SizePropertyGroup *margins READ margins CONSTANT)
+    Q_PROPERTY(Union::Quick::SizePropertyGroup *margins READ margins CONSTANT)
     SizePropertyGroup *margins() const;
 
 private:

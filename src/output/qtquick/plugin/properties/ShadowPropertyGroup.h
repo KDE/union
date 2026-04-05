@@ -58,7 +58,7 @@ public:
      *
      * Exposes ShadowProperty::OffsetProperty to QML.
      */
-    Q_PROPERTY(OffsetPropertyGroup *offset READ offset CONSTANT)
+    Q_PROPERTY(Union::Quick::OffsetPropertyGroup *offset READ offset CONSTANT)
     OffsetPropertyGroup *offset() const;
 
     /*!
@@ -93,7 +93,7 @@ public:
      *
      * Exposes ShadowProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *left READ left CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *left READ left CONSTANT)
     LinePropertyGroup *left() const;
 
     /*!
@@ -101,7 +101,7 @@ public:
      *
      * Exposes ShadowProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *right READ right CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *right READ right CONSTANT)
     LinePropertyGroup *right() const;
 
     /*!
@@ -109,7 +109,7 @@ public:
      *
      * Exposes ShadowProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *top READ top CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *top READ top CONSTANT)
     LinePropertyGroup *top() const;
 
     /*!
@@ -117,7 +117,7 @@ public:
      *
      * Exposes ShadowProperty::LineProperty to QML.
      */
-    Q_PROPERTY(LinePropertyGroup *bottom READ bottom CONSTANT)
+    Q_PROPERTY(Union::Quick::LinePropertyGroup *bottom READ bottom CONSTANT)
     LinePropertyGroup *bottom() const;
 
     /*!
@@ -125,7 +125,7 @@ public:
      *
      * Exposes ShadowProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *topLeft READ topLeft CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *topLeft READ topLeft CONSTANT)
     CornerPropertyGroup *topLeft() const;
 
     /*!
@@ -133,7 +133,7 @@ public:
      *
      * Exposes ShadowProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *topRight READ topRight CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *topRight READ topRight CONSTANT)
     CornerPropertyGroup *topRight() const;
 
     /*!
@@ -141,7 +141,7 @@ public:
      *
      * Exposes ShadowProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *bottomLeft READ bottomLeft CONSTANT)
     CornerPropertyGroup *bottomLeft() const;
 
     /*!
@@ -149,7 +149,7 @@ public:
      *
      * Exposes ShadowProperty::CornerProperty to QML.
      */
-    Q_PROPERTY(CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
+    Q_PROPERTY(Union::Quick::CornerPropertyGroup *bottomRight READ bottomRight CONSTANT)
     CornerPropertyGroup *bottomRight() const;
 
 private:
