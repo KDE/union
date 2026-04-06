@@ -16,3 +16,4 @@ Options:
   require-passing-tests-on: [ 'Linux' ]
   # Explicitly enable QtWidgets output to make sure we verify it builds
   cmake-options: "-DBUILD_OUTPUT_QTWIDGETS=ON"
+  run-qmllint: true
