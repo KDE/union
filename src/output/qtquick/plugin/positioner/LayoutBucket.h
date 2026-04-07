@@ -64,7 +64,7 @@ struct LayoutBucket {
 
     void positionItems(QQuickItem *parent)
     {
-        for (auto item : items) {
+        for (auto item : std::as_const(items)) {
             item.setItemPosition(parent);
         }
     }
