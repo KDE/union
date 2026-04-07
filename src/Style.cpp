@@ -51,7 +51,10 @@ bool Style::hasErrors() const
 
 void Style::setHasErrors(bool newHasErrors)
 {
-    d->hasErrors = newHasErrors;
+    if (d->hasErrors != newHasErrors) {
+        d->hasErrors = newHasErrors;
+        Q_EMIT hasErrorsChanged();
+    }
 }
 
 StyleLoader *Style::loader() const

@@ -61,9 +61,10 @@ public:
      *
      * Whether the style encountered any errors while loading.
      */
-    Q_PROPERTY(bool hasErrors READ hasErrors WRITE setHasErrors)
+    Q_PROPERTY(bool hasErrors READ hasErrors WRITE setHasErrors NOTIFY hasErrorsChanged)
     bool hasErrors() const;
     void setHasErrors(bool newHasErrors);
+    Q_SIGNAL void hasErrorsChanged();
 
     /*!
      * Returns the StyleLoader of this style.
