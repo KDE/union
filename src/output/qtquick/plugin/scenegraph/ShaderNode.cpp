@@ -50,7 +50,7 @@ ShaderNode::ShaderNode()
 
 ShaderNode::~ShaderNode() noexcept
 {
-    for (auto texture : std::as_const(m_textures)) {
+    for (const auto &texture : std::as_const(m_textures)) {
         if (texture.provider) {
             texture.provider->disconnect(texture.providerConnection);
         }
@@ -221,7 +221,7 @@ void ShaderNode::setTexture(Channel channel, Binding binding, QSGTextureProvider
         return;
     }
 
-    auto connection = QObject::connect(provider, &QSGTextureProvider::textureChanged, [this]() {
+    auto connection = QObject::connect(provider, &QSGTextureProvider::textureChanged, provider, [this]() {
         markDirty(QSGNode::DirtyMaterial);
     });
 
