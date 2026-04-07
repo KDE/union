@@ -195,8 +195,9 @@ navigationtabbar {
 navigationtabbutton {
     border-radius: var(--corner-radius);
     color: var(--window-text-color);
-    icon-size: var(--icon-size-small);
+    icon-size: var(--icon-size-smallmedium);
 
+    layout-alignment: content fill fill 0;
     text-alignment-horizontal: center;
     icon-alignment-horizontal: center;
 

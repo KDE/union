@@ -31,8 +31,8 @@ KT.NavigationTabBar {
 	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
 							 implicitContentHeight + topPadding + bottomPadding)
 
-	leftPadding: Math.floor(Math.max(0, width - control.maximumContentWidth) / 2) + Union.Style.properties.layout.padding.left
-	rightPadding: Math.floor(Math.max(0, width - control.maximumContentWidth) / 2) + Union.Style.properties.layout.padding.right
+	leftPadding: Union.Style.properties.layout.padding.left
+	rightPadding: Union.Style.properties.layout.padding.right
 	topPadding: Union.Style.properties.layout.padding.top
 	bottomPadding: Union.Style.properties.layout.padding.bottom
 
