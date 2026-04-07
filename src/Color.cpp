@@ -302,11 +302,11 @@ struct SetOperationData : ColorData {
     QString toString() const override
     {
         return u"Set, color: %1, r: %2, g: %3, b: %4, a: %5"_s //
-            .arg(color.toString())
-            .arg(r ? QString::number(r.value()) : u"None"_s)
-            .arg(g ? QString::number(g.value()) : u"None"_s)
-            .arg(b ? QString::number(b.value()) : u"None"_s)
-            .arg(a ? QString::number(a.value()) : u"None"_s);
+            .arg(color.toString(),
+                 (r ? QString::number(r.value()) : u"None"_s),
+                 (g ? QString::number(g.value()) : u"None"_s),
+                 (b ? QString::number(b.value()) : u"None"_s),
+                 (a ? QString::number(a.value()) : u"None"_s));
     }
 
     bool equals(const ColorData *other) const override
