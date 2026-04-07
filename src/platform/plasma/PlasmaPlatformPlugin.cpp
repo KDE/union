@@ -26,7 +26,7 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     }
 
     // Listen to smooth scroll changed events
-    QDBusConnection::sessionBus().connect(QStringLiteral(""),
+    QDBusConnection::sessionBus().connect(QString(),
                                           QStringLiteral("/SmoothScroll"),
                                           QStringLiteral("org.kde.SmoothScroll"),
                                           QStringLiteral("notifyChange"),
