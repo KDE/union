@@ -53,11 +53,11 @@ public:
      *
      * This assumes the Union Alignment value is used for horizontal alignment.
      */
-    Q_INVOKABLE Qt::Alignment toQtHorizontal(AlignmentType alignment);
+    Q_INVOKABLE Qt::Alignment toQtHorizontal(Union::Quick::Alignment::AlignmentType alignment);
     /*!
      * Returns a Qt::Alignment value for a vertical Union Alignment value.
      */
-    Q_INVOKABLE Qt::Alignment toQtVertical(AlignmentType alignment);
+    Q_INVOKABLE Qt::Alignment toQtVertical(Union::Quick::Alignment::AlignmentType alignment);
 };
 
 /*!
