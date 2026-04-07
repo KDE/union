@@ -38,13 +38,13 @@ StyleCache::StyleCache()
         return;
     }
 
-    for (auto pluginEntry : fs::directory_iterator(cachePath)) {
+    for (const auto &pluginEntry : fs::directory_iterator(cachePath)) {
         if (!pluginEntry.is_directory()) {
             continue;
         }
 
         auto pluginName = pluginEntry.path().filename();
-        for (auto styleEntry : fs::directory_iterator(pluginEntry.path())) {
+        for (const auto &styleEntry : fs::directory_iterator(pluginEntry.path())) {
             if (!styleEntry.is_regular_file()) {
                 continue;
             }
