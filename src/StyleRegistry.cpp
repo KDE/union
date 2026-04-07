@@ -153,7 +153,7 @@ void StyleRegistry::load()
 
 void StyleRegistry::save()
 {
-    for (auto style : d->styles) {
+    for (const auto &style : std::as_const(d->styles)) {
         if (style->d->modified) {
             d->styleCache->save(style->d.get());
         }
