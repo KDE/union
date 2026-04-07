@@ -477,7 +477,7 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
 
 void CssLoader::createProperties(StyleProperty *output, std::span<const cssparser::Property> properties)
 {
-    for (auto property : properties) {
+    for (const auto &property : properties) {
         if (property.name() == "width"s || property.name() == "height"s || property.name() == "spacing"s) {
             setLayoutProperty(output, property);
         } else if (property.name().starts_with("padding")) {
