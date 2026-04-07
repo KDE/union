@@ -444,7 +444,7 @@ void WheelHandler::startInertiaScrolling()
     QPointF maxExtent = QPointF(width, height) - (QPointF(contentWidth, contentHeight) + QPointF(rightMargin, bottomMargin) + QPointF(originX, originY));
 
     QPointF totalDelta(0, 0);
-    for (const QPoint delta : m_wheelEvents) {
+    for (const QPoint delta : std::as_const(m_wheelEvents)) {
         totalDelta += delta;
     }
     const uint64_t elapsed = std::max<uint64_t>(m_timestamps.last() - m_timestamps.first(), 1);
