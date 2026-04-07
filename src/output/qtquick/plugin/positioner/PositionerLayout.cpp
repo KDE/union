@@ -116,7 +116,7 @@ void PositionerLayout::updatePolish()
 
     debug("Performing layout for positioner of", parentItem());
 
-    for (auto &item : m_items) {
+    for (const auto &item : std::as_const(m_items)) {
         auto source = PositionerSource::Source::Layout;
 
         if (!item->isVisible()) {
