@@ -36,6 +36,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/Dial.qml
     style/Dialog.qml
     style/DialogButtonBox.qml
+    style/DoubleSpinBox.qml
     style/Drawer.qml
     style/Frame.qml
     style/GroupBox.qml

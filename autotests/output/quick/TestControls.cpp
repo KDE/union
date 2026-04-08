@@ -62,6 +62,9 @@ private Q_SLOTS:
         QTest::addRow("DialogButtonBox") << "DialogButtonBox" << QVariantMap{};
         QTest::addRow("Dial") << "Dial" << QVariantMap{};
         QTest::addRow("Dialog") << "Dialog" << QVariantMap{};
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+        QTest::addRow("DoubleSpinBox") << "DoubleSpinBox" << QVariantMap{};
+#endif
         QTest::addRow("Drawer") << "Drawer" << QVariantMap{};
         QTest::addRow("Frame") << "Frame" << QVariantMap{};
         QTest::addRow("GroupBox") << "GroupBox" << QVariantMap{};
