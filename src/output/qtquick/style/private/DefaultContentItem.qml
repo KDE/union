@@ -19,6 +19,8 @@ Item {
         Union.PositionedItem.source: Union.PositionerSource.Icon
         control: root.control
         visible: (name || source.toString()) && root.control.display != T.AbstractButton.TextOnly
+        implicitWidth: (control.icon.width && control.icon.width > 0) ? control.icon.width : Union.Style.properties.icon.width
+        implicitHeight: (control.icon.height && control.icon.height > 0) ? control.icon.height : Union.Style.properties.icon.height
     }
 
     Text {
