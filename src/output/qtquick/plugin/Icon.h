@@ -71,7 +71,7 @@ public:
     Q_SIGNAL void controlChanged();
 
 protected:
-    bool eventFilter(QObject *watched, QEvent *event);
+    bool eventFilter(QObject *watched, QEvent *event) override;
     void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void updatePolish() override;
