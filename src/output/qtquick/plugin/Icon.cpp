@@ -8,6 +8,8 @@
 
 #include <StyleRegistry.h>
 
+#include "QuickStyle.h"
+
 #include "qtquick_logging.h"
 
 using namespace Union::Quick;
@@ -133,11 +135,19 @@ void Icon::setControl(QQuickItem *newControl)
         m_control->disconnect(this);
     }
 
+    if (m_style) {
+        m_style->removeEventFilter(this);
+    }
+
     m_control = newControl;
 
     if (m_control) {
         QQmlProperty iconProperty(m_control, u"icon"_s);
         iconProperty.connectNotifySignal(this, SLOT(onControlIconChanged()));
+
+        m_style = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true));
+        m_style->installEventFilter(this);
+
         onControlIconChanged();
     }
 
@@ -178,6 +188,16 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
     }
 
     return node;
+}
+
+bool Icon::eventFilter(QObject *watched, QEvent *event)
+{
+    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+        onControlIconChanged();
+        return false;
+    }
+
+    return QQuickItem::eventFilter(watched, event);
 }
 
 void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value)
@@ -226,7 +246,19 @@ void Icon::onControlIconChanged()
     }
 
     auto data = icon.constData();
-    setImplicitSize(widthProperty.readOnGadget(data).toReal(), heightProperty.readOnGadget(data).toReal());
+
+    auto width = widthProperty.readOnGadget(data).toReal();
+    auto height = heightProperty.readOnGadget(data).toReal();
+
+    if ((width <= 0 || height <= 0) && m_style->query()) {
+        auto properties = m_style->query()->properties();
+        if (properties && properties->icon()) {
+            width = properties->icon()->width().value_or(0.0);
+            height = properties->icon()->height().value_or(0.0);
+        }
+    }
+
+    setImplicitSize(width, height);
     setName(nameProperty.readOnGadget(data).toString());
     setSource(sourceProperty.readOnGadget(data).toUrl());
     setColor(colorProperty.readOnGadget(data).value<QColor>());

@@ -10,6 +10,7 @@ namespace Union
 {
 namespace Quick
 {
+class QuickStyle;
 
 /*!
  * \qmltype Icon
@@ -70,6 +71,7 @@ public:
     Q_SIGNAL void controlChanged();
 
 protected:
+    bool eventFilter(QObject *watched, QEvent *event);
     void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
     void geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry) override;
     void updatePolish() override;
@@ -86,6 +88,7 @@ private:
     QSize m_iconSize;
 
     QPointer<QQuickItem> m_control;
+    QPointer<QuickStyle> m_style;
 };
 
 }
