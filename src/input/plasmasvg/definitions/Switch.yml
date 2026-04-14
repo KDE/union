@@ -15,18 +15,7 @@ switch-indicator:
             type: Indicator
 
     path: widgets/switch
-
-    layout:
-        width:
-            property: element-width
-            element: hint-bar-size
-        height:
-            property: element-height
-            element: hint-bar-size
-
-        spacing:
-            property: named-value
-            name: small-spacing
+    colorSet: Button
 
     icon:
         width:
@@ -47,15 +36,6 @@ switch-indicator:
             horizontal: Start
             vertical: Center
 
-switch-indicator:
-    selectors:
-    -   type: Switch
-        child:
-            type: Indicator
-
-    path: widgets/switch
-    colorSet: Button
-
     layout:
         width:
             property: element-width
@@ -63,6 +43,10 @@ switch-indicator:
         height:
             property: element-height
             element: hint-bar-size
+
+        spacing:
+            property: named-value
+            name: small-spacing
 
         alignment:
             container: Item
