@@ -119,22 +119,22 @@ T.ComboBox {
         Union.Element.hints: Union.ElementHint { name: "combobox" }
 
         y: control.height
-        width: Math.max(control.width, contentItem.implicitWidth)
+
+        implicitWidth: contentWidth + leftPadding + rightPadding
+        width: Math.max(control.width, implicitWidth)
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
-        rightPadding: contentItem.ScrollBar.vertical.visible ? contentItem.ScrollBar.vertical.width : 0
+        contentItem: ScrollView {
+            ListView {
+                id: popupContent
 
-        contentItem: ListView {
-            implicitWidth: contentItem.visibleChildren.reduce((acc, item) => Math.max(acc, item.implicitWidth), 0)
-            implicitHeight: contentHeight
-            model: control.delegateModel
-            currentIndex: control.highlightedIndex
-            highlightMoveDuration: 0
-            clip: true
-            boundsBehavior: ListView.StopAtBounds
-
-            ScrollBar.vertical: ScrollBar {
-                anchors.left: parent.right
+                implicitWidth: contentWidth
+                implicitHeight: contentHeight
+                model: control.delegateModel
+                currentIndex: control.highlightedIndex
+                highlightMoveDuration: 0
+                clip: true
+                boundsBehavior: ListView.StopAtBounds
             }
         }
     }
