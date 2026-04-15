@@ -165,6 +165,9 @@ void PlatformTheme::syncColorSchemeColors()
     // decoration
     setHoverColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"hover"_s}).toQColor());
     setFocusColor(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"focus"_s}).toQColor());
+
+    // We just want the alpha value we use for contrast
+    setFrameContrast(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"framecontrast"_s}).toQColor().alphaF());
 }
 
 #include "moc_PlatformTheme.cpp"

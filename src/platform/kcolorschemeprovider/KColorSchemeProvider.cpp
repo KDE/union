@@ -192,6 +192,11 @@ std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStr
                                                  colorScheme.foreground(KColorScheme::ForegroundRole::NormalText).color(),
                                                  KColorScheme::frameContrast(d->colorConfig));
             value = rgbaFromQColor(framecolor);
+        } else if (arguments.at(3) == u"framecontrast") {
+            // Set a black color and use the alpha value as the contrast
+            QColor framecolor(0, 0, 0, 0);
+            framecolor.setAlphaF(KColorScheme::frameContrast(d->colorConfig));
+            value = rgbaFromQColor(framecolor);
         } else {
             auto role = decorationRoleFromString(arguments.at(3));
             if (role) {
