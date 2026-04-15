@@ -56,7 +56,7 @@ class PositionerLayout : public QQuickItem
 public:
     PositionerLayout(QQuickItem *parentItem);
 
-    void markDirty();
+    Q_SLOT void markDirty();
 
     void addItem(QQuickItem *item);
     void removeItem(QQuickItem *item);
@@ -88,17 +88,10 @@ private:
         }
     }
 
-    QSet<QQuickItem *> m_items;
-    QSizeF m_implicitSize;
-    Sizes m_padding;
-    QSizeF m_parentSize;
+    bool m_debugEnabled = false;
 
-    Qt::LayoutDirection m_layoutDirection = Qt::LayoutDirectionAuto;
-
-    bool m_layoutDirty : 1 = true;
-    bool m_layouting : 1 = false;
-    bool m_requeuePolish : 1 = false;
-    bool m_debugEnabled : 1 = false;
+    class Private;
+    const std::unique_ptr<Private> d;
 };
 
 }

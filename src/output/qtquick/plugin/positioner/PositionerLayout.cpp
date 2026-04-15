@@ -3,6 +3,7 @@
 
 #include "PositionerLayout.h"
 
+#include <QQmlProperty>
 #include <QQuickWindow>
 
 #include "Layout.h"
@@ -14,24 +15,85 @@
 using namespace Union::Properties;
 using namespace Union::Quick;
 
+using namespace Qt::StringLiterals;
+
+class PositionerLayout::Private
+{
+public:
+    QSet<QQuickItem *> items;
+    QSizeF implicitSize;
+    QSizeF parentSize;
+
+    Qt::LayoutDirection layoutDirection = Qt::LayoutDirectionAuto;
+
+    bool layoutDirty : 1 = true;
+    bool layouting : 1 = false;
+    bool requeuePolish : 1 = false;
+
+    bool paddingValid : 1 = false;
+    bool insetValid : 1 = false;
+
+    QQmlProperty spacingProperty;
+
+    QQmlProperty leftPaddingProperty;
+    QQmlProperty rightPaddingProperty;
+    QQmlProperty topPaddingProperty;
+    QQmlProperty bottomPaddingProperty;
+
+    QQmlProperty leftInsetProperty;
+    QQmlProperty rightInsetProperty;
+    QQmlProperty topInsetProperty;
+    QQmlProperty bottomInsetProperty;
+
+    inline static const Union::Properties::LayoutProperty EmptyLayoutGroup;
+};
+
 PositionerLayout::PositionerLayout(QQuickItem *parentItem)
     : QQuickItem(parentItem)
+    , d(std::make_unique<Private>())
 {
     if (parentItem) {
         connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::onParentSizeChanged);
         connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::onParentSizeChanged);
         parentItem->installEventFilter(this);
+
+        d->spacingProperty = QQmlProperty(parentItem, u"spacing"_s);
+        d->spacingProperty.connectNotifySignal(this, SLOT(markDirty()));
+
+        d->leftPaddingProperty = QQmlProperty(parentItem, u"leftPadding"_s);
+        d->leftPaddingProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->rightPaddingProperty = QQmlProperty(parentItem, u"rightPadding"_s);
+        d->rightPaddingProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->topPaddingProperty = QQmlProperty(parentItem, u"topPadding"_s);
+        d->topPaddingProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->bottomPaddingProperty = QQmlProperty(parentItem, u"bottomPadding"_s);
+        d->bottomPaddingProperty.connectNotifySignal(this, SLOT(markDirty()));
+
+        const auto paddingProperties = {&d->leftPaddingProperty, &d->rightPaddingProperty, &d->topPaddingProperty, &d->bottomPaddingProperty};
+        d->paddingValid = std::ranges::any_of(paddingProperties, std::bind_front(std::equal_to{}, true), &QQmlProperty::isValid);
+
+        d->leftInsetProperty = QQmlProperty(parentItem, u"leftInset"_s);
+        d->leftInsetProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->rightInsetProperty = QQmlProperty(parentItem, u"rightInset"_s);
+        d->rightInsetProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->topInsetProperty = QQmlProperty(parentItem, u"topInset"_s);
+        d->topInsetProperty.connectNotifySignal(this, SLOT(markDirty()));
+        d->bottomInsetProperty = QQmlProperty(parentItem, u"bottomInset"_s);
+        d->bottomInsetProperty.connectNotifySignal(this, SLOT(markDirty()));
+
+        const auto insetProperties = {&d->leftInsetProperty, &d->rightInsetProperty, &d->topInsetProperty, &d->bottomInsetProperty};
+        d->insetValid = std::ranges::any_of(insetProperties, std::bind_front(std::equal_to{}, true), &QQmlProperty::isValid);
     }
     polish();
 }
 
 void PositionerLayout::markDirty()
 {
-    if (!m_layouting) {
-        m_layoutDirty = true;
+    if (!d->layouting) {
+        d->layoutDirty = true;
         polish();
     } else {
-        m_requeuePolish = true;
+        d->requeuePolish = true;
     }
 }
 
@@ -42,7 +104,7 @@ void PositionerLayout::addItem(QQuickItem *item)
     connect(item, &QQuickItem::visibleChanged, this, &PositionerLayout::markDirty);
     item->installEventFilter(this);
 
-    m_items.insert(item);
+    d->items.insert(item);
 
     debug("Add item to layout", item);
 
@@ -51,8 +113,8 @@ void PositionerLayout::addItem(QQuickItem *item)
 
 void PositionerLayout::removeItem(QQuickItem *item)
 {
-    auto itr = std::find(m_items.begin(), m_items.end(), item);
-    if (itr == m_items.end()) {
+    auto itr = std::find(d->items.begin(), d->items.end(), item);
+    if (itr == d->items.end()) {
         return;
     }
 
@@ -60,7 +122,7 @@ void PositionerLayout::removeItem(QQuickItem *item)
     (*itr)->removeEventFilter(this);
 
     debug("Remove item from layout", *itr);
-    m_items.erase(itr);
+    d->items.erase(itr);
 
     markDirty();
 }
@@ -77,23 +139,23 @@ void PositionerLayout::setDebugEnabled(bool newDebug)
 
 Qt::LayoutDirection PositionerLayout::layoutDirection() const
 {
-    return m_layoutDirection;
+    return d->layoutDirection;
 }
 
 void PositionerLayout::setLayoutDirection(Qt::LayoutDirection direction)
 {
-    if (direction == m_layoutDirection) {
+    if (direction == d->layoutDirection) {
         return;
     }
 
-    m_layoutDirection = direction;
+    d->layoutDirection = direction;
     markDirty();
     Q_EMIT layoutDirectionChanged();
 }
 
 QSizeF PositionerLayout::implicitSize() const
 {
-    return m_implicitSize;
+    return d->implicitSize;
 }
 
 bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
@@ -108,7 +170,7 @@ bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
 
 void PositionerLayout::updatePolish()
 {
-    if (!m_layoutDirty) {
+    if (!d->layoutDirty) {
         return;
     }
 
@@ -116,18 +178,14 @@ void PositionerLayout::updatePolish()
         return;
     }
 
-    m_layouting = true;
-    m_layoutDirty = false;
+    d->layouting = true;
+    d->layoutDirty = false;
 
     Layout layout;
 
-    // LayoutContainer itemRelative;
-    // LayoutContainer contentRelative;
-    // LayoutContainer backgroundRelative;
-
     debug("Performing layout for positioner of", parentItem());
 
-    for (const auto &item : std::as_const(m_items)) {
+    for (const auto &item : std::as_const(d->items)) {
         auto source = PositionerSource::Source::Layout;
 
         if (!item->isVisible()) {
@@ -253,39 +311,59 @@ void PositionerLayout::updatePolish()
         return;
     }
 
-    auto properties = query->properties();
-    layout.size = parentItem()->size();
-    layout.spacing = properties->layout() ? properties->layout()->spacing().value_or(0.0) : 0.0;
-    layout.inset = properties->layout() && properties->layout()->inset() ? properties->layout()->inset()->toMargins() : QMarginsF{};
-    layout.padding = properties->layout() && properties->layout()->padding() ? properties->layout()->padding()->toMargins() : QMarginsF{};
+    const auto properties = query->properties();
+    const auto &layoutGroup = properties->layout() ? *(properties->layout()) : Private::EmptyLayoutGroup;
+
+    layout.size = containerItem->size();
+
+    layout.spacing = d->spacingProperty.isValid() ? d->spacingProperty.read().toReal() : layoutGroup.spacing().value_or(0.0);
+
+    if (d->paddingValid) {
+        layout.padding = QMarginsF{d->leftPaddingProperty.read().toReal(),
+                                   d->topPaddingProperty.read().toReal(),
+                                   d->rightPaddingProperty.read().toReal(),
+                                   d->bottomPaddingProperty.read().toReal()};
+    } else {
+        layout.padding = layoutGroup.padding() ? layoutGroup.padding()->toMargins() : QMarginsF{};
+    }
+
+    if (d->insetValid) {
+        layout.inset = QMarginsF{d->leftInsetProperty.read().toReal(),
+                                 d->topInsetProperty.read().toReal(),
+                                 d->rightInsetProperty.read().toReal(),
+                                 d->bottomInsetProperty.read().toReal()};
+    } else {
+        layout.inset = layoutGroup.inset() ? layoutGroup.inset()->toMargins() : QMarginsF{};
+    }
+
     layout.layout();
 
-    if (layout.implicitSize != m_implicitSize) {
+    if (layout.implicitSize != d->implicitSize) {
         debug("  New implcit size is", layout.implicitSize);
-        m_implicitSize = layout.implicitSize;
+        d->implicitSize = layout.implicitSize;
         Q_EMIT implicitSizeChanged();
     }
 
-    layout.positionItems(parentItem(), m_layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : m_layoutDirection);
+    layout.positionItems(parentItem(), d->layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : d->layoutDirection);
 
-    m_layouting = false;
+    d->layouting = false;
 
     Q_EMIT layoutFinished();
 
-    if (m_requeuePolish) {
+    if (d->requeuePolish) {
         markDirty();
-        m_requeuePolish = false;
+        d->requeuePolish = false;
     }
 }
 
 void PositionerLayout::onParentSizeChanged()
 {
     auto newSize = parentItem()->boundingRect().size();
-    if (newSize == m_parentSize) {
+    if (newSize == d->parentSize) {
         return;
     }
 
-    m_parentSize = newSize;
+    d->parentSize = newSize;
     markDirty();
 }
 
