@@ -76,6 +76,9 @@ KT.NavigationTabButton {
 
     contentItem: Item {
         Union.PositionedItem.positionChildren: true
+        Union.Mnemonics.enabled: control.enabled && control.visible
+        Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
+        Union.Mnemonics.label: control.text
 
         Union.Icon {
             Union.PositionedItem.source: Union.PositionerSource.Icon
@@ -85,7 +88,7 @@ KT.NavigationTabButton {
 
         Text {
             Union.PositionedItem.source: Union.PositionerSource.Text
-            text: control.text
+            text: parent.Union.Mnemonics.richTextLabel ?? control.text
             font: control.font
             color: Union.Style.properties.text.color ?? "black"
             elide: Text.ElideRight

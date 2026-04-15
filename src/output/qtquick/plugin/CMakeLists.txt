@@ -16,6 +16,8 @@ target_sources(UnionQuickImpl PRIVATE
     Types.cpp
     StyledRectangle.cpp
     StyledRectangle.h
+    Mnemonics.cpp
+    Mnemonics.h
     Positioner.h
     Positioner.cpp
     Icon.h
