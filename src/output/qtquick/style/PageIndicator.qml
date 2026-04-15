@@ -23,10 +23,10 @@ T.PageIndicator {
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)
 
-    leftPadding: Union.Positioner.padding.left
-    rightPadding: Union.Positioner.padding.right
-    topPadding: Union.Positioner.padding.top
-    bottomPadding: Union.Positioner.padding.bottom
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
