@@ -119,7 +119,8 @@ toolbutton.raised
 }
 
 button,
-roundbutton
+roundbutton,
+delaybutton
 {
     box-shadow: var(--button-shadow);
 }
