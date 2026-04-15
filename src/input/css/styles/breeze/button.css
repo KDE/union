@@ -248,6 +248,7 @@ combobox
 
 popup.combobox
 {
+    padding: 0px;
     background-color: var(--combobox-popup-background-color);
 
     itemdelegate:highlight
