@@ -116,6 +116,9 @@ public:
             }
 
             platform = std::shared_ptr<PlatformPlugin>(platformRegistry->pluginObject(plugin.name));
+            if (platform) {
+                break;
+            }
         }
 
         if (!platform) {
