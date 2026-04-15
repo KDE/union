@@ -102,6 +102,8 @@ void PositionerLayout::addItem(QQuickItem *item)
     connect(item, &QQuickItem::implicitWidthChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::implicitHeightChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::visibleChanged, this, &PositionerLayout::markDirty);
+    connect(item, &QQuickItem::xChanged, this, &PositionerLayout::markDirty);
+    connect(item, &QQuickItem::yChanged, this, &PositionerLayout::markDirty);
     item->installEventFilter(this);
 
     d->items.insert(item);
