@@ -17,7 +17,6 @@ Positioner::Positioner(QObject *parent)
     m_layout = new PositionerLayout(qobject_cast<QQuickItem *>(parent));
     connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitWidthChanged);
     connect(m_layout, &PositionerLayout::implicitSizeChanged, this, &Positioner::implicitHeightChanged);
-    connect(m_layout, &PositionerLayout::paddingChanged, this, &Positioner::paddingChanged);
     connect(m_layout, &PositionerLayout::layoutDirectionChanged, this, &Positioner::layoutDirectionChanged);
 }
 
@@ -101,11 +100,6 @@ qreal Positioner::implicitWidth() const
 qreal Positioner::implicitHeight() const
 {
     return m_layout->implicitSize().height();
-}
-
-Sizes Positioner::padding() const
-{
-    return m_layout->padding();
 }
 
 bool Positioner::debug() const

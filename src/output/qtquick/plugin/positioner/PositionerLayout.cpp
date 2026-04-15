@@ -96,11 +96,6 @@ QSizeF PositionerLayout::implicitSize() const
     return m_implicitSize;
 }
 
-Sizes PositionerLayout::padding() const
-{
-    return m_padding;
-}
-
 bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QuickStyleUpdatedEvent::s_type) {
@@ -269,13 +264,6 @@ void PositionerLayout::updatePolish()
         debug("  New implcit size is", layout.implicitSize);
         m_implicitSize = layout.implicitSize;
         Q_EMIT implicitSizeChanged();
-    }
-
-    auto newPadding = Sizes(layout.itemPadding);
-    if (newPadding != m_padding) {
-        debug("  Updating padding to", layout.itemPadding.toMargins());
-        m_padding = newPadding;
-        Q_EMIT paddingChanged();
     }
 
     layout.positionItems(parentItem(), m_layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : m_layoutDirection);

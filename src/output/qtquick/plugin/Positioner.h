@@ -103,21 +103,6 @@ public:
     Q_SIGNAL void implicitHeightChanged();
 
     /*!
-     * \qmlattachedproperty Sizes Positioner::padding
-     *
-     * Padding as calculated by the internal layout.
-     *
-     * Note that this includes the space that is reserved by the style for the
-     * start and end buckets that are relative to the item container. When these
-     * values are used as a Control's padding, this ensures any reserved space
-     * is also excluded from the content item, making it easier to override the
-     * content item without needing to specify Positioner related properties.
-     */
-    Q_PROPERTY(Union::Quick::Sizes padding READ padding NOTIFY paddingChanged)
-    Sizes padding() const;
-    Q_SIGNAL void paddingChanged();
-
-    /*!
      * \qmlattachedproperty bool Positioner::debug
      *
      * Print debugging info for this positioner.
