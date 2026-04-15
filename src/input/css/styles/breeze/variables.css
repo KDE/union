@@ -65,7 +65,7 @@
     --card-hover-color: mix(var(--card-background-color), var(--highlight-color), 0.1);
     --card-pressed-color: mix(var(--card-background-color), var(--highlight-color), 0.3);
 
-    --focus-outline-alpha: 0.4;
+    --focus-outline-alpha: 0.3;
     --focus-color: modify-color(custom-color("kcolorscheme", "active", "window", "decoration", "focus") set-alpha var(--focus-outline-alpha));
 
     --shadow-color: rgba(0, 0, 0, 0.1);
