@@ -51,10 +51,8 @@ struct LayoutContainer {
     {
         std::ranges::for_each(buckets(), &LayoutBucket::layout);
 
-        auto maxImplicitHeight = std::ranges::max(buckets() | std::views::transform([](auto bucket) {
-                                                      return bucket->implicitSize.height();
-                                                  }));
-        qreal height = size.isEmpty() ? maxImplicitHeight : size.height();
+        const qreal height =
+            std::ranges::max({size.height(), start.implicitSize.height(), center.implicitSize.height(), end.implicitSize.height(), fill.implicitSize.height()});
 
         std::ranges::for_each(buckets(), [height](LayoutBucket *bucket) {
             bucket->size = QSizeF{bucket->implicitSize.width(), height};
@@ -82,8 +80,7 @@ struct LayoutContainer {
         fill.position = centerPosition;
         fill.size = remainingSize;
 
-        center.size = QSizeF{std::min(remainingSize.width(), center.size.width()), std::min(remainingSize.height(), center.size.height())};
-        center.position = centerPosition + QPointF{(remainingSize.width() - center.size.width()) / 2.0, 0.0};
+        center.position = centerPosition + QPointF{(remainingSize.width() - center.size.width()) / 2.0, (remainingSize.height() - center.size.height()) / 2.0};
 
         for (auto bucket : buckets()) {
             qreal stackedY = bucket->stackCenter ? std::max(0.0, (bucket->size.height() - bucket->implicitSize.height()) / 2.0) : 0.0;
@@ -103,20 +100,21 @@ struct LayoutContainer {
                     fillX += fillWidth;
                 }
 
+                const qreal top = bucket->position.y() + item.margins.top();
+
                 switch (item.verticalAlignment) {
                 case Union::Properties::Alignment::Unspecified:
                 case Union::Properties::Alignment::Start:
-                    item.position.setY(bucket->position.y() + item.margins.top());
+                    item.position.setY(top);
                     break;
                 case Union::Properties::Alignment::Center:
-                    item.position.setY(bucket->position.y() + item.margins.top()
-                                       + ((bucket->size.height() - item.margins.top() - item.margins.bottom()) / 2 - item.implicitSize.height() / 2));
+                    item.position.setY(top + (bucket->size.height() - item.margins.top() - item.margins.bottom() - item.implicitSize.height()) / 2);
                     break;
                 case Union::Properties::Alignment::End:
                     item.position.setY(bucket->position.y() + (bucket->size.height() - item.implicitSize.height() - item.margins.bottom()));
                     break;
                 case Union::Properties::Alignment::Fill:
-                    item.position.setY(bucket->position.y() + item.margins.top());
+                    item.position.setY(top);
                     item.size.setHeight(bucket->size.height() - item.margins.top() - item.margins.bottom());
                     break;
                 case Union::Properties::Alignment::StackCenter:

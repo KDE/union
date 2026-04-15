@@ -1,0 +1,44 @@
+{
+    "layout": {
+        "width": 24.0,
+        "height": 24.0,
+        "spacing": 4.0,
+        "padding": 8.0,
+
+        "content": {
+            "center": {
+                "items": [
+                    {
+                        "implicitWidth": 24.0,
+                        "implicitHeight": 24.0
+                    }
+                ]
+            }
+        }
+    },
+    "expected": {
+        "content": {
+            "x": 8.0,
+            "y": 8.0,
+            "width": 8.0,
+            "height": 8.0,
+
+            "center": {
+                "x": 0.0,
+                "y": 0.0,
+                "width": 24.0,
+                "height": 24.0,
+
+                "items": [
+                    {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "width": 24.0,
+                        "height": 24.0
+                    }
+                ]
+            }
+        }
+    }
+}
+

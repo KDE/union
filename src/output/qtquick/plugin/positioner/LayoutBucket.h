@@ -55,7 +55,9 @@ struct LayoutBucket {
             }
 
             maxWidth = std::max(maxWidth, item.margins.left() + item.implicitSize.width() + item.margins.right());
-            maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
+            if (item.verticalAlignment != Properties::Alignment::Fill) {
+                maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
+            }
         }
 
         implicitSize.setWidth(std::ceil(std::max(stackCenter || stackFill ? maxWidth : x, 0.0)));

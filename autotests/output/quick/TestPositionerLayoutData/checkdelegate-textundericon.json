@@ -37,7 +37,7 @@
                         }
                     },
                     {
-                        "implicitWidth": 200.0,
+                        "implicitWidth": 100.0,
                         "implicitHeight": 22.0,
                         "verticalAlignment": "stack-center"
                     }
@@ -69,9 +69,9 @@
             },
 
             "center": {
-                "x": 8.0,
+                "x": 50.0,
                 "y": 8.0,
-                "width": 184.0,
+                "width": 100.0,
                 "height": 64.0,
 
                 "items": [
@@ -82,9 +82,9 @@
                         "height": 32.0
                     },
                     {
-                        "x": 8.0,
+                        "x": 50.0,
                         "y": 47.0,
-                        "width": 184.0,
+                        "width": 100.0,
                         "height": 22.0
                     }
                 ]
