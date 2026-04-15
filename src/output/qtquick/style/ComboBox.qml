@@ -25,12 +25,22 @@ T.ComboBox {
         Union.ElementHint { name: "editable"; when: control.editable },
     ]
 
-    Union.Positioner.positionItems: [contentItem, indicator]
+    Union.Positioner.positionItems: [contentItem, icon, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
     wheelEnabled: true
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding, Union.Positioner.implicitWidth)
+    implicitWidth: {
+        let contentWidth = implicitContentWidth + leftPadding + rightPadding
+        if (indicator.visible) {
+            contentWidth += spacing + implicitIndicatorWidth
+        }
+        if (icon.visible) {
+            contentWidth += spacing + icon.implicitWidth
+        }
+
+        return Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth, contentWidth)
+    }
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
     leftPadding: Union.Style.properties.layout.padding.left
@@ -69,42 +79,38 @@ T.ComboBox {
         color: Union.Style.properties.icon.color
     }
 
-    contentItem: Item {
-        Union.PositionedItem.positionChildren: true
+    contentItem: TextInput {
+        Union.PositionedItem.source: Union.PositionerSource.Text
 
-        Union.Icon {
-            id: arrow
+        clip: true
 
-            Union.PositionedItem.source: Union.PositionerSource.Icon
+        color: Union.Style.properties.text.color ?? control.palette.text
+        text: control.editable ? control.editText : control.displayText
+        enabled: control.editable
+        autoScroll: control.editable
+        readOnly: control.down
+        inputMethodHints: control.inputMethodHints
+        validator: control.validator
 
-            implicitWidth: Union.Style.properties.icon.width ?? 0
-            implicitHeight: Union.Style.properties.icon.height ?? 0
-            name: control.Union.StyleHints.iconName
-            source: control.Union.StyleHints.iconSource
-            color: Union.Style.properties.icon.color
+        horizontalAlignment: Qt.AlignLeft
 
-            visible: name || source.toString()
-        }
+        selectByMouse: control.selectTextByMouse
+        selectionColor: control.palette.highlight
+        selectedTextColor: control.palette.highlightedText
+    }
 
-        TextInput {
-            Union.PositionedItem.source: Union.PositionerSource.Text
+    Union.Icon {
+        id: icon
 
-            clip: true
+        Union.PositionedItem.source: Union.PositionerSource.Icon
 
-            color: Union.Style.properties.text.color ?? control.palette.text
-            text: control.editable ? control.editText : control.displayText
-            enabled: control.editable
-            autoScroll: control.editable
-            readOnly: control.down
-            inputMethodHints: control.inputMethodHints
-            validator: control.validator
+        implicitWidth: Union.Style.properties.icon.width ?? 0
+        implicitHeight: Union.Style.properties.icon.height ?? 0
+        name: control.Union.StyleHints.iconName
+        source: control.Union.StyleHints.iconSource
+        color: Union.Style.properties.icon.color
 
-            horizontalAlignment: Qt.AlignLeft
-
-            selectByMouse: control.selectTextByMouse
-            selectionColor: control.palette.highlight
-            selectedTextColor: control.palette.highlightedText
-        }
+        visible: name || source.toString()
     }
 
     background: Union.StyledRectangle { }
