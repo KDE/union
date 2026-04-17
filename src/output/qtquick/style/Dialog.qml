@@ -3,9 +3,7 @@
 // SPDX-FileCopyrightText: 2025 Niccolò Venerandi <niccolo@venerandi.com>
 
 import QtQuick
-import QtQuick.Controls.impl
 import QtQuick.Templates as T
-import org.kde.kirigami as Kirigami
 
 import org.kde.union.impl as Union
 
@@ -13,6 +11,10 @@ T.Dialog {
     id: control
 
     Union.Element.type: "Dialog"
+
+    parent: T.Overlay.overlay
+    x: (parent.width - width) / 2
+    y: (parent.height - height) / 2
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Math.ceil(contentWidth) + leftPadding + rightPadding,
@@ -40,11 +42,6 @@ T.Dialog {
         Union.Element.hints: Union.ElementHint { name: "header" }
         text: control.title
         visible: control.title
-        font: Union.Style.properties.text.font ?? Application.font
-        topPadding: Union.Style.properties.layout.padding.top
-        bottomPadding: Union.Style.properties.layout.padding.bottom
-        leftPadding: Union.Style.properties.layout.padding.left
-        rightPadding: Union.Style.properties.layout.padding.right
     }
 
     footer: DialogButtonBox {
