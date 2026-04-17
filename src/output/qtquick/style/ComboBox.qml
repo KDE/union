@@ -135,6 +135,17 @@ T.ComboBox {
                 highlightMoveDuration: 0
                 clip: true
                 boundsBehavior: ListView.StopAtBounds
+
+                // Workaround https://qt-project.atlassian.net/browse/QTBUG-99287
+                // Force delegates to use the list view width as their width.
+                // This removes the need for each delegate to bind its width to
+                // ListView.view.width.
+                add: Transition {
+                    PropertyAction { property: "width"; value: popupContent.width }
+                }
+                populate: Transition {
+                    PropertyAction { property: "width"; value: popupContent.width }
+                }
             }
         }
     }
