@@ -44,10 +44,8 @@ T.ToolButton {
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
+    implicitWidth: Math.max(implicitContentWidth + leftPadding + rightPadding, Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth))
+    implicitHeight: Math.max(implicitContentHeight + topPadding + bottomPadding, Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight))
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
