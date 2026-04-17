@@ -120,15 +120,21 @@ T.ComboBox {
 
         y: control.height
 
-        implicitWidth: contentWidth + leftPadding + rightPadding
+        implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
         width: Math.max(control.width, implicitWidth)
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
         contentItem: ScrollView {
+            implicitWidth: popupContent.implicitWidth
+            implicitHeight: popupContent.implicitHeight
+
             ListView {
                 id: popupContent
 
-                implicitWidth: contentWidth
+                // Calculate implicit width based on content implicit width.
+                // Unfortunately contentWidth cannot be used here, it does not
+                // necessarily evaluate to something usable.
+                implicitWidth: contentItem.visibleChildren.reduce((acc, item) => Math.max(acc, item.implicitWidth), 0)
                 implicitHeight: contentHeight
                 model: control.delegateModel
                 currentIndex: control.highlightedIndex
