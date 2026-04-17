@@ -21,7 +21,6 @@
 menu, popup
 {
     border-radius: var(--corner-radius);
-    padding: var(--small-spacing);
 
     background-color: var(--window-background-color);
     border: 1px solid var(--window-border-color);
@@ -37,6 +36,7 @@ menu, popup
 
 menu
 {
+    padding: var(--small-spacing);
     margin: var(--popup-shadow-size);
 }
 
