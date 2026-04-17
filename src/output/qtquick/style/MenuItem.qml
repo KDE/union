@@ -34,6 +34,9 @@ T.MenuItem {
             }
         }
     }
+    Union.Mnemonics.enabled: control.enabled && control.visible
+    Union.Mnemonics.controlType: Union.Mnemonics.MenuItem
+    Union.Mnemonics.label: control.text
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -97,7 +100,7 @@ T.MenuItem {
                 rightMargin: control.menu?.contentItem?.hasAnySubmenu && !shortcut.visible ? control.arrow.implicitWidth + control.spacing : 0
             }
 
-            text: control.text
+            text: control.Union.Mnemonics.richTextLabel ?? control.text
             font: control.font
             color: Union.Style.properties.text.color
             elide: Text.ElideRight

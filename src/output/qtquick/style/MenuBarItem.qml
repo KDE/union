@@ -19,6 +19,9 @@ T.MenuBarItem {
         enabled: control.enabled
         highlighted: control.highlighted
     }
+    Union.Mnemonics.enabled: control.enabled && control.visible
+    Union.Mnemonics.controlType: Union.Mnemonics.MenuItem
+    Union.Mnemonics.label: control.text
 
     font: Union.Style.properties.text.font
 
@@ -37,7 +40,7 @@ T.MenuBarItem {
     rightPadding: Union.Style.properties.layout.padding.right
 
     contentItem: T.Label {
-        text: control.text
+        text: control.Union.Mnemonics.richTextLabel ?? control.text
         font: control.font
         color: Union.Style.properties.text.color
         visible: control.display != T.AbstractButton.IconOnly

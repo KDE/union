@@ -18,24 +18,24 @@ Kirigami.Page {
         anchors.fill: parent
         Controls.MenuBar {
             Controls.Menu {
-                title: qsTr("File")
+                title: qsTr("&File")
                 Kirigami.Action {
-                    text: qsTr("New...")
+                    text: qsTr("&New...")
                 }
                 Kirigami.Action {
-                    text: qsTr("Open...")
+                    text: qsTr("&Open...")
                 }
                 Controls.MenuSeparator {}
                 Kirigami.Action {
                     icon.name: "document-save"
-                    text: qsTr("Save")
+                    text: qsTr("&Save")
                 }
                 Kirigami.Action {
-                    text: qsTr("Save As...")
+                    text: qsTr("&Save As...")
                 }
             }
             Controls.Menu {
-                title: qsTr("Edit")
+                title: qsTr("&Edit")
                 Kirigami.Action {
                     icon.name: "edit-cut"
                     text: qsTr("Cut")
