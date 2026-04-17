@@ -43,8 +43,6 @@ T.HorizontalHeaderView {
         Text {
             id: text
 
-            Union.PositionedItem.source: Union.PositionerSource.Text
-
             text: delegate.model[control.textRole]
             font: Union.Style.properties.text.font ?? Application.font
             color: Union.Style.properties.text.color

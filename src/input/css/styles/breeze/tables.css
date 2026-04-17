@@ -103,8 +103,8 @@ headerviewdelegate
     background-color: var(--button-active-background-color);
     color: var(--button-active-text-color);
 
-    layout-alignment: content center center 0;
-    text-alignment: content fill center 0;
+    layout-alignment: content fill center 0;
+    text-alignment: content center center 0;
     icon-alignment: content end center 0;
 
     icon-size: var(--icon-size-small);
