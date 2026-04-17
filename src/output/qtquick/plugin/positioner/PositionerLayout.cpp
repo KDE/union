@@ -29,6 +29,7 @@ public:
     bool layoutDirty : 1 = true;
     bool layouting : 1 = false;
     bool requeuePolish : 1 = false;
+    bool ignorePositionChange : 1 = false;
 
     bool paddingValid : 1 = false;
     bool insetValid : 1 = false;
@@ -102,8 +103,8 @@ void PositionerLayout::addItem(QQuickItem *item)
     connect(item, &QQuickItem::implicitWidthChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::implicitHeightChanged, this, &PositionerLayout::markDirty);
     connect(item, &QQuickItem::visibleChanged, this, &PositionerLayout::markDirty);
-    connect(item, &QQuickItem::xChanged, this, &PositionerLayout::markDirty);
-    connect(item, &QQuickItem::yChanged, this, &PositionerLayout::markDirty);
+    connect(item, &QQuickItem::xChanged, this, &PositionerLayout::onItemPositionChanged);
+    connect(item, &QQuickItem::yChanged, this, &PositionerLayout::onItemPositionChanged);
     item->installEventFilter(this);
 
     d->items.insert(item);
@@ -346,7 +347,9 @@ void PositionerLayout::updatePolish()
         Q_EMIT implicitSizeChanged();
     }
 
+    d->ignorePositionChange = true;
     layout.positionItems(parentItem(), d->layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : d->layoutDirection);
+    d->ignorePositionChange = false;
 
     d->layouting = false;
 
@@ -366,6 +369,15 @@ void PositionerLayout::onParentSizeChanged()
     }
 
     d->parentSize = newSize;
+    markDirty();
+}
+
+void PositionerLayout::onItemPositionChanged()
+{
+    if (d->ignorePositionChange) {
+        return;
+    }
+
     markDirty();
 }
 

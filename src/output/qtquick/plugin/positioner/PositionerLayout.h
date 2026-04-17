@@ -79,6 +79,7 @@ protected:
 
 private:
     void onParentSizeChanged();
+    void onItemPositionChanged();
 
     template<typename... Args>
     inline void debug(Args &&...args)
