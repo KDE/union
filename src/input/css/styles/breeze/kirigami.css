@@ -91,7 +91,7 @@ heading
 
     &.primary
     {
-        font-weight: bolder;
+        font-weight: 600;
     }
 
     &.level-1
@@ -102,7 +102,7 @@ heading
     &.primary.level-1
     {
         font-size: 135%;
-        font-weight: bolder;
+        font-weight: 600;
     }
 
     &.level-2
@@ -113,7 +113,7 @@ heading
     &.primary.level-2
     {
         font-size: 120%;
-        font-weight: bolder;
+        font-weight: 600;
     }
 
     &.level-3
@@ -124,7 +124,7 @@ heading
     &.primary.level-3
     {
         font-size: 115%;
-        font-weight: bolder;
+        font-weight: 600;
     }
 
     &.level-4
@@ -135,7 +135,7 @@ heading
     &.primary.level-4
     {
         font-size: 110%;
-        font-weight: bolder;
+        font-weight: 600;
     }
 
     &.secondary
