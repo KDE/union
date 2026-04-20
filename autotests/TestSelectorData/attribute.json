@@ -52,6 +52,13 @@
                     "third": "val"
                 }
             }
+        ],
+        "equals_caseinsensitive": [
+            {
+                "attributes_equals": {
+                    "third": "VALUE"
+                }
+            }
         ]
     },
     "failing_selectors": {

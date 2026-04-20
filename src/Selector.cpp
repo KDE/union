@@ -200,7 +200,16 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeEquals, std::pair<
         return false;
     }
 
-    return element->attribute(data.first) == data.second;
+    const auto value = element->attribute(data.first);
+    if (!value.isValid()) {
+        return false;
+    }
+
+    if (value.typeId() == QMetaType::QString) {
+        return value.toString().compare(data.second.toString(), Qt::CaseInsensitive) == 0;
+    } else {
+        return value == data.second;
+    }
 }
 
 template<>
@@ -232,7 +241,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::AttributeSubstringMatch, st
     }
 
     if (element->hasAttribute(data.first)) {
-        return element->attribute(data.first).toString().contains(data.second);
+        return element->attribute(data.first).toString().contains(data.second, Qt::CaseSensitivity::CaseInsensitive);
     }
     return false;
 }

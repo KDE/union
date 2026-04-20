@@ -177,7 +177,15 @@ bool Element::hasAttribute(const QString &name) const
 
 QVariant Element::attribute(const QString &name) const
 {
-    return d->attributes.value(name);
+    const auto keyValueRange = d->attributes.asKeyValueRange();
+    auto itr = std::ranges::find_if(keyValueRange, [name](const std::pair<QString, QVariant> &entry) {
+        return entry.first.compare(name, Qt::CaseInsensitive) == 0;
+    });
+    if (itr != keyValueRange.end()) {
+        return itr->second;
+    } else {
+        return QVariant{};
+    }
 }
 
 void Element::setAttribute(const QString &name, const QVariant &value)
