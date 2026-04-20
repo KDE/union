@@ -20,7 +20,7 @@ textarea,
 spinbox,
 searchfield
 {
-    height: var(--medium-element-size);
+    height: var(--large-element-size);
     padding: var(--medium-spacing);
     border-radius: var(--corner-radius);
 

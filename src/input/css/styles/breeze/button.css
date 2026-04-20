@@ -41,8 +41,6 @@
     --button-padding: 8px; /* 6 + 2 */
     --button-spacing: 4px;
 
-    --toolbutton-padding: 6px;
-
     --tab-background-color: mix(var(--view-background-color), var(--view-text-color), 0.17);
     --tab-text-color: var(--view-text-color);
     --tab-open-background-color: var(--window-background-color);
@@ -186,8 +184,9 @@ roundbutton.flat
 
 toolbutton
 {
-    icon-size: var(--icon-size-smallmedium);
-    padding: var(--toolbutton-padding);
+    /* Ensure default toolbuttons end up with 32px height, not 34px. */
+    icon-size: 24px;
+    padding: var(--medium-spacing) var(--small-spacing);
 }
 
 toolbutton.raised
