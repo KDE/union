@@ -31,8 +31,8 @@ int main(int argc, char **argv)
         {u"type"_s, u"The type to match"_s, u"type"_s},
         {u"id"_s, u"The ID to match"_s, u"id"_s},
         {u"states"_s, u"The states to match"_s, u"states"_s},
-        {u"colorset"_s, u"The color set to match"_s, u"colorset"_s},
         {u"hint"_s, u"The hint to match. Can be specified multiple times."_s, u"hint"_s},
+        {u"attribute"_s, u"An attribute and value to match, specified as \"key=value\". Can be specified multiple times."_s, u"attribute"_s},
     });
 
     parser.process(app);
@@ -63,14 +63,22 @@ int main(int argc, char **argv)
         queryElement->setStates(static_cast<Union::Element::States>(statesEnum.keysToValue(parser.value(u"states"_s).toUtf8().data())));
     }
 
-    if (parser.isSet(u"colorset"_s)) {
-        auto colorSetEnum = queryElement->metaObject()->enumerator(queryElement->metaObject()->indexOfEnumerator("ColorSet"));
-        queryElement->setColorSet(static_cast<Union::Element::ColorSet>(colorSetEnum.keyToValue(parser.value(u"colorset"_s).toUtf8().data())));
-    }
-
     if (parser.isSet(u"hint"_s)) {
         const auto hints = parser.values(u"hint"_s);
         queryElement->setHints(QStringList(hints.begin(), hints.end()));
+    }
+
+    if (parser.isSet(u"attribute"_s)) {
+        const auto attributes = parser.values(u"attribute"_s);
+        for (const auto &attribute : attributes) {
+            auto parts = attribute.split(u'=');
+            if (parts.length() != 2) {
+                std::cout << "Ignoring invalid attribute" << attribute.toStdString();
+                continue;
+            }
+
+            queryElement->setAttribute(parts.at(0), parts.at(1));
+        }
     }
 
     query.setElements({queryElement});
