@@ -140,7 +140,7 @@ heading
 
     &.secondary
     {
-        /*         opacity: 0.75; */
+        color: modify-color(var(--window-text-color) set-alpha 0.75);
     }
 }
 
