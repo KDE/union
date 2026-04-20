@@ -34,6 +34,8 @@ public:
     bool paddingValid : 1 = false;
     bool insetValid : 1 = false;
 
+    QQmlProperty mirroredProperty;
+
     QQmlProperty spacingProperty;
 
     QQmlProperty leftPaddingProperty;
@@ -57,6 +59,9 @@ PositionerLayout::PositionerLayout(QQuickItem *parentItem)
         connect(parentItem, &QQuickItem::widthChanged, this, &PositionerLayout::onParentSizeChanged);
         connect(parentItem, &QQuickItem::heightChanged, this, &PositionerLayout::onParentSizeChanged);
         parentItem->installEventFilter(this);
+
+        d->mirroredProperty = QQmlProperty(parentItem, u"mirrored"_s);
+        d->mirroredProperty.connectNotifySignal(this, SLOT(markDirty()));
 
         d->spacingProperty = QQmlProperty(parentItem, u"spacing"_s);
         d->spacingProperty.connectNotifySignal(this, SLOT(markDirty()));
@@ -348,7 +353,17 @@ void PositionerLayout::updatePolish()
     }
 
     d->ignorePositionChange = true;
-    layout.positionItems(parentItem(), d->layoutDirection == Qt::LayoutDirectionAuto ? qApp->layoutDirection() : d->layoutDirection);
+
+    auto direction = d->layoutDirection;
+    if (direction == Qt::LayoutDirectionAuto) {
+        if (d->mirroredProperty.isValid() && d->mirroredProperty.read().toBool()) {
+            direction = Qt::LayoutDirection::RightToLeft;
+        } else {
+            direction = qApp->layoutDirection();
+        }
+    }
+
+    layout.positionItems(parentItem(), direction);
     d->ignorePositionChange = false;
 
     d->layouting = false;
