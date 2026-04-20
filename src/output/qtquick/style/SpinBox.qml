@@ -56,9 +56,9 @@ T.SpinBox {
     }
 
     contentItem: T.TextField {
-        implicitWidth: contentWidth
-        implicitHeight: contentHeight
-
+        implicitWidth: Math.ceil(priv.metrics.width)
+        implicitHeight: priv.metrics.height
+        clip: true
         text: control.displayText
         font: control.font
         color: Union.Style.properties.text.color

@@ -67,7 +67,7 @@ spinbox
     width: var(--medium-element-size);
     height: var(--large-element-size);
     layout-alignment: content fill fill 0;
-    text-alignment: content fill fill 0;
+    text-alignment: content center fill 0;
     padding-left: var(--large-spacing);
     padding-right: var(--large-spacing);
     padding-top: var(--small-spacing);
@@ -145,6 +145,12 @@ spinbox
                 border-bottom-left-radius: var(--corner-radius);
             }
         }
+    }
+
+    &.constrained {
+        layout-alignment: item start fill 0;
+        text-alignment: item start fill 0;
+        margin-left: var(--small-spacing);
     }
 
     &.constrained > indicator {
