@@ -11,6 +11,7 @@ namespace Union
 {
 namespace Quick
 {
+class ElementAttribute;
 class QuickStyle;
 }
 }
@@ -34,4 +35,5 @@ private:
     void syncColorSchemeColors();
 
     Union::Quick::QuickStyle *m_style = nullptr;
+    Union::Quick::ElementAttribute *m_colorSetAttribute = nullptr;
 };

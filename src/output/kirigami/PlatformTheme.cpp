@@ -3,10 +3,13 @@
 
 #include "PlatformTheme.h"
 
+#include <QMetaEnum>
+
 #include <Color.h>
 #include <Style.h>
 #include <StyleRegistry.h>
 
+#include "../qtquick/plugin/QuickElement.h"
 #include "../qtquick/plugin/QuickStyle.h"
 
 using namespace Qt::StringLiterals;
@@ -135,6 +138,23 @@ void PlatformTheme::syncColorSchemeColors()
     Kirigami::Platform::PlatformThemeChangeTracker tracker(this);
 
     QString set = enumToString<PlatformTheme::ColorSet>(colorSet());
+
+    // For backward compatibility, add a "colorSet" attribute to each element
+    // that also is a Kirigami element. This allows us to change appearance
+    // based on colorSet.
+    if (!m_colorSetAttribute) {
+        auto element = static_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(parent(), false));
+        if (element) {
+            auto attributes = QQmlListReference(element, "attributes");
+            m_colorSetAttribute = new Union::Quick::ElementAttribute{this};
+            m_colorSetAttribute->setName(u"colorSet"_s);
+            attributes.append(m_colorSetAttribute);
+        }
+    }
+
+    if (m_colorSetAttribute) {
+        m_colorSetAttribute->setValue(set);
+    }
 
     // foreground
     setTextColor(Color::custom(u"kcolorscheme"_s, {group, set, u"foreground"_s, u"text"_s}).toQColor());

@@ -172,7 +172,7 @@ private:
  * \sa QuickElement
  * \sa ElementAttribute
  */
-class ElementHint : public QObject
+class UNIONQUICKIMPL_EXPORT ElementHint : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
@@ -231,7 +231,7 @@ private:
  * \sa QuickElement
  * \sa ElementHint
  */
-class ElementAttribute : public ElementHint
+class UNIONQUICKIMPL_EXPORT ElementAttribute : public ElementHint
 {
     Q_OBJECT
     QML_ELEMENT
