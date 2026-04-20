@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: BSD-2-Clause
 # SPDX-FileCopyrightText: 2025 Joshua Goins <josh@redstrate.com>
 
-add_library(UnionWidgetsStyle SHARED)
+add_library(UnionWidgetsStyle MODULE)
 target_sources(UnionWidgetsStyle PRIVATE
         StyleDrawing.cpp
         StyleDrawing.h
