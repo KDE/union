@@ -12,6 +12,12 @@ applicationheader
     background-color: var(--header-active-background-color);
     color: var(--header-active-text-color);
 
+    &[colorset="window"]
+    {
+        background-color: var(--window-background-color);
+        color: var(--window-text-color);
+    }
+
     &.with-separator
     {
         border-bottom: 1px solid var(--header-active-border-color);
