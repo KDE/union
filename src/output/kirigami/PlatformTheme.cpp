@@ -153,7 +153,13 @@ void PlatformTheme::syncColorSchemeColors()
     }
 
     if (m_colorSetAttribute) {
-        m_colorSetAttribute->setValue(set);
+        // Only set a valid value for colorSet if we're not inheriting,
+        // otherwise the specified colorset is ignored anyway.
+        if (!inherit()) {
+            m_colorSetAttribute->setValue(set);
+        } else {
+            m_colorSetAttribute->setValue(QVariant{});
+        }
     }
 
     // foreground
