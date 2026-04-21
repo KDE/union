@@ -26,6 +26,8 @@ target_sources(UnionQuickImpl PRIVATE
     StyleHints.h
     WheelHandler.cpp
     WheelHandler.h
+    WindowHandler.cpp
+    WindowHandler.h
 
     positioner/PositionerLayout.h
     positioner/PositionerLayout.cpp
