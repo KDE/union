@@ -38,6 +38,17 @@ public:
     void addWindow(QQuickWindow *window);
     void removeWindow(QObject *window);
 
+    /*!
+     * A version of Window.startSystemMove() that handles non-QQuickWindows.
+     *
+     * QML Window.window may return null if the item it's attached to is in a
+     * QQuickWidget or similar. To get the actual window, you need to call
+     * QQuickRenderControl::renderWindowFor() but this cannot be done from QML.
+     * So this function will start a system move on the render window of the
+     * given item.
+     */
+    Q_INVOKABLE void startSystemMove(QQuickItem *item);
+
     static std::shared_ptr<WindowHandler> instance();
 
     static WindowHandler *create(QQmlEngine *engine, QJSEngine *)

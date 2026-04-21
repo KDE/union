@@ -31,7 +31,7 @@ KT.AbstractApplicationHeader {
             target: null
             onActiveChanged: {
                 if (active) {
-                    root.Window.window.startSystemMove()
+                    Union.WindowHandler.startSystemMove(root)
                 }
             }
         }

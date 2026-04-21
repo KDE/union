@@ -44,7 +44,7 @@ T.ToolBar {
             target: null
             onActiveChanged: {
                 if (active && control.position == T.ToolBar.Header) {
-                    control.Window.window.startSystemMove()
+                    Union.WindowHandler.startSystemMove(control)
                 }
             }
         }

@@ -95,6 +95,25 @@ void WindowHandler::removeWindow(QObject *window)
     m_windows.remove(window);
 }
 
+void WindowHandler::startSystemMove(QQuickItem *item)
+{
+    if (!item) {
+        return;
+    }
+
+    auto quickWindow = item->window();
+    if (!quickWindow) {
+        return;
+    }
+
+    auto renderWindow = QQuickRenderControl::renderWindowFor(quickWindow);
+    if (!renderWindow) {
+        renderWindow = quickWindow;
+    }
+
+    renderWindow->startSystemMove();
+}
+
 std::shared_ptr<WindowHandler> Union::Quick::WindowHandler::instance()
 {
     static std::shared_ptr<WindowHandler> inst = std::make_shared<WindowHandler>();
