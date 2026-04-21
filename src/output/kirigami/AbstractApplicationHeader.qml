@@ -8,6 +8,7 @@ import QtQuick
 import QtQuick.Templates as T
 
 import org.kde.kirigami.templates as KT
+import org.kde.kirigami.platform as KP
 
 import org.kde.union.impl as Union
 
@@ -21,6 +22,9 @@ KT.AbstractApplicationHeader {
             when: root.separatorVisible && (!root.page || !root.page.header || !root.page.header.visible || !(root.page.header instanceof T.ToolBar))
         }
     ]
+
+    KP.Theme.inherit: false
+    KP.Theme.colorSet: KP.Theme.Header
 
     background: Union.StyledRectangle {
         DragHandler {
