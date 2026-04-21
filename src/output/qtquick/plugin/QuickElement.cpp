@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 #include <QQmlEngine>
+#include <QQuickItem>
 
 #include "Element.h"
 #include "EventHelper.h"
@@ -13,6 +14,7 @@
 #include "StyleRule.h"
 
 #include "QuickStyle.h"
+#include "WindowHandler.h"
 
 using namespace Union;
 using namespace Union::Quick;
@@ -411,6 +413,17 @@ void QuickElement::classBegin()
 void QuickElement::componentComplete()
 {
     m_completed = true;
+
+    // Add the window this element belongs to to WindowHandler so it can update
+    // it to include any required state changes. This is done here because we
+    // need a hook that is both late enoguh for most of the window stuff to
+    // already be initialized and at the same time we need a place that is
+    // called often enough that we're pretty sure we're tracking all the windows.
+    auto parentItem = qobject_cast<QQuickItem *>(parent());
+    if (parentItem) {
+        WindowHandler::instance()->addWindow(parentItem->window());
+    }
+
     updateHints();
     updateAttributes();
     update();
