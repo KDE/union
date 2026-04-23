@@ -4,6 +4,7 @@
  */
 
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Templates as T
 import org.kde.kirigami.templates as KT
 
@@ -45,6 +46,8 @@ KT.NavigationTabButton {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
+    Layout.fillHeight: true
+
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
 
@@ -63,6 +66,11 @@ KT.NavigationTabButton {
     font: Union.Style.properties.text.font
 
     spacing: Union.Style.properties.layout.spacing
+
+    Layout.topMargin: Union.Style.properties.layout.margins.top
+    Layout.bottomMargin: Union.Style.properties.layout.margins.bottom
+    Layout.leftMargin: Union.Style.properties.layout.margins.left
+    Layout.rightMargin: Union.Style.properties.layout.margins.right
 
     icon {
         color: Union.Style.properties.icon.color
@@ -91,9 +99,11 @@ KT.NavigationTabButton {
             text: parent.Union.Mnemonics.richTextLabel ?? control.text
             font: control.font
             color: Union.Style.properties.text.color ?? "black"
-            elide: Text.ElideRight
-            wrapMode: Text.NoWrap
+            elide: Text.ElideMiddle
+            wrapMode: Text.Wrap
             visible: control.display != T.AbstractButton.IconOnly && text.length > 0
+            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
         }
     }
 

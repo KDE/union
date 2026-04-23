@@ -202,6 +202,8 @@ navigationtabbutton {
     border-radius: var(--corner-radius);
     color: var(--window-text-color);
     icon-size: var(--icon-size-smallmedium);
+    spacing: var(--small-spacing);
+    margin: var(--small-spacing);
 
     layout-alignment: content fill fill 0;
     text-alignment-horizontal: center;
