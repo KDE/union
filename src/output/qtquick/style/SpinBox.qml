@@ -121,7 +121,11 @@ T.SpinBox {
         // Measure what the maximum length of text is that needs to fit.
         property TextMetrics metrics: TextMetrics {
             font: control.font
-            text: control.textFromValue(control.to, Qt.locale())
+            text: {
+                const toText = control.textFromValue(control.to, Qt.locale())
+                const fromText = control.textFromValue(control.from, Qt.locale())
+                return toText.length >= fromText.length ? toText : fromText
+            }
         }
 
         // Helper to retrieve the size of indicators when not constrained.
