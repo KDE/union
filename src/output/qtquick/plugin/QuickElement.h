@@ -416,12 +416,13 @@ public:
 
     std::shared_ptr<Union::Style> style() const;
 
+    void componentComplete() override;
+
 protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
 
     void classBegin() override;
-    void componentComplete() override;
 
 private:
     friend class StatesGroup;

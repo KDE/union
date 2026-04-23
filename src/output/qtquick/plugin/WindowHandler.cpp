@@ -81,9 +81,23 @@ void WindowHandler::addWindow(QQuickWindow *window)
     // change appearance whenever the window becomes inactive.
     //
     // TODO: This should be handled by media queries rather than a hint.
-    auto element = qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(window));
+    bool created = false;
+    auto element = qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(window, false));
+    if (!element) {
+        created = true;
+        element = qobject_cast<QuickElement *>(qmlAttachedPropertiesObject<QuickElement>(window));
+    }
+
     data.inactiveHint = new WindowInactiveHint(data.renderWindow, element);
     QQmlListReference(element, "hints").append(data.inactiveHint);
+
+    // Ensure componentCompleted() is called when a new element was created for
+    // the window. QML apparently does not ensure this itself so we end up with
+    // partially initialized Elements that don't work correctly if we do not do
+    // this.
+    if (created) {
+        element->componentComplete();
+    }
 
     connect(window, &QQuickWindow::destroyed, this, &WindowHandler::removeWindow);
 
