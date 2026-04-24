@@ -57,7 +57,6 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         rect.setBottom(rect.bottom() - 2);
 
         drawBackground(painter, rect, properties);
-
         QStyleOptionButton labelOption(*buttonOption);
         labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
 
@@ -82,13 +81,28 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         auto horizontalAlignment = toQtHorizontal(properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
 
-        auto verticalAlignment = toQtVertical(properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
+        auto verticalAlignment = toQtVertical(properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
+
+        auto textRect = buttonOption->rect;
+
+        // TODO can we talk with positioner and get the areas for the icon and text?
+        if (!buttonOption->icon.isNull()) {
+            auto horizontalAlignment = toQtHorizontal(properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
+            auto verticalAlignment = toQtVertical(properties->icon()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
+            textRect.setWidth(textRect.width() - buttonOption->iconSize.width());
+            QCommonStyle::drawItemPixmap(painter,
+                                         buttonOption->rect,
+                                         QCommonStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment),
+                                         buttonOption->icon.pixmap(buttonOption->iconSize));
+        }
 
         QTextOption textOption;
         textOption.setAlignment(horizontalAlignment | verticalAlignment);
 
+        QCommonStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment);
+
         painter->setPen(buttonOption->palette.buttonText().color());
-        painter->drawText(buttonOption->rect, buttonOption->text, textOption);
+        painter->drawText(textRect, buttonOption->text, textOption);
 
         return;
     }
