@@ -35,12 +35,13 @@ Qt::Alignment toQtHorizontal(Union::Properties::Alignment alignment)
     case Union::Properties::Alignment::Unspecified:
     case Union::Properties::Alignment::Start:
         return Qt::AlignLeft;
+    case Union::Properties::Alignment::StackCenter:
     case Union::Properties::Alignment::Center:
         return Qt::AlignHCenter;
     case Union::Properties::Alignment::End:
         return Qt::AlignRight;
     case Union::Properties::Alignment::Fill:
-    case Union::Properties::Alignment::Stack:
+    case Union::Properties::Alignment::StackFill:
         return Qt::AlignJustify;
     }
 
@@ -57,7 +58,8 @@ Qt::Alignment toQtVertical(Union::Properties::Alignment alignment)
     case Union::Properties::Alignment::Unspecified:
     case Union::Properties::Alignment::Center:
     case Union::Properties::Alignment::Fill:
-    case Union::Properties::Alignment::Stack:
+    case Union::Properties::Alignment::StackCenter:
+    case Union::Properties::Alignment::StackFill:
         return Qt::AlignVCenter;
     }
 

@@ -29,7 +29,7 @@ include(CMakeDependentOption)
 
 # General build options
 option(BUILD_TOOLS "Build tools that are useful for development" ON)
-option(BUILD_EXAMPLES "Build example applications" OFF)
+option(BUILD_EXAMPLES "Build example applications" ON)
 
 # Build parts depending on certain KDE frameworks
 option(BUILD_WITH_KDEFRAMEWORKS "Build parts depending on KDE Frameworks" ON)

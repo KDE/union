@@ -52,3 +52,5 @@ void drawCornerProperty(QPainter *painter,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderProperty *border,
                         const Union::Properties::CornerProperty *corner);
+
+void drawIcon(QPainter *painter, const QRect &rect, const QIcon &icon);

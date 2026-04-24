@@ -3,6 +3,7 @@
 
 #include "StyleDrawing.h"
 
+#include <QIcon>
 #include <QPainter>
 #include <QPainterPath>
 #include <algorithm>
@@ -406,4 +407,11 @@ void drawCornerProperty(QPainter *painter,
         painter->drawPath(path);
         painter->restore();
     }
+}
+
+void drawIcon(QPainter *painter, const QRect &rect, const QIcon &icon)
+{
+    painter->save();
+    painter->drawPixmap(rect, icon.pixmap(rect.size()));
+    painter->restore();
 }
