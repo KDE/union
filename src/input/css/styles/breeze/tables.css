@@ -77,6 +77,13 @@ treeviewdelegate {
         layout-alignment: item start center 1;
     }
 
+    & > radiobutton,
+    & > checkbox {
+        layout-alignment: content fill center 0;
+        icon-alignment: content start center 1;
+        text-alignment: content fill center 2;
+    }
+
     &.expanded > indicator {
         icon-name: "arrow-down-symbolic"
     }
