@@ -11,7 +11,8 @@ Item {
 
     required property T.AbstractButton control
 
-    property int wrapMode: Text.NoWrap
+    property int wrapMode: control.Union.Style.properties.text.wrapMode ?? Text.NoWrap
+    property int elide: control.Union.Style.properties.text.elide ?? Text.ElideRight
 
     Union.PositionedItem.positionChildren: true
     Union.Mnemonics.enabled: root.control.enabled && root.control.visible
@@ -30,7 +31,7 @@ Item {
         text: root.Union.Mnemonics.richTextLabel ?? root.control.text
         font: root.control.font
         color: Union.Style.properties.text.color ?? "black"
-        elide: root.wrapMode == Text.NoWrap ? Text.ElideRight : Text.ElideNone
+        elide: root.wrapMode == Text.NoWrap ? root.elide : Text.ElideNone
         wrapMode: root.wrapMode
 
         visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0

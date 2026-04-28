@@ -115,6 +115,14 @@
     syntax: "<color>";
 }
 
+@property text-wrap-mode {
+    syntax: "no-wrap | word-wrap | wrap-anywhere | wrap";
+}
+
+@property text-elide {
+    syntax: "none | left | middle | right";
+}
+
 
 @property icon-alignment-container {
     syntax: "item | content | background";

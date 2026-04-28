@@ -79,6 +79,7 @@ treeviewdelegate {
 
     & > radiobutton,
     & > checkbox {
+        text-wrap-mode: no-wrap;
         layout-alignment: content fill center 0;
         icon-alignment: content start center 1;
         text-alignment: content fill center 2;

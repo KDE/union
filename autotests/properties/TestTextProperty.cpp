@@ -25,6 +25,8 @@ private Q_SLOTS:
         QVERIFY(!property->alignment());
         QVERIFY(!property->font().has_value());
         QVERIFY(!property->color().has_value());
+        QVERIFY(!property->wrapMode().has_value());
+        QVERIFY(!property->elide().has_value());
     }
 
     void testEmpty()
@@ -35,6 +37,8 @@ private Q_SLOTS:
         QCOMPARE(*property->alignment(), *AlignmentProperty::empty());
         QCOMPARE(property->font().value(), emptyValue<QFont>());
         QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(property->wrapMode().value(), emptyValue<Union::Properties::TextWrapMode>());
+        QCOMPARE(property->elide().value(), emptyValue<Union::Properties::TextElide>());
     }
 
     void testHasAnyValue()
@@ -69,6 +73,20 @@ private Q_SLOTS:
             property->setColor(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
+        {
+            Union::Properties::TextWrapMode value;
+            property->setWrapMode(value);
+            QVERIFY(property->hasAnyValue());
+            property->setWrapMode(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
+        {
+            Union::Properties::TextElide value;
+            property->setElide(value);
+            QVERIFY(property->hasAnyValue());
+            property->setElide(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -87,6 +105,8 @@ private Q_SLOTS:
         source->setAlignment(testAlignmentPropertyInstance());
         source->setFont(QFont{});
         source->setColor(Union::Color{});
+        source->setWrapMode(Union::Properties::TextWrapMode{});
+        source->setElide(Union::Properties::TextElide{});
 
         QVERIFY(source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
@@ -98,6 +118,8 @@ private Q_SLOTS:
         QCOMPARE(*destination->alignment(), *source->alignment());
         QCOMPARE(destination->font(), source->font());
         QCOMPARE(destination->color(), source->color());
+        QCOMPARE(destination->wrapMode(), source->wrapMode());
+        QCOMPARE(destination->elide(), source->elide());
     }
 
     void testDataStream()

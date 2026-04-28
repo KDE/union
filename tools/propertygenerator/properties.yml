@@ -57,6 +57,8 @@ text:
     alignment: *alignment
     font: QFont
     color: Union::Color
+    wrapMode: Union::Properties::TextWrapMode
+    elide: Union::Properties::TextElide
 
 icon:
     # \brief A property group containing properties related to an element's icon.

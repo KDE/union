@@ -108,6 +108,28 @@ enum class ToStringFlag {
 };
 Q_DECLARE_FLAGS(ToStringFlags, ToStringFlag)
 
+/*!
+ * \enum Union::Properties::TextWrapMode
+ */
+enum class TextWrapMode {
+    NoWrap,
+    WordWrap,
+    WrapAnywhere,
+    Wrap
+};
+Q_ENUM_NS(TextWrapMode)
+
+/*!
+ * \enum Union::Properties::TextElide
+ */
+enum class TextElide {
+    None,
+    Left,
+    Middle,
+    Right
+};
+Q_ENUM_NS(TextElide)
+
 /*
  * A template method to get an empty value of a certain type.
  *

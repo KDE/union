@@ -37,6 +37,8 @@ void TextPropertyGroup::update(TextProperty *newState)
 
     Q_EMIT fontChanged();
     Q_EMIT colorChanged();
+    Q_EMIT wrapModeChanged();
+    Q_EMIT elideChanged();
     Q_EMIT updated();
 }
 
@@ -74,6 +76,34 @@ QJSValue TextPropertyGroup::color() const
     auto value = m_state->color();
     if (value) {
         return m_style->engine()->toScriptValue(value.value().toQColor());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue TextPropertyGroup::wrapMode() const
+{
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state->wrapMode();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue TextPropertyGroup::elide() const
+{
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state->elide();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

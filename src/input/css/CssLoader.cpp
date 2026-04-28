@@ -665,6 +665,14 @@ void CssLoader::setTextProperty(StyleProperty *output, const cssparser::Property
     if (property.name() == "color" || property.name() == "text-color") {
         text->setColor(to_color(property.value()));
     }
+
+    if (property.name() == "text-wrap-mode") {
+        text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
+    }
+
+    if (property.name() == "text-elide") {
+        text->setElide(toEnumValue<TextElide>(property.value<std::string>()));
+    }
 }
 
 void CssLoader::setIconProperty(StyleProperty *output, const cssparser::Property &property)

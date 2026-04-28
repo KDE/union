@@ -41,6 +41,7 @@ radiobutton,
 switch
 {
     icon-alignment-horizontal: start;
+    text-wrap-mode: wrap;
 
     padding: var(--small-spacing);
     spacing: var(--small-spacing);

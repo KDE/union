@@ -62,7 +62,6 @@ T.CheckBox {
 
     contentItem: P.DefaultContentItem {
         control: control
-        wrapMode: Text.Wrap
     }
 
     background: Union.StyledRectangle {}
