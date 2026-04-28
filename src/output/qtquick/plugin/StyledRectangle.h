@@ -31,6 +31,11 @@ class StyledRectangle : public QQuickItem
 public:
     StyledRectangle(QQuickItem *parent = nullptr);
 
+    Q_PROPERTY(Union::Quick::QuickStyle *style READ style WRITE setStyle NOTIFY styleChanged)
+    Union::Quick::QuickStyle *style() const;
+    void setStyle(Union::Quick::QuickStyle *newStyle);
+    Q_SIGNAL void styleChanged();
+
     void componentComplete() override;
 
 protected:

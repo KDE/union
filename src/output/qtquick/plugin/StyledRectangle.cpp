@@ -26,6 +26,21 @@ StyledRectangle::StyledRectangle(QQuickItem *parent)
     setFlag(QQuickItem::ItemHasContents);
 }
 
+QuickStyle *StyledRectangle::style() const
+{
+    return m_style;
+}
+
+void StyledRectangle::setStyle(QuickStyle *newStyle)
+{
+    if (newStyle == m_style) {
+        return;
+    }
+
+    m_style = newStyle;
+    Q_EMIT styleChanged();
+}
+
 void StyledRectangle::componentComplete()
 {
     QQuickItem::componentComplete();
