@@ -20,20 +20,24 @@ T.MenuItem {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: Union.ElementHint {
-        name: "exclusive";
-        when: {
-            if (control.autoExclusive) {
-                return true
-            } else if (control.action) {
-                let group = control.action.T.ActionGroup.group
-                return group?.exclusive ?? false
-            } else {
-                let group = control.T.ButtonGroup.group
-                return group?.exclusive ?? false
+
+    Union.Element.hints: [
+        Union.ElementHint {
+            name: "exclusive";
+            when: {
+                if (control.autoExclusive) {
+                    return true
+                } else if (control.action) {
+                    let group = control.action.T.ActionGroup.group
+                    return group?.exclusive ?? false
+                } else {
+                    let group = control.T.ButtonGroup.group
+                    return group?.exclusive ?? false
+                }
             }
-        }
-    }
+        },
+        Union.ElementHint { name: "with-submenu"; when: control.subMenu !== null }
+    ]
     Union.Mnemonics.enabled: control.enabled && control.visible
     Union.Mnemonics.controlType: Union.Mnemonics.MenuItem
     Union.Mnemonics.label: control.text
