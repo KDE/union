@@ -65,6 +65,8 @@ menuitem
     }
 
     &:disabled {
+        border: none;
+        background: none;
         color: var(--window-disabled-text-color);
     }
 
