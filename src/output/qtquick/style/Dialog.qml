@@ -36,7 +36,13 @@ T.Dialog {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    background: Union.StyledRectangle { }
+    background: Union.StyledRectangle {
+        // Explicitly bind to the style instance of the main Dialog item.
+        // This ensures that even when the dialog is a Window type or the content
+        // otherwise loses connection to the main Dialog item, we still use that
+        // item's properties rather than an unknown instance.
+        style: control.Union.Style
+    }
 
     header: Label {
         Union.Element.hints: Union.ElementHint { name: "header" }
