@@ -48,8 +48,12 @@ KT.NavigationTabButton {
 
     Layout.fillHeight: true
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding,
+                             Union.Positioner.implicitHeight)
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -66,12 +70,6 @@ KT.NavigationTabButton {
     font: Union.Style.properties.text.font
 
     spacing: Union.Style.properties.layout.spacing
-
-    Layout.topMargin: Union.Style.properties.layout.margins.top
-    Layout.bottomMargin: Union.Style.properties.layout.margins.bottom
-    Layout.leftMargin: Union.Style.properties.layout.margins.left
-    Layout.rightMargin: Union.Style.properties.layout.margins.right
-
     icon {
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width

@@ -9,6 +9,7 @@
 
 :root {
     /* Standard Sizes */
+    --minimal-spacing: 2px;
     --small-spacing: 4px;
     --medium-spacing: 6px;
     --large-spacing: 8px;

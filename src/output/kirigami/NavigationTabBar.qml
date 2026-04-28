@@ -27,9 +27,9 @@ KT.NavigationTabBar {
 	]
 
 	implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-							implicitContentWidth + leftPadding + rightPadding)
+							contentWidth)
 	implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-							 implicitContentHeight + topPadding + bottomPadding)
+							 contentHeight + topPadding + bottomPadding)
 
 	leftPadding: Union.Style.properties.layout.padding.left
 	rightPadding: Union.Style.properties.layout.padding.right
@@ -41,7 +41,8 @@ KT.NavigationTabBar {
 	topInset: Union.Style.properties.layout.inset.top
 	bottomInset: Union.Style.properties.layout.inset.bottom
 
-	spacing: Union.Style.properties.layout.spacing
+	// TabBar template expects 0 spacing
+	spacing: 0
 
 	font: Union.Style.properties.text.font
 

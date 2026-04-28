@@ -161,7 +161,7 @@ spinbox
 
         border: none;
         margin: 0px;
-        margin-right: 2px;
+        margin-right: var(--minimal-spacing);
 
         &:hover,
         &:pressed
