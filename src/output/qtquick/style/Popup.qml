@@ -25,8 +25,13 @@ T.Popup {
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding:  Union.Style.properties.layout.padding.bottom
 
-
-    background: Union.StyledRectangle {}
+    background: Union.StyledRectangle {
+        // Explicitly bind to the style instance of the main Popup item.
+        // This ensures that even when the popup is a Window type or the content
+        // otherwise loses connection to the main Dialog item, we still use that
+        // item's properties rather than an unknown instance.
+        style: control.Union.Style
+    }
 
     T.Overlay.modal: Union.StyledRectangle {
         Union.Element.type: "Overlay"
