@@ -47,6 +47,7 @@ Kirigami.Page {
                 Kirigami.Action {
                     icon.name: "edit-paste"
                     text: qsTr("Paste")
+                    enabled: false
                 }
             }
             Controls.Menu {
