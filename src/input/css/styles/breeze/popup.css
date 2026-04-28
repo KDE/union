@@ -50,8 +50,15 @@ menuitem
 
     color: var(--window-text-color);
 
+    /*
+    highlight is "sticky", that is, when hovering outside of the menu or
+    over a disabled item, the last hovered item will be considered highlighted.
+    We generally only want to show hover, *except* when a menu item shows a
+    submenu, as we want to keep highlighting the menu item the submenu comes
+    from.
+    */
     &:hovered,
-    &:highlighted
+    &.with-submenu:highlighted
     {
         background-color: var(--focus-color);
         border: 1px solid var(--highlight-color);
