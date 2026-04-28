@@ -13,8 +13,8 @@ T.Dialog {
     Union.Element.type: "Dialog"
 
     parent: T.Overlay.overlay
-    x: (parent.width - width) / 2
-    y: (parent.height - height) / 2
+    x: ((parent?.width - width) / 2) ?? 0
+    y: ((parent?.height - height) / 2) ?? 0
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Math.ceil(contentWidth) + leftPadding + rightPadding,
