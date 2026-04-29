@@ -50,6 +50,8 @@ page
 toolbar
 {
     padding: var(--small-spacing);
+    padding-top: var(--medium-spacing);
+    padding-bottom: var(--large-spacing);
     color: var(--window-active-text-color);
     background-color: var(--window-active-background-color);
 
