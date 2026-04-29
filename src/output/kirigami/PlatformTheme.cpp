@@ -140,24 +140,25 @@ void PlatformTheme::syncColorSchemeColors()
     QString set = enumToString<PlatformTheme::ColorSet>(colorSet());
 
     // For backward compatibility, add a "colorSet" attribute to each element
-    // that also is a Kirigami element. This allows us to change appearance
-    // based on colorSet.
-    if (!m_colorSetAttribute) {
-        auto element = static_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(parent(), false));
-        if (element) {
-            auto attributes = QQmlListReference(element, "attributes");
-            m_colorSetAttribute = new Union::Quick::ElementAttribute{this};
-            m_colorSetAttribute->setName(u"colorSet"_s);
-            attributes.append(m_colorSetAttribute);
+    // that also is a Kirigami element and which doesn't inherit. This allows us
+    // to change appearance based on colorSet.
+    if (!inherit()) {
+        if (!m_colorSetAttribute) {
+            auto element = static_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(parent(), true));
+            if (element) {
+                auto attributes = QQmlListReference(element, "attributes");
+                m_colorSetAttribute = new Union::Quick::ElementAttribute{this};
+                m_colorSetAttribute->setName(u"colorSet"_s);
+                attributes.append(m_colorSetAttribute);
+                element->componentComplete();
+            }
         }
-    }
 
-    if (m_colorSetAttribute) {
-        // Only set a valid value for colorSet if we're not inheriting,
-        // otherwise the specified colorset is ignored anyway.
-        if (!inherit()) {
+        if (m_colorSetAttribute) {
             m_colorSetAttribute->setValue(set);
-        } else {
+        }
+    } else {
+        if (m_colorSetAttribute) {
             m_colorSetAttribute->setValue(QVariant{});
         }
     }
