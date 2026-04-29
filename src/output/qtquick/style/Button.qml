@@ -26,9 +26,7 @@ T.Button {
     Union.Element.hints: [
         Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
         Union.ElementHint { name: "flat"; when: control.flat },
-        // Match qqc2-desktop-style's logic.
-        // TODO: Figure out how much sense this actually makes, I don't like the text condition here.
-        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text },
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 

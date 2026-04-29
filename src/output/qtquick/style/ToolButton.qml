@@ -26,7 +26,7 @@ T.ToolButton {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "raised"; when: !control.flat },
-        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text },
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu },
     ]
     Union.Element.attributes: Union.ElementAttribute {
         name: "display"
