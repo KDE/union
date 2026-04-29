@@ -51,6 +51,8 @@
     --header-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
     --header-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
 
+    --complementary-text-color: custom-color("kcolorscheme", "active", "complementary", "foreground", "text");
+    --complementary-background-color: custom-color("kcolorscheme", "active", "complementary", "background", "normal");
 
     --positive-text: custom-color("kcolorscheme", "active", "view", "foreground","positive");
     --neutral-text: custom-color("kcolorscheme", "active", "view", "foreground","neutral");

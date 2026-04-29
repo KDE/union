@@ -13,6 +13,12 @@ label {
     &:disabled {
         color: var(--window-disabled-text-color);
     }
+
+    &[colorset="complementary"],
+    [colorset="complementary"] &
+    {
+        color: var(--complementary-text-color);
+    }
 }
 
 textfield,
