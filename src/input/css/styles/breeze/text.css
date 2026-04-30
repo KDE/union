@@ -61,11 +61,15 @@ searchfield
 }
 
 textfield,
-textarea,
-searchfield
+searchfield {
+    text-alignment: content start center 0;
+    width: var(--text-field-width);
+}
+
+textarea
 {
     text-alignment: content start start 0;
-    width: 200px;
+    width: var(--text-field-width);
 }
 
 spinbox
