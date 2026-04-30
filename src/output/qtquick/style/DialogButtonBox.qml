@@ -33,8 +33,6 @@ T.DialogButtonBox {
     alignment: Qt.AlignRight
 
     delegate: Button {
-        width: implicitWidth
-
         Union.Element.attributes: Union.ElementAttribute {
             name: "role"
             value: switch (DialogButtonBox.buttonRole) {
