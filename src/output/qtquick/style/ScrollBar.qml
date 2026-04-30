@@ -23,6 +23,7 @@ T.ScrollBar {
     Union.Element.hints: [
         Union.ElementHint { name: "horizontal"; when: control.horizontal },
         Union.ElementHint { name: "vertical"; when: !control.horizontal },
+        Union.ElementHint { name: "noninteractive"; when: !control.interactive },
     ]
 
     hoverEnabled: Application.styleHints.useHoverEffects

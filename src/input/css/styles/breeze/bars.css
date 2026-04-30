@@ -217,6 +217,16 @@ scrollbar
             border: 1px solid var(--bar-disabled-border-color);
         }
     }
+
+    &.noninteractive {
+        width: var(--non-interactive-scrollbar-size);
+        border-left: none;
+        padding: var(--small-spacing);
+        & > handle {
+            background-color: var(--bar-handle-disabled-background-color);
+            border: 1px solid var(--bar-handle-disabled-border-color);
+        }
+    }
 }
 
 dial {
