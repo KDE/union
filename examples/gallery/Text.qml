@@ -48,6 +48,31 @@ Kirigami.Page {
             placeholderText: "Password field"
         }
 
+        // Kirigami uses Application style, so this uses same style for all pages
+        Kirigami.ActionTextField {
+            id: actionTextField
+            Layout.fillWidth: true
+            placeholderText: "ActionTextField"
+            Layout.preferredHeight: 40
+            rightActions: [
+                Kirigami.Action {
+                    text: "Cancel"
+                    icon.name: "edit-delete-remove"
+                    onTriggered: {
+                        console.warn("blah")
+                    }
+                },
+                Kirigami.Action {
+                    text: "Confirm"
+                    icon.name: "checkmark"
+                    visible: actionTextField.text.length > 0
+                    onTriggered: {
+                        console.warn("bluh")
+                    }
+                }
+            ]
+        }
+
         Controls.TextArea {
             placeholderText: "Text Area"
         }
