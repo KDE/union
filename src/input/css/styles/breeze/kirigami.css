@@ -203,6 +203,7 @@ navigationtabbutton {
     color: var(--window-text-color);
     icon-size: var(--icon-size-smallmedium);
     inset: var(--minimal-spacing);
+    padding: var(--small-spacing);
 
     layout-alignment: content fill fill 0;
     text-alignment-horizontal: center;
