@@ -5,24 +5,23 @@ of separate output styles.
 
 ## Getting Started
 
-To use Union in your Kirigami application, ensure it is installed and then use
-`QT_QUICK_CONTROLS_STYLE=org.kde.union` or equivalent in code.
+To use Union, you will need to have Union installed, either by installing it using
+your favorite package manager, or by building it from source.
+
+To use Union in a QtQuick or Kirigami application, run the application with the
+environment variable `QT_QUICK_CONTROLS_STYLE` set to `org.kde.union`.
 
 To learn more about how to use or develop Union, see the [Union Documentation][].
 
 [Union Documentation]: https://api.kde.org/union-index.html
 
-Note that currently there is no documentation about developing styles for Union.
-This is due to there being only one input format plugin that uses KDE Plasma's
-SVG styling.
-
 ## Building
 
-To build Union, you will need a recent version of CMake and Qt version 6.8 or
-higher. To build the Plasma SVG input plugin, you will additionally need
-[RapidYAML][rapidyaml] version 0.6 or higher.
+To build Union, you will need a recent version of CMake and Qt version 6.9 or
+higher. You will also need to build [cxx-rust-cssparser] which is required for
+the default CSS input format.
 
-[rapidyaml]: https://github.com/biojppm/rapidyaml
+[cxx-rust-cssparser]: https://invent.kde.org/libraries/cxx-rust-cssparser
 
 You can build and install Union [manually with CMake](cmake) like this:
 
