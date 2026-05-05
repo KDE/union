@@ -23,6 +23,7 @@ T.ComboBox {
     Union.Element.hints: [
         Union.ElementHint { name: "flat"; when: control.flat },
         Union.ElementHint { name: "editable"; when: control.editable },
+        Union.ElementHint { name: "changed"; when: false },
     ]
 
     Union.Positioner.positionItems: [contentItem, icon, indicator]

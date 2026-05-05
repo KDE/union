@@ -371,3 +371,12 @@ tumbler {
         }
     }
 }
+
+button.changed,
+toolbutton.changed,
+combobox.changed,
+roundbutton.changed,
+delaybutton.changed {
+    background-color: var(--changed-background);
+    border: 1px solid var(--changed-foreground);
+}

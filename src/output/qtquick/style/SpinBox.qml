@@ -21,6 +21,7 @@ T.SpinBox {
     Union.Element.hints: [
         Union.ElementHint { name: "editable"; when: control.editable },
         Union.ElementHint { name: "constrained"; when: priv.constrained },
+        Union.ElementHint { name: "changed"; when: false },
     ]
 
     hoverEnabled: Application.styleHints.useHoverEffects

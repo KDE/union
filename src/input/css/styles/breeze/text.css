@@ -214,3 +214,10 @@ searchfield {
     }
     
 }
+
+textfield.changed,
+textarea.changed,
+spinbox.changed {
+    background-color: var(--changed-background);
+    border: 1px solid var(--changed-foreground);
+}

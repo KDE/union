@@ -22,6 +22,7 @@ T.TextField {
                          || control.focusReason === Qt.ShortcutFocusReason)
         enabled: control.enabled
     }
+    Union.Element.hints: Union.ElementHint { name: "changed"; when: false }
 
     implicitWidth: implicitBackgroundWidth + leftInset + rightInset
                    || Math.max(contentWidth, placeholder.implicitWidth) + leftPadding + rightPadding

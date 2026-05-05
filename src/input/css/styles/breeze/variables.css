@@ -63,6 +63,8 @@
     --neutral-background: custom-color("kcolorscheme", "active", "view", "background","neutral");
     --negative-background: custom-color("kcolorscheme", "active", "view", "background","negative");
 
+    --changed-foreground: var(--neutral-text);
+    --changed-background: var(--neutral-background);
 
     --card-background-color: var(--view-background-color);
     --card-text-color: var(--view-text-color);

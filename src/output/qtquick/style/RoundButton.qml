@@ -23,7 +23,10 @@ T.RoundButton {
         enabled: control.enabled
         highlighted: control.highlighted
     }
-    Union.Element.hints: Union.ElementHint { name: "flat"; when: control.flat }
+    Union.Element.hints: [
+        Union.ElementHint { name: "flat"; when: control.flat },
+        Union.ElementHint { name: "changed"; when: false },
+    ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
     hoverEnabled: Application.styleHints.useHoverEffects

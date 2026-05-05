@@ -27,6 +27,8 @@ T.Button {
         Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
         Union.ElementHint { name: "flat"; when: control.flat },
         Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu },
+        // This is changed by KCMUtils with using QuickElement::hint
+        Union.ElementHint { name: "changed"; when: false },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 

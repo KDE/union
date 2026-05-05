@@ -22,6 +22,7 @@ T.TextArea {
                          || control.focusReason === Qt.ShortcutFocusReason)
         enabled: control.enabled
     }
+    Union.Element.hints: Union.ElementHint { name: "changed"; when: false }
 
     hoverEnabled: Application.styleHints.useHoverEffects
 

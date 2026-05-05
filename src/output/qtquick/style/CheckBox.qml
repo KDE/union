@@ -22,7 +22,10 @@ T.CheckBox {
         checked: control.checked
         enabled: control.enabled
     }
-    Union.Element.hints: Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() }
+    Union.Element.hints: [
+        Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
+        Union.ElementHint { name: "changed"; when: false },
+    ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
     hoverEnabled: Application.styleHints.useHoverEffects

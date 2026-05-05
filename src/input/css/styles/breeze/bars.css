@@ -270,3 +270,13 @@ dial {
         }
     }
 }
+
+slider.changed {
+    & > fill {
+        background-color: var(--changed-background);
+        border: 1px solid var(--changed-foreground);
+    }
+    & > tickmark.active {
+        background-color: var(--changed-foreground);
+    }
+}

@@ -30,6 +30,7 @@ T.RadioDelegate {
         Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
         Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
         Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
+        Union.ElementHint { name: "changed"; when: false },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 

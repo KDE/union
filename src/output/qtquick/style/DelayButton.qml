@@ -25,6 +25,7 @@ T.DelayButton {
         // Match qqc2-desktop-style's logic.
         // TODO: Figure out how much sense this actually makes, I don't like the text condition here.
         Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text },
+        Union.ElementHint { name: "changed"; when: false },
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
