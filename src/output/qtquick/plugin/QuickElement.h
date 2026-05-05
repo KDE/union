@@ -381,6 +381,17 @@ public:
     Q_SIGNAL void hintsChanged();
 
     /*!
+     * Get a hint by name.
+     *
+     * This will return the ElementHint corresponding to \p name, or nullptr if
+     * it cannot be found.
+     *
+     * \note The return type of this method is QObject* to facilitate calling it
+     * through QMetaObject.
+     */
+    Q_INVOKABLE QObject *hint(const QString &name) const;
+
+    /*!
      * \qmlattachedproperty list<Attribute> Element::attributes
      * A list of attributes to provide to the element.
      *

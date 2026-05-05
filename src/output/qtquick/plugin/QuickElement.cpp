@@ -340,6 +340,14 @@ QQmlListProperty<ElementHint> QuickElement::hints()
                                          &HintFunctions::removeLast);
 }
 
+QObject *QuickElement::hint(const QString &name) const
+{
+    auto itr = std::ranges::find_if(m_hints, [&name](ElementHint *hint) {
+        return hint->name() == name;
+    });
+    return itr != m_hints.end() ? *itr : nullptr;
+}
+
 QQmlListProperty<ElementAttribute> QuickElement::attributes()
 {
     using AttributeFunctions = ListFunctions<ElementAttribute, &QuickElement::m_attributes, &QuickElement::attributesChanged>;
