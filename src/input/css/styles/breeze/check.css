@@ -57,6 +57,8 @@ menuitem,
 radiobutton,
 radiodelegate
 {
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
     & > indicator
     {
         width: var(--icon-size-small);
@@ -105,6 +107,15 @@ radiodelegate
     {
         background-color: var(--checkable-indicator-disabled-background-color);
         background-image-mask-color: var(--checkable-indicator-disabled-text-color);
+    }
+}
+
+checkbox,
+radiobutton {
+    & > indicator
+    {
+        layout-alignment-container: item;
+        layout-alignment-vertical: center;
     }
 }
 
