@@ -6,12 +6,12 @@
 #include <Element.h>
 #include <Style.h>
 
-#include <QCommonStyle>
+#include <QProxyStyle>
 
 /*!
  * \brief Provides Union styling for QtWidgets applications.
  */
-class UnionStyle : public QCommonStyle
+class UnionStyle : public QProxyStyle
 {
 public:
     UnionStyle();
