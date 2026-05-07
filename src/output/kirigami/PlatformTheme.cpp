@@ -120,6 +120,10 @@ void PlatformTheme::syncColorSchemeColors()
         return;
     }
 
+    if (!Union::StyleRegistry::instance()->defaultStyle()) {
+        Union::StyleRegistry::instance()->load();
+    }
+
     QString group = enumToString<PlatformTheme::ColorGroup>(colorGroup());
 
     auto parentItem = qobject_cast<QQuickItem *>(parent());

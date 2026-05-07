@@ -46,6 +46,10 @@ public:
             return styles.value(styleId);
         }
 
+        if (!styleCache) {
+            return nullptr;
+        }
+
         if (styleCache->hasEntry(styleId)) {
             auto data = styleCache->load(styleId);
             if (data) {
@@ -151,7 +155,9 @@ StyleRegistry::~StyleRegistry() = default;
 
 void StyleRegistry::load()
 {
-    d->styleCache = std::make_unique<StyleCache>();
+    if (!d->styleCache) {
+        d->styleCache = std::make_unique<StyleCache>();
+    }
 }
 
 void StyleRegistry::save()
