@@ -44,8 +44,8 @@ option(BUILD_INPUT_PLASMASVG "Build the PlasmaSVG input plugin" OFF)
 # Options to control building outputs
 option(BUILD_OUTPUT_QTQUICK "Build the QtQuick output" ON)
 cmake_dependent_option(BUILD_OUTPUT_KIRIGAMI "Build the Kirigami output. Requires QtQuick output." ON "BUILD_OUTPUT_QTQUICK" OFF)
-# Temporarily disabled by default until we have more complete coverage
-option(BUILD_OUTPUT_QTWIDGETS "Build the QtWidgets output" OFF)
+# Builds a proxy style that uses Breeze as the base by default
+option(BUILD_OUTPUT_QTWIDGETS "Build the QtWidgets output" ON)
 
 set(EXCLUDE_DEPRECATED_BEFORE_AND_AT 0 CACHE STRING "Control the range of deprecated API excluded from the build [default=0].")
 
@@ -80,6 +80,8 @@ endif()
 
 if (BUILD_OUTPUT_QTWIDGETS)
     find_package(Qt6Widgets ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Breeze CONFIG)
+    set_package_properties(Breeze PROPERTIES TYPE RUNTIME PURPOSE "Breeze is used as the QtWidgets base style by default.")
 endif()
 
 if (BUILD_OUTPUT_KIRIGAMI)
