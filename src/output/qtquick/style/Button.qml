@@ -26,7 +26,10 @@ T.Button {
     Union.Element.hints: [
         Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
         Union.ElementHint { name: "flat"; when: control.flat },
-        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu },
+        // Match logic used in qqc2-desktop-style
+        // TODO: The text condition here is wrong, but matches current behaviour.
+        // It should be a style decision when the menu indicator is shown.
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text !== "" },
         // This is changed by KCMUtils with using QuickElement::hint
         Union.ElementHint { name: "changed"; when: false },
     ]

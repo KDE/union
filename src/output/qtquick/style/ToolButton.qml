@@ -26,7 +26,10 @@ T.ToolButton {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "raised"; when: !control.flat },
-        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu },
+        // Match logic used in qqc2-desktop-style
+        // TODO: The text condition here is wrong, but matches current behaviour.
+        // It should be a style decision when the menu indicator is shown.
+        Union.ElementHint { name: "with-menu"; when: control.Accessible.role === Accessible.ButtonMenu && control.text !== "" },
         Union.ElementHint { name: "changed"; when: false },
     ]
     Union.Element.attributes: Union.ElementAttribute {
