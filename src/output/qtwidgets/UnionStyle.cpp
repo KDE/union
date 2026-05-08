@@ -84,9 +84,25 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         auto verticalAlignment = toQtVertical(properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
 
-        auto mainRect = buttonOption->rect;
+        // Shrink the widget rect by the insets
+        QRectF mainRect = option->rect.toRectF();
         auto textRect = mainRect;
         auto iconRect = mainRect;
+        if (const auto layout = properties->layout()) {
+            if (layout->inset()) {
+                mainRect -= layout->inset()->toMargins().toMargins();
+            }
+            if (layout->padding()) {
+                textRect -= layout->padding()->toMargins().toMargins();
+                // iconRect -= layout->padding()->toMargins().toMargins();
+            }
+        }
+
+        // Make sure to take out the space left for the visual focus rect
+        mainRect.setLeft(mainRect.left() + 2);
+        mainRect.setRight(mainRect.right() - 2);
+        mainRect.setTop(mainRect.top() + 2);
+        mainRect.setBottom(mainRect.bottom() - 2);
 
         if (!buttonOption->icon.isNull()) {
             auto iconHorizontalAlign = toQtHorizontal(properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
@@ -104,16 +120,24 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
             auto textOrder = properties->text()->alignment()->order().value_or(0);
             auto iconOrder = properties->icon()->alignment()->order().value_or(0);
 
-            iconRect.moveCenter(QPoint(iconRect.center().x() + spacing, mainRect.center().y()));
+            iconRect.moveCenter(QPoint(iconRect.center().x() + spacing * 2, mainRect.center().y()));
+            textRect.moveCenter(QPoint(textRect.center().x() + spacing * 2, textRect.center().y()));
 
             auto pixmap = buttonOption->icon.pixmap(QSize(properties->icon()->width().value_or(0), properties->icon()->height().value_or(0)));
-            painter->drawPixmap(iconRect, pixmap);
+            // painter->save();
+            // painter->setBrush(Qt::blue);
+            // painter->drawRect(textRect);
+            // painter->setBrush(Qt::red);
+            // painter->drawRect(iconRect);
+            // painter->restore();
+
+            painter->drawPixmap(iconRect.toRect(), pixmap);
         }
 
         QTextOption textOption;
         textOption.setAlignment(horizontalAlignment | verticalAlignment);
 
-        // QProxyStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment);
+        QProxyStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment);
 
         painter->setPen(buttonOption->palette.buttonText().color());
         painter->drawText(textRect, buttonOption->text, textOption);
