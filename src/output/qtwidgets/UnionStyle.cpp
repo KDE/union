@@ -44,8 +44,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         const auto properties = query->properties();
 
         // Shrink the widget rect by the insets
-        // TODO: we may have to keep it as a QRectF here
-        QRect rect = option->rect;
+        QRectF rect = option->rect.toRectF();
         if (const auto layout = properties->layout()) {
             if (layout->inset()) {
                 rect -= layout->inset()->toMargins().toMargins();
@@ -85,23 +84,36 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         auto verticalAlignment = toQtVertical(properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
 
-        auto textRect = buttonOption->rect;
+        auto mainRect = buttonOption->rect;
+        auto textRect = mainRect;
+        auto iconRect = mainRect;
 
-        // TODO can we talk with positioner and get the areas for the icon and text?
         if (!buttonOption->icon.isNull()) {
-            auto horizontalAlignment = toQtHorizontal(properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
-            auto verticalAlignment = toQtVertical(properties->icon()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
-            textRect.setWidth(textRect.width() - buttonOption->iconSize.width());
-            QProxyStyle::drawItemPixmap(painter,
-                                        buttonOption->rect,
-                                        QProxyStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment),
-                                        buttonOption->icon.pixmap(buttonOption->iconSize));
+            auto iconHorizontalAlign = toQtHorizontal(properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified));
+            auto iconVerticalAlign = toQtVertical(properties->icon()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified));
+
+            qreal spacing = properties->layout()->spacing().value_or(0);
+            qreal width = properties->icon()->width().value_or(0);
+            iconRect.setWidth(width);
+            iconRect.setHeight(properties->icon()->height().value_or(0));
+
+            // Create something that takes any amount of elements, a rectangle and then creates
+            // list of needed amount of rectangles in same order, but they fit inside the given rectangle
+            // then this can be used to draw things
+
+            auto textOrder = properties->text()->alignment()->order().value_or(0);
+            auto iconOrder = properties->icon()->alignment()->order().value_or(0);
+
+            iconRect.moveCenter(QPoint(iconRect.center().x() + spacing, mainRect.center().y()));
+
+            auto pixmap = buttonOption->icon.pixmap(QSize(properties->icon()->width().value_or(0), properties->icon()->height().value_or(0)));
+            painter->drawPixmap(iconRect, pixmap);
         }
 
         QTextOption textOption;
         textOption.setAlignment(horizontalAlignment | verticalAlignment);
 
-        QProxyStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment);
+        // QProxyStyle::visualAlignment(Qt::LayoutDirectionAuto, horizontalAlignment | verticalAlignment);
 
         painter->setPen(buttonOption->palette.buttonText().color());
         painter->drawText(textRect, buttonOption->text, textOption);

@@ -22,7 +22,7 @@ enum class SubNodeIndex {
 /*!
  * \brief Draw a Union StyleProperty, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style);
+void drawBackground(QPainter *painter, const QRectF &rect, const Union::Properties::StyleProperty *style);
 
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
@@ -32,13 +32,13 @@ QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::Corn
 /*!
  * \brief Constrains the corner radii to not go over the rectangle's size or under zero.
  */
-Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
+Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRectF &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
 
 /*!
  * \brief Draw a Union LineProperty.
  */
 void drawLineProperty(QPainter *painter,
-                      const QRect &rect,
+                      const QRectF &rect,
                       SubNodeIndex subNodeIndex,
                       const QMarginsF &borderSizes,
                       const Union::Properties::LineProperty *line,
@@ -48,9 +48,9 @@ void drawLineProperty(QPainter *painter,
  * \brief Draw a Union CornerProperty.
  */
 void drawCornerProperty(QPainter *painter,
-                        const QRect &rect,
+                        const QRectF &rect,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderProperty *border,
                         const Union::Properties::CornerProperty *corner);
 
-void drawIcon(QPainter *painter, const QRect &rect, const QIcon &icon);
+void drawIcon(QPainter *painter, const QRectF &rect, const QIcon &icon);

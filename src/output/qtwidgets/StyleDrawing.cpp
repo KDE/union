@@ -12,7 +12,7 @@
 
 static Union::LruImageCache imageCache;
 
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style)
+void drawBackground(QPainter *painter, const QRectF &rect, const Union::Properties::StyleProperty *style)
 {
     QRectF innerRect = rect;
     // Borders
@@ -193,7 +193,7 @@ QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::Corn
     return path;
 }
 
-Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii)
+Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRectF &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii)
 {
     auto topLeft = std::min({rect.width() / 2.0, rect.height() / 2.0, cornerRadii.topLeft});
     auto topRight = std::min({rect.width() / 2.0, rect.height() / 2.0, cornerRadii.topRight});
@@ -209,7 +209,7 @@ Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRect &rect
 }
 
 void drawLineProperty(QPainter *painter,
-                      const QRect &rect,
+                      const QRectF &rect,
                       SubNodeIndex subNodeIndex,
                       const QMarginsF &borderSizes,
                       const Union::Properties::LineProperty *line,
@@ -271,7 +271,7 @@ void drawLineProperty(QPainter *painter,
 
 // TODO: Fix tiny gaps caused by antialiasing between corners and borders
 void drawCornerProperty(QPainter *painter,
-                        const QRect &rect,
+                        const QRectF &rect,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderProperty *border,
                         const Union::Properties::CornerProperty *corner)
@@ -409,9 +409,9 @@ void drawCornerProperty(QPainter *painter,
     }
 }
 
-void drawIcon(QPainter *painter, const QRect &rect, const QIcon &icon)
+void drawIcon(QPainter *painter, const QRectF &rect, const QIcon &icon)
 {
     painter->save();
-    painter->drawPixmap(rect, icon.pixmap(rect.size()));
+    painter->drawPixmap(rect.toRect(), icon.pixmap(rect.size().toSize()));
     painter->restore();
 }
