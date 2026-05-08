@@ -15,4 +15,8 @@ class QStyleOption;
 /*!
  * \brief Translate the state from QStyleOption to Union::Element states.
  */
-Union::Element::States statesFromOption(const QStyleOption *option);
+Union::Element::States buttonStatesFromOption(const QStyleOption *option);
+
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties);
+
+Union::Properties::StyleProperty *prepareProperties(Union::Element::Ptr &element);

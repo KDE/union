@@ -2,10 +2,12 @@
 // SPDX-FileCopyrightText: 2025 Joshua Goins <josh@redstrate.com>
 
 #include "StyleUtils.h"
+#include <ElementQuery.h>
+#include <StyleRegistry.h>
 
 #include <QStyleOption>
 
-Union::Element::States statesFromOption(const QStyleOption *option)
+Union::Element::States buttonStatesFromOption(const QStyleOption *option)
 {
     Union::Element::States states;
     if (option->state.testFlag(QStyle::State_Active)) {
@@ -27,4 +29,36 @@ Union::Element::States statesFromOption(const QStyleOption *option)
         states |= Union::Element::State::Pressed;
     }
     return states;
+}
+
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties)
+{
+    // Shrink the widget rect by the insets
+    // TODO: we may have to keep it as a QRectF here
+    QRect rect = option->rect;
+    if (const auto layout = properties->layout()) {
+        if (layout->inset()) {
+            rect -= layout->inset()->toMargins().toMargins();
+        }
+    }
+
+    // Make sure to take out the space left for the visual focus rect
+    rect.setLeft(rect.left() + 2);
+    rect.setRight(rect.right() - 2);
+    rect.setTop(rect.top() + 2);
+    rect.setBottom(rect.bottom() - 2);
+
+    return rect;
+}
+
+Union::Properties::StyleProperty *prepareProperties(Union::Element::Ptr &element)
+{
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto query = std::make_unique<Union::ElementQuery>(style);
+
+    query->setElements({element});
+    query->execute();
+
+    auto properties = query->properties();
+    return properties;
 }

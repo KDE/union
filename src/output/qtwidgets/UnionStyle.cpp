@@ -31,45 +31,48 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         auto element = Union::Element::create();
         element->setType(QStringLiteral("Button"));
-        element->setStates(statesFromOption(option));
+        element->setStates(buttonStatesFromOption(option));
         element->setColorSet(Union::Element::ColorSet::Button);
         element->setHint(QStringLiteral("flat"), buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat));
 
-        const auto style = Union::StyleRegistry::instance()->defaultStyle();
-        const auto query = std::make_unique<Union::ElementQuery>(style);
-
-        query->setElements({element});
-        query->execute();
-
-        const auto properties = query->properties();
-
-        // Shrink the widget rect by the insets
-        // TODO: we may have to keep it as a QRectF here
-        QRect rect = option->rect;
-        if (const auto layout = properties->layout()) {
-            if (layout->inset()) {
-                rect -= layout->inset()->toMargins().toMargins();
-            }
-        }
-
-        // Make sure to take out the space left for the visual focus rect
-        rect.setLeft(rect.left() + 2);
-        rect.setRight(rect.right() - 2);
-        rect.setTop(rect.top() + 2);
-        rect.setBottom(rect.bottom() - 2);
-
+        const auto properties = prepareProperties(element);
+        auto rect = prepareRectangle(option, properties).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
         labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
 
-        // Draw label
-        // TODO: union-ize better
         QProxyStyle::drawControl(CE_PushButtonLabel, &labelOption, painter, widget);
 
         return;
     }
     QProxyStyle::drawControl(controlElement, option, painter, widget);
+}
+
+void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
+{
+    if (control == CC_ToolButton) {
+        const auto buttonOption = static_cast<const QStyleOptionToolButton *>(option);
+
+        auto element = Union::Element::create();
+        element->setType(QStringLiteral("ToolButton"));
+        element->setStates(buttonStatesFromOption(option));
+        element->setColorSet(Union::Element::ColorSet::Button);
+        // QStyle has no flat toolbuttons
+        element->setHint(QStringLiteral("raised"), true);
+
+        const auto properties = prepareProperties(element);
+        auto rect = prepareRectangle(option, properties).toRect();
+        drawBackground(painter, rect, properties);
+
+        QStyleOptionToolButton labelOption(*buttonOption);
+        labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
+
+        QProxyStyle::drawControl(CE_ToolButtonLabel, &labelOption, painter, widget);
+        return;
+    }
+
+    QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const
