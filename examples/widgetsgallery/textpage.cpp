@@ -23,6 +23,10 @@ TextPage::TextPage(QWidget *parent)
     auto *lineEdit = new QLineEdit(this);
     lineEdit->setPlaceholderText(QStringLiteral("QLineEdit"));
 
+    auto *lineEditTwo = new QLineEdit(this);
+    lineEditTwo->setPlaceholderText(QStringLiteral("QLineEditTwo"));
+    lineEditTwo->setFrame(false);
+
     auto *textEdit = new QTextEdit(this);
     textEdit->setPlaceholderText(QStringLiteral("QTextEdit"));
     textEdit->setLineWrapMode(QTextEdit::NoWrap);
@@ -59,6 +63,7 @@ TextPage::TextPage(QWidget *parent)
 
     label->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     lineEdit->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    lineEditTwo->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     textEdit->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     comboBox->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     comboBoxEditable->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
@@ -67,6 +72,7 @@ TextPage::TextPage(QWidget *parent)
 
     layout->addWidget(label);
     layout->addWidget(lineEdit);
+    layout->addWidget(lineEditTwo);
     layout->addWidget(textEdit);
     layout->addWidget(comboBox);
     layout->addWidget(comboBoxEditable);

@@ -12,7 +12,25 @@
 
 class QStyleOption;
 
+const char property_union_member_list[] = "_union_member_list";
+
 /*!
  * \brief Translate the state from QStyleOption to Union::Element states.
  */
 Union::Element::States statesFromOption(const QStyleOption *option);
+QStringList hintsFromOption(const QStyleOption *option);
+Union::Element::ColorSet colorsetFromOption(const QStyleOption *option);
+QVariantMap attributesFromOption(const QStyleOption *option);
+
+Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup);
+Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode);
+Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
+
+QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
+
+Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget = nullptr, QStringList childElementNames = {});
+Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList &elements);
+
+QStringList setupMemberList(QWidget *widget);
+
+QMap<QString, QRectF> layoutMap(const QRect &mainRect, const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements);

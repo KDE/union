@@ -3,8 +3,15 @@
 
 #include "StyleDrawing.h"
 
+#include "StyleUtils.h"
+#include <Element.h>
+#include <ElementQuery.h>
+#include <QGuiApplication>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStyleOption>
+#include <StyleRegistry.h>
+#include <StyleUtils.h>
 #include <algorithm>
 
 #include "LruCache.h"
@@ -78,13 +85,30 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
         if (const auto image = background->image(); image && image->source()) {
             painter->save();
             painter->setClipPath(path);
-            painter->drawImage(innerRect, imageCache.load(image->source().value(), innerRect.size()));
+
+            QSizeF imageSize;
+            imageSize.setHeight(style->layout()->height().value_or(16));
+            imageSize.setWidth(style->layout()->width().value_or(16));
+            auto loadedImage = imageCache.load(image->source().value(), imageSize);
+            if (image->flags().value().testAnyFlag(Union::Properties::ImageFlag::Mask)) {
+                painter->setBrush(Qt::transparent);
+                painter->setPen(image->maskColor()->toQColor());
+                QBitmap mask = QBitmap::fromImage(loadedImage.createAlphaMask());
+                auto imageRect = innerRect;
+                imageRect.setWidth(mask.width());
+                imageRect.setHeight(mask.height());
+                imageRect.moveCenter(innerRect.center());
+                painter->drawPixmap(imageRect.topLeft(), mask);
+            } else {
+                painter->drawImage(innerRect, loadedImage);
+            }
+
             painter->restore();
         }
     }
-
     // Draw borders and corners
     if (const auto border = style->border()) {
+        painter->setRenderHint(QPainter::Antialiasing, true);
         // Make simpler border shapes if complex ones are not necessary
         if (allBordersEqual && allBorderColorsEqual && allCornerRadiiEqual) { // All radii and borders identical
             QPainterPath rectangularOutline;
@@ -367,4 +391,93 @@ void drawCornerProperty(QPainter *painter,
 
     painter->drawPath(path);
     painter->restore();
+}
+
+void drawElement(Union::Properties::StylePropertyGroup *properties, QPainter *painter, const QStyleOption *opt, QRect rect)
+{
+    auto drawArea = rect;
+    if (drawArea.isEmpty()) {
+        drawArea = backgroundRectangle(opt, properties).toRect();
+    }
+    drawBackground(painter, drawArea, properties);
+}
+
+void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *painter, const QWidget *widget, const QIcon &icon, const QString &text)
+{
+    QList<Union::Element::Ptr> elements = prepareElements(opt, widget);
+    QStringList elementTypes;
+
+    bool hasIcon = !icon.isNull();
+    bool hasText = !text.isEmpty();
+
+    const bool enabled = opt->state.testFlag(QStyle::State_Enabled);
+    auto properties = queryProperties(elements);
+
+    QMargins paddings;
+    if (properties->layout()->padding()) {
+        paddings = properties->layout()->padding()->toMargins().toMargins();
+    }
+    auto rect = backgroundRectangle(opt, properties).toRect().marginsRemoved(paddings);
+
+    QStringList subElements;
+    // TODO: these need to be ordered correctly
+    if (hasIcon) {
+        subElements.append(QStringLiteral("Icon"));
+    }
+    if (hasText) {
+        subElements.append(QStringLiteral("Text"));
+    }
+    auto map = layoutMap(rect, elements, opt, subElements);
+
+    QRect textRect;
+    if (hasText) {
+        auto textAlignment = toQtAlignment(properties->text()->alignment());
+        auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
+        auto textElide = toQtElideMode(properties->text()->elide().value_or(Union::Properties::TextElide::Right));
+        auto textColor = properties->text()->color();
+        QColor penColor = opt->palette.text().color();
+        if (textColor) {
+            penColor = textColor->toQColor();
+        }
+        textRect = map[QStringLiteral("Text")].toRect();
+
+        painter->save();
+        painter->setPen(penColor);
+        qstyle->drawItemText(painter, textRect, Qt::TextShowMnemonic | textFlags | textElide | textAlignment, opt->palette, enabled, text);
+        painter->restore();
+    }
+
+    QRect iconRect;
+    if (hasIcon) {
+        auto iconAlignment = toQtAlignment(properties->icon()->alignment());
+        auto iconColor = properties->icon()->color();
+
+        iconRect = map[QStringLiteral("Icon")].toRect();
+        const QPalette activePalette = opt->palette;
+        const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
+
+        const QPixmap pixmap = icon.pixmap(iconRect.size(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+        QColor penColor = opt->palette.text().color(); // Use text color as fallback
+
+        if (iconColor) {
+            penColor = iconColor->toQColor();
+        }
+
+        painter->save();
+        painter->setPen(penColor);
+        qstyle->drawItemPixmap(painter, iconRect, iconAlignment, pixmap);
+        painter->restore();
+    }
+
+    /*
+            painter->save();
+            painter->setBrush(Qt::NoBrush);
+            painter->setPen(Qt::blue);
+            painter->drawRect(rect);
+            painter->setPen(Qt::green);
+            painter->drawRect(iconRect);
+            painter->setPen(Qt::red);
+            painter->drawRect(textRect);
+            painter->restore();
+    */
 }

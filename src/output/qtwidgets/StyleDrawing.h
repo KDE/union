@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QPainterPath>
+#include <QStyle>
 #include <properties/StylePropertyGroup.h>
 
 class QPainter;
@@ -19,8 +20,15 @@ enum class SubNodeIndex {
     BottomRight,
 };
 
+enum class PrimitiveType {
+    Standalone,
+    Panel,
+    Frame,
+    Indicator,
+};
+
 /*!
- * \brief Draw a Union StyleProperty, such as the center, border and corners.
+ * \brief Draw a Union StylePropertyGroup, such as the center, border and corners.
  */
 void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
 
@@ -52,3 +60,11 @@ void drawCornerProperty(QPainter *painter,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);
+
+void drawElement(Union::Properties::StylePropertyGroup *properties, QPainter *painter, const QStyleOption *opt, QRect rect = QRect());
+void drawIconText(const QStyleOption *opt,
+                  const QStyle *qstyle,
+                  QPainter *painter,
+                  const QWidget *widget,
+                  const QIcon &icon = QIcon(),
+                  const QString &text = QString());
