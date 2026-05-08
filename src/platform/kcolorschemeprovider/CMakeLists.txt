@@ -13,7 +13,6 @@ ecm_qt_declare_logging_category(union-colorprovider-kcolorscheme
     HEADER kcolorscheme_logging.h
     IDENTIFIER UNION_KCOLORSCHEME
     CATEGORY_NAME union.kcolorscheme
-    DEFAULT_SEVERITY Warning
     DESCRIPTION "Union - KColorScheme Color Provider Plugin"
     EXPORT Union
 )

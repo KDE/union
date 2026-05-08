@@ -71,7 +71,6 @@ ecm_qt_declare_logging_category(UnionQuickImpl
     HEADER qtquick_logging.h
     IDENTIFIER UNION_QTQUICK
     CATEGORY_NAME union.qtquick
-    DEFAULT_SEVERITY Debug
     DESCRIPTION "Union - QtQuick Output Plugin"
     EXPORT Union
 )

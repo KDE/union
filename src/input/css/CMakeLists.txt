@@ -19,7 +19,6 @@ ecm_qt_declare_logging_category(union-input-css
     HEADER css_logging.h
     IDENTIFIER UNION_CSS
     CATEGORY_NAME union.css
-    DEFAULT_SEVERITY Debug
     DESCRIPTION "Union - CSS Input Plugin"
     EXPORT Union
 )

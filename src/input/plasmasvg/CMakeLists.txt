@@ -37,7 +37,6 @@ ecm_qt_declare_logging_category(union-plasmasvg
     HEADER plasmasvg_logging.h
     IDENTIFIER UNION_PLASMASVG
     CATEGORY_NAME union.plasmasvg
-    DEFAULT_SEVERITY Debug
     DESCRIPTION "Union - Plasma SVG Input Plugin"
     EXPORT Union
 )

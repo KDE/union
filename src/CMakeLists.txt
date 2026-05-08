@@ -40,7 +40,6 @@ ecm_qt_declare_logging_category(Union
     HEADER union_logging.h
     IDENTIFIER UNION_GENERAL
     CATEGORY_NAME union.general
-    DEFAULT_SEVERITY Debug
     DESCRIPTION "Union - General"
     EXPORT Union
 )
@@ -49,7 +48,6 @@ ecm_qt_declare_logging_category(Union
     HEADER union_query_logging.h
     IDENTIFIER UNION_QUERY
     CATEGORY_NAME union.query
-    DEFAULT_SEVERITY Warning
     DESCRIPTION "Union - Query Debugging"
     EXPORT Union
 )
