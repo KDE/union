@@ -50,6 +50,7 @@ ecm_qt_declare_logging_category(Union
     CATEGORY_NAME union.query
     DESCRIPTION "Union - Query Debugging"
     EXPORT Union
+    DEFAULT_SEVERITY Warning
 )
 
 ecm_generate_export_header(Union
