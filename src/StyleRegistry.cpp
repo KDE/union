@@ -54,7 +54,7 @@ public:
             auto data = styleCache->load(styleId);
             if (data) {
                 auto style = std::make_shared<Style>(std::move(data));
-                qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from cached data.";
+                qCInfo(UNION_GENERAL) << "Loaded style" << styleName << "from cached data";
                 styles.insert(styleId, style);
                 return style;
             }
@@ -81,6 +81,8 @@ public:
             qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but it failed to load!";
             return nullptr;
         }
+
+        qCInfo(UNION_GENERAL) << "Loaded style" << styleName << "from plugin" << pluginName;
 
         styles.insert(styleId, style);
         return style;
