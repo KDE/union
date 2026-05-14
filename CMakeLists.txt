@@ -3,13 +3,13 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-set(KF_VERSION "6.0.0") # handled by release scripts
-set(KF_DEP_VERSION "6.0.0") # handled by release scripts
+set(PROJECT_VERSION "6.0.0") # handled by release scripts
+set(KF6_MIN_VERSION "6.0.0") # handled by release scripts
 
-project(Union VERSION ${KF_VERSION})
+project(Union VERSION ${PROJECT_VERSION})
 
 include(FeatureSummary)
-find_package(ECM ${KF_DEP_VERSION} NO_MODULE)
+find_package(ECM ${KF6_MIN_VERSION} NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 feature_summary(WHAT REQUIRED_PACKAGES_NOT_FOUND FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
@@ -53,8 +53,8 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Find required packages
 
-set(REQUIRED_QT_VERSION 6.9.0)
-find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Core Gui)
+set(QT_MIN_VERSION 6.9.0)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui)
 
 if (BUILD_TESTING)
     find_package(Qt6Test REQUIRED)
@@ -67,25 +67,25 @@ if (BUILD_EXAMPLES)
 endif()
 
 if (BUILD_WITH_KDEFRAMEWORKS)
-    find_package(KF6 ${KF_DEP_VERSION} REQUIRED COMPONENTS CoreAddons GuiAddons IconThemes ColorScheme)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons GuiAddons IconThemes ColorScheme)
     set_package_properties(KF6IconThemes PROPERTIES TYPE REQUIRED PURPOSE "KIconThemes is used for icon recoloring")
     set_package_properties(KF6ColorScheme PROPERTIES TYPE REQUIRED PURPOSE "KColorScheme is used to read system colors")
 endif()
 
 if (BUILD_OUTPUT_QTQUICK)
-    find_package(Qt6Quick ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
-    find_package(Qt6QuickControls2 ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
-    find_package(Qt6ShaderTools ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6Quick ${QT_MIN_VERSION} CONFIG REQUIRED)
+    find_package(Qt6QuickControls2 ${QT_MIN_VERSION} CONFIG REQUIRED)
+    find_package(Qt6ShaderTools ${QT_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
 if (BUILD_OUTPUT_QTWIDGETS)
-    find_package(Qt6Widgets ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6Widgets ${QT_MIN_VERSION} CONFIG REQUIRED)
     find_package(Breeze CONFIG)
     set_package_properties(Breeze PROPERTIES TYPE RUNTIME PURPOSE "Breeze is used as the QtWidgets base style by default.")
 endif()
 
 if (BUILD_OUTPUT_KIRIGAMI)
-    find_package(KF6KirigamiPlatform ${KF_DEP_VERSION} CONFIG REQUIRED)
+    find_package(KF6KirigamiPlatform ${KF6_MIN_VERSION} CONFIG REQUIRED)
     set_package_properties(KF6KirigamiPlatform PROPERTIES TYPE REQUIRED PURPOSE "KirigamiPlatform provides the integration interface required by the Kirigami output")
 endif()
 
@@ -94,14 +94,14 @@ if (BUILD_INPUT_CSS)
 endif()
 
 if (BUILD_INPUT_PLASMASVG)
-    find_package(Qt6Svg ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6Svg ${QT_MIN_VERSION} CONFIG REQUIRED)
     find_package(KF6 COMPONENTS Archive ColorScheme Config REQUIRED)
     find_package(Plasma REQUIRED)
     find_package(ryml REQUIRED)
 endif()
 
 if (BUILD_PLATFORM_PLASMA)
-    find_package(Qt6DBus ${REQUIRED_QT_VERSION} CONFIG REQUIRED)
+    find_package(Qt6DBus ${QT_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
 add_subdirectory(src)
