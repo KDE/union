@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-set(PROJECT_VERSION "6.6.90") # handled by release scripts
+set(PROJECT_VERSION "6.7.80") # handled by release scripts
 set(KF6_MIN_VERSION "6.24.0") # handled by release scripts
 
 project(Union VERSION ${PROJECT_VERSION})
