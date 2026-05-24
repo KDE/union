@@ -13,7 +13,7 @@ Dependencies:
 
 Options:
   test-before-installing: true
-  require-passing-tests-on: [ 'Linux' ]
+  require-passing-tests-on: ['@all']
   # Explicitly enable QtWidgets output to make sure we verify it builds
   cmake-options: "-DBUILD_OUTPUT_QTWIDGETS=ON"
   run-qmllint: true
