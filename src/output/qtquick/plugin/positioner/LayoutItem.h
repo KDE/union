@@ -15,6 +15,7 @@ struct LayoutItem {
     QPointF position = QPointF{0.0, 0.0};
     QSizeF size = QSizeF{0.0, 0.0};
     QSizeF implicitSize = QSizeF{0.0, 0.0};
+    QSizeF minimumSize = QSizeF{0.0, 0.0};
     Union::Properties::Alignment verticalAlignment = Union::Properties::Alignment::Unspecified;
     int order = 0;
     QMarginsF margins;

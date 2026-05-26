@@ -80,7 +80,8 @@ struct LayoutContainer {
         fill.position = centerPosition;
         fill.size = remainingSize;
 
-        center.size = QSizeF{std::min(remainingSize.width(), center.size.width()), std::min(remainingSize.height(), center.size.height())};
+        center.size = QSizeF{std::max(std::min(remainingSize.width(), center.size.width()), center.minimumSize.width()),
+                             std::max(std::min(remainingSize.height(), center.size.height()), center.minimumSize.height())};
         center.position = centerPosition + QPointF{(remainingSize.width() - center.size.width()) / 2.0, (remainingSize.height() - center.size.height()) / 2.0};
 
         for (auto bucket : buckets()) {
@@ -92,7 +93,10 @@ struct LayoutContainer {
 
             for (auto &item : bucket->items) {
                 item.position = bucket->position + item.position;
-                item.size = item.implicitSize;
+
+                auto constrainedWidth = std::min(item.implicitSize.width(), bucket->size.width());
+                auto constrainedHeight = std::min(item.implicitSize.height(), bucket->size.height());
+                item.size = QSizeF{std::max(constrainedWidth, item.minimumSize.width()), std::max(constrainedHeight, item.minimumSize.height())};
 
                 if (bucket == &fill) {
                     fillX += item.margins.left();
@@ -109,10 +113,10 @@ struct LayoutContainer {
                     item.position.setY(top);
                     break;
                 case Union::Properties::Alignment::Center:
-                    item.position.setY(top + (bucket->size.height() - item.margins.top() - item.margins.bottom() - item.implicitSize.height()) / 2);
+                    item.position.setY(top + (bucket->size.height() - item.margins.top() - item.margins.bottom() - item.size.height()) / 2);
                     break;
                 case Union::Properties::Alignment::End:
-                    item.position.setY(bucket->position.y() + (bucket->size.height() - item.implicitSize.height() - item.margins.bottom()));
+                    item.position.setY(bucket->position.y() + (bucket->size.height() - item.size.height() - item.margins.bottom()));
                     break;
                 case Union::Properties::Alignment::Fill:
                     item.position.setY(top);
@@ -123,7 +127,7 @@ struct LayoutContainer {
                     item.size.setWidth(std::min(bucket->size.width(), item.size.width()));
                     item.position.setX(bucket->position.x() + (bucket->size.width() - item.size.width()) / 2);
                     item.position.setY(bucket->position.y() + stackedY);
-                    stackedY += item.implicitSize.height() + item.margins.bottom();
+                    stackedY += item.size.height() + item.margins.bottom();
                     break;
                 case Union::Properties::Alignment::StackFill:
                     stackedY += item.margins.top();

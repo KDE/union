@@ -3,6 +3,8 @@
 
 #include "Positioner.h"
 
+#include <EventHelper.h>
+
 #include "QuickStyle.h"
 #include "positioner/PositionerLayout.h"
 
@@ -10,6 +12,9 @@
 
 using namespace Union;
 using namespace Union::Quick;
+
+UNION_EXPORT QEvent::Type PositionedItemChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<PositionedItemChangedEvent> positionedItemChangedRegistration;
 
 Positioner::Positioner(QObject *parent)
     : QObject(parent)
@@ -183,6 +188,7 @@ void PositionedItem::setHorizontalAlignment(Union::Properties::Alignment newAlig
     }
 
     m_horizontalAlignment = newAlignment;
+    sendChangedEvent();
     Q_EMIT horizontalAlignmentChanged();
 }
 
@@ -203,6 +209,7 @@ void PositionedItem::setVerticalAlignment(Union::Properties::Alignment newAlignm
     }
 
     m_verticalAlignment = newAlignment;
+    sendChangedEvent();
     Q_EMIT verticalAlignmentChanged();
 }
 
@@ -211,9 +218,73 @@ void PositionedItem::resetVerticalAlignment()
     setVerticalAlignment(Union::Properties::Alignment::Unspecified);
 }
 
+qreal PositionedItem::minimumWidth() const
+{
+    return m_minimumWidth;
+}
+
+void PositionedItem::setMinimumWidth(qreal newMinimumWidth)
+{
+    if (newMinimumWidth == m_minimumWidth) {
+        return;
+    }
+
+    m_minimumWidth = newMinimumWidth;
+    sendChangedEvent();
+    Q_EMIT minimumWidthChanged();
+}
+
+void PositionedItem::resetMinimumWidth()
+{
+    setMinimumWidth(-1.0);
+}
+
+qreal PositionedItem::minimumHeight() const
+{
+    return m_minimumHeight;
+}
+
+void PositionedItem::setMinimumHeight(qreal newMinimumHeight)
+{
+    if (newMinimumHeight == m_minimumHeight) {
+        return;
+    }
+
+    m_minimumHeight = newMinimumHeight;
+    sendChangedEvent();
+    Q_EMIT minimumHeightChanged();
+}
+
+void PositionedItem::resetMinimumHeight()
+{
+    setMinimumHeight(-1.0);
+}
+
 PositionedItem *PositionedItem::qmlAttachedProperties(QObject *parent)
 {
     return new PositionedItem(parent);
+}
+
+bool PositionedItem::event(QEvent *event)
+{
+    if (event->type() == PositionedItemChangedEvent::s_type) {
+        // Propagate to parent to also enable event filters on the parent to
+        // notify of changes.
+        QCoreApplication::sendEvent(parent(), event);
+    }
+
+    return QObject::event(event);
+}
+
+void PositionedItem::sendChangedEvent()
+{
+    PositionedItemChangedEvent event;
+    QCoreApplication::sendEvent(this, &event);
+}
+
+PositionedItemChangedEvent::PositionedItemChangedEvent()
+    : QEvent(s_type)
+{
 }
 
 #include "moc_Positioner.cpp"

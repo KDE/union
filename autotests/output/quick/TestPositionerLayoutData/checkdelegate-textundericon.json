@@ -12,6 +12,8 @@
                     {
                         "implicitWidth": 16.0,
                         "implicitHeight": 16.0,
+                        "minimumWidth": 16.0,
+                        "minimumHeight": 16.0,
                         "margins": {
                             "left": 0.0,
                             "right": -16.0,
