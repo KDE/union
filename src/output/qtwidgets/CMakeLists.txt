@@ -24,3 +24,5 @@ set_target_properties(UnionWidgetsStyle PROPERTIES
 )
 
 install(TARGETS UnionWidgetsStyle DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/styles/)
+install(FILES union.themerc DESTINATION ${KDE_INSTALL_DATADIR}/kstyle/themes)
+

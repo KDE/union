@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: MIT
+# SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+
+[Misc]
+Name=Union
+Comment=An in-development style engine intended to unify the various styling systems in KDE.
+[KDE]
+WidgetStyle=Union
