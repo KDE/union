@@ -50,10 +50,6 @@ T.ToolTip {
     // Never time out while being hovered; it's annoying
     timeout: -1
 
-    // TODO Change this to Window when upstream has more fixes for it
-    // See also: https://invent.kde.org/plasma/union/-/issues/93
-    popupType: T.Popup.Item
-
     contentItem: Text {
         text: control.text
         font: control.font
