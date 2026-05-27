@@ -8,18 +8,10 @@ import QtQuick
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+import org.kde.kirigami.templates as KT
 
-T.Label {
+KT.Heading {
     id: control
-
-    property int level: 1
-
-    enum Type {
-        Normal,
-        Primary,
-        Secondary
-    }
-    property int type: Heading.Type.Normal
 
     Union.Element.type: "Heading"
     Union.Element.hints: [
@@ -42,7 +34,8 @@ T.Label {
 
     font: Union.Style.properties.text.font ?? Application.font
 
-    color: Union.Style.properties.text.color ?? palette.text
+    // Don't set the color as Headings in the plasma shell would
+    // break otherwise. a proper solution involves own union style for plasmashell
 
     background: Union.StyledRectangle { }
 }
