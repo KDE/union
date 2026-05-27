@@ -218,14 +218,40 @@ public:
     void resetVerticalAlignment();
     Q_SIGNAL void verticalAlignmentChanged();
 
+    Q_PROPERTY(qreal minimumWidth READ minimumWidth WRITE setMinimumWidth RESET resetMinimumWidth NOTIFY minimumWidthChanged)
+    qreal minimumWidth() const;
+    void setMinimumWidth(qreal newMinimumWidth);
+    void resetMinimumWidth();
+    Q_SIGNAL void minimumWidthChanged();
+
+    Q_PROPERTY(qreal minimumHeight READ minimumHeight WRITE setMinimumHeight RESET resetMinimumWidth NOTIFY minimumHeightChanged)
+    qreal minimumHeight() const;
+    void setMinimumHeight(qreal newMinimumHeight);
+    void resetMinimumHeight();
+    Q_SIGNAL void minimumHeightChanged();
+
     static PositionedItem *qmlAttachedProperties(QObject *parent);
 
+protected:
+    bool event(QEvent *event) override;
+
 private:
+    void sendChangedEvent();
+
     bool m_positionChildren = false;
     PositionerSource::Source m_source = PositionerSource::Source::Layout;
     Union::Properties::Alignment m_horizontalAlignment = Union::Properties::Alignment::Unspecified;
     Union::Properties::Alignment m_verticalAlignment = Union::Properties::Alignment::Unspecified;
+    qreal m_minimumWidth = -1.0;
+    qreal m_minimumHeight = -1.0;
 };
 
+class PositionedItemChangedEvent : public QEvent
+{
+public:
+    PositionedItemChangedEvent();
+
+    static QEvent::Type s_type;
+};
 }
 }

@@ -21,6 +21,8 @@ Item {
 
     Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
+        Union.PositionedItem.minimumWidth: control.icon?.width ?? 0.0
+        Union.PositionedItem.minimumHeight: control.icon?.height ?? 0.0
         control: root.control
         visible: (name || source.toString()) && root.control.display != T.AbstractButton.TextOnly
     }

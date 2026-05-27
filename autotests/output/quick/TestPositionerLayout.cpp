@@ -64,6 +64,7 @@ class TestPositionerLayout : public QObject
         QSizeF expectedSize;
 
         QSizeF implicitSize;
+        QSizeF minimumSize;
         QMarginsF margins;
         Union::Properties::Alignment verticalAlignment = Union::Properties::Alignment::Center;
         int order = 0;
@@ -144,6 +145,10 @@ class TestPositionerLayout : public QObject
 
         if (json.contains(u"implicitWidth") || json.contains(u"implicitHeight")) {
             data.implicitSize = QSizeF{json[u"implicitWidth"].toDouble(), json[u"implicitHeight"].toDouble()};
+        }
+
+        if (json.contains(u"minimumWidth") || json.contains(u"minimumHeight")) {
+            data.minimumSize = QSizeF{json[u"minimumWidth"].toDouble(), json[u"minimumHeight"].toDouble()};
         }
 
         data.margins = qMarginsFromJson(json[u"margins"]);
@@ -298,6 +303,7 @@ class TestPositionerLayout : public QObject
                 for (auto itemData : std::as_const(bucketData->items)) {
                     LayoutItem item;
                     item.implicitSize = itemData.implicitSize;
+                    item.minimumSize = itemData.minimumSize;
                     item.margins = itemData.margins;
                     item.order = itemData.order;
                     item.verticalAlignment = itemData.verticalAlignment;

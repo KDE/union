@@ -4,6 +4,7 @@
         "height": 24.0,
         "spacing": 4.0,
         "padding": 8.0,
+        "inset": 8.0,
 
         "content": {
             "center": {
@@ -11,6 +12,19 @@
                     {
                         "implicitWidth": 24.0,
                         "implicitHeight": 24.0
+                    }
+                ]
+            }
+        },
+
+        "background": {
+            "center": {
+                "items": [
+                    {
+                        "implicitWidth": 24.0,
+                        "implicitHeight": 24.0,
+                        "minimumWidth": 24.0,
+                        "minimumHeight": 24.0
                     }
                 ]
             }
@@ -32,6 +46,29 @@
                 "items": [
                     {
                         "x": 8.0,
+                        "y": 8.0,
+                        "width": 8.0,
+                        "height": 8.0
+                    }
+                ]
+            }
+        },
+
+        "background": {
+            "x": 8.0,
+            "y": 8.0,
+            "width": 8.0,
+            "height": 8.0,
+
+            "center": {
+                "x": 0.0,
+                "y": 0.0,
+                "width": 24.0,
+                "height": 24.0,
+
+                "items": [
+                    {
+                        "x": 0.0,
                         "y": 0.0,
                         "width": 24.0,
                         "height": 24.0

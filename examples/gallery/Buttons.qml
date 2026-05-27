@@ -66,6 +66,14 @@ Kirigami.Page {
             highlighted: true
         }
 
+        Controls.Button {
+            Layout.preferredWidth: 24
+            Layout.preferredHeight: Layout.preferredWidth
+            icon.name: "document-save"
+            text: "Tiny Button"
+            display: Controls.Button.IconOnly
+        }
+
         Controls.ToolButton {
             text: "ToolButton with Text"
         }

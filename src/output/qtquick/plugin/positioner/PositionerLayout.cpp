@@ -168,7 +168,7 @@ QSizeF PositionerLayout::implicitSize() const
 
 bool PositionerLayout::eventFilter(QObject *target, QEvent *event)
 {
-    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+    if (event->type() == QuickStyleUpdatedEvent::s_type || event->type() == PositionedItemChangedEvent::s_type) {
         markDirty();
         return false;
     }
@@ -255,6 +255,11 @@ void PositionerLayout::updatePolish()
             .margins = QMarginsF{},
             .item = item,
         };
+
+        if (positionedItemAttached) {
+            layoutItem.minimumSize = QSizeF{positionedItemAttached->minimumWidth() > 0.0 ? positionedItemAttached->minimumWidth() : 0.0,
+                                            positionedItemAttached->minimumHeight() > 0.0 ? positionedItemAttached->minimumHeight() : 0.0};
+        }
 
         if (source == PositionerSource::Source::Layout && layoutProperties && layoutProperties->margins()) {
             auto margins = layoutProperties->margins()->toMargins();

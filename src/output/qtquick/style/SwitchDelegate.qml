@@ -78,6 +78,9 @@ T.SwitchDelegate {
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
 
+        Union.PositionedItem.minimumWidth: Union.Style.properties.layout.width
+        Union.PositionedItem.minimumHeight: Union.Style.properties.layout.height
+
         Union.StyledRectangle { anchors.fill: parent }
 
         Union.StyledRectangle {

@@ -67,6 +67,9 @@ T.RadioDelegate {
 
     indicator: Union.StyledRectangle {
         Union.Element.type: "Indicator"
+
+        Union.PositionedItem.minimumWidth: Union.Style.properties.layout.width
+        Union.PositionedItem.minimumHeight: Union.Style.properties.layout.height
     }
 
     background: Union.StyledRectangle { }
