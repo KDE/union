@@ -10,12 +10,10 @@ import org.kde.union.impl as Union
 T.Menu {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + (Union.Style.properties.layout.inset.left ?? 0) + (Union.Style.properties.layout.inset.right ?? 0),
-                            contentWidth + leftPadding + rightPadding)
-                   + (-leftInset) + (-rightInset)
-    implicitHeight: Math.max(implicitBackgroundHeight + (Union.Style.properties.layout.inset.top ?? 0) + (Union.Style.properties.layout.inset.bottom ?? 0),
-                             contentHeight + topPadding + bottomPadding)
-                    + (popupType == T.Popup.Window ? (-topInset) + (-bottomInset) : 0)
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     Union.Element.type: "Menu"
     Union.Element.states {
@@ -28,12 +26,10 @@ T.Menu {
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
-    leftInset: -(Union.Style.properties.layout.margins.left ?? 0)
-    rightInset: -(Union.Style.properties.layout.margins.right ?? 0)
-    topInset: -(Union.Style.properties.layout.margins.top ?? 0)
-    bottomInset: -(Union.Style.properties.layout.margins.bottom ?? 0)
-
-    popupType: Qt.application.layoutDirection === Qt.RightToLeft ? T.Popup.Item : T.Popup.Window
+    leftInset: Union.Style.properties.layout.inset.left 
+    rightInset: Union.Style.properties.layout.inset.right 
+    topInset: Union.Style.properties.layout.inset.top 
+    bottomInset: Union.Style.properties.layout.inset.bottom 
 
     delegate: MenuItem { }
 
@@ -55,24 +51,5 @@ T.Menu {
         ScrollIndicator.vertical: ScrollIndicator {}
     }
 
-    background: Item {
-        // Workaround for Popup margins not working as expected. We need a window
-        // that is larger than the actual background, but we still want the
-        // background at the right position. We use margins to indicate how much
-        // bigger the background needs to be, then correct for that here by
-        // insetting the actual StyledRectangle background.
-
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-
-        Union.StyledRectangle {
-            anchors {
-                fill: parent
-                leftMargin: (Union.Style.properties.layout.margins.left ?? 0) + (Union.Style.properties.layout.inset.left ?? 0)
-                rightMargin: (Union.Style.properties.layout.margins.right ?? 0) + (Union.Style.properties.layout.inset.right ?? 0)
-                topMargin: (Union.Style.properties.layout.margins.top ?? 0) + (Union.Style.properties.layout.inset.top ?? 0)
-                bottomMargin: (Union.Style.properties.layout.margins.bottom ?? 0) + (Union.Style.properties.layout.inset.bottom ?? 0)
-            }
-        }
-    }
+    background: Union.StyledRectangle {} 
 }
