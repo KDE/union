@@ -11,6 +11,7 @@
 
 #include <QPainter>
 #include <QPushButton>
+#include <QStyle>
 #include <QStyleFactory>
 #include <QStyleOption>
 #include <QWidget>
@@ -36,7 +37,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         element->setHint(QStringLiteral("flat"), buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
+        auto rect = prepareRectangle(option, properties, QMarginsF(2, 2, 2, 2)).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
@@ -71,15 +72,67 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         QProxyStyle::drawControl(CE_ToolButtonLabel, &labelOption, painter, widget);
         return;
     }
+    if (control == CC_GroupBox) {
+        const auto groupBoxOption = static_cast<const QStyleOptionGroupBox *>(option);
+
+        auto element = Union::Element::create();
+        element->setType(QStringLiteral("GroupBox"));
+        element->setStates(buttonStatesFromOption(option));
+        element->setColorSet(Union::Element::ColorSet::Complementary);
+
+        const auto properties = prepareProperties(element);
+        auto rect = prepareRectangle(option, properties).toRect();
+        drawBackground(painter, rect, properties);
+        if ((groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && !groupBoxOption->text.isEmpty()) {
+            QRect textRect = subControlRect(CC_GroupBox, option, SC_GroupBoxLabel, widget);
+            QColor textColor = properties->text()->color().value().toQColor();
+
+            painter->setPen(textColor);
+            drawItemText(painter,
+                         textRect,
+                         Qt::TextShowMnemonic | Qt::AlignHCenter | groupBoxOption->textAlignment,
+                         groupBoxOption->palette,
+                         groupBoxOption->state & State_Enabled,
+                         groupBoxOption->text,
+                         textColor.isValid() ? QPalette::NoRole : QPalette::WindowText);
+        }
+        return;
+    }
 
     QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    if (element == PE_Frame) { }
+    if (element == PE_Frame) {
+        const auto frameOption = static_cast<const QStyleOptionFrame *>(option);
+
+        auto element = Union::Element::create();
+        element->setType(QStringLiteral("Frame"));
+        element->setStates(buttonStatesFromOption(frameOption));
+        element->setColorSet(Union::Element::ColorSet::View);
+
+        const auto properties = prepareProperties(element);
+        auto rect = prepareRectangle(option, properties).toRect();
+        drawBackground(painter, rect, properties);
+        return;
+    }
+    if (element == PE_FrameGroupBox) {
+        const auto frameOption = static_cast<const QStyleOptionFrame *>(option);
+
+        auto element = Union::Element::create();
+        element->setType(QStringLiteral("GroupBox"));
+        element->setStates(buttonStatesFromOption(frameOption));
+        element->setColorSet(Union::Element::ColorSet::Complementary);
+
+        const auto properties = prepareProperties(element);
+        auto rect = prepareRectangle(option, properties).toRect();
+        drawBackground(painter, rect, properties);
+        return;
+    }
     QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
+
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const
 {
     if (ct == CT_PushButton) {
@@ -138,5 +191,8 @@ void UnionStyle::polish(QApplication *application)
 
 void UnionStyle::polish(QWidget *widget)
 {
+    if (qobject_cast<QPushButton *>(widget)) {
+        widget->setAttribute(Qt::WA_Hover);
+    }
     QProxyStyle::polish(widget);
 }

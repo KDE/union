@@ -31,7 +31,7 @@ Union::Element::States buttonStatesFromOption(const QStyleOption *option)
     return states;
 }
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties)
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties, const QMarginsF &adjustments)
 {
     // Shrink the widget rect by the insets
     // TODO: we may have to keep it as a QRectF here
@@ -43,10 +43,10 @@ QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::Sty
     }
 
     // Make sure to take out the space left for the visual focus rect
-    rect.setLeft(rect.left() + 2);
-    rect.setRight(rect.right() - 2);
-    rect.setTop(rect.top() + 2);
-    rect.setBottom(rect.bottom() - 2);
+    rect.setLeft(rect.left() + adjustments.left());
+    rect.setRight(rect.right() - adjustments.right());
+    rect.setTop(rect.top() + adjustments.top());
+    rect.setBottom(rect.bottom() - adjustments.bottom());
 
     return rect;
 }
