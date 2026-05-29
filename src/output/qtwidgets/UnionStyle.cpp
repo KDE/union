@@ -75,6 +75,11 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
     QProxyStyle::drawComplexControl(control, option, painter, widget);
 }
 
+void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+{
+    if (element == PE_Frame) { }
+    QProxyStyle::drawPrimitive(element, option, painter, widget);
+}
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const
 {
     if (ct == CT_PushButton) {
@@ -134,8 +139,4 @@ void UnionStyle::polish(QApplication *application)
 void UnionStyle::polish(QWidget *widget)
 {
     QProxyStyle::polish(widget);
-
-    if (qobject_cast<QPushButton *>(widget)) {
-        widget->setAttribute(Qt::WA_Hover);
-    }
 }
