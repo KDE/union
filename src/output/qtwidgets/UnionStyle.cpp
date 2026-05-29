@@ -59,8 +59,8 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setType(QStringLiteral("ToolButton"));
         element->setStates(buttonStatesFromOption(option));
         element->setColorSet(Union::Element::ColorSet::Button);
-        // QStyle has no flat toolbuttons
-        element->setHint(QStringLiteral("raised"), true);
+        bool flat = option->state & QStyle::State_AutoRaise;
+        element->setHint(QStringLiteral("raised"), !flat);
 
         const auto properties = prepareProperties(element);
         auto rect = prepareRectangle(option, properties).toRect();
@@ -110,7 +110,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         auto element = Union::Element::create();
         element->setType(QStringLiteral("Frame"));
         element->setStates(buttonStatesFromOption(frameOption));
-        element->setColorSet(Union::Element::ColorSet::View);
+        element->setColorSet(Union::Element::ColorSet::None);
 
         const auto properties = prepareProperties(element);
         auto rect = prepareRectangle(option, properties).toRect();
@@ -123,7 +123,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         auto element = Union::Element::create();
         element->setType(QStringLiteral("GroupBox"));
         element->setStates(buttonStatesFromOption(frameOption));
-        element->setColorSet(Union::Element::ColorSet::Complementary);
+        element->setColorSet(Union::Element::ColorSet::None);
 
         const auto properties = prepareProperties(element);
         auto rect = prepareRectangle(option, properties).toRect();
