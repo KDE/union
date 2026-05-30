@@ -3,6 +3,22 @@
 
 [Misc]
 Name=Union (In Development)
+Name[ca]=Union (en desenvolupament)
+Name[ca@valencia]=Union (en desenvolupament)
+Name[es]=Unión (en desarrollo)
+Name[he]=איחוד (בפיתוח)
+Name[pt_BR]=Union (Em desenvolvimento)
+Name[sk]=Union (vo vývoji)
+Name[tr]=Union (Geliştirme Sürecinde)
+Name[uk]=Union (у розробці)
 Comment=An in-development style engine intended to unify the various styling systems in KDE.
+Comment[ca]=Un motor d'estil en desenvolupament destinat a unificar els diversos sistemes d'estils de KDE.
+Comment[ca@valencia]=Un motor d'estil en desenvolupament destinat a unificar els diversos sistemes d'estils de KDE.
+Comment[es]=Un motor de estilos en desarrollo que pretende unificar los distintos sistemas de estilos de KDE.
+Comment[he]=מנוע סגנונות שעדיין נמצא בפיתוח שמיועד לאחד את מערכת יישום העיצוב השונות ב־KDE.
+Comment[pt_BR]=Um mecanismo de estilo em desenvolvimento, destinado a unificar os vários sistemas de estilo do KDE.
+Comment[sk]=Vyvíjaný štýlovací engine určený na zjednotenie rôznych štýlovacích systémov v KDE.
+Comment[tr]=KDE’deki çeşitli stil sistemlerini birleştirmeyi amaçlayan, geliştirme aşamasındaki bir stil işletkesi
+Comment[uk]=Незавершений рушій стилів, який призначено для уніфікації різноманітних систем стилів у KDE.
 [KDE]
 WidgetStyle=Union
