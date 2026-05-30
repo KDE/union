@@ -101,5 +101,5 @@ set_target_properties(UnionQuickStyle PROPERTIES
     SOVERSION ${PROJECT_VERSION_MAJOR}
 )
 
-install(TARGETS UnionQuickStyle ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS UnionQuickStyle ${KDE_INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 ecm_finalize_qml_module(UnionQuickStyle)
