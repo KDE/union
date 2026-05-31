@@ -179,6 +179,7 @@ private Q_SLOTS:
             }
             QFAIL("Could not create an instance of component");
         }
+        delete instance;
     }
 };
 
