@@ -4,6 +4,7 @@
 #include <QtTest>
 
 #include <Color.h>
+#include <memory>
 
 using namespace Union;
 using namespace Qt::StringLiterals;
@@ -35,7 +36,8 @@ class TestColor : public QObject
 private Q_SLOTS:
     void initTestCase()
     {
-        ColorProvider::registerProvider(u"test"_s, new TestColorProvider);
+        m_colorProvider = std::make_unique<TestColorProvider>();
+        ColorProvider::registerProvider(u"test"_s, m_colorProvider.get());
     }
 
     void testCreate()
@@ -211,6 +213,9 @@ private Q_SLOTS:
         QCOMPARE(readStream.status(), QDataStream::Status::Ok);
         QCOMPARE(readColor, color);
     }
+
+private:
+    std::unique_ptr<ColorProvider> m_colorProvider;
 };
 
 QTEST_MAIN(TestColor)
