@@ -10,12 +10,10 @@ documentationinheaders = true
 
 headerdirs = \
     . \
-    ./plasmasvg \
     ./qtquick \
     ./qtwidgets \
     ../src \
     ../src/properties \
-    ../src/input/plasmasvg \
     ../src/output/qtquick
 
 headers.fileextensions = "*.qdoc *.h"
