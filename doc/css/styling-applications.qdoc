@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page css-styling-applications.html
+\title Styling Applications with CSS
+
+\section1 Creating a New Style
+
+To create a new style for Union's CSS input, you need to create a directory in a
+location where Union can find it. On Linux-based systems, this will usually be
+\c{~/.local/share/union/css/styles}. The name of the directory is used as an
+identifier for the style.
+
+That directory then needs to contain at least a single CSS file called
+\c{style.css}, which is the file Union will load to use the style. It is
+recommended to not place any style rules in \c{style.css}, but instead to split
+your rules up into multiple files and import them in \c{style.css} using
+\c{@import "file.css"}.
+
+To use your new style, you will need to run your application with the
+environment variable \c{UNION_STYLE_NAME} set to the directory name of your
+style. This will be made easier in the future once there are more styles for
+Union to choose from.
+
+\section1 What You Can and Cannot Style
+
+While Union's goal is to give as much freedom to you as style creator to style
+things the way you want, there are inherent limitations in what Union can do due
+to how the underlying technology works.
+
+The most significant limitation is that the application, and not Union, is the one
+that decides the layout of things. This means that, unless otherwise noted, you
+will not be able to control the position of elements. For sizes, the application
+is also in final control, but you \i{can} provide an initial size for most elements.
+
+The exception to this is that there are certain elements that consists of several
+sub-elements. Union is generally in control of the placement of these
+sub-elements, which allows you as style creator to influence them.
+
+*/
