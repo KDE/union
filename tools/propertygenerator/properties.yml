@@ -17,6 +17,8 @@ children:
             api: |
                 \brief A property group containing properties related to the layout of an element.
 
+            css: |
+                These properties all relate to an element's layout and sizing.
 
         children:
             alignment: &alignment
@@ -24,6 +26,19 @@ children:
                 doc:
                     api: |
                         \brief A property group with properties related to alignment.
+
+                    css: |
+                        The alignment related properties can be used to control the alignment for
+                        elements that combine multiple items into a single element, such as a checkbox
+                        that contains a check mark (usually referred to as \c{indicator}), an icon and
+                        a label. For details about how the layout for elements works, see \l{layout}.
+
+                        Horizontal and vertical alignment is specified in relative terms that do not
+                        imply a writing direction.
+
+                        \b layout-alignment (<container> <horizontal> <vertical> <order>)
+
+                        Shorthand for setting the various layout properties.
 
                 children:
                     container:
@@ -59,6 +74,8 @@ children:
                 doc:
                     api: |
                         \brief A property group representing a set of sizes for cardinal directions.
+                    css: |
+                        TODO
 
                 children:
                     left:

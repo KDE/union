@@ -52,8 +52,8 @@ std::unique_ptr<{{ type.type }}> test{{type.type}}Instance()
 {
     auto instance = std::make_unique<{{ type.type }}>();
 
-{% for property in type.properties %}
-{% if property.is_group %}
+{% for property in type.children %}
+{% if property.children %}
     instance->set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
 {% elif property.type == "QColor" %}
     instance->set{{ property.name | ucfirst }}(testQColorInstance());

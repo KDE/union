@@ -3,6 +3,7 @@
 # SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
+import copy
 import dataclasses
 from pathlib import Path
 import shutil
@@ -46,6 +47,7 @@ class Description:
     extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
 
     api_documentation: str = ""
+    css_documentation: str = ""
 
     def __lt__(self, other):
         return self.type < other.type
@@ -96,7 +98,9 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
         description_type = group_name(type_name)
 
     description = Description(name, description_type, parent)
-    memo[type_name] = description
+
+    if node_type == "group":
+        memo[type_name] = description
 
     for key_node, value_node in node.value:
         if key_node.value == "extra_code":
@@ -117,16 +121,20 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
         elif key_node.value == "doc":
             if isinstance(value_node, yaml.MappingNode):
                 description.api_documentation = mapping_value(value_node, "api", "")
+                description.css_documentation = mapping_value(value_node, "css", "")
             else:
                 description.api_documentation = value_node.value
+                description.css_documentation = value_node.value
 
         elif key_node.value == "children" and node_type == "group":
             for key_node, value_node in value_node.value:
                 prop = None
 
                 if isinstance(value_node, AliasNode):
-                    group = memo[value_node.value]
-                    description.add_child(Description(key_node.value, group.type, description))
+                    child = copy.deepcopy(memo[value_node.value])
+                    child.name = key_node.value
+                    child.parent = description
+                    description.add_child(child)
                 else:
                     child_type_name = value_node.anchor if value_node.anchor is not None else key_node.value
                     memo = memo | process_node(value_node, key_node.value, description, memo, type_name = child_type_name)
@@ -163,6 +171,7 @@ def render_template(template_name: str, output_path: Path, env: jinja2.Environme
     render_data["system_includes"] = data.get("system_includes", {}).get(template_name, [])
     render_data["local_includes"] = data.get("local_includes", {}).get(template_name, [])
     render_data["api_documentation"] = data.get("api_documentation", "")
+    render_data["css_documentation"] = data.get("css_documentation", "")
 
     with open(output_path, "w") as f:
         template = jinja_env.get_template(template_name, None)
@@ -179,7 +188,6 @@ if __name__ == "__main__":
         structure = parser.compose(f)
 
     types = process_node(structure, "style", None, {}, "style")
-    groups = {k: v for (k, v) in types.items() if v.children}
 
     jinja_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(base_directory),
@@ -199,12 +207,16 @@ if __name__ == "__main__":
     if css_generated_path.exists():
         css_generated_path.unlink()
 
+    css_doc_generated_path = css_docs_directory / "css-properties.qdoc"
+    if css_doc_generated_path.exists():
+        css_doc_generated_path.unlink()
+
     src_directory.mkdir(exist_ok = True)
     tests_directory.mkdir(exist_ok = True)
     css_input_directory.mkdir(exist_ok = True)
     quick_output_directory.mkdir(exist_ok = True)
 
-    for name, type_definition in groups.items():
+    for name, type_definition in types.items():
         data = {field.name: getattr(type_definition, field.name) for field in dataclasses.fields(type_definition)}
 
         type_name = type_definition.type
@@ -217,7 +229,7 @@ if __name__ == "__main__":
         render_template("qml_group.h.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".h"), jinja_env, data)
         render_template("qml_group.cpp.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), jinja_env, data)
 
-    data = {"types": groups.values()}
+    data = {"types": types.values()}
 
     render_template("CreateTestInstances.h.j2", tests_directory / "CreateTestInstances.h", jinja_env, data)
     render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)
@@ -225,3 +237,4 @@ if __name__ == "__main__":
     render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data)
 
     render_template("properties.css.j2", css_generated_path, jinja_env, data)
+    render_template("css-properties.qdoc.j2", css_doc_generated_path, jinja_env, data)
