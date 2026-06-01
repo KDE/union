@@ -42,16 +42,16 @@ namespace Union
 namespace Properties
 {
 
-class {{ type_name }}Private;
+class {{ type }}Private;
 
 /*!
-\class Union::Properties::{{ type_name }}
+\class Union::Properties::{{ type }}
 \inmodule core
 \ingroup core-properties
 
-{{ documentation }}
+{{ api_documentation }}
 */
-class UNION_EXPORT {{ type_name }}
+class UNION_EXPORT {{ type }}
 {
 public:
     /*!
@@ -60,28 +60,28 @@ public:
      * A null instance in this case means an instance that does not have any
      * values for its properties. This includes property groups.
      */
-    {{ type_name }}();
+    {{ type }}();
     /*!
      * Copy constructor.
      */
-    {{ type_name }}(const {{ type_name }} &other);
+    {{ type }}(const {{ type }} &other);
     /*!
      * Move constructor.
      */
-    {{ type_name }}({{ type_name }} &&other);
-    ~{{ type_name }}();
+    {{ type }}({{ type }} &&other);
+    ~{{ type }}();
 
     /*!
      * Copy assignment operator.
      */
-    {{ type_name }} &operator=(const {{ type_name }} &other);
+    {{ type }} &operator=(const {{ type }} &other);
     /*!
      * Move assignment operator.
      */
-    {{ type_name }} &operator=({{ type_name }} &&other);
+    {{ type }} &operator=({{ type }} &&other);
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     /*!
      * Returns {{ property.name }} if set or nullptr if not.
      */
@@ -97,6 +97,8 @@ public:
 {% else %}
     /*!
      * Returns the value of {{ property.name }}.
+     *
+     * {{ property.api_documentation }}
      */
     std::optional<{{ property.type }}> {{ property.name }}() const;
 
@@ -143,42 +145,42 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const {{ type_name }} *source, {{ type_name }} *destination);
+    static void resolveProperties(const {{ type }} *source, {{ type }} *destination);
 
     /*!
-     * Create and return an empty {{ type_name }} instance.
+     * Create and return an empty {{ type }} instance.
      *
-     * This will create an empty {{ type_name }} instance, which is defined as
+     * This will create an empty {{ type }} instance, which is defined as
      * an instance with all of its values default-constructed. Note that this is
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static std::unique_ptr<{{ type_name }}> empty();
+    static std::unique_ptr<{{ type }}> empty();
 
 {% if extra_code and "public" in extra_code %}
 {{ extra_code["public"] | render }}
 
 {% endif %}
 private:
-    std::unique_ptr<{{ type_name }}Private> d;
+    std::unique_ptr<{{ type }}Private> d;
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
 {% endif %}
 };
 
 /*!
- * \relates Union::Properties::{{ type_name }}
- * Equality comparison for {{ type_name }}.
+ * \relates Union::Properties::{{ type }}
+ * Equality comparison for {{ type }}.
  */
-UNION_EXPORT bool operator==(const {{ type_name }} &left, const {{ type_name}} &right);
+UNION_EXPORT bool operator==(const {{ type }} &left, const {{ type}} &right);
 }
 }
 
 /*!
- * \relates Union::Properties::{{ type_name }}
- * QDebug support for {{ type_name }}.
+ * \relates Union::Properties::{{ type }}
+ * QDebug support for {{ type }}.
  */
-UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::{{ type_name }} *type);
+UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::{{ type }} *type);
 
-UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type_name }} *type);
-UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type_name }}> &type);
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type }} *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type }}> &type);

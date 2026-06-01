@@ -13,7 +13,7 @@ REUSE-IgnoreStart
 // To regenerate, run `tools/propertygenerator/generate_properties.py`.
 {# REUSE-IgnoreEnd #}
 
-#include "{{ type_name }}.h"
+#include "{{ type }}.h"
 
 #include <QRegularExpression>
 
@@ -23,11 +23,11 @@ REUSE-IgnoreStart
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-class Union::Properties::{{ type_name }}Private
+class Union::Properties::{{ type }}Private
 {
 public:
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     std::unique_ptr<{{ property.type }}> {{ property.name }};
 {% else %}
     std::optional<{{ property.type }}> {{ property.name }};
@@ -38,16 +38,16 @@ public:
 {% endif %}
 };
 
-{{ type_name }}::{{ type_name }}()
-    : d(std::make_unique<{{ type_name }}Private>())
+{{ type }}::{{ type }}()
+    : d(std::make_unique<{{ type }}Private>())
 {
 }
 
-{{ type_name }}::{{ type_name }}(const {{ type_name }} &other)
-    : d(std::make_unique<{{ type_name }}Private>())
+{{ type }}::{{ type }}(const {{ type }} &other)
+    : d(std::make_unique<{{ type }}Private>())
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     d->{{ property.name }} = std::make_unique<{{ property.type }}>();
     *(d->{{ property.name }}) = *(other.d->{{ property.name }});
 {% else %}
@@ -56,18 +56,18 @@ public:
 {% endfor %}
 }
 
-{{ type_name }}::{{ type_name }}({{ type_name }} &&other)
+{{ type }}::{{ type }}({{ type }} &&other)
     : d(std::move(other.d))
 {
 }
 
-{{ type_name }}::~{{ type_name}}() = default;
+{{ type }}::~{{ type}}() = default;
 
-{{ type_name }} &{{ type_name }}::operator=(const {{ type_name }} &other)
+{{ type }} &{{ type }}::operator=(const {{ type }} &other)
 {
     if (this != &other) {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
         *(d->{{ property.name }}) = *(other.d->{{ property.name }});
 {% else %}
         d->{{ property.name }} = other.d->{{ property.name }};
@@ -77,31 +77,31 @@ public:
     return *this;
 }
 
-{{ type_name }} &{{ type_name }}::operator=({{ type_name }} &&other)
+{{ type }} &{{ type }}::operator=({{ type }} &&other)
 {
     std::swap(d, other.d);
     return *this;
 }
 
-{% for property in properties %}
-{% if property.is_group %}
-{{ property.type }} *{{ type_name }}::{{ property.name }}() const
+{% for property in children %}
+{% if property.children %}
+{{ property.type }} *{{ type }}::{{ property.name }}() const
 {
     return d->{{ property.name }}.get();
 }
 
-void {{ type_name }}::set{{ property.name | ucfirst }}(std::unique_ptr<{{ property.type }}> &&newValue)
+void {{ type }}::set{{ property.name | ucfirst }}(std::unique_ptr<{{ property.type }}> &&newValue)
 {
     d->{{ property.name }} = std::move(newValue);
 }
 
 {% else %}
-std::optional<{{ property.type }}> {{ type_name }}::{{ property.name }}() const
+std::optional<{{ property.type }}> {{ type }}::{{ property.name }}() const
 {
     return d->{{ property.name }};
 }
 
-void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
+void {{ type }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
 {
     if (newValue == d->{{ property.name }}) {
         return;
@@ -112,10 +112,10 @@ void {{ type_name }}::set{{ property.name | ucfirst }}(const std::optional<{{ pr
 
 {% endif %}
 {% endfor %}
-bool {{ type_name }}::hasAnyValue() const
+bool {{ type }}::hasAnyValue() const
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     if (d->{{ property.name }} && d->{{ property.name }}->hasAnyValue()) {
         return true;
     }
@@ -128,14 +128,14 @@ bool {{ type_name }}::hasAnyValue() const
     return false;
 }
 
-bool {{ type_name }}::isEmpty() const
+bool {{ type }}::isEmpty() const
 {
     if (!hasAnyValue()) {
         return true;
     }
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     if (d->{{ property.name }} && !d->{{ property.name }}->isEmpty()) {
         return false;
     }
@@ -149,7 +149,7 @@ bool {{ type_name }}::isEmpty() const
     return true;
 }
 
-QString {{ type_name }}::toString(int indentation, ToStringFlags flags) const
+QString {{ type }}::toString(int indentation, ToStringFlags flags) const
 {
     if (!hasAnyValue()) {
         return u"(empty)"_s;
@@ -175,15 +175,15 @@ QString {{ type_name }}::toString(int indentation, ToStringFlags flags) const
     const QByteArray empty = "(empty)";
 
     if (types) {
-        out << "{{ type_name }}(" << maybeNewLine;
+        out << "{{ type }}(" << maybeNewLine;
     } else if (indentation > 0) {
         out << maybeNewLine;
     }
 
-{% for property in properties %}
-    out << indent(indentation, multiline, {{ "true" if property == properties[0] else "false" }}) << "{{ property.name }}: ";
+{% for property in children %}
+    out << indent(indentation, multiline, {{ "true" if property == children[0] else "false" }}) << "{{ property.name }}: ";
     if (d->{{ property.name }}) {
-{% if property.is_group %}
+{% if property.children %}
         out << d->{{ property.name }}->toString(indentation + 2, flags);
 {% elif property.type in ("QFont", "QUrl", "Union::Color") %}
         out << d->{{ property.name }}->toString() << maybeNewLine;
@@ -210,14 +210,14 @@ QString {{ type_name }}::toString(int indentation, ToStringFlags flags) const
     return result;
 }
 
-void {{ type_name }}::resolveProperties(const {{ type_name }} *source, {{ type_name }} *destination)
+void {{ type }}::resolveProperties(const {{ type }} *source, {{ type }} *destination)
 {
     if (!source || !destination) {
         return;
     }
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     if (source->d->{{ property.name }}) {
         if (!destination->d->{{ property.name }}) {
             destination->d->{{ property.name }} = std::make_unique<{{ property.type }}>();
@@ -232,11 +232,11 @@ void {{ type_name }}::resolveProperties(const {{ type_name }} *source, {{ type_n
 {% endfor %}
 }
 
-std::unique_ptr<{{ type_name }}> {{ type_name }}::empty()
+std::unique_ptr<{{ type }}> {{ type }}::empty()
 {
-    auto result = std::make_unique<{{ type_name }}>();
-{% for property in properties %}
-{% if property.is_group %}
+    auto result = std::make_unique<{{ type }}>();
+{% for property in children %}
+{% if property.children %}
     result->d->{{ property.name }} = {{ property.type }}::empty();
 {% else %}
     result->d->{{ property.name }} = emptyValue<{{ property.type }}>();
@@ -249,10 +249,10 @@ std::unique_ptr<{{ type_name }}> {{ type_name }}::empty()
 {{ extra_code["global"] | render }}
 {% endif %}
 
-bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_name}} &right)
+bool Union::Properties::operator==(const {{ type }} &left, const {{ type}} &right)
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     if (left.{{ property.name }}() && right.{{ property.name }}()) {
         if (*(left.{{ property.name }}()) != *(right.{{ property.name }}())) {
             return false;
@@ -269,17 +269,17 @@ bool Union::Properties::operator==(const {{ type_name }} &left, const {{ type_na
     return true;
 }
 
-QDebug operator<<(QDebug debug, Union::Properties::{{ type_name }} *type)
+QDebug operator<<(QDebug debug, Union::Properties::{{ type }} *type)
 {
     QDebugStateSaver saver(debug);
     debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
     return debug;
 }
 
-QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type_name }} *type)
+QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type }} *type)
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     {
         auto data = type->{{ property.name }}();
         stream << bool(data);
@@ -294,10 +294,10 @@ QDataStream &operator<<(QDataStream &stream, const Union::Properties::{{ type_na
     return stream;
 }
 
-QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type_name }}> &type)
+QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::{{ type }}> &type)
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     {
         bool hasData;
         stream >> hasData;

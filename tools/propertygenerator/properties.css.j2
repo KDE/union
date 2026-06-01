@@ -64,10 +64,10 @@ from web CSS, without needing to change the structure of properties.
 
 {# Recursively print all properties of an object, with a prefix #}
 {% macro print_properties(name, object) %}
-{% for property in object.properties %}
-{% if property.is_group %}
+{% for property in object.children %}
+{% if property.children %}
 {% set name = name + "-" + property.name if name else property.name %}
-{{ print_properties(name, property.type_object) }}
+{{ print_properties(name, property) }}
 {% elif property.type in type_map %}
 {% set name = (name + "-" + property.name) | css_name %}
 {% set name = name_map[name] if name in name_map else name %}

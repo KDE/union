@@ -12,11 +12,15 @@ import re
 import ruamel.yaml as yaml
 import jinja2
 
+from yaml_helpers import *
+
+
 base_directory = Path(__file__).parent
 root_directory = base_directory.parent.parent
 src_directory = root_directory / "src" / "properties"
 tests_directory = root_directory / "autotests" / "properties"
 css_input_directory = root_directory / "src" / "input" / "css" / "defaults"
+css_docs_directory = root_directory / "doc" / "css"
 quick_output_directory = root_directory / "src" / "output" / "qtquick" / "plugin" / "properties"
 
 include_patterns = [
@@ -25,62 +29,49 @@ include_patterns = [
     {"pattern": "std::filesystem::path", "use_include": "filesystem", "system_include": True},
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
     {"pattern": "Q", "system_include": True},
-    {"pattern": "Union::Properties::", "use_include": "../PropertiesTypes.h"},
+    {"pattern": "Union::Properties::", "use_include": None},
     {"pattern": "Union::Color", "use_include": "../Color.h"},
-    {"pattern": "", },
 ]
 
 
-class AliasNode(yaml.Node):
-    id = "anchor"
-
-
-class PreserveAliasesComposer(yaml.composer.Composer):
-    def compose_node(self, parent, index):
-        if self.parser.check_event(yaml.AliasEvent):
-            event = self.parser.get_event()
-            return AliasNode("", event.anchor, event.start_mark, event.end_mark)
-
-        event = self.parser.peek_event()
-        result = super().compose_node(parent, index)
-
-        if event.anchor is not None:
-            result.anchor = event.anchor
-        else:
-            result.anchor = None
-
-        return result
-
-
 @dataclasses.dataclass
-class PropertyDescription:
+class Description:
     name: str
-    type: str = ""
-    type_object: Optional[Type] = None
-    group: Optional["GroupDescription"] = None
+    type: str
+    parent: Optional["Description"] = None
+    children: list["Description"] = dataclasses.field(default_factory=list)
 
-
-@dataclasses.dataclass
-class GroupDescription:
-    name: str
-    type_name: str
-    parent_group: Optional["GroupDescription"] = None
-    properties: list[PropertyDescription] = dataclasses.field(default_factory=list)
     system_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
-    documentation: str = ""
+
+    api_documentation: str = ""
 
     def __lt__(self, other):
-        return self.type_name < other.type_name
+        return self.type < other.type
+
+    def add_system_include(self, file: str, include: str) -> None:
+        if not file in self.system_includes:
+            self.system_includes[file] = set()
+        self.system_includes[file].add(include)
+
+    def add_local_include(self, file: str, include: str) -> None:
+        if not file in self.local_includes:
+            self.local_includes[file] = set()
+        self.local_includes[file].add(include)
+
+    def add_child(self, child: "Description") -> None:
+        self.children.append(child)
+        if child.children:
+            self.add_local_include("property.h.j2", child.type + ".h")
 
 
 def ucfirst(value):
     return f"{value[0].upper()}{value[1:]}"
 
 
-def qualified_name(type_name):
-    return f"{ucfirst(type_name)}Property"
+def group_name(type_name):
+    return f"{ucfirst(type_name)}PropertyGroup"
 
 
 def css_name(name):
@@ -89,32 +80,26 @@ def css_name(name):
     return result.replace("--", "-")
 
 
-def process_node(node, name, parent_group, memo):
+def process_node(node, name: str, parent: Description, memo: dict[str, Description], type_name: str | None = None):
     if not isinstance(node, yaml.MappingNode):
         raise RuntimeError(f"Node {node} is not a mapping node!")
 
-    type_name = qualified_name(name)
+    node_type = mapping_value(node, "type")
+    if node_type is None:
+        raise RuntimeError(f"Node {node} is missing a type!")
 
-    description = GroupDescription(name, type_name, parent_group)
-    memo[name] = description
+    if not type_name:
+        type_name = node_type
 
-    if (node.comment and node.comment[-1]):
-        comments = node.comment[-1]
+    description_type = node_type
+    if node_type == "group":
+        description_type = group_name(type_name)
 
-        documentation = ""
-        for line in comments:
-            text = line.value.strip().lstrip("# ")
-
-            if text.startswith("SPDX"):
-                continue
-
-            documentation += text
-            documentation += "\n"
-
-        description.documentation = documentation
+    description = Description(name, description_type, parent)
+    memo[type_name] = description
 
     for key_node, value_node in node.value:
-        if key_node.value == "_extra_code":
+        if key_node.value == "extra_code":
             for template_name, extra_code in value_node.value:
                 if isinstance(extra_code, yaml.MappingNode):
                     extra_code_data = {}
@@ -123,59 +108,46 @@ def process_node(node, name, parent_group, memo):
                     description.extra_code[template_name.value] = extra_code_data
                 else:
                     description.extra_code[template_name.value] = extra_code.value
-            continue
 
-        if key_node.value == "_extra_system_includes":
+        elif key_node.value == "extra_system_includes":
             for template_name, includes in value_node.value:
                 for include_name in includes.value:
-                    if template_name.value not in description.system_includes:
-                        description.system_includes[template_name.value] = set()
-                    description.system_includes[template_name.value].add(include_name.value)
+                    description.add_system_include(template_name.value, include_name.value)
+
+        elif key_node.value == "doc":
+            if isinstance(value_node, yaml.MappingNode):
+                description.api_documentation = mapping_value(value_node, "api", "")
+            else:
+                description.api_documentation = value_node.value
+
+        elif key_node.value == "children" and node_type == "group":
+            for key_node, value_node in value_node.value:
+                prop = None
+
+                if isinstance(value_node, AliasNode):
+                    group = memo[value_node.value]
+                    description.add_child(Description(key_node.value, group.type, description))
+                else:
+                    child_type_name = value_node.anchor if value_node.anchor is not None else key_node.value
+                    memo = memo | process_node(value_node, key_node.value, description, memo, type_name = child_type_name)
+
+    for entry in include_patterns:
+        if not description.type.startswith(entry["pattern"]) or not parent:
             continue
 
-        prop = PropertyDescription(name = key_node.value, group = description)
+        system = entry.get("system_include", False)
+        include = entry.get("use_include", description.type if system else description.type + ".h")
 
-        match type(value_node).__name__:
-            case "MappingNode":
-                name = value_node.anchor if value_node.anchor is not None else key_node.value
-                memo = memo | process_node(value_node, name, description, memo)
+        if include is None:
+            continue
 
-                prop.type = qualified_name(name)
-                prop.type_object = memo[name]
-                prop.is_group = True
+        if system:
+            parent.add_system_include("property.h.j2", include)
+        else:
+            parent.add_local_include("property.h.j2", include)
 
-            case "AliasNode":
-                group = memo[value_node.value]
-
-                prop.type = group.type_name
-                prop.type_object = group
-                prop.is_group = True
-
-            case "ScalarNode":
-                prop.type = value_node.value
-
-        for entry in include_patterns:
-            if not prop.type.startswith(entry["pattern"]):
-                continue
-
-            system = entry.get("system_include", False)
-            include = entry.get("use_include", prop.type if system else prop.type + ".h")
-
-            if include is None:
-                break
-
-            if system:
-                if "property.h.j2" not in description.system_includes:
-                    description.system_includes["property.h.j2"] = set()
-                description.system_includes["property.h.j2"].add(include)
-            else:
-                if "property.h.j2" not in description.local_includes:
-                    description.local_includes["property.h.j2"] = set()
-                description.local_includes["property.h.j2"].add(include)
-
-            break
-
-        description.properties.append(prop)
+    if parent:
+        parent.add_child(description)
 
     return memo
 
@@ -190,7 +162,7 @@ def render_template(template_name: str, output_path: Path, env: jinja2.Environme
     render_data["extra_code"] = data.get("extra_code", {}).get(template_name, "")
     render_data["system_includes"] = data.get("system_includes", {}).get(template_name, [])
     render_data["local_includes"] = data.get("local_includes", {}).get(template_name, [])
-    render_data["documentation"] = data.get("documentation", "")
+    render_data["api_documentation"] = data.get("api_documentation", "")
 
     with open(output_path, "w") as f:
         template = jinja_env.get_template(template_name, None)
@@ -206,7 +178,8 @@ if __name__ == "__main__":
     with open(base_directory / "properties.yml") as f:
         structure = parser.compose(f)
 
-    types = process_node(structure, "style", None, {})
+    types = process_node(structure, "style", None, {}, "style")
+    groups = {k: v for (k, v) in types.items() if v.children}
 
     jinja_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(base_directory),
@@ -231,10 +204,10 @@ if __name__ == "__main__":
     css_input_directory.mkdir(exist_ok = True)
     quick_output_directory.mkdir(exist_ok = True)
 
-    for name, type_definition in types.items():
+    for name, type_definition in groups.items():
         data = {field.name: getattr(type_definition, field.name) for field in dataclasses.fields(type_definition)}
 
-        type_name = type_definition.type_name
+        type_name = type_definition.type
 
         render_template("property.h.j2", (src_directory / type_name).with_suffix(".h"), jinja_env, data)
         render_template("property.cpp.j2", (src_directory / type_name).with_suffix(".cpp"), jinja_env, data)
@@ -244,7 +217,7 @@ if __name__ == "__main__":
         render_template("qml_group.h.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".h"), jinja_env, data)
         render_template("qml_group.cpp.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), jinja_env, data)
 
-    data = {"types": types.values()}
+    data = {"types": groups.values()}
 
     render_template("CreateTestInstances.h.j2", tests_directory / "CreateTestInstances.h", jinja_env, data)
     render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)

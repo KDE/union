@@ -29,10 +29,10 @@ template but that clang format doesn't like, so disable format for that.
 #include <{{ include }}>
 {% endfor %}
 
-#include <properties/{{ type_name }}.h>
+#include <properties/{{ type }}.h>
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
 #include "{{ property.type }}Group.h"
 {% endif %}
 {% endfor %}
@@ -46,31 +46,31 @@ namespace Quick
 class QuickStyle;
 
 /*!
- * \qmltype {{ type_name }}Group
+ * \qmltype {{ type }}Group
  * \inqmlmodule org.kde.union.impl
  * \ingroup qtquick-properties
  *
- * \brief A group object exposing the properties of {{ type_name }} to QML.
+ * \brief A group object exposing the properties of {{ type }} to QML.
  */
-class {{ type_name }}Group : public QObject
+class {{ type }}Group : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    explicit {{ type_name }}Group(QuickStyle *style);
+    explicit {{ type }}Group(QuickStyle *style);
 
-    void update(Union::Properties::{{ type_name }} *newState);
+    void update(Union::Properties::{{ type }} *newState);
     Q_SIGNAL void updated();
 
     void refreshColors();
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     /*!
-     * \qmlproperty {{ property.type }}Group {{ type_name }}Group::{{ property.name }}
+     * \qmlproperty {{ property.type }}Group {{ type }}Group::{{ property.name }}
      *
-     * Exposes {{ type_name }}::{{ property.type }} to QML.
+     * Exposes {{ type }}::{{ property.type }} to QML.
      */
     Q_PROPERTY(Union::Quick::{{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
     {{ property.type }}Group *{{ property.name }}() const;
@@ -82,9 +82,9 @@ public:
     to take over.
 #}
     /*!
-     * \qmlproperty {{ property.type }} {{ type_name }}Group::{{ property.name }}
+     * \qmlproperty {{ property.type }} {{ type }}Group::{{ property.name }}
      *
-     * Exposes {{ type_name }}::{{ property.name }} to QML.
+     * Exposes {{ type }}::{{ property.name }} to QML.
      */
     Q_PROPERTY(QJSValue {{ property.name }} READ {{ property.name }} NOTIFY {{ property.name }}Changed)
     QJSValue {{ property.name }}() const;
@@ -98,13 +98,13 @@ public:
 {% endif %}
 private:
     QuickStyle *m_style = nullptr;
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     std::unique_ptr<{{ property.type }}Group> m_{{ property.name }};
 {% endif %}
 {% endfor %}
 
-    Union::Properties::{{ type_name }} *m_state = nullptr;
+    Union::Properties::{{ type }} *m_state = nullptr;
 {% if extra_code and "private" in extra_code %}
 {{ extra_code["private"] | render }}
 {% endif %}

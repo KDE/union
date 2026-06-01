@@ -15,24 +15,24 @@ REUSE-IgnoreStart
 
 #include <QtTest>
 
-#include <properties/{{ type_name }}.h>
+#include <properties/{{ type }}.h>
 
 #include "CreateTestInstances.h"
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-class Test{{ type_name }} : public QObject
+class Test{{ type }} : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
     void testNull()
     {
-        auto property = std::make_unique<{{ type_name }}>();
+        auto property = std::make_unique<{{ type }}>();
 
         // A null instance should not have any values for its properties.
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
         QVERIFY(!property->{{ property.name }}());
 {% else %}
         QVERIFY(!property->{{ property.name }}().has_value());
@@ -42,11 +42,11 @@ private Q_SLOTS:
 
     void testEmpty()
     {
-        auto property = {{ type_name }}::empty();
+        auto property = {{ type }}::empty();
 
         // An empty instance should only have values that are considered "empty".
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
         QCOMPARE(*property->{{ property.name }}(), *{{ property.type }}::empty());
 {% else %}
         QCOMPARE(property->{{ property.name }}().value(), emptyValue<{{ property.type }}>());
@@ -56,13 +56,13 @@ private Q_SLOTS:
 
     void testHasAnyValue()
     {
-        auto property = std::make_unique<{{ type_name }}>();
+        auto property = std::make_unique<{{ type }}>();
 
         // An empty instance should not have any values for its properties.
         QVERIFY(!property->hasAnyValue());
 
-{% for property in properties %}
-{% if not property.is_group %}
+{% for property in children %}
+{% if not property.children %}
         {
             {{ property.type }} value;
             property->set{{ property.name | ucfirst }}(value);
@@ -88,19 +88,19 @@ private Q_SLOTS:
 
     void testResolveProperties()
     {
-        auto source = std::make_unique<{{ type_name }}>();
-        auto destination = std::make_unique<{{ type_name }}>();
+        auto source = std::make_unique<{{ type }}>();
+        auto destination = std::make_unique<{{ type }}>();
 
         QVERIFY(!source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
 
         // Calling resolve on empty source and destination should have no effect.
-        {{ type_name }}::resolveProperties(source.get(), destination.get());
+        {{ type }}::resolveProperties(source.get(), destination.get());
 
         QVERIFY(!destination->hasAnyValue());
 
-{% for property in properties %}
-{% if not property.is_group %}
+{% for property in children %}
+{% if not property.children %}
         source->set{{ property.name | ucfirst }}({{ property.type }}{});
 {% else %}
         source->set{{ property.name | ucfirst }}(test{{ property.type }}Instance());
@@ -110,12 +110,12 @@ private Q_SLOTS:
         QVERIFY(source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
 
-        {{ type_name }}::resolveProperties(source.get(), destination.get());
+        {{ type }}::resolveProperties(source.get(), destination.get());
 
         QVERIFY(destination->hasAnyValue());
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
         QCOMPARE(*destination->{{ property.name }}(), *source->{{ property.name }}());
 {% else %}
         QCOMPARE(destination->{{ property.name }}(), source->{{ property.name }}());
@@ -125,7 +125,7 @@ private Q_SLOTS:
 
     void testDataStream()
     {
-        auto group = test{{ type_name }}Instance();
+        auto group = test{{ type }}Instance();
 
         QByteArray data;
         QDataStream writeStream(&data, QIODevice::WriteOnly);
@@ -135,7 +135,7 @@ private Q_SLOTS:
         QVERIFY(data.size() > 0);
 
         QDataStream readStream(data);
-        auto readGroup = std::make_unique<{{ type_name }}>();
+        auto readGroup = std::make_unique<{{ type }}>();
         readStream >> readGroup;
 
         QCOMPARE(readStream.status(), QDataStream::Status::Ok);
@@ -143,6 +143,6 @@ private Q_SLOTS:
     }
 };
 
-QTEST_MAIN(Test{{ type_name }})
+QTEST_MAIN(Test{{ type }})
 
-#include "Test{{ type_name }}.moc"
+#include "Test{{ type }}.moc"

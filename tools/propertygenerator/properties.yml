@@ -1,233 +1,382 @@
 # SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>*
 
-# \brief The root property group for all elements.
-#
-# This class contains all the properties that are used to style an element.
+type: group
 
-layout:
-    # \brief A property group containing properties related to the layout of an element.
+doc:
+    api: |
+        \brief The root property group for all elements.
 
-    alignment: &alignment
-        # \brief A property group with properties related to alignment.
+        This class contains all the properties that are used to style an element.
 
-        container: Union::Properties::AlignmentContainer
-        horizontal: Union::Properties::Alignment
-        vertical: Union::Properties::Alignment
-        order: int
+children:
+    layout:
+        type: group
 
-    width: qreal
-    height: qreal
-    spacing: qreal
+        doc:
+            api: |
+                \brief A property group containing properties related to the layout of an element.
 
-    padding: &size
-        # \brief A property group representing a set of sizes for cardinal directions.
 
-        left: qreal
-        right: qreal
-        top: qreal
-        bottom: qreal
+        children:
+            alignment: &alignment
+                type: group
+                doc:
+                    api: |
+                        \brief A property group with properties related to alignment.
 
-        _extra_system_includes:
+                children:
+                    container:
+                        type: Union::Properties::AlignmentContainer
+                        doc: The alignment container. This determines relative to what the element is placed.
+
+                    horizontal:
+                        type: Union::Properties::Alignment
+                        doc: The horizontal alignment.
+
+                    vertical:
+                        type: Union::Properties::Alignment
+                        doc: The vertical alignment.
+
+                    order:
+                        type: int
+                        doc: The order determines which elements come before others in the same alignment group.
+
+            width:
+                type: qreal
+                doc: The implicit (initial) width of an element.
+
+            height:
+                type: qreal
+                doc: The implicit (initial) height of an element.
+
+            spacing:
+                type: qreal
+                doc: The spacing between various elements.
+
+            padding: &size
+                type: group
+                doc:
+                    api: |
+                        \brief A property group representing a set of sizes for cardinal directions.
+
+                children:
+                    left:
+                        type: qreal
+                        doc: The size of the left side.
+                    right:
+                        type: qreal
+                        doc: The size of the right side.
+                    top:
+                        type: qreal
+                        doc: The size of the top side.
+                    bottom:
+                        type: qreal
+                        doc: The size of the bottom side.
+
+                extra_system_includes:
+                    "property.h.j2":
+                    -   "QMarginsF"
+
+                extra_code:
+                    "property.h.j2":
+                        public: |4
+                                /*!
+                                Convert a Size property to QMarginsF.
+
+                                If any values are not set, they will use 0.0.
+                                */
+                                QMarginsF toMargins() const;
+                    "property.cpp.j2":
+                        global: |4
+                            QMarginsF {{ type_name }}::toMargins() const
+                            {
+                                return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
+                            }
+
+            inset: *size
+
+            margins: *size
+
+    text:
+        type: group
+
+        doc:
+            api: |
+                \brief A property group containing properties related to the text of an element.
+
+        children:
+            alignment: *alignment
+
+            font:
+                type: QFont
+
+            color:
+                type: Union::Color
+
+            wrapMode:
+                type: Union::Properties::TextWrapMode
+
+            elide:
+                type: Union::Properties::TextElide
+
+    icon:
+        type: group
+
+        doc:
+            api: |
+                \brief A property group containing properties related to an element's icon.
+
+        children:
+            alignment: *alignment
+
+            width:
+                type: qreal
+
+            height:
+                type: qreal
+
+            name:
+                type: QString
+
+            source:
+                type: QUrl
+
+            color:
+                type: Union::Color
+
+    background:
+        type: group
+
+        doc:
+            api: |
+                \brief A property group containing properties related to an element's background.
+
+        children:
+            color:
+                type: Union::Color
+
+            image: &image
+                type: group
+
+                doc:
+                    api: |
+                        \brief A property group describing properties of an image.
+
+                children:
+                    source:
+                        type: std::filesystem::path
+
+                    width:
+                        type: qreal
+
+                    height:
+                        type: qreal
+
+                    xOffset:
+                        type: qreal
+
+                    yOffset:
+                        type: qreal
+
+                    flags:
+                        type: Union::Properties::ImageFlags
+
+                    maskColor:
+                        type: Union::Color
+
+    border:
+        type: group
+
+        doc:
+            api: \brief A property group containing properties of an element's border.
+
+        children:
+            left: &line
+                type: group
+
+                doc:
+                    api: \brief A property group containing the properties of a line.
+
+                children:
+                    size:
+                        type: qreal
+
+                    color:
+                        type: Union::Color
+
+                    style:
+                        type: Union::Properties::LineStyle
+
+                    image: *image
+
+            right: *line
+            top: *line
+            bottom: *line
+
+        extra_system_includes:
             "property.h.j2":
             -   "QMarginsF"
-        _extra_code:
+
+        extra_code:
             "property.h.j2":
                 public: |4
-                        /*!
-                           Convert a Size property to QMarginsF.
+                        /*! Returns the size of all borders */
+                        QMarginsF sizes() const;
 
-                           If any values are not set, they will use 0.0.
-                         */
-                        QMarginsF toMargins() const;
             "property.cpp.j2":
                 global: |4
-                    QMarginsF {{ type_name }}::toMargins() const
+                    QMarginsF BorderProperty::sizes() const
                     {
-                        return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
+                        QMarginsF result;
+
+                        if (d->left) {
+                            result.setLeft(d->left->size().value_or(0.0));
+                        }
+                        if (d->right) {
+                            result.setRight(d->right->size().value_or(0.0));
+                        }
+                        if (d->top) {
+                            result.setTop(d->top->size().value_or(0.0));
+                        }
+                        if (d->bottom) {
+                            result.setBottom(d->bottom->size().value_or(0.0));
+                        }
+
+                        return result;
                     }
 
-    inset: *size
+    outline:
+        type: group
 
-    margins: *size
+        doc:
+            api: \brief A property group containing properties of an element's outline.
 
-text:
-    # \brief A property group containing properties related to the text of an element.
+        children:
+            left: *line
+            right: *line
+            top: *line
+            bottom: *line
 
-    alignment: *alignment
-    font: QFont
-    color: Union::Color
-    wrapMode: Union::Properties::TextWrapMode
-    elide: Union::Properties::TextElide
+    corners:
+        type: group
 
-icon:
-    # \brief A property group containing properties related to an element's icon.
+        doc:
+            api: \brief A property group containing properties of a background's corners.
 
-    alignment: *alignment
-    width: qreal
-    height: qreal
-    name: QString
-    source: QUrl
-    color: Union::Color
+        children:
+            topLeft: &corner
+                type: group
 
-background:
-    # \brief A property group containing properties related to an element's background.
+                doc:
+                    api: \brief A property group containing the properties of a corner.
 
-    color: Union::Color
-    image: &image
-        # \brief A property group describing properties of an image.
+                children:
+                    radius:
+                        type: qreal
 
-        source: std::filesystem::path
-        width: qreal
-        height: qreal
-        xOffset: qreal
-        yOffset: qreal
-        flags: Union::Properties::ImageFlags
-        maskColor: Union::Color
+                    width:
+                        type: qreal
 
-border:
-    # \brief A property group containing properties of an element's border.
+                    height:
+                        type: qreal
 
-    left: &line
-        # \brief A property group containing the properties of a line.
+                    color:
+                        type: Union::Color
 
-        size: qreal
-        color: Union::Color
-        style: Union::Properties::LineStyle
-        image: *image
+                    image: *image
 
-    right: *line
-    top: *line
-    bottom: *line
+            topRight: *corner
+            bottomLeft: *corner
+            bottomRight: *corner
 
-    _extra_system_includes:
-        "property.h.j2":
-        -   "QMarginsF"
-
-    _extra_code:
-        "property.h.j2":
-            public: |4
-                    /*! Returns the size of all borders */
-                    QMarginsF sizes() const;
-
-        "property.cpp.j2":
-            global: |4
-                QMarginsF BorderProperty::sizes() const
-                {
-                    QMarginsF result;
-
-                    if (d->left) {
-                        result.setLeft(d->left->size().value_or(0.0));
-                    }
-                    if (d->right) {
-                        result.setRight(d->right->size().value_or(0.0));
-                    }
-                    if (d->top) {
-                        result.setTop(d->top->size().value_or(0.0));
-                    }
-                    if (d->bottom) {
-                        result.setBottom(d->bottom->size().value_or(0.0));
-                    }
-
-                    return result;
-                }
-
-outline:
-    # \brief A property group containing properties of an element's outline.
-
-    left: *line
-    right: *line
-    top: *line
-    bottom: *line
-
-corners:
-    # \brief A property group containing properties of a background's corners.
-
-    topLeft: &corner
-        # \brief A property group containing the properties of a corner.
-
-        radius: qreal
-        width: qreal
-        height: qreal
-        color: Union::Color
-        image: *image
-
-    topRight: *corner
-    bottomLeft: *corner
-    bottomRight: *corner
-
-    _extra_code:
-        "property.h.j2":
-            public: |4
-                    struct CornerRadii {
-                        qreal topLeft = 0.0;
-                        qreal topRight = 0.0;
-                        qreal bottomLeft = 0.0;
-                        qreal bottomRight = 0.0;
-                    };
-
-                    /*! Returns the radii of all corners */
-                    CornerRadii radii() const;
-
-        "property.cpp.j2":
-            global: |4
-                CornersProperty::CornerRadii CornersProperty::radii() const
-                {
-                    CornerRadii result;
-
-                    if (d->topLeft) {
-                        result.topLeft = d->topLeft->radius().value_or(0.0);
-                    }
-                    if (d->topRight) {
-                        result.topRight = d->topRight->radius().value_or(0.0);
-                    }
-                    if (d->bottomLeft) {
-                        result.bottomLeft = d->bottomLeft->radius().value_or(0.0);
-                    }
-                    if (d->bottomRight) {
-                        result.bottomRight = d->bottomRight->radius().value_or(0.0);
-                    }
-
-                    return result;
-                }
-
-shadow:
-    # \brief A property group containing properties relating to an element's shadow.
-
-    offset:
-        horizontal: qreal
-        vertical: qreal
-
-        _extra_system_includes:
-            "property.h.j2":
-            -   "QVector2D"
-
-        _extra_code:
+        extra_code:
             "property.h.j2":
                 public: |4
-                        /*!
-                           Convert an Offset property to QVector2D.
+                        struct CornerRadii {
+                            qreal topLeft = 0.0;
+                            qreal topRight = 0.0;
+                            qreal bottomLeft = 0.0;
+                            qreal bottomRight = 0.0;
+                        };
 
-                           If any values are not set, they will use 0.0.
-                         */
-                        QVector2D toVector2D() const;
+                        /*! Returns the radii of all corners */
+                        CornerRadii radii() const;
+
             "property.cpp.j2":
                 global: |4
-                    QVector2D {{ type_name }}::toVector2D() const
+                    CornersProperty::CornerRadii CornersProperty::radii() const
                     {
-                        return QVector2D{float(d->horizontal.value_or(0.0)), float(d->vertical.value_or(0.0))};
+                        CornerRadii result;
+
+                        if (d->topLeft) {
+                            result.topLeft = d->topLeft->radius().value_or(0.0);
+                        }
+                        if (d->topRight) {
+                            result.topRight = d->topRight->radius().value_or(0.0);
+                        }
+                        if (d->bottomLeft) {
+                            result.bottomLeft = d->bottomLeft->radius().value_or(0.0);
+                        }
+                        if (d->bottomRight) {
+                            result.bottomRight = d->bottomRight->radius().value_or(0.0);
+                        }
+
+                        return result;
                     }
 
-    color: Union::Color
-    size: qreal
-    blur: qreal
+    shadow:
+        type: group
 
-    left: *line
-    right: *line
-    top: *line
-    bottom: *line
+        doc:
+            api: \brief A property group containing properties relating to an element's shadow.
 
-    topLeft: *corner
-    topRight: *corner
-    bottomLeft: *corner
-    bottomRight: *corner
+        children:
+            offset:
+                type: group
+
+                children:
+                    horizontal:
+                        type: qreal
+
+                    vertical:
+                        type: qreal
+
+                extra_system_includes:
+                    "property.h.j2":
+                    -   "QVector2D"
+
+                extra_code:
+                    "property.h.j2":
+                        public: |4
+                                /*!
+                                Convert an Offset property to QVector2D.
+
+                                If any values are not set, they will use 0.0.
+                                */
+                                QVector2D toVector2D() const;
+                    "property.cpp.j2":
+                        global: |4
+                            QVector2D {{ type_name }}::toVector2D() const
+                            {
+                                return QVector2D{float(d->horizontal.value_or(0.0)), float(d->vertical.value_or(0.0))};
+                            }
+
+            color:
+                type: Union::Color
+
+            size:
+                type: qreal
+
+            blur:
+                type: qreal
+
+            left: *line
+            right: *line
+            top: *line
+            bottom: *line
+
+            topLeft: *corner
+            topRight: *corner
+            bottomLeft: *corner
+            bottomRight: *corner

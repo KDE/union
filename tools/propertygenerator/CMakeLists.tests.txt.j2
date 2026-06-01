@@ -15,7 +15,7 @@ REUSE-IgnoreStart
 
 ecm_add_tests(
 {% for type in types %}
-    Test{{ type.type_name | ucfirst }}.cpp
+    Test{{ type.type | ucfirst }}.cpp
 {% endfor %}
     LINK_LIBRARIES Qt6::Test Union::Union
 )

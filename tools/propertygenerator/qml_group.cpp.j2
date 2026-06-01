@@ -13,7 +13,7 @@ REUSE-IgnoreStart
 // To regenerate, run `tools/propertygenerator/generate_properties.py`.
 {# REUSE-IgnoreEnd #}
 
-{% set group_name = type_name + "Group" %}
+{% set group_name = type + "Group" %}
 #include "{{ group_name }}.h"
 
 #include <QQmlEngine>
@@ -28,14 +28,14 @@ using namespace Qt::StringLiterals;
     : QObject()
     , m_style(style)
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     m_{{ property.name }} = std::make_unique<{{ property.type }}Group>(m_style);
 {% endif %}
 {% endfor %}
 }
 
-void {{ group_name }}::update({{ type_name }} *newState)
+void {{ group_name }}::update({{ type }} *newState)
 {
     if (newState == m_state) {
         return;
@@ -44,21 +44,21 @@ void {{ group_name }}::update({{ type_name }} *newState)
     m_state = newState;
 
     if (!newState) {
-{% for property in properties %}
-    {% if property.is_group %}
+{% for property in children %}
+    {% if property.children %}
         m_{{ property.name }}->update(nullptr);
     {% endif %}
 {% endfor %}
     } else {
-{% for property in properties %}
-    {% if property.is_group %}
+{% for property in children %}
+    {% if property.children %}
         m_{{ property.name }}->update(newState->{{ property.name }}());
     {% endif %}
 {% endfor %}
     }
 
-{% for property in properties %}
-{% if not property.is_group %}
+{% for property in children %}
+{% if not property.children %}
     Q_EMIT {{ property.name }}Changed();
 {% endif %}
 {% endfor %}
@@ -70,8 +70,8 @@ void {{ group_name }}::update({{ type_name }} *newState)
 
 void {{ group_name }}::refreshColors()
 {
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
     m_{{ property.name }}->refreshColors();
 {% elif property.type == "Union::Color" %}
     Q_EMIT {{ property.name }}Changed();
@@ -79,8 +79,8 @@ void {{ group_name }}::refreshColors()
 {% endfor %}
 }
 
-{% for property in properties %}
-{% if property.is_group %}
+{% for property in children %}
+{% if property.children %}
 {{ property.type }}Group *{{ group_name }}::{{ property.name }}() const
 {
     return m_{{ property.name }}.get();
@@ -111,4 +111,4 @@ QJSValue {{ group_name }}::{{ property.name }}() const
 {{ extra_code["global"] | render }}
 
 {% endif %}
-#include "moc_{{ type_name }}Group.cpp"
+#include "moc_{{ type }}Group.cpp"
