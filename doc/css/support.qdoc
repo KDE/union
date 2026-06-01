@@ -14,13 +14,12 @@ some extensions.
 Most of the basic selectors are supported:
 
 \list
-    \li Element type, such as "Button". Note that matching is case-insensitive.
-    \li Element ID
-    \li Class. Note that this will be converted to an attribute selector that
-        checks if the given name exists as a boolean attribute and has a value
-        of \c true.
-    \li Pseudo-class. Pseudo-classes are interpreted as states, which means that
-        the following pseudo-classes are available:
+    \li Element type: \c{element-type}. Note that matching is case-insensitive.
+    \li Element ID: \c{#element-id}.
+    \li Class: \c{.hint}. These are converted to what Union calls "hints", but
+        work the same  way.
+    \li Pseudo-class: \c{:hovered}. Pseudo-classes are interpreted as states,
+        which means that the following pseudo-classes are available:
         \list
             \li hovered
             \li active-focus
@@ -30,8 +29,10 @@ Most of the basic selectors are supported:
             \li disabled
             \li highlighted
         \endlist
-    \li Attribute
-    \li Universal
+    \li Attribute Exists: \c{[attribute]}.
+    \li Attribute Equals: \c{[attribute=value]}.
+    \li Attribute Contains \c{[attribute~=value]}.
+    \li Universal: \c{*}.
 \endlist
 
 In addition, the \c :root selector is supported as a way of declaring variables,
@@ -39,10 +40,9 @@ but does not actually match any element.
 
 \section2 Supported Combinators
 
-At the moment, only the descendant combinator is supported. The direct child
-(\c >) combinator is supported by the parser but not implemented in Union
-itself. Other combinators are unsupported pending implementation in the parser
-library.
+At the moment, only the descendant (\c{element descendant}) and child
+(\c{element > child}) combinators are supported. Other combinators may be
+supported in the future but require implementation.
 
 \section1 Properties
 
@@ -73,5 +73,45 @@ to start with \c{--}. It is however recommended to not make use of this, as it
 is used by Union itself to define properties which may end up conflicting with
 any custom properties you have declared.
 
+Union also supports an extended syntax for the property syntax declaration.
+
+\section1 Common CSS That is Currently Unsupported
+
+The following common CSS constructs are currently unsupported, but are planned
+to be supported in future releases:
+
+\list
+    \li Units other than \c{px}. In some places these are already somewhat
+        supported but may not work exactly the way you expect it to.
+    \li Property inheritance.
+    \li \c{@media} queries.
+    \li Multiple background declarations.
+    \li \c{:first-child} and \c{:last-child} pseudo selectors.
+    \li \c{visibility} property.
+    \li \c{calc()} for property values.
+    \li Transitions and animations.
+\endlist
+
+The following common CSS constructs are currently unsupported and not planned to
+be supported:
+
+\list
+    \li \c{position} and related properties. Most of the positioning of controls
+        is done by applications themselves without Union being able to influence
+        it. For sub-controls, Union uses a custom layout that is designed to be
+        flexible but also allow a fair amount of control.
+    \li Flexbox or Grid layouts. Similar to positioning, most of the layouting
+        is done by the application outside of Union's control. The sub-control
+        layout used by Union is loosely based on Flexbox, however.
+    \li \c{display} and related properties. Applications, and by extension Union,
+        don't work with the same model as used by HTML. Therefore, the
+        distinction between block and inline elements does not exist. Neither do
+        many of the other contexts that the \c{display} property is used for.
+    \li \c{width} and \c{height} as anything more than initial size hints. Like
+        positions, Union is not in control of most layouting done by an
+        application. This includes sizing controls. The size specified using the
+        \c{width} and \c{height} properties is used as an initial size hint, but
+        the application can always ignore it.
+\endlist
 
 */
