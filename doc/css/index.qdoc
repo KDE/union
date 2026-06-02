@@ -31,7 +31,7 @@ To get started creating CSS styles for Union, please read
 \section1 Articles
 
 \list
-    \li \c{css-styling-applications.html}{Styling Applications with CSS}
+    \li \l{css-styling-applications.html}{Styling Applications with CSS}
     \li \l{css-support.html}{Supported CSS}
     \li \l{css-properties.html}{Property Reference}
 \endlist
