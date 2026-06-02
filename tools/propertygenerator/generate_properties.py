@@ -94,13 +94,18 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
         type_name = node_type
 
     description_type = node_type
-    if node_type == "group":
+    if node_type == "group" or node_type == "type":
         description_type = group_name(type_name)
 
-    description = Description(name, description_type, parent)
-
-    if node_type == "group":
-        memo[type_name] = description
+    description = None
+    if description_type in memo:
+        description = copy.deepcopy(memo[description_type])
+        description.name = name
+        description.parent = parent
+    else:
+        description = Description(name, description_type, parent)
+        if node_type == "group" or node_type == "type":
+            memo[type_name] = description
 
     for key_node, value_node in node.value:
         if key_node.value == "extra_code":
@@ -126,7 +131,11 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
                 description.api_documentation = value_node.value
                 description.css_documentation = value_node.value
 
-        elif key_node.value == "children" and node_type == "group":
+        elif key_node.value == "types":
+            for key_node, value_node in value_node.value:
+                memo = memo | process_node(value_node, key_node.value, description, memo, type_name = key_node.value)
+
+        elif key_node.value == "children":
             for key_node, value_node in value_node.value:
                 prop = None
 
@@ -154,7 +163,7 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
         else:
             parent.add_local_include("property.h.j2", include)
 
-    if parent:
+    if parent and node_type != "type":
         parent.add_child(description)
 
     return memo
