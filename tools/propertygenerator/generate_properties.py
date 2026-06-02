@@ -161,8 +161,8 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
 
 
 @jinja2.pass_context
-def render_template_filter(context, value):
-    return context.environment.from_string(value).render(context)
+def render_template_filter(context, value, **kwargs):
+    return context.environment.from_string(value).render(context, **kwargs)
 
 
 def render_template(template_name: str, output_path: Path, env: jinja2.Environment, data: dict):
