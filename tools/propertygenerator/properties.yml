@@ -16,8 +16,6 @@ children:
         doc:
             api: |
                 \brief A property group representing a set of sizes for cardinal directions.
-            # css: |
-            #     TODO
 
         children:
             left:
@@ -64,8 +62,6 @@ children:
             api: |
                 \brief A property group with properties related to alignment.
 
-
-
         children:
             container:
                 type: Union::Properties::AlignmentContainer
@@ -99,40 +95,54 @@ children:
         children:
             source:
                 type: std::filesystem::path
+                doc: The path to an image to use as source for this image.
 
             width:
                 type: qreal
+                doc: The width to use for the image. If unset, the source's image width is used.
 
             height:
                 type: qreal
+                doc: The height to use for the image. If unset, the source's image height is used.
 
             xOffset:
                 type: qreal
+                doc: An offset on placement of the image horizontally.
 
             yOffset:
                 type: qreal
+                doc: An offset on placement of the image vertically.
 
             flags:
                 type: Union::Properties::ImageFlags
+                doc: A set of flags to use for this image.
 
             maskColor:
                 type: Union::Color
+                doc: The color to use for rendering the image when the image is used as a mask.
 
     line:
         type: type
 
         doc:
             api: \brief A property group containing the properties of a line.
+            css: |
+                \b {{ name }} (none | (<length> (none | solid) <color>))
+
+                A shorthand to set the properties of the line.
 
         children:
             size:
                 type: qreal
+                doc: The thickness of the line.
 
             color:
                 type: Union::Color
+                doc: The color of the line.
 
             style:
                 type: Union::Properties::LineStyle
+                doc: The style of the line.
 
 
         extra_code:
@@ -150,8 +160,7 @@ children:
         children:
             radius:
                 type: qreal
-
-
+                doc: The radius of the corner.
 
     layout:
         type: group
@@ -166,6 +175,19 @@ children:
         children:
             alignment:
                 type: alignment
+                doc:
+                    css: |
+                        The alignment related properties can be used to control the alignment for
+                        elements that combine multiple items into a single element, such as a checkbox
+                        that contains a check mark (usually referred to as \c{indicator}), an icon and
+                        a label. For details about how the layout for elements works, see \l{layout}.
+
+                        Horizontal and vertical alignment is specified in relative terms that do not
+                        imply a writing direction.
+
+                        \section3 layout-alignment (<container> <horizontal> <vertical> <order>)
+
+                        Shorthand for setting the various layout properties.
 
             width:
                 type: qreal
@@ -182,11 +204,41 @@ children:
             padding:
                 type: size
 
+                doc:
+                    css: |
+                        Padding defines extra spacing around the content of an element.
+
+                        \b padding (<length>{1,4})
+
+                        A shorthand to set all padding values in a single property. Can take one
+                        to four values. If one value is provided, it will be used for all four
+                        padding values. If two values are provided, the first will be used for
+                        left and right padding, the second for top and bottom padding. If three
+                        values are provided, the first will be used for top, the second for left
+                        and right and the third for bottom padding. If four values are provided,
+                        they are used for top, right, bottom, left padding in that order.
+
             inset:
                 type: size
 
+                doc:
+                    css: |
+                        Inset defines extra spacing around the background of an element.
+
+                        \b inset (<length>{1,4})
+
+                        A shorthand to set all inset values in a single property. Can take one
+                        to four values. If one value is provided, it will be used for all four
+                        inset values. If two values are provided, the first will be used for
+                        left and right inset, the second for top and bottom inset. If three
+                        values are provided, the first will be used for top, the second for left
+                        and right and the third for bottom inset. If four values are provided,
+                        they are used for top, right, bottom, left inset in that order.
+
             margins:
                 type: size
+
+                doc: Margins define extra spacing between sub-elements of an element.
 
     text:
         type: group
@@ -194,22 +246,45 @@ children:
         doc:
             api: |
                 \brief A property group containing properties related to the text of an element.
+            css: |
+                These properties all relate to the text of an element. They will have no effect
+                if the element has no visible text.
+
+                \b color (<color>)
+
+                A shorthand to set both text and icon color in a single property.
+
+                \b font-size (<length> or <percentage>)
+
+                The size of the font.
+
+                \b font-weight (<integer> | (normal | bold | bolder | lighter))
+
+                The weight of the font. Can be either an integer in the range 100-1000 or a
+                weight name.
 
         children:
             alignment:
                 type: alignment
+
+                doc:
+                    css: |
+                        The alignment of text of an element.
 
             font:
                 type: QFont
 
             color:
                 type: Union::Color
+                doc: The color of text of an element.
 
             wrapMode:
                 type: Union::Properties::TextWrapMode
+                doc: The wrap mode for the text of an element.
 
             elide:
                 type: Union::Properties::TextElide
+                doc: The elide mode for the text of an element.
 
         extra_code:
             "properties.css.j2": |4
@@ -233,6 +308,13 @@ children:
         doc:
             api: |
                 \brief A property group containing properties related to an element's icon.
+            css: |
+                These properties all relate to the icon of an element. They will have no
+                effect if the element does not have an icon.
+
+                \b icon-size (<length>)
+
+                A shorthand to set both icon width and icon height in one property.
 
         children:
             alignment:
@@ -241,17 +323,29 @@ children:
             width:
                 type: qreal
 
+                doc: The width of the icon.
+
             height:
                 type: qreal
+
+                doc: The height of the icon.
 
             name:
                 type: QString
 
+                doc: The name of an icon of the icon theme to use for this icon.
+
             source:
                 type: QUrl
 
+                doc: |
+                    A URL to a file to use for the icon. Currently only local files are
+                    supported.
+
             color:
                 type: Union::Color
+
+                doc: The color of the icon.
 
         extra_code:
             "properties.css.j2": |4
@@ -266,12 +360,27 @@ children:
             api: |
                 \brief A property group containing properties related to an element's background.
 
+            css: |
+                The background properties all relate to the background of an element. An element's
+                background is a layer rendered over any shadows but underneath everything else.
+
+                \b background (none | <color> | <url>)
+
+                A shorthand to set a background for an element. Setting this to "none" will
+                explicitly disable any background. Setting this to a color value will use that
+                color as background. Setting it to a url will use that as image source for the
+                background.
+
         children:
             color:
                 type: Union::Color
 
+                doc: The background color to use for an element.
 
+            image:
+                type: image
 
+                doc: The image to use for an element.
 
         extra_code:
             "properties.css.j2": |4
@@ -288,6 +397,32 @@ children:
 
         doc:
             api: \brief A property group containing properties of an element's border.
+
+            css: |
+                The border properties all relate to an element's border. An element's
+                border is a set of lines rendered inside the edge of an element, over any
+                background but underneath any content. Borders have a width, a style and
+                a color. Currently only the styles "none" and "solid" are supported, with
+                "none" meaning do not draw the border and "solid" being use a solid color
+                for the border.
+
+                \b border (none | (<length> (none | solid) <color>))
+
+                A shorthand to set all border properties in a single property. If set to
+                none, all borders will be disabled. If set to <length> solid <color>, all
+                borders will use <length> for their size and <color> for their color.
+
+                \b border-width (<length>)
+
+                A shorthand to set all border widths in a single property.
+
+                \b border-color (<color>)
+
+                A shorthand to set all border colors in a single property.
+
+                \b border-style (none | solid)
+
+                A shorthand to set all border styles in a single property.
 
         children:
             left:
@@ -441,16 +576,31 @@ children:
         doc:
             api: \brief A property group containing properties relating to an element's shadow.
 
+            css: |
+                These properties describe an element's shadow.
+
+                \b box-shadow (none | (<length> <length> <length> <length> <color>))
+
+                A shorthand to set the shadow of an element to a box-shaped shadow. If set to none,
+                the shadow will explicitly be disabled. Otherwise, the parameters are X offset, Y offset,
+                size, blur and finally color.
+
         children:
             offset:
                 type: group
 
+                doc: |
+                    The offset of the shadow from its element. Setting this will move the entire shadow,
+                    as if the light were cast from a different angle.
+
                 children:
                     horizontal:
                         type: qreal
+                        doc: The horizontal offset of the shadow.
 
                     vertical:
                         type: qreal
+                        doc: The vertical offset of the shadow.
 
                 extra_system_includes:
                     "property.h.j2":
@@ -474,13 +624,17 @@ children:
 
             color:
                 type: Union::Color
+                doc: The color of the shadow.
 
             size:
                 type: qreal
+                doc: The size of the shadow. This expands the area used for the shadow compared to the element.
 
             blur:
                 type: qreal
-
+                doc: |
+                    The amount of blur to use for the shadow. Increasing this will increase how smooth the shadow
+                    goes from fully transparent to the full shadow color.
 
         extra_code:
             "properties.css.j2": |4
