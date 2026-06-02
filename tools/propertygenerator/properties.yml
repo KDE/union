@@ -134,8 +134,6 @@ children:
             style:
                 type: Union::Properties::LineStyle
 
-            image:
-                type: image
 
         extra_code:
             "properties.css.j2": |4
@@ -153,17 +151,7 @@ children:
             radius:
                 type: qreal
 
-            width:
-                type: qreal
 
-            height:
-                type: qreal
-
-            color:
-                type: Union::Color
-
-            image:
-                type: image
 
     layout:
         type: group
@@ -493,29 +481,6 @@ children:
             blur:
                 type: qreal
 
-            left:
-                type: line
-
-            right:
-                type: line
-
-            top:
-                type: line
-
-            bottom:
-                type: line
-
-            topLeft:
-                type: corner
-
-            topRight:
-                type: corner
-
-            bottomLeft:
-                type: corner
-
-            bottomRight:
-                type: corner
 
         extra_code:
             "properties.css.j2": |4
