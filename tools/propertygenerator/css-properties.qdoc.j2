@@ -73,18 +73,18 @@ Note: Keep in sync with the mapping in properties.css.j2
 }%}
 
 {# Recursively print all properties of an object, with a prefix #}
-{% macro print_properties(name, object, level) %}
+{% macro print_properties(name, object) %}
 {% for property in object.children %}
 {% set prop_name = (name + "-" + property.name if name else property.name) | css_name %}
 {%- if property.children %}
-\section{{ level }} {{ prop_name }}
+\section2 {{ prop_name }}
 
 {{ property.css_documentation }}
 
-{{ print_properties(prop_name, property, level + 1) }}
+{{ print_properties(prop_name, property) }}
 {% elif property.type in type_map %}
 {% set prop_name = name_map[prop_name] if prop_name in name_map else prop_name %}
-\b {{ prop_name }} ({{ type_map[property.type] }})
+\section3 {{ prop_name }} ({{ type_map[property.type] }})
 
 {{ property.css_documentation }}
 
@@ -94,7 +94,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 
 {%- for type in types %}
 {% if type.name == "style" %}
-{{ print_properties("", type, 1) }}
+{{ print_properties("", type) }}
 {% endif %}
 {% endfor %}
 
