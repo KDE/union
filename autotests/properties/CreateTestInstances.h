@@ -8,21 +8,21 @@
 
 #include <QtTest>
 
-#include <properties/AlignmentProperty.h>
-#include <properties/BackgroundProperty.h>
-#include <properties/BorderProperty.h>
-#include <properties/CornerProperty.h>
-#include <properties/CornersProperty.h>
-#include <properties/IconProperty.h>
-#include <properties/ImageProperty.h>
-#include <properties/LayoutProperty.h>
-#include <properties/LineProperty.h>
-#include <properties/OffsetProperty.h>
-#include <properties/OutlineProperty.h>
-#include <properties/ShadowProperty.h>
-#include <properties/SizeProperty.h>
-#include <properties/StyleProperty.h>
-#include <properties/TextProperty.h>
+#include <properties/AlignmentPropertyGroup.h>
+#include <properties/BackgroundPropertyGroup.h>
+#include <properties/BorderPropertyGroup.h>
+#include <properties/CornerPropertyGroup.h>
+#include <properties/CornersPropertyGroup.h>
+#include <properties/IconPropertyGroup.h>
+#include <properties/ImagePropertyGroup.h>
+#include <properties/LayoutPropertyGroup.h>
+#include <properties/LinePropertyGroup.h>
+#include <properties/OffsetPropertyGroup.h>
+#include <properties/OutlinePropertyGroup.h>
+#include <properties/ShadowPropertyGroup.h>
+#include <properties/SizePropertyGroup.h>
+#include <properties/StylePropertyGroup.h>
+#include <properties/TextPropertyGroup.h>
 
 using namespace Qt::StringLiterals;
 
@@ -46,68 +46,41 @@ QFont testQFontInstance()
     return QFont{u"Noto Sans"_s, 12};
 }
 
-std::unique_ptr<StyleProperty> testStylePropertyInstance();
-std::unique_ptr<LayoutProperty> testLayoutPropertyInstance();
-std::unique_ptr<AlignmentProperty> testAlignmentPropertyInstance();
-std::unique_ptr<SizeProperty> testSizePropertyInstance();
-std::unique_ptr<TextProperty> testTextPropertyInstance();
-std::unique_ptr<IconProperty> testIconPropertyInstance();
-std::unique_ptr<BackgroundProperty> testBackgroundPropertyInstance();
-std::unique_ptr<ImageProperty> testImagePropertyInstance();
-std::unique_ptr<BorderProperty> testBorderPropertyInstance();
-std::unique_ptr<LineProperty> testLinePropertyInstance();
-std::unique_ptr<OutlineProperty> testOutlinePropertyInstance();
-std::unique_ptr<CornersProperty> testCornersPropertyInstance();
-std::unique_ptr<CornerProperty> testCornerPropertyInstance();
-std::unique_ptr<ShadowProperty> testShadowPropertyInstance();
-std::unique_ptr<OffsetProperty> testOffsetPropertyInstance();
+std::unique_ptr<StylePropertyGroup> testStylePropertyGroupInstance();
+std::unique_ptr<SizePropertyGroup> testSizePropertyGroupInstance();
+std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance();
+std::unique_ptr<ImagePropertyGroup> testImagePropertyGroupInstance();
+std::unique_ptr<LinePropertyGroup> testLinePropertyGroupInstance();
+std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance();
+std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance();
+std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance();
+std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance();
+std::unique_ptr<BackgroundPropertyGroup> testBackgroundPropertyGroupInstance();
+std::unique_ptr<BorderPropertyGroup> testBorderPropertyGroupInstance();
+std::unique_ptr<OutlinePropertyGroup> testOutlinePropertyGroupInstance();
+std::unique_ptr<CornersPropertyGroup> testCornersPropertyGroupInstance();
+std::unique_ptr<ShadowPropertyGroup> testShadowPropertyGroupInstance();
+std::unique_ptr<OffsetPropertyGroup> testOffsetPropertyGroupInstance();
 
-std::unique_ptr<StyleProperty> testStylePropertyInstance()
+std::unique_ptr<StylePropertyGroup> testStylePropertyGroupInstance()
 {
-    auto instance = std::make_unique<StyleProperty>();
+    auto instance = std::make_unique<StylePropertyGroup>();
 
-    instance->setLayout(testLayoutPropertyInstance());
-    instance->setText(testTextPropertyInstance());
-    instance->setIcon(testIconPropertyInstance());
-    instance->setBackground(testBackgroundPropertyInstance());
-    instance->setBorder(testBorderPropertyInstance());
-    instance->setOutline(testOutlinePropertyInstance());
-    instance->setCorners(testCornersPropertyInstance());
-    instance->setShadow(testShadowPropertyInstance());
+    instance->setLayout(testLayoutPropertyGroupInstance());
+    instance->setText(testTextPropertyGroupInstance());
+    instance->setIcon(testIconPropertyGroupInstance());
+    instance->setBackground(testBackgroundPropertyGroupInstance());
+    instance->setBorder(testBorderPropertyGroupInstance());
+    instance->setOutline(testOutlinePropertyGroupInstance());
+    instance->setCorners(testCornersPropertyGroupInstance());
+    instance->setShadow(testShadowPropertyGroupInstance());
 
     return instance;
 }
 
-std::unique_ptr<LayoutProperty> testLayoutPropertyInstance()
+std::unique_ptr<SizePropertyGroup> testSizePropertyGroupInstance()
 {
-    auto instance = std::make_unique<LayoutProperty>();
-
-    instance->setAlignment(testAlignmentPropertyInstance());
-    instance->setWidth(testQrealInstance());
-    instance->setHeight(testQrealInstance());
-    instance->setSpacing(testQrealInstance());
-    instance->setPadding(testSizePropertyInstance());
-    instance->setInset(testSizePropertyInstance());
-    instance->setMargins(testSizePropertyInstance());
-
-    return instance;
-}
-
-std::unique_ptr<AlignmentProperty> testAlignmentPropertyInstance()
-{
-    auto instance = std::make_unique<AlignmentProperty>();
-
-    instance->setContainer(Union::Properties::AlignmentContainer{});
-    instance->setHorizontal(Union::Properties::Alignment{});
-    instance->setVertical(Union::Properties::Alignment{});
-    instance->setOrder(int{});
-
-    return instance;
-}
-
-std::unique_ptr<SizeProperty> testSizePropertyInstance()
-{
-    auto instance = std::make_unique<SizeProperty>();
+    auto instance = std::make_unique<SizePropertyGroup>();
 
     instance->setLeft(testQrealInstance());
     instance->setRight(testQrealInstance());
@@ -117,46 +90,21 @@ std::unique_ptr<SizeProperty> testSizePropertyInstance()
     return instance;
 }
 
-std::unique_ptr<TextProperty> testTextPropertyInstance()
+std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance()
 {
-    auto instance = std::make_unique<TextProperty>();
+    auto instance = std::make_unique<AlignmentPropertyGroup>();
 
-    instance->setAlignment(testAlignmentPropertyInstance());
-    instance->setFont(testQFontInstance());
-    instance->setColor(Union::Color{});
-    instance->setWrapMode(Union::Properties::TextWrapMode{});
-    instance->setElide(Union::Properties::TextElide{});
+    instance->setContainer(Union::Properties::AlignmentContainer{});
+    instance->setHorizontal(Union::Properties::Alignment{});
+    instance->setVertical(Union::Properties::Alignment{});
+    instance->setOrder(int{});
 
     return instance;
 }
 
-std::unique_ptr<IconProperty> testIconPropertyInstance()
+std::unique_ptr<ImagePropertyGroup> testImagePropertyGroupInstance()
 {
-    auto instance = std::make_unique<IconProperty>();
-
-    instance->setAlignment(testAlignmentPropertyInstance());
-    instance->setWidth(testQrealInstance());
-    instance->setHeight(testQrealInstance());
-    instance->setName(QString{});
-    instance->setSource(QUrl{});
-    instance->setColor(Union::Color{});
-
-    return instance;
-}
-
-std::unique_ptr<BackgroundProperty> testBackgroundPropertyInstance()
-{
-    auto instance = std::make_unique<BackgroundProperty>();
-
-    instance->setColor(Union::Color{});
-    instance->setImage(testImagePropertyInstance());
-
-    return instance;
-}
-
-std::unique_ptr<ImageProperty> testImagePropertyInstance()
-{
-    auto instance = std::make_unique<ImageProperty>();
+    auto instance = std::make_unique<ImagePropertyGroup>();
 
     instance->setSource(std::filesystem::path{});
     instance->setWidth(testQrealInstance());
@@ -169,90 +117,129 @@ std::unique_ptr<ImageProperty> testImagePropertyInstance()
     return instance;
 }
 
-std::unique_ptr<BorderProperty> testBorderPropertyInstance()
+std::unique_ptr<LinePropertyGroup> testLinePropertyGroupInstance()
 {
-    auto instance = std::make_unique<BorderProperty>();
-
-    instance->setLeft(testLinePropertyInstance());
-    instance->setRight(testLinePropertyInstance());
-    instance->setTop(testLinePropertyInstance());
-    instance->setBottom(testLinePropertyInstance());
-
-    return instance;
-}
-
-std::unique_ptr<LineProperty> testLinePropertyInstance()
-{
-    auto instance = std::make_unique<LineProperty>();
+    auto instance = std::make_unique<LinePropertyGroup>();
 
     instance->setSize(testQrealInstance());
     instance->setColor(Union::Color{});
     instance->setStyle(Union::Properties::LineStyle{});
-    instance->setImage(testImagePropertyInstance());
 
     return instance;
 }
 
-std::unique_ptr<OutlineProperty> testOutlinePropertyInstance()
+std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance()
 {
-    auto instance = std::make_unique<OutlineProperty>();
-
-    instance->setLeft(testLinePropertyInstance());
-    instance->setRight(testLinePropertyInstance());
-    instance->setTop(testLinePropertyInstance());
-    instance->setBottom(testLinePropertyInstance());
-
-    return instance;
-}
-
-std::unique_ptr<CornersProperty> testCornersPropertyInstance()
-{
-    auto instance = std::make_unique<CornersProperty>();
-
-    instance->setTopLeft(testCornerPropertyInstance());
-    instance->setTopRight(testCornerPropertyInstance());
-    instance->setBottomLeft(testCornerPropertyInstance());
-    instance->setBottomRight(testCornerPropertyInstance());
-
-    return instance;
-}
-
-std::unique_ptr<CornerProperty> testCornerPropertyInstance()
-{
-    auto instance = std::make_unique<CornerProperty>();
+    auto instance = std::make_unique<CornerPropertyGroup>();
 
     instance->setRadius(testQrealInstance());
-    instance->setWidth(testQrealInstance());
-    instance->setHeight(testQrealInstance());
-    instance->setColor(Union::Color{});
-    instance->setImage(testImagePropertyInstance());
 
     return instance;
 }
 
-std::unique_ptr<ShadowProperty> testShadowPropertyInstance()
+std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance()
 {
-    auto instance = std::make_unique<ShadowProperty>();
+    auto instance = std::make_unique<LayoutPropertyGroup>();
 
-    instance->setOffset(testOffsetPropertyInstance());
+    instance->setAlignment(testAlignmentPropertyGroupInstance());
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setSpacing(testQrealInstance());
+    instance->setPadding(testSizePropertyGroupInstance());
+    instance->setInset(testSizePropertyGroupInstance());
+    instance->setMargins(testSizePropertyGroupInstance());
+
+    return instance;
+}
+
+std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance()
+{
+    auto instance = std::make_unique<TextPropertyGroup>();
+
+    instance->setAlignment(testAlignmentPropertyGroupInstance());
+    instance->setFont(testQFontInstance());
+    instance->setColor(Union::Color{});
+    instance->setWrapMode(Union::Properties::TextWrapMode{});
+    instance->setElide(Union::Properties::TextElide{});
+
+    return instance;
+}
+
+std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance()
+{
+    auto instance = std::make_unique<IconPropertyGroup>();
+
+    instance->setAlignment(testAlignmentPropertyGroupInstance());
+    instance->setWidth(testQrealInstance());
+    instance->setHeight(testQrealInstance());
+    instance->setName(QString{});
+    instance->setSource(QUrl{});
+    instance->setColor(Union::Color{});
+
+    return instance;
+}
+
+std::unique_ptr<BackgroundPropertyGroup> testBackgroundPropertyGroupInstance()
+{
+    auto instance = std::make_unique<BackgroundPropertyGroup>();
+
+    instance->setColor(Union::Color{});
+    instance->setImage(testImagePropertyGroupInstance());
+
+    return instance;
+}
+
+std::unique_ptr<BorderPropertyGroup> testBorderPropertyGroupInstance()
+{
+    auto instance = std::make_unique<BorderPropertyGroup>();
+
+    instance->setLeft(testLinePropertyGroupInstance());
+    instance->setRight(testLinePropertyGroupInstance());
+    instance->setTop(testLinePropertyGroupInstance());
+    instance->setBottom(testLinePropertyGroupInstance());
+
+    return instance;
+}
+
+std::unique_ptr<OutlinePropertyGroup> testOutlinePropertyGroupInstance()
+{
+    auto instance = std::make_unique<OutlinePropertyGroup>();
+
+    instance->setLeft(testLinePropertyGroupInstance());
+    instance->setRight(testLinePropertyGroupInstance());
+    instance->setTop(testLinePropertyGroupInstance());
+    instance->setBottom(testLinePropertyGroupInstance());
+
+    return instance;
+}
+
+std::unique_ptr<CornersPropertyGroup> testCornersPropertyGroupInstance()
+{
+    auto instance = std::make_unique<CornersPropertyGroup>();
+
+    instance->setTopLeft(testCornerPropertyGroupInstance());
+    instance->setTopRight(testCornerPropertyGroupInstance());
+    instance->setBottomLeft(testCornerPropertyGroupInstance());
+    instance->setBottomRight(testCornerPropertyGroupInstance());
+
+    return instance;
+}
+
+std::unique_ptr<ShadowPropertyGroup> testShadowPropertyGroupInstance()
+{
+    auto instance = std::make_unique<ShadowPropertyGroup>();
+
+    instance->setOffset(testOffsetPropertyGroupInstance());
     instance->setColor(Union::Color{});
     instance->setSize(testQrealInstance());
     instance->setBlur(testQrealInstance());
-    instance->setLeft(testLinePropertyInstance());
-    instance->setRight(testLinePropertyInstance());
-    instance->setTop(testLinePropertyInstance());
-    instance->setBottom(testLinePropertyInstance());
-    instance->setTopLeft(testCornerPropertyInstance());
-    instance->setTopRight(testCornerPropertyInstance());
-    instance->setBottomLeft(testCornerPropertyInstance());
-    instance->setBottomRight(testCornerPropertyInstance());
 
     return instance;
 }
 
-std::unique_ptr<OffsetProperty> testOffsetPropertyInstance()
+std::unique_ptr<OffsetPropertyGroup> testOffsetPropertyGroupInstance()
 {
-    auto instance = std::make_unique<OffsetProperty>();
+    auto instance = std::make_unique<OffsetPropertyGroup>();
 
     instance->setHorizontal(testQrealInstance());
     instance->setVertical(testQrealInstance());

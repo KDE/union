@@ -5,20 +5,20 @@
 # To regenerate, run `tools/propertygenerator/generate_properties.py`.
 
 ecm_add_tests(
-    TestStyleProperty.cpp
-    TestLayoutProperty.cpp
-    TestAlignmentProperty.cpp
-    TestSizeProperty.cpp
-    TestTextProperty.cpp
-    TestIconProperty.cpp
-    TestBackgroundProperty.cpp
-    TestImageProperty.cpp
-    TestBorderProperty.cpp
-    TestLineProperty.cpp
-    TestOutlineProperty.cpp
-    TestCornersProperty.cpp
-    TestCornerProperty.cpp
-    TestShadowProperty.cpp
-    TestOffsetProperty.cpp
+    TestStylePropertyGroup.cpp
+    TestSizePropertyGroup.cpp
+    TestAlignmentPropertyGroup.cpp
+    TestImagePropertyGroup.cpp
+    TestLinePropertyGroup.cpp
+    TestCornerPropertyGroup.cpp
+    TestLayoutPropertyGroup.cpp
+    TestTextPropertyGroup.cpp
+    TestIconPropertyGroup.cpp
+    TestBackgroundPropertyGroup.cpp
+    TestBorderPropertyGroup.cpp
+    TestOutlinePropertyGroup.cpp
+    TestCornersPropertyGroup.cpp
+    TestShadowPropertyGroup.cpp
+    TestOffsetPropertyGroup.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )

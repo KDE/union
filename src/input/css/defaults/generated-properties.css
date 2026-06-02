@@ -43,7 +43,7 @@
 }
 
 @property padding {
-    syntax: "<length>{1, 4}";
+    syntax: "<length>{1,4}";
 }
 
 @property padding-left {
@@ -64,7 +64,7 @@
 
 
 @property inset {
-    syntax: "<length>{1, 4}";
+    syntax: "<length>{1,4}";
 }
 
 @property inset-left {
@@ -85,7 +85,7 @@
 
 
 @property margin {
-    syntax: "<length>{1, 4}";
+    syntax: "<length>{1,4}";
 }
 
 @property margin-left {
@@ -266,26 +266,9 @@
     syntax: "<color>";
 }
 
-@property border-left-image-width {
-    syntax: "<length>";
+@property border-left-style {
+    syntax: "none | solid";
 }
-
-@property border-left-image-height {
-    syntax: "<length>";
-}
-
-@property border-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property border-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property border-left-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property border-right {
@@ -300,26 +283,9 @@
     syntax: "<color>";
 }
 
-@property border-right-image-width {
-    syntax: "<length>";
+@property border-right-style {
+    syntax: "none | solid";
 }
-
-@property border-right-image-height {
-    syntax: "<length>";
-}
-
-@property border-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property border-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property border-right-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property border-top {
@@ -334,26 +300,9 @@
     syntax: "<color>";
 }
 
-@property border-top-image-width {
-    syntax: "<length>";
+@property border-top-style {
+    syntax: "none | solid";
 }
-
-@property border-top-image-height {
-    syntax: "<length>";
-}
-
-@property border-top-image-x-offset {
-    syntax: "<length>";
-}
-
-@property border-top-image-y-offset {
-    syntax: "<length>";
-}
-
-@property border-top-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property border-bottom {
@@ -368,26 +317,9 @@
     syntax: "<color>";
 }
 
-@property border-bottom-image-width {
-    syntax: "<length>";
+@property border-bottom-style {
+    syntax: "none | solid";
 }
-
-@property border-bottom-image-height {
-    syntax: "<length>";
-}
-
-@property border-bottom-image-x-offset {
-    syntax: "<length>";
-}
-
-@property border-bottom-image-y-offset {
-    syntax: "<length>";
-}
-
-@property border-bottom-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 
@@ -407,26 +339,9 @@
     syntax: "<color>";
 }
 
-@property outline-left-image-width {
-    syntax: "<length>";
+@property outline-left-style {
+    syntax: "none | solid";
 }
-
-@property outline-left-image-height {
-    syntax: "<length>";
-}
-
-@property outline-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property outline-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property outline-left-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property outline-right {
@@ -441,26 +356,9 @@
     syntax: "<color>";
 }
 
-@property outline-right-image-width {
-    syntax: "<length>";
+@property outline-right-style {
+    syntax: "none | solid";
 }
-
-@property outline-right-image-height {
-    syntax: "<length>";
-}
-
-@property outline-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property outline-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property outline-right-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property outline-top {
@@ -475,26 +373,9 @@
     syntax: "<color>";
 }
 
-@property outline-top-image-width {
-    syntax: "<length>";
+@property outline-top-style {
+    syntax: "none | solid";
 }
-
-@property outline-top-image-height {
-    syntax: "<length>";
-}
-
-@property outline-top-image-x-offset {
-    syntax: "<length>";
-}
-
-@property outline-top-image-y-offset {
-    syntax: "<length>";
-}
-
-@property outline-top-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property outline-bottom {
@@ -509,26 +390,9 @@
     syntax: "<color>";
 }
 
-@property outline-bottom-image-width {
-    syntax: "<length>";
+@property outline-bottom-style {
+    syntax: "none | solid";
 }
-
-@property outline-bottom-image-height {
-    syntax: "<length>";
-}
-
-@property outline-bottom-image-x-offset {
-    syntax: "<length>";
-}
-
-@property outline-bottom-image-y-offset {
-    syntax: "<length>";
-}
-
-@property outline-bottom-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 
@@ -540,152 +404,20 @@
     syntax: "<length>";
 }
 
-@property corners-top-left-width {
-    syntax: "<length>";
-}
-
-@property corners-top-left-height {
-    syntax: "<length>";
-}
-
-@property corners-top-left-color {
-    syntax: "<color>";
-}
-
-@property corners-top-left-image-width {
-    syntax: "<length>";
-}
-
-@property corners-top-left-image-height {
-    syntax: "<length>";
-}
-
-@property corners-top-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property corners-top-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property corners-top-left-image-mask-color {
-    syntax: "<color>";
-}
-
-
 
 @property border-top-right-radius {
     syntax: "<length>";
 }
-
-@property corners-top-right-width {
-    syntax: "<length>";
-}
-
-@property corners-top-right-height {
-    syntax: "<length>";
-}
-
-@property corners-top-right-color {
-    syntax: "<color>";
-}
-
-@property corners-top-right-image-width {
-    syntax: "<length>";
-}
-
-@property corners-top-right-image-height {
-    syntax: "<length>";
-}
-
-@property corners-top-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property corners-top-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property corners-top-right-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 @property border-bottom-left-radius {
     syntax: "<length>";
 }
 
-@property corners-bottom-left-width {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-height {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-color {
-    syntax: "<color>";
-}
-
-@property corners-bottom-left-image-width {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-image-height {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property corners-bottom-left-image-mask-color {
-    syntax: "<color>";
-}
-
-
 
 @property border-bottom-right-radius {
     syntax: "<length>";
 }
-
-@property corners-bottom-right-width {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-height {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-color {
-    syntax: "<color>";
-}
-
-@property corners-bottom-right-image-width {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-image-height {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property corners-bottom-right-image-mask-color {
-    syntax: "<color>";
-}
-
 
 
 
@@ -713,294 +445,6 @@
 @property shadow-blur {
     syntax: "<length>";
 }
-
-@property shadow-left {
-    syntax: "none | (<length> (none | solid) <color>)";
-}
-
-@property shadow-left-size {
-    syntax: "<length>";
-}
-
-@property shadow-left-color {
-    syntax: "<color>";
-}
-
-@property shadow-left-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-left-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-left-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-right {
-    syntax: "none | (<length> (none | solid) <color>)";
-}
-
-@property shadow-right-size {
-    syntax: "<length>";
-}
-
-@property shadow-right-color {
-    syntax: "<color>";
-}
-
-@property shadow-right-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-right-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-right-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-top {
-    syntax: "none | (<length> (none | solid) <color>)";
-}
-
-@property shadow-top-size {
-    syntax: "<length>";
-}
-
-@property shadow-top-color {
-    syntax: "<color>";
-}
-
-@property shadow-top-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-top-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-top-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-bottom {
-    syntax: "none | (<length> (none | solid) <color>)";
-}
-
-@property shadow-bottom-size {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-color {
-    syntax: "<color>";
-}
-
-@property shadow-bottom-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-top-left-radius {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-width {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-height {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-color {
-    syntax: "<color>";
-}
-
-@property shadow-top-left-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-left-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-top-right-radius {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-width {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-height {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-color {
-    syntax: "<color>";
-}
-
-@property shadow-top-right-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-top-right-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-bottom-left-radius {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-width {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-height {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-color {
-    syntax: "<color>";
-}
-
-@property shadow-bottom-left-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-left-image-mask-color {
-    syntax: "<color>";
-}
-
-
-
-@property shadow-bottom-right-radius {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-width {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-height {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-color {
-    syntax: "<color>";
-}
-
-@property shadow-bottom-right-image-width {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-image-height {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-image-x-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-image-y-offset {
-    syntax: "<length>";
-}
-
-@property shadow-bottom-right-image-mask-color {
-    syntax: "<color>";
-}
-
-
 
 
 
