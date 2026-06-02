@@ -106,7 +106,7 @@ children:
                                 QMarginsF toMargins() const;
                     "property.cpp.j2":
                         global: |4
-                            QMarginsF {{ type_name }}::toMargins() const
+                            QMarginsF {{ type }}::toMargins() const
                             {
                                 return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
                             }
@@ -243,7 +243,7 @@ children:
 
             "property.cpp.j2":
                 global: |4
-                    QMarginsF BorderProperty::sizes() const
+                    QMarginsF {{ type }}::sizes() const
                     {
                         QMarginsF result;
 
@@ -322,7 +322,7 @@ children:
 
             "property.cpp.j2":
                 global: |4
-                    CornersProperty::CornerRadii CornersProperty::radii() const
+                    {{ type }}::CornerRadii {{ type }}::radii() const
                     {
                         CornerRadii result;
 
@@ -374,7 +374,7 @@ children:
                                 QVector2D toVector2D() const;
                     "property.cpp.j2":
                         global: |4
-                            QVector2D {{ type_name }}::toVector2D() const
+                            QVector2D {{ type }}::toVector2D() const
                             {
                                 return QVector2D{float(d->horizontal.value_or(0.0)), float(d->vertical.value_or(0.0))};
                             }

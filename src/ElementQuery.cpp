@@ -16,9 +16,9 @@ public:
     std::shared_ptr<Style> style;
     QList<Element::Ptr> elements;
     QList<StyleRule::Ptr> styles;
-    std::shared_ptr<Properties::StyleProperty> properties = nullptr;
+    std::shared_ptr<Properties::StylePropertyGroup> properties = nullptr;
 
-    inline static LruCache<std::size_t, std::shared_ptr<Properties::StyleProperty>, 500> s_matchesCache;
+    inline static LruCache<std::size_t, std::shared_ptr<Properties::StylePropertyGroup>, 500> s_matchesCache;
 };
 
 ElementQuery::ElementQuery(std::shared_ptr<Style> style)
@@ -66,10 +66,10 @@ bool ElementQuery::execute()
         }
     }
 
-    d->properties = std::make_shared<Properties::StyleProperty>();
+    d->properties = std::make_shared<Properties::StylePropertyGroup>();
 
     for (auto style : std::as_const(d->styles)) {
-        Properties::StyleProperty::resolveProperties(style->properties(), d->properties.get());
+        Properties::StylePropertyGroup::resolveProperties(style->properties(), d->properties.get());
     }
 
     ElementQueryPrivate::s_matchesCache.insert(cacheKey, d->properties);
@@ -82,7 +82,7 @@ bool ElementQuery::hasMatches() const
     return bool(d->properties);
 }
 
-Properties::StyleProperty *ElementQuery::properties() const
+Properties::StylePropertyGroup *ElementQuery::properties() const
 {
     return d->properties.get();
 }

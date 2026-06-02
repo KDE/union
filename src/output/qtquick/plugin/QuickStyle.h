@@ -15,7 +15,7 @@
 #include <Selector.h>
 
 #include "Types.h"
-#include "properties/StylePropertyGroup.h"
+#include "properties/StylePropertyGroupQuick.h"
 
 #include "unionquickimpl_export.h"
 
@@ -54,8 +54,8 @@ public:
      *
      * The properties that should be used to style the attached item.
      */
-    Q_PROPERTY(Union::Quick::StylePropertyGroup *properties READ properties CONSTANT)
-    StylePropertyGroup *properties() const;
+    Q_PROPERTY(Union::Quick::StylePropertyGroupQuick *properties READ properties CONSTANT)
+    StylePropertyGroupQuick *properties() const;
 
     /*!
      * The ElementQuery associated with this instance.
@@ -96,7 +96,7 @@ private:
     void setElement(QuickElement *newElement);
     void update();
 
-    std::unique_ptr<StylePropertyGroup> m_properties;
+    std::unique_ptr<StylePropertyGroupQuick> m_properties;
     QPointer<QuickElement> m_element = nullptr;
     QQmlEngine *m_engine = nullptr;
 

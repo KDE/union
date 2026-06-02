@@ -23,7 +23,7 @@ inline QVector4D toVector4D(const T *property)
 {
     QVector4D result;
 
-    auto directionValue = [](LineProperty *line) {
+    auto directionValue = [](LinePropertyGroup *line) {
         if (line) {
             if (line->style().value_or(Union::Properties::LineStyle::None) != Union::Properties::LineStyle::None) {
                 return line->size().value_or(0.0);
@@ -218,8 +218,16 @@ void OutlineBorderRectangleNode::updateGeometry(QSGGeometry *geometry)
 
 void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize)
 {
-    const float width = rect.width();
-    const float height = rect.height();
+    // Make sure to reserve 1px extra on each side to account for any overflow
+    // in the SDF shaders.
+
+    // const float dpr = m_window ? m_window->devicePixelRatio() : 1.0
+
+    const float horizontalCorrection = 1.0;
+    const float verticalCorrection = 1.0;
+
+    const float width = rect.width() + horizontalCorrection;
+    const float height = rect.height() + verticalCorrection;
 
     const float left = rect.x() - outlineSize.x();
     const float right = rect.x() + width + outlineSize.z();
@@ -228,9 +236,9 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.
     const float leftWidth = outlineSize.x() + borderSize.x();
-    const float rightWidth = outlineSize.z() + borderSize.z();
+    const float rightWidth = outlineSize.z() + borderSize.z() + horizontalCorrection;
     const float topHeight = outlineSize.y() + borderSize.y();
-    const float bottomHeight = outlineSize.w() + borderSize.w();
+    const float bottomHeight = outlineSize.w() + borderSize.w() + verticalCorrection;
 
     const float leftTopWidth = std::max(leftWidth, std::min(radii.w(), width / 2));
     const float leftBottomWidth = std::max(leftWidth, std::min(radii.z(), width / 2));
@@ -242,52 +250,60 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     const float rightTopHeight = std::max(topHeight, std::min(radii.y(), height / 2));
     const float rightBottomHeight = std::max(bottomHeight, std::min(radii.x(), height / 2));
 
-    const QVector4D uv0HorizontalTop = QVector4D{0.0f, // left
-                                                 float(leftTopWidth / rect.width()), // right side of left edge
-                                                 1.0f - float(rightTopWidth / rect.width()), // left side of right edge
-                                                 1.0f}; // right
-    const QVector4D uv0HorizontalBottom = QVector4D{0.0f, // left
-                                                    float(leftBottomWidth / rect.width()), // right side of left edge
-                                                    1.0f - float(rightBottomWidth / rect.width()), // left side of right edge
-                                                    1.0f}; // right
-    const QVector4D uv0VerticalLeft = QVector4D{0.0f, // top
-                                                float(leftTopHeight / rect.height()), // bottom side of top edge
-                                                1.0f - float(leftBottomHeight / rect.height()), // top side of bottom edge
-                                                1.0f}; // right
-    const QVector4D uv0VerticalRight = QVector4D{0.0f, // top
-                                                 float(rightTopHeight / rect.height()), // bottom side of top edge
-                                                 1.0f - float(rightBottomHeight / rect.height()), // top side of bottom edge
-                                                 1.0f}; // right
+    const float uCorrection = horizontalCorrection / width;
+    const float vCorrection = verticalCorrection / height;
+
+    const float uLeftMost = 0.0;
+    const float uRightMost = 1.0f + uCorrection;
+    const float vTopMost = 0.0;
+    const float vBottomMost = 1.0f + vCorrection;
+
+    const QVector4D uv0HorizontalTop = QVector4D{uLeftMost, // left
+                                                 float(leftTopWidth / width), // right side of left edge
+                                                 uRightMost - float(rightTopWidth / width), // left side of right edge
+                                                 uRightMost}; // right
+    const QVector4D uv0HorizontalBottom = QVector4D{uLeftMost, // left
+                                                    float(leftBottomWidth / width), // right side of left edge
+                                                    uRightMost - float(rightBottomWidth / width), // left side of right edge
+                                                    uRightMost}; // right
+    const QVector4D uv0VerticalLeft = QVector4D{vTopMost, // top
+                                                float(leftTopHeight / height), // bottom side of top edge
+                                                vBottomMost - float(leftBottomHeight / height), // top side of bottom edge
+                                                vBottomMost}; // right
+    const QVector4D uv0VerticalRight = QVector4D{vTopMost, // top
+                                                 float(rightTopHeight / height), // bottom side of top edge
+                                                 vBottomMost - float(rightBottomHeight / height), // top side of bottom edge
+                                                 vBottomMost}; // right
 
     auto textureUV = uvs(1);
 
-    const float leftWidthNorm = outlineSize.x() / rect.width();
-    const float rightWidthNorm = outlineSize.z() / rect.width();
-    const float topHeightNorm = outlineSize.y() / rect.height();
-    const float bottomHeightNorm = outlineSize.w() / rect.height();
+    const float leftWidthNorm = outlineSize.x() / width;
+    const float rightWidthNorm = outlineSize.z() / width;
+    const float topHeightNorm = outlineSize.y() / height;
+    const float bottomHeightNorm = outlineSize.w() / height;
 
-    QVector4D uv1HorizontalTop = QVector4D{-leftWidthNorm, // left
+    QVector4D uv1HorizontalTop = QVector4D{uLeftMost - leftWidthNorm, // left
                                            uv0HorizontalTop[1] - leftWidthNorm, // right side of left edge
                                            uv0HorizontalTop[2] + rightWidthNorm, // left side of right edge
-                                           1.0f + rightWidthNorm}; // right
-    QVector4D uv1HorizontalBottom = QVector4D{-leftWidthNorm, // left
+                                           uRightMost + rightWidthNorm}; // right
+    QVector4D uv1HorizontalBottom = QVector4D{uLeftMost - leftWidthNorm, // left
                                               uv0HorizontalBottom[1] - leftWidthNorm, // right side of left edge
                                               uv0HorizontalBottom[2] + rightWidthNorm, // left side of right edge
-                                              1.0f + rightWidthNorm}; // right
+                                              uRightMost + rightWidthNorm}; // right
 
     uv1HorizontalTop *= textureUV.width();
     uv1HorizontalBottom *= textureUV.width();
     uv1HorizontalTop += QVector4D(textureUV.x(), textureUV.x(), textureUV.x(), textureUV.x());
     uv1HorizontalBottom += QVector4D(textureUV.x(), textureUV.x(), textureUV.x(), textureUV.x());
 
-    QVector4D uv1VerticalLeft = QVector4D{-topHeightNorm, // top
+    QVector4D uv1VerticalLeft = QVector4D{vTopMost - topHeightNorm, // top
                                           uv0VerticalLeft[1] - topHeightNorm, // bottom side of top edge
                                           uv0VerticalLeft[2] + topHeightNorm, // top side of bottom edge
-                                          1.0f + topHeightNorm}; // bottom
-    QVector4D uv1VerticalRight = QVector4D{-bottomHeightNorm, // top
+                                          vBottomMost + topHeightNorm}; // bottom
+    QVector4D uv1VerticalRight = QVector4D{vTopMost - bottomHeightNorm, // top
                                            uv0VerticalRight[1] - bottomHeightNorm, // bottom side of top edge
                                            uv0VerticalRight[2] + bottomHeightNorm, // top side of bottom edge
-                                           1.0f + bottomHeightNorm}; // bottom
+                                           vBottomMost + bottomHeightNorm}; // bottom
 
     uv1VerticalLeft *= textureUV.height();
     uv1VerticalRight *= textureUV.height();
@@ -415,7 +431,7 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[27].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[2]);
 }
 
-void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderProperty *border, const QColor &center)
+void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderPropertyGroup *border, const QColor &center)
 {
     auto borderColor = [](auto border) {
         return (border ? border->color().value_or(Union::Color{}) : Union::Color{}).toQColor();
@@ -429,7 +445,7 @@ void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::Bor
     updateColors(&Vertex::border, left, right, top, bottom, center);
 }
 
-void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlineProperty *outline, const QColor &center)
+void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlinePropertyGroup *outline, const QColor &center)
 {
     auto outlineColor = [](auto outline) {
         return (outline ? outline->color().value_or(Union::Color{}) : Union::Color{}).toQColor();

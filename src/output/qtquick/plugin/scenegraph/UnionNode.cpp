@@ -18,7 +18,7 @@ void UnionNode::ensureChildRemoved(int index)
 }
 
 QSGTexture *UnionNode::createTextureForImageProperty(QQuickWindow *window,
-                                                     const std::optional<Union::Properties::ImageProperty> &property,
+                                                     const std::optional<Union::Properties::ImagePropertyGroup> &property,
                                                      const QRectF &destinationRect,
                                                      QRectF &sourceRect)
 {

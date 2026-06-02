@@ -6,6 +6,8 @@
 #include <QQmlProperty>
 #include <QQuickWindow>
 
+#include <properties/StylePropertyGroup.h>
+
 #include "Layout.h"
 #include "Positioner.h"
 #include "QuickStyle.h"
@@ -48,7 +50,7 @@ public:
     QQmlProperty topInsetProperty;
     QQmlProperty bottomInsetProperty;
 
-    inline static const Union::Properties::LayoutProperty EmptyLayoutGroup;
+    inline static const Union::Properties::LayoutPropertyGroup EmptyLayoutGroup;
 };
 
 PositionerLayout::PositionerLayout(QQuickItem *parentItem)
@@ -217,7 +219,7 @@ void PositionerLayout::updatePolish()
         auto properties = query->properties();
         auto layoutProperties = properties->layout();
 
-        Union::Properties::AlignmentProperty *alignment;
+        Union::Properties::AlignmentPropertyGroup *alignment;
         switch (source) {
         case PositionerSource::Source::Layout:
             alignment = layoutProperties ? layoutProperties->alignment() : nullptr;

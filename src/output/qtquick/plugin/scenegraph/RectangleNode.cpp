@@ -33,12 +33,12 @@ RectangleNode::RectangleNode()
 {
 }
 
-Union::Properties::StyleProperty RectangleNode::style() const
+Union::Properties::StylePropertyGroup RectangleNode::style() const
 {
     return m_style;
 }
 
-void RectangleNode::setStyle(const Union::Properties::StyleProperty &newStyle)
+void RectangleNode::setStyle(const Union::Properties::StylePropertyGroup &newStyle)
 {
     if (newStyle == m_style) {
         return;
@@ -82,7 +82,7 @@ void RectangleNode::update(QQuickWindow *window)
     if (m_style.border().has_value()) {
         auto borders = m_style.border().value();
 
-        for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, LineProperty>>{
+        for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, LinePropertyGroup>>{
                  {SubNodeIndex::Left, borders.left_or_new()},
                  {SubNodeIndex::Right, borders.right_or_new()},
                  {SubNodeIndex::Top, borders.top_or_new()},
@@ -127,7 +127,7 @@ void RectangleNode::update(QQuickWindow *window)
     if (m_style.corners().has_value()) {
         auto corners = m_style.corners().value();
 
-        for (auto [position, property] : std::initializer_list<std::pair<SubNodeIndex, CornerProperty>>{
+        for (auto [position, property] : std::initializer_list<std::pair<SubNodeIndex, CornerPropertyGroup>>{
                  {SubNodeIndex::TopLeft, corners.topLeft_or_new()},
                  {SubNodeIndex::TopRight, corners.topRight_or_new()},
                  {SubNodeIndex::BottomLeft, corners.bottomLeft_or_new()},

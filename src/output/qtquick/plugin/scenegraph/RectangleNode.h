@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <properties/StyleProperty.h>
+#include <properties/StylePropertyGroup.h>
 
 #include "UnionNode.h"
 
@@ -12,13 +12,13 @@ class RectangleNode : public HierarchyNode
 public:
     RectangleNode();
 
-    Union::Properties::StyleProperty style() const;
-    void setStyle(const Union::Properties::StyleProperty &newStyle);
+    Union::Properties::StylePropertyGroup style() const;
+    void setStyle(const Union::Properties::StylePropertyGroup &newStyle);
 
     void update(QQuickWindow *window) override;
 
 private:
     void buildNodeHierarchy() override;
 
-    Union::Properties::StyleProperty m_style;
+    Union::Properties::StylePropertyGroup m_style;
 };

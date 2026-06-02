@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include <properties/ShadowProperty.h>
+#include <properties/ShadowPropertyGroup.h>
 
 #include "UnionNode.h"
 
@@ -12,13 +12,13 @@ class ShadowNode : public HierarchyNode
 public:
     ShadowNode();
 
-    Union::Properties::ShadowProperty shadow() const;
-    void setShadow(const Union::Properties::ShadowProperty &newShadow);
+    Union::Properties::ShadowPropertyGroup shadow() const;
+    void setShadow(const Union::Properties::ShadowPropertyGroup &newShadow);
 
     void update(QQuickWindow *window) override;
 
 private:
     void buildNodeHierarchy() override;
 
-    Union::Properties::ShadowProperty m_shadow;
+    Union::Properties::ShadowPropertyGroup m_shadow;
 };

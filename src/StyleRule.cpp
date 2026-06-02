@@ -11,7 +11,7 @@ class Union::StyleRulePrivate
 {
 public:
     SelectorList selectors;
-    std::unique_ptr<Properties::StyleProperty> properties;
+    std::unique_ptr<Properties::StylePropertyGroup> properties;
 };
 
 StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)
@@ -32,12 +32,12 @@ void StyleRule::setSelectors(const SelectorList &selectors)
     d->selectors = selectors;
 }
 
-Properties::StyleProperty *StyleRule::properties() const
+Properties::StylePropertyGroup *StyleRule::properties() const
 {
     return d->properties.get();
 }
 
-void StyleRule::setProperties(std::unique_ptr<Properties::StyleProperty> &&newProperties)
+void StyleRule::setProperties(std::unique_ptr<Properties::StylePropertyGroup> &&newProperties)
 {
     d->properties = std::move(newProperties);
 }
@@ -77,7 +77,7 @@ QDataStream &operator>>(QDataStream &stream, std::shared_ptr<Union::StyleRule> &
     stream >> hasProperties;
 
     if (hasProperties) {
-        auto properties = std::make_unique<Union::Properties::StyleProperty>();
+        auto properties = std::make_unique<Union::Properties::StylePropertyGroup>();
         stream >> properties;
         rule->setProperties(std::move(properties));
     }

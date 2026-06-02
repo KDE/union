@@ -13,7 +13,7 @@ REUSE-IgnoreStart
 // To regenerate, run `tools/propertygenerator/generate_properties.py`.
 {# REUSE-IgnoreEnd #}
 
-{% set group_name = type + "Group" %}
+{% set group_name = type + "Quick" %}
 #include "{{ group_name }}.h"
 
 #include <QQmlEngine>
@@ -30,7 +30,7 @@ using namespace Qt::StringLiterals;
 {
 {% for property in children %}
 {% if property.children %}
-    m_{{ property.name }} = std::make_unique<{{ property.type }}Group>(m_style);
+    m_{{ property.name }} = std::make_unique<{{ property.type }}Quick>(m_style);
 {% endif %}
 {% endfor %}
 }
@@ -81,7 +81,7 @@ void {{ group_name }}::refreshColors()
 
 {% for property in children %}
 {% if property.children %}
-{{ property.type }}Group *{{ group_name }}::{{ property.name }}() const
+{{ property.type }}Quick *{{ group_name }}::{{ property.name }}() const
 {
     return m_{{ property.name }}.get();
 }
@@ -111,4 +111,4 @@ QJSValue {{ group_name }}::{{ property.name }}() const
 {{ extra_code["global"] | render }}
 
 {% endif %}
-#include "moc_{{ type }}Group.cpp"
+#include "moc_{{ type }}Quick.cpp"

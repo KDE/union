@@ -5,9 +5,9 @@
 
 #include <QQuickWindow>
 
-#include <properties/BackgroundProperty.h>
-#include <properties/LineProperty.h>
-#include <properties/ShadowProperty.h>
+#include <properties/BackgroundPropertyGroup.h>
+#include <properties/LinePropertyGroup.h>
+#include <properties/ShadowPropertyGroup.h>
 
 #include "StyleRule.h"
 
@@ -119,7 +119,7 @@ void StyledRectangle::updateImplicitSize()
     update();
 }
 
-QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty *style)
+QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGroup *style)
 {
     if (!node) {
         node = new QSGNode{};
@@ -127,7 +127,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StyleProperty *s
 
     auto rect = boundingRect();
 
-    auto cornerSizes = style->corners() ? style->corners()->radii() : CornersProperty::CornerRadii{};
+    auto cornerSizes = style->corners() ? style->corners()->radii() : CornersPropertyGroup::CornerRadii{};
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.
     auto radii = QVector4D{float(cornerSizes.bottomRight), float(cornerSizes.topRight), float(cornerSizes.bottomLeft), float(cornerSizes.topLeft)};

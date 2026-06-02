@@ -6,7 +6,7 @@
 #include <QQuickWindow>
 #include <QSGNode>
 
-#include <properties/ImageProperty.h>
+#include <properties/ImagePropertyGroup.h>
 
 /**
  * A convenience base class that contains some things that are useful for all node implementations.
@@ -39,7 +39,7 @@ public:
 
     void ensureChildRemoved(int index);
     QSGTexture *createTextureForImageProperty(QQuickWindow *window,
-                                              const std::optional<Union::Properties::ImageProperty> &property,
+                                              const std::optional<Union::Properties::ImagePropertyGroup> &property,
                                               const QRectF &destinationRect,
                                               QRectF &sourceRect);
 };

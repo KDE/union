@@ -25,14 +25,14 @@ QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
     , m_engine(engine)
 {
-    m_properties = std::make_unique<StylePropertyGroup>(this);
+    m_properties = std::make_unique<StylePropertyGroupQuick>(this);
 
     initialize();
 
     update();
 }
 
-StylePropertyGroup *QuickStyle::properties() const
+StylePropertyGroupQuick *QuickStyle::properties() const
 {
     return m_properties.get();
 }

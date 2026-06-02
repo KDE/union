@@ -3,8 +3,6 @@
 
 #pragma once
 
-#include <properties/ShadowProperty.h>
-
 #include "ShaderNode.h"
 
 /*!

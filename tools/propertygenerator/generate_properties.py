@@ -226,15 +226,15 @@ if __name__ == "__main__":
 
         render_template("autotest.cpp.j2", (tests_directory / ("Test" + type_name)).with_suffix(".cpp"), jinja_env, data)
 
-        render_template("qml_group.h.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".h"), jinja_env, data)
-        render_template("qml_group.cpp.j2", (quick_output_directory / (type_name + "Group")).with_suffix(".cpp"), jinja_env, data)
+        render_template("qml_group.h.j2", (quick_output_directory / (type_name + "Quick")).with_suffix(".h"), jinja_env, data)
+        render_template("qml_group.cpp.j2", (quick_output_directory / (type_name + "Quick")).with_suffix(".cpp"), jinja_env, data)
 
     data = {"types": types.values()}
 
     render_template("CreateTestInstances.h.j2", tests_directory / "CreateTestInstances.h", jinja_env, data)
     render_template("CMakeLists.txt.j2", src_directory / "CMakeLists.txt", jinja_env, {"target_name": "Union", "file_suffix": ""} | data)
     render_template("CMakeLists.tests.txt.j2", tests_directory / "CMakeLists.txt", jinja_env, data)
-    render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Group"} | data)
+    render_template("CMakeLists.txt.j2", quick_output_directory / "CMakeLists.txt", jinja_env, {"target_name": "UnionQuickImpl", "file_suffix": "Quick"} | data)
 
     render_template("properties.css.j2", css_generated_path, jinja_env, data)
     render_template("css-properties.qdoc.j2", css_doc_generated_path, jinja_env, data)

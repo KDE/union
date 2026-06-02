@@ -9,10 +9,8 @@
 #include <qqmlregistration.h>
 
 #include <PropertiesTypes.h>
-#include <properties/StyleProperty.h>
 
 #include "Types.h"
-#include "properties/AlignmentPropertyGroup.h"
 
 namespace Union
 {

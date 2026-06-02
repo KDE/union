@@ -29,15 +29,15 @@ private:
     SelectorList createSelectorList(const cssparser::Selector &selector);
     Selector createSelector(const cssparser::SelectorPart &part);
 
-    void createProperties(StyleProperty *output, std::span<const cssparser::Property> properties);
+    void createProperties(StylePropertyGroup *output, std::span<const cssparser::Property> properties);
 
-    void setLayoutProperty(StyleProperty *output, const cssparser::Property &property);
-    void setBackgroundProperty(StyleProperty *output, const cssparser::Property &property);
-    void setBorderProperty(StyleProperty *output, const cssparser::Property &property);
-    void setOutlineProperty(StyleProperty *output, const cssparser::Property &property);
-    void setTextProperty(StyleProperty *output, const cssparser::Property &property);
-    void setIconProperty(StyleProperty *output, const cssparser::Property &property);
-    void setShadowProperty(StyleProperty *output, const cssparser::Property &property);
+    void setLayoutProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setBackgroundProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setBorderProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setOutlineProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setTextProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setIconProperty(StylePropertyGroup *output, const cssparser::Property &property);
+    void setShadowProperty(StylePropertyGroup *output, const cssparser::Property &property);
 
     std::filesystem::path m_stylePath;
 };

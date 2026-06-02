@@ -44,7 +44,7 @@ protected:
 
 private:
     void updateImplicitSize();
-    QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::StyleProperty *style);
+    QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::StylePropertyGroup *style);
 
     QuickStyle *m_style = nullptr;
 };

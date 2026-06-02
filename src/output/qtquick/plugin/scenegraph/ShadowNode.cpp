@@ -3,8 +3,8 @@
 
 #include "ShadowNode.h"
 
-#include <properties/CornerProperty.h>
-#include <properties/LineProperty.h>
+#include <properties/CornerPropertyGroup.h>
+#include <properties/LinePropertyGroup.h>
 
 #include "CornerNode.h"
 #include "LineNode.h"
@@ -28,12 +28,12 @@ ShadowNode::ShadowNode()
 {
 }
 
-Union::Properties::ShadowProperty ShadowNode::shadow() const
+Union::Properties::ShadowPropertyGroup ShadowNode::shadow() const
 {
     return m_shadow;
 }
 
-void ShadowNode::setShadow(const ShadowProperty &newShadow)
+void ShadowNode::setShadow(const ShadowPropertyGroup &newShadow)
 {
     if (newShadow == m_shadow) {
         return;
@@ -69,16 +69,16 @@ void ShadowNode::update(QQuickWindow *window)
                              rect.height() + offsets.top() + offsets.bottom()};
 
     QMarginsF margins;
-    margins.setLeft(m_shadow.left().value_or(LineProperty{}).size().value_or(0.0));
-    margins.setRight(m_shadow.right().value_or(LineProperty{}).size().value_or(0.0));
-    margins.setTop(m_shadow.top().value_or(LineProperty{}).size().value_or(0.0));
-    margins.setBottom(m_shadow.bottom().value_or(LineProperty{}).size().value_or(0.0));
+    margins.setLeft(m_shadow.left().value_or(LinePropertyGroup{}).size().value_or(0.0));
+    margins.setRight(m_shadow.right().value_or(LinePropertyGroup{}).size().value_or(0.0));
+    margins.setTop(m_shadow.top().value_or(LinePropertyGroup{}).size().value_or(0.0));
+    margins.setBottom(m_shadow.bottom().value_or(LinePropertyGroup{}).size().value_or(0.0));
 
-    for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, LineProperty>>{
-             {SubNodeIndex::Left, m_shadow.left().value_or(LineProperty{})},
-             {SubNodeIndex::Right, m_shadow.right().value_or(LineProperty{})},
-             {SubNodeIndex::Top, m_shadow.top().value_or(LineProperty{})},
-             {SubNodeIndex::Bottom, m_shadow.bottom().value_or(LineProperty{})},
+    for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, LinePropertyGroup>>{
+             {SubNodeIndex::Left, m_shadow.left().value_or(LinePropertyGroup{})},
+             {SubNodeIndex::Right, m_shadow.right().value_or(LinePropertyGroup{})},
+             {SubNodeIndex::Top, m_shadow.top().value_or(LinePropertyGroup{})},
+             {SubNodeIndex::Bottom, m_shadow.bottom().value_or(LinePropertyGroup{})},
          }) {
         auto node = static_cast<LineNode *>(childAtIndex(int(subNode)));
 
@@ -115,11 +115,11 @@ void ShadowNode::update(QQuickWindow *window)
         node->update(window);
     }
 
-    for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, CornerProperty>>{
-             {SubNodeIndex::TopLeft, m_shadow.topLeft().value_or(CornerProperty{})},
-             {SubNodeIndex::TopRight, m_shadow.topRight().value_or(CornerProperty{})},
-             {SubNodeIndex::BottomLeft, m_shadow.bottomLeft().value_or(CornerProperty{})},
-             {SubNodeIndex::BottomRight, m_shadow.bottomRight().value_or(CornerProperty{})},
+    for (auto [subNode, property] : std::initializer_list<std::pair<SubNodeIndex, CornerPropertyGroup>>{
+             {SubNodeIndex::TopLeft, m_shadow.topLeft().value_or(CornerPropertyGroup{})},
+             {SubNodeIndex::TopRight, m_shadow.topRight().value_or(CornerPropertyGroup{})},
+             {SubNodeIndex::BottomLeft, m_shadow.bottomLeft().value_or(CornerPropertyGroup{})},
+             {SubNodeIndex::BottomRight, m_shadow.bottomRight().value_or(CornerPropertyGroup{})},
          }) {
         auto node = static_cast<CornerNode *>(childAtIndex(int(subNode)));
 

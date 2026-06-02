@@ -231,12 +231,12 @@ inline void setImage(T *output, const fs::path &rootPath, const cssparser::Prope
 template<typename T>
 inline void setAlignment(T *output, const cssparser::Property &property)
 {
-    std::unique_ptr<AlignmentProperty> tempAlignment;
-    AlignmentProperty *alignment;
+    std::unique_ptr<AlignmentPropertyGroup> tempAlignment;
+    AlignmentPropertyGroup *alignment;
     if (output->alignment()) {
         alignment = output->alignment();
     } else {
-        tempAlignment = std::make_unique<AlignmentProperty>();
+        tempAlignment = std::make_unique<AlignmentPropertyGroup>();
         alignment = tempAlignment.get();
     }
 
@@ -260,7 +260,7 @@ inline void setAlignment(T *output, const cssparser::Property &property)
     }
 }
 
-inline void sizeFromProperty(SizeProperty *output, const cssparser::Property &property)
+inline void sizeFromProperty(SizePropertyGroup *output, const cssparser::Property &property)
 {
     if (property.name().ends_with("left")) {
         output->setLeft(to_px(property.value()));
@@ -401,7 +401,7 @@ bool CssLoader::load(Style::Ptr theme)
         auto styleRule = StyleRule::create();
         styleRule->setSelectors(createSelectorList(rule.selector()));
 
-        auto properties = std::make_unique<StyleProperty>();
+        auto properties = std::make_unique<StylePropertyGroup>();
         createProperties(properties.get(), rule.properties());
         styleRule->setProperties(std::move(properties));
         theme->insert(styleRule);
@@ -475,7 +475,7 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     return Union::Selector::create();
 }
 
-void CssLoader::createProperties(StyleProperty *output, std::span<const cssparser::Property> properties)
+void CssLoader::createProperties(StylePropertyGroup *output, std::span<const cssparser::Property> properties)
 {
     for (const auto &property : properties) {
         if (property.name() == "width"s || property.name() == "height"s || property.name() == "spacing"s) {
@@ -507,9 +507,9 @@ void CssLoader::createProperties(StyleProperty *output, std::span<const cssparse
     }
 }
 
-void CssLoader::setLayoutProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setLayoutProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder layout(output, &StyleProperty::layout, &StyleProperty::setLayout);
+    PropertyGroupBuilder layout(output, &StylePropertyGroup::layout, &StylePropertyGroup::setLayout);
 
     if (property.name() == "width"s) {
         layout->setWidth(to_px(property.value()));
@@ -520,26 +520,26 @@ void CssLoader::setLayoutProperty(StyleProperty *output, const cssparser::Proper
     } else if (property.name().starts_with("layout-alignment")) {
         setAlignment(layout.instance, property);
     } else if (property.name().starts_with("padding")) {
-        PropertyGroupBuilder padding(layout.instance, &LayoutProperty::padding, &LayoutProperty::setPadding);
+        PropertyGroupBuilder padding(layout.instance, &LayoutPropertyGroup::padding, &LayoutPropertyGroup::setPadding);
         sizeFromProperty(padding.instance, property);
     } else if (property.name().starts_with("inset")) {
-        PropertyGroupBuilder inset(layout.instance, &LayoutProperty::inset, &LayoutProperty::setInset);
+        PropertyGroupBuilder inset(layout.instance, &LayoutPropertyGroup::inset, &LayoutPropertyGroup::setInset);
         sizeFromProperty(inset.instance, property);
     } else if (property.name().starts_with("margin")) {
-        PropertyGroupBuilder margins(layout.instance, &LayoutProperty::margins, &LayoutProperty::setMargins);
+        PropertyGroupBuilder margins(layout.instance, &LayoutPropertyGroup::margins, &LayoutPropertyGroup::setMargins);
         sizeFromProperty(margins.instance, property);
     }
 }
 
-void CssLoader::setBackgroundProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setBackgroundProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder background(output, &StyleProperty::background, &StyleProperty::setBackground);
+    PropertyGroupBuilder background(output, &StylePropertyGroup::background, &StylePropertyGroup::setBackground);
 
     if (property.name() == "background"s) {
         auto value = property.value();
         if (matches_keyword(value, u"none"_s)) {
             background->setColor(Union::Color{});
-            background->setImage(ImageProperty::empty());
+            background->setImage(ImagePropertyGroup::empty());
         } else if (value.type() == cssparser::Value::Type::Color) {
             background->setColor(to_color(value));
         } else if (value.type() == cssparser::Value::Type::Url) {
@@ -553,24 +553,24 @@ void CssLoader::setBackgroundProperty(StyleProperty *output, const cssparser::Pr
 
     if (property.name() == "background-image") {
         if (matches_keyword(property.value(), u"none"_s)) {
-            background->setImage(ImageProperty::empty());
+            background->setImage(ImagePropertyGroup::empty());
         } else {
             setImage(background.instance, m_stylePath, property);
         }
     }
 
     if (property.name() == "background-image-mask-color") {
-        PropertyGroupBuilder image(background.instance, &BackgroundProperty::image, &BackgroundProperty::setImage);
+        PropertyGroupBuilder image(background.instance, &BackgroundPropertyGroup::image, &BackgroundPropertyGroup::setImage);
         image->setMaskColor(to_color(property.value()));
     }
 }
 
-void CssLoader::setBorderProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setBorderProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder border(output, &StyleProperty::border, &StyleProperty::setBorder);
+    PropertyGroupBuilder border(output, &StylePropertyGroup::border, &StylePropertyGroup::setBorder);
 
     if (property.name().ends_with("radius")) {
-        PropertyGroupBuilder corners(output, &StyleProperty::corners, &StyleProperty::setCorners);
+        PropertyGroupBuilder corners(output, &StylePropertyGroup::corners, &StylePropertyGroup::setCorners);
 
         auto setCornerRadius = [](auto &&corner, qreal radius) {
             corner->setRadius(radius);
@@ -579,26 +579,31 @@ void CssLoader::setBorderProperty(StyleProperty *output, const cssparser::Proper
         if (property.name() == "border-radius"s) {
             if (property.values().size() == 1) {
                 auto radius = to_px(property.value());
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft), radius);
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight), radius);
             } else if (property.values().size() == 4) {
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), to_px(property.value(0)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), to_px(property.value(1)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight),
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft),
+                                to_px(property.value(0)));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight),
+                                to_px(property.value(1)));
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight),
                                 to_px(property.value(2)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft),
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft),
                                 to_px(property.value(3)));
             }
         } else if (property.name() == "border-top-left-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topLeft, &CornersProperty::setTopLeft), to_px(property.value()));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), to_px(property.value()));
         } else if (property.name() == "border-top-right-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::topRight, &CornersProperty::setTopRight), to_px(property.value()));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight),
+                            to_px(property.value()));
         } else if (property.name() == "border-bottom-left-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomLeft, &CornersProperty::setBottomLeft), to_px(property.value()));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft),
+                            to_px(property.value()));
         } else if (property.name() == "border-bottom-right-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersProperty::bottomRight, &CornersProperty::setBottomRight), to_px(property.value()));
+            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight),
+                            to_px(property.value()));
         }
 
         return;
@@ -607,15 +612,15 @@ void CssLoader::setBorderProperty(StyleProperty *output, const cssparser::Proper
     setDirectionValue(border.instance, "border"s, property);
 }
 
-void CssLoader::setOutlineProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setOutlineProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder outline(output, &StyleProperty::outline, &StyleProperty::setOutline);
+    PropertyGroupBuilder outline(output, &StylePropertyGroup::outline, &StylePropertyGroup::setOutline);
     setDirectionValue(outline.instance, "outline"s, property);
 }
 
-void CssLoader::setTextProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder text(output, &StyleProperty::text, &StyleProperty::setText);
+    PropertyGroupBuilder text(output, &StylePropertyGroup::text, &StylePropertyGroup::setText);
 
     if (property.name().starts_with("text-alignment")) {
         setAlignment(text.instance, property);
@@ -675,9 +680,9 @@ void CssLoader::setTextProperty(StyleProperty *output, const cssparser::Property
     }
 }
 
-void CssLoader::setIconProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setIconProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
-    PropertyGroupBuilder icon(output, &StyleProperty::icon, &StyleProperty::setIcon);
+    PropertyGroupBuilder icon(output, &StylePropertyGroup::icon, &StylePropertyGroup::setIcon);
 
     if (property.name().starts_with("icon-alignment")) {
         setAlignment(icon.instance, property);
@@ -697,15 +702,15 @@ void CssLoader::setIconProperty(StyleProperty *output, const cssparser::Property
     }
 }
 
-void CssLoader::setShadowProperty(StyleProperty *output, const cssparser::Property &property)
+void CssLoader::setShadowProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
     if (property.name() == "box-shadow") {
         if (matches_keyword(property.value(), u"none"_s)) {
-            output->setShadow(ShadowProperty::empty());
+            output->setShadow(ShadowPropertyGroup::empty());
         } else {
-            PropertyGroupBuilder shadow(output, &StyleProperty::shadow, &StyleProperty::setShadow);
+            PropertyGroupBuilder shadow(output, &StylePropertyGroup::shadow, &StylePropertyGroup::setShadow);
 
-            PropertyGroupBuilder offset(shadow.instance, &ShadowProperty::offset, &ShadowProperty::setOffset);
+            PropertyGroupBuilder offset(shadow.instance, &ShadowPropertyGroup::offset, &ShadowPropertyGroup::setOffset);
             offset->setHorizontal(to_px(property.value(0)));
             offset->setVertical(to_px(property.value(1)));
 

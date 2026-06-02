@@ -5,8 +5,6 @@
 
 #include "UniformDataStream.h"
 
-using namespace Union;
-using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
 RectangleShadowNode::RectangleShadowNode()

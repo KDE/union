@@ -10,7 +10,7 @@
 #include <QVariant>
 
 #include "Selector.h"
-#include "properties/StyleProperty.h"
+#include "properties/StylePropertyGroup.h"
 
 #include "union_export.h"
 
@@ -42,8 +42,8 @@ public:
     SelectorList selectors() const;
     void setSelectors(const SelectorList &selectors);
 
-    Properties::StyleProperty *properties() const;
-    void setProperties(std::unique_ptr<Properties::StyleProperty> &&newProperties);
+    Properties::StylePropertyGroup *properties() const;
+    void setProperties(std::unique_ptr<Properties::StylePropertyGroup> &&newProperties);
 
     static Ptr create();
 

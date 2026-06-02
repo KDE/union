@@ -33,7 +33,7 @@ template but that clang format doesn't like, so disable format for that.
 
 {% for property in children %}
 {% if property.children %}
-#include "{{ property.type }}Group.h"
+#include "{{ property.type }}Quick.h"
 {% endif %}
 {% endfor %}
 // clang-format on
@@ -45,20 +45,22 @@ namespace Quick
 
 class QuickStyle;
 
+{%- set group_name = type + "Quick" %}
+
 /*!
- * \qmltype {{ type }}Group
+ * \qmltype {{ group_name }}
  * \inqmlmodule org.kde.union.impl
  * \ingroup qtquick-properties
  *
  * \brief A group object exposing the properties of {{ type }} to QML.
  */
-class {{ type }}Group : public QObject
+class {{ group_name }} : public QObject
 {
     Q_OBJECT
     QML_ANONYMOUS
 
 public:
-    explicit {{ type }}Group(QuickStyle *style);
+    explicit {{ group_name }}(QuickStyle *style);
 
     void update(Union::Properties::{{ type }} *newState);
     Q_SIGNAL void updated();
@@ -68,12 +70,12 @@ public:
 {% for property in children %}
 {% if property.children %}
     /*!
-     * \qmlproperty {{ property.type }}Group {{ type }}Group::{{ property.name }}
+     * \qmlproperty {{ property.type }}Quick {{ group_name }}::{{ property.name }}
      *
      * Exposes {{ type }}::{{ property.type }} to QML.
      */
-    Q_PROPERTY(Union::Quick::{{ property.type}}Group *{{ property.name }} READ {{ property.name }} CONSTANT)
-    {{ property.type }}Group *{{ property.name }}() const;
+    Q_PROPERTY(Union::Quick::{{ property.type}}Quick *{{ property.name }} READ {{ property.name }} CONSTANT)
+    {{ property.type }}Quick *{{ property.name }}() const;
 {% else %}
 {#
     We use QJSValue here to be able to communicate the "undefined" state to the
@@ -82,7 +84,7 @@ public:
     to take over.
 #}
     /*!
-     * \qmlproperty {{ property.type }} {{ type }}Group::{{ property.name }}
+     * \qmlproperty {{ property.type }} {{ group_name }}::{{ property.name }}
      *
      * Exposes {{ type }}::{{ property.name }} to QML.
      */
@@ -100,7 +102,7 @@ private:
     QuickStyle *m_style = nullptr;
 {% for property in children %}
 {% if property.children %}
-    std::unique_ptr<{{ property.type }}Group> m_{{ property.name }};
+    std::unique_ptr<{{ property.type }}Quick> m_{{ property.name }};
 {% endif %}
 {% endfor %}
 
