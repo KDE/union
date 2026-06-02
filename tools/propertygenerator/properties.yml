@@ -57,6 +57,12 @@ children:
                         type: int
                         doc: The order determines which elements come before others in the same alignment group.
 
+                extra_code:
+                    "properties.css.j2": |4
+                        @property {{ name }} {
+                            syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
+                        }
+
             width:
                 type: qreal
                 doc: The implicit (initial) width of an element.
@@ -111,6 +117,11 @@ children:
                                 return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
                             }
 
+                    "properties.css.j2": |4
+                        @property {{ name }} {
+                            syntax: "<length>{1, 4}";
+                        }
+
             inset: *size
 
             margins: *size
@@ -137,6 +148,22 @@ children:
             elide:
                 type: Union::Properties::TextElide
 
+        extra_code:
+            "properties.css.j2": |4
+                @property color {
+                    syntax: "<color>";
+                    inherits: true;
+                    initial-value: #ffffff;
+                }
+
+                @property font-size {
+                    syntax: "<length-percentage>";
+                }
+
+                @property font-weight {
+                    syntax: "<integer> | (normal | bold | bolder | lighter)";
+                }
+
     icon:
         type: group
 
@@ -161,6 +188,12 @@ children:
 
             color:
                 type: Union::Color
+
+        extra_code:
+            "properties.css.j2": |4
+                @property icon-size {
+                    syntax: "<length>";
+                }
 
     background:
         type: group
@@ -202,6 +235,16 @@ children:
                     maskColor:
                         type: Union::Color
 
+        extra_code:
+            "properties.css.j2": |4
+                @property background {
+                    syntax: "none | <color> | <url>";
+                }
+
+                @property background-image {
+                    syntax: "(<url> (mask | inverted-mask) <color>) | <url>"
+                }
+
     border:
         type: group
 
@@ -226,6 +269,12 @@ children:
                         type: Union::Properties::LineStyle
 
                     image: *image
+
+                extra_code:
+                    "properties.css.j2": |4
+                        @property {{ name }} {
+                            syntax: "none | (<length> (none | solid) <color>)";
+                        }
 
             right: *line
             top: *line
@@ -263,6 +312,23 @@ children:
                         return result;
                     }
 
+            "properties.css.j2": |4
+                @property border {
+                    syntax: "none | (<length> (none | solid) <color>)";
+                }
+
+                @property border-width {
+                    syntax: "<length>";
+                }
+
+                @property border-color {
+                    syntax: "<color>";
+                }
+
+                @property border-style {
+                    syntax: "none | solid";
+                }
+
     outline:
         type: group
 
@@ -274,6 +340,12 @@ children:
             right: *line
             top: *line
             bottom: *line
+
+        extra_code:
+            "properties.css.j2": |4
+                @property outline {
+                    syntax: "none | (<length> (none | solid) <color>)";
+                }
 
     corners:
         type: group
@@ -342,6 +414,11 @@ children:
                         return result;
                     }
 
+            "properties.css.j2": |4
+                @property border-radius {
+                    syntax: "<length> | (<length> <length> <length> <length>)";
+                }
+
     shadow:
         type: group
 
@@ -397,3 +474,9 @@ children:
             topRight: *corner
             bottomLeft: *corner
             bottomRight: *corner
+
+        extra_code:
+            "properties.css.j2": |4
+                @property box-shadow {
+                    syntax: "none | (<length> <length> <length> <length> <color>)";
+                }

@@ -25,14 +25,17 @@ Note: Keep in sync with the mapping in css-properties.qdoc.j2
     "layout-width": "width",
     "layout-height": "height",
     "layout-spacing": "spacing",
+    "layout-padding": "padding",
     "layout-padding-left": "padding-left",
     "layout-padding-right": "padding-right",
     "layout-padding-top": "padding-top",
     "layout-padding-bottom": "padding-bottom",
+    "layout-inset": "inset",
     "layout-inset-left": "inset-left",
     "layout-inset-right": "inset-right",
     "layout-inset-top": "inset-top",
     "layout-inset-bottom": "inset-bottom",
+    "layout-margins": "margin",
     "layout-margins-left": "margin-left",
     "layout-margins-right": "margin-right",
     "layout-margins-top": "margin-top",
@@ -69,6 +72,10 @@ Note: Keep in sync with the mapping in css-properties.qdoc.j2
 {% for property in object.children %}
 {% if property.children %}
 {% set name = name + "-" + property.name if name else property.name %}
+{% if property.extra_code and "properties.css.j2" in property.extra_code %}
+{{ property.extra_code["properties.css.j2"] | render(name = name_map[name] if name in name_map else name) }}
+
+{% endif %}
 {{ print_properties(name, property) }}
 {% elif property.type in type_map %}
 {% set name = (name + "-" + property.name) | css_name %}

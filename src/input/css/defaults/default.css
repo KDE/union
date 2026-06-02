@@ -4,7 +4,6 @@
  */
 
 @import "generated-properties.css";
-@import "extra-properties.css";
 
 * {
     layout-alignment: item start center 0;
