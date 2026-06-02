@@ -80,21 +80,21 @@ Note: Keep in sync with the mapping in properties.css.j2
 \section{{ level }} {{ prop_name }}
 
 {{ property.css_documentation }}
+
 {{ print_properties(prop_name, property, level + 1) }}
 {% elif property.type in type_map %}
 {% set prop_name = name_map[prop_name] if prop_name in name_map else prop_name %}
 \b {{ prop_name }} ({{ type_map[property.type] }})
 
 {{ property.css_documentation }}
+
 {% endif %}
 {% endfor -%}
 {% endmacro %}
 
 {%- for type in types %}
 {% if type.name == "style" %}
-{% for property in type.children %}
 {{ print_properties("", type, 1) }}
-{% endfor %}
 {% endif %}
 {% endfor %}
 

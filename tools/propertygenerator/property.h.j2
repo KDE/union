@@ -82,9 +82,15 @@ public:
 
 {% for property in children %}
 {% if property.children %}
+{% if property.api_documentation %}
+    /*!
+     * {{ property.api_documentation }}
+     */
+{% else %}
     /*!
      * Returns {{ property.name }} if set or nullptr if not.
      */
+{% endif %}
     {{ property.type }} *{{ property.name }}() const;
 
     /*!
@@ -95,11 +101,15 @@ public:
     void set{{ property.name | ucfirst }}(std::unique_ptr<{{ property.type }}> &&newValue);
 
 {% else %}
+{% if property.api_documentation %}
+    /*!
+        {{ property.api_documentation }}
+     */
+{% else %}
     /*!
      * Returns the value of {{ property.name }}.
-     *
-     * {{ property.api_documentation }}
      */
+{% endif %}
     std::optional<{{ property.type }}> {{ property.name }}() const;
 
     /*!
