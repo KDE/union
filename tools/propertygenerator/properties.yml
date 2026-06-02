@@ -10,6 +10,161 @@ doc:
         This class contains all the properties that are used to style an element.
 
 children:
+    size:
+        type: type
+
+        doc:
+            api: |
+                \brief A property group representing a set of sizes for cardinal directions.
+            # css: |
+            #     TODO
+
+        children:
+            left:
+                type: qreal
+                doc: The size of the left side.
+            right:
+                type: qreal
+                doc: The size of the right side.
+            top:
+                type: qreal
+                doc: The size of the top side.
+            bottom:
+                type: qreal
+                doc: The size of the bottom side.
+
+        extra_system_includes:
+            "property.h.j2":
+            -   "QMarginsF"
+
+        extra_code:
+            "property.h.j2":
+                public: |4
+                        /*!
+                        Convert a Size property to QMarginsF.
+
+                        If any values are not set, they will use 0.0.
+                        */
+                        QMarginsF toMargins() const;
+            "property.cpp.j2":
+                global: |4
+                    QMarginsF {{ type }}::toMargins() const
+                    {
+                        return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
+                    }
+
+            "properties.css.j2": |4
+                @property {{ name }} {
+                    syntax: "<length>{1,4}";
+                }
+
+    alignment:
+        type: type
+        doc:
+            api: |
+                \brief A property group with properties related to alignment.
+
+
+
+        children:
+            container:
+                type: Union::Properties::AlignmentContainer
+                doc: The alignment container. This determines relative to what the element is placed.
+
+            horizontal:
+                type: Union::Properties::Alignment
+                doc: The horizontal alignment.
+
+            vertical:
+                type: Union::Properties::Alignment
+                doc: The vertical alignment.
+
+            order:
+                type: int
+                doc: The order determines which elements come before others in the same alignment group.
+
+        extra_code:
+            "properties.css.j2": |4
+                @property {{ name }} {
+                    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
+                }
+
+    image:
+        type: type
+
+        doc:
+            api: |
+                \brief A property group describing properties of an image.
+
+        children:
+            source:
+                type: std::filesystem::path
+
+            width:
+                type: qreal
+
+            height:
+                type: qreal
+
+            xOffset:
+                type: qreal
+
+            yOffset:
+                type: qreal
+
+            flags:
+                type: Union::Properties::ImageFlags
+
+            maskColor:
+                type: Union::Color
+
+    line:
+        type: type
+
+        doc:
+            api: \brief A property group containing the properties of a line.
+
+        children:
+            size:
+                type: qreal
+
+            color:
+                type: Union::Color
+
+            style:
+                type: Union::Properties::LineStyle
+
+            image:
+                type: image
+
+        extra_code:
+            "properties.css.j2": |4
+                @property {{ name }} {
+                    syntax: "none | (<length> (none | solid) <color>)";
+                }
+
+    corner:
+        type: type
+
+        doc:
+            api: \brief A property group containing the properties of a corner.
+
+        children:
+            radius:
+                type: qreal
+
+            width:
+                type: qreal
+
+            height:
+                type: qreal
+
+            color:
+                type: Union::Color
+
+            image:
+                type: image
+
     layout:
         type: group
 
@@ -21,47 +176,8 @@ children:
                 These properties all relate to an element's layout and sizing.
 
         children:
-            alignment: &alignment
-                type: group
-                doc:
-                    api: |
-                        \brief A property group with properties related to alignment.
-
-                    css: |
-                        The alignment related properties can be used to control the alignment for
-                        elements that combine multiple items into a single element, such as a checkbox
-                        that contains a check mark (usually referred to as \c{indicator}), an icon and
-                        a label. For details about how the layout for elements works, see \l{layout}.
-
-                        Horizontal and vertical alignment is specified in relative terms that do not
-                        imply a writing direction.
-
-                        \b layout-alignment (<container> <horizontal> <vertical> <order>)
-
-                        Shorthand for setting the various layout properties.
-
-                children:
-                    container:
-                        type: Union::Properties::AlignmentContainer
-                        doc: The alignment container. This determines relative to what the element is placed.
-
-                    horizontal:
-                        type: Union::Properties::Alignment
-                        doc: The horizontal alignment.
-
-                    vertical:
-                        type: Union::Properties::Alignment
-                        doc: The vertical alignment.
-
-                    order:
-                        type: int
-                        doc: The order determines which elements come before others in the same alignment group.
-
-                extra_code:
-                    "properties.css.j2": |4
-                        @property {{ name }} {
-                            syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
-                        }
+            alignment:
+                type: alignment
 
             width:
                 type: qreal
@@ -75,56 +191,14 @@ children:
                 type: qreal
                 doc: The spacing between various elements.
 
-            padding: &size
-                type: group
-                doc:
-                    api: |
-                        \brief A property group representing a set of sizes for cardinal directions.
-                    css: |
-                        TODO
+            padding:
+                type: size
 
-                children:
-                    left:
-                        type: qreal
-                        doc: The size of the left side.
-                    right:
-                        type: qreal
-                        doc: The size of the right side.
-                    top:
-                        type: qreal
-                        doc: The size of the top side.
-                    bottom:
-                        type: qreal
-                        doc: The size of the bottom side.
+            inset:
+                type: size
 
-                extra_system_includes:
-                    "property.h.j2":
-                    -   "QMarginsF"
-
-                extra_code:
-                    "property.h.j2":
-                        public: |4
-                                /*!
-                                Convert a Size property to QMarginsF.
-
-                                If any values are not set, they will use 0.0.
-                                */
-                                QMarginsF toMargins() const;
-                    "property.cpp.j2":
-                        global: |4
-                            QMarginsF {{ type }}::toMargins() const
-                            {
-                                return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
-                            }
-
-                    "properties.css.j2": |4
-                        @property {{ name }} {
-                            syntax: "<length>{1, 4}";
-                        }
-
-            inset: *size
-
-            margins: *size
+            margins:
+                type: size
 
     text:
         type: group
@@ -134,7 +208,8 @@ children:
                 \brief A property group containing properties related to the text of an element.
 
         children:
-            alignment: *alignment
+            alignment:
+                type: alignment
 
             font:
                 type: QFont
@@ -172,7 +247,8 @@ children:
                 \brief A property group containing properties related to an element's icon.
 
         children:
-            alignment: *alignment
+            alignment:
+                type: alignment
 
             width:
                 type: qreal
@@ -206,34 +282,8 @@ children:
             color:
                 type: Union::Color
 
-            image: &image
-                type: group
 
-                doc:
-                    api: |
-                        \brief A property group describing properties of an image.
 
-                children:
-                    source:
-                        type: std::filesystem::path
-
-                    width:
-                        type: qreal
-
-                    height:
-                        type: qreal
-
-                    xOffset:
-                        type: qreal
-
-                    yOffset:
-                        type: qreal
-
-                    flags:
-                        type: Union::Properties::ImageFlags
-
-                    maskColor:
-                        type: Union::Color
 
         extra_code:
             "properties.css.j2": |4
@@ -252,33 +302,17 @@ children:
             api: \brief A property group containing properties of an element's border.
 
         children:
-            left: &line
-                type: group
+            left:
+                type: line
 
-                doc:
-                    api: \brief A property group containing the properties of a line.
+            right:
+                type: line
 
-                children:
-                    size:
-                        type: qreal
+            top:
+                type: line
 
-                    color:
-                        type: Union::Color
-
-                    style:
-                        type: Union::Properties::LineStyle
-
-                    image: *image
-
-                extra_code:
-                    "properties.css.j2": |4
-                        @property {{ name }} {
-                            syntax: "none | (<length> (none | solid) <color>)";
-                        }
-
-            right: *line
-            top: *line
-            bottom: *line
+            bottom:
+                type: line
 
         extra_system_includes:
             "property.h.j2":
@@ -336,10 +370,17 @@ children:
             api: \brief A property group containing properties of an element's outline.
 
         children:
-            left: *line
-            right: *line
-            top: *line
-            bottom: *line
+            left:
+                type: line
+
+            right:
+                type: line
+
+            top:
+                type: line
+
+            bottom:
+                type: line
 
         extra_code:
             "properties.css.j2": |4
@@ -354,30 +395,17 @@ children:
             api: \brief A property group containing properties of a background's corners.
 
         children:
-            topLeft: &corner
-                type: group
+            topLeft:
+                type: corner
 
-                doc:
-                    api: \brief A property group containing the properties of a corner.
+            topRight:
+                type: corner
 
-                children:
-                    radius:
-                        type: qreal
+            bottomLeft:
+                type: corner
 
-                    width:
-                        type: qreal
-
-                    height:
-                        type: qreal
-
-                    color:
-                        type: Union::Color
-
-                    image: *image
-
-            topRight: *corner
-            bottomLeft: *corner
-            bottomRight: *corner
+            bottomRight:
+                type: corner
 
         extra_code:
             "property.h.j2":
@@ -465,15 +493,29 @@ children:
             blur:
                 type: qreal
 
-            left: *line
-            right: *line
-            top: *line
-            bottom: *line
+            left:
+                type: line
 
-            topLeft: *corner
-            topRight: *corner
-            bottomLeft: *corner
-            bottomRight: *corner
+            right:
+                type: line
+
+            top:
+                type: line
+
+            bottom:
+                type: line
+
+            topLeft:
+                type: corner
+
+            topRight:
+                type: corner
+
+            bottomLeft:
+                type: corner
+
+            bottomRight:
+                type: corner
 
         extra_code:
             "properties.css.j2": |4
