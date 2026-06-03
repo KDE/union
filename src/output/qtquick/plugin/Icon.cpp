@@ -178,7 +178,7 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
                               qreal(m_iconSize.width()),
                               qreal(m_iconSize.height())});
     imageNode->setOwnsTexture(true);
-    imageNode->setFiltering(QSGTexture::Linear);
+    imageNode->setFiltering(QSGTexture::Nearest);
 
     if (m_iconChanged || !imageNode->texture()) {
         const auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
