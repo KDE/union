@@ -43,7 +43,7 @@ switch
     icon-alignment-horizontal: start;
     text-wrap-mode: wrap;
 
-    padding: var(--small-spacing);
+    padding: 0px var(--small-spacing);
     spacing: var(--small-spacing);
 
     color: var(--window-text-color);
