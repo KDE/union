@@ -13,6 +13,10 @@
  */
 class UnionStyle : public QProxyStyle
 {
+    Q_OBJECT
+    /* KStyle has custom elements mechanism, disable it. */
+    Q_CLASSINFO("X-KDE-CustomElements", "false")
+
 public:
     UnionStyle();
 
