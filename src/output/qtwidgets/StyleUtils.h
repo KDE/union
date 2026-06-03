@@ -4,8 +4,8 @@
 #pragma once
 
 #include <Element.h>
-#include <properties/SizeProperty.h>
-#include <properties/StyleProperty.h>
+#include <properties/SizePropertyGroup.h>
+#include <properties/StylePropertyGroup.h>
 
 #include <QMargins>
 #include <QPainterPath>

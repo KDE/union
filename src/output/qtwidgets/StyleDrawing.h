@@ -4,7 +4,7 @@
 #pragma once
 
 #include <QPainterPath>
-#include <properties/StyleProperty.h>
+#include <properties/StylePropertyGroup.h>
 
 class QPainter;
 
@@ -22,17 +22,17 @@ enum class SubNodeIndex {
 /*!
  * \brief Draw a Union StyleProperty, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StyleProperty *style);
+void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
 
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
  */
-QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
+QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
 
 /*!
  * \brief Constrains the corner radii to not go over the rectangle's size or under zero.
  */
-Union::Properties::CornersProperty::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersProperty::CornerRadii cornerRadii);
+Union::Properties::CornersPropertyGroup::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
 
 /*!
  * \brief Draw a Union LineProperty.
@@ -41,8 +41,8 @@ void drawLineProperty(QPainter *painter,
                       const QRect &rect,
                       SubNodeIndex subNodeIndex,
                       const QMarginsF &borderSizes,
-                      const Union::Properties::LineProperty *line,
-                      const Union::Properties::CornersProperty *corners);
+                      const Union::Properties::LinePropertyGroup *line,
+                      const Union::Properties::CornersPropertyGroup *corners);
 
 /*!
  * \brief Draw a Union CornerProperty.
@@ -50,5 +50,5 @@ void drawLineProperty(QPainter *painter,
 void drawCornerProperty(QPainter *painter,
                         const QRect &rect,
                         SubNodeIndex subNodeIndex,
-                        const Union::Properties::BorderProperty *border,
-                        const Union::Properties::CornerProperty *corner);
+                        const Union::Properties::BorderPropertyGroup *border,
+                        const Union::Properties::CornerPropertyGroup *corner);
