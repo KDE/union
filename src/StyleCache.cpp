@@ -22,7 +22,7 @@ namespace fs = std::filesystem;
 static constexpr quint64 CacheMagic = 0x23'55'4E'49'4F'55'43'46;
 // Version of the cache file. Increase this whenever there are changes to the
 // underlying data structures.
-static constexpr uint32_t CacheVersion = 2;
+static constexpr uint32_t CacheVersion = 3;
 
 class StyleCache::Private
 {

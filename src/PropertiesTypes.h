@@ -114,8 +114,9 @@ Q_DECLARE_FLAGS(ToStringFlags, ToStringFlag)
 enum class TextWrapMode {
     NoWrap,
     WordWrap,
+    ManualWrap,
     WrapAnywhere,
-    Wrap
+    WrapAtWordBoundaryOrAnywhere
 };
 Q_ENUM_NS(TextWrapMode)
 
