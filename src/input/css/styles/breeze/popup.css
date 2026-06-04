@@ -173,6 +173,7 @@ tooltip
     width: var(--medium-element-size);
     height: var(--medium-element-size);
     padding: var(--large-spacing);
+    color: var(--tooltip-text-color);
     background-color: var(--tooltip-background-color);
     border-radius: var(--corner-radius);
     border: 1px solid var(--tooltip-border-color);
