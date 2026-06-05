@@ -6,6 +6,7 @@
 #include "StyleUtils.h"
 
 #include <ElementQuery.h>
+#include <Positioner.h>
 #include <QApplication>
 #include <StyleRegistry.h>
 
@@ -37,7 +38,15 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         element->setHint(QStringLiteral("flat"), buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat));
 
         const auto properties = prepareProperties(element);
+
+        auto pos = Union::Widgets::Positioner(properties, widget);
+        Union::Widgets::Positioner::ItemList list;
+        list.append(buttonOption->styleObject);
+        pos.setPositionItems(list);
+
         auto rect = prepareRectangle(option, properties, QMarginsF(2, 2, 2, 2)).toRect();
+        rect.setWidth(pos.implicitWidth());
+        rect.setHeight(pos.implicitHeight());
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
@@ -194,5 +203,6 @@ void UnionStyle::polish(QWidget *widget)
     if (qobject_cast<QPushButton *>(widget)) {
         widget->setAttribute(Qt::WA_Hover);
     }
+
     QProxyStyle::polish(widget);
 }

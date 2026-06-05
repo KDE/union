@@ -31,7 +31,7 @@ Union::Element::States buttonStatesFromOption(const QStyleOption *option)
     return states;
 }
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties, const QMarginsF &adjustments)
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, const QMarginsF &adjustments)
 {
     // Shrink the widget rect by the insets
     // TODO: we may have to keep it as a QRectF here
@@ -51,7 +51,7 @@ QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::Sty
     return rect;
 }
 
-Union::Properties::StyleProperty *prepareProperties(Union::Element::Ptr &element)
+Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &element)
 {
     const auto style = Union::StyleRegistry::instance()->defaultStyle();
     const auto query = std::make_unique<Union::ElementQuery>(style);

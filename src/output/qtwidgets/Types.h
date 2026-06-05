@@ -1,0 +1,104 @@
+// SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+#pragma once
+
+#include <QMarginsF>
+#include <QWidget>
+
+#include <Element.h>
+#include <PropertiesTypes.h>
+
+namespace Union
+{
+namespace Widgets
+{
+
+namespace ColorSet
+{
+Q_NAMESPACE
+
+}
+
+/*!
+ * \qmltype Alignment
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief Helper functions related to alignment.
+ */
+class Alignment : public QObject
+{
+    Q_OBJECT
+
+public:
+    using QObject::QObject;
+
+    enum AlignmentType {
+        Unspecified = int(Union::Properties::Alignment::Unspecified),
+        Start = int(Union::Properties::Alignment::Start),
+        Center = int(Union::Properties::Alignment::Center),
+        End = int(Union::Properties::Alignment::End),
+        Fill = int(Union::Properties::Alignment::Fill),
+        StackCenter = int(Union::Properties::Alignment::StackCenter),
+        StackFill = int(Union::Properties::Alignment::StackFill),
+    };
+    Q_ENUM(AlignmentType)
+
+    /*!
+     * Returns a Qt::Alignment value for a horizontal Union Alignment value.
+     *
+     * This assumes the Union Alignment value is used for horizontal alignment.
+     */
+    Qt::Alignment toQtHorizontal(Union::Widgets::Alignment::AlignmentType alignment);
+    /*!
+     * Returns a Qt::Alignment value for a vertical Union Alignment value.
+     */
+    Qt::Alignment toQtVertical(Union::Widgets::Alignment::AlignmentType alignment);
+};
+
+/*!
+ * \qmlvaluetype Sizes
+ * \inqmlmodule org.kde.union.impl
+ * \ingroup qtquick-core
+ *
+ * \brief A helper type that wraps and exposes a QMarginsF to QML.
+ */
+class Sizes
+{
+    Q_GADGET
+
+public:
+    Sizes();
+    Sizes(qreal left, qreal right, qreal top, qreal bottom);
+    explicit Sizes(const QMarginsF &margins);
+
+    bool operator==(const Sizes &other) const;
+
+    Q_PROPERTY(qreal left READ left WRITE setLeft)
+    qreal left() const;
+    void setLeft(qreal newLeft);
+
+    Q_PROPERTY(qreal right READ right WRITE setRight)
+    qreal right() const;
+    void setRight(qreal newRight);
+
+    Q_PROPERTY(qreal top READ top WRITE setTop)
+    qreal top() const;
+    void setTop(qreal newTop);
+
+    Q_PROPERTY(qreal bottom READ bottom WRITE setBottom)
+    qreal bottom() const;
+    void setBottom(qreal newBottom);
+
+    Q_PROPERTY(bool valid READ isValid)
+    bool isValid() const;
+
+    QMarginsF toMargins() const;
+
+private:
+    QMarginsF m_margins;
+};
+
+}
+}

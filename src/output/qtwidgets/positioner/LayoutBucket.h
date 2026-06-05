@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+#pragma once
+
+#include "LayoutItem.h"
+
+namespace Union
+{
+namespace Widgets
+{
+
+struct LayoutBucket {
+    QPointF position = QPointF{0.0, 0.0};
+    QSizeF size = QSizeF{0.0, 0.0};
+    QSizeF implicitSize = QSizeF{0.0, 0.0};
+    QSizeF minimumSize = QSizeF{0.0, 0.0};
+    qreal spacing = 0.0;
+    bool stackCenter = false;
+    bool stackFill = false;
+    QList<LayoutItem> items;
+
+    bool isEmpty()
+    {
+        return items.isEmpty();
+    }
+
+    void sort()
+    {
+        std::ranges::stable_sort(items, std::ranges::less(), &LayoutItem::order);
+    }
+
+    void layout()
+    {
+        qreal x = 0.0;
+        qreal minWidth = 0.0;
+        qreal minHeight = 0.0;
+        qreal maxWidth = 0.0;
+        qreal maxHeight = 0.0;
+        qreal totalHeight = 0.0;
+
+        for (auto &item : items) {
+            if (stackCenter || stackFill) {
+                item.position.setX(0.0);
+                totalHeight += item.margins.top() + item.margins.bottom() + item.implicitSize.height();
+
+                minWidth = std::max(minWidth, item.margins.left() + item.minimumSize.width() + item.margins.right());
+                minHeight += item.margins.top() + item.minimumSize.height() + item.margins.bottom();
+
+                maxWidth = std::max(maxWidth, item.margins.left() + item.implicitSize.width() + item.margins.right());
+                maxHeight = totalHeight;
+            } else {
+                if (qFuzzyIsNull(item.implicitSize.width())) {
+                    continue;
+                }
+
+                if (x > 0.0) {
+                    x += spacing;
+                }
+
+                x += item.margins.left();
+                item.position.setX(x);
+                x += item.implicitSize.width() + item.margins.right();
+
+                minWidth += item.margins.left() + item.minimumSize.width() + item.margins.right();
+                minHeight = std::max(minHeight, item.margins.top() + item.minimumSize.height() + item.margins.bottom());
+
+                maxWidth = x;
+                maxHeight = std::max(maxHeight, item.margins.top() + item.implicitSize.height() + item.margins.bottom());
+            }
+        }
+
+        implicitSize.setWidth(std::ceil(std::max(maxWidth, 0.0)));
+        implicitSize.setHeight(std::ceil(std::max(maxHeight, 0.0)));
+
+        minimumSize.setWidth(minWidth);
+        minimumSize.setHeight(minHeight);
+    }
+
+    void positionItems(QWidget *parent, Qt::LayoutDirection direction)
+    {
+        for (auto item : std::as_const(items)) {
+            item.setItemPosition(parent, direction);
+        }
+    }
+};
+
+}
+}

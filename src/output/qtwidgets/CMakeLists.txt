@@ -11,6 +11,12 @@ target_sources(UnionWidgetsStyle PRIVATE
         UnionStyle.h
         UnionStylePlugin.cpp
         UnionStylePlugin.h
+        Types.cpp
+        Types.h
+        Positioner.h
+        Positioner.cpp
+        positioner/PositionerLayout.h
+        positioner/PositionerLayout.cpp
 )
 target_link_libraries(UnionWidgetsStyle
         PUBLIC
