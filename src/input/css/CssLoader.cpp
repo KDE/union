@@ -667,7 +667,13 @@ void CssLoader::setTextProperty(StyleProperty *output, const cssparser::Property
     }
 
     if (property.name() == "text-wrap-mode") {
-        text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
+        const auto val = property.value<std::string>();
+        // Wrap is shorthand for WrapAtWordBoundaryOrAnywhere
+        if (val == "wrap") {
+            text->setWrapMode(TextWrapMode::WrapAtWordBoundaryOrAnywhere);
+        } else {
+            text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
+        }
     }
 
     if (property.name() == "text-elide") {

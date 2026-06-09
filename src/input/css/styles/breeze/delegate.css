@@ -26,7 +26,7 @@ swipedelegate
     layout-alignment: content fill center 0;
     icon-alignment: content start center 0;
     text-alignment: content fill center 0;
-    text-wrap-mode: word-wrap;
+    text-wrap-mode: wrap;
 
     color: var(--window-text-color);
 
