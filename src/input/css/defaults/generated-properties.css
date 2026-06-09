@@ -150,7 +150,7 @@
 }
 
 @property text-wrap-mode {
-    syntax: "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap";
+    syntax: "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap";
 }
 
 @property text-elide {
