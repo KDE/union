@@ -26,6 +26,12 @@ Union to choose from.
 
 \section1 What You Can and Cannot Style
 
+Union strives to provide a generic "middle layer" that styles can provide styling
+information for and that outputs can consume to apply the styling. This middle
+layer includes the definition of what elements there are, what properties these
+elements have that you can use for styling and what kind of sub-elements there
+are. See the \l{elements.html}{Element Reference} for details.
+
 While Union's goal is to give as much freedom to you as style creator to style
 things the way you want, there are inherent limitations in what Union can do due
 to how the underlying technology works.
@@ -38,5 +44,6 @@ is also in final control, but you \i{can} provide an initial size for most eleme
 The exception to this is that there are certain elements that consists of several
 sub-elements. Union is generally in control of the placement of these
 sub-elements, which allows you as style creator to influence them.
+
 
 */
