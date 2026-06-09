@@ -1,0 +1,217 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for button-like elements
+
+-   name: Button
+    group: Button-like Elements
+    description: A Button.
+
+    type: Button
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the button has an icon set.
+        flat: Set whenever the button should use a flat appearance.
+        with-menu: Set whenever the button has a menu attached to it.
+        changed: Set whenever the button should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            An extra icon that indicates something about the button. By default
+            used to add a down-arrow icon when \c{with-menu} is set.
+        type: Indicator
+
+-   name: ToolButton
+    group: Button-like Elements
+    description: |
+        A button with a less prominent visual appearance for use in toolbars and
+        similar locations.
+
+    type: ToolButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        raised: Set whenever the button should use a raised appearance.
+        with-menu: Set whenever the button has a menu attached to it.
+        changed: Set whenever the button should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            An extra icon that indicates something about the button. By default
+            used to add a down-arrow icon when \c{with-menu} is set.
+        type: Indicator
+
+-   name: ComboBox
+    group: Button-like Elements
+    description: A button with a dropdown that allows selecting one of several options.
+
+    type: ComboBox
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    -   Highlighted
+    hints:
+        flat: Set whenever the combobox should use a flat appearance.
+        editable: Set whenever the combobox is user-editable and should display that.
+        changed: Set whenever the combobox should visualize a changed state.
+
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            An icon used to indicate that this is a combobox. Should use a down
+            arrow icon or similar.
+        type: Indicator
+    -   name: Popup
+        description: |
+            The dropdown displayed by the combobox.
+
+            \note This subelement is not a descendant of the combobox, so you
+            cannot target it with child or descrendant selectors. Instead, use
+            the type and "combobox" hint to target the popup.
+
+        type: Popup
+        hints:
+            combobox: Used to indicate that this is a combobox popup.
+
+    -   name: Delegate
+        description: |
+            The combobox has a delegate that is used by the dropdown. By default
+            this delegate will be an ItemDelegate but it may be overridden by
+            applications.
+
+-   name: RoundButton
+    group: Button-like Elements
+    description: A button that is usually displayed in a circular manner.
+
+    type: RoundButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        flat: Set whenever the button should use a flat appearance.
+        changed: Set whenever the button should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+
+-   name: DelayButton
+    group: Button-like Elements
+    description: |
+        A button with progress that will set the checked state after holding it
+        down for a certain amount of time.
+
+    type: DelayButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    hints:
+        with-icon: Set whenever the button has an icon set.
+        with-menu: Set whenever the button has a menu attached to it.
+        changed: Set whenever the button should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            An extra icon that indicates something about the button. By default
+            used to add a down-arrow icon when \c{with-menu} is set.
+        type: Indicator
+    -   name: Fill
+        description: |
+            A rectangle that indicates how far the DelayButton has progressed.
+        type: Fill
+
+
