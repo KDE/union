@@ -21,9 +21,12 @@ reading the \l{overview.html}{Overview} page. This gives a general overview of
 how the code is structured, important technical concepts and relevant types to
 use.
 
-Note that currently there is no documentation about developing styles for Union.
-This is due to there being only one input format plugin that uses KDE Plasma's
-SVG styling.
+\section1 Creating Styles
+
+To create a new style for Union, please read
+\l{css-styling-applications.html}{Styling Applications with CSS}. Currently, the
+CSS input format is the main input format and it is recommended to use CSS to
+create new styles.
 
 \section1 Reference
 \list
