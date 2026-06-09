@@ -3,6 +3,7 @@
 
 [Misc]
 Name=Union (In Development)
+Name[ar]=يونيون (تحت التطوير)
 Name[ca]=Union (en desenvolupament)
 Name[ca@valencia]=Union (en desenvolupament)
 Name[de]=Union (in Entwicklung)
@@ -10,6 +11,7 @@ Name[es]=Unión (en desarrollo)
 Name[eu]=Union (garapen fasean)
 Name[fr]=Union (En développement)
 Name[he]=איחוד (בפיתוח)
+Name[hu]=Union (fejlesztés alatt)
 Name[ka]=Union (მიმდინარეობს შემუშავებ)
 Name[ko]=Union(개발 중)
 Name[lt]=Union (plėtojamas)
@@ -21,6 +23,7 @@ Name[tr]=Union (Geliştirme Sürecinde)
 Name[uk]=Union (у розробці)
 Name[zh_CN]=Union 和合 (开发中)
 Comment=An in-development style engine intended to unify the various styling systems in KDE.
+Comment[ar]=محرك أنماط قيد التطوير يهدف إلى توحيد أنظمة الأنماط المختلفة في كيدي.
 Comment[ca]=Un motor d'estil en desenvolupament destinat a unificar els diversos sistemes d'estils de KDE.
 Comment[ca@valencia]=Un motor d'estil en desenvolupament destinat a unificar els diversos sistemes d'estils de KDE.
 Comment[de]=Ein in Entwicklung befindliches Designsystem, das die verschiedenen Gestaltungssysteme von KDE vereinen soll.
@@ -28,6 +31,7 @@ Comment[es]=Un motor de estilos en desarrollo que pretende unificar los distinto
 Comment[eu]=KDEko estilo-sistema ezberdinak bateratzeko, garapen fasean dagoen estilo-motor bat.
 Comment[fr]=Un moteur de style en cours de développement destiné à unifier les différents systèmes de style dans KDE.
 Comment[he]=מנוע סגנונות שעדיין נמצא בפיתוח שמיועד לאחד את מערכת יישום העיצוב השונות ב־KDE.
+Comment[hu]=Egy fejlesztés alatt álló stílusmotor, amelynek célja a KDE különböző stílusrendszereinek egységesítése.
 Comment[ka]=შემუშავების სტადიაში მყოფი სტილების ძრავა, რომელიც მიზნად ისახავს KDE-ის სხვადასხვა დასტილვის სისტემების გაერთიანებას.
 Comment[ko]=KDE의 다양한 스타일 시스템을 통합할 목적으로 개발하고 있는 스타일 엔진입니다.
 Comment[lt]=Vis dar plėtojamas stiliaus modulis, kurio tikslas – suvienyti įvairias KDE darbalaukio aplinkoje esančias stiliaus sistemas.
