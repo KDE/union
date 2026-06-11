@@ -17,6 +17,6 @@ class QStyleOption;
  */
 Union::Element::States buttonStatesFromOption(const QStyleOption *option);
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StyleProperty *properties, const QMarginsF &adjustments = QMarginsF());
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, const QMarginsF &adjustments = QMarginsF());
 
-Union::Properties::StyleProperty *prepareProperties(Union::Element::Ptr &element);
+Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &element);

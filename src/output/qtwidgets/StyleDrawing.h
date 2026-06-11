@@ -20,7 +20,7 @@ enum class SubNodeIndex {
 };
 
 /*!
- * \brief Draw a Union StyleProperty, such as the center, border and corners.
+ * \brief Draw a Union StylePropertyGroup, such as the center, border and corners.
  */
 void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
 
