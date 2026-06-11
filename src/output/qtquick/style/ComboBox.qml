@@ -126,8 +126,8 @@ T.ComboBox {
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
         contentItem: ScrollView {
-            implicitWidth: popupContent.implicitWidth
-            implicitHeight: popupContent.implicitHeight
+            implicitWidth: popupContent.implicitWidth + leftPadding + rightPadding
+            implicitHeight: popupContent.implicitHeight + topPadding + bottomPadding
 
             ListView {
                 id: popupContent
