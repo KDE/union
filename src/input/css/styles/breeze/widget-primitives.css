@@ -1,0 +1,73 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+/* Frame elements are the border around panels */
+frame,
+framedefaultbutton,
+framedockwidget,
+framefocusrect,
+framegroupbox,
+framelineedit,
+framemenu,
+framestatusbaritem,
+frametabwidget,
+framewindow,
+framebuttonbevel,
+framebuttontool,
+frametabbarbase {
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+}
+
+/* Panel elements are the background of items */
+panelbuttoncommand,
+panelbuttonbevel,
+panelbuttontool,
+panelmenubar,
+paneltoolbar,
+panellineedit,
+paneltiplabel,
+panelscrollareacorner,
+panelitemviewitem,
+panelitemviewrow,
+panelmenu,
+panelstatusbar {
+    background-color: var(--window-background-color);
+    border: none;
+    border-radius: var(--corner-radius);
+}
+
+/*
+indicatorarrowdown,
+indicatorarrowleft,
+indicatorarrowright,
+indicatorarrowup,
+indicatorbranch,
+indicatorbuttondropdown,
+indicatoritemviewitemcheck,
+indicatorcheckbox,
+indicatordockwidgetresizehandle,
+indicatorheaderarrow,
+indicatormenucheckmark,
+indicatorprogresschunk,
+indicatorradiobutton,
+indicatorspindown,
+indicatorspinminus,
+indicatorspinplus,
+indicatorspinup,
+indicatortoolbarhandle,
+indicatortoolbarseparator,
+indicatortabtear,
+indicatorcolumnviewarrow,
+indicatoritemviewitemdrop,
+indicatortabclose,
+indicatortabtearright {
+
+}
+*/
+
+widget {
+    background-color: var(--window-background-color);
+}

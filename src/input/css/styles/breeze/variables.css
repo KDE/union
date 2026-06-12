@@ -14,7 +14,7 @@
     --medium-spacing: 6px;
     --large-spacing: 8px;
     --grid-unit: 18px;
-    --corner-radius: 5px;
+    --corner-radius: 1px;
 
     /* Icon sizes */
     --icon-size-small: 16px;
@@ -41,7 +41,7 @@
     --window-background-alternate-color: custom-color("kcolorscheme", "active", "window", "background", "alternate");
     --window-border-color: custom-color("kcolorscheme", "active", "window", "decoration", "frame");
     --window-highlight-color: mix(var(--window-background-color), var(--highlight-color), 0.5);
-
+    --window-border-highlight-color: var(--highlight-color);
 
     --view-text-color: custom-color("kcolorscheme", "active", "view", "foreground", "text");
     --view-background-color: custom-color("kcolorscheme", "active", "view", "background", "normal");

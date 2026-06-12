@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QPainterPath>
+#include <QStyle>
 #include <properties/StylePropertyGroup.h>
 
 class QPainter;
@@ -52,3 +53,5 @@ void drawCornerProperty(QPainter *painter,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);
+
+void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter);

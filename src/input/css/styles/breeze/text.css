@@ -24,7 +24,9 @@ label {
 textfield,
 textarea,
 spinbox,
-searchfield
+searchfield,
+panellineedit,
+framelineedit
 {
     height: var(--large-element-size);
     padding: var(--medium-spacing);

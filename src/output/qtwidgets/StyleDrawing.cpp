@@ -3,8 +3,10 @@
 
 #include "StyleDrawing.h"
 
+#include <Element.h>
 #include <QPainter>
 #include <QPainterPath>
+#include <StyleUtils.h>
 #include <algorithm>
 
 #include "LruCache.h"
@@ -368,4 +370,20 @@ void drawCornerProperty(QPainter *painter,
 
     painter->drawPath(path);
     painter->restore();
+}
+
+void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter)
+{
+    auto unionElement = Union::Element::create();
+    unionElement->setType(elementType);
+    unionElement->setStates(statesFromOption(opt));
+    unionElement->setHints(hintsFromOption(opt));
+    unionElement->setColorSet(colorsetFromOption(opt));
+    unionElement->setAttributes(attributesFromOption(opt));
+
+    // TODO: Do we need to set anything from styleoption here?
+    const auto properties = prepareProperties(unionElement);
+
+    auto rect = prepareRectangle(opt, properties).toRect();
+    drawBackground(painter, rect, properties);
 }

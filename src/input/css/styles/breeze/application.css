@@ -145,14 +145,18 @@ pageindicatordelegate {
 }
 
 frame,
-groupbox
+groupbox,
+framemenu,
+framedockwidget,
+framewindow
 {
     padding: var(--small-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
 }
 
-groupbox {
+groupbox,
+panel {
     background-color: var(--window-background-color);
     color: var(--window-text-color);
 

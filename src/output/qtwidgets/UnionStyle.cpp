@@ -32,9 +32,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
         auto element = Union::Element::create();
         element->setType(QStringLiteral("Button"));
-        element->setStates(buttonStatesFromOption(option));
-        element->setColorSet(Union::Element::ColorSet::Button);
-        element->setHint(QStringLiteral("flat"), buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat));
+        element->setStates(statesFromOption(option));
+        element->setColorSet(colorsetFromOption(option));
+        element->setHints(hintsFromOption(option));
 
         const auto properties = prepareProperties(element);
         auto rect = prepareRectangle(option, properties, QMarginsF(2, 2, 2, 2)).toRect();
@@ -57,8 +57,8 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 
         auto element = Union::Element::create();
         element->setType(QStringLiteral("ToolButton"));
-        element->setStates(buttonStatesFromOption(option));
-        element->setColorSet(Union::Element::ColorSet::Button);
+        element->setStates(statesFromOption(option));
+        element->setColorSet(colorsetFromOption(option));
         bool flat = option->state & QStyle::State_AutoRaise;
         element->setHint(QStringLiteral("raised"), !flat);
 
@@ -77,8 +77,8 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 
         auto element = Union::Element::create();
         element->setType(QStringLiteral("GroupBox"));
-        element->setStates(buttonStatesFromOption(option));
-        element->setColorSet(Union::Element::ColorSet::Complementary);
+        element->setStates(statesFromOption(option));
+        element->setColorSet(colorsetFromOption(option));
 
         const auto properties = prepareProperties(element);
         auto rect = prepareRectangle(option, properties).toRect();
@@ -104,31 +104,98 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    if (element == PE_Frame) {
-        const auto frameOption = static_cast<const QStyleOptionFrame *>(option);
-
-        auto element = Union::Element::create();
-        element->setType(QStringLiteral("Frame"));
-        element->setStates(buttonStatesFromOption(frameOption));
-        element->setColorSet(Union::Element::ColorSet::None);
-
-        const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
-        drawBackground(painter, rect, properties);
+    switch (element) {
+    case QStyle::PE_Frame:
+        drawStyleOption(QStringLiteral("Frame"), option, painter);
         return;
-    }
-    if (element == PE_FrameGroupBox) {
-        const auto frameOption = static_cast<const QStyleOptionFrame *>(option);
-
-        auto element = Union::Element::create();
-        element->setType(QStringLiteral("GroupBox"));
-        element->setStates(buttonStatesFromOption(frameOption));
-        element->setColorSet(Union::Element::ColorSet::None);
-
-        const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
-        drawBackground(painter, rect, properties);
+    case QStyle::PE_FrameDefaultButton:
+        drawStyleOption(QStringLiteral("FrameDefaultButton"), option, painter);
         return;
+    case QStyle::PE_FrameDockWidget:
+        drawStyleOption(QStringLiteral("FrameDockWidget"), option, painter);
+        return;
+    case QStyle::PE_FrameFocusRect:
+        drawStyleOption(QStringLiteral("FrameFocusRect"), option, painter);
+        return;
+    case QStyle::PE_FrameGroupBox:
+        drawStyleOption(QStringLiteral("FrameGroupBox"), option, painter);
+        return;
+    case QStyle::PE_FrameLineEdit:
+        drawStyleOption(QStringLiteral("FrameLineEdit"), option, painter);
+        return;
+    case QStyle::PE_FrameMenu:
+        drawStyleOption(QStringLiteral("FrameMenu"), option, painter);
+        return;
+    case QStyle::PE_FrameStatusBarItem:
+        drawStyleOption(QStringLiteral("FrameStatusBarItem"), option, painter);
+        return;
+    case QStyle::PE_FrameTabWidget:
+        drawStyleOption(QStringLiteral("FrameTabWidget"), option, painter);
+        return;
+    case QStyle::PE_FrameWindow:
+        drawStyleOption(QStringLiteral("FrameWindow"), option, painter);
+        return;
+    case QStyle::PE_FrameButtonBevel:
+        drawStyleOption(QStringLiteral("FrameButtonBevel"), option, painter);
+        return;
+    case QStyle::PE_FrameButtonTool:
+        drawStyleOption(QStringLiteral("FrameButtonTool"), option, painter);
+        return;
+    case QStyle::PE_FrameTabBarBase:
+        drawStyleOption(QStringLiteral("FrameTabBarBase"), option, painter);
+        return;
+    case QStyle::PE_PanelButtonCommand:
+        drawStyleOption(QStringLiteral("PanelButtonCommand"), option, painter);
+        return;
+    case QStyle::PE_PanelButtonBevel:
+        drawStyleOption(QStringLiteral("PanelButtonBevel"), option, painter);
+        return;
+    case QStyle::PE_PanelButtonTool:
+        drawStyleOption(QStringLiteral("PanelButtonTool"), option, painter);
+        return;
+    case QStyle::PE_PanelMenuBar:
+        drawStyleOption(QStringLiteral("PanelMenuBar"), option, painter);
+        return;
+    case QStyle::PE_PanelToolBar:
+        drawStyleOption(QStringLiteral("PanelToolBar"), option, painter);
+        return;
+    case QStyle::PE_PanelLineEdit:
+        drawStyleOption(QStringLiteral("PanelLineEdit"), option, painter);
+        return;
+    case QStyle::PE_PanelTipLabel:
+    case QStyle::PE_PanelScrollAreaCorner:
+    case QStyle::PE_PanelItemViewItem:
+    case QStyle::PE_PanelItemViewRow:
+    case QStyle::PE_PanelStatusBar:
+    case QStyle::PE_PanelMenu:
+    case QStyle::PE_IndicatorArrowDown:
+    case QStyle::PE_IndicatorArrowLeft:
+    case QStyle::PE_IndicatorArrowRight:
+    case QStyle::PE_IndicatorArrowUp:
+    case QStyle::PE_IndicatorBranch:
+    case QStyle::PE_IndicatorButtonDropDown:
+    case QStyle::PE_IndicatorItemViewItemCheck:
+    case QStyle::PE_IndicatorCheckBox:
+    case QStyle::PE_IndicatorDockWidgetResizeHandle:
+    case QStyle::PE_IndicatorHeaderArrow:
+    case QStyle::PE_IndicatorMenuCheckMark:
+    case QStyle::PE_IndicatorProgressChunk:
+    case QStyle::PE_IndicatorRadioButton:
+    case QStyle::PE_IndicatorSpinDown:
+    case QStyle::PE_IndicatorSpinMinus:
+    case QStyle::PE_IndicatorSpinPlus:
+    case QStyle::PE_IndicatorSpinUp:
+    case QStyle::PE_IndicatorToolBarHandle:
+    case QStyle::PE_IndicatorToolBarSeparator:
+    case QStyle::PE_IndicatorTabTear:
+    case QStyle::PE_IndicatorColumnViewArrow:
+    case QStyle::PE_IndicatorItemViewItemDrop:
+    case QStyle::PE_IndicatorTabClose:
+    case QStyle::PE_IndicatorTabTearRight:
+    case QStyle::PE_Widget:
+        break;
+    default:
+        QProxyStyle::drawPrimitive(element, option, painter, widget);
     }
     QProxyStyle::drawPrimitive(element, option, painter, widget);
 }
@@ -166,9 +233,105 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     case PM_ButtonShiftHorizontal:
     case PM_ButtonShiftVertical:
         return 0;
+    case QStyle::PM_ButtonMargin:
+    case QStyle::PM_ButtonDefaultIndicator:
+    case QStyle::PM_MenuButtonIndicator:
+    case QStyle::PM_DefaultFrameWidth:
+    case QStyle::PM_SpinBoxFrameWidth:
+    case QStyle::PM_ComboBoxFrameWidth:
+    case QStyle::PM_MaximumDragDistance:
+    case QStyle::PM_ScrollBarExtent:
+    case QStyle::PM_ScrollBarSliderMin:
+    case QStyle::PM_SliderThickness:
+    case QStyle::PM_SliderControlThickness:
+    case QStyle::PM_SliderLength:
+    case QStyle::PM_SliderTickmarkOffset:
+    case QStyle::PM_SliderSpaceAvailable:
+    case QStyle::PM_DockWidgetSeparatorExtent:
+    case QStyle::PM_DockWidgetHandleExtent:
+    case QStyle::PM_DockWidgetFrameWidth:
+    case QStyle::PM_TabBarTabOverlap:
+    case QStyle::PM_TabBarTabHSpace:
+    case QStyle::PM_TabBarTabVSpace:
+    case QStyle::PM_TabBarBaseHeight:
+    case QStyle::PM_TabBarBaseOverlap:
+    case QStyle::PM_ProgressBarChunkWidth:
+    case QStyle::PM_SplitterWidth:
+    case QStyle::PM_TitleBarHeight:
+    case QStyle::PM_MenuScrollerHeight:
+    case QStyle::PM_MenuHMargin:
+    case QStyle::PM_MenuVMargin:
+    case QStyle::PM_MenuPanelWidth:
+    case QStyle::PM_MenuTearoffHeight:
+    case QStyle::PM_MenuDesktopFrameWidth:
+    case QStyle::PM_MenuBarPanelWidth:
+    case QStyle::PM_MenuBarItemSpacing:
+    case QStyle::PM_MenuBarVMargin:
+    case QStyle::PM_MenuBarHMargin:
+    case QStyle::PM_IndicatorWidth:
+    case QStyle::PM_IndicatorHeight:
+    case QStyle::PM_ExclusiveIndicatorWidth:
+    case QStyle::PM_ExclusiveIndicatorHeight:
+    case QStyle::PM_DialogButtonsSeparator:
+    case QStyle::PM_DialogButtonsButtonWidth:
+    case QStyle::PM_DialogButtonsButtonHeight:
+    case QStyle::PM_MdiSubWindowFrameWidth:
+    case QStyle::PM_MdiSubWindowMinimizedWidth:
+    case QStyle::PM_HeaderMargin:
+    case QStyle::PM_HeaderMarkSize:
+    case QStyle::PM_HeaderGripMargin:
+    case QStyle::PM_TabBarTabShiftHorizontal:
+    case QStyle::PM_TabBarTabShiftVertical:
+    case QStyle::PM_TabBarScrollButtonWidth:
+    case QStyle::PM_ToolBarFrameWidth:
+    case QStyle::PM_ToolBarHandleExtent:
+    case QStyle::PM_ToolBarItemSpacing:
+    case QStyle::PM_ToolBarItemMargin:
+    case QStyle::PM_ToolBarSeparatorExtent:
+    case QStyle::PM_ToolBarExtensionExtent:
+    case QStyle::PM_SpinBoxSliderHeight:
+    case QStyle::PM_ToolBarIconSize:
+    case QStyle::PM_ListViewIconSize:
+    case QStyle::PM_IconViewIconSize:
+    case QStyle::PM_SmallIconSize:
+    case QStyle::PM_LargeIconSize:
+    case QStyle::PM_FocusFrameVMargin:
+    case QStyle::PM_FocusFrameHMargin:
+    case QStyle::PM_ToolTipLabelFrameWidth:
+    case QStyle::PM_CheckBoxLabelSpacing:
+    case QStyle::PM_TabBarIconSize:
+    case QStyle::PM_SizeGripSize:
+    case QStyle::PM_DockWidgetTitleMargin:
+    case QStyle::PM_MessageBoxIconSize:
+    case QStyle::PM_ButtonIconSize:
+    case QStyle::PM_DockWidgetTitleBarButtonMargin:
+    case QStyle::PM_RadioButtonLabelSpacing:
+    case QStyle::PM_LayoutLeftMargin:
+    case QStyle::PM_LayoutTopMargin:
+    case QStyle::PM_LayoutRightMargin:
+    case QStyle::PM_LayoutBottomMargin:
+    case QStyle::PM_LayoutHorizontalSpacing:
+    case QStyle::PM_LayoutVerticalSpacing:
+    case QStyle::PM_TabBar_ScrollButtonOverlap:
+    case QStyle::PM_TextCursorWidth:
+    case QStyle::PM_TabCloseIndicatorWidth:
+    case QStyle::PM_TabCloseIndicatorHeight:
+    case QStyle::PM_ScrollView_ScrollBarSpacing:
+    case QStyle::PM_ScrollView_ScrollBarOverlap:
+    case QStyle::PM_SubMenuOverlap:
+    case QStyle::PM_TreeViewIndentation:
+    case QStyle::PM_HeaderDefaultSectionSizeHorizontal:
+    case QStyle::PM_HeaderDefaultSectionSizeVertical:
+    case QStyle::PM_TitleBarButtonIconSize:
+    case QStyle::PM_TitleBarButtonSize:
+    case QStyle::PM_LineEditIconSize:
+    case QStyle::PM_LineEditIconMargin:
+    case QStyle::PM_CustomBase:
+        return QProxyStyle::pixelMetric(metric, option, widget);
+        break;
     default:
         return QProxyStyle::pixelMetric(metric, option, widget);
-    }
+    };
 }
 
 void UnionStyle::polish(QApplication *application)

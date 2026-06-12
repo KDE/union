@@ -15,7 +15,10 @@ class QStyleOption;
 /*!
  * \brief Translate the state from QStyleOption to Union::Element states.
  */
-Union::Element::States buttonStatesFromOption(const QStyleOption *option);
+Union::Element::States statesFromOption(const QStyleOption *option);
+QStringList hintsFromOption(const QStyleOption *option);
+Union::Element::ColorSet colorsetFromOption(const QStyleOption *option);
+QVariantMap attributesFromOption(const QStyleOption *option);
 
 QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, const QMarginsF &adjustments = QMarginsF());
 
