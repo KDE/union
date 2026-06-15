@@ -86,6 +86,7 @@ private:
     QIcon m_icon;
     bool m_iconChanged = true;
     QSize m_iconSize;
+    qreal m_iconDpr = 1.0;
 
     QPointer<QQuickItem> m_control;
     QPointer<QuickStyle> m_style;
