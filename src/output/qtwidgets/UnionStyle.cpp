@@ -120,9 +120,6 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
     case QStyle::PE_FrameLineEdit:
         drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Frame);
         return;
-    case QStyle::PE_FrameMenu:
-        drawStyleOption(QStringLiteral("Menu"), option, painter, PrimitiveType::Frame);
-        return;
     case QStyle::PE_FrameStatusBarItem:
         drawStyleOption(QStringLiteral("Statusbar"), option, painter, PrimitiveType::Frame);
         return;
@@ -134,12 +131,6 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
     case QStyle::PE_PanelButtonTool:
         drawStyleOption(QStringLiteral("ToolButton"), option, painter, PrimitiveType::Panel);
         return;
-    case QStyle::PE_PanelLineEdit:
-        drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Panel);
-        return;
-    case QStyle::PE_PanelMenu:
-        drawStyleOption(QStringLiteral("Menu"), option, painter, PrimitiveType::Panel);
-        return;
     case QStyle::PE_PanelStatusBar:
         drawStyleOption(QStringLiteral("Statusbar"), option, painter, PrimitiveType::Panel);
         return;
@@ -148,8 +139,16 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         drawStyleOption(QStringLiteral("Panel"), option, painter, PrimitiveType::Panel);
         return;
         // Standalone elements
+    case QStyle::PE_PanelLineEdit:
+        // TODO hide frames inside comboboxes
+        drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Standalone);
+        return;
+    case QStyle::PE_FrameMenu:
+    case QStyle::PE_PanelMenu:
+        // These two are confusing. Apparently they're bot their distinct items.'
+        drawStyleOption(QStringLiteral("Menu"), option, painter, PrimitiveType::Standalone);
+        return;
     case QStyle::PE_PanelItemViewItem:
-        // TODO: handle beginning/middle/end
         drawStyleOption(QStringLiteral("ItemViewItem"), option, painter, PrimitiveType::Standalone);
         return;
     case QStyle::PE_PanelItemViewRow:

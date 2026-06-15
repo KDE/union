@@ -6,6 +6,7 @@
 #include <StyleRegistry.h>
 
 #include <QStyleOption>
+#include <QStyleOptionFrame>
 #include <QTableView>
 
 Union::Element::States statesFromOption(const QStyleOption *option)
@@ -107,9 +108,29 @@ QStringList hintsFromOption(const QStyleOption *option)
             }
         }
     } break;
+    case QStyleOption::SO_Frame: {
+        if (const auto optionFrame = static_cast<const QStyleOptionFrame *>(option)) {
+            if (optionFrame->features.testFlag(QStyleOptionFrame::Flat)) {
+                hints.append(QStringLiteral("flat"));
+            }
+            if (optionFrame->features.testFlag(QStyleOptionFrame::Rounded)) {
+                hints.append(QStringLiteral("rounded"));
+            }
+            switch (optionFrame->frameShape) {
+            case QFrame::NoFrame:
+            case QFrame::Box:
+            case QFrame::Panel:
+            case QFrame::WinPanel:
+            case QFrame::HLine:
+            case QFrame::VLine:
+            case QFrame::StyledPanel:
+                break;
+            }
+        }
+    } break;
+
     case QStyleOption::SO_Tab:
     case QStyleOption::SO_MenuItem:
-    case QStyleOption::SO_Frame:
     case QStyleOption::SO_ProgressBar:
     case QStyleOption::SO_ToolBox:
     case QStyleOption::SO_Header:
