@@ -16,6 +16,7 @@ T.HorizontalHeaderView {
         activeFocus: control.activeFocus
         enabled: control.enabled
     }
+    Union.Element.hints: Union.ElementHint { name: "horizontal" }
     
     implicitWidth: syncView ? syncView.width : 0
     implicitHeight: Math.max(1, contentHeight)
@@ -31,6 +32,7 @@ T.HorizontalHeaderView {
             enabled: delegate.enabled
         }
         Union.Element.hints: [
+            Union.ElementHint { name: "horizontal" },
             Union.ElementHint { name: "sort-ascending"; when: delegate.model.sort !== undefined && delegate.model.sort == Qt.AscendingOrder },
             Union.ElementHint { name: "sort-descending"; when: delegate.model.sort !== undefined && delegate.model.sort != Qt.AscendingOrder },
         ]

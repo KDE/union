@@ -13,8 +13,8 @@ T.DelayButton {
 
     Union.Element.type: "DelayButton"
     Union.Element.states {
-    hovered: control.hovered
-    activeFocus: control.activeFocus
+        hovered: control.hovered
+        activeFocus: control.activeFocus
         visualFocus: control.visualFocus
         pressed: control.down
         checked: control.checked

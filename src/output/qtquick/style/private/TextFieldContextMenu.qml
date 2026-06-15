@@ -19,6 +19,8 @@ Menu {
 
     modal: true
 
+    Union.Element.hints: Union.ElementHint { name: "context-menu" }
+
     MenuItem {
         id: undoItem
         action: T.Action {

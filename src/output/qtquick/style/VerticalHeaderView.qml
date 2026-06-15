@@ -16,6 +16,7 @@ T.VerticalHeaderView {
         activeFocus: control.activeFocus
         enabled: control.enabled
     }
+    Union.Element.hints: Union.ElementHint { name: "vertical" }
     
     implicitWidth: Math.max(1, contentWidth)
     implicitHeight: syncView ? syncView.height : 0
@@ -26,6 +27,7 @@ T.VerticalHeaderView {
         Union.Element.states {
             enabled: control.enabled
         }
+        Union.Element.hints: Union.ElementHint { name: "vertical" }
 
         required property var model
 

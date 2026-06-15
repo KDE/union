@@ -27,6 +27,8 @@ T.Switch {
         enabled: control.enabled
     }
 
+    hoverEnabled: Application.styleHints.useHoverEffects
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
@@ -38,7 +40,6 @@ T.Switch {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     spacing: Union.Style.properties.layout.spacing
-    hoverEnabled: Application.styleHints.useHoverEffects
     icon {
         color: Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
@@ -51,14 +52,6 @@ T.Switch {
 
     indicator: Item {
         Union.Element.type: "Indicator"
-        Union.Element.states {
-            hovered: control.hovered
-            activeFocus: control.activeFocus
-            visualFocus: control.visualFocus
-            pressed: control.down
-            checked: control.checked
-            enabled: control.enabled
-        }
 
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
@@ -67,14 +60,6 @@ T.Switch {
 
         Union.StyledRectangle {
             Union.Element.type: "Handle"
-            Union.Element.states {
-                hovered: control.hovered
-                activeFocus: control.activeFocus
-                visualFocus: control.visualFocus
-                pressed: control.down
-                checked: control.checked
-                enabled: control.enabled
-            }
 
             anchors.verticalCenter: parent.verticalCenter
 

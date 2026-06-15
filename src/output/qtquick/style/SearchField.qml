@@ -87,6 +87,9 @@ T.SearchField {
 
         Text {
             id: placeholder
+
+            Union.Element.hints: Union.ElementHint { name: "placeholder" }
+
             x: parent.leftPadding
             y: parent.topPadding
             width: parent.width - parent.leftPadding - parent.rightPadding
@@ -100,13 +103,15 @@ T.SearchField {
             renderType: parent.renderType
             elide: parent.wrapMode == Text.NoWrap ? Text.ElideRight : Text.ElideNone
         }
+    }
 
-        T.ContextMenu.menu: P.TextFieldContextMenu {
-            target: control
-        }
+    T.ContextMenu.menu: P.TextFieldContextMenu {
+        target: control
     }
 
     popup: Popup {
+        Union.Element.hints: Union.ElementHint { name: "SearchField" }
+
         y: control.height
         width: control.width
         height: Math.min(contentItem.implicitHeight, control.Window.height - control.y - control.height - control.padding)
