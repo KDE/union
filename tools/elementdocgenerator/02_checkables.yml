@@ -1,0 +1,113 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for checkable elements
+
+-   name: CheckBox
+    group: Checkable Elements
+    description: A checkable box with a label.
+
+    type: CheckBox
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    hints:
+        with-icon: Set whenever the element has an icon set.
+        changed: Set whenever the element should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the element. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used to render the checkmark. This should show a
+            checkmark image if the delegate's state is checked.
+        type: Indicator
+
+-   name: RadioButton
+    group: Checkable Elements
+    description: A checkable element that is one of several options.
+
+    type: RadioButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    hints:
+        with-icon: Set whenever the element has an icon set.
+        changed: Set whenever the element should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the element. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used to render the radio indicator. This should show a
+            radio image if the delegate's state is checked.
+        type: Indicator
+
+-   name: Switch
+    group: Checkable Elements
+    description: A toggle switch with a distinct "on" and "off" state.
+
+    type: Switch
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the element. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used as background for the handle.
+        type: Indicator
+
+        subelements:
+        -   name: Handle
+            description: |
+                A rectangle used as moving part of the switch indicator. This
+                will be moved to the appropriate position based on switch state.
+            type: Handle

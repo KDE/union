@@ -1,0 +1,329 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for application structure elements.
+
+-   name: ApplicationWindow
+    group: Application Structure
+    description: A window element used as the base for applications.
+
+    type: ApplicationWindow
+    hints:
+        inactive: Set when the window does not currently have focus.
+
+
+-   name: Drawer
+    group: Application Structure
+    description: A pane that slides in from a window edge.
+
+    type: Drawer
+    hints:
+        modal: |
+            Set when the drawer prevents interaction with the rest of the
+            application when it is shown.
+    attributes:
+        edge:
+            description: Which edge of the window the drawer is attached to.
+            values:
+                left: The left edge.
+                right: The right edge.
+                top: The top edge.
+                bottom: The bottom edge.
+
+-   name: Frame
+    group: Application Structure
+    description: A frame that can be used to visually group elements together.
+
+    type: Frame
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+-   name: GroupBox
+    group: Application Structure
+    description: A box with a title that can be used to visually group elements together.
+
+    type: GroupBox
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+    subelements:
+    -   name: Header
+        description: A text element with a background that shows the title.
+
+        type: Header
+
+-   name: Page
+    group: Application Structure
+    description: A content area with header and footer.
+
+    type: Page
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+-   name: Pane
+    group: Application Structure
+    description: An area with a background that can be used to visually group elements together.
+
+    type: Pane
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+-   name: ScrollView
+    group: Application Structure
+    description: An area with a scrollbar for displaying lists and similar scrollable content.
+
+    type: ScrollView
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        horizontal-scroll: Set when the scrollview can scroll horizontally.
+        vertical-scroll: Set when the scrollview can scroll vertically.
+        framed-background: Set when the scrollview should display a frame around itself.
+
+    subelements:
+    -   name: Horizontal Scrollbar
+        description: |
+            The scrollbar used for scrolling horizontally. See the ScrollBar
+            type for details.
+    -   name: Vertical Scrollbar
+        description: |
+            The scrollbar used for scrolling vertically. See the ScrollBar
+            type for details.
+
+-   name: ScrollBar
+    group: Application Structure
+    description: A bar that indicates the size and position of a scrollable area.
+
+    type: ScrollBar
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    hints:
+        horizontal: Set when the scrollbar orientation is horizontal.
+        vertical: Set when the scrollbar orientation is vertical.
+        noninteractive: |
+            Set when the scrollbar is used only to display scroll position and
+            cannot be dragged to set the scroll position.
+
+    subelements:
+    -   name: Handle
+        description: A rectangle used for the draggable part of the scrollbar.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   VisualFocus
+        -   Pressed
+        -   Enabled
+
+-   name: ScrollIndicator
+    group: Application Structure
+    description: |
+        An indicator that indicates the scroll position of an area. This is
+        generally used to indicate a non-interactive scroll position.
+
+    type: ScrollIndicator
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    attributes:
+        orientation:
+            description: Used to indicate which orientation the scroll indicator has.
+            values:
+                horizontal: The scroll indicator is oriented horizontally.
+                vertical: The scroll indicator is oriented vertically.
+
+    subelements:
+    -   name: Handle
+        description: A rectangle used for the positioned part of the indicator.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   VisualFocus
+        -   Pressed
+        -   Enabled
+
+-   name: SplitView
+    group: Application Structure
+    description: |
+        An area with a draggable split in the middle that can be used to display
+        two sets of content side by side.
+
+    type: SplitView
+    states:
+        -   Hovered
+        -   ActiveFocus
+        -   VisualFocus
+        -   Pressed
+        -   Enabled
+    hints:
+        horizontal: Set when the split view is split horizontally.
+        vertical: Set when the split view is split vertically.
+
+    subelements:
+    -   name: Handle
+        description: The draggable area between two splits.
+        type: Handle
+
+-   name: StackView
+    group: Application Structure
+    description: A stack of pages with the top-most page visible.
+
+    type: StackView
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+-   name: SwipeView
+    group: Application Structure
+    description: A view of multiple elements that allows swiping between those elements.
+
+    type: SwipeView
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        horizontal: Set when the view is oriented horizontally.
+        vertical: Set when the view is oriented vertically.
+
+-   name: PageIndicator
+    group: Application Structure
+    description: An element showing the number of pages and the current page.
+
+    type: PageIndicator
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    subelements:
+    -   name: Delegate
+        description: A rectangle used for a single page.
+
+        type: PageIndicatorDelegate
+        hints:
+            current: Set when the delegate displays the current page.
+
+-   name: ToolBar
+    group: Application Structure
+    description: An area used for elements that interact with the rest of the application.
+
+    type: ToolBar
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        header: Set when the toolbar is located in the header of an application window or page.
+        footer: Set when the toolbar is located in the footer of an application window or page.
+
+-   name: ToolSeparator
+    group: Application Structure
+    description: A line used to separate groups of elements inside a tool bar.
+
+    type: ToolSeparator
+    states:
+    -   Enabled
+    hints:
+        horizontal: Set when the separator is oriented horizontally.
+        vertical: Set when the separator is oriented vertically.
+
+-   name: TabBar
+    group: Application Structure
+    description: A row of tab-like buttons that allows switching content.
+
+    type: TabBar
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    attributes:
+        tab-position:
+            description: The position of tabs relative to the content.
+            values:
+                top: The tabs are located at the top of content.
+                bottom: The tabs are located at the bottom of content.
+    subelements:
+    -   name: Highlight
+        description: A highlight for the current active tab.
+
+        type: TabBarHighlight
+        states:
+        -   Enabled
+        -   Highlighted
+        hints:
+            itemview-highlight: Used to indicate this is a highlight.
+        attributes:
+            tab-position:
+                description: The position of the tab relative to content.
+                values:
+                    top: The tab is located at the top of content.
+                    bottom: The tab is located at the bottom of content.
+
+-   name: TabButton
+    group: Application Structure
+    description: A single button to active a tab.
+
+    type: TabButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    hints:
+        with-icon: Set whenever the button has an icon set.
+        itemview-highlight: Set when the tabbar requests highlighting the tab.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+        direction:
+            description: The position of the tab relative to content.
+            values:
+                top: The tab is located at the top of content.
+                bottom: The tab is located at the bottom of content.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.

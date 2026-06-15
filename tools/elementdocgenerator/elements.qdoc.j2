@@ -18,7 +18,7 @@ REUSE-IgnoreStart
         Possible values:
         \list
         {% for key, value in attribute.values.items() %}
-        \b {{ key }} {{ value }}
+            \li \b {{ key }} {{ value }}
         {% endfor %}
         \endlist
 {% endmacro %}
@@ -94,7 +94,32 @@ This document describes the various elements that Union knows about and their
 properties. Note that this page is based upon what the QtQuick output provides,
 as that is at time of writing the most complete output.
 
-\section1 States
+\section1 Element Overview
+
+Things that can be styled by Union are generally referred to as \i{elements}.
+Each element consists of a number of properties that allow style rules to target
+elements matching those properties. The matching style rules result in a set of
+properties that should be applied to the matching elements.
+
+An element can have children and each child can have its own children. Indirect
+children are referred to as \i{descendants}. Certain elements have specific
+children that are considered part of the element, even though they have their
+own properties. These are referred to as sub-elements.
+
+Each element can have the following properties:
+
+\section2 Type
+
+A string indicating the type of element.
+
+\section2 ID
+
+A string used as a unique identifier for a single element.
+
+\section2 States
+
+States represent different states the element can be in. Many of these are
+related to input. The following states are currently supported:
 
 \section3 Hovered
 Set whenever the element is hovered by a mouse or similar input device.
@@ -114,7 +139,15 @@ Set whenever the element is considered to be "on".
 \section3 Highlighted
 Set whenever the element should receive extra visual highlighting.
 
-\endtable
+\section2 Hints
+
+Hints are used as extra boolean flags that indicate something is different about
+the element.
+
+\section2 Attributes
+
+Attributes are key-value pairs that indicate something is different about the
+element, which is more complex than a simple binary state.
 
 {% for type in types %}
 {% if loop.changed(type.group) %}

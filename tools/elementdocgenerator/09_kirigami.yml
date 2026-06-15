@@ -1,0 +1,164 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for Kirigami elements.
+
+-   name: Application Header
+    group: Kirigami
+    description: Base type for Kirigami's application headers.
+
+    type: ApplicationHeader
+    hints:
+        with-separator: Set when the header should show a separator below it.
+
+-   name: Card
+    group: Kirigami
+    description: An element grouping together information in a view.
+
+    type: Card
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+
+-   name: Chip
+    group: Kirigami
+    description: A small element used to show tags or similar information.
+
+    type: Chip
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    hints:
+        closable: Set when the chip should show a button to remove it.
+        interactive: Set when the chip can be interacted with.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the chip. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the chip. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A toolbutton used for removing or other actions on the chip.
+        type: ToolButton
+        hints:
+            indicator: Used to indicate this is an indicator toolbutton.
+
+-   name: Heading
+    group: Kirigami
+    description: A text element that is used as a title for a different section of content.
+
+    type: Heading
+    hints:
+        "level-{1-6}": The level of the heading. Lower levels mean bigger headings.
+        primary: Set when the heading should be shown emphasized as a primary heading.
+        secondary: Set when the heading should be shown deemphasized as a secondary heading.
+
+-   name: InlineMessage
+    group: Kirigami
+    description: A text with a distinct background used to display messages to the user.
+
+    type: InlineMessage
+    attributes:
+        type:
+            description: The type of message.
+            values:
+                positive: The message shows something succeeded or similarly positive.
+                warning: The message gives a warning that something is wrong.
+                error: The message shows an error.
+        position:
+            description: Where the message is located relative to content.
+            values:
+                inline: The message is shown inline with the content.
+                header: The message is shown as a header on top of the content.
+                footer: The message is shown as a footer below the content.
+
+-   name: NavigationTabBar
+    group: Kirigami
+    description: A tab bar used for navigating between different pages of an application.
+
+    type: NavigationTabBar
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        header: Set when the tab bar is located in the header of the application.
+        footer: Set when the tab bar is located in the footer of the application.
+
+-   name: NavigationTabButton
+    group: Kirigami
+    description: A button for use in a NavigationTabBar.
+
+    type: NavigationTabButton
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    attributes:
+        direction:
+            description: Where the tab button is located relative to the content.
+            values:
+                top: The button is above the content.
+                bottom: The button is below the content.
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            An extra icon that indicates something about the button.
+        type: Indicator
+
+-   name: OverlayDrawer
+    group: Kirigami
+    description: A drawer used as base for several Kirigami drawers.
+
+    type: OverlayDrawer
+    hints:
+        modal: Set when the drawer should block interaction with the application when visible.
+    attributes:
+        edge:
+            description: Which edge of the window the drawer is attached to.
+            values:
+                left: The left edge.
+                right: The right edge.
+                top: The top edge.
+                bottom: The bottom edge.

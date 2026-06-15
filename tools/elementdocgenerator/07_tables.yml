@@ -1,0 +1,155 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for table and tree view elements.
+
+-   name: TableViewDelegate
+    group: Table and Tree Views
+    description: A standard delegate for table views.
+
+    type: TableViewDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    -   Highlighted
+    hints:
+        alternating-colors: Set when the delegate should be using alternating row colors.
+        editing: Set when the user is currently editing the table cell.
+        current: Set when the table cell is the currently selected cell.
+        selected: Set when the table cell is in the selected set of cells.
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: EditDelegate
+        description: |
+            A text field that is used when the user is editing the table cell.
+
+-   name: TreeViewDelegate
+    group: Table and Tree Views
+    description: A standard delegate for tree views.
+
+    type: TreeViewDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    -   Highlighted
+    hints:
+        alternating-colors: Set when the delegate should be using alternating row colors.
+        expanded: Set when the children of the tree node are visible.
+        editing: Set when the user is currently editing the table cell.
+        current: Set when the tree cell is the currently selected cell.
+        selected: Set when the tree cell is in the selected set of cells.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the element. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indentation
+        description: |
+            A transparent item used to reserve space for tree indentation. This
+            should be placed at the start of the delegate.
+        type: Indentation
+    -   name: Indicator
+        description: |
+            An icon used to indicate the tree node has children. Usually styled
+            as an arrow.
+        type: Indicator
+    -   name: EditDelegate
+        description: |
+            A text field that is used when the user is editing the tree cell.
+
+-   name: Header View
+    group: Table and Tree Views
+    description: A horizontal or vertical view of table headers.
+
+    type: HeaderView
+    states:
+    -   ActiveFocus
+    -   Enabled
+    hints:
+        horizontal: Set when the header view is oriented horizontally.
+        vertical: Set when the header view is oriented vertically.
+
+    subelements:
+    -   name: Delegate
+        description: An element used to show a single entry of the view.
+
+        type: HeaderViewDelegate
+        states:
+        -   ActiveFocus
+        -   Enabled
+        hints:
+            horizontal: Set when the delegate is used for a horizontally oriented header view.
+            vertical: Set when the delegate is used for a vertically oriented header view.
+            sort-ascending: |
+                Set when the delegate should indicate ascending sorting is
+                active for the associated table or tree column.
+            sort-descending: |
+                Set when the delegate should indicate descending sorting is
+                active for the associated table or tree column.
+        subelements:
+        -   name: Icon
+            description: An icon that can be used to display sorting state.
+        -   name: Text
+            description: A text element that shows the row or column's title.
+
+-   name: HeaderViewDelegate
+    group: Table and Tree Views
+    description: |
+        A standard delegate that can be used in a header view.
+
+        \note This is separate from the HeaderView delegate because of Qt
+        versioning reasons.
+
+    type: HeaderViewDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    -   Highlighted
+    hints:
+        horizontal: Set when the delegate is intended for a horizontal header.
+        vertical: Set when the delegate is intended for a vertical header.
+    subelements:
+    -   name: Text
+        description: The text that should be displayed.
+
+-   name: SelectionRectangle
+    group: Table and Tree Views
+    description: |
+        A rectangle that is used to indicate which cells of a table or tree view
+        are selected.
+
+    type: SelectionRectangle
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+
+    subelements:
+    -   name: Handle
+        description: |
+            A handle that can be dragged to change the selection.
+
+            \note This is not a descendant of SelectionRectangle so you cannot
+            target it with descendant selectors.
+
+        type: SelectionRectangleHandle
+        states:
+        -   Enabled
+        -   VisualFocus

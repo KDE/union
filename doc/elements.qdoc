@@ -19,7 +19,32 @@ This document describes the various elements that Union knows about and their
 properties. Note that this page is based upon what the QtQuick output provides,
 as that is at time of writing the most complete output.
 
-\section1 States
+\section1 Element Overview
+
+Things that can be styled by Union are generally referred to as \i{elements}.
+Each element consists of a number of properties that allow style rules to target
+elements matching those properties. The matching style rules result in a set of
+properties that should be applied to the matching elements.
+
+An element can have children and each child can have its own children. Indirect
+children are referred to as \i{descendants}. Certain elements have specific
+children that are considered part of the element, even though they have their
+own properties. These are referred to as sub-elements.
+
+Each element can have the following properties:
+
+\section2 Type
+
+A string indicating the type of element.
+
+\section2 ID
+
+A string used as a unique identifier for a single element.
+
+\section2 States
+
+States represent different states the element can be in. Many of these are
+related to input. The following states are currently supported:
 
 \section3 Hovered
 Set whenever the element is hovered by a mouse or similar input device.
@@ -39,7 +64,15 @@ Set whenever the element is considered to be "on".
 \section3 Highlighted
 Set whenever the element should receive extra visual highlighting.
 
-\endtable
+\section2 Hints
+
+Hints are used as extra boolean flags that indicate something is different about
+the element.
+
+\section2 Attributes
+
+Attributes are key-value pairs that indicate something is different about the
+element, which is more complex than a simple binary state.
 
 \section1 Button-like Elements
 
@@ -88,10 +121,10 @@ A Button.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -178,10 +211,10 @@ similar locations.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -370,10 +403,10 @@ A button that is usually displayed in a circular manner.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -441,10 +474,10 @@ down for a certain amount of time.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -522,6 +555,411 @@ A simple text label.
 \endtable
 
 
+
+\section2 TextField
+
+A single-line input field for text.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TextField
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Placeholder
+
+The text displayed when there is no input. It serves as a hint for
+what kind of input is accepted. Generally displayed in a muted style.
+
+
+\table
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b placeholder
+    \li Indicates this is the element's placeholder text.
+
+
+\endtable
+
+
+
+
+\section2 TextField
+
+A single-line input field for text.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TextField
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Placeholder
+
+The text displayed when there is no input. It serves as a hint for
+what kind of input is accepted. Generally displayed in a muted style.
+
+
+\table
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b placeholder
+    \li Indicates this is the element's placeholder text.
+
+
+\endtable
+
+
+
+
+\section2 TextArea
+
+A multi-line input field for text.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TextArea
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Placeholder
+
+The text displayed when there is no input. It serves as a hint for
+what kind of input is accepted. Generally displayed in a muted style.
+
+
+\table
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b placeholder
+    \li Indicates this is the element's placeholder text.
+
+
+\endtable
+
+
+
+
+\section2 SearchField
+
+A single-line input field with a dropdown for searching things.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SearchField
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Placeholder
+
+The text displayed when there is no input. It serves as a hint for
+what kind of input is accepted. Generally displayed in a muted style.
+
+
+\table
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b placeholder
+    \li Indicates this is the element's placeholder text.
+
+
+\endtable
+
+
+\section4 SearchIndicator
+
+An icon that indicates the element is a search field.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SearchIndicator
+
+
+
+
+\endtable
+
+
+\section4 ClearIndicator
+
+An icon that, when clicked, will clear the element's text.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ClearIndicator
+
+
+
+
+\endtable
+
+
+\section4 Popup
+
+A popup that displays search results for the element.
+
+\note The popup is not a descendant of the SearchField, so cannot
+be targeted with descendant selectors. Instead use the type and hint
+to target the SearchField popup.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Popup
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b SearchField
+    \li Indicates that this is a search field popup.
+
+
+\endtable
+
+
+
+
+\section2 SpinBox
+
+A text field displaying a numerical value along with increase and
+decrease buttons.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SpinBox
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 3} \b{Hints}
+    \li \b editable
+    \li Set when the spinbox allows direct input by the user.
+\row
+    \li \b constrained
+    \li Set when the spinbox does not have enough space to display the text
+and buttons with the main layout. This can be used to switch to a
+more compact layout.
+
+\row
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Up/Increase Indicator
+
+The button used to increase the value of the spinbox. It consists of
+a rectangle with an icon centered in it.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+\row
+    \li{1, 3} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b increase
+    \li Used to indicate this is the up/increase indicator.
+
+
+\endtable
+
+
+\section4 Down/Decrease Indicator
+
+The button used to decrease the value of the spinbox. It consists of
+a rectangle with an icon centered in it.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+\row
+    \li{1, 3} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b decrease
+    \li Used to indicate this is the down/decrease indicator.
+
+
+\endtable
+
+
+
+
+\section2 DoubleSpinBox
+
+A SpinBox meant for editing floating-point values. Note that this
+element is exactly the same as SpinBox, except with one added hint.
+
+
+\table
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b doublespinbox
+    \li Used to indicate this is a DoubleSpinBox.
+
+
+\endtable
+
+
 \section1 Checkable Elements
 
 \section2 CheckBox
@@ -550,10 +988,10 @@ A checkable box with a label.
 \row
     \li{1, 2} \b{Hints}
     \li \b with-icon
-    \li Set whenever the button has an icon set.
+    \li Set whenever the element has an icon set.
 \row
     \li \b changed
-    \li Set whenever the button should visualize a changed state.
+    \li Set whenever the element should visualize a changed state.
 
 \row
     \li{1, 1} \b{Attributes}
@@ -561,10 +999,10 @@ A checkable box with a label.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -574,7 +1012,7 @@ A checkable box with a label.
 
 \section4 Icon
 
-The icon displayed by the button. Style it using the icon related
+The icon displayed by the element. Style it using the icon related
 properties.
 
 
@@ -582,7 +1020,7 @@ properties.
 
 \section4 Text
 
-The text displayed by the button. Style it using the text related
+The text displayed by the element. Style it using the text related
 properties.
 
 
@@ -590,8 +1028,8 @@ properties.
 
 \section4 Indicator
 
-The actual checkbox. Should display a checkmark or similar image
-when the checkbox's state is checked.
+A rectangle used to render the checkmark. This should show a
+checkmark image if the delegate's state is checked.
 
 
 \table
@@ -603,6 +1041,171 @@ when the checkbox's state is checked.
 
 
 \endtable
+
+
+
+
+\section2 RadioButton
+
+A checkable element that is one of several options.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} RadioButton
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the element has an icon set.
+\row
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the element. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+A rectangle used to render the radio indicator. This should show a
+radio image if the delegate's state is checked.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+
+
+
+\section2 Switch
+
+A toggle switch with a distinct "on" and "off" state.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Switch
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the element. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+A rectangle used as background for the handle.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle used as moving part of the switch indicator. This
+will be moved to the appropriate position based on switch state.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+
+
+
+\endtable
+
 
 
 
@@ -633,6 +1236,22 @@ A standard delegate for lists and other views.
 \row
     \li{2, 1} Highlighted
 
+\row
+    \li{1, 5} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the delegate has an icon set.
+\row
+    \li \b hover-enabled
+    \li Set when the delegate is supposed to show hover effects.
+\row
+    \li \b inside-list
+    \li Set when the delegate is used inside a list view.
+\row
+    \li \b inside-table
+    \li Set when the delegate is used inside a table view.
+\row
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
 
 \row
     \li{1, 1} \b{Attributes}
@@ -640,10 +1259,90 @@ A standard delegate for lists and other views.
     \li A hint indicating what sub-controls should be visible. \br
         Possible values:
         \list
-        \b icon-only Only display the icon.
-        \b text-only Only display the text.
-        \b text-beside-icon Display both icon and text in a row.
-        \b text-below-icon Display both icon and text with the text below the icon.
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+
+
+\section2 CheckDelegate
+
+A standard delegate with a checkmark.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} CheckDelegate
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 6} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the delegate has an icon set.
+\row
+    \li \b hover-enabled
+    \li Set when the delegate is supposed to show hover effects.
+\row
+    \li \b inside-list
+    \li Set when the delegate is used inside a list view.
+\row
+    \li \b inside-table
+    \li Set when the delegate is used inside a table view.
+\row
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+\row
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
         \endlist
 
 
@@ -669,8 +1368,8 @@ properties.
 
 \section4 Indicator
 
-The actual checkbox. Should display a checkmark or similar image
-when the checkbox's state is checked.
+A rectangle used to render the checkmark. This should show a
+checkmark image if the delegate's state is checked.
 
 
 \table
@@ -683,6 +1382,2536 @@ when the checkbox's state is checked.
 
 \endtable
 
+
+
+
+\section2 RadioDelegate
+
+A standard delegate with a radio button.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} RadioDelegate
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 6} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the delegate has an icon set.
+\row
+    \li \b hover-enabled
+    \li Set when the delegate is supposed to show hover effects.
+\row
+    \li \b inside-list
+    \li Set when the delegate is used inside a list view.
+\row
+    \li \b inside-table
+    \li Set when the delegate is used inside a table view.
+\row
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+\row
+    \li \b changed
+    \li Set whenever the element should visualize a changed state.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+A rectangle used to render the radio indicator. This should show a
+radio indicator image if the delegate's state is checked.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+
+
+
+\section2 SwitchDelegate
+
+A standard delegate with a switch.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SwitchDelegate
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 5} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the delegate has an icon set.
+\row
+    \li \b hover-enabled
+    \li Set when the delegate is supposed to show hover effects.
+\row
+    \li \b inside-list
+    \li Set when the delegate is used inside a list view.
+\row
+    \li \b inside-table
+    \li Set when the delegate is used inside a table view.
+\row
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+A rectangle used as background for the switch handle.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle used as handle of the switch indicator.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+
+
+
+\endtable
+
+
+
+
+
+\section2 SwipeDelegate
+
+A delegate that can be swiped to the side to reveal content underneath.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SwipeDelegate
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 5} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the delegate has an icon set.
+\row
+    \li \b hover-enabled
+    \li Set when the delegate is supposed to show hover effects.
+\row
+    \li \b inside-list
+    \li Set when the delegate is used inside a list view.
+\row
+    \li \b inside-table
+    \li Set when the delegate is used inside a table view.
+\row
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+
+\section1 Progress Indicators and Sliders
+
+\section2 BusyIndicator
+
+An element that indicates something is busy.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} BusyIndicator
+
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the indicator. Style it using the icon related
+properties. The indicator will spin the icon around.
+
+
+
+
+
+
+\section2 ProgressBar
+
+A bar indicating how far along a process is.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ProgressBar
+
+\row
+    \li{1, 1} \b{States}
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b indeterminate
+    \li Set when the progress bar is in an indeterminate (i.e. no progress
+range is known) state.
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Track
+
+A rectangle displaying the progress.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Track
+
+
+
+
+\endtable
+
+
+
+
+\section2 Slider
+
+A button that slides along a track to allow choosing a value.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Slider
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 3} \b{Hints}
+    \li \b horizontal
+    \li Set when the slider is oriented horizontally.
+\row
+    \li \b vertical
+    \li Set when the slider is oriented vertically.
+\row
+    \li \b changed
+    \li Set when the element should display a changed state.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle that can be dragged to choose the slider value.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+\section4 Fill
+
+A rectangle displaying the filled part of the slider.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Fill
+
+
+
+
+\endtable
+
+
+\section4 Tick Marks
+
+A slider can have tickmarks to show distinct values. Each tick mark
+is its own element.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TickMark
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b active
+    \li Set when the slider value is greater than the value the tick
+mark represents.
+
+
+
+\endtable
+
+
+
+
+\section2 RangeSlider
+
+A slider with two handles that allows selecting a range of values.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} RangeSlider
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the slider is oriented horizontally.
+\row
+    \li \b vertical
+    \li Set when the slider is oriented vertically
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 First Handle
+
+A rectangle that can be dragged to choose the minimum value for the
+range.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b first
+    \li Used to indicate this is the first handle.
+
+
+\endtable
+
+
+\section4 Second Handle
+
+A rectangle that can be dragged to choose the maximum value for the
+range.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b second
+    \li Used to indicate this is the first handle.
+
+
+\endtable
+
+
+\section4 Fill
+
+A rectangle displaying the filled part of the slider.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Fill
+
+
+
+
+\endtable
+
+
+
+
+\section2 Dial
+
+A circular slider for choosing a value.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Dial
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle that can be dragged to choose the dial's value.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section1 Application Structure
+
+\section2 ApplicationWindow
+
+A window element used as the base for applications.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ApplicationWindow
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b inactive
+    \li Set when the window does not currently have focus.
+
+
+\endtable
+
+
+
+\section2 Drawer
+
+A pane that slides in from a window edge.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Drawer
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b modal
+    \li Set when the drawer prevents interaction with the rest of the
+application when it is shown.
+
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b edge
+    \li Which edge of the window the drawer is attached to. \br
+        Possible values:
+        \list
+            \li \b left The left edge.
+            \li \b right The right edge.
+            \li \b top The top edge.
+            \li \b bottom The bottom edge.
+        \endlist
+
+
+\endtable
+
+
+
+\section2 Frame
+
+A frame that can be used to visually group elements together.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Frame
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 GroupBox
+
+A box with a title that can be used to visually group elements together.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} GroupBox
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Header
+
+A text element with a background that shows the title.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Header
+
+
+
+
+\endtable
+
+
+
+
+\section2 Page
+
+A content area with header and footer.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Page
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 Pane
+
+An area with a background that can be used to visually group elements together.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Pane
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 ScrollView
+
+An area with a scrollbar for displaying lists and similar scrollable content.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ScrollView
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 3} \b{Hints}
+    \li \b horizontal-scroll
+    \li Set when the scrollview can scroll horizontally.
+\row
+    \li \b vertical-scroll
+    \li Set when the scrollview can scroll vertically.
+\row
+    \li \b framed-background
+    \li Set when the scrollview should display a frame around itself.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Horizontal Scrollbar
+
+The scrollbar used for scrolling horizontally. See the ScrollBar
+type for details.
+
+
+
+
+\section4 Vertical Scrollbar
+
+The scrollbar used for scrolling vertically. See the ScrollBar
+type for details.
+
+
+
+
+
+
+\section2 ScrollBar
+
+A bar that indicates the size and position of a scrollable area.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ScrollBar
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 3} \b{Hints}
+    \li \b horizontal
+    \li Set when the scrollbar orientation is horizontal.
+\row
+    \li \b vertical
+    \li Set when the scrollbar orientation is vertical.
+\row
+    \li \b noninteractive
+    \li Set when the scrollbar is used only to display scroll position and
+cannot be dragged to set the scroll position.
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle used for the draggable part of the scrollbar.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+
+\section2 ScrollIndicator
+
+An indicator that indicates the scroll position of an area. This is
+generally used to indicate a non-interactive scroll position.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ScrollIndicator
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b orientation
+    \li Used to indicate which orientation the scroll indicator has. \br
+        Possible values:
+        \list
+            \li \b horizontal The scroll indicator is oriented horizontally.
+            \li \b vertical The scroll indicator is oriented vertically.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A rectangle used for the positioned part of the indicator.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+
+\section2 SplitView
+
+An area with a draggable split in the middle that can be used to display
+two sets of content side by side.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SplitView
+
+\row
+    \li{1, 5} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the split view is split horizontally.
+\row
+    \li \b vertical
+    \li Set when the split view is split vertically.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+The draggable area between two splits.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Handle
+
+
+
+
+\endtable
+
+
+
+
+\section2 StackView
+
+A stack of pages with the top-most page visible.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} StackView
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 SwipeView
+
+A view of multiple elements that allows swiping between those elements.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SwipeView
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the view is oriented horizontally.
+\row
+    \li \b vertical
+    \li Set when the view is oriented vertically.
+
+
+\endtable
+
+
+
+\section2 PageIndicator
+
+An element showing the number of pages and the current page.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} PageIndicator
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Delegate
+
+A rectangle used for a single page.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} PageIndicatorDelegate
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b current
+    \li Set when the delegate displays the current page.
+
+
+\endtable
+
+
+
+
+\section2 ToolBar
+
+An area used for elements that interact with the rest of the application.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ToolBar
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b header
+    \li Set when the toolbar is located in the header of an application window or page.
+\row
+    \li \b footer
+    \li Set when the toolbar is located in the footer of an application window or page.
+
+
+\endtable
+
+
+
+\section2 ToolSeparator
+
+A line used to separate groups of elements inside a tool bar.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ToolSeparator
+
+\row
+    \li{1, 1} \b{States}
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the separator is oriented horizontally.
+\row
+    \li \b vertical
+    \li Set when the separator is oriented vertically.
+
+
+\endtable
+
+
+
+\section2 TabBar
+
+A row of tab-like buttons that allows switching content.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TabBar
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b tab-position
+    \li The position of tabs relative to the content. \br
+        Possible values:
+        \list
+            \li \b top The tabs are located at the top of content.
+            \li \b bottom The tabs are located at the bottom of content.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Highlight
+
+A highlight for the current active tab.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TabBarHighlight
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b itemview-highlight
+    \li Used to indicate this is a highlight.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b tab-position
+    \li The position of the tab relative to content. \br
+        Possible values:
+        \list
+            \li \b top The tab is located at the top of content.
+            \li \b bottom The tab is located at the bottom of content.
+        \endlist
+
+
+\endtable
+
+
+
+
+\section2 TabButton
+
+A single button to active a tab.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TabButton
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b with-icon
+    \li Set whenever the button has an icon set.
+\row
+    \li \b itemview-highlight
+    \li Set when the tabbar requests highlighting the tab.
+
+\row
+    \li{1, 2} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+\row
+        \li \b direction
+    \li The position of the tab relative to content. \br
+        Possible values:
+        \list
+            \li \b top The tab is located at the top of content.
+            \li \b bottom The tab is located at the bottom of content.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+
+\section1 Popups and Menus
+
+\section2 Popup
+
+A generic popup that can overlay content over the main application content.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Popup
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 Overlay
+
+The overlay underneath popups.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Overlay
+
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b modal
+    \li Used to indicate the overlay is for modal popups.
+\row
+    \li \b modeless
+    \li Used to indicate the overlay is for modeless popups.
+
+
+\endtable
+
+
+
+\section2 Dialog
+
+A popup with a title, content and action buttons.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Dialog
+
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Header
+
+The label used for the title in the dialog's header.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Label
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b header
+    \li Used to indicate this label is used as a header.
+
+
+\endtable
+
+
+
+
+\section2 DialogButtonBox
+
+A container for dialog action buttons.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} DialogButtonBox
+
+
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b position
+    \li The position of the dialog button box. \br
+        Possible values:
+        \list
+            \li \b header The dialog button box is in the header of a dialog.
+            \li \b footer The dialog button box is in the footer of a dialog.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Delegate
+
+A button that is used to represent each dialog action.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Button
+
+
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b role
+    \li The dialog button box role associated with this button. \br
+        Possible values:
+        \list
+            \li \b invalid The button has an invalid role.
+            \li \b accept The button is used to accept the dialog.
+            \li \b reject The button is used to reject the dialog.
+            \li \b destructive The button is used for a destructive action.
+            \li \b action The button is used for a generic action.
+            \li \b help The button is used to call up some form of help.
+            \li \b yes The button is used to confirm the dialog.
+            \li \b no The button is used to deny the dialog.
+            \li \b reset The button is used to reset the contents of the dialog.
+            \li \b apply The button is used to apply the changes made in the dialog.
+        \endlist
+
+
+\endtable
+
+
+
+
+\section2 Menu
+
+A popup containing a list of interactive elements.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Menu
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Delegate
+
+The default element for menu items is MenuItem. See there for details.
+
+
+
+
+
+\section2 MenuItem
+
+A single entry in a menu.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} MenuItem
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b exclusive
+    \li Set when the menu item is checkable and only a single entry between
+multiple menu items can be checked. Generally used to change the
+indicator into a radio button style.
+
+\row
+    \li \b with-submenu
+    \li Set when the menu item will show a submenu on hover or click.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the element. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the element. Style it using the text related
+properties.
+
+
+
+
+\section4 ShortcutText
+
+A text that shows what shortcut is assigned to the menu item.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ShortcutText
+
+
+
+
+\endtable
+
+
+\section4 Indicator
+
+A rectangle used to display the checkmark for checkable items.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+
+\section4 Arrow
+
+An icon used to display an arrow icon when the menu item will show a
+sub menu.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Arrow
+
+
+
+
+\endtable
+
+
+
+
+\section2 MenuSeparator
+
+A separator between different menu items.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} MenuSeparator
+
+\row
+    \li{1, 1} \b{States}
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+
+\section2 MenuBar
+
+A bar containing items that will show menus.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} MenuBar
+
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Delegate
+
+The default item used for entries of a menu bar is MenuBarItem.
+
+
+
+
+
+\section2 MenuBarItem
+
+An item inside a menu bar that will show a menu when clicked.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} MenuBarItem
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+
+
+\endtable
+
+
+
+\section2 ToolTip
+
+A popup that shows more descriptive text for an element.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ToolTip
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+
+\section1 Table and Tree View
+
+\section2 TableViewDelegate
+
+A standard delegate for table views.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TableViewDelegate
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 4} \b{Hints}
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+\row
+    \li \b editing
+    \li Set when the user is currently editing the table cell.
+\row
+    \li \b current
+    \li Set when the table cell is the currently selected cell.
+\row
+    \li \b selected
+    \li Set when the table cell is in the selected set of cells.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+\section4 EditDelegate
+
+A text field that is used when the user is editing the table cell.
+
+
+
+
+
+
+\section2 TreeViewDelegate
+
+A standard delegate for tree views.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} TreeViewDelegate
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 5} \b{Hints}
+    \li \b alternating-colors
+    \li Set when the delegate should be using alternating row colors.
+\row
+    \li \b expanded
+    \li Set when the children of the tree node are visible.
+\row
+    \li \b editing
+    \li Set when the user is currently editing the table cell.
+\row
+    \li \b current
+    \li Set when the tree cell is the currently selected cell.
+\row
+    \li \b selected
+    \li Set when the tree cell is in the selected set of cells.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the element. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+\section4 Indentation
+
+A transparent item used to reserve space for tree indentation. This
+should be placed at the start of the delegate.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indentation
+
+
+
+
+\endtable
+
+
+\section4 Indicator
+
+An icon used to indicate the tree node has children. Usually styled
+as an arrow.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+
+\section4 EditDelegate
+
+A text field that is used when the user is editing the tree cell.
+
+
+
+
+
+\section1 Table and Tree Views
+
+\section2 Header View
+
+A horizontal or vertical view of table headers.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} HeaderView
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the header view is oriented horizontally.
+\row
+    \li \b vertical
+    \li Set when the header view is oriented vertically.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Delegate
+
+An element used to show a single entry of the view.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} HeaderViewDelegate
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 4} \b{Hints}
+    \li \b horizontal
+    \li Set when the delegate is used for a horizontally oriented header view.
+\row
+    \li \b vertical
+    \li Set when the delegate is used for a vertically oriented header view.
+\row
+    \li \b sort-ascending
+    \li Set when the delegate should indicate ascending sorting is
+active for the associated table or tree column.
+
+\row
+    \li \b sort-descending
+    \li Set when the delegate should indicate descending sorting is
+active for the associated table or tree column.
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+An icon that can be used to display sorting state.
+
+
+
+\section4 Text
+
+A text element that shows the row or column's title.
+
+
+
+
+
+
+\section2 HeaderViewDelegate
+
+A standard delegate that can be used in a header view.
+
+\note This is separate from the HeaderView delegate because of Qt
+versioning reasons.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} HeaderViewDelegate
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b horizontal
+    \li Set when the delegate is intended for a horizontal header.
+\row
+    \li \b vertical
+    \li Set when the delegate is intended for a vertical header.
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Text
+
+The text that should be displayed.
+
+
+
+
+
+\section2 SelectionRectangle
+
+A rectangle that is used to indicate which cells of a table or tree view
+are selected.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SelectionRectangle
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Handle
+
+A handle that can be dragged to change the selection.
+
+\note This is not a descendant of SelectionRectangle so you cannot
+target it with descendant selectors.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} SelectionRectangleHandle
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} VisualFocus
+
+
+
+\endtable
+
+
+
+\section1 Calendar
+
+\section2 MonthGrid
+
+A grid displaying days of a month.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} MonthGrid
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Day
+
+A label showing a specific day.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Label
+
+\row
+    \li{1, 2} \b{States}
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b current-month
+    \li Set when the label shows a day of the currently selected month.
+\row
+    \li \b today
+    \li Set when the label show the current day.
+
+
+\endtable
+
+
+
+
+\section2 DayOfWeekRow
+
+A row displaying the names of days of the week.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} DayOfWeekRow
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Label
+
+A label showing a single day name.
+
+
+
+
+
+\section2 WeekNumberColumn
+
+A column displaying the number of a week.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} WeekNumberColumn
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Label
+
+A label showing a single week number.
+
+
+
+
+\section1 Kirigami
+
+\section2 Application Header
+
+Base type for Kirigami's application headers.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ApplicationHeader
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b with-separator
+    \li Set when the header should show a separator below it.
+
+
+\endtable
+
+
+
+\section2 Card
+
+An element grouping together information in a view.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Card
+
+\row
+    \li{1, 7} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+\row
+    \li{2, 1} Highlighted
+
+
+
+\endtable
+
+
+
+\section2 Chip
+
+A small element used to show tags or similar information.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Chip
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b closable
+    \li Set when the chip should show a button to remove it.
+\row
+    \li \b interactive
+    \li Set when the chip can be interacted with.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the chip. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the chip. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+A toolbutton used for removing or other actions on the chip.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} ToolButton
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b indicator
+    \li Used to indicate this is an indicator toolbutton.
+
+
+\endtable
+
+
+
+
+\section2 Heading
+
+A text element that is used as a title for a different section of content.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Heading
+
+
+\row
+    \li{1, 3} \b{Hints}
+    \li \b level-{1-6}
+    \li The level of the heading. Lower levels mean bigger headings.
+\row
+    \li \b primary
+    \li Set when the heading should be shown emphasized as a primary heading.
+\row
+    \li \b secondary
+    \li Set when the heading should be shown deemphasized as a secondary heading.
+
+
+\endtable
+
+
+
+\section2 InlineMessage
+
+A text with a distinct background used to display messages to the user.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} InlineMessage
+
+
+
+\row
+    \li{1, 2} \b{Attributes}
+        \li \b type
+    \li The type of message. \br
+        Possible values:
+        \list
+            \li \b positive The message shows something succeeded or similarly positive.
+            \li \b warning The message gives a warning that something is wrong.
+            \li \b error The message shows an error.
+        \endlist
+
+\row
+        \li \b position
+    \li Where the message is located relative to content. \br
+        Possible values:
+        \list
+            \li \b inline The message is shown inline with the content.
+            \li \b header The message is shown as a header on top of the content.
+            \li \b footer The message is shown as a footer below the content.
+        \endlist
+
+
+\endtable
+
+
+
+\section2 NavigationTabBar
+
+A tab bar used for navigating between different pages of an application.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} NavigationTabBar
+
+\row
+    \li{1, 4} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Enabled
+
+\row
+    \li{1, 2} \b{Hints}
+    \li \b header
+    \li Set when the tab bar is located in the header of the application.
+\row
+    \li \b footer
+    \li Set when the tab bar is located in the footer of the application.
+
+
+\endtable
+
+
+
+\section2 NavigationTabButton
+
+A button for use in a NavigationTabBar.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} NavigationTabButton
+
+\row
+    \li{1, 6} \b{States}
+    \li{2, 1} Hovered
+\row
+    \li{2, 1} ActiveFocus
+\row
+    \li{2, 1} VisualFocus
+\row
+    \li{2, 1} Pressed
+\row
+    \li{2, 1} Checked
+\row
+    \li{2, 1} Enabled
+
+
+\row
+    \li{1, 2} \b{Attributes}
+        \li \b direction
+    \li Where the tab button is located relative to the content. \br
+        Possible values:
+        \list
+            \li \b top The button is above the content.
+            \li \b bottom The button is below the content.
+        \endlist
+
+\row
+        \li \b display
+    \li A hint indicating what sub-controls should be visible. \br
+        Possible values:
+        \list
+            \li \b icon-only Only display the icon.
+            \li \b text-only Only display the text.
+            \li \b text-beside-icon Display both icon and text in a row.
+            \li \b text-below-icon Display both icon and text with the text below the icon.
+        \endlist
+
+
+\endtable
+
+\section3 Sub-Elements
+
+\section4 Icon
+
+The icon displayed by the button. Style it using the icon related
+properties.
+
+
+
+
+\section4 Text
+
+The text displayed by the button. Style it using the text related
+properties.
+
+
+
+
+\section4 Indicator
+
+An extra icon that indicates something about the button.
+
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} Indicator
+
+
+
+
+\endtable
+
+
+
+
+\section2 OverlayDrawer
+
+A drawer used as base for several Kirigami drawers.
+
+\table
+\row
+    \li \b{Type}
+    \li{2, 1} OverlayDrawer
+
+
+\row
+    \li{1, 1} \b{Hints}
+    \li \b modal
+    \li Set when the drawer should block interaction with the application when visible.
+
+\row
+    \li{1, 1} \b{Attributes}
+        \li \b edge
+    \li Which edge of the window the drawer is attached to. \br
+        Possible values:
+        \list
+            \li \b left The left edge.
+            \li \b right The right edge.
+            \li \b top The top edge.
+            \li \b bottom The bottom edge.
+        \endlist
+
+
+\endtable
 
 
 

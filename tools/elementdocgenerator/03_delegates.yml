@@ -1,0 +1,210 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for delegate elements
+
+-   name: ItemDelegate
+    group: Delegate Elements
+    description: A standard delegate for lists and other views.
+
+    type: ItemDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the delegate has an icon set.
+        hover-enabled: Set when the delegate is supposed to show hover effects.
+        inside-list: Set when the delegate is used inside a list view.
+        inside-table: Set when the delegate is used inside a table view.
+        alternating-colors: Set when the delegate should be using alternating row colors.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+
+-   name: CheckDelegate
+    group: Delegate Elements
+    description: A standard delegate with a checkmark.
+
+    type: CheckDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the delegate has an icon set.
+        hover-enabled: Set when the delegate is supposed to show hover effects.
+        inside-list: Set when the delegate is used inside a list view.
+        inside-table: Set when the delegate is used inside a table view.
+        alternating-colors: Set when the delegate should be using alternating row colors.
+        changed: Set whenever the element should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used to render the checkmark. This should show a
+            checkmark image if the delegate's state is checked.
+        type: Indicator
+
+-   name: RadioDelegate
+    group: Delegate Elements
+    description: A standard delegate with a radio button.
+
+    type: RadioDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the delegate has an icon set.
+        hover-enabled: Set when the delegate is supposed to show hover effects.
+        inside-list: Set when the delegate is used inside a list view.
+        inside-table: Set when the delegate is used inside a table view.
+        alternating-colors: Set when the delegate should be using alternating row colors.
+        changed: Set whenever the element should visualize a changed state.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used to render the radio indicator. This should show a
+            radio indicator image if the delegate's state is checked.
+        type: Indicator
+
+-   name: SwitchDelegate
+    group: Delegate Elements
+    description: A standard delegate with a switch.
+
+    type: SwitchDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the delegate has an icon set.
+        hover-enabled: Set when the delegate is supposed to show hover effects.
+        inside-list: Set when the delegate is used inside a list view.
+        inside-table: Set when the delegate is used inside a table view.
+        alternating-colors: Set when the delegate should be using alternating row colors.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.
+    -   name: Indicator
+        description: |
+            A rectangle used as background for the switch handle.
+        type: Indicator
+
+        subelements:
+        -   name: Handle
+            description: A rectangle used as handle of the switch indicator.
+            type: Handle
+
+-   name: SwipeDelegate
+    group: Delegate Elements
+    description: A delegate that can be swiped to the side to reveal content underneath.
+
+    type: SwipeDelegate
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        with-icon: Set whenever the delegate has an icon set.
+        hover-enabled: Set when the delegate is supposed to show hover effects.
+        inside-list: Set when the delegate is used inside a list view.
+        inside-table: Set when the delegate is used inside a table view.
+        alternating-colors: Set when the delegate should be using alternating row colors.
+    attributes:
+        display:
+            description: A hint indicating what sub-controls should be visible.
+            values:
+                icon-only: Only display the icon.
+                text-only: Only display the text.
+                text-beside-icon: Display both icon and text in a row.
+                text-below-icon: Display both icon and text with the text below the icon.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the button. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the button. Style it using the text related
+            properties.

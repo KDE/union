@@ -1,0 +1,159 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for popup elements.
+
+-   name: Popup
+    group: Popups and Menus
+    description: A generic popup that can overlay content over the main application content.
+
+    type: Popup
+    states:
+    -   ActiveFocus
+    -   Enabled
+
+-   name: Overlay
+    group: Popups and Menus
+    description: The overlay underneath popups.
+
+    type: Overlay
+    hints:
+        modal: Used to indicate the overlay is for modal popups.
+        modeless: Used to indicate the overlay is for modeless popups.
+
+-   name: Dialog
+    group: Popups and Menus
+    description: A popup with a title, content and action buttons.
+
+    type: Dialog
+    subelements:
+    -   name: Header
+        description: The label used for the title in the dialog's header.
+
+        type: Label
+        hints:
+            header: Used to indicate this label is used as a header.
+
+-   name: DialogButtonBox
+    group: Popups and Menus
+    description: A container for dialog action buttons.
+
+    type: DialogButtonBox
+    attributes:
+        position:
+            description: The position of the dialog button box.
+            values:
+                header: The dialog button box is in the header of a dialog.
+                footer: The dialog button box is in the footer of a dialog.
+
+    subelements:
+    -   name: Delegate
+        description: A button that is used to represent each dialog action.
+
+        type: Button
+        attributes:
+            role:
+                description: The dialog button box role associated with this button.
+                values:
+                    invalid: The button has an invalid role.
+                    accept: The button is used to accept the dialog.
+                    reject: The button is used to reject the dialog.
+                    destructive: The button is used for a destructive action.
+                    action: The button is used for a generic action.
+                    help: The button is used to call up some form of help.
+                    yes: The button is used to confirm the dialog.
+                    no: The button is used to deny the dialog.
+                    reset: The button is used to reset the contents of the dialog.
+                    apply: The button is used to apply the changes made in the dialog.
+
+-   name: Menu
+    group: Popups and Menus
+    description: A popup containing a list of interactive elements.
+
+    type: Menu
+    states:
+    -   ActiveFocus
+    -   Enabled
+    subelements:
+    -   name: Delegate
+        description: The default element for menu items is MenuItem. See there for details.
+
+-   name: MenuItem
+    group: Popups and Menus
+    description: A single entry in a menu.
+
+    type: MenuItem
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+    hints:
+        exclusive: |
+            Set when the menu item is checkable and only a single entry between
+            multiple menu items can be checked. Generally used to change the
+            indicator into a radio button style.
+        with-submenu: Set when the menu item will show a submenu on hover or click.
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the element. Style it using the icon related
+            properties.
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: ShortcutText
+        description: A text that shows what shortcut is assigned to the menu item.
+        type: ShortcutText
+    -   name: Indicator
+        description: A rectangle used to display the checkmark for checkable items.
+        type: Indicator
+    -   name: Arrow
+        description: |
+            An icon used to display an arrow icon when the menu item will show a
+            sub menu.
+        type: Arrow
+
+-   name: MenuSeparator
+    group: Popups and Menus
+    description: A separator between different menu items.
+
+    type: MenuSeparator
+    states:
+    -   Enabled
+
+-   name: MenuBar
+    group: Popups and Menus
+    description: A bar containing items that will show menus.
+
+    type: MenuBar
+    subelements:
+    -   name: Delegate
+        description: The default item used for entries of a menu bar is MenuBarItem.
+
+-   name: MenuBarItem
+    group: Popups and Menus
+    description: An item inside a menu bar that will show a menu when clicked.
+
+    type: MenuBarItem
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    -   Highlighted
+
+-   name: ToolTip
+    group: Popups and Menus
+    description: A popup that shows more descriptive text for an element.
+
+    type: ToolTip
+    states:
+    -   ActiveFocus
+    -   Enabled

@@ -1,0 +1,54 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for calendar elements.
+
+-   name: MonthGrid
+    group: Calendar
+    description: A grid displaying days of a month.
+
+    type: MonthGrid
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    subelements:
+    -   name: Day
+        description: A label showing a specific day.
+
+        type: Label
+        states:
+        -   ActiveFocus
+        -   Enabled
+        hints:
+            current-month: Set when the label shows a day of the currently selected month.
+            today: Set when the label show the current day.
+
+-   name: DayOfWeekRow
+    group: Calendar
+    description: A row displaying the names of days of the week.
+
+    type: DayOfWeekRow
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    subelements:
+    -   name: Label
+        description: A label showing a single day name.
+
+-   name: WeekNumberColumn
+    group: Calendar
+    description: A column displaying the number of a week.
+
+    type: WeekNumberColumn
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    subelements:
+    -   name: Label
+        description: A label showing a single week number.

@@ -1,0 +1,145 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for progress indicators and sliders.
+
+-   name: BusyIndicator
+    group: Progress Indicators and Sliders
+    description: An element that indicates something is busy.
+
+    type: BusyIndicator
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the indicator. Style it using the icon related
+            properties. The indicator will spin the icon around.
+
+-   name: ProgressBar
+    group: Progress Indicators and Sliders
+    description: A bar indicating how far along a process is.
+
+    type: ProgressBar
+    states:
+    -   Enabled
+    hints:
+        indeterminate: |
+            Set when the progress bar is in an indeterminate (i.e. no progress
+            range is known) state.
+    subelements:
+    -   name: Track
+        description: |
+            A rectangle displaying the progress.
+        type: Track
+
+-   name: Slider
+    group: Progress Indicators and Sliders
+    description: A button that slides along a track to allow choosing a value.
+
+    type: Slider
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    hints:
+        horizontal: Set when the slider is oriented horizontally.
+        vertical: Set when the slider is oriented vertically.
+        changed: Set when the element should display a changed state.
+    subelements:
+    -   name: Handle
+        description: A rectangle that can be dragged to choose the slider value.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   VisualFocus
+        -   Pressed
+        -   Enabled
+
+    -   name: Fill
+        description: A rectangle displaying the filled part of the slider.
+
+        type: Fill
+
+    -   name: Tick Marks
+        description: |
+            A slider can have tickmarks to show distinct values. Each tick mark
+            is its own element.
+
+        type: TickMark
+        hints:
+            active: |
+                Set when the slider value is greater than the value the tick
+                mark represents.
+
+-   name: RangeSlider
+    group: Progress Indicators and Sliders
+    description: A slider with two handles that allows selecting a range of values.
+
+    type: RangeSlider
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        horizontal: Set when the slider is oriented horizontally.
+        vertical: Set when the slider is oriented vertically
+    subelements:
+    -   name: First Handle
+        description: |
+            A rectangle that can be dragged to choose the minimum value for the
+            range.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   Pressed
+        -   Enabled
+        hints:
+            first: Used to indicate this is the first handle.
+
+    -   name: Second Handle
+        description: |
+            A rectangle that can be dragged to choose the maximum value for the
+            range.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   Pressed
+        -   Enabled
+        hints:
+            second: Used to indicate this is the first handle.
+
+    -   name: Fill
+        description: A rectangle displaying the filled part of the slider.
+
+        type: Fill
+
+-   name: Dial
+    group: Progress Indicators and Sliders
+    description: A circular slider for choosing a value.
+
+    type: Dial
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
+    subelements:
+    -   name: Handle
+        description: A rectangle that can be dragged to choose the dial's value.
+
+        type: Handle
+        states:
+        -   Hovered
+        -   ActiveFocus
+        -   VisualFocus
+        -   Pressed
+        -   Enabled

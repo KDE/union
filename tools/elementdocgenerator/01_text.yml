@@ -1,0 +1,180 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Element reference for text elements
+
+-   name: Label
+    group: Text Elements
+    description: A simple text label.
+
+    type: Label
+    states:
+    -   Enabled
+
+-   name: TextField
+    group: Text Elements
+    description: A single-line input field for text.
+
+    type: TextField
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        changed: Set whenever the element should visualize a changed state.
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Placeholder
+        description: |
+            The text displayed when there is no input. It serves as a hint for
+            what kind of input is accepted. Generally displayed in a muted style.
+        hints:
+            placeholder: Indicates this is the element's placeholder text.
+
+-   name: TextField
+    group: Text Elements
+    description: A single-line input field for text.
+
+    type: TextField
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        changed: Set whenever the element should visualize a changed state.
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Placeholder
+        description: |
+            The text displayed when there is no input. It serves as a hint for
+            what kind of input is accepted. Generally displayed in a muted style.
+        hints:
+            placeholder: Indicates this is the element's placeholder text.
+
+-   name: TextArea
+    group: Text Elements
+    description: A multi-line input field for text.
+
+    type: TextArea
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        changed: Set whenever the element should visualize a changed state.
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Placeholder
+        description: |
+            The text displayed when there is no input. It serves as a hint for
+            what kind of input is accepted. Generally displayed in a muted style.
+        hints:
+            placeholder: Indicates this is the element's placeholder text.
+
+-   name: SearchField
+    group: Text Elements
+    description: A single-line input field with a dropdown for searching things.
+
+    type: SearchField
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Placeholder
+        description: |
+            The text displayed when there is no input. It serves as a hint for
+            what kind of input is accepted. Generally displayed in a muted style.
+        hints:
+            placeholder: Indicates this is the element's placeholder text.
+    -   name: SearchIndicator
+        description: |
+            An icon that indicates the element is a search field.
+        type: SearchIndicator
+    -   name: ClearIndicator
+        description: |
+            An icon that, when clicked, will clear the element's text.
+        type: ClearIndicator
+    -   name: Popup
+        description: |
+            A popup that displays search results for the element.
+
+            \note The popup is not a descendant of the SearchField, so cannot
+            be targeted with descendant selectors. Instead use the type and hint
+            to target the SearchField popup.
+        type: Popup
+        hints:
+            SearchField: Indicates that this is a search field popup.
+
+-   name: SpinBox
+    group: Text Elements
+    description: |
+        A text field displaying a numerical value along with increase and
+        decrease buttons.
+
+    type: SpinBox
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Enabled
+    hints:
+        editable: Set when the spinbox allows direct input by the user.
+        constrained: |
+            Set when the spinbox does not have enough space to display the text
+            and buttons with the main layout. This can be used to switch to a
+            more compact layout.
+        changed: Set whenever the element should visualize a changed state.
+    subelements:
+    -   name: Text
+        description: |
+            The text displayed by the element. Style it using the text related
+            properties.
+    -   name: Up/Increase Indicator
+        description: |
+            The button used to increase the value of the spinbox. It consists of
+            a rectangle with an icon centered in it.
+        type: Indicator
+        states:
+        -   Hovered
+        -   Pressed
+        -   Enabled
+        hints:
+            increase: Used to indicate this is the up/increase indicator.
+    -   name: Down/Decrease Indicator
+        description: |
+            The button used to decrease the value of the spinbox. It consists of
+            a rectangle with an icon centered in it.
+        type: Indicator
+        states:
+        -   Hovered
+        -   Pressed
+        -   Enabled
+        hints:
+            decrease: Used to indicate this is the down/decrease indicator.
+
+-   name: DoubleSpinBox
+    group: Text Elements
+    description: |
+        A SpinBox meant for editing floating-point values. Note that this
+        element is exactly the same as SpinBox, except with one added hint.
+
+    hints:
+        doublespinbox: Used to indicate this is a DoubleSpinBox.
