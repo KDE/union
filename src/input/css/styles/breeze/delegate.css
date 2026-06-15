@@ -110,4 +110,28 @@ itemviewrow,
 itemviewitem {
     inset: 0px;
     padding: 0px;
+
+    &.position-invalid {
+        border-radius: 0px;
+    }
+
+    &.position-beginning {
+        border-right: none;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    &.position-middle {
+        border-right: none;
+        border-left: none;
+        border-radius: 0px;
+    }
+
+    &.position-end {
+        border-left: none;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+
 }

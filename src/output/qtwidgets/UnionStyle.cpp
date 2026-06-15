@@ -149,6 +149,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         return;
         // Standalone elements
     case QStyle::PE_PanelItemViewItem:
+        // TODO: handle beginning/middle/end
         drawStyleOption(QStringLiteral("ItemViewItem"), option, painter, PrimitiveType::Standalone);
         return;
     case QStyle::PE_PanelItemViewRow:

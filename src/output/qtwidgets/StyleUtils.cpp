@@ -6,6 +6,7 @@
 #include <StyleRegistry.h>
 
 #include <QStyleOption>
+#include <QTableView>
 
 Union::Element::States statesFromOption(const QStyleOption *option)
 {
@@ -46,33 +47,64 @@ QStringList hintsFromOption(const QStyleOption *option)
     QStringList hints;
     switch ((QStyleOption::OptionType)option->type) {
     case QStyleOption::SO_FocusRect: {
-        const auto optionFocusRect = static_cast<const QStyleOptionFocusRect *>(option);
-        if (optionFocusRect->state.testFlag(QStyle::State_FocusAtBorder)) {
-            hints.append(QStringLiteral("focus-at-border"));
+        if (const auto optionFocusRect = static_cast<const QStyleOptionFocusRect *>(option)) {
+            if (optionFocusRect->state.testFlag(QStyle::State_FocusAtBorder)) {
+                hints.append(QStringLiteral("focus-at-border"));
+            }
         }
     } break;
     case QStyleOption::SO_Button: {
-        const auto optionButton = static_cast<const QStyleOptionButton *>(option);
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::None)) {
-            return hints;
+        if (const auto optionButton = static_cast<const QStyleOptionButton *>(option)) {
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::None)) {
+                return hints;
+            }
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
+                hints.append(QStringLiteral("flat"));
+            }
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::HasMenu)) {
+                hints.append(QStringLiteral("with-menu"));
+            }
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)) {
+                hints.append(QStringLiteral("default-button"));
+            }
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
+                hints.append(QStringLiteral("auto-default-button"));
+            }
+            if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::CommandLinkButton)) {
+                hints.append(QStringLiteral("command-link-button"));
+            }
+            if (!optionButton->state.testFlag(QStyle::State_AutoRaise)) {
+                hints.append(QStringLiteral("raised"));
+            }
         }
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
-            hints.append(QStringLiteral("flat"));
-        }
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::HasMenu)) {
-            hints.append(QStringLiteral("with-menu"));
-        }
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)) {
-            hints.append(QStringLiteral("default-button"));
-        }
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
-            hints.append(QStringLiteral("auto-default-button"));
-        }
-        if (optionButton->features.testFlag(QStyleOptionButton::ButtonFeature::CommandLinkButton)) {
-            hints.append(QStringLiteral("command-link-button"));
-        }
-        if (!optionButton->state.testFlag(QStyle::State_AutoRaise)) {
-            hints.append(QStringLiteral("raised"));
+    } break;
+    case QStyleOption::SO_ViewItem: {
+        if (const auto optionViewItem = static_cast<const QStyleOptionViewItem *>(option)) {
+            auto viewItemPosition = optionViewItem->viewItemPosition;
+            const auto table = qobject_cast<const QTableView *>(optionViewItem->widget);
+
+            // For tables and such, we just want to select one item.
+            if (table) {
+                viewItemPosition = QStyleOptionViewItem::Invalid;
+            }
+
+            switch (viewItemPosition) {
+            case QStyleOptionViewItem::Invalid:
+                hints.append(QStringLiteral("position-invalid"));
+                break;
+            case QStyleOptionViewItem::Beginning:
+                hints.append(QStringLiteral("position-beginning"));
+                break;
+            case QStyleOptionViewItem::Middle:
+                hints.append(QStringLiteral("position-middle"));
+                break;
+            case QStyleOptionViewItem::End:
+                hints.append(QStringLiteral("position-end"));
+                break;
+            case QStyleOptionViewItem::OnlyOne:
+                hints.append(QStringLiteral("position-onlyone"));
+                break;
+            }
         }
     } break;
     case QStyleOption::SO_Tab:
@@ -82,7 +114,6 @@ QStringList hintsFromOption(const QStyleOption *option)
     case QStyleOption::SO_ToolBox:
     case QStyleOption::SO_Header:
     case QStyleOption::SO_DockWidget:
-    case QStyleOption::SO_ViewItem:
     case QStyleOption::SO_TabWidgetFrame:
     case QStyleOption::SO_TabBarBase:
     case QStyleOption::SO_RubberBand:
@@ -152,6 +183,35 @@ Union::Element::ColorSet colorsetFromOption(const QStyleOption *option)
 
 QVariantMap attributesFromOption(const QStyleOption *option)
 {
+    switch ((QStyleOption::OptionType)option->type) {
+    case QStyleOption::SO_ViewItem:
+    case QStyleOption::SO_Default:
+    case QStyleOption::SO_FocusRect:
+    case QStyleOption::SO_Button:
+    case QStyleOption::SO_Tab:
+    case QStyleOption::SO_MenuItem:
+    case QStyleOption::SO_Frame:
+    case QStyleOption::SO_ProgressBar:
+    case QStyleOption::SO_ToolBox:
+    case QStyleOption::SO_Header:
+    case QStyleOption::SO_DockWidget:
+    case QStyleOption::SO_TabWidgetFrame:
+    case QStyleOption::SO_TabBarBase:
+    case QStyleOption::SO_RubberBand:
+    case QStyleOption::SO_ToolBar:
+    case QStyleOption::SO_GraphicsItem:
+    case QStyleOption::SO_Complex:
+    case QStyleOption::SO_Slider:
+    case QStyleOption::SO_SpinBox:
+    case QStyleOption::SO_ToolButton:
+    case QStyleOption::SO_ComboBox:
+    case QStyleOption::SO_TitleBar:
+    case QStyleOption::SO_GroupBox:
+    case QStyleOption::SO_SizeGrip:
+    case QStyleOption::SO_CustomBase:
+    case QStyleOption::SO_ComplexCustomBase:
+        break;
+    }
     return QVariantMap();
 }
 
