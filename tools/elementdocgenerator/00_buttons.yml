@@ -213,5 +213,3 @@
         description: |
             A rectangle that indicates how far the DelayButton has progressed.
         type: Fill
-
-

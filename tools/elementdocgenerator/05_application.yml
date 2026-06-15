@@ -11,7 +11,6 @@
     hints:
         inactive: Set when the window does not currently have focus.
 
-
 -   name: Drawer
     group: Application Structure
     description: A pane that slides in from a window edge.
@@ -55,7 +54,6 @@
     subelements:
     -   name: Header
         description: A text element with a background that shows the title.
-
         type: Header
 
 -   name: Page
@@ -175,11 +173,11 @@
 
     type: SplitView
     states:
-        -   Hovered
-        -   ActiveFocus
-        -   VisualFocus
-        -   Pressed
-        -   Enabled
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Enabled
     hints:
         horizontal: Set when the split view is split horizontally.
         vertical: Set when the split view is split vertically.
