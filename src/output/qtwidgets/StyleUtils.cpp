@@ -23,7 +23,7 @@ Union::Element::States statesFromOption(const QStyleOption *option)
     if (option->state.testFlag(QStyle::State_On)) {
         states |= Union::Element::State::Checked;
     }
-    if (!option->state.testFlag(QStyle::State_Raised)) {
+    if (option->state.testFlag(QStyle::State_Sunken)) {
         states |= Union::Element::State::Pressed;
     }
     return states;
