@@ -20,10 +20,19 @@ enum class SubNodeIndex {
     BottomRight,
 };
 
+enum class PrimitiveType {
+    Standalone,
+    Panel,
+    Frame,
+};
+
 /*!
  * \brief Draw a Union StylePropertyGroup, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
+void drawBackground(QPainter *painter,
+                    const QRect &rect,
+                    const Union::Properties::StylePropertyGroup *style,
+                    const PrimitiveType primitiveType = PrimitiveType::Standalone);
 
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
@@ -54,4 +63,4 @@ void drawCornerProperty(QPainter *painter,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);
 
-void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter);
+void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter, PrimitiveType primitiveType);

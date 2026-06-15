@@ -35,7 +35,7 @@ Union::Element::States statesFromOption(const QStyleOption *option)
         states.setFlag(Union::Element::State::Pressed, false);
     }
     if (option->state.testFlag(QStyle::State_Selected)) {
-        states.setFlag(Union::Element::State::VisualFocus);
+        states.setFlag(Union::Element::State::Highlighted);
     }
 
     return states;

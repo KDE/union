@@ -11,7 +11,8 @@ itemdelegate,
 checkdelegate,
 radiodelegate,
 switchdelegate,
-swipedelegate
+swipedelegate,
+itemviewitem
 {
     padding: var(--large-spacing);
     inset: var(--small-spacing);
@@ -103,4 +104,10 @@ switchdelegate[display="text-under-icon"] > indicator {
     layout-alignment: content start start -1;
     margin-right: -36px;
     margin-top: var(--small-spacing);
+}
+
+itemviewrow,
+itemviewitem {
+    inset: 0px;
+    padding: 0px;
 }
