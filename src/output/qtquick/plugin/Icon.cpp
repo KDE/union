@@ -4,6 +4,7 @@
 #include "Icon.h"
 
 #include <QQmlProperty>
+#include <QQuickRenderControl>
 #include <QSGImageNode>
 
 #include <StyleRegistry.h>
@@ -180,9 +181,16 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
     imageNode->setOwnsTexture(true);
     imageNode->setFiltering(QSGTexture::Nearest);
 
-    if (m_iconChanged || !imageNode->texture()) {
+    auto renderWindow = QQuickRenderControl::renderWindowFor(window());
+    if (!renderWindow) {
+        renderWindow = window();
+    }
+
+    auto dpr = renderWindow->devicePixelRatio();
+
+    if (m_iconChanged || !imageNode->texture() || !qFuzzyCompare(m_iconDpr, dpr)) {
         const auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
-        auto image = m_icon.pixmap(m_iconSize, window()->devicePixelRatio(), mode).toImage();
+        auto image = m_icon.pixmap(m_iconSize, dpr, mode).toImage();
         imageNode->setTexture(window()->createTextureFromImage(image, QQuickWindow::TextureCanUseAtlas));
         m_iconChanged = false;
     }
