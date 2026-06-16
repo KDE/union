@@ -401,6 +401,8 @@ void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPaint
 {
     QList<Union::Element::Ptr> elements;
 
+    bool hasFocusRect = false;
+
     auto unionElement = Union::Element::create();
     unionElement->setType(elementType);
     unionElement->setStates(statesFromOption(opt));
@@ -417,6 +419,7 @@ void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPaint
         indicator->setColorSet(colorsetFromOption(opt));
         indicator->setAttributes(attributesFromOption(opt));
         elements.append(indicator);
+        hasFocusRect = true;
     }
 
     const auto style = Union::StyleRegistry::instance()->defaultStyle();
@@ -426,6 +429,6 @@ void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPaint
     query->execute();
     auto properties = query->properties();
 
-    auto rect = prepareRectangle(opt, properties).toRect();
+    auto rect = prepareRectangle(opt, properties, hasFocusRect).toRect();
     drawBackground(painter, rect, properties, primitiveType);
 }

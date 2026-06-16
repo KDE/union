@@ -20,6 +20,6 @@ QStringList hintsFromOption(const QStyleOption *option);
 Union::Element::ColorSet colorsetFromOption(const QStyleOption *option);
 QVariantMap attributesFromOption(const QStyleOption *option);
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, const QMarginsF &adjustments = QMarginsF());
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, bool hasVisualFocusRect);
 
 Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &element);

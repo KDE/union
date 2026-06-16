@@ -37,7 +37,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         element->setHints(hintsFromOption(option));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties, QMarginsF(2, 2, 2, 2)).toRect();
+        auto rect = prepareRectangle(option, properties, true).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
@@ -63,7 +63,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setHint(QStringLiteral("raised"), !flat);
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
+        auto rect = prepareRectangle(option, properties, true).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionToolButton labelOption(*buttonOption);
@@ -81,7 +81,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setColorSet(colorsetFromOption(option));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
+        auto rect = prepareRectangle(option, properties, false).toRect();
         drawBackground(painter, rect, properties);
         if ((groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && !groupBoxOption->text.isEmpty()) {
             QRect textRect = subControlRect(CC_GroupBox, option, SC_GroupBoxLabel, widget);

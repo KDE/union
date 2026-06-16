@@ -236,7 +236,7 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     return QVariantMap();
 }
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, const QMarginsF &adjustments)
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, bool hasVisualFocusRect)
 {
     // Shrink the widget rect by the insets
     // TODO: we may have to keep it as a QRectF here
@@ -248,10 +248,13 @@ QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::Sty
     }
 
     // Make sure to take out the space left for the visual focus rect
-    rect.setLeft(rect.left() + adjustments.left());
-    rect.setRight(rect.right() - adjustments.right());
-    rect.setTop(rect.top() + adjustments.top());
-    rect.setBottom(rect.bottom() - adjustments.bottom());
+    if (hasVisualFocusRect) {
+        QMarginsF adjustments(2, 2, 2, 2);
+        rect.setLeft(rect.left() + adjustments.left());
+        rect.setRight(rect.right() - adjustments.right());
+        rect.setTop(rect.top() + adjustments.top());
+        rect.setBottom(rect.bottom() - adjustments.bottom());
+    }
 
     return rect;
 }
