@@ -140,7 +140,11 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         return;
         // Standalone elements
     case QStyle::PE_PanelLineEdit:
-        // TODO hide frames inside comboboxes
+        // For spinboxes and comboboxes, we do not want to draw this element
+        // TODO: remove if this is not needed after making the complex controls
+        if (widget->parentWidget()->inherits("QComboBox") || widget->parentWidget()->inherits("QAbstractSpinBox")) {
+            return;
+        }
         drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Standalone);
         return;
     case QStyle::PE_FrameMenu:
