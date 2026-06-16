@@ -125,6 +125,10 @@ T.ComboBox {
         width: Math.max(control.width, implicitWidth)
         height: Math.min(contentItem.implicitHeight + topPadding + bottomPadding, control.Window.height)
 
+        // Ensure the popup is moved to be within the window if it goes out of
+        // bounds.
+        margins: 0
+
         contentItem: ScrollView {
             implicitWidth: popupContent.implicitWidth + leftPadding + rightPadding
             implicitHeight: popupContent.implicitHeight + topPadding + bottomPadding
