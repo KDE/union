@@ -86,7 +86,10 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
                 painter->save();
                 painter->setClipPath(path);
 
-                auto loadedImage = imageCache.load(image->source().value(), innerRect.size());
+                QSizeF imageSize;
+                imageSize.setHeight(style->layout()->height().value_or(16));
+                imageSize.setWidth(style->layout()->width().value_or(16));
+                auto loadedImage = imageCache.load(image->source().value(), imageSize);
                 if (image->flags().value().testAnyFlag(Union::Properties::ImageFlag::Mask)) {
                     painter->setBrush(Qt::transparent);
                     painter->setPen(image->maskColor()->toQColor());
