@@ -80,9 +80,11 @@ T.ComboBox {
         color: Union.Style.properties.icon.color
     }
 
-    contentItem: TextInput {
+    contentItem: T.TextField {
         Union.PositionedItem.source: Union.PositionerSource.Text
 
+        implicitWidth: Math.max(contentWidth, 1)
+        implicitHeight: Math.max(contentHeight, metrics.height)
         clip: true
 
         color: Union.Style.properties.text.color ?? control.palette.text
@@ -92,12 +94,23 @@ T.ComboBox {
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
+        font: control.font
 
         horizontalAlignment: Qt.AlignLeft
 
         selectByMouse: control.selectTextByMouse
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
+
+        // It is possible for the combobox to not have any text. In that case, the
+        // TextField does not have a height, so we end up with the combobox
+        // resizing oddly if the text is larger than the default height, so we need
+        // to account for the text height in the implicit height, even if no text is
+        // set.
+        FontMetrics {
+            id: metrics
+            font: control.font
+        }
     }
 
     Union.Icon {
