@@ -173,7 +173,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         drawStyleOption(QStringLiteral("Tabbar"), option, painter, PrimitiveType::Standalone);
         return;
     case QStyle::PE_FrameFocusRect:
-        drawStyleOption(QStringLiteral("FocusFrame"), option, painter, PrimitiveType::Standalone);
+        drawStyleOption(QStringLiteral("FocusFrame"), option, painter, PrimitiveType::Frame);
         return;
     case QStyle::PE_FrameDockWidget:
         drawStyleOption(QStringLiteral("DockWidget"), option, painter, PrimitiveType::Standalone);
@@ -182,6 +182,12 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         drawStyleOption(QStringLiteral("GroupBox"), option, painter, PrimitiveType::Standalone);
         return;
         // Indicators
+    case QStyle::PE_IndicatorCheckBox:
+        drawStyleOption(QStringLiteral("CheckBox"), option, painter, PrimitiveType::Indicator);
+        return;
+    case QStyle::PE_IndicatorRadioButton:
+        drawStyleOption(QStringLiteral("RadioButton"), option, painter, PrimitiveType::Indicator);
+        return;
     case QStyle::PE_IndicatorArrowDown:
     case QStyle::PE_IndicatorArrowLeft:
     case QStyle::PE_IndicatorArrowRight:
@@ -189,12 +195,10 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
     case QStyle::PE_IndicatorBranch:
     case QStyle::PE_IndicatorButtonDropDown:
     case QStyle::PE_IndicatorItemViewItemCheck:
-    case QStyle::PE_IndicatorCheckBox:
     case QStyle::PE_IndicatorDockWidgetResizeHandle:
     case QStyle::PE_IndicatorHeaderArrow:
     case QStyle::PE_IndicatorMenuCheckMark:
     case QStyle::PE_IndicatorProgressChunk:
-    case QStyle::PE_IndicatorRadioButton:
     case QStyle::PE_IndicatorSpinDown:
     case QStyle::PE_IndicatorSpinMinus:
     case QStyle::PE_IndicatorSpinPlus:

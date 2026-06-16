@@ -3,9 +3,13 @@
 
 #include "StyleDrawing.h"
 
+#include "StyleUtils.h"
 #include <Element.h>
+#include <ElementQuery.h>
 #include <QPainter>
 #include <QPainterPath>
+#include <QStyleOption>
+#include <StyleRegistry.h>
 #include <StyleUtils.h>
 #include <algorithm>
 
@@ -81,7 +85,21 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
             if (const auto image = background->image(); image && image->source()) {
                 painter->save();
                 painter->setClipPath(path);
-                painter->drawImage(innerRect, imageCache.load(image->source().value(), innerRect.size()));
+
+                auto loadedImage = imageCache.load(image->source().value(), innerRect.size());
+                if (image->flags().value().testAnyFlag(Union::Properties::ImageFlag::Mask)) {
+                    painter->setBrush(Qt::transparent);
+                    painter->setPen(image->maskColor()->toQColor());
+                    QBitmap mask = QBitmap::fromImage(loadedImage.createAlphaMask());
+                    auto imageRect = innerRect;
+                    imageRect.setWidth(mask.width());
+                    imageRect.setHeight(mask.height());
+                    imageRect.moveCenter(innerRect.center());
+                    painter->drawPixmap(imageRect.topLeft(), mask);
+                } else {
+                    painter->drawImage(innerRect, loadedImage);
+                }
+
                 painter->restore();
             }
         }
@@ -378,15 +396,32 @@ void drawCornerProperty(QPainter *painter,
 
 void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter, PrimitiveType primitiveType)
 {
+    QList<Union::Element::Ptr> elements;
+
     auto unionElement = Union::Element::create();
     unionElement->setType(elementType);
     unionElement->setStates(statesFromOption(opt));
     unionElement->setHints(hintsFromOption(opt));
     unionElement->setColorSet(colorsetFromOption(opt));
     unionElement->setAttributes(attributesFromOption(opt));
+    elements.append(unionElement);
 
-    // TODO: Do we need to set anything from styleoption here?
-    const auto properties = prepareProperties(unionElement);
+    if (primitiveType == PrimitiveType::Indicator) {
+        auto indicator = Union::Element::create();
+        indicator->setType(QStringLiteral("Indicator"));
+        indicator->setStates(statesFromOption(opt));
+        indicator->setHints(hintsFromOption(opt));
+        indicator->setColorSet(colorsetFromOption(opt));
+        indicator->setAttributes(attributesFromOption(opt));
+        elements.append(indicator);
+    }
+
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto query = std::make_unique<Union::ElementQuery>(style);
+
+    query->setElements(elements);
+    query->execute();
+    auto properties = query->properties();
 
     auto rect = prepareRectangle(opt, properties).toRect();
     drawBackground(painter, rect, properties, primitiveType);

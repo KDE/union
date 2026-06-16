@@ -166,7 +166,7 @@ focusframe,
 dockwidget {
     border-radius: var(--corner-radius);
 
-    &:active-focus {
+    &:visual-focus {
         border: 1px solid var(--highlight-color);
     }
 }

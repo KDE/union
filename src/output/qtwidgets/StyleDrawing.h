@@ -24,6 +24,7 @@ enum class PrimitiveType {
     Standalone,
     Panel,
     Frame,
+    Indicator,
 };
 
 /*!
