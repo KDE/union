@@ -30,6 +30,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 #}
 {%- set name_map = {
     "display-visible": "visibility",
+    "display-opacity": "opacity",
     "layout-width": "width",
     "layout-height": "height",
     "layout-spacing": "spacing",
@@ -73,6 +74,7 @@ Note: Keep in sync with the mapping in properties.css.j2
     "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
     "Union::Properties::TextElide": "none | left | middle | right",
     "visibility": "visible | hidden",
+    "opacity": "<number>",
 }%}
 
 {# Recursively print all properties of an object, with a prefix #}

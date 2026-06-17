@@ -49,6 +49,13 @@ private Q_SLOTS:
             property->setVisible(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
+        {
+            qreal value;
+            property->setOpacity(value);
+            QVERIFY(property->hasAnyValue());
+            property->setOpacity(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -65,6 +72,7 @@ private Q_SLOTS:
         QVERIFY(!destination->hasAnyValue());
 
         source->setVisible(bool{});
+        source->setOpacity(qreal{});
 
         QVERIFY(source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
@@ -74,6 +82,7 @@ private Q_SLOTS:
         QVERIFY(destination->hasAnyValue());
 
         QCOMPARE(destination->visible(), source->visible());
+        QCOMPARE(destination->opacity(), source->opacity());
     }
 
     void testDataStream()

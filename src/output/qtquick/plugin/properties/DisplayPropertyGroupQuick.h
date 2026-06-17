@@ -52,6 +52,15 @@ public:
     QJSValue visible() const;
     Q_SIGNAL void visibleChanged();
 
+    /*!
+     * \qmlproperty qreal DisplayPropertyGroupQuick::opacity
+     *
+     * Exposes DisplayPropertyGroup::opacity to QML.
+     */
+    Q_PROPERTY(QJSValue opacity READ opacity NOTIFY opacityChanged)
+    QJSValue opacity() const;
+    Q_SIGNAL void opacityChanged();
+
 private:
     QuickStyle *m_style = nullptr;
 

@@ -75,6 +75,18 @@ public:
     void setVisible(const std::optional<bool> &newValue);
 
     /*!
+        The opacity of the element.
+     */
+    std::optional<qreal> opacity() const;
+
+    /*!
+     * Set the value of opacity.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setOpacity(const std::optional<qreal> &newValue);
+
+    /*!
      * Returns if this property group has any value set.
      *
      * Note that for any property that is also a property group, this will also
