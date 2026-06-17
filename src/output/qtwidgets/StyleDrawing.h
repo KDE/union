@@ -30,10 +30,7 @@ enum class PrimitiveType {
 /*!
  * \brief Draw a Union StylePropertyGroup, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter,
-                    const QRect &rect,
-                    const Union::Properties::StylePropertyGroup *style,
-                    const PrimitiveType primitiveType = PrimitiveType::Standalone);
+void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
 
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
@@ -64,4 +61,4 @@ void drawCornerProperty(QPainter *painter,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);
 
-void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter, PrimitiveType primitiveType);
+void drawElement(const QString elementName, const QStyleOption *opt, QPainter *painter, const QWidget *widget);

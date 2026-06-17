@@ -236,7 +236,7 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     return QVariantMap();
 }
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, bool hasVisualFocusRect)
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties)
 {
     // Shrink the widget rect by the insets
     // TODO: we may have to keep it as a QRectF here
@@ -248,7 +248,9 @@ QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::Sty
     }
 
     // Make sure to take out the space left for the visual focus rect
-    if (hasVisualFocusRect) {
+    // Button and ComboBox types have focus rect so we need to reserve room for them
+    if (option->type == QStyleOption::OptionType::SO_Button || option->type == QStyleOption::OptionType::SO_ComboBox) {
+        // TODO: get the size from the focusRect subelement
         QMarginsF adjustments(2, 2, 2, 2);
         rect.setLeft(rect.left() + adjustments.left());
         rect.setRight(rect.right() - adjustments.right());
@@ -269,4 +271,65 @@ Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &el
 
     auto properties = query->properties();
     return properties;
+}
+
+QStringList setupMemberList(QWidget *widget)
+{
+    if (!widget) {
+        return QStringList();
+    }
+    QStringList members;
+    // We will have to check what items the widget inherits from,
+    // as far as I know there is no better way to do this.
+    const QMap<const char *, QString> parentClasses = {
+        {"QCheckBox", QStringLiteral("CheckBox")},
+        {"QRadioButton", QStringLiteral("RadioButton")},
+        {"QPushButton", QStringLiteral("Button")},
+        {"QToolButton", QStringLiteral("ToolButton")},
+        {"QDial", QStringLiteral("Dial")},
+        {"QScrollBar", QStringLiteral("ScrollBar")},
+        {"QSlider", QStringLiteral("Slider")},
+        {"QAbstractSpinox", QStringLiteral("SpinBox")},
+        {"QComboBox", QStringLiteral("ComboBox")},
+        {"QDialog", QStringLiteral("Dialog")},
+        {"QDialogButtonox", QStringLiteral("DialogButtonBox")},
+        {"QDockWidget", QStringLiteral("Dock")},
+        {"QFocusFrame", QStringLiteral("FocusFrame")},
+        {"QFrame", QStringLiteral("Frame")},
+        {"QGroupBox", QStringLiteral("GroupBox")},
+        {"QKeySequenceEit", QStringLiteral("KeySequenceEdit")},
+        {"QLineEdit", QStringLiteral("TextField")},
+        {"QMainWindow", QStringLiteral("ApplicationWindow")},
+        {"QMdiSubWinow", QStringLiteral("MdiSubWindow")},
+        {"QMenu", QStringLiteral("Menu")},
+        {"QMenuBar", QStringLiteral("MenuBar")},
+        {"QProgressBar", QStringLiteral("ProgressBar")},
+        {"QRubberBand", QStringLiteral("RubberBand")},
+        {"QSizeGrip", QStringLiteral("SizeGrip")},
+        {"QSplitterHandle", QStringLiteral("SplitterHandle")},
+        {"QStatusBar", QStringLiteral("StatusBar")},
+        {"QTabBar", QStringLiteral("TabBar")},
+        {"QTabWidget", QStringLiteral("TabWidget")},
+        {"QToolBar", QStringLiteral("ToolBar")},
+    };
+
+    for (const auto classes : parentClasses.asKeyValueRange()) {
+        if (widget->inherits(classes.first)) {
+            members.prepend(classes.second);
+            break;
+        }
+    }
+
+    auto parent = widget->parentWidget();
+    while (parent) {
+        for (const auto classes : parentClasses.asKeyValueRange()) {
+            if (parent->inherits(classes.first)) {
+                members.prepend(classes.second);
+                break;
+            }
+        }
+        parent = parent->parentWidget();
+    }
+
+    return members;
 }

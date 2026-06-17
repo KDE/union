@@ -37,7 +37,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         element->setHints(hintsFromOption(option));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties, true).toRect();
+        auto rect = prepareRectangle(option, properties).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
@@ -63,7 +63,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setHint(QStringLiteral("raised"), !flat);
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties, true).toRect();
+        auto rect = prepareRectangle(option, properties).toRect();
         drawBackground(painter, rect, properties);
 
         QStyleOptionToolButton labelOption(*buttonOption);
@@ -81,7 +81,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setColorSet(colorsetFromOption(option));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties, false).toRect();
+        auto rect = prepareRectangle(option, properties).toRect();
         drawBackground(painter, rect, properties);
         if ((groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && !groupBoxOption->text.isEmpty()) {
             QRect textRect = subControlRect(CC_GroupBox, option, SC_GroupBoxLabel, widget);
@@ -108,35 +108,35 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         // Frames
     case QStyle::PE_FrameWindow:
     case QStyle::PE_Frame:
-        drawStyleOption(QStringLiteral("Frame"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("Frame"), option, painter, widget);
         return;
     case QStyle::PE_FrameDefaultButton:
     case QStyle::PE_FrameButtonBevel:
-        drawStyleOption(QStringLiteral("Button"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("Button"), option, painter, widget);
         return;
     case QStyle::PE_FrameButtonTool:
-        drawStyleOption(QStringLiteral("ToolButton"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("ToolButton"), option, painter, widget);
         return;
     case QStyle::PE_FrameLineEdit:
-        drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("TextField"), option, painter, widget);
         return;
     case QStyle::PE_FrameStatusBarItem:
-        drawStyleOption(QStringLiteral("Statusbar"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("Statusbar"), option, painter, widget);
         return;
         // Panels
     case QStyle::PE_PanelButtonCommand:
     case QStyle::PE_PanelButtonBevel:
-        drawStyleOption(QStringLiteral("Button"), option, painter, PrimitiveType::Panel);
+        drawElement(QStringLiteral("Button"), option, painter, widget);
         return;
     case QStyle::PE_PanelButtonTool:
-        drawStyleOption(QStringLiteral("ToolButton"), option, painter, PrimitiveType::Panel);
+        drawElement(QStringLiteral("ToolButton"), option, painter, widget);
         return;
     case QStyle::PE_PanelStatusBar:
-        drawStyleOption(QStringLiteral("Statusbar"), option, painter, PrimitiveType::Panel);
+        drawElement(QStringLiteral("Statusbar"), option, painter, widget);
         return;
     case QStyle::PE_Widget:
         // Relates to PE_Frame
-        drawStyleOption(QStringLiteral("Panel"), option, painter, PrimitiveType::Panel);
+        drawElement(QStringLiteral("Panel"), option, painter, widget);
         return;
         // Standalone elements
     case QStyle::PE_PanelLineEdit:
@@ -145,52 +145,52 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         if (widget->parentWidget()->inherits("QComboBox") || widget->parentWidget()->inherits("QAbstractSpinBox")) {
             return;
         }
-        drawStyleOption(QStringLiteral("TextField"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("TextField"), option, painter, widget);
         return;
     case QStyle::PE_FrameMenu:
     case QStyle::PE_PanelMenu:
         // These two are confusing. Apparently they're bot their distinct items.'
-        drawStyleOption(QStringLiteral("Menu"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Menu"), option, painter, widget);
         return;
     case QStyle::PE_PanelItemViewItem:
-        drawStyleOption(QStringLiteral("ItemViewItem"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("ItemViewItem"), option, painter, widget);
         return;
     case QStyle::PE_PanelItemViewRow:
-        drawStyleOption(QStringLiteral("ItemViewRow"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("ItemViewRow"), option, painter, widget);
         return;
     case QStyle::PE_PanelScrollAreaCorner:
-        drawStyleOption(QStringLiteral("ScrollAreaCorner"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("ScrollAreaCorner"), option, painter, widget);
         return;
     case QStyle::PE_PanelTipLabel:
-        drawStyleOption(QStringLiteral("Tooltip"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Tooltip"), option, painter, widget);
         return;
     case QStyle::PE_PanelToolBar:
-        drawStyleOption(QStringLiteral("Toolbar"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Toolbar"), option, painter, widget);
         return;
     case QStyle::PE_PanelMenuBar:
-        drawStyleOption(QStringLiteral("Menubar"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Menubar"), option, painter, widget);
         return;
     case QStyle::PE_FrameTabWidget:
-        drawStyleOption(QStringLiteral("Tabbutton"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Tabbutton"), option, painter, widget);
         return;
     case QStyle::PE_FrameTabBarBase:
-        drawStyleOption(QStringLiteral("Tabbar"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("Tabbar"), option, painter, widget);
         return;
     case QStyle::PE_FrameFocusRect:
-        drawStyleOption(QStringLiteral("FocusFrame"), option, painter, PrimitiveType::Frame);
+        drawElement(QStringLiteral("FocusFrame"), option, painter, widget);
         return;
     case QStyle::PE_FrameDockWidget:
-        drawStyleOption(QStringLiteral("DockWidget"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("DockWidget"), option, painter, widget);
         return;
     case QStyle::PE_FrameGroupBox:
-        drawStyleOption(QStringLiteral("GroupBox"), option, painter, PrimitiveType::Standalone);
+        drawElement(QStringLiteral("GroupBox"), option, painter, widget);
         return;
         // Indicators
     case QStyle::PE_IndicatorCheckBox:
-        drawStyleOption(QStringLiteral("CheckBox"), option, painter, PrimitiveType::Indicator);
+        drawElement(QStringLiteral("Indicator"), option, painter, widget);
         return;
     case QStyle::PE_IndicatorRadioButton:
-        drawStyleOption(QStringLiteral("RadioButton"), option, painter, PrimitiveType::Indicator);
+        drawElement(QStringLiteral("Indicator"), option, painter, widget);
         return;
     case QStyle::PE_IndicatorArrowDown:
     case QStyle::PE_IndicatorArrowLeft:
@@ -380,5 +380,8 @@ void UnionStyle::polish(QWidget *widget)
     if (qobject_cast<QPushButton *>(widget)) {
         widget->setAttribute(Qt::WA_Hover);
     }
+
+    widget->setProperty(property_union_member_list, setupMemberList(widget));
+
     QProxyStyle::polish(widget);
 }

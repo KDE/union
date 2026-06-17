@@ -17,7 +17,7 @@
 
 static Union::LruImageCache imageCache;
 
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style, PrimitiveType primitiveType)
+void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style)
 {
     QRectF innerRect = rect;
     // Borders
@@ -64,112 +64,107 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
     }
 
     // Draw background
-    if (primitiveType != PrimitiveType::Frame) {
-        if (const auto background = style->background()) {
-            QPainterPath path;
+    if (const auto background = style->background()) {
+        QPainterPath path;
 
-            // Draw less complex rectangles if complex ones are not needed
-            if (allCornerRadiiEqual && !constrainedRadii.topLeft) {
-                path.addRect(innerRect);
-            } else if (allCornerRadiiEqual) {
-                path.addRoundedRect(innerRect, innerCornerRadii.topLeft, innerCornerRadii.topLeft);
+        // Draw less complex rectangles if complex ones are not needed
+        if (allCornerRadiiEqual && !constrainedRadii.topLeft) {
+            path.addRect(innerRect);
+        } else if (allCornerRadiiEqual) {
+            path.addRoundedRect(innerRect, innerCornerRadii.topLeft, innerCornerRadii.topLeft);
+        } else {
+            path = unevenRadiiRectPath(innerRect, innerCornerRadii);
+        }
+
+        if (const auto color = background->color()) {
+            painter->setPen(Qt::transparent);
+            painter->setBrush(color.value().toQColor());
+            painter->drawPath(path);
+        }
+        if (const auto image = background->image(); image && image->source()) {
+            painter->save();
+            painter->setClipPath(path);
+
+            QSizeF imageSize;
+            imageSize.setHeight(style->layout()->height().value_or(16));
+            imageSize.setWidth(style->layout()->width().value_or(16));
+            auto loadedImage = imageCache.load(image->source().value(), imageSize);
+            if (image->flags().value().testAnyFlag(Union::Properties::ImageFlag::Mask)) {
+                painter->setBrush(Qt::transparent);
+                painter->setPen(image->maskColor()->toQColor());
+                QBitmap mask = QBitmap::fromImage(loadedImage.createAlphaMask());
+                auto imageRect = innerRect;
+                imageRect.setWidth(mask.width());
+                imageRect.setHeight(mask.height());
+                imageRect.moveCenter(innerRect.center());
+                painter->drawPixmap(imageRect.topLeft(), mask);
             } else {
-                path = unevenRadiiRectPath(innerRect, innerCornerRadii);
+                painter->drawImage(innerRect, loadedImage);
             }
 
-            if (const auto color = background->color()) {
-                painter->setPen(Qt::transparent);
-                painter->setBrush(color.value().toQColor());
-                painter->drawPath(path);
-            }
-            if (const auto image = background->image(); image && image->source()) {
-                painter->save();
-                painter->setClipPath(path);
-
-                QSizeF imageSize;
-                imageSize.setHeight(style->layout()->height().value_or(16));
-                imageSize.setWidth(style->layout()->width().value_or(16));
-                auto loadedImage = imageCache.load(image->source().value(), imageSize);
-                if (image->flags().value().testAnyFlag(Union::Properties::ImageFlag::Mask)) {
-                    painter->setBrush(Qt::transparent);
-                    painter->setPen(image->maskColor()->toQColor());
-                    QBitmap mask = QBitmap::fromImage(loadedImage.createAlphaMask());
-                    auto imageRect = innerRect;
-                    imageRect.setWidth(mask.width());
-                    imageRect.setHeight(mask.height());
-                    imageRect.moveCenter(innerRect.center());
-                    painter->drawPixmap(imageRect.topLeft(), mask);
-                } else {
-                    painter->drawImage(innerRect, loadedImage);
-                }
-
-                painter->restore();
-            }
+            painter->restore();
         }
     }
-
     // Draw borders and corners
-    if (primitiveType != PrimitiveType::Panel) {
-        if (const auto border = style->border()) {
-            painter->setRenderHint(QPainter::Antialiasing, true);
-            // Make simpler border shapes if complex ones are not necessary
-            if (allBordersEqual && allBorderColorsEqual && allCornerRadiiEqual) { // All radii and borders identical
-                QPainterPath rectangularOutline;
-                QPainterPath innerRectangularOutline;
+    if (const auto border = style->border()) {
+        painter->setRenderHint(QPainter::Antialiasing, true);
+        // Make simpler border shapes if complex ones are not necessary
+        if (allBordersEqual && allBorderColorsEqual && allCornerRadiiEqual) { // All radii and borders identical
+            QPainterPath rectangularOutline;
+            QPainterPath innerRectangularOutline;
 
-                innerRectangularOutline.addRoundedRect(innerRect, innerCornerRadii.topLeft, innerCornerRadii.topLeft);
-                rectangularOutline.addRoundedRect(rect, constrainedRadii.topLeft, constrainedRadii.topLeft);
+            innerRectangularOutline.addRoundedRect(innerRect, innerCornerRadii.topLeft, innerCornerRadii.topLeft);
+            rectangularOutline.addRoundedRect(rect, constrainedRadii.topLeft, constrainedRadii.topLeft);
 
-                rectangularOutline = rectangularOutline.subtracted(innerRectangularOutline);
+            rectangularOutline = rectangularOutline.subtracted(innerRectangularOutline);
 
-                painter->setPen(Qt::transparent);
-                painter->setBrush(border->top()->color().value().toQColor());
-                painter->drawPath(rectangularOutline);
-            } else if (allBordersEqual && allBorderColorsEqual) { // All borders identical
-                QPainterPath rectangularOutline;
-                QPainterPath innerRectangularOutline;
+            painter->setPen(Qt::transparent);
+            painter->setBrush(border->top()->color().value().toQColor());
+            painter->drawPath(rectangularOutline);
+        } else if (allBordersEqual && allBorderColorsEqual) { // All borders identical
+            QPainterPath rectangularOutline;
+            QPainterPath innerRectangularOutline;
 
-                innerRectangularOutline = unevenRadiiRectPath(innerRect, innerCornerRadii);
-                rectangularOutline = unevenRadiiRectPath(rect, constrainedRadii);
+            innerRectangularOutline = unevenRadiiRectPath(innerRect, innerCornerRadii);
+            rectangularOutline = unevenRadiiRectPath(rect, constrainedRadii);
 
-                rectangularOutline = rectangularOutline.subtracted(innerRectangularOutline);
+            rectangularOutline = rectangularOutline.subtracted(innerRectangularOutline);
 
-                painter->setPen(Qt::transparent);
-                painter->setBrush(border->top()->color().value().toQColor());
-                painter->drawPath(rectangularOutline);
-            } else { // All other complex scenarios
-                const auto corners = style->corners();
-                // Draw borders
-                if (const auto top = border->top()) {
-                    drawLineProperty(painter, rect, SubNodeIndex::Top, borderSizes, top, corners);
-                }
-                if (const auto right = border->right()) {
-                    drawLineProperty(painter, rect, SubNodeIndex::Right, borderSizes, right, corners);
-                }
-                if (const auto bottom = border->bottom()) {
-                    drawLineProperty(painter, rect, SubNodeIndex::Bottom, borderSizes, bottom, corners);
-                }
-                if (const auto left = border->left()) {
-                    drawLineProperty(painter, rect, SubNodeIndex::Left, borderSizes, left, corners);
-                }
+            painter->setPen(Qt::transparent);
+            painter->setBrush(border->top()->color().value().toQColor());
+            painter->drawPath(rectangularOutline);
+        } else { // All other complex scenarios
+            const auto corners = style->corners();
+            // Draw borders
+            if (const auto top = border->top()) {
+                drawLineProperty(painter, rect, SubNodeIndex::Top, borderSizes, top, corners);
+            }
+            if (const auto right = border->right()) {
+                drawLineProperty(painter, rect, SubNodeIndex::Right, borderSizes, right, corners);
+            }
+            if (const auto bottom = border->bottom()) {
+                drawLineProperty(painter, rect, SubNodeIndex::Bottom, borderSizes, bottom, corners);
+            }
+            if (const auto left = border->left()) {
+                drawLineProperty(painter, rect, SubNodeIndex::Left, borderSizes, left, corners);
+            }
 
-                // Draw corners if at least one border is present
-                if (borderSizes.top() || borderSizes.left()) {
-                    const auto topLeft = corners ? corners->topLeft() : nullptr;
-                    drawCornerProperty(painter, rect, SubNodeIndex::TopLeft, border, topLeft);
-                }
-                if (borderSizes.top() || borderSizes.right()) {
-                    const auto topRight = corners ? corners->topRight() : nullptr;
-                    drawCornerProperty(painter, rect, SubNodeIndex::TopRight, border, topRight);
-                }
-                if (borderSizes.bottom() || borderSizes.right()) {
-                    const auto bottomRight = corners ? corners->bottomRight() : nullptr;
-                    drawCornerProperty(painter, rect, SubNodeIndex::BottomRight, border, bottomRight);
-                }
-                if (borderSizes.bottom() || borderSizes.left()) {
-                    const auto bottomLeft = corners ? corners->bottomLeft() : nullptr;
-                    drawCornerProperty(painter, rect, SubNodeIndex::BottomLeft, border, bottomLeft);
-                }
+            // Draw corners if at least one border is present
+            if (borderSizes.top() || borderSizes.left()) {
+                const auto topLeft = corners ? corners->topLeft() : nullptr;
+                drawCornerProperty(painter, rect, SubNodeIndex::TopLeft, border, topLeft);
+            }
+            if (borderSizes.top() || borderSizes.right()) {
+                const auto topRight = corners ? corners->topRight() : nullptr;
+                drawCornerProperty(painter, rect, SubNodeIndex::TopRight, border, topRight);
+            }
+            if (borderSizes.bottom() || borderSizes.right()) {
+                const auto bottomRight = corners ? corners->bottomRight() : nullptr;
+                drawCornerProperty(painter, rect, SubNodeIndex::BottomRight, border, bottomRight);
+            }
+            if (borderSizes.bottom() || borderSizes.left()) {
+                const auto bottomLeft = corners ? corners->bottomLeft() : nullptr;
+                drawCornerProperty(painter, rect, SubNodeIndex::BottomLeft, border, bottomLeft);
             }
         }
     }
@@ -397,29 +392,24 @@ void drawCornerProperty(QPainter *painter,
     painter->restore();
 }
 
-void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPainter *painter, PrimitiveType primitiveType)
+void drawElement(const QString elementName, const QStyleOption *opt, QPainter *painter, const QWidget *widget)
 {
     QList<Union::Element::Ptr> elements;
+    QStringList elementTypes;
 
-    bool hasFocusRect = false;
+    if (widget) {
+        elementTypes = widget->property(property_union_member_list).toStringList();
+    }
+    elementTypes.append(elementName);
 
-    auto unionElement = Union::Element::create();
-    unionElement->setType(elementType);
-    unionElement->setStates(statesFromOption(opt));
-    unionElement->setHints(hintsFromOption(opt));
-    unionElement->setColorSet(colorsetFromOption(opt));
-    unionElement->setAttributes(attributesFromOption(opt));
-    elements.append(unionElement);
-
-    if (primitiveType == PrimitiveType::Indicator) {
-        auto indicator = Union::Element::create();
-        indicator->setType(QStringLiteral("Indicator"));
-        indicator->setStates(statesFromOption(opt));
-        indicator->setHints(hintsFromOption(opt));
-        indicator->setColorSet(colorsetFromOption(opt));
-        indicator->setAttributes(attributesFromOption(opt));
-        elements.append(indicator);
-        hasFocusRect = true;
+    for (const auto &elementType : elementTypes) {
+        auto unionElement = Union::Element::create();
+        unionElement->setType(elementType);
+        unionElement->setStates(statesFromOption(opt));
+        unionElement->setHints(hintsFromOption(opt));
+        unionElement->setColorSet(colorsetFromOption(opt));
+        unionElement->setAttributes(attributesFromOption(opt));
+        elements.append(unionElement);
     }
 
     const auto style = Union::StyleRegistry::instance()->defaultStyle();
@@ -429,6 +419,6 @@ void drawStyleOption(const QString &elementType, const QStyleOption *opt, QPaint
     query->execute();
     auto properties = query->properties();
 
-    auto rect = prepareRectangle(opt, properties, hasFocusRect).toRect();
-    drawBackground(painter, rect, properties, primitiveType);
+    auto rect = prepareRectangle(opt, properties).toRect();
+    drawBackground(painter, rect, properties);
 }

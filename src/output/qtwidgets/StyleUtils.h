@@ -12,6 +12,8 @@
 
 class QStyleOption;
 
+const char property_union_member_list[] = "_union_member_list";
+
 /*!
  * \brief Translate the state from QStyleOption to Union::Element states.
  */
@@ -20,6 +22,8 @@ QStringList hintsFromOption(const QStyleOption *option);
 Union::Element::ColorSet colorsetFromOption(const QStyleOption *option);
 QVariantMap attributesFromOption(const QStyleOption *option);
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties, bool hasVisualFocusRect);
+QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
 
 Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &element);
+
+QStringList setupMemberList(QWidget *widget);
