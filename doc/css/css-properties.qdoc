@@ -218,7 +218,7 @@ The order determines which elements come before others in the same alignment gro
 
 The color of text of an element.
 
-\section3 text-wrap-mode (no-wrap | word-wrap | wrap-anywhere | wrap)
+\section3 text-wrap-mode (no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap)
 
 The wrap mode for the text of an element.
 
