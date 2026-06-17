@@ -55,6 +55,7 @@ Note: Keep in sync with the mapping in css-properties.qdoc.j2
 
 {# A map of C++ property types to CSS syntax strings. #}
 {%- set type_map = {
+    "bool": "true | false",
     "Union::Color": "<color>",
     "qreal": "<length>",
     "int": "<integer>",
@@ -79,10 +80,10 @@ Note: Keep in sync with the mapping in css-properties.qdoc.j2
 {% endif %}
 {{ print_properties(name, property) }}
 {% elif property.type in type_map %}
-{% set name = (name + "-" + property.name) | css_name %}
+{% set name = ((name + "-" + property.name) if name else property.name) | css_name %}
 {% set name = name_map[name] if name in name_map else name %}
 @property {{ name }} {
-    syntax: "{{ type_map[property.type] }}";
+    syntax: "{{ type }}";
 }
 
 {% endif %}

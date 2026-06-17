@@ -70,6 +70,7 @@ Note: Keep in sync with the mapping in properties.css.j2
     "Union::Properties::LineStyle": "none | solid",
     "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
     "Union::Properties::TextElide": "none | left | middle | right",
+    "Union::Properties::Visibility": "visible | hidden",
 }%}
 
 {# Recursively print all properties of an object, with a prefix #}
@@ -84,7 +85,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 {{ print_properties(prop_name, property) }}
 {% elif property.type in type_map %}
 {% set prop_name = name_map[prop_name] if prop_name in name_map else prop_name %}
-\section3 {{ prop_name }} ({{ type_map[property.type] }})
+\section3 {{ prop_name }} ({{ type }})
 
 {{ property.css_documentation }}
 
