@@ -17,6 +17,7 @@ from yaml_helpers import *
 
 
 base_directory = Path(__file__).parent
+template_directory = base_directory / "templates"
 root_directory = base_directory.parent.parent
 src_directory = root_directory / "src" / "properties"
 tests_directory = root_directory / "autotests" / "properties"
@@ -199,7 +200,7 @@ if __name__ == "__main__":
     types = process_node(structure, "style", None, {}, "style")
 
     jinja_env = jinja2.Environment(
-        loader=jinja2.FileSystemLoader(base_directory),
+        loader=jinja2.FileSystemLoader(template_directory),
         autoescape=False,
         trim_blocks=True,
         lstrip_blocks=True,
