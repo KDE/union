@@ -9,6 +9,11 @@
 
 
 
+@property visibility {
+    syntax: "visible | hidden";
+}
+
+
 @property layout-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
 }

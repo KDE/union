@@ -11,6 +11,7 @@ ecm_add_tests(
     TestImagePropertyGroup.cpp
     TestLinePropertyGroup.cpp
     TestCornerPropertyGroup.cpp
+    TestDisplayPropertyGroup.cpp
     TestLayoutPropertyGroup.cpp
     TestTextPropertyGroup.cpp
     TestIconPropertyGroup.cpp

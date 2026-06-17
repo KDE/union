@@ -17,6 +17,8 @@ target_sources(Union PRIVATE
     LinePropertyGroup.h
     CornerPropertyGroup.cpp
     CornerPropertyGroup.h
+    DisplayPropertyGroup.cpp
+    DisplayPropertyGroup.h
     LayoutPropertyGroup.cpp
     LayoutPropertyGroup.h
     TextPropertyGroup.cpp
