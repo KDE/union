@@ -143,7 +143,8 @@ T.MenuItem {
             color: Union.Style.properties.text.color
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
-            visible: control.action && control.action.shortcut !== undefined
+            visible: control.action && control.action.shortcut !== undefined && (Union.Style.properties.display.visible ?? true)
+            opacity: Union.Style.properties.display.opacity ?? 1.0
         }
     }
 
@@ -159,7 +160,8 @@ T.MenuItem {
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
 
-        visible: control.checkable
+        visible: control.checkable && (Union.Style.properties.display.visible ?? true)
+        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 
     arrow: Union.Icon {
@@ -176,7 +178,8 @@ T.MenuItem {
 
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
-        visible: control.subMenu
+        visible: control.subMenu && (Union.Style.properties.display.visible ?? true)
+        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 
     background: Union.StyledRectangle { }
