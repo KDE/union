@@ -392,7 +392,7 @@ void drawCornerProperty(QPainter *painter,
     painter->restore();
 }
 
-void drawElement(const QString elementName, const QStyleOption *opt, QPainter *painter, const QWidget *widget)
+void drawElement(const QStyleOption *opt, QPainter *painter, const QWidget *widget, const QString childElementName)
 {
     QList<Union::Element::Ptr> elements;
     QStringList elementTypes;
@@ -400,7 +400,14 @@ void drawElement(const QString elementName, const QStyleOption *opt, QPainter *p
     if (widget) {
         elementTypes = widget->property(property_union_member_list).toStringList();
     }
-    elementTypes.append(elementName);
+    if (!childElementName.isEmpty()) {
+        elementTypes.append(childElementName);
+    }
+
+    if (elementTypes.isEmpty()) {
+        qWarning() << "Could not draw widget" << widget << "with styleOption" << opt << " ! Missing elementType!";
+        return;
+    }
 
     for (const auto &elementType : elementTypes) {
         auto unionElement = Union::Element::create();

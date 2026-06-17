@@ -313,22 +313,15 @@ QStringList setupMemberList(QWidget *widget)
         {"QToolBar", QStringLiteral("ToolBar")},
     };
 
-    for (const auto classes : parentClasses.asKeyValueRange()) {
-        if (widget->inherits(classes.first)) {
-            members.prepend(classes.second);
-            break;
-        }
-    }
-
-    auto parent = widget->parentWidget();
-    while (parent) {
+    auto currentWidget = widget;
+    while (currentWidget) {
         for (const auto classes : parentClasses.asKeyValueRange()) {
-            if (parent->inherits(classes.first)) {
+            if (currentWidget->inherits(classes.first)) {
                 members.prepend(classes.second);
                 break;
             }
         }
-        parent = parent->parentWidget();
+        currentWidget = currentWidget->parentWidget();
     }
 
     return members;

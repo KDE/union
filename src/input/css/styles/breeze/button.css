@@ -349,6 +349,13 @@ tabbar {
     spacing: 0px;
 }
 
+tabwidget {
+    padding: var(--small-spacing);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+    background-color: var(--view-background-color);
+}
+
 delaybutton {
     & > fill {
         border-radius: var(--corner-radius);
