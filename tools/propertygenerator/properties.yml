@@ -184,6 +184,11 @@ children:
                         to hidden also removes the element's box from any layout. Effectively
                         \c{visibility: hidden} works like \c{display: none}.
 
+            opacity:
+                type: qreal
+
+                doc: The opacity of the element.
+
     layout:
         type: group
 

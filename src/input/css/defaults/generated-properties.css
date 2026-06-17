@@ -13,6 +13,10 @@
     syntax: "visible | hidden";
 }
 
+@property opacity {
+    syntax: "<number>";
+}
+
 
 @property layout-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";

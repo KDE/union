@@ -18,6 +18,7 @@ class Union::Properties::DisplayPropertyGroupPrivate
 {
 public:
     std::optional<bool> visible;
+    std::optional<qreal> opacity;
 };
 
 DisplayPropertyGroup::DisplayPropertyGroup()
@@ -29,6 +30,7 @@ DisplayPropertyGroup::DisplayPropertyGroup(const DisplayPropertyGroup &other)
     : d(std::make_unique<DisplayPropertyGroupPrivate>())
 {
     d->visible = other.d->visible;
+    d->opacity = other.d->opacity;
 }
 
 DisplayPropertyGroup::DisplayPropertyGroup(DisplayPropertyGroup &&other)
@@ -42,6 +44,7 @@ DisplayPropertyGroup &DisplayPropertyGroup::operator=(const DisplayPropertyGroup
 {
     if (this != &other) {
         d->visible = other.d->visible;
+        d->opacity = other.d->opacity;
     }
     return *this;
 }
@@ -66,9 +69,26 @@ void DisplayPropertyGroup::setVisible(const std::optional<bool> &newValue)
     d->visible = newValue;
 }
 
+std::optional<qreal> DisplayPropertyGroup::opacity() const
+{
+    return d->opacity;
+}
+
+void DisplayPropertyGroup::setOpacity(const std::optional<qreal> &newValue)
+{
+    if (newValue == d->opacity) {
+        return;
+    }
+
+    d->opacity = newValue;
+}
+
 bool DisplayPropertyGroup::hasAnyValue() const
 {
     if (d->visible.has_value()) {
+        return true;
+    }
+    if (d->opacity.has_value()) {
         return true;
     }
     return false;
@@ -81,6 +101,9 @@ bool DisplayPropertyGroup::isEmpty() const
     }
 
     if (d->visible.has_value() && d->visible.value() != emptyValue<bool>()) {
+        return false;
+    }
+    if (d->opacity.has_value() && d->opacity.value() != emptyValue<qreal>()) {
         return false;
     }
 
@@ -124,6 +147,12 @@ QString DisplayPropertyGroup::toString(int indentation, ToStringFlags flags) con
     } else {
         out << empty << maybeNewLine;
     }
+    out << indent(indentation, multiline, false) << "opacity: ";
+    if (d->opacity) {
+        out << d->opacity.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
 
     if (types) {
         out << indent(indentation - 2, multiline, true) << ")";
@@ -144,18 +173,25 @@ void DisplayPropertyGroup::resolveProperties(const DisplayPropertyGroup *source,
     if (!destination->d->visible.has_value()) {
         destination->d->visible = source->d->visible;
     }
+    if (!destination->d->opacity.has_value()) {
+        destination->d->opacity = source->d->opacity;
+    }
 }
 
 std::unique_ptr<DisplayPropertyGroup> DisplayPropertyGroup::empty()
 {
     auto result = std::make_unique<DisplayPropertyGroup>();
     result->d->visible = emptyValue<bool>();
+    result->d->opacity = emptyValue<qreal>();
     return result;
 }
 
 bool Union::Properties::operator==(const DisplayPropertyGroup &left, const DisplayPropertyGroup &right)
 {
     if (left.visible() != right.visible()) {
+        return false;
+    }
+    if (left.opacity() != right.opacity()) {
         return false;
     }
     return true;
@@ -171,6 +207,7 @@ QDebug operator<<(QDebug debug, Union::Properties::DisplayPropertyGroup *type)
 QDataStream &operator<<(QDataStream &stream, const Union::Properties::DisplayPropertyGroup *type)
 {
     stream << type->visible();
+    stream << type->opacity();
     return stream;
 }
 
@@ -180,6 +217,11 @@ QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::
         std::optional<bool> data;
         stream >> data;
         type->setVisible(data);
+    }
+    {
+        std::optional<qreal> data;
+        stream >> data;
+        type->setOpacity(data);
     }
 
     return stream;

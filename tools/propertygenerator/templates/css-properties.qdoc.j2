@@ -30,6 +30,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 #}
 {%- set name_map = {
     "display-visible": "visibility",
+    "display-opacity": "opacity",
     "layout-width": "width",
     "layout-height": "height",
     "layout-spacing": "spacing",
@@ -74,6 +75,7 @@ Note: Keep in sync with the mapping in properties.css.j2
     "Union::Properties::TextElide": "none | left | middle | right",
     "Union::Properties::Visibility": "visible | hidden",
     "visibility": "visible | hidden",
+    "opacity": "<number>",
 }%}
 
 {# Recursively print all properties of an object, with a prefix #}

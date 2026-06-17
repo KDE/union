@@ -145,6 +145,7 @@ std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance()
     auto instance = std::make_unique<DisplayPropertyGroup>();
 
     instance->setVisible(bool{});
+    instance->setOpacity(testQrealInstance());
 
     return instance;
 }

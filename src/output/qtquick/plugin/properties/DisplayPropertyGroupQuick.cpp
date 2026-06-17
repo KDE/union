@@ -33,6 +33,7 @@ void DisplayPropertyGroupQuick::update(DisplayPropertyGroup *newState)
     }
 
     Q_EMIT visibleChanged();
+    Q_EMIT opacityChanged();
     Q_EMIT updated();
 }
 
@@ -47,6 +48,20 @@ QJSValue DisplayPropertyGroupQuick::visible() const
     }
 
     auto value = m_state->visible();
+    if (value) {
+        return m_style->engine()->toScriptValue(value.value());
+    }
+
+    return QJSValue(QJSValue::UndefinedValue);
+}
+
+QJSValue DisplayPropertyGroupQuick::opacity() const
+{
+    if (!m_state) {
+        return QJSValue(QJSValue::UndefinedValue);
+    }
+
+    auto value = m_state->opacity();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
     }
