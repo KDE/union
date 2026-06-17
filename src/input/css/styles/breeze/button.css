@@ -108,6 +108,7 @@ toolbutton.raised
     }
 
     &.with-menu > indicator {
+        visibility: visible;
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
