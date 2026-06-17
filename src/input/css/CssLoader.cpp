@@ -83,6 +83,20 @@ inline float to_px(const cssparser::Value &value)
     return to_px(value.get<cssparser::Dimension>());
 }
 
+inline float to_number(const cssparser::Value &value)
+{
+    if (value.type() != cssparser::Value::Type::Dimension) {
+        return 0.0;
+    }
+
+    auto dimension = value.get<cssparser::Dimension>();
+    if (dimension.unit() != cssparser::Dimension::Unit::Number) {
+        return 0.0;
+    }
+
+    return dimension.value();
+}
+
 Color to_color(const cssparser::Color::Color &color)
 {
     switch (color.type()) {
@@ -480,7 +494,9 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
 void CssLoader::createProperties(StylePropertyGroup *output, std::span<const cssparser::Property> properties)
 {
     for (const auto &property : properties) {
-        if (property.name() == "width"s || property.name() == "height"s || property.name() == "spacing"s) {
+        if (property.name() == "visibility"s || property.name() == "opacity"s) {
+            setDisplayProperty(output, property);
+        } else if (property.name() == "width"s || property.name() == "height"s || property.name() == "spacing"s) {
             setLayoutProperty(output, property);
         } else if (property.name().starts_with("padding")) {
             setLayoutProperty(output, property);
@@ -506,6 +522,23 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
         } else if (property.name().starts_with("shadow") || property.name().starts_with("box-shadow")) {
             setShadowProperty(output, property);
         }
+    }
+}
+
+void CssLoader::setDisplayProperty(StylePropertyGroup *output, const cssparser::Property &property)
+{
+    PropertyGroupBuilder display(output, &StylePropertyGroup::display, &StylePropertyGroup::setDisplay);
+
+    if (property.name() == "visibility") {
+        if (matches_keyword(property.value(), u"visible"_s)) {
+            display->setVisible(true);
+        } else if (matches_keyword(property.value(), u"hidden"_s)) {
+            display->setVisible(false);
+        }
+    }
+
+    if (property.name() == "opacity") {
+        display->setOpacity(to_number(property.value()));
     }
 }
 
