@@ -85,6 +85,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 {{ print_properties(prop_name, property) }}
 {% elif property.type in type_map %}
 {% set prop_name = name_map[prop_name] if prop_name in name_map else prop_name %}
+{% set type = type_map[prop_name] if prop_name in type_map else type_map[property.type] %}
 \section3 {{ prop_name }} ({{ type }})
 
 {{ property.css_documentation }}
