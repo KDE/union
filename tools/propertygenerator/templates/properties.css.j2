@@ -81,8 +81,9 @@ Note: Keep in sync with the mapping in css-properties.qdoc.j2
 {% elif property.type in type_map %}
 {% set name = (name + "-" + property.name) | css_name %}
 {% set name = name_map[name] if name in name_map else name %}
+{% set type = type_map[name] if name in type_map else type_map[property.type] %}
 @property {{ name }} {
-    syntax: "{{ type_map[property.type] }}";
+    syntax: "{{ type }}";
 }
 
 {% endif %}
