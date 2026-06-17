@@ -292,7 +292,7 @@ QStringList setupMemberList(QWidget *widget)
         {"QAbstractSpinox", QStringLiteral("SpinBox")},
         {"QComboBox", QStringLiteral("ComboBox")},
         {"QDialog", QStringLiteral("Dialog")},
-        {"QDialogButtonox", QStringLiteral("DialogButtonBox")},
+        {"QDialogButtonBox", QStringLiteral("DialogButtonBox")},
         {"QDockWidget", QStringLiteral("Dock")},
         {"QFocusFrame", QStringLiteral("FocusFrame")},
         {"QFrame", QStringLiteral("Frame")},

@@ -30,6 +30,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     if (controlElement == CE_PushButton) {
         const auto buttonOption = static_cast<const QStyleOptionButton *>(option);
 
+        // TODO: Works with drawElement, but needs drawTextElement
         auto element = Union::Element::create();
         element->setType(QStringLiteral("Button"));
         element->setStates(statesFromOption(option));
