@@ -31,6 +31,7 @@ private:
 
     void createProperties(StylePropertyGroup *output, std::span<const cssparser::Property> properties);
 
+    void setDisplayProperty(StylePropertyGroup *output, const cssparser::Property &property);
     void setLayoutProperty(StylePropertyGroup *output, const cssparser::Property &property);
     void setBackgroundProperty(StylePropertyGroup *output, const cssparser::Property &property);
     void setBorderProperty(StylePropertyGroup *output, const cssparser::Property &property);
