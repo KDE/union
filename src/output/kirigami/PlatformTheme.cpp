@@ -4,6 +4,8 @@
 #include "PlatformTheme.h"
 
 #include <QMetaEnum>
+#include <QQuickRenderControl>
+#include <QQuickWindow>
 
 #include <Color.h>
 #include <Style.h>
@@ -32,6 +34,13 @@ PlatformTheme::PlatformTheme(QObject *parent)
     auto style = static_cast<Union::Quick::QuickStyle *>(qmlAttachedPropertiesObject<Union::Quick::QuickStyle>(parent));
     if (style) {
         style->installEventFilter(this);
+    }
+
+    auto parentItem = qobject_cast<QQuickItem *>(parent);
+    if (parentItem) {
+        connect(parentItem, &QQuickItem::enabledChanged, this, &PlatformTheme::syncColorSchemeColors);
+        connect(parentItem, &QQuickItem::visibleChanged, this, &PlatformTheme::syncColorSchemeColors);
+        connect(parentItem, &QQuickItem::windowChanged, this, &PlatformTheme::syncWindow);
     }
 }
 
@@ -130,12 +139,12 @@ void PlatformTheme::syncColorSchemeColors()
     if (parentItem) {
         if (!parentItem->isEnabled()) {
             group = u"disabled"_s;
-            // } else if (m_window && !m_window->isActive() && m_window->isExposed()) {
-            //     // Why also checking the window is exposed?
-            //     // in the case of QQuickWidget the window() will never be active
-            //     // and the widgets will always have the inactive palette.
-            //     // better to always show it active than always show it inactive
-            //     group = u"inactive"_s;
+        } else if (m_window && !m_window->isActive() && m_window->isExposed()) {
+            // Why also checking the window is exposed?
+            // in the case of QQuickWidget the window() will never be active
+            // and the widgets will always have the inactive palette.
+            // better to always show it active than always show it inactive
+            group = u"inactive"_s;
         }
     }
 
@@ -199,6 +208,31 @@ void PlatformTheme::syncColorSchemeColors()
 
     // We just want the alpha value we use for contrast
     setFrameContrast(Color::custom(u"kcolorscheme"_s, {group, set, u"decoration"_s, u"framecontrast"_s}).toQColor().alphaF());
+}
+
+void PlatformTheme::syncWindow()
+{
+    if (m_window) {
+        disconnect(m_window.data(), &QWindow::activeChanged, this, &PlatformTheme::syncColorSchemeColors);
+    }
+
+    QWindow *window = nullptr;
+
+    auto parentItem = qobject_cast<QQuickItem *>(parent());
+    if (parentItem) {
+        QQuickWindow *qw = parentItem->window();
+
+        window = QQuickRenderControl::renderWindowFor(qw);
+        if (!window) {
+            window = qw;
+        }
+    }
+    m_window = window;
+
+    if (window) {
+        connect(m_window.data(), &QWindow::activeChanged, this, &PlatformTheme::syncColorSchemeColors);
+        syncColorSchemeColors();
+    }
 }
 
 #include "moc_PlatformTheme.cpp"
