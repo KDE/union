@@ -15,6 +15,7 @@
 
 #include <properties/StylePropertyGroup.h>
 
+#include "DisplayPropertyGroupQuick.h"
 #include "LayoutPropertyGroupQuick.h"
 #include "TextPropertyGroupQuick.h"
 #include "IconPropertyGroupQuick.h"
@@ -50,6 +51,14 @@ public:
     Q_SIGNAL void updated();
 
     void refreshColors();
+
+    /*!
+     * \qmlproperty DisplayPropertyGroupQuick StylePropertyGroupQuick::display
+     *
+     * Exposes StylePropertyGroup::DisplayPropertyGroup to QML.
+     */
+    Q_PROPERTY(Union::Quick::DisplayPropertyGroupQuick *display READ display CONSTANT)
+    DisplayPropertyGroupQuick *display() const;
 
     /*!
      * \qmlproperty LayoutPropertyGroupQuick StylePropertyGroupQuick::layout
@@ -117,6 +126,7 @@ public:
 
 private:
     QuickStyle *m_style = nullptr;
+    std::unique_ptr<DisplayPropertyGroupQuick> m_display;
     std::unique_ptr<LayoutPropertyGroupQuick> m_layout;
     std::unique_ptr<TextPropertyGroupQuick> m_text;
     std::unique_ptr<IconPropertyGroupQuick> m_icon;

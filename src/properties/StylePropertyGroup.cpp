@@ -17,6 +17,7 @@ using namespace Qt::StringLiterals;
 class Union::Properties::StylePropertyGroupPrivate
 {
 public:
+    std::unique_ptr<DisplayPropertyGroup> display;
     std::unique_ptr<LayoutPropertyGroup> layout;
     std::unique_ptr<TextPropertyGroup> text;
     std::unique_ptr<IconPropertyGroup> icon;
@@ -35,6 +36,8 @@ StylePropertyGroup::StylePropertyGroup()
 StylePropertyGroup::StylePropertyGroup(const StylePropertyGroup &other)
     : d(std::make_unique<StylePropertyGroupPrivate>())
 {
+    d->display = std::make_unique<DisplayPropertyGroup>();
+    *(d->display) = *(other.d->display);
     d->layout = std::make_unique<LayoutPropertyGroup>();
     *(d->layout) = *(other.d->layout);
     d->text = std::make_unique<TextPropertyGroup>();
@@ -63,6 +66,7 @@ StylePropertyGroup::~StylePropertyGroup() = default;
 StylePropertyGroup &StylePropertyGroup::operator=(const StylePropertyGroup &other)
 {
     if (this != &other) {
+        *(d->display) = *(other.d->display);
         *(d->layout) = *(other.d->layout);
         *(d->text) = *(other.d->text);
         *(d->icon) = *(other.d->icon);
@@ -79,6 +83,16 @@ StylePropertyGroup &StylePropertyGroup::operator=(StylePropertyGroup &&other)
 {
     std::swap(d, other.d);
     return *this;
+}
+
+DisplayPropertyGroup *StylePropertyGroup::display() const
+{
+    return d->display.get();
+}
+
+void StylePropertyGroup::setDisplay(std::unique_ptr<DisplayPropertyGroup> &&newValue)
+{
+    d->display = std::move(newValue);
 }
 
 LayoutPropertyGroup *StylePropertyGroup::layout() const
@@ -163,6 +177,9 @@ void StylePropertyGroup::setShadow(std::unique_ptr<ShadowPropertyGroup> &&newVal
 
 bool StylePropertyGroup::hasAnyValue() const
 {
+    if (d->display && d->display->hasAnyValue()) {
+        return true;
+    }
     if (d->layout && d->layout->hasAnyValue()) {
         return true;
     }
@@ -196,6 +213,9 @@ bool StylePropertyGroup::isEmpty() const
         return true;
     }
 
+    if (d->display && !d->display->isEmpty()) {
+        return false;
+    }
     if (d->layout && !d->layout->isEmpty()) {
         return false;
     }
@@ -255,7 +275,13 @@ QString StylePropertyGroup::toString(int indentation, ToStringFlags flags) const
         out << maybeNewLine;
     }
 
-    out << indent(indentation, multiline, true) << "layout: ";
+    out << indent(indentation, multiline, true) << "display: ";
+    if (d->display) {
+        out << d->display->toString(indentation + 2, flags);
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "layout: ";
     if (d->layout) {
         out << d->layout->toString(indentation + 2, flags);
     } else {
@@ -320,6 +346,12 @@ void StylePropertyGroup::resolveProperties(const StylePropertyGroup *source, Sty
         return;
     }
 
+    if (source->d->display) {
+        if (!destination->d->display) {
+            destination->d->display = std::make_unique<DisplayPropertyGroup>();
+        }
+        DisplayPropertyGroup::resolveProperties(source->d->display.get(), destination->d->display.get());
+    }
     if (source->d->layout) {
         if (!destination->d->layout) {
             destination->d->layout = std::make_unique<LayoutPropertyGroup>();
@@ -373,6 +405,7 @@ void StylePropertyGroup::resolveProperties(const StylePropertyGroup *source, Sty
 std::unique_ptr<StylePropertyGroup> StylePropertyGroup::empty()
 {
     auto result = std::make_unique<StylePropertyGroup>();
+    result->d->display = DisplayPropertyGroup::empty();
     result->d->layout = LayoutPropertyGroup::empty();
     result->d->text = TextPropertyGroup::empty();
     result->d->icon = IconPropertyGroup::empty();
@@ -386,6 +419,13 @@ std::unique_ptr<StylePropertyGroup> StylePropertyGroup::empty()
 
 bool Union::Properties::operator==(const StylePropertyGroup &left, const StylePropertyGroup &right)
 {
+    if (left.display() && right.display()) {
+        if (*(left.display()) != *(right.display())) {
+            return false;
+        }
+    } else if (left.display() != right.display()) {
+        return false;
+    }
     if (left.layout() && right.layout()) {
         if (*(left.layout()) != *(right.layout())) {
             return false;
@@ -455,6 +495,13 @@ QDebug operator<<(QDebug debug, Union::Properties::StylePropertyGroup *type)
 QDataStream &operator<<(QDataStream &stream, const Union::Properties::StylePropertyGroup *type)
 {
     {
+        auto data = type->display();
+        stream << bool(data);
+        if (data) {
+            stream << data;
+        }
+    }
+    {
         auto data = type->layout();
         stream << bool(data);
         if (data) {
@@ -515,6 +562,16 @@ QDataStream &operator<<(QDataStream &stream, const Union::Properties::StylePrope
 
 QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::StylePropertyGroup> &type)
 {
+    {
+        bool hasData;
+        stream >> hasData;
+
+        if (hasData) {
+            auto data = std::make_unique<DisplayPropertyGroup>();
+            stream >> data;
+            type->setDisplay(std::move(data));
+        }
+    }
     {
         bool hasData;
         stream >> hasData;

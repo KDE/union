@@ -15,6 +15,20 @@ To regenerate, run `tools/propertygenerator/generate_properties.py`.
 
 
 
+\section2 display
+
+These properties relate to how an element is displayed.
+
+
+\section3 visibility (visible | hidden)
+
+The visibility of the element, whether it should be shown or hidden.
+
+\note Unlike the web-CSS version of this property, setting visibility
+to hidden also removes the element's box from any layout. Effectively
+\c{visibility: hidden} works like \c{display: none}.
+
+
 \section2 layout
 
 These properties all relate to an element's layout and sizing.

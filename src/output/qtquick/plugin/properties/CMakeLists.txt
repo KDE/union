@@ -17,6 +17,8 @@ target_sources(UnionQuickImpl PRIVATE
     LinePropertyGroupQuick.h
     CornerPropertyGroupQuick.cpp
     CornerPropertyGroupQuick.h
+    DisplayPropertyGroupQuick.cpp
+    DisplayPropertyGroupQuick.h
     LayoutPropertyGroupQuick.cpp
     LayoutPropertyGroupQuick.h
     TextPropertyGroupQuick.cpp

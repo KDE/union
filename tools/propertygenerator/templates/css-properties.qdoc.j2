@@ -29,6 +29,7 @@ from web CSS, without needing to change the structure of properties.
 Note: Keep in sync with the mapping in properties.css.j2
 #}
 {%- set name_map = {
+    "display-visible": "visibility",
     "layout-width": "width",
     "layout-height": "height",
     "layout-spacing": "spacing",
@@ -59,6 +60,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 
 {# A map of C++ property types to CSS syntax strings. #}
 {%- set type_map = {
+    "bool": "true | false",
     "Union::Color": "<color>",
     "qreal": "<length>",
     "int": "<integer>",
@@ -70,6 +72,7 @@ Note: Keep in sync with the mapping in properties.css.j2
     "Union::Properties::LineStyle": "none | solid",
     "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
     "Union::Properties::TextElide": "none | left | middle | right",
+    "visibility": "visible | hidden",
 }%}
 
 {# Recursively print all properties of an object, with a prefix #}

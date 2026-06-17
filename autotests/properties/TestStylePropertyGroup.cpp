@@ -22,6 +22,7 @@ private Q_SLOTS:
         auto property = std::make_unique<StylePropertyGroup>();
 
         // A null instance should not have any values for its properties.
+        QVERIFY(!property->display());
         QVERIFY(!property->layout());
         QVERIFY(!property->text());
         QVERIFY(!property->icon());
@@ -37,6 +38,7 @@ private Q_SLOTS:
         auto property = StylePropertyGroup::empty();
 
         // An empty instance should only have values that are considered "empty".
+        QCOMPARE(*property->display(), *DisplayPropertyGroup::empty());
         QCOMPARE(*property->layout(), *LayoutPropertyGroup::empty());
         QCOMPARE(*property->text(), *TextPropertyGroup::empty());
         QCOMPARE(*property->icon(), *IconPropertyGroup::empty());
@@ -54,6 +56,17 @@ private Q_SLOTS:
         // An empty instance should not have any values for its properties.
         QVERIFY(!property->hasAnyValue());
 
+        {
+            // Assigning an empty value to a property should have no effect.
+            property->setDisplay(std::make_unique<DisplayPropertyGroup>());
+            QVERIFY(!property->hasAnyValue());
+
+            property->setDisplay(testDisplayPropertyGroupInstance());
+            QVERIFY(property->hasAnyValue());
+
+            property->setDisplay(nullptr);
+            QVERIFY(!property->hasAnyValue());
+        }
         {
             // Assigning an empty value to a property should have no effect.
             property->setLayout(std::make_unique<LayoutPropertyGroup>());
@@ -157,6 +170,7 @@ private Q_SLOTS:
 
         QVERIFY(!destination->hasAnyValue());
 
+        source->setDisplay(testDisplayPropertyGroupInstance());
         source->setLayout(testLayoutPropertyGroupInstance());
         source->setText(testTextPropertyGroupInstance());
         source->setIcon(testIconPropertyGroupInstance());
@@ -173,6 +187,7 @@ private Q_SLOTS:
 
         QVERIFY(destination->hasAnyValue());
 
+        QCOMPARE(*destination->display(), *source->display());
         QCOMPARE(*destination->layout(), *source->layout());
         QCOMPARE(*destination->text(), *source->text());
         QCOMPARE(*destination->icon(), *source->icon());

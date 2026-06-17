@@ -18,6 +18,7 @@ StylePropertyGroupQuick::StylePropertyGroupQuick(QuickStyle *style)
     : QObject()
     , m_style(style)
 {
+    m_display = std::make_unique<DisplayPropertyGroupQuick>(m_style);
     m_layout = std::make_unique<LayoutPropertyGroupQuick>(m_style);
     m_text = std::make_unique<TextPropertyGroupQuick>(m_style);
     m_icon = std::make_unique<IconPropertyGroupQuick>(m_style);
@@ -37,6 +38,7 @@ void StylePropertyGroupQuick::update(StylePropertyGroup *newState)
     m_state = newState;
 
     if (!newState) {
+        m_display->update(nullptr);
         m_layout->update(nullptr);
         m_text->update(nullptr);
         m_icon->update(nullptr);
@@ -46,6 +48,7 @@ void StylePropertyGroupQuick::update(StylePropertyGroup *newState)
         m_corners->update(nullptr);
         m_shadow->update(nullptr);
     } else {
+        m_display->update(newState->display());
         m_layout->update(newState->layout());
         m_text->update(newState->text());
         m_icon->update(newState->icon());
@@ -61,6 +64,7 @@ void StylePropertyGroupQuick::update(StylePropertyGroup *newState)
 
 void StylePropertyGroupQuick::refreshColors()
 {
+    m_display->refreshColors();
     m_layout->refreshColors();
     m_text->refreshColors();
     m_icon->refreshColors();
@@ -69,6 +73,11 @@ void StylePropertyGroupQuick::refreshColors()
     m_outline->refreshColors();
     m_corners->refreshColors();
     m_shadow->refreshColors();
+}
+
+DisplayPropertyGroupQuick *StylePropertyGroupQuick::display() const
+{
+    return m_display.get();
 }
 
 LayoutPropertyGroupQuick *StylePropertyGroupQuick::layout() const

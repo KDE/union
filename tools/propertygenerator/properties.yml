@@ -161,6 +161,29 @@ children:
                 type: qreal
                 doc: The radius of the corner.
 
+    display:
+        type: group
+
+        doc:
+            api: |
+                \brief A property group containing properties related to how the element is displayed.
+            css: |
+                These properties relate to how an element is displayed.
+
+        children:
+            visible:
+                type: bool
+
+                doc:
+                    api: Whether the element should be shown or hidden.
+
+                    css: |
+                        The visibility of the element, whether it should be shown or hidden.
+
+                        \note Unlike the web-CSS version of this property, setting visibility
+                        to hidden also removes the element's box from any layout. Effectively
+                        \c{visibility: hidden} works like \c{display: none}.
+
     layout:
         type: group
 

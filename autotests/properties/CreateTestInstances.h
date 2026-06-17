@@ -13,6 +13,7 @@
 #include <properties/BorderPropertyGroup.h>
 #include <properties/CornerPropertyGroup.h>
 #include <properties/CornersPropertyGroup.h>
+#include <properties/DisplayPropertyGroup.h>
 #include <properties/IconPropertyGroup.h>
 #include <properties/ImagePropertyGroup.h>
 #include <properties/LayoutPropertyGroup.h>
@@ -52,6 +53,7 @@ std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance();
 std::unique_ptr<ImagePropertyGroup> testImagePropertyGroupInstance();
 std::unique_ptr<LinePropertyGroup> testLinePropertyGroupInstance();
 std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance();
+std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance();
 std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance();
 std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance();
 std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance();
@@ -66,6 +68,7 @@ std::unique_ptr<StylePropertyGroup> testStylePropertyGroupInstance()
 {
     auto instance = std::make_unique<StylePropertyGroup>();
 
+    instance->setDisplay(testDisplayPropertyGroupInstance());
     instance->setLayout(testLayoutPropertyGroupInstance());
     instance->setText(testTextPropertyGroupInstance());
     instance->setIcon(testIconPropertyGroupInstance());
@@ -133,6 +136,15 @@ std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance()
     auto instance = std::make_unique<CornerPropertyGroup>();
 
     instance->setRadius(testQrealInstance());
+
+    return instance;
+}
+
+std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance()
+{
+    auto instance = std::make_unique<DisplayPropertyGroup>();
+
+    instance->setVisible(bool{});
 
     return instance;
 }

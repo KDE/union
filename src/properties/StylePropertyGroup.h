@@ -14,6 +14,7 @@
 #include "BackgroundPropertyGroup.h"
 #include "BorderPropertyGroup.h"
 #include "CornersPropertyGroup.h"
+#include "DisplayPropertyGroup.h"
 #include "IconPropertyGroup.h"
 #include "LayoutPropertyGroup.h"
 #include "OutlinePropertyGroup.h"
@@ -71,6 +72,19 @@ public:
      * Move assignment operator.
      */
     StylePropertyGroup &operator=(StylePropertyGroup &&other);
+
+    /*!
+     * \brief A property group containing properties related to how the element is displayed.
+
+     */
+    DisplayPropertyGroup *display() const;
+
+    /*!
+     * Set the value of display.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setDisplay(std::unique_ptr<DisplayPropertyGroup> &&newValue);
 
     /*!
      * \brief A property group containing properties related to the layout of an element.
