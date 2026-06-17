@@ -78,6 +78,9 @@ T.ComboBox {
         implicitHeight: Union.Style.properties.layout.height ?? 0
         name: Union.Style.properties.icon.name
         color: Union.Style.properties.icon.color
+
+        visible: Union.Style.properties.display.visible ?? false
+        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 
     contentItem: T.TextField {
@@ -124,7 +127,8 @@ T.ComboBox {
         source: control.Union.StyleHints.iconSource
         color: Union.Style.properties.icon.color
 
-        visible: name || source.toString()
+        visible: (name || source.toString()) && (Union.Style.properties.display.visible ?? true)
+        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 
     background: Union.StyledRectangle { }
