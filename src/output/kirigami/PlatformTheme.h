@@ -33,7 +33,9 @@ protected:
 
 private:
     void syncColorSchemeColors();
+    void syncWindow();
 
     Union::Quick::QuickStyle *m_style = nullptr;
     Union::Quick::ElementAttribute *m_colorSetAttribute = nullptr;
+    QPointer<QWindow> m_window = nullptr;
 };
