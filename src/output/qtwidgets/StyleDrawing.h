@@ -62,3 +62,9 @@ void drawCornerProperty(QPainter *painter,
                         const Union::Properties::CornerPropertyGroup *corner);
 
 void drawElement(const QStyleOption *opt, QPainter *painter, const QWidget *widget, const QString childElementName = QString());
+void drawIconText(const QStyleOption *opt,
+                  const QStyle *qstyle,
+                  QPainter *painter,
+                  const QWidget *widget,
+                  const QIcon &icon = QIcon(),
+                  const QString &text = QString());

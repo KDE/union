@@ -6,6 +6,7 @@
 #include "StyleUtils.h"
 #include <Element.h>
 #include <ElementQuery.h>
+#include <QGuiApplication>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
@@ -426,6 +427,146 @@ void drawElement(const QStyleOption *opt, QPainter *painter, const QWidget *widg
     query->execute();
     auto properties = query->properties();
 
-    auto rect = prepareRectangle(opt, properties).toRect();
+    auto rect = backgroundRectangle(opt, properties).toRect();
     drawBackground(painter, rect, properties);
+}
+
+void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *painter, const QWidget *widget, const QIcon &icon, const QString &text)
+{
+    QList<Union::Element::Ptr> elements;
+    QStringList elementTypes;
+
+    bool hasIcon = !icon.isNull();
+    bool hasText = !text.isEmpty();
+
+    if (widget) {
+        elementTypes = widget->property(property_union_member_list).toStringList();
+    }
+    //    elementTypes.append(QStringLiteral("Text"));
+
+    if (elementTypes.isEmpty()) {
+        qWarning() << "Could not draw text" << widget << "with styleOption" << opt << " ! Missing elementType!";
+        return;
+    }
+
+    for (const auto &elementType : elementTypes) {
+        auto unionElement = Union::Element::create();
+        unionElement->setType(elementType);
+        unionElement->setStates(statesFromOption(opt));
+        unionElement->setHints(hintsFromOption(opt));
+        unionElement->setColorSet(colorsetFromOption(opt));
+        unionElement->setAttributes(attributesFromOption(opt));
+        elements.append(unionElement);
+    }
+
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto query = std::make_unique<Union::ElementQuery>(style);
+    const bool enabled = opt->state.testFlag(QStyle::State_Enabled);
+
+    query->setElements(elements);
+    query->execute();
+    auto properties = query->properties();
+
+    auto rect = backgroundRectangle(opt, properties).toRect();
+
+    QMargins paddings;
+    if (properties->layout()->padding()) {
+        paddings = properties->layout()->padding()->toMargins().toMargins();
+    }
+
+    rect = rect.marginsRemoved(paddings);
+
+    auto textRect = rect;
+    auto iconRect = textRect;
+    QSize iconSize(properties->icon()->width().value_or(0), properties->icon()->height().value_or(0));
+    auto spacing = properties->layout()->spacing().value_or(0);
+    iconRect.setSize(iconSize);
+
+    // TODO move these into their own little function
+    auto textOrder = properties->text()->alignment()->order().value_or(0);
+    auto iconOrder = properties->icon()->alignment()->order().value_or(0);
+    if (hasIcon && hasText) {
+        switch (properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified)) {
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::Start:
+            textRect.moveLeft(rect.left());
+            textRect.adjust(0, 0, -iconRect.width() + spacing / 2, 0);
+            iconRect.moveLeft(textRect.right());
+            break;
+        case Union::Properties::Alignment::Center:
+        case Union::Properties::Alignment::Fill:
+        case Union::Properties::Alignment::End:
+            textRect.moveCenter(rect.center());
+            textRect.adjust(iconRect.width() - spacing / 2, 0, 0, 0);
+            iconRect.moveRight(textRect.left());
+            break;
+        case Union::Properties::Alignment::StackCenter:
+        case Union::Properties::Alignment::StackFill:
+            break;
+        }
+    } else {
+        textRect.moveCenter(rect.center());
+        iconRect.moveCenter(rect.center());
+    }
+    switch (properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified)) {
+    case Union::Properties::Alignment::Unspecified:
+    case Union::Properties::Alignment::Center:
+    case Union::Properties::Alignment::Fill:
+        textRect.moveCenter(QPoint(textRect.center().x(), rect.center().y()));
+        iconRect.moveCenter(QPoint(iconRect.center().x(), rect.center().y()));
+        break;
+    case Union::Properties::Alignment::Start:
+    case Union::Properties::Alignment::End:
+    case Union::Properties::Alignment::StackCenter:
+    case Union::Properties::Alignment::StackFill:
+        break;
+    }
+
+    if (hasText) {
+        auto textAlignment = toQtAlignment(properties->text()->alignment());
+        auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
+        auto textElide = toQtElideMode(properties->text()->elide().value_or(Union::Properties::TextElide::Right));
+        auto textColor = properties->text()->color();
+        QColor penColor = opt->palette.text().color();
+        if (textColor) {
+            penColor = textColor->toQColor();
+        }
+
+        painter->save();
+        painter->setPen(penColor);
+        qstyle->drawItemText(painter, textRect, textFlags | textElide | textAlignment, opt->palette, enabled, text);
+        painter->restore();
+    }
+
+    if (hasIcon) {
+        auto iconAlignment = toQtAlignment(properties->icon()->alignment());
+        auto iconColor = properties->icon()->color();
+
+        const QPalette activePalette = opt->palette;
+        const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
+
+        const QPixmap pixmap = icon.pixmap(iconSize, dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+        QColor penColor = opt->palette.text().color(); // Use text color as fallback
+
+        if (iconColor) {
+            penColor = iconColor->toQColor();
+        }
+
+        painter->save();
+        painter->setPen(penColor);
+        qstyle->drawItemPixmap(painter, iconRect, iconAlignment, pixmap);
+        painter->restore();
+    }
+
+    /*debug
+        painter->save();
+        painter->setBrush(Qt::NoBrush);
+        painter->setPen(Qt::blue);
+        painter->drawRect(rect);
+        painter->setPen(Qt::green);
+        painter->drawRect(iconRect);
+        painter->setPen(Qt::red);
+        painter->drawRect(textRect);
+        painter->restore();
+    */
 }

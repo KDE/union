@@ -22,7 +22,14 @@ QStringList hintsFromOption(const QStyleOption *option);
 Union::Element::ColorSet colorsetFromOption(const QStyleOption *option);
 QVariantMap attributesFromOption(const QStyleOption *option);
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
+Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup,
+                            Union::Properties::TextElide elideMode = Union::Properties::TextElide::None,
+                            Union::Properties::TextWrapMode wrapMode = Union::Properties::TextWrapMode::WrapAtWordBoundaryOrAnywhere);
+
+Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode);
+Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
+
+QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
 
 Union::Properties::StylePropertyGroup *prepareProperties(Union::Element::Ptr &element);
 

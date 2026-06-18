@@ -129,6 +129,19 @@ QStringList hintsFromOption(const QStyleOption *option)
         }
     } break;
 
+    case QStyleOption::SO_ToolButton: {
+        if (const auto optionButton = static_cast<const QStyleOptionToolButton *>(option)) {
+            if (optionButton->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
+                return hints;
+            }
+            if (optionButton->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::HasMenu)) {
+                hints.append(QStringLiteral("with-menu"));
+            }
+            if (!optionButton->state.testFlag(QStyle::State_AutoRaise)) {
+                hints.append(QStringLiteral("raised"));
+            }
+        }
+    } break;
     case QStyleOption::SO_Tab:
     case QStyleOption::SO_MenuItem:
     case QStyleOption::SO_ProgressBar:
@@ -143,7 +156,6 @@ QStringList hintsFromOption(const QStyleOption *option)
     case QStyleOption::SO_Complex:
     case QStyleOption::SO_Slider:
     case QStyleOption::SO_SpinBox:
-    case QStyleOption::SO_ToolButton:
     case QStyleOption::SO_ComboBox:
     case QStyleOption::SO_TitleBar:
     case QStyleOption::SO_GroupBox:
@@ -236,7 +248,94 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     return QVariantMap();
 }
 
-QRectF prepareRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties)
+Qt::Alignment
+toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup, Union::Properties::TextElide elideMode, Union::Properties::TextWrapMode wrapMode)
+{
+    Qt::Alignment verticalAlignment = Qt::AlignVCenter;
+    Qt::Alignment horizontalAlignment = Qt::AlignLeft;
+    Qt::TextElideMode elide = Qt::ElideNone;
+    Qt::TextFlag wrap = Qt::TextWordWrap;
+
+    if (!alignmentGroup) {
+        return verticalAlignment | horizontalAlignment;
+    }
+
+    auto unionVertical = alignmentGroup->vertical().value_or(Union::Properties::Alignment::Unspecified);
+    auto unionHorizontal = alignmentGroup->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+
+    switch (unionVertical) {
+    case Union::Properties::Alignment::Unspecified:
+    case Union::Properties::Alignment::Fill:
+    case Union::Properties::Alignment::StackCenter:
+    case Union::Properties::Alignment::StackFill:
+    case Union::Properties::Alignment::Center:
+        verticalAlignment = Qt::AlignVCenter;
+        break;
+    case Union::Properties::Alignment::Start:
+        verticalAlignment = Qt::AlignTop;
+        break;
+    case Union::Properties::Alignment::End:
+        verticalAlignment = Qt::AlignBottom;
+        break;
+    }
+
+    switch (unionHorizontal) {
+    case Union::Properties::Alignment::Unspecified:
+    case Union::Properties::Alignment::Fill:
+    case Union::Properties::Alignment::StackCenter:
+    case Union::Properties::Alignment::StackFill:
+    case Union::Properties::Alignment::Start:
+        horizontalAlignment = Qt::AlignLeft;
+        break;
+    case Union::Properties::Alignment::Center:
+        horizontalAlignment = Qt::AlignHCenter;
+        break;
+    case Union::Properties::Alignment::End:
+        horizontalAlignment = Qt::AlignRight;
+        break;
+    }
+
+    return verticalAlignment | horizontalAlignment;
+}
+
+Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode)
+{
+    Qt::TextElideMode elide;
+    switch (elideMode) {
+    case Union::Properties::TextElide::None:
+        elide = Qt::TextElideMode::ElideNone;
+        break;
+    case Union::Properties::TextElide::Left:
+        elide = Qt::TextElideMode::ElideLeft;
+        break;
+    case Union::Properties::TextElide::Middle:
+        elide = Qt::TextElideMode::ElideMiddle;
+        break;
+    case Union::Properties::TextElide::Right:
+        elide = Qt::TextElideMode::ElideRight;
+        break;
+    }
+    return elide;
+}
+Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode)
+{
+    Qt::TextFlag wrap = Qt::TextFlag::TextDontClip;
+    switch (wrapMode) {
+    case Union::Properties::TextWrapMode::NoWrap:
+    case Union::Properties::TextWrapMode::ManualWrap:
+        break;
+    case Union::Properties::TextWrapMode::WordWrap:
+    case Union::Properties::TextWrapMode::WrapAtWordBoundaryOrAnywhere:
+        wrap = Qt::TextFlag::TextWordWrap;
+        break;
+    case Union::Properties::TextWrapMode::WrapAnywhere:
+        wrap = Qt::TextFlag::TextWrapAnywhere;
+        break;
+    }
+    return wrap;
+}
+
+QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties)
 {
     // Shrink the widget rect by the insets
     // TODO: we may have to keep it as a QRectF here

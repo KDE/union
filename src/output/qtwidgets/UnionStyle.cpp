@@ -29,25 +29,21 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
     if (controlElement == CE_PushButton) {
         const auto buttonOption = static_cast<const QStyleOptionButton *>(option);
-
-        // TODO: Works with drawElement, but needs drawTextElement
-        auto element = Union::Element::create();
-        element->setType(QStringLiteral("Button"));
-        element->setStates(statesFromOption(option));
-        element->setColorSet(colorsetFromOption(option));
-        element->setHints(hintsFromOption(option));
-
-        const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
-        drawBackground(painter, rect, properties);
-
-        QStyleOptionButton labelOption(*buttonOption);
-        labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
-
-        QProxyStyle::drawControl(CE_PushButtonLabel, &labelOption, painter, widget);
-
+        drawElement(buttonOption, painter, widget);
+        drawControl(CE_PushButtonLabel, buttonOption, painter, widget);
         return;
     }
+    if (controlElement == CE_PushButtonLabel) {
+        const auto buttonOption = static_cast<const QStyleOptionButton *>(option);
+        drawIconText(buttonOption, this, painter, widget, buttonOption->icon, buttonOption->text);
+        return;
+    }
+    if (controlElement == CE_ToolButtonLabel) {
+        const auto buttonOption = static_cast<const QStyleOptionToolButton *>(option);
+        drawIconText(buttonOption, this, painter, widget, buttonOption->icon, buttonOption->text);
+        return;
+    }
+
     QProxyStyle::drawControl(controlElement, option, painter, widget);
 }
 
@@ -55,22 +51,8 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 {
     if (control == CC_ToolButton) {
         const auto buttonOption = static_cast<const QStyleOptionToolButton *>(option);
-
-        auto element = Union::Element::create();
-        element->setType(QStringLiteral("ToolButton"));
-        element->setStates(statesFromOption(option));
-        element->setColorSet(colorsetFromOption(option));
-        bool flat = option->state & QStyle::State_AutoRaise;
-        element->setHint(QStringLiteral("raised"), !flat);
-
-        const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
-        drawBackground(painter, rect, properties);
-
-        QStyleOptionToolButton labelOption(*buttonOption);
-        labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
-
-        QProxyStyle::drawControl(CE_ToolButtonLabel, &labelOption, painter, widget);
+        drawElement(buttonOption, painter, widget);
+        drawControl(CE_ToolButtonLabel, buttonOption, painter, widget);
         return;
     }
     if (control == CC_GroupBox) {
@@ -82,7 +64,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         element->setColorSet(colorsetFromOption(option));
 
         const auto properties = prepareProperties(element);
-        auto rect = prepareRectangle(option, properties).toRect();
+        auto rect = backgroundRectangle(option, properties).toRect();
         drawBackground(painter, rect, properties);
         if ((groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && !groupBoxOption->text.isEmpty()) {
             QRect textRect = subControlRect(CC_GroupBox, option, SC_GroupBoxLabel, widget);
@@ -132,7 +114,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
         drawElement(option, painter, widget, QStringLiteral("ScrollAreaCorner"));
         return;
     case QStyle::PE_PanelTipLabel:
-        drawElement(option, painter, widget, QStringLiteral("Text"));
+        drawElement(option, painter, widget, QStringLiteral("ToolTip"));
         return;
     case QStyle::PE_FrameFocusRect:
         drawElement(option, painter, widget, QStringLiteral("FocusFrame"));
