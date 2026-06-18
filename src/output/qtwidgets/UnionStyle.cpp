@@ -9,11 +9,130 @@
 #include <QApplication>
 #include <StyleRegistry.h>
 
+#include <QImage>
 #include <QPainter>
 #include <QPushButton>
 #include <QStyleFactory>
 #include <QStyleOption>
 #include <QWidget>
+
+namespace
+{
+
+std::unique_ptr<Union::ElementQuery> executeQuery(const QList<Union::Element::Ptr> &elements)
+{
+    auto query = std::make_unique<Union::ElementQuery>(Union::StyleRegistry::instance()->defaultStyle());
+    query->setElements(elements);
+    query->execute();
+    return query;
+}
+
+Union::Element::Ptr createCheckBoxElement(const QStyleOption *option)
+{
+    auto element = Union::Element::create();
+    element->setType(QStringLiteral("CheckBox"));
+    if (option) {
+        element->setStates(statesFromOption(option));
+    }
+
+    if (const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option); buttonOption && !buttonOption->icon.isNull()) {
+        element->setHint(QStringLiteral("with-icon"));
+    }
+
+    return element;
+}
+
+Union::Element::Ptr createIndicatorElement(const Union::Element::Ptr &parentElement)
+{
+    auto indicator = Union::Element::create();
+    indicator->setType(QStringLiteral("Indicator"));
+    indicator->setStates(parentElement->states());
+    return indicator;
+}
+
+QMargins marginsFromSizeGroup(const Union::Properties::SizePropertyGroup *size)
+{
+    if (!size) {
+        return {};
+    }
+
+    return size->toMargins().toMargins();
+}
+
+QSize sizeFromMargins(const QMargins &margins)
+{
+    return {margins.left() + margins.right(), margins.top() + margins.bottom()};
+}
+
+QRect insetRect(const QRect &rect, const Union::Properties::StylePropertyGroup *properties)
+{
+    QRect result = rect;
+
+    if (const auto layout = properties ? properties->layout() : nullptr; layout && layout->inset()) {
+        result -= marginsFromSizeGroup(layout->inset());
+    }
+
+    return result;
+}
+
+QRect innerBackgroundRect(const QRect &rect, const Union::Properties::StylePropertyGroup *properties)
+{
+    QRectF innerRect = rect;
+
+    if (const auto border = properties ? properties->border() : nullptr) {
+        innerRect -= border->sizes();
+    }
+
+    return innerRect.toAlignedRect();
+}
+
+QSize styledIndicatorSize(const Union::Properties::StylePropertyGroup *properties, const QSize &fallback)
+{
+    QSize size = fallback;
+
+    if (const auto layout = properties ? properties->layout() : nullptr) {
+        if (const auto width = layout->width()) {
+            size.setWidth(qRound(*width));
+        }
+        if (const auto height = layout->height()) {
+            size.setHeight(qRound(*height));
+        }
+    }
+
+    return size;
+}
+
+void drawStyledBackgroundImage(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *properties)
+{
+    const auto background = properties ? properties->background() : nullptr;
+    const auto image = background ? background->image() : nullptr;
+    if (!image || !image->source()) {
+        return;
+    }
+
+    QImage renderedImage;
+    const auto targetRect = innerBackgroundRect(rect, properties);
+    const auto sourceImage = QImage(QString::fromStdString(image->source()->string()));
+
+    if (sourceImage.isNull()) {
+        return;
+    }
+
+    renderedImage = sourceImage.convertToFormat(QImage::Format_ARGB32_Premultiplied);
+
+    if (const auto flags = image->flags();
+        flags && (flags->testFlag(Union::Properties::ImageFlag::Mask) || flags->testFlag(Union::Properties::ImageFlag::InvertedMask))) {
+        const auto maskColor = image->maskColor().value_or(Union::Color{}).toQColor();
+        QPainter imagePainter(&renderedImage);
+        imagePainter.setCompositionMode(flags->testFlag(Union::Properties::ImageFlag::InvertedMask) ? QPainter::CompositionMode_DestinationOut
+                                                                                                    : QPainter::CompositionMode_SourceIn);
+        imagePainter.fillRect(renderedImage.rect(), maskColor);
+    }
+
+    painter->drawImage(targetRect, renderedImage);
+}
+
+}
 
 UnionStyle::UnionStyle()
     : QCommonStyle()
@@ -72,6 +191,31 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     QCommonStyle::drawControl(controlElement, option, painter, widget);
 }
 
+void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+{
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
+    if (element == PE_IndicatorCheckBox /*&& option && !option->state.testFlag(State_NoChange)*/) {
+        auto checkboxElement = createCheckBoxElement(option);
+        auto indicatorElement = createIndicatorElement(checkboxElement);
+
+        const auto query = executeQuery({checkboxElement, indicatorElement});
+        if (!query->hasMatches()) {
+            QCommonStyle::drawPrimitive(element, option, painter, widget);
+            return;
+        }
+
+        const auto properties = query->properties();
+        const auto rect = insetRect(option->rect, properties);
+
+        drawBackground(painter, rect, properties);
+        drawStyledBackgroundImage(painter, rect, properties);
+        return;
+    }
+
+    QCommonStyle::drawPrimitive(element, option, painter, widget);
+}
+
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const
 {
     if (ct == CT_PushButton) {
@@ -95,12 +239,73 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
 
         return size;
     }
+    if (ct == CT_CheckBox) {
+        QSize size = contentsSize;
+
+        auto checkboxElement = createCheckBoxElement(opt);
+        const auto checkboxQuery = executeQuery({checkboxElement});
+        const auto indicatorQuery = executeQuery({checkboxElement, createIndicatorElement(checkboxElement)});
+
+        int spacing = pixelMetric(PM_CheckBoxLabelSpacing, opt, widget);
+        QSize indicatorSize{pixelMetric(PM_IndicatorWidth, opt, widget), pixelMetric(PM_IndicatorHeight, opt, widget)};
+
+        if (indicatorQuery->hasMatches()) {
+            indicatorSize = styledIndicatorSize(indicatorQuery->properties(), indicatorSize);
+        }
+
+        const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt);
+        const bool hasLabelContent = buttonOption && (!buttonOption->text.isEmpty() || !buttonOption->icon.isNull());
+
+        size.rwidth() += indicatorSize.width();
+        if (hasLabelContent) {
+            size.rwidth() += spacing;
+        }
+        size.setHeight(std::max(size.height(), indicatorSize.height()));
+
+        if (checkboxQuery->hasMatches()) {
+            const auto properties = checkboxQuery->properties();
+            if (const auto layout = properties->layout()) {
+                size += sizeFromMargins(marginsFromSizeGroup(layout->padding()));
+                size += sizeFromMargins(marginsFromSizeGroup(layout->inset()));
+
+                if (const auto width = layout->width()) {
+                    size.setWidth(std::max(size.width(), qRound(*width)));
+                }
+                if (const auto height = layout->height()) {
+                    size.setHeight(std::max(size.height(), qRound(*height)));
+                }
+            }
+        }
+
+        return size;
+    }
     return QCommonStyle::sizeFromContents(ct, opt, contentsSize, widget);
 }
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
     switch (metric) {
+    case PM_IndicatorWidth:
+    case PM_IndicatorHeight: {
+        auto checkboxElement = createCheckBoxElement(option);
+        const auto query = executeQuery({checkboxElement, createIndicatorElement(checkboxElement)});
+        if (query->hasMatches()) {
+            const auto styledSize = styledIndicatorSize(
+                query->properties(),
+                {QCommonStyle::pixelMetric(PM_IndicatorWidth, option, widget), QCommonStyle::pixelMetric(PM_IndicatorHeight, option, widget)});
+            return metric == PM_IndicatorWidth ? styledSize.width() : styledSize.height();
+        }
+        break;
+    }
+    case PM_CheckBoxLabelSpacing: {
+        const auto query = executeQuery({createCheckBoxElement(option)});
+        if (query->hasMatches()) {
+            if (const auto layout = query->properties()->layout(); layout && layout->spacing()) {
+                return qRound(*layout->spacing());
+            }
+        }
+        break;
+    }
     // Don't shift button text when sunken
     case PM_ButtonShiftHorizontal:
     case PM_ButtonShiftVertical:
@@ -108,6 +313,8 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     default:
         return QCommonStyle::pixelMetric(metric, option, widget);
     }
+
+    return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
 void UnionStyle::polish(QApplication *application)
