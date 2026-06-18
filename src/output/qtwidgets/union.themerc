@@ -23,6 +23,7 @@ Name[sl]=Union (V razvoju)
 Name[tr]=Union (Geliştirme Sürecinde)
 Name[uk]=Union (у розробці)
 Name[zh_CN]=Union 和合 (开发中)
+Name[zh_TW]=Union（開發中）
 Comment=An in-development style engine intended to unify the various styling systems in KDE.
 Comment[ar]=محرك أنماط قيد التطوير يهدف إلى توحيد أنظمة الأنماط المختلفة في كيدي.
 Comment[ca]=Un motor d'estil en desenvolupament destinat a unificar els diversos sistemes d'estils de KDE.
@@ -44,5 +45,6 @@ Comment[sl]=Slogovni mehanizem v razvoju, namenjen poenotenju različnih slogovn
 Comment[tr]=KDE’deki çeşitli stil sistemlerini birleştirmeyi amaçlayan, geliştirme aşamasındaki bir stil işletkesi
 Comment[uk]=Незавершений рушій стилів, який призначено для уніфікації різноманітних систем стилів у KDE.
 Comment[zh_CN]=一款旨在统一 KDE 中的各种样式系统的样式引擎 (开发中)。
+Comment[zh_TW]=開發中的樣式引擎，希望統合 KDE 的各種風格樣式化系統。
 [KDE]
 WidgetStyle=Union
