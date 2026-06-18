@@ -11,7 +11,7 @@
 /*!
  * \brief Provides Union styling for QtWidgets applications.
  */
-class UnionStyle : public QProxyStyle
+class UnionStyle : public QCommonStyle
 {
     Q_OBJECT
     /* KStyle has custom elements mechanism, disable it. */
