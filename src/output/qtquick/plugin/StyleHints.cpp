@@ -14,7 +14,7 @@
 using namespace Union;
 using namespace Union::Quick;
 
-QEvent::Type StyleHintsChangedEvent::s_type = QEvent::None;
+UNIONQUICKIMPL_EXPORT QEvent::Type StyleHintsChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<StyleHintsChangedEvent> styleHintsRegistration;
 
 StyleHints::StyleHints(QObject *parent)

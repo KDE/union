@@ -16,9 +16,9 @@
 using namespace Union;
 using namespace Union::Quick;
 
-UNION_EXPORT QEvent::Type QuickStyleUpdatedEvent::s_type = QEvent::None;
+UNIONQUICKIMPL_EXPORT QEvent::Type QuickStyleUpdatedEvent::s_type = QEvent::None;
 static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleUpdatedRegistration;
-UNION_EXPORT QEvent::Type QuickStyleColorsChangedEvent::s_type = QEvent::None;
+UNIONQUICKIMPL_EXPORT QEvent::Type QuickStyleColorsChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<QuickStyleColorsChangedEvent> quickStyleColorsChangedRegistration;
 
 QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)

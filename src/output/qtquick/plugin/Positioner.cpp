@@ -13,7 +13,7 @@
 using namespace Union;
 using namespace Union::Quick;
 
-UNION_EXPORT QEvent::Type PositionedItemChangedEvent::s_type = QEvent::None;
+UNIONQUICKIMPL_EXPORT QEvent::Type PositionedItemChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<PositionedItemChangedEvent> positionedItemChangedRegistration;
 
 Positioner::Positioner(QObject *parent)
