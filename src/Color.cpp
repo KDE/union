@@ -434,7 +434,9 @@ Color::Color(Color &&other)
 
 Color &Color::operator=(const Color &other)
 {
-    data = other.data;
+    if (other.data) {
+        data = other.data;
+    }
     return *this;
 }
 
