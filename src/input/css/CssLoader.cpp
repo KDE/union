@@ -376,7 +376,9 @@ bool CssLoader::load(Style::Ptr theme)
     m_stylePath = cssPath / "styles"s / theme->name().toStdString();
     cssparser::StyleSheet styleSheet(m_stylePath / "style.css"s);
 
-    styleSheet.import(cssPath / "defaults"s / "default.css"s);
+    auto defaultsPath =
+        fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults"_s, QStandardPaths::LocateDirectory).toStdString());
+    styleSheet.import(defaultsPath / "default.css"s);
     styleSheet.parse();
 
     const auto paths = styleSheet.paths();
