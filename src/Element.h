@@ -305,7 +305,7 @@ public:
 
     const Element::Changes changes;
 
-    inline static QEvent::Type s_type = QEvent::None;
+    static QEvent::Type s_type;
 };
 }
 

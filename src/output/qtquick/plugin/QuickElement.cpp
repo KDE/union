@@ -19,6 +19,7 @@
 using namespace Union;
 using namespace Union::Quick;
 
+UNIONQUICKIMPL_EXPORT QEvent::Type QuickElementUpdatedEvent::s_type = QEvent::None;
 static EventTypeRegistration<QuickElementUpdatedEvent> quickElementRegistration;
 
 template<typename T, QList<T *> QuickElement::*member, void (QuickElement::*changeSignal)()>

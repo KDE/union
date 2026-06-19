@@ -15,6 +15,7 @@
 using namespace Union;
 using namespace Qt::StringLiterals;
 
+UNION_EXPORT QEvent::Type ElementChangedEvent::s_type = QEvent::None;
 static EventTypeRegistration<ElementChangedEvent> elementRegistration;
 
 class Union::ElementPrivate

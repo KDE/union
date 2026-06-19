@@ -462,7 +462,7 @@ class QuickElementUpdatedEvent : public QEvent
 public:
     QuickElementUpdatedEvent();
 
-    inline static QEvent::Type s_type = QEvent::None;
+    static QEvent::Type s_type;
 };
 
 }
