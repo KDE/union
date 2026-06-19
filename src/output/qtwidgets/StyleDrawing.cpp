@@ -442,7 +442,6 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
     if (widget) {
         elementTypes = widget->property(property_union_member_list).toStringList();
     }
-    //    elementTypes.append(QStringLiteral("Text"));
 
     if (elementTypes.isEmpty()) {
         qWarning() << "Could not draw text" << widget << "with styleOption" << opt << " ! Missing elementType!";
@@ -467,61 +466,23 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
     query->execute();
     auto properties = query->properties();
 
-    auto rect = backgroundRectangle(opt, properties).toRect();
-
     QMargins paddings;
     if (properties->layout()->padding()) {
         paddings = properties->layout()->padding()->toMargins().toMargins();
     }
+    auto rect = backgroundRectangle(opt, properties).toRect().marginsRemoved(paddings);
 
-    rect = rect.marginsRemoved(paddings);
-
-    auto textRect = rect;
-    auto iconRect = textRect;
-    QSize iconSize(properties->icon()->width().value_or(0), properties->icon()->height().value_or(0));
-    auto spacing = properties->layout()->spacing().value_or(0);
-    iconRect.setSize(iconSize);
-
-    // TODO move these into their own little function
-    auto textOrder = properties->text()->alignment()->order().value_or(0);
-    auto iconOrder = properties->icon()->alignment()->order().value_or(0);
-    if (hasIcon && hasText) {
-        switch (properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified)) {
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            textRect.moveLeft(rect.left());
-            textRect.adjust(0, 0, -iconRect.width() + spacing / 2, 0);
-            iconRect.moveLeft(textRect.right());
-            break;
-        case Union::Properties::Alignment::Center:
-        case Union::Properties::Alignment::Fill:
-        case Union::Properties::Alignment::End:
-            textRect.moveCenter(rect.center());
-            textRect.adjust(iconRect.width() - spacing / 2, 0, 0, 0);
-            iconRect.moveRight(textRect.left());
-            break;
-        case Union::Properties::Alignment::StackCenter:
-        case Union::Properties::Alignment::StackFill:
-            break;
-        }
-    } else {
-        textRect.moveCenter(rect.center());
-        iconRect.moveCenter(rect.center());
+    QStringList subElements;
+    // TODO: these need to be ordered correctly
+    if (hasIcon) {
+        subElements.append(QStringLiteral("Icon"));
     }
-    switch (properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified)) {
-    case Union::Properties::Alignment::Unspecified:
-    case Union::Properties::Alignment::Center:
-    case Union::Properties::Alignment::Fill:
-        textRect.moveCenter(QPoint(textRect.center().x(), rect.center().y()));
-        iconRect.moveCenter(QPoint(iconRect.center().x(), rect.center().y()));
-        break;
-    case Union::Properties::Alignment::Start:
-    case Union::Properties::Alignment::End:
-    case Union::Properties::Alignment::StackCenter:
-    case Union::Properties::Alignment::StackFill:
-        break;
+    if (hasText) {
+        subElements.append(QStringLiteral("Text"));
     }
+    auto map = layoutMap(rect, opt, elements, subElements);
 
+    QRect textRect;
     if (hasText) {
         auto textAlignment = toQtAlignment(properties->text()->alignment());
         auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
@@ -531,6 +492,7 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
         if (textColor) {
             penColor = textColor->toQColor();
         }
+        textRect = map[QStringLiteral("Text")].toRect();
 
         painter->save();
         painter->setPen(penColor);
@@ -538,14 +500,16 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
         painter->restore();
     }
 
+    QRect iconRect;
     if (hasIcon) {
         auto iconAlignment = toQtAlignment(properties->icon()->alignment());
         auto iconColor = properties->icon()->color();
 
+        iconRect = map[QStringLiteral("Icon")].toRect();
         const QPalette activePalette = opt->palette;
         const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
 
-        const QPixmap pixmap = icon.pixmap(iconSize, dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+        const QPixmap pixmap = icon.pixmap(iconRect.size(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
         QColor penColor = opt->palette.text().color(); // Use text color as fallback
 
         if (iconColor) {
@@ -558,7 +522,7 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
         painter->restore();
     }
 
-    /*debug
+    /* debug
         painter->save();
         painter->setBrush(Qt::NoBrush);
         painter->setPen(Qt::blue);

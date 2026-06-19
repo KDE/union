@@ -217,6 +217,15 @@ Union::Element::ColorSet colorsetFromOption(const QStyleOption *option)
 QVariantMap attributesFromOption(const QStyleOption *option)
 {
     switch ((QStyleOption::OptionType)option->type) {
+    case QStyleOption::SO_ToolButton:
+        if (const auto optionButton = static_cast<const QStyleOptionToolButton *>(option)) {
+            if (optionButton->toolButtonStyle == Qt::ToolButtonTextUnderIcon) {
+                QVariantMap map;
+                map[QStringLiteral("display")] = QVariant(QStringLiteral("text-under-icon"));
+                return map;
+            }
+        }
+        break;
     case QStyleOption::SO_ViewItem:
     case QStyleOption::SO_Default:
     case QStyleOption::SO_FocusRect:
@@ -236,7 +245,6 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     case QStyleOption::SO_Complex:
     case QStyleOption::SO_Slider:
     case QStyleOption::SO_SpinBox:
-    case QStyleOption::SO_ToolButton:
     case QStyleOption::SO_ComboBox:
     case QStyleOption::SO_TitleBar:
     case QStyleOption::SO_GroupBox:
@@ -248,13 +256,10 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     return QVariantMap();
 }
 
-Qt::Alignment
-toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup, Union::Properties::TextElide elideMode, Union::Properties::TextWrapMode wrapMode)
+Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup)
 {
     Qt::Alignment verticalAlignment = Qt::AlignVCenter;
     Qt::Alignment horizontalAlignment = Qt::AlignLeft;
-    Qt::TextElideMode elide = Qt::ElideNone;
-    Qt::TextFlag wrap = Qt::TextWordWrap;
 
     if (!alignmentGroup) {
         return verticalAlignment | horizontalAlignment;
@@ -424,4 +429,138 @@ QStringList setupMemberList(QWidget *widget)
     }
 
     return members;
+}
+
+QMap<QString, QRectF> layoutMap(const QRect &mainRect, const QStyleOption *opt, const QList<Union::Element::Ptr> &elementList, const QStringList &subElements)
+{
+    QMap<QString, QRectF> map;
+
+    if (mainRect.isEmpty()) {
+        qWarning() << "Could not layout on empty rectangle!";
+        return map;
+    }
+    if (subElements.empty()) {
+        qWarning() << "No sublements given, returning empty map!";
+        return map;
+    }
+
+    // TODO get the order of items, create them rectangles
+    // then go through them in order, checking for previous and next rectangle and
+    // layouting them
+
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto query = std::make_unique<Union::ElementQuery>(style);
+    QRectF availableSpace = mainRect;
+    QRectF previousRect;
+    for (const auto &subElement : subElements) {
+        auto currentHierarchy = elementList;
+        // NOTE: Currently these are part of the main element, but eventually
+        // will be moved as their own elements
+        if (subElement != QStringLiteral("Icon") && subElement != QStringLiteral("Text")) {
+            auto unionElement = Union::Element::create();
+            unionElement->setType(subElement);
+            unionElement->setStates(statesFromOption(opt));
+            unionElement->setHints(hintsFromOption(opt));
+            unionElement->setColorSet(colorsetFromOption(opt));
+            unionElement->setAttributes(attributesFromOption(opt));
+            currentHierarchy.append(unionElement);
+        }
+
+        query->setElements(currentHierarchy);
+        query->execute();
+        auto properties = query->properties();
+        Union::Properties::Alignment horizontalAlignment;
+        Union::Properties::Alignment verticalAlignment;
+        QRectF elementRect = availableSpace;
+        if (subElement == QStringLiteral("Icon")) {
+            elementRect.setWidth(properties->icon()->width().value_or(0));
+            elementRect.setHeight(properties->icon()->height().value_or(0));
+            horizontalAlignment = properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+            verticalAlignment = properties->icon()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+        } else if (subElement == QStringLiteral("Text")) {
+            horizontalAlignment = properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+            verticalAlignment = properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+        } else {
+            horizontalAlignment = properties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+            verticalAlignment = properties->layout()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+        }
+
+        // TODO for now icon and text have their own layout, so use that
+        // check them by name
+
+        auto spacing = properties->layout()->spacing().value_or(0);
+        switch (horizontalAlignment) {
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::Start:
+            if (!previousRect.isEmpty()) {
+                elementRect.moveLeft(previousRect.right());
+                elementRect.adjust(0, 0, -previousRect.width() + spacing / 2, 0);
+            } else {
+                elementRect.moveLeft(mainRect.left());
+            }
+            availableSpace.moveLeft(elementRect.right());
+            break;
+        case Union::Properties::Alignment::Center:
+        case Union::Properties::Alignment::Fill:
+            // For single items, we can just utilize the exact center, since we do not need to move
+            // other items around
+            if (subElements.size() > 1) {
+                if (!previousRect.isEmpty()) {
+                    elementRect.moveLeft(previousRect.right());
+                    elementRect.adjust(0, 0, -previousRect.width() + spacing / 2, 0);
+                } else {
+                    elementRect.moveLeft(mainRect.left());
+                }
+                availableSpace.moveLeft(elementRect.right());
+            } else {
+                elementRect.moveCenter(QPoint(mainRect.center().x(), elementRect.center().y()));
+            }
+            break;
+        case Union::Properties::Alignment::End:
+            if (!previousRect.isEmpty()) {
+                elementRect.moveRight(previousRect.left());
+                elementRect.adjust(previousRect.width() - spacing / 2, 0, 0, 0);
+            } else {
+                elementRect.moveRight(mainRect.right());
+            }
+            availableSpace.moveRight(elementRect.left());
+            break;
+        case Union::Properties::Alignment::StackCenter:
+        case Union::Properties::Alignment::StackFill:
+            elementRect.moveCenter(QPoint(mainRect.center().x(), elementRect.center().y()));
+            break;
+        }
+        switch (verticalAlignment) {
+        case Union::Properties::Alignment::Unspecified:
+            break;
+        case Union::Properties::Alignment::Fill:
+        case Union::Properties::Alignment::Center:
+            elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.center().y()));
+            break;
+        case Union::Properties::Alignment::Start:
+
+            if (!previousRect.isEmpty()) {
+                elementRect.moveTop(previousRect.bottom());
+            } else {
+                elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.top()));
+            }
+            availableSpace.moveTop(elementRect.bottom());
+            break;
+        case Union::Properties::Alignment::End:
+            elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.bottom()));
+            // TODO need to check previous item position
+            break;
+        case Union::Properties::Alignment::StackCenter:
+        case Union::Properties::Alignment::StackFill:
+            if (!previousRect.isEmpty()) {
+                elementRect.moveTop(previousRect.bottom());
+            } else {
+                elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.center().y()));
+            }
+            availableSpace.moveTop(elementRect.bottom());
+        }
+        previousRect = elementRect;
+        map[subElement] = elementRect;
+    }
+    return map;
 }
