@@ -34,5 +34,6 @@ To get started creating CSS styles for Union, please read
     \li \l{css-styling-applications.html}{Styling Applications with CSS}
     \li \l{css-support.html}{Supported CSS}
     \li \l{css-properties.html}{Property Reference}
+    \li \l{css-functions.html}{Function Reference}
 \endlist
 */

@@ -1,0 +1,51 @@
+/*
+    SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+    SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+*/
+
+/*!
+
+\page css-functions.html
+\title CSS Function Reference
+
+\section1 Color Functions
+
+\section2 custom-color(source, arguments)
+
+Returns a color from \p source. \p arguments is a list of strings that can be
+used by the source to determine what color is returned.
+
+Currently the following sources are supported:
+
+\list
+    \li \b{kcolorscheme:} Retrieve colors from KDE's color scheme format. \br
+        Arguments are:
+        \list
+            \li \b{color group:} active, inactive, disabled
+            \li \b{color set:} window, button, view, header, tooltip, selection, complementary
+            \li \b{color role:} foreground, background, decoration
+            \li \b{color name:}
+                \list
+                    \li For foreground: text, active, inactive, positive, neutral, negative, link, visited
+                    \li For background: normal, alternate, active, positive, neutral, negative, link, visited
+                    \li For decoration: hover, focus
+                \endlist
+        \endlist
+\endlist
+
+\section2 mix(first_color, second_color, amount)
+
+Mixes two colors by linear interpolating between \p first_color and \p second_color by \p amount.
+
+\section2 modify-color(color operation parameter)
+
+Modifies \p color in some way. Supported operations:
+
+\list
+    \li \b{add} Adds two colors together. \p parameter is expected to be another color.
+    \li \b{subtract} Subtracts a color from \p color. \p parameter is expected to be another color.
+    \li \b{multiply} Multiplies two colors together. \p parameter is expected to be another color.
+    \li \b{set-alpha} Sets the alpha value of \p color. \p parameter is expected to be the alpha value.
+\endlist
+
+*/
