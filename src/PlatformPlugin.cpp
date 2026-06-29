@@ -27,3 +27,8 @@ bool PlatformPlugin::smoothScroll()
 {
     return true;
 }
+
+qreal PlatformPlugin::animationSpeedMultiplier()
+{
+    return 1.0;
+}
