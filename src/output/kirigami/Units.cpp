@@ -4,6 +4,7 @@
 #include "Units.h"
 
 #include "ElementQuery.h"
+#include "StyleRegistry.h"
 
 using namespace Qt::StringLiterals;
 
@@ -19,10 +20,18 @@ Units::Units(QObject *parent)
     // query.setElements({unitsElement});
     // query.execute();
 
-    setVeryShortDuration(50);
-    setShortDuration(100);
-    setLongDuration(200);
-    setVeryLongDuration(400);
+    auto platform = Union::StyleRegistry::instance()->platform();
+    connect(platform.get(), &Union::PlatformPlugin::animationSpeedMultiplierChanged, this, &Units::setAnimationSpeeds);
+    setAnimationSpeeds();
+}
+
+void Units::setAnimationSpeeds()
+{
+    auto multiplier = Union::StyleRegistry::instance()->platform()->animationSpeedMultiplier();
+    setVeryShortDuration(50 * multiplier);
+    setShortDuration(100 * multiplier);
+    setLongDuration(200 * multiplier);
+    setVeryLongDuration(400 * multiplier);
 }
 
 #include "moc_Units.cpp"

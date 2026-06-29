@@ -10,4 +10,7 @@ class Units : public Kirigami::Platform::Units
     Q_OBJECT
 public:
     explicit Units(QObject *parent = nullptr);
+
+private:
+    void setAnimationSpeeds();
 };
