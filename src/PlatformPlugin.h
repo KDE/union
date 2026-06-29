@@ -52,6 +52,19 @@ public:
      * Enables/disables tweened scrollbars and inertial scrolling. Defaults to true
      */
     virtual bool smoothScroll();
+    /*!
+     * Returns a multiplier to globally change the animation speed.
+     *
+     * This value should be used with animation speeds to ensure a platform's
+     * preferences with regards to animation speed is respected.
+     *
+     * By default this will return 1.0.
+     */
+    virtual qreal animationSpeedMultiplier();
+    /*!
+     * Emitted whenever animationSpeedMultiplier changes.
+     */
+    Q_SIGNAL void animationSpeedMultiplierChanged();
 };
 
 }
