@@ -22,8 +22,13 @@ public:
 
     bool smoothScroll() override;
 
+    qreal animationSpeedMultiplier() override;
+
 private:
     void setSmoothScroll(bool enabled);
+    void setAnimationSpeedMultiplier(qreal multiplier);
+
     bool m_smoothScroll = true;
+    qreal m_animationSpeedMultiplier = 1.0;
     KConfigWatcher::Ptr m_kdeGlobalsWatcher;
 };
