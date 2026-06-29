@@ -46,6 +46,7 @@ Icon::Icon(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents, true);
+    setSmooth(false);
 }
 
 QString Icon::name() const
@@ -179,7 +180,12 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
                               qreal(m_iconSize.width()),
                               qreal(m_iconSize.height())});
     imageNode->setOwnsTexture(true);
-    imageNode->setFiltering(QSGTexture::Nearest);
+
+    if (smooth()) {
+        imageNode->setFiltering(QSGTexture::Linear);
+    } else {
+        imageNode->setFiltering(QSGTexture::Nearest);
+    }
 
     auto renderWindow = QQuickRenderControl::renderWindowFor(window());
     if (!renderWindow) {
