@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QSaveFile>
 #include <QStandardPaths>
+#include <QThread>
 
 #include "QDataStreamExtras.h"
 #include "Style_p.h"
@@ -61,37 +62,8 @@ StyleCache::StyleCache()
     }
 }
 
-StyleCache::~StyleCache() = default;
-
-bool Union::StyleCache::enabled() const
+std::unique_ptr<StylePrivate> loadCachedStyle(const StyleCache::StyleId &styleId, const fs::path &path)
 {
-    static bool enabled = !qEnvironmentVariableIsSet("UNION_DISABLE_STYLE_CACHE");
-    return enabled;
-}
-
-bool StyleCache::hasEntry(const StyleId &styleId) const
-{
-    return d->stylePaths.contains(styleId);
-}
-
-std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
-{
-    if (!enabled()) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because caching has been disabled";
-        return nullptr;
-    }
-
-    auto path = d->stylePaths.value(styleId);
-    if (path.empty()) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because no cache file could be found";
-        return nullptr;
-    }
-
-    static bool forceRecreate = qEnvironmentVariableIsSet("UNION_FORCE_RECREATE_STYLE_CACHE");
-    if (forceRecreate) {
-        return nullptr;
-    }
-
     QFile cacheFile(path);
     if (!cacheFile.open(QIODevice::ReadOnly)) {
         return nullptr;
@@ -155,6 +127,55 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
 
     if (reader.status() != QDataStream::Status::Ok) {
         qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "restoring cached data failed";
+        return nullptr;
+    }
+
+    return result;
+}
+
+StyleCache::~StyleCache() = default;
+
+bool Union::StyleCache::enabled() const
+{
+    static bool enabled = !qEnvironmentVariableIsSet("UNION_DISABLE_STYLE_CACHE");
+    return enabled;
+}
+
+bool StyleCache::hasEntry(const StyleId &styleId) const
+{
+    return d->stylePaths.contains(styleId);
+}
+
+std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
+{
+    if (!enabled()) {
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because caching has been disabled";
+        return nullptr;
+    }
+
+    auto path = d->stylePaths.value(styleId);
+    if (path.empty()) {
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because no cache file could be found";
+        return nullptr;
+    }
+
+    static bool forceRecreate = qEnvironmentVariableIsSet("UNION_FORCE_RECREATE_STYLE_CACHE");
+    if (forceRecreate) {
+        return nullptr;
+    }
+
+    // Cache data is loaded on a thread so that we can abort it if it takes too
+    // much time. This can happen when the cache format has changed but our
+    // validation checks still think it's valid.
+    std::unique_ptr<StylePrivate> result;
+    auto thread = QThread::create([&]() {
+        result = loadCachedStyle(styleId, path);
+    });
+    thread->start();
+
+    if (!thread->wait(500)) {
+        qCWarning(UNION_GENERAL) << "Timed out reading cached data, ignoring cache for style" << styleId.second << "from plugin" << styleId.first;
+        thread->terminate();
         return nullptr;
     }
 
