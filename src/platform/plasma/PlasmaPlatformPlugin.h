@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <KConfigWatcher>
+
 #include <PlatformPlugin.h>
 
 class PlasmaPlatformPlugin : public Union::PlatformPlugin
@@ -21,8 +23,7 @@ public:
     bool smoothScroll() override;
 
 private:
-    bool m_smoothScroll = true;
-
-private Q_SLOTS:
     void setSmoothScroll(bool enabled);
+    bool m_smoothScroll = true;
+    KConfigWatcher::Ptr m_kdeGlobalsWatcher;
 };

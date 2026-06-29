@@ -17,21 +17,18 @@ using namespace Qt::StringLiterals;
 
 PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     : Union::PlatformPlugin(parent)
+    , m_kdeGlobalsWatcher(KConfigWatcher::create(KSharedConfig::openConfig()))
 {
-    const QString configPath = QStandardPaths::locate(QStandardPaths::ConfigLocation, QStringLiteral("kdeglobals"));
-    if (QFile::exists(configPath)) {
-        QSettings globals(configPath, QSettings::IniFormat);
-        globals.beginGroup(QStringLiteral("KDE"));
-        m_smoothScroll = globals.value(QStringLiteral("SmoothScroll"), true).toBool();
-    }
+    KConfigGroup generalCfg = KConfigGroup(KSharedConfig::openConfig(), u"KDE"_s);
+    m_smoothScroll = generalCfg.readEntry(u"SmoothScroll"_s, true);
 
-    // Listen to smooth scroll changed events
-    QDBusConnection::sessionBus().connect(QString(),
-                                          QStringLiteral("/SmoothScroll"),
-                                          QStringLiteral("org.kde.SmoothScroll"),
-                                          QStringLiteral("notifyChange"),
-                                          this,
-                                          SLOT(setSmoothScroll(bool)));
+    connect(m_kdeGlobalsWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+        if (group.name() == "KDE"_L1) {
+            if (names.contains("SmoothScroll"_ba)) {
+                setSmoothScroll(group.readEntry(u"SmoothScroll"_s, true));
+            }
+        }
+    });
 }
 
 QString PlasmaPlatformPlugin::defaultInputPlugin()
@@ -79,5 +76,10 @@ bool PlasmaPlatformPlugin::smoothScroll()
 
 void PlasmaPlatformPlugin::setSmoothScroll(bool enabled)
 {
+    if (enabled == m_smoothScroll) {
+        return;
+    }
+
     m_smoothScroll = enabled;
+    Q_EMIT smoothScrollChanged();
 }
