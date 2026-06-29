@@ -21,9 +21,14 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
 {
     KConfigGroup generalCfg = KConfigGroup(KSharedConfig::openConfig(), u"KDE"_s);
     m_smoothScroll = generalCfg.readEntry(u"SmoothScroll"_s, true);
+    m_animationSpeedMultiplier = std::max<double>(0.0, generalCfg.readEntry(u"AnimationDurationFactor"_s, 1.0));
 
     connect(m_kdeGlobalsWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
         if (group.name() == "KDE"_L1) {
+            if (names.contains("AnimationDurationFactor"_ba)) {
+                setAnimationSpeedMultiplier(std::max<double>(0.0, group.readEntry(u"AnimationDurationFactor"_s, 1.0)));
+            }
+
             if (names.contains("SmoothScroll"_ba)) {
                 setSmoothScroll(group.readEntry(u"SmoothScroll"_s, true));
             }
@@ -82,4 +87,19 @@ void PlasmaPlatformPlugin::setSmoothScroll(bool enabled)
 
     m_smoothScroll = enabled;
     Q_EMIT smoothScrollChanged();
+}
+
+qreal PlasmaPlatformPlugin::animationSpeedMultiplier()
+{
+    return m_animationSpeedMultiplier;
+}
+
+void PlasmaPlatformPlugin::setAnimationSpeedMultiplier(qreal multiplier)
+{
+    if (qFuzzyCompare(multiplier, m_animationSpeedMultiplier)) {
+        return;
+    }
+
+    m_animationSpeedMultiplier = multiplier;
+    Q_EMIT animationSpeedMultiplierChanged();
 }
