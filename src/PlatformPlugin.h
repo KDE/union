@@ -53,6 +53,10 @@ public:
      */
     virtual bool smoothScroll();
     /*!
+     * Emitted whenever smoothScroll changes.
+     */
+    Q_SIGNAL void smoothScrollChanged();
+    /*!
      * Returns a multiplier to globally change the animation speed.
      *
      * This value should be used with animation speeds to ensure a platform's
