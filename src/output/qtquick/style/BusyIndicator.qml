@@ -38,6 +38,7 @@ T.BusyIndicator {
             name: Union.Style.properties.icon.name
             color: Union.Style.properties.icon.color
             opacity: control.running ? 1 : 0
+            smooth: true
 
             RotationAnimator on rotation {
                 running: control.running
