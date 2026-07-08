@@ -54,7 +54,7 @@ public:
             auto data = styleCache->load(styleId);
             if (data) {
                 auto style = std::make_shared<Style>(std::move(data));
-                qCInfo(UNION_GENERAL) << "Loaded style" << styleName << "from cached data";
+                qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from cached data";
                 styles.insert(styleId, style);
                 return style;
             }
@@ -82,7 +82,7 @@ public:
             return nullptr;
         }
 
-        qCInfo(UNION_GENERAL) << "Loaded style" << styleName << "from plugin" << pluginName;
+        qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from plugin" << pluginName;
 
         styles.insert(styleId, style);
         return style;
