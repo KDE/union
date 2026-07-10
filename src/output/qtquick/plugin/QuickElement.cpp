@@ -300,11 +300,15 @@ QuickElement::QuickElement(QObject *parent)
     m_element->installEventFilter(this);
 
     m_statesGroup = std::make_unique<StatesGroup>(this);
-    m_style = StyleRegistry::instance()->defaultStyle();
 
     initialize();
 
     update();
+}
+
+std::shared_ptr<Union::Style> QuickElement::style() const
+{
+    return m_style;
 }
 
 QString QuickElement::type() const
@@ -385,6 +389,7 @@ QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
 
 void QuickElement::attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *)
 {
+    updateStyleFromParent();
     update();
 }
 
@@ -423,6 +428,10 @@ void QuickElement::componentComplete()
 {
     m_completed = true;
 
+    if (!m_style) {
+        setStyle(nullptr);
+    }
+
     // Add the window this element belongs to to WindowHandler so it can update
     // it to include any required state changes. This is done here because we
     // need a hook that is both late enoguh for most of the window stuff to
@@ -457,9 +466,28 @@ void QuickElement::setActiveStates(Union::Element::States newActiveStates)
     m_element->setStates(newActiveStates);
 }
 
-std::shared_ptr<Union::Style> QuickElement::style() const
+void QuickElement::setStyle(const std::shared_ptr<Union::Style> &newStyle)
 {
-    return m_style;
+    m_style = newStyle;
+
+    if (!m_style) {
+        if (attachedParent()) {
+            auto attached = qobject_cast<QuickElement *>(attachedParent());
+            while (attached && !m_style) {
+                m_style = attached->style();
+                attached = qobject_cast<QuickElement *>(attached->attachedParent());
+            }
+        }
+
+        if (!m_style) {
+            m_style = StyleRegistry::instance()->defaultStyle();
+        }
+    }
+
+    const auto children = attachedChildren();
+    for (const auto &child : children) {
+        qobject_cast<QuickElement *>(child)->updateStyleFromParent();
+    }
 }
 
 void QuickElement::updateHints()
@@ -534,6 +562,13 @@ void QuickElement::update()
     const auto children = attachedChildren();
     for (auto child : children) {
         qobject_cast<QuickElement *>(child)->update();
+    }
+}
+
+void Quick::QuickElement::updateStyleFromParent()
+{
+    if (m_styleName.isEmpty() && attachedParent()) {
+        setStyle(qobject_cast<QuickElement *>(attachedParent())->style());
     }
 }
 

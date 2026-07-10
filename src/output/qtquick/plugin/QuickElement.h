@@ -332,6 +332,8 @@ public:
     Q_PROPERTY(QuickElement *parentElement READ parentElement NOTIFY updated)
     QuickElement *parentElement() const;
 
+    std::shared_ptr<Union::Style> style() const;
+
     /*!
      * \qmlattachedproperty string Element::type
      *
@@ -425,8 +427,6 @@ public:
 
     static QuickElement *qmlAttachedProperties(QObject *parent);
 
-    std::shared_ptr<Union::Style> style() const;
-
     void componentComplete() override;
 
 protected:
@@ -441,9 +441,11 @@ private:
     friend class ElementAttribute;
 
     void setActiveStates(Union::Element::States newActiveStates);
+    void setStyle(const std::shared_ptr<Union::Style> &newStyle);
     void updateHints();
     void updateAttributes();
     void update();
+    void updateStyleFromParent();
 
     std::shared_ptr<Union::Element> m_element;
     std::unique_ptr<StatesGroup> m_statesGroup;
@@ -452,6 +454,8 @@ private:
     QList<ElementAttribute *> m_attributes;
 
     std::unique_ptr<Union::ElementQuery> m_query;
+
+    QString m_styleName;
     std::shared_ptr<Union::Style> m_style;
 
     bool m_completed = false;
