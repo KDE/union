@@ -209,7 +209,7 @@ void PositionerLayout::updatePolish()
         }
 
         auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(item, true))->query();
-        if (!query) {
+        if (!query || !query->properties()) {
             // Apparently the item has not completed yet, abort layouting and
             // try again the next frame.
             polish();
