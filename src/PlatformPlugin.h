@@ -78,8 +78,18 @@ public:
      * Emitted whenever animationSpeedMultiplier changes.
      */
     Q_SIGNAL void animationSpeedMultiplierChanged();
+
+protected:
+    void sendDefaultStyleChangedEvent();
 };
 
+class DefaultStyleChangedEvent : public QEvent
+{
+public:
+    DefaultStyleChangedEvent();
+
+    static QEvent::Type s_type;
+};
 }
 
 Q_DECLARE_INTERFACE(Union::PlatformPlugin, "org.kde.union.PlatformPlugin")

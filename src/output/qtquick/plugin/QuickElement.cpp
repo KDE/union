@@ -445,6 +445,14 @@ bool QuickElement::eventFilter(QObject *watched, QEvent *event)
         return false;
     }
 
+    if (event->type() == DefaultStyleChangedEvent::s_type) {
+        if (m_styleId.isEmpty() && !attachedParent()) {
+            setStyle(StyleRegistry::instance()->defaultStyle());
+            update();
+        }
+        return false;
+    }
+
     return QObject::eventFilter(watched, event);
 }
 

@@ -6,8 +6,13 @@
 #include <QIcon>
 #include <QStandardPaths>
 
+#include "EventHelper.h"
+
 using namespace Union;
 using namespace Qt::StringLiterals;
+
+UNION_EXPORT QEvent::Type DefaultStyleChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<DefaultStyleChangedEvent> defaultStyleChangedEventRegistration;
 
 PlatformPlugin::PlatformPlugin(QObject *parent)
     : Plugin(parent)
@@ -42,4 +47,15 @@ bool PlatformPlugin::smoothScroll()
 qreal PlatformPlugin::animationSpeedMultiplier()
 {
     return 1.0;
+}
+
+void PlatformPlugin::sendDefaultStyleChangedEvent()
+{
+    DefaultStyleChangedEvent event;
+    QCoreApplication::sendEvent(this, &event);
+}
+
+DefaultStyleChangedEvent::DefaultStyleChangedEvent()
+    : QEvent(DefaultStyleChangedEvent::s_type)
+{
 }
