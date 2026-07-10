@@ -436,6 +436,20 @@ void QuickElement::componentComplete()
     updateHints();
     updateAttributes();
     update();
+
+    // It is possible that `QQuickAttachedPropertyPropagator::initialize()`
+    // creates QuickElement instances that are not attached to a QQuickItem for
+    // which `componentComplete()` does not get called. So go through our
+    // ancestors once and ensure `componentComplete()` is called at least once
+    // for these elements, otherwise they are in a defunct state and do not work
+    // properly.
+    auto element = parentElement();
+    while (element) {
+        if (!element->m_completed && !qobject_cast<QQuickItem *>(element->parent())) {
+            element->componentComplete();
+        }
+        element = element->parentElement();
+    }
 }
 
 void QuickElement::setActiveStates(Union::Element::States newActiveStates)
