@@ -254,6 +254,10 @@ void Icon::onControlIconChanged()
     static auto sourceProperty = iconType->property(iconType->indexOfProperty("source"));
     static auto colorProperty = iconType->property(iconType->indexOfProperty("color"));
 
+    if (!m_control) {
+        return;
+    }
+
     auto icon = m_control->property("icon");
     if (!icon.isValid()) {
         return;
