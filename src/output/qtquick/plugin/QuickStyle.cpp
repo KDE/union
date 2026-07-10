@@ -101,14 +101,12 @@ void QuickStyle::setElement(QuickElement *newElement)
 
     if (m_element) {
         m_element->removeEventFilter(this);
-        m_element->style()->removeEventFilter(this);
     }
 
     m_element = newElement;
 
     if (m_element) {
         m_element->installEventFilter(this);
-        m_element->style()->installEventFilter(this);
     }
 }
 

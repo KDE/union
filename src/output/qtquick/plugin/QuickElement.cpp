@@ -299,6 +299,8 @@ QuickElement::QuickElement(QObject *parent)
     m_element = Element::create();
     m_element->installEventFilter(this);
 
+    StyleRegistry::instance()->platform()->installEventFilter(this);
+
     m_statesGroup = std::make_unique<StatesGroup>(this);
 
     initialize();
@@ -417,6 +419,14 @@ bool QuickElement::eventFilter(QObject *watched, QEvent *event)
         return false;
     }
 
+    if (event->type() == StyleChangedEvent::s_type) {
+        // Forward style changes so that other objects (QuickStyle) filtering
+        // this do not need to install their own event filter on a style that
+        // might change.
+        QCoreApplication::sendEvent(this, event);
+        return false;
+    }
+
     return QObject::eventFilter(watched, event);
 }
 
@@ -468,6 +478,10 @@ void QuickElement::setActiveStates(Union::Element::States newActiveStates)
 
 void QuickElement::setStyle(const std::shared_ptr<Union::Style> &newStyle)
 {
+    if (m_style) {
+        m_style->removeEventFilter(this);
+    }
+
     m_style = newStyle;
 
     if (!m_style) {
@@ -483,6 +497,8 @@ void QuickElement::setStyle(const std::shared_ptr<Union::Style> &newStyle)
             m_style = StyleRegistry::instance()->defaultStyle();
         }
     }
+
+    m_style->installEventFilter(this);
 
     const auto children = attachedChildren();
     for (const auto &child : children) {
