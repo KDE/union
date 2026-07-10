@@ -308,6 +308,24 @@ QuickElement::QuickElement(QObject *parent)
     update();
 }
 
+QString QuickElement::styleId() const
+{
+    return m_styleId;
+}
+
+void QuickElement::setStyleId(const QString &newStyleId)
+{
+    if (newStyleId == m_styleId) {
+        return;
+    }
+
+    m_styleId = newStyleId;
+    setStyle(StyleRegistry::instance()->style(m_styleId));
+    update();
+
+    Q_EMIT styleIdChanged();
+}
+
 std::shared_ptr<Union::Style> QuickElement::style() const
 {
     return m_style;
@@ -583,7 +601,7 @@ void QuickElement::update()
 
 void Quick::QuickElement::updateStyleFromParent()
 {
-    if (m_styleName.isEmpty() && attachedParent()) {
+    if (m_styleId.isEmpty() && attachedParent()) {
         setStyle(qobject_cast<QuickElement *>(attachedParent())->style());
     }
 }

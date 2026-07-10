@@ -332,6 +332,16 @@ public:
     Q_PROPERTY(QuickElement *parentElement READ parentElement NOTIFY updated)
     QuickElement *parentElement() const;
 
+    /*!
+     * \qmlattachedproperty string Element::style
+     *
+     * The style to use for this element and any children.
+     */
+    Q_PROPERTY(QString styleId READ styleId WRITE setStyleId NOTIFY styleIdChanged)
+    QString styleId() const;
+    void setStyleId(const QString &newStyleId);
+    Q_SIGNAL void styleIdChanged();
+
     std::shared_ptr<Union::Style> style() const;
 
     /*!
@@ -455,7 +465,7 @@ private:
 
     std::unique_ptr<Union::ElementQuery> m_query;
 
-    QString m_styleName;
+    QString m_styleId;
     std::shared_ptr<Union::Style> m_style;
 
     bool m_completed = false;
