@@ -38,13 +38,12 @@ class QuickElement;
  * one attached to the same Item as this class is attached to, or to any parent
  * Item.
  */
-class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator, public QQmlParserStatus
+class UNIONQUICKIMPL_EXPORT QuickStyle : public QQuickAttachedPropertyPropagator
 {
     Q_OBJECT
     QML_NAMED_ELEMENT(Style)
     QML_UNCREATABLE("Attached Property")
     QML_ATTACHED(QuickStyle)
-    Q_INTERFACES(QQmlParserStatus)
 
 public:
     QuickStyle(QQmlEngine *engine, QObject *parent = nullptr);
@@ -89,8 +88,6 @@ protected:
     void attachedParentChange(QQuickAttachedPropertyPropagator *, QQuickAttachedPropertyPropagator *) override;
     bool event(QEvent *event) override;
     bool eventFilter(QObject *watched, QEvent *event) override;
-    void classBegin() override;
-    void componentComplete() override;
 
 private:
     void setElement(QuickElement *newElement);
@@ -99,8 +96,6 @@ private:
     std::unique_ptr<StylePropertyGroupQuick> m_properties;
     QPointer<QuickElement> m_element = nullptr;
     QQmlEngine *m_engine = nullptr;
-
-    bool m_completed = false;
 };
 
 class QuickStyleUpdatedEvent : public QEvent
