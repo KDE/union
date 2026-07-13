@@ -281,10 +281,11 @@ using ElementList = QList<Element::Ptr>;
  *
  * Get a cache key for an ElementList.
  */
-inline std::size_t elementListCacheKey(const Union::ElementList &key, std::size_t seed = 0)
+inline std::size_t elementListCacheKey(const Union::ElementList &key, std::size_t seed = 0, const QList<std::size_t> &extra = {})
 {
     QList<std::size_t> elements;
-    elements.reserve(key.size());
+    elements.reserve(key.size() + extra.size());
+    elements.append(extra);
     std::ranges::transform(key, std::back_inserter(elements), [seed](const Union::Element::Ptr &element) {
         return element->cacheKey(seed);
     });

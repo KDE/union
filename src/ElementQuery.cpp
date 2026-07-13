@@ -43,7 +43,7 @@ bool ElementQuery::execute()
 {
     qCInfo(UNION_QUERY) << "Trying to match" << d->elements;
 
-    auto cacheKey = elementListCacheKey(d->elements, QHashSeed::globalSeed());
+    auto cacheKey = elementListCacheKey(d->elements, QHashSeed::globalSeed(), {qHash(d->style.get())});
     if (auto cached = ElementQueryPrivate::s_matchesCache.value(cacheKey); cached) {
         qCInfo(UNION_QUERY) << "Matched from cache";
         d->properties = cached.value();
