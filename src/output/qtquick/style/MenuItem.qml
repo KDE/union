@@ -106,7 +106,7 @@ T.MenuItem {
 
             text: control.Union.Mnemonics.richTextLabel ?? control.text
             font: control.font
-            color: Union.Style.properties.text.color
+            color: Union.Style.properties.text.color ?? control.palette.text
             elide: Text.ElideRight
 
             horizontalAlignment: Text.AlignLeft
@@ -125,7 +125,7 @@ T.MenuItem {
                 highlighted: control.highlighted
             }
 
-            readonly property real spacing: Union.Style.properties.layout.spacing
+            readonly property real spacing: Union.Style.properties.layout.spacing ?? 0.0
 
             anchors {
                 fill: parent
@@ -140,7 +140,7 @@ T.MenuItem {
 
             text: visible ? itemShortcut.nativeText : ""
             font: control.font
-            color: Union.Style.properties.text.color
+            color: Union.Style.properties.text.color ?? control.palette.text
             horizontalAlignment: Text.AlignRight
             verticalAlignment: Text.AlignVCenter
             visible: control.action && control.action.shortcut !== undefined && (Union.Style.properties.display.visible ?? true)
