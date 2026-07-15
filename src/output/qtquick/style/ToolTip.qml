@@ -22,7 +22,7 @@ T.ToolTip {
     y: -implicitHeight
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
+                            Math.min(implicitContentWidth, contentItem.maximumWidth) + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
@@ -55,12 +55,23 @@ T.ToolTip {
     popupType: T.Popup.Item
 
     contentItem: Text {
+        // A maximum width for the contents of the tooltip. This is calculated to
+        // fit 70 characters which is usually considered a good line length.
+        //
+        // TODO: Add max-width and em support so this can be expressed in CSS.
+        readonly property real maximumWidth: metrics.averageCharacterWidth * 70
+
         text: control.text
         font: control.font
         wrapMode: Text.Wrap
         color: Union.Style.properties.text.color ?? control.palette.text
         horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+
+        FontMetrics {
+            id: metrics
+            font: control.font
+        }
     }
 
     background: Union.StyledRectangle {}
