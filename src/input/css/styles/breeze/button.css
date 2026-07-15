@@ -214,6 +214,7 @@ combobox
         height: var(--icon-size-small);
         icon-name: "arrow-down-symbolic";
         icon-color: var(--button-active-text-color);
+        visibility: visible;
     }
 
     &.editable,
