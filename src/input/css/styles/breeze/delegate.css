@@ -56,6 +56,13 @@ swipedelegate
         background-color: var(--highlight-hover-color);
     }
 
+    &:active-focus
+    {
+        border: 1px solid var(--highlight-color);
+        background-color: var(--highlight-hover-color);
+        outline: 2px solid var(--focus-color);
+    }
+
     &:pressed,
     &:highlighted
     {
