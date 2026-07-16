@@ -508,10 +508,12 @@ QMap<QString, QRectF> layoutMap(const QRect &mainRect, const Union::ElementList 
             unionElement->setAttributes(attributesFromOption(opt));
             currentHierarchy.append(unionElement);
         }
-        auto properties = queryProperties(elements);
+        auto properties = queryProperties(currentHierarchy);
         Union::Properties::Alignment horizontalAlignment;
         Union::Properties::Alignment verticalAlignment;
         QRectF elementRect = availableSpace;
+        // TODO for now icon and text have their own layout, so use that
+        // check them by name
         if (subElement == QStringLiteral("Icon")) {
             elementRect.setWidth(properties->icon()->width().value_or(0));
             elementRect.setHeight(properties->icon()->height().value_or(0));
@@ -527,19 +529,17 @@ QMap<QString, QRectF> layoutMap(const QRect &mainRect, const Union::ElementList 
             verticalAlignment = properties->layout()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
         }
 
-        // TODO for now icon and text have their own layout, so use that
-        // check them by name
-
         auto spacing = properties->layout()->spacing().value_or(0);
         switch (horizontalAlignment) {
         case Union::Properties::Alignment::Unspecified:
-            break;
+        case Union::Properties::Alignment::StackFill:
+        case Union::Properties::Alignment::StackCenter:
         case Union::Properties::Alignment::Start:
             if (!previousRect.isEmpty()) {
-                elementRect.moveLeft(previousRect.right());
-                elementRect.adjust(0, 0, -previousRect.width() + spacing / 2, 0);
+                elementRect.moveLeft(previousRect.right() + spacing);
+                elementRect.adjust(0, 0, -previousRect.width(), 0);
             } else {
-                elementRect.moveLeft(mainRect.left());
+                elementRect.moveLeft(availableSpace.left());
             }
             availableSpace.moveLeft(elementRect.right());
             break;
@@ -550,62 +550,58 @@ QMap<QString, QRectF> layoutMap(const QRect &mainRect, const Union::ElementList 
             if (subElements.size() > 1 && verticalAlignment != Union::Properties::Alignment::StackCenter
                 && verticalAlignment != Union::Properties::Alignment::StackFill) {
                 if (!previousRect.isEmpty()) {
-                    elementRect.moveLeft(previousRect.right());
-                    elementRect.adjust(0, 0, -previousRect.width() + spacing / 2, 0);
+                    elementRect.moveLeft(previousRect.right() + spacing);
+                    elementRect.adjust(0, 0, -previousRect.width(), 0);
                 } else {
-                    elementRect.moveLeft(mainRect.left());
+                    elementRect.moveLeft(availableSpace.left());
                 }
                 availableSpace.moveLeft(elementRect.right());
             } else {
-                elementRect.moveCenter(QPoint(mainRect.center().x(), elementRect.center().y()));
+                elementRect.moveCenter(QPoint(availableSpace.center().x(), elementRect.center().y()));
             }
             break;
         case Union::Properties::Alignment::End:
             if (!previousRect.isEmpty()) {
-                elementRect.moveRight(previousRect.left());
-                elementRect.adjust(previousRect.width() - spacing / 2, 0, 0, 0);
+                elementRect.moveRight(previousRect.left() - spacing);
+                elementRect.adjust(previousRect.width(), 0, 0, 0);
             } else {
-                elementRect.moveRight(mainRect.right());
+                elementRect.moveRight(availableSpace.right());
             }
             availableSpace.moveRight(elementRect.left());
             break;
-        case Union::Properties::Alignment::StackCenter:
-        case Union::Properties::Alignment::StackFill:
-            elementRect.moveCenter(QPoint(mainRect.center().x(), elementRect.center().y()));
-            break;
         }
+
         switch (verticalAlignment) {
         case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::Start:
+            if (!previousRect.isEmpty()) {
+                elementRect.moveTop(previousRect.bottom() + spacing);
+                elementRect.adjust(0, previousRect.height(), 0, 0);
+            } else {
+                elementRect.moveCenter(QPoint(elementRect.center().x(), availableSpace.top()));
+            }
+            availableSpace.moveTop(elementRect.bottom());
             break;
         case Union::Properties::Alignment::Fill:
         case Union::Properties::Alignment::Center:
-            elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.center().y()));
-            break;
-        case Union::Properties::Alignment::Start:
-            if (!previousRect.isEmpty()) {
-                elementRect.moveTop(previousRect.bottom());
-                elementRect.adjust(0, previousRect.height() - spacing / 2, 0, 0);
-            } else {
-                elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.top()));
-            }
-            availableSpace.moveTop(elementRect.bottom());
+            elementRect.moveCenter(QPoint(elementRect.center().x(), availableSpace.center().y()));
             break;
         case Union::Properties::Alignment::End:
             if (!previousRect.isEmpty()) {
-                elementRect.moveTop(previousRect.bottom());
-                elementRect.adjust(0, 0, 0, -previousRect.height() + spacing / 2);
+                elementRect.moveTop(previousRect.bottom() + spacing);
+                elementRect.adjust(0, 0, 0, -previousRect.height());
             } else {
-                elementRect.moveCenter(QPoint(elementRect.center().x(), mainRect.bottom()));
+                elementRect.moveCenter(QPoint(elementRect.center().x(), availableSpace.bottom()));
             }
             availableSpace.moveTop(elementRect.bottom());
             break;
         case Union::Properties::Alignment::StackCenter:
         case Union::Properties::Alignment::StackFill:
             if (!previousRect.isEmpty()) {
-                elementRect.moveTop(previousRect.bottom());
-                elementRect.adjust(0, 0, 0, -previousRect.height() + spacing / 2);
+                elementRect.moveTop(previousRect.bottom() + spacing);
+                elementRect.adjust(0, 0, 0, -previousRect.height());
             } else {
-                elementRect.moveTop(mainRect.top());
+                elementRect.moveTop(availableSpace.top());
             }
             availableSpace.moveTop(elementRect.bottom());
             break;
