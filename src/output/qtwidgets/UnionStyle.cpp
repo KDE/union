@@ -61,7 +61,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         drawBackground(painter, rect, properties);
 
         QStyleOptionButton labelOption(*buttonOption);
-        labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
+        if (properties->text() && properties->text()->color()) {
+            labelOption.palette.setColor(QPalette::ButtonText, properties->text()->color().value().toQColor());
+        }
 
         // Draw label
         // TODO: union-ize better
@@ -123,7 +125,9 @@ void UnionStyle::polish(QApplication *application)
     const auto properties = matches.first()->properties();
 
     QPalette palette;
-    palette.setColor(QPalette::Window, properties->background()->color().value().toQColor());
+    if (properties->background() && properties->background()->color()) {
+        palette.setColor(QPalette::Window, properties->background()->color().value().toQColor());
+    }
 
     application->setPalette(palette);
 }
