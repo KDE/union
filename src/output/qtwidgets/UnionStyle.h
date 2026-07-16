@@ -6,12 +6,12 @@
 #include <Element.h>
 #include <Style.h>
 
-#include <QProxyStyle>
+#include <QCommonStyle>
 
 /*!
  * \brief Provides Union styling for QtWidgets applications.
  */
-class UnionStyle : public QProxyStyle
+class UnionStyle : public QCommonStyle
 {
     Q_OBJECT
     /* KStyle has custom elements mechanism, disable it. */
@@ -24,8 +24,8 @@ public:
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = nullptr) const override;
     void drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = nullptr) const override;
 
-    QSize sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget = nullptr) const override;
-
+    QSize sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const override;
+    QRect subElementRect(SubElement subElement, const QStyleOption *option, const QWidget *widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const override;
 
     void polish(QApplication *application) override;

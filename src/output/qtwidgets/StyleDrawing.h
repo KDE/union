@@ -61,7 +61,7 @@ void drawCornerProperty(QPainter *painter,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);
 
-void drawElement(Union::Properties::StylePropertyGroup *properties, QPainter *painter, const QStyleOption *opt, QRect rect = QRect());
+void drawElement(Union::Properties::StylePropertyGroup *properties, QPainter *painter, const QStyleOption *opt);
 void drawIconText(const QStyleOption *opt,
                   const QStyle *qstyle,
                   QPainter *painter,

@@ -12,6 +12,14 @@
 
 class QStyleOption;
 
+struct LayoutItem {
+    QString elementName;
+    int order;
+    Union::Properties::Alignment horizontalAlignment;
+    Union::Properties::Alignment verticalAlignment;
+    QRectF rect;
+};
+
 const char property_union_member_list[] = "_union_member_list";
 
 /*!
@@ -33,4 +41,4 @@ Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList 
 
 QStringList setupMemberList(QWidget *widget);
 
-QMap<QString, QRectF> layoutMap(const QRect &mainRect, const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements);
+QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements);
