@@ -21,6 +21,9 @@ target_sources(Union PRIVATE
 
 target_sources(Union PUBLIC
     FILE_SET HEADERS
+    BASE_DIRS
+    ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
     FILES
     StyleRegistry.h
     Style.h
@@ -59,6 +62,13 @@ ecm_generate_export_header(Union
     VERSION ${PROJECT_VERSION}
     DEPRECATED_BASE_VERSION 0
     EXCLUDE_DEPRECATED_BEFORE_AND_AT ${EXCLUDE_DEPRECATED_BEFORE_AND_AT}
+)
+
+target_sources(Union PUBLIC
+    FILE_SET HEADERS
+    FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/union_export.h
+    ${CMAKE_CURRENT_BINARY_DIR}/union_logging.h
 )
 
 set_target_properties(Union PROPERTIES
