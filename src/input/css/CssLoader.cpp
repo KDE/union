@@ -371,14 +371,19 @@ inline void setDirectionValue(T *output, const std::string &baseName, const cssp
 
 bool CssLoader::load(Style::Ptr theme)
 {
-    auto cssPath = fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css"_s, QStandardPaths::LocateDirectory).toStdString());
+    QString relativeStylePath = u"union/css/styles/"_s + theme->name() + u"/style.css"_s;
+    m_stylePath = fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativeStylePath, QStandardPaths::LocateFile).toStdString());
 
-    m_stylePath = cssPath / "styles"s / theme->name().toStdString();
-    cssparser::StyleSheet styleSheet(m_stylePath / "style.css"s);
+    if (!fs::exists(m_stylePath)) {
+        qCWarning(UNION_CSS) << theme->name() << "does not exist!";
+        return false;
+    }
+
+    cssparser::StyleSheet styleSheet(m_stylePath);
 
     auto defaultsPath =
-        fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults"_s, QStandardPaths::LocateDirectory).toStdString());
-    styleSheet.import(defaultsPath / "default.css"s);
+        fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, u"union/css/defaults/default.css"_s, QStandardPaths::LocateFile).toStdString());
+    styleSheet.import(defaultsPath);
     styleSheet.parse();
 
     const auto paths = styleSheet.paths();
