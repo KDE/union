@@ -285,7 +285,7 @@ tabbutton {
     width: var(--button-default-size);
     height: var(--button-default-size);
     spacing: 0px;
-    padding: 0px;
+    padding: var(--small-spacing);
     border-radius: var(--corner-radius);
     background-color: var(--tab-background-color);
     border: 1px solid var(--tab-background-color);
