@@ -135,6 +135,12 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
 
     for (int i = 0; i < result->cachePaths.size(); ++i) {
         auto path = result->cachePaths.at(i);
+
+        if (!fs::exists(path)) {
+            qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "original file no longer exists";
+            return nullptr;
+        }
+
         auto cachedModificationTime = result->modificationTimes.at(i);
         auto currentModificationTime = fs::last_write_time(path);
 
