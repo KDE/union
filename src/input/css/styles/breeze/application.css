@@ -144,10 +144,16 @@ pageindicatordelegate {
     }
 }
 
+pane
+{
+    padding: var(--large-spacing);
+}
+
 frame,
 groupbox
 {
     padding: var(--small-spacing);
+    padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
 }
