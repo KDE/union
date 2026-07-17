@@ -37,6 +37,11 @@ T.TabButton {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              Union.Positioner.implicitHeight)
 
+    // TabBar divides the space between buttons equally, which leads to
+    // weirdness when relying on implicit sizes. So explicitly set the width
+    // to tabbar doesn't try to divide up things.
+    width: implicitWidth
+
     hoverEnabled: Application.styleHints.useHoverEffects
 
     leftPadding: Union.Style.properties.layout.padding.left
