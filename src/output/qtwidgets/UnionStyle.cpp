@@ -322,6 +322,7 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
 
     switch (ct) {
     case QStyle::CT_CheckBox:
+    case QStyle::CT_RadioButton:
     case QStyle::CT_PushButton: {
         const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt);
         QStringList subElements = {};
@@ -341,7 +342,6 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
             }
         }
     } break;
-    case QStyle::CT_RadioButton:
     case QStyle::CT_ToolButton:
     case QStyle::CT_ComboBox:
     case QStyle::CT_Splitter:
@@ -458,111 +458,246 @@ QRect UnionStyle::subElementRect(SubElement subElement, const QStyleOption *opti
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
+    int defaultMetric = QCommonStyle::pixelMetric(metric, option, widget);
+    auto elements = prepareElements(option, widget);
+    if (elements.isEmpty()) {
+        return defaultMetric;
+    }
+    auto properties = queryProperties(elements);
+    if (!properties) {
+        return defaultMetric;
+    }
+
     switch (metric) {
     // Don't shift button text when sunken
+    case QStyle::PM_TabBarTabShiftHorizontal:
+    case QStyle::PM_TabBarTabShiftVertical:
     case PM_ButtonShiftHorizontal:
     case PM_ButtonShiftVertical:
         return 0;
-    case QStyle::PM_ButtonMargin:
-        return 8;
-    case QStyle::PM_ButtonDefaultIndicator:
-    case QStyle::PM_MenuButtonIndicator:
+    // Due to how QWidgets works, we just return the average margin size now
+    // since there is no support for returning margin per edge
+    case QStyle::PM_ToolBarItemMargin:
+    case QStyle::PM_MenuBarVMargin:
+    case QStyle::PM_MenuBarHMargin:
+    case QStyle::PM_FocusFrameVMargin:
+    case QStyle::PM_FocusFrameHMargin:
+    case QStyle::PM_MenuHMargin:
+    case QStyle::PM_MenuVMargin:
+    case QStyle::PM_HeaderMargin:
+    case QStyle::PM_LineEditIconMargin:
+    case QStyle::PM_ButtonMargin: {
+        if (properties->layout() && properties->layout()->margins()) {
+            auto margins = properties->layout()->margins()->toMargins();
+            auto avg = (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
+            return avg;
+        }
+    } break;
+    case QStyle::PM_ToolBarSeparatorExtent:
+    case QStyle::PM_ToolTipLabelFrameWidth:
+    case QStyle::PM_ToolBarFrameWidth:
+    case QStyle::PM_MenuDesktopFrameWidth:
+    case QStyle::PM_MenuBarPanelWidth:
     case QStyle::PM_DefaultFrameWidth:
     case QStyle::PM_SpinBoxFrameWidth:
     case QStyle::PM_ComboBoxFrameWidth:
-    case QStyle::PM_MaximumDragDistance:
-    case QStyle::PM_ScrollBarExtent:
+    case QStyle::PM_DockWidgetFrameWidth:
+    case QStyle::PM_MdiSubWindowFrameWidth:
+    case QStyle::PM_ButtonDefaultIndicator: {
+        if (properties->border()) {
+            auto borderSizes = properties->border()->sizes();
+            auto avg = (borderSizes.left() + borderSizes.right() + borderSizes.top() + borderSizes.bottom()) / 4;
+            return avg;
+        }
+    } break;
+    case QStyle::PM_IndicatorWidth:
+    case QStyle::PM_ExclusiveIndicatorWidth:
+    case QStyle::PM_MenuButtonIndicator:
+    case QStyle::PM_IndicatorHeight:
+    case QStyle::PM_TabCloseIndicatorWidth:
+    case QStyle::PM_TabCloseIndicatorHeight:
+    case QStyle::PM_ExclusiveIndicatorHeight: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("Indicator")});
+        if (elements.isEmpty()) {
+            return defaultMetric;
+        }
+        auto properties = queryProperties(elements);
+        if (!properties) {
+            return defaultMetric;
+        }
+        if (properties->layout()) {
+            if (metric == PM_IndicatorHeight || metric == PM_ExclusiveIndicatorHeight || metric == PM_TabCloseIndicatorHeight) {
+                return properties->layout()->height().value_or(defaultMetric);
+            }
+            return properties->layout()->width().value_or(defaultMetric);
+        }
+    } break;
     case QStyle::PM_ScrollBarSliderMin:
     case QStyle::PM_SliderThickness:
-    case QStyle::PM_SliderControlThickness:
     case QStyle::PM_SliderLength:
-    case QStyle::PM_SliderTickmarkOffset:
-    case QStyle::PM_SliderSpaceAvailable:
-    case QStyle::PM_DockWidgetSeparatorExtent:
-    case QStyle::PM_DockWidgetHandleExtent:
-    case QStyle::PM_DockWidgetFrameWidth:
-    case QStyle::PM_TabBarTabOverlap:
+    case QStyle::PM_ScrollBarExtent: {
+        auto scrollbaroption = qstyleoption_cast<const QStyleOptionSlider *>(option);
+        if (scrollbaroption && properties->layout()) {
+            if (scrollbaroption->orientation == Qt::Horizontal) {
+                return properties->layout()->height().value_or(defaultMetric);
+            } else {
+                return properties->layout()->width().value_or(defaultMetric);
+            }
+        }
+    } break;
+    case QStyle::PM_SliderControlThickness: {
+        auto scrollbaroption = qstyleoption_cast<const QStyleOptionSlider *>(option);
+        auto elements = prepareElements(option, widget, {QStringLiteral("Handle")});
+        if (elements.isEmpty()) {
+            return defaultMetric;
+        }
+        auto properties = queryProperties(elements);
+        if (!properties) {
+            return defaultMetric;
+        }
+        if (scrollbaroption && properties->layout()) {
+            if (scrollbaroption->orientation == Qt::Horizontal) {
+                return properties->layout()->height().value_or(defaultMetric);
+            } else {
+                return properties->layout()->width().value_or(defaultMetric);
+            }
+        }
+    } break;
+    case QStyle::PM_ToolBarHandleExtent:
+    case QStyle::PM_ToolBarExtensionExtent: {
+        auto toolbaroption = qstyleoption_cast<const QStyleOptionToolBar *>(option);
+        QStringList childelements;
+        if (metric == PM_ToolBarHandleExtent) {
+            childelements.append(QStringLiteral("Handle"));
+        }
+        if (metric == PM_ToolBarExtensionExtent) {
+            childelements.append(QStringLiteral("Extension"));
+        }
+        auto elements = prepareElements(option, widget, childelements);
+        if (elements.isEmpty()) {
+            return defaultMetric;
+        }
+        auto properties = queryProperties(elements);
+        if (!properties) {
+            return defaultMetric;
+        }
+        if (toolbaroption && properties->layout()) {
+            if (toolbaroption->state & QStyle::State_Horizontal) {
+                return properties->layout()->width().value_or(defaultMetric);
+            } else {
+                return properties->layout()->height().value_or(defaultMetric);
+            }
+        }
+    } break;
+    case QStyle::PM_LayoutLeftMargin:
+    case QStyle::PM_LayoutTopMargin:
+    case QStyle::PM_LayoutRightMargin:
+    case QStyle::PM_LayoutBottomMargin: {
+        if (properties->layout() && properties->layout()->margins()) {
+            auto margins = properties->layout()->margins()->toMargins();
+            if (metric == PM_LayoutLeftMargin) {
+                return margins.left();
+            }
+            if (metric == PM_LayoutTopMargin) {
+                return margins.top();
+            }
+            if (metric == PM_LayoutBottomMargin) {
+                return margins.bottom();
+            }
+            if (metric == PM_LayoutRightMargin) {
+                return margins.right();
+            }
+        }
+    } break;
+    // Currently we only have one spacing value
+    case QStyle::PM_CheckBoxLabelSpacing:
+    case QStyle::PM_ScrollView_ScrollBarSpacing:
+    case QStyle::PM_RadioButtonLabelSpacing:
     case QStyle::PM_TabBarTabHSpace:
     case QStyle::PM_TabBarTabVSpace:
-    case QStyle::PM_TabBarBaseHeight:
-    case QStyle::PM_TabBarBaseOverlap:
-    case QStyle::PM_ProgressBarChunkWidth:
+    case QStyle::PM_MenuBarItemSpacing:
+    case QStyle::PM_ToolBarItemSpacing:
+    case QStyle::PM_LayoutHorizontalSpacing:
+    case QStyle::PM_LayoutVerticalSpacing: {
+        if (properties->layout()) {
+            return properties->layout()->spacing().value_or(defaultMetric);
+        }
+    } break;
+    case QStyle::PM_TitleBarButtonSize:
+    case QStyle::PM_TabBarScrollButtonWidth:
+    case QStyle::PM_MenuPanelWidth:
     case QStyle::PM_SplitterWidth:
+    case QStyle::PM_ProgressBarChunkWidth: {
+        if (properties->layout()) {
+            return properties->layout()->width().value_or(defaultMetric);
+        }
+    } break;
+    case QStyle::PM_SpinBoxSliderHeight:
     case QStyle::PM_TitleBarHeight:
     case QStyle::PM_MenuScrollerHeight:
-    case QStyle::PM_MenuHMargin:
-    case QStyle::PM_MenuVMargin:
-    case QStyle::PM_MenuPanelWidth:
-    case QStyle::PM_MenuTearoffHeight:
-    case QStyle::PM_MenuDesktopFrameWidth:
-    case QStyle::PM_MenuBarPanelWidth:
-    case QStyle::PM_MenuBarItemSpacing:
-    case QStyle::PM_MenuBarVMargin:
-    case QStyle::PM_MenuBarHMargin:
-    case QStyle::PM_IndicatorWidth:
-    case QStyle::PM_IndicatorHeight:
-    case QStyle::PM_ExclusiveIndicatorWidth:
-    case QStyle::PM_ExclusiveIndicatorHeight:
-    case QStyle::PM_DialogButtonsSeparator:
-    case QStyle::PM_DialogButtonsButtonWidth:
-    case QStyle::PM_DialogButtonsButtonHeight:
-    case QStyle::PM_MdiSubWindowFrameWidth:
-    case QStyle::PM_MdiSubWindowMinimizedWidth:
-    case QStyle::PM_HeaderMargin:
-    case QStyle::PM_HeaderMarkSize:
-    case QStyle::PM_HeaderGripMargin:
-    case QStyle::PM_TabBarTabShiftHorizontal:
-    case QStyle::PM_TabBarTabShiftVertical:
-    case QStyle::PM_TabBarScrollButtonWidth:
-    case QStyle::PM_ToolBarFrameWidth:
-    case QStyle::PM_ToolBarHandleExtent:
-    case QStyle::PM_ToolBarItemSpacing:
-    case QStyle::PM_ToolBarItemMargin:
-    case QStyle::PM_ToolBarSeparatorExtent:
-    case QStyle::PM_ToolBarExtensionExtent:
-    case QStyle::PM_SpinBoxSliderHeight:
+    case QStyle::PM_TabBarBaseHeight: {
+        if (properties->layout()) {
+            return properties->layout()->height().value_or(defaultMetric);
+        }
+    } break;
+    case QStyle::PM_TreeViewIndentation: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("Indentation")});
+        if (elements.isEmpty()) {
+            return defaultMetric;
+        }
+        auto properties = queryProperties(elements);
+        if (!properties) {
+            return defaultMetric;
+        }
+        if (properties->layout()) {
+            return properties->layout()->width().value_or(defaultMetric);
+        }
+    } break;
+
     case QStyle::PM_ToolBarIconSize:
     case QStyle::PM_ListViewIconSize:
     case QStyle::PM_IconViewIconSize:
     case QStyle::PM_SmallIconSize:
     case QStyle::PM_LargeIconSize:
-    case QStyle::PM_FocusFrameVMargin:
-    case QStyle::PM_FocusFrameHMargin:
-    case QStyle::PM_ToolTipLabelFrameWidth:
-    case QStyle::PM_CheckBoxLabelSpacing:
     case QStyle::PM_TabBarIconSize:
-    case QStyle::PM_SizeGripSize:
-    case QStyle::PM_DockWidgetTitleMargin:
-    case QStyle::PM_MessageBoxIconSize:
     case QStyle::PM_ButtonIconSize:
+    case QStyle::PM_MessageBoxIconSize:
+    case QStyle::PM_TitleBarButtonIconSize:
+    case QStyle::PM_LineEditIconSize: {
+        if (properties->icon()) {
+            return properties->icon()->width().value_or(defaultMetric);
+        }
+    } break;
+
+    // Use defaults
+    case QStyle::PM_MaximumDragDistance:
+    case QStyle::PM_SliderTickmarkOffset:
+    case QStyle::PM_SliderSpaceAvailable:
+    case QStyle::PM_MenuTearoffHeight:
+    case QStyle::PM_DockWidgetSeparatorExtent:
+    case QStyle::PM_TabBarTabOverlap:
+    case QStyle::PM_DockWidgetHandleExtent:
+    case QStyle::PM_TabBarBaseOverlap:
+    case QStyle::PM_DialogButtonsSeparator:
+    case QStyle::PM_DialogButtonsButtonWidth:
+    case QStyle::PM_DialogButtonsButtonHeight:
+    case QStyle::PM_MdiSubWindowMinimizedWidth:
+    case QStyle::PM_HeaderMarkSize:
+    case QStyle::PM_HeaderGripMargin:
+    case QStyle::PM_DockWidgetTitleMargin:
     case QStyle::PM_DockWidgetTitleBarButtonMargin:
-    case QStyle::PM_RadioButtonLabelSpacing:
-    case QStyle::PM_LayoutLeftMargin:
-    case QStyle::PM_LayoutTopMargin:
-    case QStyle::PM_LayoutRightMargin:
-    case QStyle::PM_LayoutBottomMargin:
-    case QStyle::PM_LayoutHorizontalSpacing:
-    case QStyle::PM_LayoutVerticalSpacing:
     case QStyle::PM_TabBar_ScrollButtonOverlap:
+    case QStyle::PM_SizeGripSize:
     case QStyle::PM_TextCursorWidth:
-    case QStyle::PM_TabCloseIndicatorWidth:
-    case QStyle::PM_TabCloseIndicatorHeight:
-    case QStyle::PM_ScrollView_ScrollBarSpacing:
     case QStyle::PM_ScrollView_ScrollBarOverlap:
     case QStyle::PM_SubMenuOverlap:
-    case QStyle::PM_TreeViewIndentation:
     case QStyle::PM_HeaderDefaultSectionSizeHorizontal:
     case QStyle::PM_HeaderDefaultSectionSizeVertical:
-    case QStyle::PM_TitleBarButtonIconSize:
-    case QStyle::PM_TitleBarButtonSize:
-    case QStyle::PM_LineEditIconSize:
-    case QStyle::PM_LineEditIconMargin:
     case QStyle::PM_CustomBase:
-        return QCommonStyle::pixelMetric(metric, option, widget);
-        break;
     default:
         return QCommonStyle::pixelMetric(metric, option, widget);
     };
+    return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
 void UnionStyle::polish(QApplication *application)

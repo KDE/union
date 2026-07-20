@@ -12,6 +12,9 @@
 Union::Element::States statesFromOption(const QStyleOption *option)
 {
     Union::Element::States states;
+    if (!option) {
+        return states;
+    }
     if (option->state.testFlag(QStyle::State_None)) {
         return states;
     }
@@ -46,6 +49,9 @@ Union::Element::States statesFromOption(const QStyleOption *option)
 QStringList hintsFromOption(const QStyleOption *option)
 {
     QStringList hints;
+    if (!option) {
+        return hints;
+    }
     switch ((QStyleOption::OptionType)option->type) {
     case QStyleOption::SO_FocusRect: {
         if (const auto optionFocusRect = static_cast<const QStyleOptionFocusRect *>(option)) {
@@ -180,6 +186,9 @@ Union::Element::ColorSet colorsetFromOption(const QStyleOption *option)
      *  Complementary,
      *  Header,
     };*/
+    if (!option) {
+        return Union::Element::ColorSet::None;
+    }
     switch ((QStyleOption::OptionType)option->type) {
     case QStyleOption::SO_Default:
     case QStyleOption::SO_FocusRect:
@@ -216,6 +225,9 @@ Union::Element::ColorSet colorsetFromOption(const QStyleOption *option)
 
 QVariantMap attributesFromOption(const QStyleOption *option)
 {
+    if (!option) {
+        return QVariantMap();
+    }
     switch ((QStyleOption::OptionType)option->type) {
     case QStyleOption::SO_ToolButton:
         if (const auto optionButton = static_cast<const QStyleOptionToolButton *>(option)) {
@@ -372,14 +384,12 @@ Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widge
 
     if (widget) {
         elementTypes = widget->property(property_union_member_list).toStringList();
+        if (elementTypes.isEmpty()) {
+            elementTypes = setupMemberList(widget);
+        }
     }
     if (!childElementNames.isEmpty()) {
         elementTypes.append(childElementNames);
-    }
-
-    if (elementTypes.isEmpty()) {
-        qWarning() << "Could not draw widget" << widget << "with styleOption" << opt << " ! Missing elementType!";
-        return elements;
     }
 
     for (const auto &elementType : elementTypes) {
@@ -406,7 +416,7 @@ Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList 
     return properties;
 }
 
-QStringList setupMemberList(QWidget *widget)
+QStringList setupMemberList(const QWidget *widget)
 {
     if (!widget) {
         return QStringList();
@@ -414,37 +424,39 @@ QStringList setupMemberList(QWidget *widget)
     QStringList members;
     // We will have to check what items the widget inherits from,
     // as far as I know there is no better way to do this.
-    const QMap<const char *, QString> parentClasses = {
-        {"QCheckBox", QStringLiteral("CheckBox")},
-        {"QRadioButton", QStringLiteral("RadioButton")},
-        {"QPushButton", QStringLiteral("Button")},
-        {"QToolButton", QStringLiteral("ToolButton")},
-        {"QDial", QStringLiteral("Dial")},
-        {"QScrollBar", QStringLiteral("ScrollBar")},
-        {"QSlider", QStringLiteral("Slider")},
-        {"QAbstractSpinox", QStringLiteral("SpinBox")},
-        {"QComboBox", QStringLiteral("ComboBox")},
-        {"QDialog", QStringLiteral("Dialog")},
-        {"QDialogButtonBox", QStringLiteral("DialogButtonBox")},
-        {"QDockWidget", QStringLiteral("Dock")},
-        {"QFocusFrame", QStringLiteral("FocusFrame")},
-        {"QFrame", QStringLiteral("Frame")},
-        {"QGroupBox", QStringLiteral("GroupBox")},
-        {"QKeySequenceEit", QStringLiteral("KeySequenceEdit")},
-        {"QLineEdit", QStringLiteral("TextField")},
-        {"QMainWindow", QStringLiteral("ApplicationWindow")},
-        {"QMdiSubWinow", QStringLiteral("MdiSubWindow")},
-        {"QMenu", QStringLiteral("Menu")},
-        {"QMenuBar", QStringLiteral("MenuBar")},
-        {"QProgressBar", QStringLiteral("ProgressBar")},
-        {"QRubberBand", QStringLiteral("RubberBand")},
-        {"QSizeGrip", QStringLiteral("SizeGrip")},
-        {"QSplitterHandle", QStringLiteral("SplitterHandle")},
-        {"QStatusBar", QStringLiteral("StatusBar")},
-        {"QTabBar", QStringLiteral("TabBar")},
-        {"QTabWidget", QStringLiteral("TabWidget")},
-        {"QToolBar", QStringLiteral("ToolBar")},
-    };
+    const QMap<const char *, QString> parentClasses = {{"QCheckBox", QStringLiteral("CheckBox")},
+                                                       {"QRadioButton", QStringLiteral("RadioButton")},
+                                                       {"QPushButton", QStringLiteral("Button")},
+                                                       {"QToolButton", QStringLiteral("ToolButton")},
+                                                       {"QDial", QStringLiteral("Dial")},
+                                                       {"QScrollBar", QStringLiteral("ScrollBar")},
+                                                       {"QSlider", QStringLiteral("Slider")},
+                                                       {"QAbstractSpinBox", QStringLiteral("SpinBox")},
+                                                       {"QComboBox", QStringLiteral("ComboBox")},
+                                                       {"QDialog", QStringLiteral("Dialog")},
+                                                       {"QDialogButtonBox", QStringLiteral("DialogButtonBox")},
+                                                       {"QDockWidget", QStringLiteral("Dock")},
+                                                       {"QFocusFrame", QStringLiteral("FocusFrame")},
+                                                       {"QFrame", QStringLiteral("Frame")},
+                                                       {"QGroupBox", QStringLiteral("GroupBox")},
+                                                       {"QKeySequenceEit", QStringLiteral("KeySequenceEdit")},
+                                                       {"QLineEdit", QStringLiteral("TextField")},
+                                                       {"QMainWindow", QStringLiteral("ApplicationWindow")},
+                                                       {"QMdiSubWinow", QStringLiteral("MdiSubWindow")},
+                                                       {"QMenu", QStringLiteral("Menu")},
+                                                       {"QMenuBar", QStringLiteral("MenuBar")},
+                                                       {"QProgressBar", QStringLiteral("ProgressBar")},
+                                                       {"QRubberBand", QStringLiteral("RubberBand")},
+                                                       {"QSizeGrip", QStringLiteral("SizeGrip")},
+                                                       {"QSplitterHandle", QStringLiteral("SplitterHandle")},
+                                                       {"QStatusBar", QStringLiteral("StatusBar")},
+                                                       {"QTabBar", QStringLiteral("TabBar")},
+                                                       {"QTabWidget", QStringLiteral("TabWidget")},
+                                                       {"QToolBar", QStringLiteral("ToolBar")},
+                                                       {"QAbstractScrollArea", QStringLiteral("ScrollArea")},
+                                                       {"QListView", QStringLiteral("ListView")},
+                                                       {"QScrollBar", QStringLiteral("ScrollBar")},
+                                                       {"QTreeView", QStringLiteral("QTreeViewDelegate")}};
 
     auto currentWidget = widget;
     while (currentWidget) {

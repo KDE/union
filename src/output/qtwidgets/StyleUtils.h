@@ -39,6 +39,6 @@ QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::
 Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget = nullptr, QStringList childElementNames = {});
 Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList &elements);
 
-QStringList setupMemberList(QWidget *widget);
+QStringList setupMemberList(const QWidget *widget);
 
 QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements);

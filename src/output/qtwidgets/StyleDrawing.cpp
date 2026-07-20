@@ -456,6 +456,7 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
         painter->restore();
     }
 
+    /*
             painter->save();
             painter->setBrush(Qt::NoBrush);
             painter->setPen(Qt::blue);
@@ -465,4 +466,5 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
             painter->setPen(Qt::red);
             painter->drawRect(textRect);
             painter->restore();
+            */
 }
