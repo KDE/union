@@ -25,7 +25,6 @@ public:
     void drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget = nullptr) const override;
 
     QSize sizeFromContents(QStyle::ContentsType ct, const QStyleOption *opt, const QSize &contentsSize, const QWidget *widget) const override;
-    QRect subElementRect(SubElement subElement, const QStyleOption *option, const QWidget *widget = nullptr) const override;
     int pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const override;
 
     void polish(QApplication *application) override;

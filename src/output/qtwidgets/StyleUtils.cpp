@@ -549,6 +549,11 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         return lhs.order < rhs.order;
     });
 
+    QMarginsF padding;
+
+    if (properties->layout() && properties->layout()->padding()) {
+        padding = properties->layout()->padding()->toMargins();
+    }
     // QtWidgets containment is always within Widget, since we can't draw outside of a widget due
     // widgets limitations.
     QRectF previousRect;
@@ -562,7 +567,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.moveLeft(previousRect.right());
                 item.rect.adjust(spacing, 0, spacing, 0);
             } else {
-                item.rect.moveLeft(availableSpace.left());
+                item.rect.moveLeft(availableSpace.left() + padding.left());
             }
             availableSpace.moveLeft(item.rect.right());
             break;
@@ -572,8 +577,8 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.moveRight(availableSpace.right());
                 item.rect.adjust(spacing, 0, spacing, 0);
             } else {
-                item.rect.moveRight(availableSpace.right());
-                item.rect.moveLeft(availableSpace.left());
+                item.rect.moveRight(availableSpace.right() - padding.right());
+                item.rect.moveLeft(availableSpace.left() + padding.left());
             }
             availableSpace.moveLeft(item.rect.right());
             break;
@@ -587,7 +592,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                     item.rect.moveLeft(previousRect.right());
                     item.rect.adjust(spacing, 0, spacing, 0);
                 } else {
-                    item.rect.moveLeft(availableSpace.left());
+                    item.rect.moveLeft(availableSpace.left() + padding.left());
                 }
                 availableSpace.moveLeft(item.rect.right());
             } else {
@@ -599,7 +604,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.moveRight(previousRect.left());
                 item.rect.adjust(spacing, 0, spacing, 0);
             } else {
-                item.rect.moveRight(availableSpace.right());
+                item.rect.moveRight(availableSpace.right() - padding.right());
             }
             availableSpace.moveRight(item.rect.left());
             break;
@@ -611,13 +616,13 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.moveTop(previousRect.bottom());
                 item.rect.adjust(0, spacing, 0, spacing);
             } else {
-                item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.top()));
+                item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.top() + padding.top()));
             }
             availableSpace.moveTop(item.rect.bottom());
             break;
         case Union::Properties::Alignment::Fill:
-            item.rect.moveTop(availableSpace.top());
-            item.rect.moveBottom(availableSpace.bottom());
+            item.rect.moveTop(availableSpace.top() + padding.top());
+            item.rect.moveBottom(availableSpace.bottom() - padding.bottom());
             break;
         case Union::Properties::Alignment::Center:
             item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.center().y()));
@@ -627,7 +632,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.moveTop(previousRect.bottom());
                 item.rect.adjust(0, spacing, 0, spacing);
             } else {
-                item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.bottom()));
+                item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.bottom() - padding.bottom()));
             }
             availableSpace.moveTop(item.rect.bottom());
             break;
@@ -637,15 +642,15 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
                 item.rect.adjust(0, spacing, 0, spacing);
                 item.rect.moveBottom(availableSpace.bottom());
             } else {
-                item.rect.moveTop(availableSpace.top());
-                item.rect.moveBottom(availableSpace.bottom());
+                item.rect.moveTop(availableSpace.top() + padding.top());
+                item.rect.moveBottom(availableSpace.bottom() - padding.bottom());
             }
         case Union::Properties::Alignment::StackCenter:
             if (!previousRect.isEmpty()) {
                 item.rect.moveTop(previousRect.bottom());
                 item.rect.adjust(0, spacing, 0, spacing);
             } else {
-                item.rect.moveTop(availableSpace.top());
+                item.rect.moveTop(availableSpace.top() + padding.top());
             }
             availableSpace.moveTop(item.rect.bottom());
             break;
