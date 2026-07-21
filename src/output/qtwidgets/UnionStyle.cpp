@@ -16,6 +16,13 @@
 #include <QStyleOption>
 #include <QWidget>
 
+/*
+ * How this works:
+ * We polish the items which should get the hierarchy information
+ * Create the needed areas/rectangles/sizes from the layoutmap
+ * Utilize those areas for drawing the elements in right places
+ */
+
 UnionStyle::UnionStyle()
     : QCommonStyle()
 {
@@ -65,7 +72,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
         QStyleOptionButton subopt = *buttonOption;
         // Draw background
-        auto bgElements = prepareElements(&subopt, widget, {QStringLiteral("CheckBox")});
+        auto bgElements = prepareElements(&subopt, widget);
         auto bgProps = queryProperties(bgElements);
         auto rect = backgroundRectangle(option, bgProps).toRect();
         drawBackground(painter, rect, bgProps);
@@ -81,7 +88,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
         QStyleOptionButton subopt = *buttonOption;
         // Draw background
-        auto bgElements = prepareElements(&subopt, widget, {QStringLiteral("RadioButton")});
+        auto bgElements = prepareElements(&subopt, widget);
         auto bgProps = queryProperties(bgElements);
         auto rect = backgroundRectangle(option, bgProps).toRect();
         drawBackground(painter, rect, bgProps);
@@ -417,44 +424,89 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
 
 QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
+    QRect rect;
     switch (element) {
+    case QStyle::SE_TreeViewDisclosureItem:
+    case QStyle::SE_RadioButtonIndicator:
     case QStyle::SE_CheckBoxIndicator: {
-        auto checkboxElements = prepareElements(option, widget, {QStringLiteral("CheckBox")});
-        auto indicatorMap = layoutMap(checkboxElements, option, {QStringLiteral("Indicator")});
-        return indicatorMap[QStringLiteral("Indicator")].rect.toRect();
-    }
+        auto elements = prepareElements(option, widget);
+        auto map = layoutMap(elements, option, {QStringLiteral("Indicator")});
+        rect = map[QStringLiteral("Indicator")].rect.toRect();
+    } break;
+    case QStyle::SE_ItemViewItemDecoration: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
+        auto map = layoutMap(elements, option, {QStringLiteral("Icon")});
+        rect = map[QStringLiteral("Icon")].rect.toRect();
+    } break;
+    case QStyle::SE_ItemViewItemText: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
+        auto map = layoutMap(elements, option, {QStringLiteral("Icon"), QStringLiteral("Text")});
+        rect = map[QStringLiteral("Text")].rect.toRect();
+    } break;
+    case QStyle::SE_ItemViewItemCheckIndicator: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
+        auto map = layoutMap(elements, option, {QStringLiteral("CheckBox"), QStringLiteral("Indicator")});
+        rect = map[QStringLiteral("Indicator")].rect.toRect();
+    } break;
+    case QStyle::SE_ProgressBarLabel: {
+        const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        auto elements = prepareElements(option, widget);
+        QStringList childelements = {QStringLiteral("Indicator")};
+        if (!opt->text.isEmpty()) {
+            childelements.append(QStringLiteral("Text"));
+        } else {
+            return QRect();
+        }
+        auto map = layoutMap(elements, option, childelements);
+        rect = map[QStringLiteral("Text")].rect.toRect();
+    } break;
+    case QStyle::SE_PushButtonContents:
+    case QStyle::SE_RadioButtonContents:
     case QStyle::SE_CheckBoxContents: {
-        auto checkboxElements = prepareElements(option, widget, {QStringLiteral("CheckBox")});
-        auto indicatorMap = layoutMap(checkboxElements, option, {QStringLiteral("Indicator"), QStringLiteral("Text")});
-        return indicatorMap[QStringLiteral("Text")].rect.toRect();
-    }
-    case QStyle::SE_RadioButtonIndicator: {
-        auto checkboxElements = prepareElements(option, widget, {QStringLiteral("RadioButton")});
-        auto indicatorMap = layoutMap(checkboxElements, option, {QStringLiteral("Indicator")});
-        return indicatorMap[QStringLiteral("Indicator")].rect.toRect();
-    }
-    case QStyle::SE_RadioButtonContents: {
-        auto checkboxElements = prepareElements(option, widget, {QStringLiteral("RadioButton")});
-        auto indicatorMap = layoutMap(checkboxElements, option, {QStringLiteral("Indicator"), QStringLiteral("Text")});
-        return indicatorMap[QStringLiteral("Text")].rect.toRect();
-    }
-    case QStyle::SE_DockWidgetCloseButton:
-    case QStyle::SE_DockWidgetFloatButton:
-    case QStyle::SE_DockWidgetIcon:
-    case QStyle::SE_DockWidgetTitleBarText:
-    case QStyle::SE_FrameContents:
-    case QStyle::SE_HeaderArrow:
-    case QStyle::SE_HeaderLabel:
-    case QStyle::SE_ItemViewItemCheckIndicator:
-    case QStyle::SE_ItemViewItemDecoration:
-    case QStyle::SE_ItemViewItemText:
+        const auto opt = qstyleoption_cast<const QStyleOptionButton *>(option);
+        auto elements = prepareElements(option, widget);
+        QStringList childelements = {QStringLiteral("Indicator")};
+        if (!opt->icon.isNull()) {
+            childelements.append(QStringLiteral("Icon"));
+        }
+        if (!opt->text.isEmpty()) {
+            childelements.append(QStringLiteral("Text"));
+        }
+        if (childelements.isEmpty()) {
+            return QRect();
+        }
+        auto map = layoutMap(elements, option, childelements);
+        QRect unifiedRect;
+        for (const auto &m : map) {
+            if (m.elementName != QStringLiteral("Indicator")) {
+                unifiedRect = unifiedRect.united(m.rect.toRect());
+            }
+        }
+        rect = unifiedRect;
+    } break;
+    case QStyle::SE_ProgressBarGroove: {
+        auto elements = prepareElements(option, widget);
+        auto map = layoutMap(elements, option, {QStringLiteral("Track")});
+        rect = map[QStringLiteral("Track")].rect.toRect();
+    } break;
+    case QStyle::SE_PushButtonBevel:
+    case QStyle::SE_ShapedFrameContents:
     case QStyle::SE_LineEditContents:
     case QStyle::SE_ProgressBarContents:
-    case QStyle::SE_ProgressBarGroove:
-    case QStyle::SE_ProgressBarLabel:
-    case QStyle::SE_PushButtonBevel:
-    case QStyle::SE_PushButtonContents:
-    case QStyle::SE_ShapedFrameContents:
+    case QStyle::SE_FrameContents: {
+        auto frameElements = prepareElements(option, widget);
+        auto props = queryProperties(frameElements);
+        int frameWidth = pixelMetric(PM_DefaultFrameWidth, option, widget);
+        rect = backgroundRectangle(option, props).toRect().adjusted(frameWidth, frameWidth, -frameWidth, -frameWidth);
+    } break;
+    case QStyle::SE_HeaderArrow:
+    case QStyle::SE_HeaderLabel: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("HeaderViewDelegate")});
+        QStringList childelements = {QStringLiteral("Text"), QStringLiteral("Icon")};
+        auto map = layoutMap(elements, option, childelements);
+        auto mapItem = (element == SE_HeaderLabel) ? QStringLiteral("Text") : QStringLiteral("Icon");
+        rect = map[mapItem].rect.toRect();
+    } break;
     case QStyle::SE_TabBarScrollLeftButton:
     case QStyle::SE_TabBarScrollRightButton:
     case QStyle::SE_TabBarTabLeftButton:
@@ -469,7 +521,11 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
     case QStyle::SE_TabWidgetTabPane:
     case QStyle::SE_ToolBarHandle:
     case QStyle::SE_ToolBoxTabContents:
-    case QStyle::SE_TreeViewDisclosureItem:
+    case QStyle::SE_DockWidgetCloseButton:
+    case QStyle::SE_DockWidgetFloatButton:
+    case QStyle::SE_DockWidgetIcon:
+    case QStyle::SE_DockWidgetTitleBarText:
+        rect = QCommonStyle::subElementRect(element, option, widget);
         break;
     // Follow defaults
     case QStyle::SE_CustomBase:
@@ -497,7 +553,7 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
         return QCommonStyle::subElementRect(element, option, widget);
     }
 
-    return QCommonStyle::subElementRect(element, option, widget);
+    return visualRect(option->direction, option->rect, rect);
 }
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const

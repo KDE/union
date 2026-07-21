@@ -149,11 +149,24 @@ QStringList hintsFromOption(const QStyleOption *option)
             }
         }
     } break;
+    case QStyleOption::SO_Header: {
+        if (const auto opt = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+            switch (opt->sortIndicator) {
+            case QStyleOptionHeader::None:
+                return hints;
+            case QStyleOptionHeader::SortUp:
+                hints.append(QStringLiteral("sort-ascending"));
+                break;
+            case QStyleOptionHeader::SortDown:
+                hints.append(QStringLiteral("sort-descending"));
+                break;
+            }
+        }
+    }
     case QStyleOption::SO_Tab:
     case QStyleOption::SO_MenuItem:
     case QStyleOption::SO_ProgressBar:
     case QStyleOption::SO_ToolBox:
-    case QStyleOption::SO_Header:
     case QStyleOption::SO_DockWidget:
     case QStyleOption::SO_TabWidgetFrame:
     case QStyleOption::SO_TabBarBase:
@@ -496,6 +509,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         spacing = properties->layout()->spacing().value_or(0);
     }
     auto currentHierarchy = elements;
+    // this could be turned into its own method
     for (const auto &subElement : subElements) {
         // NOTE: Currently text and icon are part of the main element, but eventually
         // will be moved as their own elements
@@ -526,6 +540,7 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
             verticalAlignment = properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
             auto textAlignment = toQtAlignment(properties->text()->alignment());
             auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
+            // We need to make sure the text rectangle for all the elements that have text is correct
             if (const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
                 elementRect = opt->fontMetrics.boundingRect(elementRect.toRect(), textFlags | textAlignment, buttonOption->text);
             } else if (const auto buttonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
@@ -553,11 +568,13 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         return lhs.order < rhs.order;
     });
 
+    // Apply padding
     QMarginsF padding;
-
     if (properties->layout() && properties->layout()->padding()) {
         padding = properties->layout()->padding()->toMargins();
     }
+
+    // Actual layouting starts here
     // QtWidgets containment is always within Widget, since we can't draw outside of a widget due
     // widgets limitations.
     QRectF previousRect;
