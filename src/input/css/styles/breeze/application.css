@@ -150,6 +150,7 @@ pane
 }
 
 frame,
+splitter,
 groupbox,
 framemenu,
 framedockwidget,
@@ -167,6 +168,7 @@ groupbox {
     border-radius: var(--corner-radius);
     background-color: var(--window-background-alternate-color);
     color: var(--window-text-color);
+    text-alignment: content fill center 0;
 
     & > header {
         color: var(--window-text-color);

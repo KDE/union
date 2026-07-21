@@ -8,6 +8,7 @@
 #include <QStyleOption>
 #include <QStyleOptionFrame>
 #include <QTableView>
+#include <QTextOption>
 
 Union::Element::States statesFromOption(const QStyleOption *option)
 {
@@ -456,7 +457,8 @@ QStringList setupMemberList(const QWidget *widget)
                                                        {"QAbstractScrollArea", QStringLiteral("ScrollArea")},
                                                        {"QListView", QStringLiteral("ListView")},
                                                        {"QScrollBar", QStringLiteral("ScrollBar")},
-                                                       {"QTreeView", QStringLiteral("QTreeViewDelegate")}};
+                                                       {"QTreeView", QStringLiteral("QTreeViewDelegate")},
+                                                       {"QSplitter", QStringLiteral("Splitter")}};
 
     auto currentWidget = widget;
     while (currentWidget) {
@@ -522,10 +524,12 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         } else if (subElement == QStringLiteral("Text")) {
             horizontalAlignment = properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
             verticalAlignment = properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+            auto textAlignment = toQtAlignment(properties->text()->alignment());
+            auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
             if (const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
-                elementRect = opt->fontMetrics.boundingRect(buttonOption->text);
+                elementRect = opt->fontMetrics.boundingRect(elementRect.toRect(), textFlags | textAlignment, buttonOption->text);
             } else if (const auto buttonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
-                elementRect = opt->fontMetrics.boundingRect(buttonOption->text);
+                elementRect = opt->fontMetrics.boundingRect(elementRect.toRect(), textFlags | textAlignment, buttonOption->text);
             }
             order = properties->text()->alignment()->order().value_or(0);
         } else {
