@@ -65,6 +65,7 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
     }
 
     // Draw background
+    painter->save();
     if (const auto background = style->background()) {
         QPainterPath path;
 
@@ -106,7 +107,9 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
             painter->restore();
         }
     }
+    painter->restore();
     // Draw borders and corners
+    painter->save();
     if (const auto border = style->border()) {
         painter->setRenderHint(QPainter::Antialiasing, true);
         // Make simpler border shapes if complex ones are not necessary
@@ -169,6 +172,7 @@ void drawBackground(QPainter *painter, const QRect &rect, const Union::Propertie
             }
         }
     }
+    painter->restore();
 }
 
 QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii)
@@ -234,6 +238,7 @@ void drawLineProperty(QPainter *painter,
                       const Union::Properties::LinePropertyGroup *line,
                       const Union::Properties::CornersPropertyGroup *corners)
 {
+    painter->save();
     auto cornerRadii = corners ? constrainRadii(rect, corners->radii()) : Union::Properties::CornersPropertyGroup::CornerRadii{};
 
     QRectF lineRect;
@@ -283,6 +288,7 @@ void drawLineProperty(QPainter *painter,
         painter->setBrush(color.value().toQColor());
         painter->drawRect(lineRect);
     }
+    painter->restore();
 }
 
 // TODO: Fix tiny gaps caused by antialiasing between corners and borders
