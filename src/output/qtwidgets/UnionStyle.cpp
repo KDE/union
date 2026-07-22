@@ -43,10 +43,14 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     }
         return;
     case QStyle::CE_RadioButtonLabel:
-    case QStyle::CE_CheckBoxLabel:
+    case QStyle::CE_CheckBoxLabel: {
+        const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
+        layoutAndDrawIconText(buttonOption, painter, widget, buttonOption->icon, buttonOption->text);
+    }
+        return;
     case QStyle::CE_PushButtonLabel: {
         const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
-        drawIconText(buttonOption, this, painter, widget, buttonOption->icon, buttonOption->text);
+        layoutAndDrawIconText(buttonOption, painter, widget, buttonOption->icon, buttonOption->text);
     }
         return;
     case QStyle::CE_PushButton: {
@@ -65,7 +69,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         if (buttonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
             icon = QIcon();
         }
-        drawIconText(buttonOption, this, painter, widget, icon, text);
+        layoutAndDrawIconText(buttonOption, painter, widget, icon, text);
     }
         return;
     case QStyle::CE_CheckBox: {
@@ -102,7 +106,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         return;
     case QStyle::CE_MenuItem: {
         const auto menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
-        drawIconText(option, this, painter, widget, menuItem->icon, menuItem->text);
+        layoutAndDrawIconText(option, painter, widget, menuItem->icon, menuItem->text);
     }
         return;
     case QStyle::CE_TabBarTabShape: {
@@ -116,7 +120,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         const auto tabOption = qstyleoption_cast<const QStyleOptionTab *>(option);
         auto opt = *tabOption;
         opt.rect = subElementRect(SE_TabBarTabText, tabOption, widget);
-        drawIconText(&opt, this, painter, widget, tabOption->icon, tabOption->text);
+        layoutAndDrawIconText(&opt, painter, widget, tabOption->icon, tabOption->text);
     }
         return;
     case QStyle::CE_TabBarTab: {
@@ -128,13 +132,15 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         const auto vi = qstyleoption_cast<const QStyleOptionViewItem *>(option);
         QStyleOptionViewItem subopt = *vi;
         // Draw background
-        auto bgElements = prepareElements(&subopt, widget, {QStringLiteral("ItemViewItem")});
-        auto bgProps = queryProperties(bgElements);
-        auto rect = backgroundRectangle(option, bgProps).toRect();
-        drawBackground(painter, rect, bgProps);
+        auto elements = prepareElements(&subopt, widget, {QStringLiteral("ItemViewItem")});
+        auto props = queryProperties(elements);
+        subopt.rect = backgroundRectangle(option, props).toRect();
+        drawBackground(painter, subopt.rect, props);
         // Draw text
-        subopt.rect = subElementRect(SE_ItemViewItemText, vi, widget);
-        drawIconText(&subopt, this, painter, widget, vi->icon, vi->text);
+        if (subopt.features.testFlag(QStyleOptionViewItem::HasDisplay)) {
+            subopt.rect = subElementRect(SE_ItemViewItemText, &subopt, widget);
+            layoutAndDrawIconText(&subopt, painter, widget, QIcon(), vi->text);
+        }
         // Draw indicator
         if (subopt.features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
             QStyleOptionButton checkbox;
@@ -151,6 +157,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
             }
             checkbox.rect = subElementRect(SE_ItemViewItemCheckIndicator, vi, widget);
             drawPrimitive(PE_IndicatorCheckBox, &checkbox, painter, widget);
+        } else if (subopt.features.testFlag(QStyleOptionViewItem::HasDecoration)) {
+            subopt.rect = subElementRect(SE_ItemViewItemDecoration, vi, widget);
+            layoutAndDrawIconText(&subopt, painter, widget, vi->icon, QString());
         }
     }
         return;
@@ -479,20 +488,38 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
         auto map = layoutMap(elements, option, {QStringLiteral("Indicator")});
         rect = map[QStringLiteral("Indicator")].rect.toRect();
     } break;
-    case QStyle::SE_ItemViewItemDecoration: {
-        auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
-        auto map = layoutMap(elements, option, {QStringLiteral("Icon")});
-        rect = map[QStringLiteral("Icon")].rect.toRect();
-    } break;
-    case QStyle::SE_ItemViewItemText: {
-        auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
-        auto map = layoutMap(elements, option, {QStringLiteral("Icon"), QStringLiteral("Text")});
-        rect = map[QStringLiteral("Text")].rect.toRect();
-    } break;
+    case QStyle::SE_ItemViewItemText:
+    case QStyle::SE_ItemViewItemDecoration:
     case QStyle::SE_ItemViewItemCheckIndicator: {
+        const auto vi = qstyleoption_cast<const QStyleOptionViewItem *>(option);
+        QStringList childelements = {};
+        if (vi) {
+            if (vi->features.testFlag(QStyleOptionViewItem::HasDisplay)) {
+                childelements.append(QStringLiteral("Text"));
+            }
+            if (vi->features.testFlag(QStyleOptionViewItem::HasDecoration)) {
+                childelements.append(QStringLiteral("Icon"));
+            }
+            if (vi->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+                childelements.append(QStringLiteral("CheckBox"));
+            }
+        }
+        if (childelements.empty()) {
+            return QRect();
+        }
+
         auto elements = prepareElements(option, widget, {QStringLiteral("ItemViewItem")});
-        auto map = layoutMap(elements, option, {QStringLiteral("CheckBox"), QStringLiteral("Indicator")});
-        rect = map[QStringLiteral("Indicator")].rect.toRect();
+        auto map = layoutMap(elements, option, childelements);
+
+        if (element == SE_ItemViewItemText) {
+            rect = map[QStringLiteral("Text")].rect.toRect();
+        }
+        if (element == SE_ItemViewItemDecoration) {
+            rect = map[QStringLiteral("Icon")].rect.toRect();
+        }
+        if (element == SE_ItemViewItemCheckIndicator) {
+            rect = map[QStringLiteral("CheckBox")].rect.toRect();
+        }
     } break;
     case QStyle::SE_ProgressBarLabel: {
         const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
@@ -887,4 +914,91 @@ void UnionStyle::polish(QWidget *widget)
     widget->setProperty(property_union_member_list, setupMemberList(widget));
 
     QCommonStyle::polish(widget);
+}
+
+void UnionStyle::drawText(const QRect &rect, const QStyleOption *opt, QPainter *painter, const QString &text, const QWidget *widget) const
+{
+    if (text.isEmpty()) {
+        return;
+    }
+
+    QList<Union::Element::Ptr> elements = prepareElements(opt, widget);
+    const bool enabled = opt->state.testFlag(QStyle::State_Enabled);
+    auto properties = queryProperties(elements);
+    // TODO: hide mnemonics if requested
+    auto textColor = properties->text()->color();
+    QColor penColor = opt->palette.text().color();
+    if (textColor) {
+        penColor = textColor->toQColor();
+    }
+
+    painter->save();
+    painter->setPen(penColor);
+    drawItemText(painter, rect, textFlagsFromProperties(properties), opt->palette, enabled, text);
+    painter->restore();
+}
+
+void UnionStyle::drawIcon(const QRect &rect, const QStyleOption *opt, QPainter *painter, const QIcon &icon, const QWidget *widget) const
+{
+    QList<Union::Element::Ptr> elements = prepareElements(opt, widget);
+    const bool enabled = opt->state.testFlag(QStyle::State_Enabled);
+    auto properties = queryProperties(elements);
+
+    auto iconAlignment = toQtAlignment(properties->icon()->alignment());
+    auto iconColor = properties->icon()->color();
+    const QPalette activePalette = opt->palette;
+    const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
+    const QPixmap pixmap = icon.pixmap(rect.size(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+    QColor penColor = opt->palette.text().color(); // Use text color as fallback
+    if (iconColor) {
+        penColor = iconColor->toQColor();
+    }
+
+    painter->save();
+    painter->setPen(penColor);
+    drawItemPixmap(painter, rect, iconAlignment, pixmap);
+    painter->restore();
+}
+
+void UnionStyle::layoutAndDrawIconText(const QStyleOption *opt, QPainter *painter, const QWidget *widget, const QIcon &icon, const QString &text) const
+{
+    QList<Union::Element::Ptr> elements = prepareElements(opt, widget);
+
+    bool hasIcon = !icon.isNull();
+    bool hasText = !text.isEmpty();
+
+    QStringList subElements;
+    if (hasIcon) {
+        subElements.append(QStringLiteral("Icon"));
+    }
+    if (hasText) {
+        subElements.append(QStringLiteral("Text"));
+    }
+    // Nothing to draw, just return
+    if (subElements.isEmpty()) {
+        return;
+    }
+    auto map = layoutMap(elements, opt, subElements);
+
+    QRect textRect = map[QStringLiteral("Text")].rect.toRect();
+    if (hasText) {
+        drawText(textRect, opt, painter, text, widget);
+    }
+
+    QRect iconRect = map[QStringLiteral("Icon")].rect.toRect();
+    if (hasIcon) {
+        drawIcon(iconRect, opt, painter, icon, widget);
+    }
+
+    /*
+             painter->save();
+             painter->setBrush(Qt::NoBrush);
+             painter->setPen(Qt::blue);
+             painter->drawRect(opt->rect);
+             painter->setPen(Qt::magenta);
+             painter->drawRect(iconRect);
+             painter->setPen(Qt::yellow);
+             painter->drawRect(textRect);
+             painter->restore();
+    */
 }

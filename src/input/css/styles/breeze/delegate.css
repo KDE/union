@@ -117,6 +117,18 @@ itemviewrow,
 itemviewitem {
     inset: 0px;
     padding: 0px;
+    layout-alignment: content start center 0;
+    icon-alignment: content start center 0;
+    text-alignment: content start center 1;
+    icon-size: var(--small-element-size);
+
+    & > checkbox {
+        padding: 2px;
+        margin: 0px;
+        inset: 0px;
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+    }
 
     &.position-invalid {
         border-radius: 0px;
