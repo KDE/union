@@ -421,6 +421,10 @@ void drawIconText(const QStyleOption *opt, const QStyle *qstyle, QPainter *paint
     if (hasText) {
         subElements.append(QStringLiteral("Text"));
     }
+    // Nothing to draw, just return
+    if (subElements.isEmpty()) {
+        return;
+    }
     auto map = layoutMap(elements, opt, subElements);
 
     QRect textRect = map[QStringLiteral("Text")].rect.toRect();

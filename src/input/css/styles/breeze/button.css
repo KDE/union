@@ -345,6 +345,15 @@ tabbutton {
             border-top-color: var(--tab-open-background-color);
         }
     }
+
+    /* close button for widgets */
+    & > closebutton {
+        layout-alignment: content end center 0;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "tab-close";
+        icon-color: var(--negative-text);
+    }
 }
 
 tabbar {

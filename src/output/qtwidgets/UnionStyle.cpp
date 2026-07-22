@@ -197,8 +197,17 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         }
     }
         return;
+    case QStyle::CC_ComboBox: {
+        // TODO: this is wrong, used for debug for now
+        const auto buttonOption = qstyleoption_cast<const QStyleOptionComboBox *>(option);
+        const auto elements = prepareElements(buttonOption, widget);
+        const auto properties = queryProperties(elements);
+        auto rect = backgroundRectangle(buttonOption, properties).toRect();
+        drawBackground(painter, rect, properties);
+        drawControl(CE_ComboBoxLabel, buttonOption, painter, widget);
+    }
+        return;
     case QStyle::CC_SpinBox:
-    case QStyle::CC_ComboBox:
     case QStyle::CC_ScrollBar:
     case QStyle::CC_Slider:
     case QStyle::CC_TitleBar:
@@ -288,71 +297,96 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
     // TODO use subelement rects to build the thing if possible
     QSize size = QCommonStyle::sizeFromContents(ct, opt, contentsSize, widget);
     QSize minimumSize(contentsSize.width(), contentsSize.height());
-    QIcon icon = QIcon();
-    QString text = QString();
-    QStringList subElements = {};
-    bool vertical = false;
-
+    auto elements = prepareElements(opt, widget);
+    if (elements.isEmpty()) {
+        return size;
+    }
+    auto properties = queryProperties(elements);
+    if (!properties) {
+        return size;
+    }
+    QMargins padding;
+    if (properties->layout()) {
+        auto width = properties->layout()->width().value_or(contentsSize.width());
+        auto height = properties->layout()->height().value_or(contentsSize.height());
+        minimumSize = QSize(width, height);
+        if (properties->layout()->padding()) {
+            padding = properties->layout()->padding()->toMargins().toMargins();
+        }
+    }
     switch (ct) {
     case QStyle::CT_CheckBox: {
-        QRegion elements;
+        QRegion r;
         auto indicatorRect = subElementRect(SE_CheckBoxIndicator, opt, widget);
         auto textRect = subElementRect(SE_CheckBoxContents, opt, widget);
-        elements.setRects({indicatorRect, textRect});
-        return elements.boundingRect().size();
-    }
+        r.setRects({indicatorRect, textRect});
+        size = r.boundingRect().size().grownBy(padding);
+    } break;
     case QStyle::CT_RadioButton: {
-        QRegion elements;
+        QRegion r;
         auto indicatorRect = subElementRect(SE_RadioButtonIndicator, opt, widget);
         auto textRect = subElementRect(SE_RadioButtonContents, opt, widget);
-        elements.setRects({indicatorRect, textRect});
-        return elements.boundingRect().size();
-    }
+        r.setRects({indicatorRect, textRect});
+        size = r.boundingRect().size().grownBy(padding);
+    } break;
     case QStyle::CT_PushButton: {
-        const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt);
-        icon = buttonOption->icon;
-        text = buttonOption->text;
+        QRegion r;
+        auto contentsRect = subElementRect(SE_PushButtonContents, opt, widget);
+        auto bgRect = subElementRect(SE_PushButtonBevel, opt, widget);
+        auto focus = subElementRect(SE_PushButtonFocusRect, opt, widget);
+        r.setRects({contentsRect, bgRect, focus});
+        size = r.boundingRect().size().grownBy(padding);
     } break;
     case QStyle::CT_ToolButton: {
         const auto toolButtonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt);
-        icon = toolButtonOption->icon;
-        text = toolButtonOption->text;
-        vertical = toolButtonOption->toolButtonStyle == Qt::ToolButtonStyle::ToolButtonTextUnderIcon;
+        auto elements = prepareElements(toolButtonOption, widget);
+        QStringList childelements = {};
+        if (!toolButtonOption->icon.isNull()) {
+            childelements.append(QStringLiteral("Icon"));
+        }
+        if (!toolButtonOption->text.isEmpty()) {
+            childelements.append(QStringLiteral("Text"));
+        }
+        if (childelements.isEmpty()) {
+            return size;
+        }
+        auto map = layoutMap(elements, toolButtonOption, childelements);
+        QRect unifiedRect;
+        for (const auto &m : map) {
+            unifiedRect = unifiedRect.united(m.rect.toRect());
+        }
+        size = unifiedRect.size().grownBy(padding);
     } break;
     case QStyle::CT_ComboBox: {
-        const auto comboBoxOption = qstyleoption_cast<const QStyleOptionComboBox *>(opt);
-        icon = comboBoxOption->currentIcon;
-        text = comboBoxOption->currentText;
+        const auto option = qstyleoption_cast<const QStyleOptionComboBox *>(opt);
+        auto elements = prepareElements(option, widget);
+        QStringList childelements = {QStringLiteral("Icon"), QStringLiteral("Text"), QStringLiteral("Indicator")};
+        auto map = layoutMap(elements, option, childelements);
+        QRect unifiedRect;
+        for (const auto &m : map) {
+            unifiedRect = unifiedRect.united(m.rect.toRect());
+        }
+        size = unifiedRect.size().grownBy(padding);
     } break;
     case QStyle::CT_TabBarTab: {
-        const auto tabOption = qstyleoption_cast<const QStyleOptionTab *>(opt);
-        icon = tabOption->icon;
-        text = tabOption->text;
+        QRegion r;
+        auto lb = subElementRect(SE_TabBarTabLeftButton, opt, widget);
+        auto rb = subElementRect(SE_TabBarTabRightButton, opt, widget);
+        auto textRect = subElementRect(SE_TabBarTabText, opt, widget);
+        r.setRects({lb, textRect, rb});
+        size = r.boundingRect().size().grownBy(padding);
     } break;
     case QStyle::CT_MenuBar:
     case QStyle::CT_MenuItem:
     case QStyle::CT_MenuBarItem: {
-        const auto menuOption = qstyleoption_cast<const QStyleOptionMenuItem *>(opt);
-        icon = menuOption->icon;
-        text = menuOption->text;
     } break;
     case QStyle::CT_GroupBox: {
-        const auto groupBoxOption = qstyleoption_cast<const QStyleOptionGroupBox *>(opt);
-        text = groupBoxOption->text;
     } break;
     case QStyle::CT_ProgressBar: {
-        const auto progressBarOption = qstyleoption_cast<const QStyleOptionProgressBar *>(opt);
-        text = progressBarOption->text;
     } break;
     case QStyle::CT_HeaderSection: {
-        const auto headerOption = qstyleoption_cast<const QStyleOptionHeader *>(opt);
-        icon = headerOption->icon;
-        text = headerOption->text;
     } break;
     case QStyle::CT_ItemViewItem: {
-        const auto viewItemOption = qstyleoption_cast<const QStyleOptionViewItem *>(opt);
-        icon = viewItemOption->icon;
-        text = viewItemOption->text;
     } break;
     // QStyleOptionSlider, no text/icon
     case QStyle::CT_Slider:
@@ -373,44 +407,6 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
     case QStyle::CT_Splitter:
     case QStyle::CT_CustomBase:
         break;
-    }
-
-    auto elements = prepareElements(opt, widget, subElements);
-    if (elements.isEmpty()) {
-        return size;
-    }
-    auto properties = queryProperties(elements);
-    if (!properties) {
-        return size;
-    }
-    QMargins padding;
-    if (properties->layout()) {
-        auto width = properties->layout()->width().value_or(contentsSize.width());
-        auto height = properties->layout()->height().value_or(contentsSize.height());
-        minimumSize = QSize(width, height);
-        if (properties->layout()->padding()) {
-            padding = properties->layout()->padding()->toMargins().toMargins();
-        }
-    }
-
-    if (!text.isEmpty()) {
-        const int textFlags(Qt::TextShowMnemonic | Qt::AlignCenter);
-        size = opt->fontMetrics.size(textFlags, text);
-    }
-    if (!icon.isNull() && properties->icon()) {
-        QSize iconSize(properties->icon()->width().value_or(0), properties->icon()->height().value_or(0));
-        if (vertical) {
-            size.setHeight(size.height() + iconSize.height() + padding.top() + padding.bottom());
-        } else {
-            size.setHeight(qMax(size.height(), iconSize.height()) + padding.top() + padding.bottom());
-        }
-        size.rwidth() += iconSize.width() + padding.right() + padding.left();
-
-        if (!text.isEmpty() && properties->layout()->spacing()) {
-            size.rwidth() += properties->layout()->spacing().value_or(0);
-        }
-    } else {
-        size = size.grownBy(padding);
     }
 
     if (size.width() < minimumSize.width()) {
@@ -507,27 +503,39 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
         auto mapItem = (element == SE_HeaderLabel) ? QStringLiteral("Text") : QStringLiteral("Icon");
         rect = map[mapItem].rect.toRect();
     } break;
-    case QStyle::SE_TabBarScrollLeftButton:
-    case QStyle::SE_TabBarScrollRightButton:
-    case QStyle::SE_TabBarTabLeftButton:
-    case QStyle::SE_TabBarTabRightButton:
-    case QStyle::SE_TabBarTabText:
-    case QStyle::SE_TabBarTearIndicator:
-    case QStyle::SE_TabBarTearIndicatorRight:
-    case QStyle::SE_TabWidgetLeftCorner:
-    case QStyle::SE_TabWidgetRightCorner:
-    case QStyle::SE_TabWidgetTabBar:
-    case QStyle::SE_TabWidgetTabContents:
-    case QStyle::SE_TabWidgetTabPane:
-    case QStyle::SE_ToolBarHandle:
-    case QStyle::SE_ToolBoxTabContents:
+    case QStyle::SE_TabBarTabText: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("TabButton")});
+        auto map = layoutMap(elements, option, {QStringLiteral("Text")});
+        rect = map[QStringLiteral("Text")].rect.toRect();
+    } break;
+    // Use this as the icon area
+    case QStyle::SE_TabBarTabLeftButton: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("TabButton")});
+        auto map = layoutMap(elements, option, {QStringLiteral("Icon")});
+        rect = map[QStringLiteral("Icon")].rect.toRect();
+    } break;
+    // Use this as the close button
+    case QStyle::SE_TabBarTabRightButton: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("TabButton")});
+        auto map = layoutMap(elements, option, {QStringLiteral("CloseButton")});
+        rect = map[QStringLiteral("CloseButton")].rect.toRect();
+    } break;
+    // Follow defaults
     case QStyle::SE_DockWidgetCloseButton:
     case QStyle::SE_DockWidgetFloatButton:
     case QStyle::SE_DockWidgetIcon:
     case QStyle::SE_DockWidgetTitleBarText:
-        rect = QCommonStyle::subElementRect(element, option, widget);
-        break;
-    // Follow defaults
+    case QStyle::SE_ToolBarHandle:
+    case QStyle::SE_TabWidgetLeftCorner:
+    case QStyle::SE_TabWidgetRightCorner:
+    case QStyle::SE_TabWidgetTabBar:
+    case QStyle::SE_TabWidgetTabPane:
+    case QStyle::SE_TabWidgetTabContents:
+    case QStyle::SE_ToolBoxTabContents: // TODO: check if this needs changes
+    case QStyle::SE_TabBarTearIndicator:
+    case QStyle::SE_TabBarTearIndicatorRight:
+    case QStyle::SE_TabBarScrollRightButton:
+    case QStyle::SE_TabBarScrollLeftButton:
     case QStyle::SE_CustomBase:
     case QStyle::SE_CheckBoxClickRect:
     case QStyle::SE_CheckBoxFocusRect:
