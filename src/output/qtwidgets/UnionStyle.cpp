@@ -189,7 +189,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
             painter->setPen(textColor);
             drawItemText(painter,
                          textRect,
-                         Qt::TextShowMnemonic | groupBoxOption->textAlignment,
+                         textFlagsFromProperties(properties),
                          groupBoxOption->palette,
                          groupBoxOption->state & State_Enabled,
                          groupBoxOption->text,
@@ -376,10 +376,31 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         r.setRects({lb, textRect, rb});
         size = r.boundingRect().size().grownBy(padding);
     } break;
-    case QStyle::CT_MenuBar:
-    case QStyle::CT_MenuItem:
-    case QStyle::CT_MenuBarItem: {
+    case QStyle::CT_MenuBar: {
+        const auto option = qstyleoption_cast<const QStyleOptionMenuItem *>(opt);
+        size = backgroundRectangle(option, properties).size().toSize();
     } break;
+    case QStyle::CT_MenuBarItem: {
+        const auto menuopt = qstyleoption_cast<const QStyleOptionMenuItem *>(opt);
+        auto elements = prepareElements(menuopt, widget, {QStringLiteral("MenuBarItem")});
+        QStringList childelements = {};
+        if (!menuopt->icon.isNull()) {
+            childelements.append(QStringLiteral("Icon"));
+        }
+        if (!menuopt->text.isEmpty()) {
+            childelements.append(QStringLiteral("Text"));
+        }
+        if (childelements.isEmpty()) {
+            return size;
+        }
+        auto map = layoutMap(elements, menuopt, childelements);
+        QRect unifiedRect;
+        for (const auto &m : map) {
+            unifiedRect = unifiedRect.united(m.rect.toRect());
+        }
+        size = unifiedRect.size().grownBy(padding);
+    } break;
+    case QStyle::CT_MenuItem:
     case QStyle::CT_GroupBox: {
     } break;
     case QStyle::CT_ProgressBar: {
@@ -803,7 +824,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     case QStyle::PM_HeaderDefaultSectionSizeVertical:
     case QStyle::PM_CustomBase:
     default:
-        return QCommonStyle::pixelMetric(metric, option, widget);
+        break;
     };
     return QCommonStyle::pixelMetric(metric, option, widget);
 }

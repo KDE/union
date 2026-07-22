@@ -538,14 +538,8 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         } else if (subElement == QStringLiteral("Text")) {
             horizontalAlignment = properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
             verticalAlignment = properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
-            auto textAlignment = toQtAlignment(properties->text()->alignment());
-            auto textFlags = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
-            // We need to make sure the text rectangle for all the elements that have text is correct
-            if (const auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
-                elementRect = opt->fontMetrics.boundingRect(elementRect.toRect(), textFlags | textAlignment, buttonOption->text);
-            } else if (const auto buttonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
-                elementRect = opt->fontMetrics.boundingRect(elementRect.toRect(), textFlags | textAlignment, buttonOption->text);
-            }
+            const auto optiontext = textFromOption(opt);
+            elementRect = opt->fontMetrics.boundingRect(availableSpace.toRect(), textFlagsFromProperties(properties), optiontext);
             order = properties->text()->alignment()->order().value_or(0);
         } else {
             elementRect.setWidth(properties->layout()->width().value_or(0));
@@ -690,4 +684,72 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
         map[item.elementName] = item;
     }
     return map;
+}
+
+QString textFromOption(const QStyleOption *opt)
+{
+    switch ((QStyleOption::OptionType)opt->type) {
+    case QStyleOption::SO_Button:
+        if (const auto option = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_ToolButton:
+        if (const auto option = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_DockWidget:
+        if (const auto option = qstyleoption_cast<const QStyleOptionDockWidget *>(opt)) {
+            return option->title;
+        }
+        break;
+    case QStyleOption::SO_Header:
+        if (const auto option = qstyleoption_cast<const QStyleOptionHeader *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_MenuItem:
+        if (const auto option = qstyleoption_cast<const QStyleOptionMenuItem *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_ProgressBar:
+        if (const auto option = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_Tab:
+        if (const auto option = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_ToolBox:
+        if (const auto option = qstyleoption_cast<const QStyleOptionToolBox *>(opt)) {
+            return option->text;
+        }
+        break;
+    case QStyleOption::SO_ViewItem:
+        if (const auto option = qstyleoption_cast<const QStyleOptionViewItem *>(opt)) {
+            return option->text;
+        }
+        break;
+    default:
+        break;
+    }
+    return QString();
+}
+
+int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
+{
+    int textFlags = Qt::AlignVCenter;
+    auto textAlignment = toQtAlignment(properties->text()->alignment());
+    auto textWrap = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
+    auto textElide = toQtElideMode(properties->text()->elide().value_or(Union::Properties::TextElide::Right));
+    auto textColor = properties->text()->color();
+    textFlags |= textAlignment;
+    textFlags |= textWrap;
+    textFlags |= textElide;
+    textFlags |= Qt::TextShowMnemonic;
+    return textFlags;
 }
