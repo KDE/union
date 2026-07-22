@@ -17,6 +17,7 @@ target_sources(Union PRIVATE
     Color.cpp
     PlatformPlugin.cpp
     StyleCache.cpp
+    StylePackage.cpp
 )
 
 target_sources(Union PUBLIC
@@ -37,6 +38,7 @@ target_sources(Union PUBLIC
     Color.h
     PluginRegistry.h
     PlatformPlugin.h
+    StylePackage.h
 )
 
 ecm_qt_declare_logging_category(Union

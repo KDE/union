@@ -4,6 +4,7 @@
 #pragma once
 
 #include "PluginRegistry.h"
+#include "StylePackage.h"
 
 #include "union_export.h"
 
@@ -30,7 +31,15 @@ public:
     InputPlugin(QObject *parent = nullptr);
 
     /*!
-     * Create an instance of a style by name.
+     * Validate if a given package is a valid package for this input.
+     *
+     * This should be reimplemented by subclasses and check whether the given
+     * package has all files required for createStyle() to work correctly.
+     */
+    virtual StylePackage::Error validatePackage(const StylePackage &package) = 0;
+
+    /*!
+     * Create an instance of a style from a package.
      *
      * This should be reimplemented by subclasses and create a new instance of
      * Style using an appropriate StyleLoader and other input specific data.
