@@ -9,9 +9,20 @@
 
 using namespace Qt::StringLiterals;
 
+namespace fs = std::filesystem;
+
 CssPlugin::CssPlugin(QObject *parent)
     : Union::InputPlugin(parent)
 {
+}
+
+Union::StylePackage::Error CssPlugin::validatePackage(const Union::StylePackage &package)
+{
+    if (!fs::exists(package.path() / "contents" / "css" / "style.css")) {
+        return StylePackage::Error::MissingFiles;
+    }
+
+    return StylePackage::Error::None;
 }
 
 std::shared_ptr<Union::Style> CssPlugin::createStyle(const QString &styleName) const

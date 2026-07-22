@@ -18,5 +18,7 @@ class CssPlugin : public Union::InputPlugin
 public:
     CssPlugin(QObject *parent = nullptr);
 
+    Union::StylePackage::Error validatePackage(const Union::StylePackage &package) override;
+
     std::shared_ptr<Union::Style> createStyle(const QString &styleName) const override;
 };
