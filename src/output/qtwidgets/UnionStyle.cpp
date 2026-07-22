@@ -124,6 +124,36 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         drawControl(CE_TabBarTabLabel, option, painter, widget);
     }
         return;
+    case QStyle::CE_ItemViewItem: {
+        const auto vi = qstyleoption_cast<const QStyleOptionViewItem *>(option);
+        QStyleOptionViewItem subopt = *vi;
+        // Draw background
+        auto bgElements = prepareElements(&subopt, widget, {QStringLiteral("ItemViewItem")});
+        auto bgProps = queryProperties(bgElements);
+        auto rect = backgroundRectangle(option, bgProps).toRect();
+        drawBackground(painter, rect, bgProps);
+        // Draw text
+        subopt.rect = subElementRect(SE_ItemViewItemText, vi, widget);
+        drawIconText(&subopt, this, painter, widget, vi->icon, vi->text);
+        // Draw indicator
+        if (subopt.features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+            QStyleOptionButton checkbox;
+            switch (subopt.checkState) {
+            case Qt::Unchecked:
+                checkbox.state = State_Off;
+                break;
+            case Qt::PartiallyChecked:
+                checkbox.state = State_NoChange;
+                break;
+            case Qt::Checked:
+                checkbox.state = State_On;
+                break;
+            }
+            checkbox.rect = subElementRect(SE_ItemViewItemCheckIndicator, vi, widget);
+            drawPrimitive(PE_IndicatorCheckBox, &checkbox, painter, widget);
+        }
+    }
+        return;
     case QStyle::CE_ProgressBar:
     case QStyle::CE_ProgressBarGroove:
     case QStyle::CE_ProgressBarContents:
@@ -157,7 +187,6 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     case QStyle::CE_ToolBoxTabLabel:
     case QStyle::CE_HeaderEmptyArea:
     case QStyle::CE_ColumnViewGrip:
-    case QStyle::CE_ItemViewItem:
     case QStyle::CE_ShapedFrame:
     case QStyle::CE_CustomBase:
         break;
