@@ -41,55 +41,6 @@ public:
     {
     }
 
-    Style::Ptr loadStyle(const QString &styleName, const QString &pluginName)
-    {
-        auto styleId = std::make_pair(pluginName.toStdString(), styleName.toStdString());
-        if (styles.contains(styleId)) {
-            return styles.value(styleId);
-        }
-
-        if (!styleCache) {
-            return nullptr;
-        }
-
-        if (styleCache->hasEntry(styleId)) {
-            auto data = styleCache->load(styleId);
-            if (data) {
-                auto style = std::make_shared<Style>(std::move(data));
-                qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from cached data";
-                styles.insert(styleId, style);
-                return style;
-            }
-        }
-
-        static const bool DisablePlugins = qEnvironmentVariableIsSet("UNION_DISABLE_INPUT_PLUGINS");
-        if (DisablePlugins) {
-            return nullptr;
-        }
-
-        auto plugin = InputPlugin::inputPlugin(pluginName);
-        if (!plugin) {
-            qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but the plugin could not be found!";
-            return nullptr;
-        }
-
-        auto style = plugin->createStyle(styleName);
-        if (!style) {
-            qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but the style could not be found!";
-            return nullptr;
-        }
-
-        if (!style->load()) {
-            qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but it failed to load!";
-            return nullptr;
-        }
-
-        qCDebug(UNION_GENERAL) << "Loaded style" << styleName << "from plugin" << pluginName;
-
-        styles.insert(styleId, style);
-        return style;
-    }
-
     void loadPlatform()
     {
         const auto forcedPlatform = qEnvironmentVariable("UNION_FORCE_PLATFORM", QString{});
@@ -102,6 +53,11 @@ public:
 
         const auto platformName = QGuiApplication::platformName();
         const auto desktopNames = qEnvironmentVariable("XDG_CURRENT_DESKTOP", QString{}).split(u':');
+
+        if (platformName.isEmpty()) {
+            platform = std::make_shared<FallbackPlatformPlugin>();
+            return;
+        }
 
         const auto plugins = platformRegistry->plugins();
         for (const auto &plugin : plugins) {
@@ -198,10 +154,23 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleId)
         return itr.value();
     }
 
+    if (!d->styleCache) {
+        return nullptr;
+    }
+
     auto stylePackage = d->packageHandler->package(styleId);
     if (!stylePackage.isValid()) {
         qCWarning(UNION_GENERAL) << "Could not find style" << styleId;
         return nullptr;
+    }
+
+    if (d->styleCache->hasEntry(stylePackage.path())) {
+        if (auto data = d->styleCache->load(stylePackage.path()); data) {
+            auto style = std::make_shared<Style>(std::move(data));
+            qCDebug(UNION_GENERAL) << "Loaded style" << styleId << "from cached data";
+            d->styles.insert(stylePackage.path(), style);
+            return style;
+        }
     }
 
     auto style = stylePackage.load();
