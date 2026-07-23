@@ -3,6 +3,7 @@
 
 #include "StyleCache_p.h"
 
+#include <QCryptographicHash>
 #include <QFile>
 #include <QSaveFile>
 #include <QStandardPaths>
@@ -27,38 +28,19 @@ static constexpr uint32_t CacheVersion = 6;
 class StyleCache::Private
 {
 public:
-    QHash<StyleId, fs::path> stylePaths;
+    fs::path cachePath(const fs::path &stylePath)
+    {
+        auto pathHash = QCryptographicHash::hash(stylePath.string(), QCryptographicHash::Sha256).toBase64().toStdString();
+        return storagePath / pathHash;
+    }
+
+    fs::path storagePath;
 };
 
 StyleCache::StyleCache()
     : d(std::make_unique<Private>())
 {
-    auto cachePath = fs::path(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation).toStdString()) / "union";
-    if (!enabled() || !fs::exists(cachePath)) {
-        return;
-    }
-
-    for (const auto &pluginEntry : fs::directory_iterator(cachePath)) {
-        if (!pluginEntry.is_directory()) {
-            continue;
-        }
-
-        auto pluginName = pluginEntry.path().filename();
-        for (const auto &styleEntry : fs::directory_iterator(pluginEntry.path())) {
-            if (!styleEntry.is_regular_file()) {
-                continue;
-            }
-
-            if (styleEntry.file_size() == 0) {
-                continue;
-            }
-
-            auto styleName = styleEntry.path().stem();
-
-            auto styleId = std::make_pair(pluginName.string(), styleName.string());
-            d->stylePaths.insert(styleId, styleEntry.path());
-        }
-    }
+    d->storagePath = fs::path(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation).toStdString()) / "union";
 }
 
 StyleCache::~StyleCache() = default;
@@ -69,21 +51,21 @@ bool Union::StyleCache::enabled() const
     return enabled;
 }
 
-bool StyleCache::hasEntry(const StyleId &styleId) const
+bool StyleCache::hasEntry(const fs::path &path) const
 {
-    return d->stylePaths.contains(styleId);
+    return fs::exists(d->cachePath(path));
 }
 
-std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
+std::unique_ptr<StylePrivate> StyleCache::load(const fs::path &path) const
 {
     if (!enabled()) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because caching has been disabled";
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "because caching has been disabled";
         return nullptr;
     }
 
-    auto path = d->stylePaths.value(styleId);
-    if (path.empty()) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << styleId.second << "from plugin" << styleId.first << "because no cache file could be found";
+    auto cachePath = d->cachePath(path);
+    if (!fs::exists(cachePath)) {
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "because no cache file could be found";
         return nullptr;
     }
 
@@ -92,7 +74,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
         return nullptr;
     }
 
-    QFile cacheFile(path);
+    QFile cacheFile(cachePath);
     if (!cacheFile.open(QIODevice::ReadOnly)) {
         return nullptr;
     }
@@ -104,7 +86,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
     reader >> magic;
 
     if (magic != CacheMagic) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "invalid magic value";
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "invalid magic value";
         return nullptr;
     }
 
@@ -112,15 +94,15 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
     reader >> version;
 
     if (version != CacheVersion) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "version mismatch";
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "version mismatch";
         return nullptr;
     }
 
     auto result = std::make_unique<StylePrivate>();
     reader >> result->path;
 
-    if (result->pluginName.toStdString() != styleId.first || result->styleName.toStdString() != styleId.second) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "plugin/style name mismatch";
+    if (result->path != path) {
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "style path mismatch";
         return nullptr;
     }
 
@@ -128,7 +110,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
     reader >> result->modificationTimes;
 
     if (result->cachePaths.size() != result->modificationTimes.size()) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "mismatch between cache paths and modification times";
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "mismatch between cache paths and modification times";
         return nullptr;
     }
 
@@ -136,7 +118,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
         auto path = result->cachePaths.at(i);
 
         if (!fs::exists(path)) {
-            qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "original file no longer exists";
+            qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "original file no longer exists";
             return nullptr;
         }
 
@@ -144,7 +126,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
         auto currentModificationTime = fs::last_write_time(path);
 
         if (cachedModificationTime != currentModificationTime) {
-            qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "file modification time mismatch";
+            qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "file modification time mismatch";
             return nullptr;
         }
     }
@@ -159,7 +141,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
     }
 
     if (reader.status() != QDataStream::Status::Ok) {
-        qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "restoring cached data failed";
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "restoring cached data failed";
         return nullptr;
     }
 
@@ -176,15 +158,14 @@ bool Union::StyleCache::save(const StylePrivate *style) const
         return false;
     }
 
-    auto path = fs::path(QStandardPaths::writableLocation(QStandardPaths::GenericCacheLocation).toStdString()) / "union" / style->pluginName.toStdString();
-    if (!fs::exists(path)) {
-        if (!fs::create_directories(path)) {
-            qCWarning(UNION_GENERAL) << "Could not create cache path" << path.string();
+    if (!fs::exists(d->storagePath)) {
+        if (!fs::create_directories(d->storagePath)) {
+            qCWarning(UNION_GENERAL) << "Could not create cache path" << d->storagePath.string();
             return false;
         }
     }
 
-    QSaveFile cacheFile(QString::fromStdString(path / (style->styleName.toStdString() + ".cache"s)));
+    QSaveFile cacheFile(QString::fromStdString(d->cachePath(style->path)));
     if (!cacheFile.open(QIODevice::WriteOnly)) {
         qCWarning(UNION_GENERAL) << "Could not open cache file" << qPrintable(cacheFile.fileName()) << "for writing";
         return false;

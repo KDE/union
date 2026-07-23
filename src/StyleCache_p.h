@@ -27,8 +27,6 @@ class StylePrivate;
 class StyleCache
 {
 public:
-    using StyleId = std::pair<std::string, std::string>;
-
     StyleCache();
     ~StyleCache();
 
@@ -38,20 +36,20 @@ public:
     // set.
     bool enabled() const;
 
-    // Does a cache entry exist for the given style ID.
+    // Does a cache entry exist for the given style package path.
     //
-    // Note that this is based on whether a cache file exists for the given ID.
+    // Note that this is based on whether a cache file exists for the given path.
     // It does not verify that the cache file actually loads properly, so this
     // may return true while load() still ends up returning nullptr.
-    bool hasEntry(const StyleId &styleId) const;
+    bool hasEntry(const std::filesystem::path &path) const;
 
-    // Load the cached data for the style with the given style ID.
+    // Load the cached data for the style with the given style package path.
     //
     // This will return nullptr when the cached data cannot be loaded. Cached
     // data may not be loaded for a number of reasons, including changes to the
     // underlying style files as well as changes to the code or structure of
     // cache files.
-    std::unique_ptr<StylePrivate> load(const StyleId &styleId) const;
+    std::unique_ptr<StylePrivate> load(const std::filesystem::path &path) const;
 
     // Save the style data to a cache file.
     //
