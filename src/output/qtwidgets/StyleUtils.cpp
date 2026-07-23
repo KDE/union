@@ -635,9 +635,6 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
             availableSpace.moveTop(item.rect.bottom() + spacing);
             break;
         case Union::Properties::Alignment::Fill:
-            item.rect.moveTop(availableSpace.top() - spacing);
-            item.rect.moveBottom(availableSpace.bottom() + spacing);
-            break;
         case Union::Properties::Alignment::Center:
             item.rect.moveCenter(QPoint(item.rect.center().x(), availableSpace.center().y()));
             break;

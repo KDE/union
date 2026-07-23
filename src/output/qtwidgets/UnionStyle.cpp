@@ -109,18 +109,24 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         layoutAndDrawIconText(option, painter, widget, menuItem->icon, menuItem->text);
     }
         return;
+    case QStyle::CE_ToolBoxTabShape:
     case QStyle::CE_TabBarTabShape: {
         const auto tabOption = qstyleoption_cast<const QStyleOptionTab *>(option);
-        auto opt = *tabOption;
-        opt.rect = subElementRect(SE_TabWidgetTabPane, tabOption, widget);
-        drawElement(queryProperties(prepareElements(tabOption, widget, {QStringLiteral("TabButton")})), painter, tabOption);
+        auto bgElements = prepareElements(tabOption, widget, {QStringLiteral("TabButton")});
+        auto bgProps = queryProperties(bgElements);
+        auto rect = backgroundRectangle(option, bgProps).toRect();
+        drawBackground(painter, rect, bgProps);
     }
         return;
+    case QStyle::CE_ToolBoxTabLabel:
     case QStyle::CE_TabBarTabLabel: {
         const auto tabOption = qstyleoption_cast<const QStyleOptionTab *>(option);
-        layoutAndDrawIconText(tabOption, painter, widget, tabOption->icon, tabOption->text);
+        auto subopt = *tabOption;
+        subopt.rect = subElementRect(SE_TabBarTabText, tabOption, widget);
+        layoutAndDrawIconText(&subopt, painter, widget, tabOption->icon, tabOption->text);
     }
         return;
+    case QStyle::CE_ToolBoxTab:
     case QStyle::CE_TabBarTab: {
         const auto tabOption = qstyleoption_cast<const QStyleOptionTab *>(option);
         drawControl(CE_TabBarTabShape, tabOption, painter, widget);
@@ -176,7 +182,6 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     case QStyle::CE_Header:
     case QStyle::CE_HeaderSection:
     case QStyle::CE_HeaderLabel:
-    case QStyle::CE_ToolBoxTab:
     case QStyle::CE_SizeGrip:
     case QStyle::CE_Splitter:
     case QStyle::CE_RubberBand:
@@ -191,8 +196,6 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     case QStyle::CE_FocusFrame:
     case QStyle::CE_ComboBoxLabel:
     case QStyle::CE_ToolBar:
-    case QStyle::CE_ToolBoxTabShape:
-    case QStyle::CE_ToolBoxTabLabel:
     case QStyle::CE_HeaderEmptyArea:
     case QStyle::CE_ColumnViewGrip:
     case QStyle::CE_ShapedFrame:
@@ -402,12 +405,21 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         size = unifiedRect.size().grownBy(padding);
     } break;
     case QStyle::CT_TabBarTab: {
-        QRegion r;
-        auto lb = subElementRect(SE_TabBarTabLeftButton, opt, widget);
-        auto rb = subElementRect(SE_TabBarTabRightButton, opt, widget);
+        auto elements = prepareElements(opt, widget, {QStringLiteral("TabButton")});
+        auto props = queryProperties(elements);
         auto textRect = subElementRect(SE_TabBarTabText, opt, widget);
-        r.setRects({lb, textRect, rb});
-        size = r.boundingRect().size().grownBy(padding);
+        if (props->layout()) {
+            if (props->layout()->width()) {
+                textRect.setWidth(props->layout()->width().value_or(contentsSize.width()));
+            }
+            if (props->layout()->height()) {
+                textRect.setHeight(props->layout()->height().value_or(contentsSize.height()));
+            }
+            if (props->layout()->padding()) {
+                padding = props->layout()->padding()->toMargins().toMargins();
+            }
+        }
+        return textRect.size().grownBy(padding);
     } break;
     case QStyle::CT_MenuBar: {
         const auto option = qstyleoption_cast<const QStyleOptionMenuItem *>(opt);
@@ -584,14 +596,13 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
         auto map = layoutMap(elements, option, {QStringLiteral("Icon"), QStringLiteral("Text")});
         QRect unifiedRect;
         for (const auto &m : map) {
-            // Skip the indicator area
-            if (m.elementName != QStringLiteral("Indicator")) {
-                unifiedRect = unifiedRect.united(m.rect.toRect());
-            }
+            unifiedRect = unifiedRect.united(m.rect.toRect());
         }
         rect = unifiedRect;
     } break;
     // Follow defaults
+    case QStyle::SE_TabWidgetTabContents:
+    case QStyle::SE_ToolBoxTabContents:
     case QStyle::SE_TabBarTabLeftButton:
     case QStyle::SE_TabBarTabRightButton:
     case QStyle::SE_DockWidgetCloseButton:
@@ -603,8 +614,6 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
     case QStyle::SE_TabWidgetRightCorner:
     case QStyle::SE_TabWidgetTabBar:
     case QStyle::SE_TabWidgetTabPane:
-    case QStyle::SE_TabWidgetTabContents:
-    case QStyle::SE_ToolBoxTabContents: // TODO: check if this needs changes
     case QStyle::SE_TabBarTearIndicator:
     case QStyle::SE_TabBarTearIndicatorRight:
     case QStyle::SE_TabBarScrollRightButton:
@@ -804,8 +813,18 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
             return properties->layout()->spacing().value_or(defaultMetric);
         }
     } break;
+    case QStyle::PM_TabBarScrollButtonWidth: {
+        auto elements = prepareElements(option, widget, {QStringLiteral("TabScrollButton")});
+        if (elements.isEmpty()) {
+            return defaultMetric;
+        }
+        auto properties = queryProperties(elements);
+        if (!properties) {
+            return defaultMetric;
+        }
+        return properties->layout()->width().value_or(defaultMetric);
+    } break;
     case QStyle::PM_TitleBarButtonSize:
-    case QStyle::PM_TabBarScrollButtonWidth:
     case QStyle::PM_MenuPanelWidth:
     case QStyle::PM_SplitterWidth:
     case QStyle::PM_ProgressBarChunkWidth: {
@@ -851,6 +870,8 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     } break;
 
     // Use defaults
+    case QStyle::PM_TabBar_ScrollButtonOverlap:
+        return 0;
     case QStyle::PM_MaximumDragDistance:
     case QStyle::PM_SliderTickmarkOffset:
     case QStyle::PM_SliderSpaceAvailable:
@@ -867,7 +888,6 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     case QStyle::PM_HeaderGripMargin:
     case QStyle::PM_DockWidgetTitleMargin:
     case QStyle::PM_DockWidgetTitleBarButtonMargin:
-    case QStyle::PM_TabBar_ScrollButtonOverlap:
     case QStyle::PM_SizeGripSize:
     case QStyle::PM_TextCursorWidth:
     case QStyle::PM_ScrollView_ScrollBarOverlap:

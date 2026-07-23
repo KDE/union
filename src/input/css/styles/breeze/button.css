@@ -50,7 +50,7 @@
 
     --tab-highlight-size: 3px;
     --tab-default-width: 100px;
-    --tab-default-height: var(--button-default-size);
+    --tab-default-height: 24px;
 
     /* Match Breeze QStyle color */
     --combobox-popup-background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
@@ -391,4 +391,14 @@ roundbutton.changed,
 delaybutton.changed {
     background-color: var(--changed-background);
     border: 1px solid var(--changed-foreground);
+}
+
+
+tabscrollbutton {
+    icon-alignment: content fill fill 0;
+    layout-alignment: content center center 0;
+    icon-size: 16px;
+    icon-name: "arrow-down-symbolic";
+    width: var(--button-default-size);
+    height: var(--button-default-size);
 }
