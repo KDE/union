@@ -110,3 +110,25 @@ PackageHandler::Error PackageHandler::uninstall(const StylePackage &package)
 
     return Error::None;
 }
+
+PackageHandler::Error PackageHandler::update(const StylePackage &updatePackage)
+{
+    if (!updatePackage.isValid()) {
+        return Error::InvalidPackage;
+    }
+
+    auto installedPackage = package(updatePackage.id());
+    if (!installedPackage.isValid()) {
+        return Error::NotInstalled;
+    }
+
+    if (installedPackage.version() == updatePackage.version()) {
+        return Error::NotAnUpdate;
+    }
+
+    if (auto result = uninstall(installedPackage); result != Error::None) {
+        return result;
+    }
+
+    return install(updatePackage);
+}
