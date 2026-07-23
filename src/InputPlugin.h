@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include "PackageHandler.h"
 #include "PluginRegistry.h"
 #include "StylePackage.h"
 
@@ -12,6 +13,7 @@ namespace Union
 {
 
 class Style;
+
 /*!
  * \class Union::InputPlugin
  * \inmodule core
@@ -37,6 +39,11 @@ public:
      * package has all files required for createStyle() to work correctly.
      */
     virtual StylePackage::Error validatePackage(const StylePackage &package) = 0;
+
+    /*!
+     * Create any files required for the package to be valid.
+     */
+    virtual PackageHandler::Error createPackage(const StylePackage &package) = 0;
 
     /*!
      * Create an instance of a style from a package.

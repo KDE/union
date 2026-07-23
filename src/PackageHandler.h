@@ -5,6 +5,8 @@
 
 #include <filesystem>
 
+#include <QUrl>
+
 #include "StylePackage.h"
 
 #include "union_export.h"
@@ -43,6 +45,12 @@ public:
      * \value NotAnUpdate
      *      The operation failed because the provided package is not considered
      *      to be an update for the existing installed package.
+     * \value PackageExists
+     *      The operation failed because a package already exists at the
+     *      location provided. Note that this differs from AlreadyInstalled in
+     *      that this may also occur for non-install paths.
+     * \value UnknownInputType
+     *      The operation failed because an unknown input type was requested.
      */
     enum class Error {
         None,
@@ -51,6 +59,19 @@ public:
         FilesystemError,
         NotInstalled,
         NotAnUpdate,
+        PackageExists,
+        UnknownInputType,
+    };
+
+    struct CreateInfo {
+        std::filesystem::path path;
+        QString inputType;
+        QString name;
+        QString description;
+        QString version;
+        QString license;
+        QUrl url;
+        QStringList authors;
     };
 
     PackageHandler(const std::shared_ptr<PlatformPlugin> &platformPlugin);
@@ -66,6 +87,10 @@ public:
      */
     QList<StylePackage> allPackages();
 
+    /*!
+     * Create a new package.
+     */
+    Error create(StylePackage &destination, const CreateInfo &info);
     /*!
      * Install a package.
      *

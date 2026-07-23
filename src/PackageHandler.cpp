@@ -71,6 +71,73 @@ QList<StylePackage> PackageHandler::allPackages()
     return result;
 }
 
+PackageHandler::Error PackageHandler::create(StylePackage &destination, const PackageHandler::CreateInfo &info)
+{
+    if (fs::exists(info.path)) {
+        return Error::PackageExists;
+    }
+
+    if (!fs::create_directories(info.path)) {
+        return Error::FilesystemError;
+    }
+
+    if (!fs::create_directories(info.path / "contents")) {
+        return Error::FilesystemError;
+    }
+
+    auto inputPlugin = InputPlugin::inputPlugin(info.inputType);
+    if (!inputPlugin) {
+        return Error::UnknownInputType;
+    }
+
+    QFile metaDataFile(info.path / "metadata.json");
+    if (!metaDataFile.open(QIODevice::WriteOnly)) {
+        return Error::FilesystemError;
+    }
+
+    QTextStream stream{&metaDataFile};
+    stream << "{\n";
+    stream << R"(    "input-type": ")" << info.inputType << "\",\n";
+    stream << R"(    "name": ")" << info.name << "\"";
+    if (!info.description.isEmpty()) {
+        stream << ",\n";
+        stream << R"(    "description": ")" << info.description << "\"";
+    }
+
+    if (!info.version.isEmpty()) {
+        stream << ",\n";
+        stream << R"(    "version": ")" << info.version << "\"";
+    }
+    if (!info.license.isEmpty()) {
+        stream << ",\n";
+        stream << R"(    "license": ")" << info.license << "\"";
+    }
+    if (!info.url.isEmpty()) {
+        stream << ",\n";
+        stream << R"(    "url": ")" << info.url.toString() << "\"";
+    }
+    if (!info.authors.isEmpty()) {
+        stream << ",\n";
+        stream << R"(    "authors": [)" << "\n";
+        for (int i = 0; i < info.authors.size(); ++i) {
+            stream << "        \"" << info.authors.at(i) << "\"";
+            if (i < info.authors.size() - 1) {
+                stream << ",";
+            }
+            stream << "\n";
+        }
+        stream << "    ]";
+    }
+    stream << "\n";
+    stream << "}\n";
+
+    stream.flush();
+    metaDataFile.close();
+
+    destination = StylePackage{info.path};
+    return inputPlugin->createPackage(destination);
+}
+
 PackageHandler::Error PackageHandler::install(const StylePackage &package)
 {
     if (!package.isValid()) {
