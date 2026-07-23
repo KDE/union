@@ -301,10 +301,46 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
     case QStyle::PE_IndicatorRadioButton:
         drawElement(queryProperties(prepareElements(option, widget, {QStringLiteral("RadioButton"), QStringLiteral("Indicator")})), painter, option);
         return;
-    case QStyle::PE_IndicatorArrowDown:
-    case QStyle::PE_IndicatorArrowLeft:
-    case QStyle::PE_IndicatorArrowRight:
-    case QStyle::PE_IndicatorArrowUp:
+    case QStyle::PE_IndicatorArrowLeft: {
+        auto props = queryProperties(prepareElements(option, widget, {QStringLiteral("IndicatorArrowLeft")}));
+        auto name = QStringLiteral("arrow-left-symbolic");
+        if (props->icon()) {
+            name = props->icon()->name().value_or(name);
+        }
+        auto icon = QIcon::fromTheme(name);
+        drawIcon(option->rect, option, painter, icon, widget);
+        return;
+    }
+    case QStyle::PE_IndicatorArrowUp: {
+        auto props = queryProperties(prepareElements(option, widget, {QStringLiteral("IndicatorArrowUp")}));
+        auto name = QStringLiteral("arrow-up-symbolic");
+        if (props->icon()) {
+            name = props->icon()->name().value_or(name);
+        }
+        auto icon = QIcon::fromTheme(name);
+        drawIcon(option->rect, option, painter, icon, widget);
+        return;
+    }
+    case QStyle::PE_IndicatorArrowRight: {
+        auto props = queryProperties(prepareElements(option, widget, {QStringLiteral("IndicatorArrowRight")}));
+        auto name = QStringLiteral("arrow-right-symbolic");
+        if (props->icon()) {
+            name = props->icon()->name().value_or(name);
+        }
+        auto icon = QIcon::fromTheme(name);
+        drawIcon(option->rect, option, painter, icon, widget);
+        return;
+    }
+    case QStyle::PE_IndicatorArrowDown: {
+        auto props = queryProperties(prepareElements(option, widget, {QStringLiteral("IndicatorArrowDown")}));
+        auto name = QStringLiteral("arrow-down-symbolic");
+        if (props->icon()) {
+            name = props->icon()->name().value_or(name);
+        }
+        auto icon = QIcon::fromTheme(name);
+        drawIcon(option->rect, option, painter, icon, widget);
+        return;
+    }
     case QStyle::PE_IndicatorBranch:
     case QStyle::PE_IndicatorButtonDropDown:
     case QStyle::PE_IndicatorItemViewItemCheck:

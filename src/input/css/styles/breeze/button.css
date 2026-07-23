@@ -398,7 +398,6 @@ tabscrollbutton {
     icon-alignment: content fill fill 0;
     layout-alignment: content center center 0;
     icon-size: 16px;
-    icon-name: "arrow-down-symbolic";
     width: var(--button-default-size);
     height: var(--button-default-size);
 }
