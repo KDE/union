@@ -138,9 +138,15 @@ int printHandlerError(const Union::StylePackage &package, Union::PackageHandler:
     case Union::PackageHandler::Error::NotInstalled:
         std::cerr << "The style " << qPrintable(package.id()) << " is not installed.\n";
         return 8;
+    case Union::PackageHandler::Error::NotAnUpdate:
+        std::cerr << "The style " << qPrintable(package.id()) << " in not an update for the installed style.\n";
+        return 9;
     case Union::PackageHandler::Error::PackageExists:
         std::cerr << "A style already exists at " << package.path() << "\n";
-        return 9;
+        return 10;
+    case Union::PackageHandler::Error::UnknownInputType:
+        std::cerr << "The input type " << qPrintable(package.inputType()) << " could not be found.\n";
+        return 11;
     case Union::PackageHandler::Error::None:
         break;
     }
