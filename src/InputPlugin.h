@@ -36,6 +36,16 @@ public:
      * Style using an appropriate StyleLoader and other input specific data.
      */
     virtual std::shared_ptr<Style> createStyle(const QString &styleName) const = 0;
+
+    /*!
+     * Returns an input plugin by type name.
+     */
+    static std::shared_ptr<InputPlugin> inputPlugin(const QString &typeName);
+
+    /*!
+     * Add an input type manually.
+     */
+    static void addInputType(const QString &typeName, const std::shared_ptr<InputPlugin> &plugin);
 };
 
 }
