@@ -1,0 +1,16 @@
+{
+    "rules": [
+        {
+            "selectors": [
+                { "type": "test" }
+            ],
+            "background-color": "red"
+        },
+        {
+            "selectors": [
+                { "id": "test" }
+            ],
+            "background-color": "blue"
+        }
+    ]
+}

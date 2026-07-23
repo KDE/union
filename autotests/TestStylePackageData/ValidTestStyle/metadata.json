@@ -1,0 +1,11 @@
+{
+    "input-type": "test",
+    "name": "Valid Test Style",
+    "description": "A style used for testing that is completely valid.",
+    "version": "1.0",
+    "license": "BSD-2-Clause",
+    "authors": [
+        "Test Author 1",
+        "Test Author 2"
+    ]
+}
