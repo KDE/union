@@ -18,6 +18,7 @@ target_sources(Union PRIVATE
     PlatformPlugin.cpp
     StyleCache.cpp
     StylePackage.cpp
+    PackageHandler.cpp
 )
 
 target_sources(Union PUBLIC
@@ -39,6 +40,7 @@ target_sources(Union PUBLIC
     PluginRegistry.h
     PlatformPlugin.h
     StylePackage.h
+    PackageHandler.h
 )
 
 ecm_qt_declare_logging_category(Union
