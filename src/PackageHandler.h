@@ -38,12 +38,15 @@ public:
      *      The operation failed because a file system error occurred during the
      *      operation. Note that this can be anything from insufficient
      *      permissions to disk failure.
+     * \value NotInstalled
+     *      The operation failed because the provided package is not installed.
      */
     enum class Error {
         None,
         InvalidPackage,
         AlreadyInstalled,
         FilesystemError,
+        NotInstalled,
     };
 
     PackageHandler(const std::shared_ptr<PlatformPlugin> &platformPlugin);
@@ -70,6 +73,15 @@ public:
      * system error occurs.
      */
     Error install(const StylePackage &package);
+    /*!
+     * Uninstall a package.
+     *
+     * This will uninstall the package \p package if it is currently installed.
+     * It will return Error::None if uninstallation was successful. It will
+     * return Error::NotInstalled if the package is not installed. It will
+     * return Error::FilesystemError if an operating system error occurs.
+     */
+    Error uninstall(const StylePackage &package);
 
 private:
     class Private;
