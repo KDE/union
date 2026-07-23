@@ -34,8 +34,7 @@ class Union::StyleRegistryPrivate
 {
 public:
     StyleRegistryPrivate()
-        : inputRegistry{std::make_shared<PluginRegistry<InputPlugin>>(u"input"_s)}
-        , platformRegistry{std::make_shared<PluginRegistry<PlatformPlugin>>(u"platform"_s)}
+        : platformRegistry{std::make_shared<PluginRegistry<PlatformPlugin>>(u"platform"_s)}
     {
     }
 
@@ -65,7 +64,7 @@ public:
             return nullptr;
         }
 
-        auto plugin = inputRegistry->pluginObject(pluginName);
+        auto plugin = InputPlugin::inputPlugin(pluginName);
         if (!plugin) {
             qCWarning(UNION_GENERAL) << "Requested style" << styleName << "from plugin" << pluginName << "but the plugin could not be found!";
             return nullptr;
@@ -136,7 +135,6 @@ public:
 
     std::unique_ptr<StyleCache> styleCache;
 
-    std::shared_ptr<PluginRegistry<InputPlugin>> inputRegistry;
     QHash<StyleCache::StyleId, std::shared_ptr<Style>> styles;
 
     std::shared_ptr<PluginRegistry<PlatformPlugin>> platformRegistry;
@@ -247,7 +245,6 @@ void StyleRegistry::cleanup()
     instance->save();
 
     instance->d->styles.clear();
-    instance->d->inputRegistry.reset();
 
     instance->d->platform.reset();
     instance->d->platformRegistry.reset();
