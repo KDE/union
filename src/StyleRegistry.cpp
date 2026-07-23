@@ -10,6 +10,7 @@
 #include <QPluginLoader>
 #include <QThread>
 
+#include "PackageHandler.h"
 #include "PluginRegistry.h"
 #include "Style.h"
 #include "StyleCache_p.h"
@@ -19,6 +20,8 @@
 
 using namespace Union;
 using namespace Qt::StringLiterals;
+
+namespace fs = std::filesystem;
 
 // This is implements the most minimal of PlatformPlugin that can be used as a
 // fallback if we have no existing platform plugin for the current platform.
@@ -139,16 +142,21 @@ public:
 
     std::shared_ptr<PluginRegistry<PlatformPlugin>> platformRegistry;
     std::shared_ptr<PlatformPlugin> platform;
+
+    std::shared_ptr<PackageHandler> packageHandler;
 };
 
-StyleRegistry::StyleRegistry(std::unique_ptr<StyleRegistryPrivate> &&d)
+StyleRegistry::StyleRegistry(std::unique_ptr<StyleRegistryPrivate> &&_d)
     : QObject(nullptr)
-    , d(std::move(d))
+    , d(std::move(_d))
 {
     // Ensure we execute cleanup during QCoreApplication shutdown instead of
     // static variable cleanup so that any resources that require a valid
     // application are handled properly.
     qAddPostRoutine(StyleRegistry::cleanup);
+
+    d->loadPlatform();
+    d->packageHandler = std::make_shared<PackageHandler>(d->platform);
 }
 
 StyleRegistry::~StyleRegistry() = default;
@@ -229,13 +237,14 @@ void Union::StyleRegistry::addStyle(const std::shared_ptr<Style> &style)
     d->styles.insert(styleId, style);
 }
 
-std::shared_ptr<PlatformPlugin> Union::StyleRegistry::platform() const
+std::shared_ptr<PlatformPlugin> StyleRegistry::platform() const
 {
-    if (!d->platform) {
-        d->loadPlatform();
-    }
-
     return d->platform;
+}
+
+std::shared_ptr<PackageHandler> StyleRegistry::packageHandler() const
+{
+    return d->packageHandler;
 }
 
 void StyleRegistry::cleanup()
@@ -245,6 +254,8 @@ void StyleRegistry::cleanup()
     instance->save();
 
     instance->d->styles.clear();
+
+    instance->d->packageHandler.reset();
 
     instance->d->platform.reset();
     instance->d->platformRegistry.reset();

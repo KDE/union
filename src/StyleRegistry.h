@@ -14,7 +14,7 @@
 
 namespace Union
 {
-
+class PackageHandler;
 class Style;
 class StyleRegistryPrivate;
 
@@ -34,7 +34,7 @@ class UNION_EXPORT StyleRegistry : public QObject
     Q_OBJECT
 
 public:
-    StyleRegistry(std::unique_ptr<StyleRegistryPrivate> &&d);
+    StyleRegistry(std::unique_ptr<StyleRegistryPrivate> &&_d);
     ~StyleRegistry() override;
 
     /*!
@@ -73,6 +73,8 @@ public:
      * Returns the platform integration plugin for the current platform.
      */
     std::shared_ptr<PlatformPlugin> platform() const;
+
+    std::shared_ptr<PackageHandler> packageHandler() const;
     /*!
      * Returns the global instance of StyleRegistry.
      */
