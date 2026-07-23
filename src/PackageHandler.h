@@ -40,6 +40,9 @@ public:
      *      permissions to disk failure.
      * \value NotInstalled
      *      The operation failed because the provided package is not installed.
+     * \value NotAnUpdate
+     *      The operation failed because the provided package is not considered
+     *      to be an update for the existing installed package.
      */
     enum class Error {
         None,
@@ -47,6 +50,7 @@ public:
         AlreadyInstalled,
         FilesystemError,
         NotInstalled,
+        NotAnUpdate,
     };
 
     PackageHandler(const std::shared_ptr<PlatformPlugin> &platformPlugin);
@@ -82,6 +86,21 @@ public:
      * return Error::FilesystemError if an operating system error occurs.
      */
     Error uninstall(const StylePackage &package);
+    /*!
+     * Update a package.
+     *
+     * This will update an installed package with the same ID as \p updatePackage
+     * and replace its contents with the contents of \p updatePackage. It will
+     * return Error::None if the update was successful. It will return
+     * Error::NotInstalled if no installed package with the same ID could be
+     * found. It will return Error::NotAnUpdate if the given package is not
+     * considered to be an update for the installed package.
+     *
+     * Updating happens by first uninstalling the existing package and then
+     * installing \p updatePackage. Any error that occurs during these steps
+     * will cause the update to fail and will return the error.
+     */
+    Error update(const StylePackage &updatePackage);
 
 private:
     class Private;
