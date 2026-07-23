@@ -70,3 +70,23 @@ QList<StylePackage> PackageHandler::allPackages()
 
     return result;
 }
+
+PackageHandler::Error PackageHandler::install(const StylePackage &package)
+{
+    if (!package.isValid()) {
+        return Error::InvalidPackage;
+    }
+
+    auto destination = d->platform->stylePackageInstallPath() / package.path().filename();
+    if (fs::exists(destination)) {
+        return Error::AlreadyInstalled;
+    }
+
+    std::error_code ec;
+    fs::copy(package.path(), destination, fs::copy_options::recursive, ec);
+    if (ec) {
+        return Error::FilesystemError;
+    }
+
+    return Error::None;
+}
