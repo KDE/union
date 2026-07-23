@@ -90,3 +90,23 @@ PackageHandler::Error PackageHandler::install(const StylePackage &package)
 
     return Error::None;
 }
+
+PackageHandler::Error PackageHandler::uninstall(const StylePackage &package)
+{
+    if (!package.isValid()) {
+        return Error::InvalidPackage;
+    }
+
+    const auto installPaths = d->platform->stylePackagePaths();
+    if (!installPaths.contains(package.path().parent_path())) {
+        return Error::NotInstalled;
+    }
+
+    std::error_code ec;
+    fs::remove_all(package.path(), ec);
+    if (ec) {
+        return Error::FilesystemError;
+    }
+
+    return Error::None;
+}
