@@ -46,3 +46,5 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
 QString textFromOption(const QStyleOption *opt);
 
 int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, bool skipAlign);
+
+QRect centerRect(const QRect &rect, int width, int height);

@@ -739,3 +739,8 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, b
     textFlags |= Qt::TextShowMnemonic;
     return textFlags;
 }
+
+QRect centerRect(const QRect &rect, int width, int height)
+{
+    return QRect(rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height);
+}

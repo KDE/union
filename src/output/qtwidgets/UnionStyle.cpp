@@ -168,10 +168,71 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         }
     }
         return;
+    case QStyle::CE_ProgressBarGroove: {
+        const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        auto subopt = *opt;
+        auto groove = subElementRect(SE_ProgressBarGroove, opt, widget);
+        subopt.rect = groove;
+        drawElement(queryProperties(prepareElements(&subopt, widget)), painter, &subopt);
+    }
+        return;
+    case QStyle::CE_ProgressBarContents: {
+        const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        auto subopt = *opt;
+
+        const qreal p = opt->progress;
+        if (p <= 0) {
+            return;
+        }
+        const qreal min = opt->minimum;
+        const qreal max = opt->maximum;
+        const qreal percentage = (p - min) / (max - min);
+
+        auto groove = subElementRect(SE_ProgressBarGroove, opt, widget);
+        auto progress = subElementRect(SE_ProgressBarContents, opt, widget);
+
+        const bool horizontal = opt->state.testFlag(QStyle::State_Horizontal);
+        const bool inverted(opt->invertedAppearance);
+        bool reverse = horizontal && option->direction == Qt::RightToLeft;
+        if (inverted) {
+            reverse = !reverse;
+        }
+
+        if (horizontal) {
+            const qreal progressWidth = percentage * groove.width();
+            if (reverse) {
+                progress.setLeft(groove.right() - progressWidth);
+            } else {
+                progress.setWidth(progressWidth);
+            }
+        } else {
+            const qreal progressHeight = percentage * groove.height();
+            if (reverse) {
+                progress.setHeight(progressHeight);
+            } else {
+                progress.setTop(groove.bottom() - progressHeight);
+            }
+        }
+        subopt.rect = progress;
+
+        drawElement(queryProperties(prepareElements(&subopt, widget, {QStringLiteral("Track")})), painter, &subopt);
+    }
+        return;
+    case QStyle::CE_ProgressBarLabel: {
+        const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
+        if (opt->textVisible) {
+            auto subopt = *opt;
+            auto rect = subElementRect(SE_ProgressBarLabel, opt, widget);
+            subopt.rect = rect;
+            layoutAndDrawIconText(&subopt, painter, widget, QIcon(), opt->text);
+        }
+    }
+        return;
     case QStyle::CE_ProgressBar:
-    case QStyle::CE_ProgressBarGroove:
-    case QStyle::CE_ProgressBarContents:
-    case QStyle::CE_ProgressBarLabel:
+        drawControl(CE_ProgressBarGroove, option, painter, widget);
+        drawControl(CE_ProgressBarContents, option, painter, widget);
+        drawControl(CE_ProgressBarLabel, option, painter, widget);
+        return;
     case QStyle::CE_MenuScroller:
     case QStyle::CE_MenuVMargin:
     case QStyle::CE_MenuHMargin:
@@ -485,6 +546,12 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
     case QStyle::CT_GroupBox: {
     } break;
     case QStyle::CT_ProgressBar: {
+        QRegion r;
+        auto grooveRect = subElementRect(SE_ProgressBarGroove, opt, widget);
+        auto contentRect = subElementRect(SE_ProgressBarContents, opt, widget);
+        auto textRect = subElementRect(SE_ProgressBarLabel, opt, widget);
+        r.setRects({grooveRect, contentRect, textRect});
+        size = r.boundingRect().size().grownBy(padding);
     } break;
     case QStyle::CT_HeaderSection: {
     } break;
@@ -564,18 +631,7 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
             rect = map[QStringLiteral("CheckBox")].rect.toRect();
         }
     } break;
-    case QStyle::SE_ProgressBarLabel: {
-        const auto opt = qstyleoption_cast<const QStyleOptionProgressBar *>(option);
-        auto elements = prepareElements(option, widget);
-        QStringList childelements = {QStringLiteral("Indicator")};
-        if (!opt->text.isEmpty()) {
-            childelements.append(QStringLiteral("Text"));
-        } else {
-            return QRect();
-        }
-        auto map = layoutMap(elements, option, childelements);
-        rect = map[QStringLiteral("Text")].rect.toRect();
-    } break;
+
     case QStyle::SE_PushButtonContents:
     case QStyle::SE_RadioButtonContents:
     case QStyle::SE_CheckBoxContents: {
@@ -604,15 +660,10 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
         }
         rect = unifiedRect;
     } break;
-    case QStyle::SE_ProgressBarGroove: {
-        auto elements = prepareElements(option, widget);
-        auto map = layoutMap(elements, option, {QStringLiteral("Track")});
-        rect = map[QStringLiteral("Track")].rect.toRect();
-    } break;
+
     case QStyle::SE_PushButtonBevel:
     case QStyle::SE_ShapedFrameContents:
     case QStyle::SE_LineEditContents:
-    case QStyle::SE_ProgressBarContents:
     case QStyle::SE_FrameContents: {
         auto frameElements = prepareElements(option, widget);
         auto props = queryProperties(frameElements);
@@ -635,6 +686,27 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
             unifiedRect = unifiedRect.united(m.rect.toRect());
         }
         rect = unifiedRect;
+    } break;
+    case QStyle::SE_ProgressBarLabel:
+    case QStyle::SE_ProgressBarContents:
+    case QStyle::SE_ProgressBarGroove: {
+        const auto opt(qstyleoption_cast<const QStyleOptionProgressBar *>(option));
+        if (!opt) {
+            return QRect();
+        }
+        auto props = queryProperties(prepareElements(option, widget));
+        qreal width = 0;
+        qreal height = 0;
+        if (props->layout()) {
+            width = props->layout()->width().value_or(width);
+            height = props->layout()->height().value_or(height);
+        }
+        rect = option->rect;
+        if (opt->state.testFlag(QStyle::State_Horizontal)) {
+            rect = centerRect(rect, width, height);
+        } else {
+            rect = centerRect(rect, height, width);
+        }
     } break;
     // Follow defaults
     case QStyle::SE_TabWidgetTabContents:

@@ -4,6 +4,7 @@
 #include <QBoxLayout>
 #include <QDateTimeEdit>
 #include <QGridLayout>
+#include <QProgressBar>
 #include <QSlider>
 #include <QSpinBox>
 
@@ -53,12 +54,18 @@ NumberPage::NumberPage(QWidget *parent)
     sliderVTicks2->setTickInterval(1);
     sliderVTicks2->setTickPosition(QSlider::TicksLeft);
 
+    auto *progressBar = new QProgressBar(this);
+    progressBar->setMinimum(0);
+    progressBar->setMaximum(100);
+    progressBar->setValue(50);
+
     sliderH->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sliderV->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sliderHTicks->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sliderVTicks->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sliderHTicks2->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
     sliderVTicks2->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    progressBar->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 
     sliderLayout->addWidget(sliderH, 0, 0);
     sliderLayout->addWidget(sliderV, 1, 0);
@@ -66,6 +73,7 @@ NumberPage::NumberPage(QWidget *parent)
     sliderLayout->addWidget(sliderVTicks, 1, 1);
     sliderLayout->addWidget(sliderHTicks2, 0, 2);
     sliderLayout->addWidget(sliderVTicks2, 1, 2);
+    sliderLayout->addWidget(progressBar, 2, 0);
 
     layout->addLayout(sliderLayout);
 
