@@ -49,6 +49,8 @@
     --tab-disabled-background-color: var(--button-disabled-background-color);
 
     --tab-highlight-size: 3px;
+    --tab-default-width: 100px;
+    --tab-default-height: var(--button-default-size);
 
     /* Match Breeze QStyle color */
     --combobox-popup-background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
@@ -284,8 +286,8 @@ toolseparator {
 }
 
 tabbutton {
-    width: var(--button-default-size);
-    height: var(--button-default-size);
+    width: var(--tab-default-width);
+    height: var(--tab-default-height);
     spacing: 0px;
     padding: var(--small-spacing);
     border-radius: var(--corner-radius);
@@ -294,8 +296,7 @@ tabbutton {
     color: var(--tab-text-color);
 
     icon-alignment: content start center 0;
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
+    text-alignment: content center center 1;
 
     &[direction="top"] {
         border-bottom-left-radius: 0px;
@@ -345,18 +346,11 @@ tabbutton {
             border-top-color: var(--tab-open-background-color);
         }
     }
-
-    /* close button for widgets */
-    & > closebutton {
-        layout-alignment: content end center 0;
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        icon-name: "tab-close";
-        icon-color: var(--negative-text);
-    }
 }
 
 tabbar {
+    height: var(--tab-default-height);
+    width: var(--tab-default-width);
     spacing: 0px;
 }
 

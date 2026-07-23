@@ -45,4 +45,4 @@ QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QS
 
 QString textFromOption(const QStyleOption *opt);
 
-int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties);
+int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, bool skipAlign);
