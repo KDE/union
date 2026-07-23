@@ -34,7 +34,7 @@ private Q_SLOTS:
 
         auto cssInputPath = fs::path(QFINDTESTDATA("../../src/input/css/").toStdString());
 
-        cssparser::StyleSheet styleSheet(cssInputPath / "styles"s / styleName / "style.css"s);
+        cssparser::StyleSheet styleSheet(cssInputPath / "styles"s / styleName / "contents" / "css" / "style.css"s);
         styleSheet.import(cssInputPath / "defaults"s / "default.css"s);
         styleSheet.parse();
 

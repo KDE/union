@@ -116,7 +116,7 @@ menuitem
 {
     &:checked indicator
     {
-        background-image: url("images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
+        background-image: url("../images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
     }
 }
 
@@ -131,7 +131,7 @@ menuitem.exclusive
 
     &:checked > indicator
     {
-        background-image: url("images/radio.svg") mask var(--checkable-indicator-active-text-color);
+        background-image: url("../images/radio.svg") mask var(--checkable-indicator-active-text-color);
     }
 }
 
