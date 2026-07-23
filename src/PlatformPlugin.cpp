@@ -24,6 +24,11 @@ QList<std::filesystem::path> Union::PlatformPlugin::stylePackagePaths()
     return result;
 }
 
+std::filesystem::path Union::PlatformPlugin::stylePackageInstallPath()
+{
+    return std::filesystem::path(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation).toStdString()) / "union" / "styles";
+}
+
 QIcon PlatformPlugin::platformIcon(const QString &name, [[maybe_unused]] const QColor &color)
 {
     return QIcon::fromTheme(name);

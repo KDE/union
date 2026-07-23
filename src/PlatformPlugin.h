@@ -39,6 +39,14 @@ public:
      */
     virtual QList<std::filesystem::path> stylePackagePaths();
     /*!
+     * Returns the path where new styles should be installed to.
+     *
+     * By default this will use QStandardPaths and return the writable path for
+     * GenericDataLocation with "union/styles" appended. This can be overridden
+     * by a platform if styles should be written to a different location.
+     */
+    virtual std::filesystem::path stylePackageInstallPath();
+    /*!
      * Returns an icon from the platform.
      *
      * This should return an icon matching \a name using \a color to recolor
