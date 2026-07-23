@@ -104,6 +104,10 @@ menuitem
     }
 }
 
+overlay {
+    background-color: rgba(0.0, 0.0, 0.0, 0.2);
+}
+
 /* Menuitems are sometimes used in comboboxes instead of itemdelegates, adjust their padding to
  * same as itemdelegate in those cases */
 popup.combobox menuitem {

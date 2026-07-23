@@ -1,0 +1,13 @@
+{
+    "input-type": "css",
+    "input-version": 1,
+    "name": "Breeze",
+    "description": "The Breeze style for KDE Plasma.",
+    "version": "6.8",
+    "license": "BSD-2-Clause",
+    "url": "https://invent.kde.org/plasa/union",
+    "authors": [
+        "Arjen Hiemstra",
+        "Akseli Lahtinen"
+    ]
+}
