@@ -4,6 +4,7 @@
 #include "PlatformPlugin.h"
 
 #include <QIcon>
+#include <QStandardPaths>
 
 using namespace Union;
 using namespace Qt::StringLiterals;
@@ -16,6 +17,16 @@ PlatformPlugin::PlatformPlugin(QObject *parent)
 QString PlatformPlugin::defaultInputPlugin()
 {
     return QString{};
+}
+
+QList<std::filesystem::path> Union::PlatformPlugin::stylePackagePaths()
+{
+    const auto paths = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, u"union/styles"_s, QStandardPaths::LocateDirectory);
+    QList<std::filesystem::path> result;
+    std::ranges::transform(paths, std::back_inserter(result), [](const QString &path) {
+        return std::filesystem::path(path.toStdString());
+    });
+    return result;
 }
 
 QIcon PlatformPlugin::platformIcon(const QString &name, [[maybe_unused]] const QColor &color)

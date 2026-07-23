@@ -38,6 +38,14 @@ public:
      */
     virtual QString defaultStyleName() = 0;
     /*!
+     * Returns the list of directories that should be searched for style packages.
+     *
+     * By default this will use QStandardPaths and search for the directory
+     * "union/styles" in GenericDataLocation. However, this can be overridden
+     * should the platform have a location that is not handled by QStandardPaths.
+     */
+    virtual QList<std::filesystem::path> stylePackagePaths();
+    /*!
      * Returns an icon from the platform.
      *
      * This should return an icon matching \a name using \a color to recolor
