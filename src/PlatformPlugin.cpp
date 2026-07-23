@@ -14,11 +14,6 @@ PlatformPlugin::PlatformPlugin(QObject *parent)
 {
 }
 
-QString PlatformPlugin::defaultInputPlugin()
-{
-    return QString{};
-}
-
 QList<std::filesystem::path> Union::PlatformPlugin::stylePackagePaths()
 {
     const auto paths = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, u"union/styles"_s, QStandardPaths::LocateDirectory);

@@ -36,11 +36,6 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     });
 }
 
-QString PlasmaPlatformPlugin::defaultInputPlugin()
-{
-    return u"css"_s;
-}
-
 QString PlasmaPlatformPlugin::defaultStyleName()
 {
     // These values should really be queries by the CSS using media queries,
