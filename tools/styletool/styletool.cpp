@@ -12,6 +12,29 @@
 
 int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
 {
+    auto parser = parseCommand(u"install"_s, arguments, [](QCommandLineParser *parser) {
+        parser->setApplicationDescription(u"Install a new style."_s);
+        parser->addPositionalArgument(u"<path>"_s, u"The path to the style to install."_s);
+    });
+
+    if (parser->positionalArguments().size() != 1) {
+        showCommandHelp(parser.get(), u"install"_s, u"Invalid arguments for command \"install\""_s, 1);
+    }
+
+    auto packageName = parser->positionalArguments().first();
+    auto packagePath = fs::absolute(fs::path(packageName.toStdString()));
+
+    auto package = Union::StylePackage{packagePath};
+    if (!package.isValid()) {
+        return printPackageError(package);
+    }
+
+    auto handler = Union::StyleRegistry::instance()->packageHandler();
+    if (auto result = handler->install(package); result != Union::PackageHandler::Error::None) {
+        return printHandlerError(package, result);
+    }
+
+    std::cout << "Installed style " << qPrintable(package.id()) << "\n";
     return 0;
 }
 
@@ -94,11 +117,57 @@ int handleListCommand([[maybe_unused]] const QStringList &arguments)
 
 int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
 {
+    auto parser = parseCommand(u"update"_s, arguments, [](QCommandLineParser *parser) {
+        parser->setApplicationDescription(u"Update a style."_s);
+        parser->addPositionalArgument(u"<path>"_s, u"The path to the style to update."_s);
+    });
+
+    if (parser->positionalArguments().size() != 1) {
+        showCommandHelp(parser.get(), u"update"_s, u"Invalid arguments for command \"update\""_s, 1);
+    }
+
+    auto packageName = parser->positionalArguments().first();
+    auto package = Union::StylePackage{fs::absolute(fs::path(packageName.toStdString()))};
+
+    if (!package.isValid()) {
+        return printPackageError(package);
+    }
+
+    auto handler = Union::StyleRegistry::instance()->packageHandler();
+    if (auto result = handler->update(package); result != Union::PackageHandler::Error::None) {
+        return printHandlerError(package, result);
+    }
+
+    std::cout << "Updated style " << qPrintable(package.id()) << " to version " << qPrintable(package.version());
     return 0;
 }
 
 int handleUninstallCommand([[maybe_unused]] const QStringList &arguments)
 {
+    auto parser = parseCommand(u"uninstall"_s, arguments, [](QCommandLineParser *parser) {
+        parser->setApplicationDescription(u"Uninstall am installed style."_s);
+        parser->addPositionalArgument(u"<style>"_s, u"The style to uninstall."_s);
+    });
+
+    if (parser->positionalArguments().size() != 1) {
+        showCommandHelp(parser.get(), u"uninstall"_s, u"Invalid arguments for command \"uninstall\""_s, 1);
+    }
+
+    auto style = parser->positionalArguments().first();
+
+    auto handler = Union::StyleRegistry::instance()->packageHandler();
+
+    auto package = handler->package(style);
+    if (!package.isValid()) {
+        std::cerr << qPrintable(style) << " was not found.\n";
+        return 1;
+    }
+
+    if (auto result = handler->uninstall(package); result != Union::PackageHandler::Error::None) {
+        return printHandlerError(package, result);
+    }
+
+    std::cout << "Uninstalled style " << qPrintable(style) << "\n";
     return 0;
 }
 
