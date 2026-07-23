@@ -9,6 +9,7 @@ ecm_add_tests(
     TestStyle.cpp
     TestStyleRegistry.cpp
     TestColor.cpp
+    TestStylePackage.cpp
     LINK_LIBRARIES Qt6::Test Union::Union
 )
 
