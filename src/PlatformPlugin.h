@@ -27,13 +27,6 @@ public:
     PlatformPlugin(QObject *parent = nullptr);
 
     /*!
-     * Returns the platform's default input plugin.
-     *
-     * By default, this will return an empty string, which indicates all plugins
-     * should be searched for the default style name.
-     */
-    virtual QString defaultInputPlugin();
-    /*!
      * Returns the platform's default style name.
      */
     virtual QString defaultStyleName() = 0;

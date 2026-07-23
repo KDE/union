@@ -15,7 +15,6 @@ class PlasmaPlatformPlugin : public Union::PlatformPlugin
 public:
     PlasmaPlatformPlugin(QObject *parent = nullptr);
 
-    QString defaultInputPlugin() override;
     QString defaultStyleName() override;
 
     QIcon platformIcon(const QString &name, const QColor &color) override;
