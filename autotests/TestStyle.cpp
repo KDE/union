@@ -26,7 +26,7 @@ class TestStyle : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto style = Style::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
+        auto style = Style::create(std::filesystem::path(), std::make_unique<TestLoader>());
 
         QVERIFY(style->load());
 
@@ -37,7 +37,7 @@ private Q_SLOTS:
 
     void testMatches()
     {
-        auto style = Style::create(u"test"_s, u"test"_s, std::make_unique<TestLoader>());
+        auto style = Style::create(std::filesystem::path(), std::make_unique<TestLoader>());
         QVERIFY(style->load());
 
         QList<Element::Ptr> elements;

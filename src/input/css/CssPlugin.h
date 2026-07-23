@@ -8,6 +8,7 @@
 namespace Union
 {
 class Style;
+class StylePackage;
 }
 
 class CssPlugin : public Union::InputPlugin
@@ -20,5 +21,5 @@ public:
 
     Union::StylePackage::Error validatePackage(const Union::StylePackage &package) override;
 
-    std::shared_ptr<Union::Style> createStyle(const QString &styleName) const override;
+    std::shared_ptr<Union::Style> createStyle(const Union::StylePackage &package) const override;
 };

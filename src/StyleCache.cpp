@@ -117,8 +117,7 @@ std::unique_ptr<StylePrivate> StyleCache::load(const StyleId &styleId) const
     }
 
     auto result = std::make_unique<StylePrivate>();
-    reader >> result->pluginName;
-    reader >> result->styleName;
+    reader >> result->path;
 
     if (result->pluginName.toStdString() != styleId.first || result->styleName.toStdString() != styleId.second) {
         qCDebug(UNION_GENERAL) << "Ignoring cache file" << path.string() << "plugin/style name mismatch";
@@ -197,8 +196,7 @@ bool Union::StyleCache::save(const StylePrivate *style) const
     writer << CacheMagic;
     writer << CacheVersion;
 
-    writer << style->pluginName;
-    writer << style->styleName;
+    writer << style->path;
 
     writer << style->cachePaths;
     writer << style->modificationTimes;

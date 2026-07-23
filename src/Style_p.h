@@ -18,8 +18,7 @@ class StylePrivate
 public:
     std::unique_ptr<StyleLoader> loader;
 
-    QString pluginName;
-    QString styleName;
+    std::filesystem::path path;
 
     bool modified = false;
     bool hasErrors = false;

@@ -37,7 +37,7 @@ private Q_SLOTS:
 
         Union::StyleRegistry::instance()->load();
 
-        auto testStyle = Union::Style::create(u"test"_s, u"test"_s, std::make_unique<TestStyleLoader>());
+        auto testStyle = Union::Style::create(std::filesystem::path(), std::make_unique<TestStyleLoader>());
         Union::StyleRegistry::instance()->addStyle(testStyle);
     }
 

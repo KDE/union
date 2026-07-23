@@ -41,20 +41,22 @@ public:
     ~Style() override;
 
     /*!
-     * \property Union::Style::name
+     * \property Union::Style::path
      *
-     * The name of the style.
+     * The path where the package for this style is located.
      */
-    Q_PROPERTY(QString name READ name CONSTANT)
-    QString name() const;
+    Q_PROPERTY(std::filesystem::path path READ path CONSTANT)
+    std::filesystem::path path() const;
 
     /*!
-     * \property Union::Style::pluginName
+     * \property Union::Style::id
      *
-     * The name of the plugin used to load rules for this Style.
+     * The identifier of the style.
+     *
+     * This is effectively the filename of path().
      */
-    Q_PROPERTY(QString pluginName READ pluginName CONSTANT)
-    QString pluginName() const;
+    Q_PROPERTY(QString id READ id CONSTANT)
+    QString id() const;
 
     /*!
      * \property Union::Style::hasErrors
@@ -102,14 +104,13 @@ public:
     QList<StyleRule::Ptr> rules();
 
     /*!
-     * Create a new instance of Style.
+     * Create a new instance of Style from a path.
      *
-     * \a pluginName The name of the plugin responsible for creating this style.
-     * \a styleName The name of this style.
+     * \a path   The path to create a style from.
      * \a loader An instance of StyleLoader responsible for loading the actual
      *           data of this style.
      */
-    static Ptr create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader);
+    static Ptr create(const std::filesystem::path &path, std::unique_ptr<StyleLoader> &&loader);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

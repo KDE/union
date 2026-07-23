@@ -4,6 +4,7 @@
 #include "CssPlugin.h"
 
 #include <Style.h>
+#include <StylePackage.h>
 
 #include "CssLoader.h"
 
@@ -25,9 +26,9 @@ Union::StylePackage::Error CssPlugin::validatePackage(const Union::StylePackage 
     return StylePackage::Error::None;
 }
 
-std::shared_ptr<Union::Style> CssPlugin::createStyle(const QString &styleName) const
+std::shared_ptr<Union::Style> CssPlugin::createStyle(const Union::StylePackage &package) const
 {
-    return Union::Style::create(name(), styleName, std::make_unique<CssLoader>());
+    return Union::Style::create(package.path(), std::make_unique<CssLoader>());
 }
 
 #include "moc_CssPlugin.cpp"
