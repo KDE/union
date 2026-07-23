@@ -55,13 +55,11 @@ public:
      * Get a style instance by name.
      *
      * \a styleName  The name of the style to retrieve.
-     * \a pluginName The name of the input plugin that provides the style. If
-     *               empty, the style will be searched for in available plugins.
      *
-     * Returns a Style instance that matches `styleName` and `pluginName`, or
-     * `nullptr` if it could not be found.
+     * Returns a Style instance that matches `styleName`, or `nullptr` if it
+     * could not be found.
      */
-    std::shared_ptr<Style> style(const QString &styleName, const QString &pluginName = QString{});
+    std::shared_ptr<Style> style(const QString &styleId);
 
     /*!
      * Programatically add a style to the registry.

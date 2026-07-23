@@ -138,7 +138,7 @@ public:
 
     std::unique_ptr<StyleCache> styleCache;
 
-    QHash<StyleCache::StyleId, std::shared_ptr<Style>> styles;
+    QHash<fs::path, Style::Ptr> styles;
 
     std::shared_ptr<PluginRegistry<PlatformPlugin>> platformRegistry;
     std::shared_ptr<PlatformPlugin> platform;
@@ -179,62 +179,55 @@ void StyleRegistry::save()
 
 std::shared_ptr<Style> StyleRegistry::defaultStyle()
 {
-    static auto environmentPlugin = qEnvironmentVariable("UNION_STYLE_PLUGIN", QString{});
     static auto environmentName = qEnvironmentVariable("UNION_STYLE_NAME", QString{});
-
-    auto plugin = environmentPlugin;
-    if (plugin.isEmpty()) {
-        plugin = platform()->defaultInputPlugin();
-    }
 
     auto name = environmentName;
     if (name.isEmpty()) {
         name = platform()->defaultStyleName();
     }
 
-    return style(name, plugin);
+    return style(name);
 }
 
-std::shared_ptr<Style> StyleRegistry::style(const QString &styleName, const QString &pluginName)
+std::shared_ptr<Style> StyleRegistry::style(const QString &styleId)
 {
-    if (!pluginName.isEmpty()) {
-        return d->loadStyle(styleName, pluginName);
+    auto itr = std::ranges::find_if(d->styles, [styleId](const Style::Ptr &style) {
+        return style->id() == styleId;
+    });
+    if (itr != d->styles.end()) {
+        return itr.value();
     }
 
-    // pluginName is empty so we don't know which exact input plugin provides
-    // the style. Search through all input plugins until we find one that
-    // returns a valid style for styleName.
-
-    // First search through already-loaded plugins
-    const auto objects = d->inputRegistry->pluginObjects();
-    for (const auto &object : objects) {
-        if (auto style = d->loadStyle(styleName, object); style) {
-            return style;
-        }
+    auto stylePackage = d->packageHandler->package(styleId);
+    if (!stylePackage.isValid()) {
+        qCWarning(UNION_GENERAL) << "Could not find style" << styleId;
+        return nullptr;
     }
 
-    // Nothing found in loaded plugins, try and load each available plugin and
-    // see if that returns something.
-    const auto plugins = d->inputRegistry->plugins();
-    for (const auto &plugin : plugins) {
-        if (auto style = d->loadStyle(styleName, plugin.name); style) {
-            return style;
-        }
+    auto style = stylePackage.load();
+    if (!style) {
+        qCWarning(UNION_GENERAL) << "Style" << styleId << "failed to load";
+        return nullptr;
     }
 
-    qCWarning(UNION_GENERAL) << "Requested style" << styleName << "which could not be found in any plugin!";
-    return nullptr;
+    if (!style->load()) {
+        qCWarning(UNION_GENERAL) << "Style" << styleId << "failed to load";
+        return nullptr;
+    }
+
+    d->styles.insert(stylePackage.path(), style);
+    qCDebug(UNION_GENERAL) << "Loaded style" << styleId << "from" << stylePackage.path().string();
+    return style;
 }
 
 void Union::StyleRegistry::addStyle(const std::shared_ptr<Style> &style)
 {
-    auto styleId = std::make_pair(style->pluginName().toStdString(), style->name().toStdString());
-    if (d->styles.contains(styleId)) {
-        qCWarning(UNION_GENERAL) << "A style from plugin" << style->pluginName() << "with name" << style->name() << "is already registered";
+    if (d->styles.contains(style->path())) {
+        qCWarning(UNION_GENERAL) << "A style with path" << style->path().string() << "is already registered";
         return;
     }
 
-    d->styles.insert(styleId, style);
+    d->styles.insert(style->path(), style);
 }
 
 std::shared_ptr<PlatformPlugin> StyleRegistry::platform() const

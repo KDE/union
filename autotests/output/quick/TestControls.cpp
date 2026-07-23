@@ -32,12 +32,11 @@ private Q_SLOTS:
     void initTestCase()
     {
         qputenv("UNION_DISABLE_INPUT_PLUGINS", "1");
-        qputenv("UNION_STYLE_PLUGIN", "test");
         qputenv("UNION_STYLE_NAME", "test");
 
         Union::StyleRegistry::instance()->load();
 
-        auto testStyle = Union::Style::create(u"test"_s, u"test"_s, std::make_unique<TestStyleLoader>());
+        auto testStyle = Union::Style::create(std::filesystem::path("test"), std::make_unique<TestStyleLoader>());
         Union::StyleRegistry::instance()->addStyle(testStyle);
     }
 

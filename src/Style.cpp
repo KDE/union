@@ -34,14 +34,14 @@ Style::Style(std::unique_ptr<StylePrivate> &&d)
 
 Style::~Style() = default;
 
-QString Style::name() const
+std::filesystem::path Style::path() const
 {
-    return d->styleName;
+    return d->path;
 }
 
-QString Style::pluginName() const
+QString Style::id() const
 {
-    return d->pluginName;
+    return QString::fromStdString(d->path.filename());
 }
 
 bool Style::hasErrors() const
@@ -95,7 +95,7 @@ QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
     QList<StyleRule::Ptr> result;
 
     if (d->rules.isEmpty()) {
-        qCInfo(UNION_QUERY) << "No style rules found for theme" << d->styleName << "so we will never match anything!";
+        qCInfo(UNION_QUERY) << "No style rules found for style" << d->path.filename().string() << "so we will never match anything!";
     }
 
     for (auto rule : d->rules) {
@@ -115,11 +115,10 @@ QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
     return result;
 }
 
-std::shared_ptr<Style> Style::create(const QString &pluginName, const QString &styleName, std::unique_ptr<StyleLoader> &&loader)
+std::shared_ptr<Style> Style::create(const std::filesystem::path &path, std::unique_ptr<StyleLoader> &&loader)
 {
     auto d = std::make_unique<StylePrivate>();
-    d->pluginName = pluginName;
-    d->styleName = styleName;
+    d->path = path;
     d->loader = std::move(loader);
     return std::make_shared<Style>(std::move(d));
 }

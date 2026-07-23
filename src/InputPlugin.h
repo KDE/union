@@ -44,7 +44,7 @@ public:
      * This should be reimplemented by subclasses and create a new instance of
      * Style using an appropriate StyleLoader and other input specific data.
      */
-    virtual std::shared_ptr<Style> createStyle(const QString &styleName) const = 0;
+    virtual std::shared_ptr<Style> createStyle(const StylePackage &package) const = 0;
 
     /*!
      * Returns an input plugin by type name.

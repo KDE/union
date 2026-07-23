@@ -383,15 +383,9 @@ inline void setDirectionValue(T *output, const std::string &baseName, const cssp
     }
 }
 
-bool CssLoader::load(Style::Ptr theme)
+bool CssLoader::load(Style::Ptr style)
 {
-    QString relativeStylePath = u"union/css/styles/"_s + theme->name() + u"/style.css"_s;
-    m_stylePath = fs::path(QStandardPaths::locate(QStandardPaths::GenericDataLocation, relativeStylePath, QStandardPaths::LocateFile).toStdString());
-
-    if (!fs::exists(m_stylePath)) {
-        qCWarning(UNION_CSS) << theme->name() << "does not exist!";
-        return false;
-    }
+    m_stylePath = style->path() / "contents" / "css" / "style.css";
 
     cssparser::StyleSheet styleSheet(m_stylePath);
 
@@ -402,11 +396,11 @@ bool CssLoader::load(Style::Ptr theme)
 
     const auto paths = styleSheet.paths();
     for (const auto &path : paths) {
-        theme->addCachePath(path);
+        style->addCachePath(path);
     }
 
     if (styleSheet.errors().size() > 0) {
-        theme->setHasErrors(true);
+        style->setHasErrors(true);
 
         qCWarning(UNION_CSS) << "Errors encountered while parsing CSS:";
         for (const auto &error : styleSheet.errors()) {
@@ -425,7 +419,7 @@ bool CssLoader::load(Style::Ptr theme)
         auto properties = std::make_unique<StylePropertyGroup>();
         createProperties(properties.get(), rule.properties());
         styleRule->setProperties(std::move(properties));
-        theme->insert(styleRule);
+        style->insert(styleRule);
     }
 
     return true;
