@@ -6,15 +6,16 @@
 /*
  * This is a workaround for missing media-query support in the CSS parser.
  * Instead of media queries, the Plasma platform plugin will load this style
- * instead of breeze as default style when on a mobile platform.
+ * instead of breeze as default style when the application is in right-to-left
+ * mode.
  */
 
 /*
  * Import the main breeze style first.
  */
-@import "../breeze/style.css";
+@import "../../../breeze/contents/css/style.css";
 
 /*
- * Mobile-specific overrides.
+ * RtL-specific overrides.
  */
 @import "overrides.css";

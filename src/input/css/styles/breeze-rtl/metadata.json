@@ -1,0 +1,12 @@
+{
+    "input-type": "css",
+    "name": "Breeze Right-to-Left",
+    "description": "Breeze variant for right-to-left languages.",
+    "version": "6.8",
+    "license": "BSD-2-Clause",
+    "url": "https://invent.kde.org/plasa/union",
+    "authors": [
+        "Arjen Hiemstra",
+        "Akseli Lahtinen"
+    ]
+}
