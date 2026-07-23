@@ -8,7 +8,7 @@
 class KColorSchemeProvider : public Union::ColorProvider
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "org.kde.union.ColorProvider" FILE "kcolorschemeprovider.json")
+    Q_PLUGIN_METADATA(IID "org.kde.union.ColorProvider" FILE "metadata.json")
 
 public:
     KColorSchemeProvider(QObject *parent = nullptr);
