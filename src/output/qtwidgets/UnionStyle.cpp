@@ -97,11 +97,44 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         // Skip text drawing for icon only buttons completely
         if (buttonOption->toolButtonStyle == Qt::ToolButtonIconOnly) {
             text = QString();
-        }
-        if (buttonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
+        } else if (buttonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
             icon = QIcon();
         }
-        layoutAndDrawIconText(buttonOption, painter, widget, icon, text);
+        if (icon.isNull() && buttonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
+            QList<Union::Element::Ptr> elements = prepareElements(buttonOption, widget);
+            bool hasText = !text.isEmpty();
+            QStringList subElements = {QStringLiteral("Icon")};
+            if (hasText) {
+                subElements.append(QStringLiteral("Text"));
+            }
+            auto map = layoutMap(elements, buttonOption, subElements);
+            if (hasText) {
+                QRect textRect = map[QStringLiteral("Text")].rect.toRect();
+                drawText(textRect, buttonOption, painter, text, widget);
+            }
+            QRect iconRect = map[QStringLiteral("Icon")].rect.toRect();
+            auto subopt = *buttonOption;
+            subopt.rect = iconRect;
+
+            switch (buttonOption->arrowType) {
+            case Qt::LeftArrow:
+                drawPrimitive(PE_IndicatorArrowLeft, &subopt, painter, widget);
+                break;
+            case Qt::RightArrow:
+                drawPrimitive(PE_IndicatorArrowRight, &subopt, painter, widget);
+                break;
+            case Qt::UpArrow:
+                drawPrimitive(PE_IndicatorArrowUp, &subopt, painter, widget);
+                break;
+            case Qt::DownArrow:
+                drawPrimitive(PE_IndicatorArrowDown, &subopt, painter, widget);
+                break;
+            default:
+                break;
+            }
+        } else {
+            layoutAndDrawIconText(buttonOption, painter, widget, icon, text);
+        }
     }
         return;
     case QStyle::CE_CheckBox: {
@@ -1097,7 +1130,7 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
     case SH_Menu_SupportsSections:
         return true;
     case SH_Widget_Animation_Duration:
-        return 1;
+        return 150;
     case SH_DialogButtonBox_ButtonsHaveIcons:
         return true;
     case SH_GroupBox_TextLabelVerticalAlignment:
@@ -1261,13 +1294,13 @@ void UnionStyle::layoutAndDrawIconText(const QStyleOption *opt, QPainter *painte
     }
     auto map = layoutMap(elements, opt, subElements);
 
-    QRect textRect = map[QStringLiteral("Text")].rect.toRect();
     if (hasText) {
+        QRect textRect = map[QStringLiteral("Text")].rect.toRect();
         drawText(textRect, opt, painter, text, widget);
     }
 
-    QRect iconRect = map[QStringLiteral("Icon")].rect.toRect();
     if (hasIcon) {
+        QRect iconRect = map[QStringLiteral("Icon")].rect.toRect();
         drawIcon(iconRect, opt, painter, icon, widget);
     }
 }
