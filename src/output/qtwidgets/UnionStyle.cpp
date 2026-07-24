@@ -201,6 +201,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         return;
     case QStyle::CE_ItemViewItem: {
         const auto vi = qstyleoption_cast<const QStyleOptionViewItem *>(option);
+        // Dont allow drawing outside of the area
+        painter->save();
+        painter->setClipRect(option->rect);
         QStyleOptionViewItem subopt = *vi;
         // Draw background
         auto elements = prepareElements(&subopt, widget, {QStringLiteral("ItemViewItem")});
@@ -232,6 +235,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
             subopt.rect = subElementRect(SE_ItemViewItemDecoration, vi, widget);
             layoutAndDrawIconText(&subopt, painter, widget, vi->icon, QString());
         }
+        painter->restore();
     }
         return;
     case QStyle::CE_ProgressBarGroove: {
@@ -337,6 +341,9 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 // Complex controls are bit annoying. We may need to manually handle some things to make sure they work correctly
 void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
 {
+    // Make lines not look completely terrible on fractional scales
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
     switch (control) {
     case QStyle::CC_ToolButton: {
         const auto buttonOption = qstyleoption_cast<const QStyleOptionToolButton *>(option);
@@ -390,6 +397,9 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
+    // Make lines not look completely terrible on fractional scales
+    painter->setRenderHint(QPainter::Antialiasing, true);
+
     switch (element) {
     case QStyle::PE_FrameStatusBarItem:
         drawElement(queryProperties(prepareElements(option, widget, {QStringLiteral("Item")})), painter, option);

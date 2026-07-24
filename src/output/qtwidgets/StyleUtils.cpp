@@ -746,7 +746,11 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, b
     auto textElide = toQtElideMode(properties->text()->elide().value_or(Union::Properties::TextElide::Right));
     auto textColor = properties->text()->color();
     textFlags |= textAlign;
-    textFlags |= textWrap;
+    // Do not add wrap flags if we get DontClip
+    // This could be done better
+    if (textWrap == Qt::TextDontClip) {
+        textFlags |= textWrap;
+    }
     textFlags |= textElide;
     textFlags |= Qt::TextShowMnemonic;
     return textFlags;
