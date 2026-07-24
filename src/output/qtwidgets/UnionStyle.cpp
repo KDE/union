@@ -100,7 +100,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         } else if (buttonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
             icon = QIcon();
         }
-        if (icon.isNull() && buttonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
+        if (icon.isNull() && buttonOption->toolButtonStyle != Qt::ToolButtonTextOnly && buttonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
             QList<Union::Element::Ptr> elements = prepareElements(buttonOption, widget);
             bool hasText = !text.isEmpty();
             QStringList subElements = {QStringLiteral("Icon")};
