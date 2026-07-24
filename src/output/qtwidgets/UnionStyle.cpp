@@ -347,8 +347,20 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
     switch (control) {
     case QStyle::CC_ToolButton: {
         const auto buttonOption = qstyleoption_cast<const QStyleOptionToolButton *>(option);
-        drawElement(queryProperties(prepareElements(option, widget)), painter, buttonOption);
+        const auto elements = prepareElements(buttonOption, widget);
+        const auto properties = queryProperties(elements);
+        auto rect = subControlRect(CC_ToolButton, option, SC_ToolButton, widget);
+        drawBackground(painter, rect, properties);
+
         drawControl(CE_ToolButtonLabel, buttonOption, painter, widget);
+        if (buttonOption->features.testFlag(QStyleOptionToolButton::Menu)) {
+            auto indicatorRect = subControlRect(CC_ToolButton, option, SC_ToolButtonMenu, widget);
+            const auto props = queryProperties(prepareElements(buttonOption, widget, {QStringLiteral("Indicator")}));
+            if (props->icon()) {
+                auto icon = QIcon::fromTheme(props->icon()->name().value_or(QStringLiteral("arrow-down-symbolic")));
+                drawIcon(indicatorRect, option, painter, icon, widget);
+            }
+        }
     }
         return;
     case QStyle::CC_GroupBox: {
@@ -373,13 +385,15 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
     }
         return;
     case QStyle::CC_ComboBox: {
-        // TODO: this is wrong, used for debug for now
         const auto buttonOption = qstyleoption_cast<const QStyleOptionComboBox *>(option);
-        const auto elements = prepareElements(buttonOption, widget);
-        const auto properties = queryProperties(elements);
-        auto rect = backgroundRectangle(buttonOption, properties).toRect();
-        drawBackground(painter, rect, properties);
+        drawElement(queryProperties(prepareElements(buttonOption, widget)), painter, buttonOption);
         drawControl(CE_ComboBoxLabel, buttonOption, painter, widget);
+        auto indicatorRect = subControlRect(CC_ComboBox, buttonOption, SC_ComboBoxArrow, widget);
+        const auto props = queryProperties(prepareElements(buttonOption, widget, {QStringLiteral("Indicator")}));
+        if (props->icon()) {
+            auto icon = QIcon::fromTheme(props->icon()->name().value_or(QStringLiteral("arrow-down-symbolic")));
+            drawIcon(indicatorRect, option, painter, icon, widget);
+        }
     }
         return;
     case QStyle::CC_SpinBox:
@@ -392,7 +406,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
         break;
     }
 
-    QCommonStyle::drawComplexControl(control, option, painter, widget);
+    return QCommonStyle::drawComplexControl(control, option, painter, widget);
 }
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
@@ -551,10 +565,15 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         const auto toolButtonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt);
         auto elements = prepareElements(toolButtonOption, widget);
         QStringList childelements = {};
-        if (!toolButtonOption->icon.isNull()) {
+        QRect menubuttonrect;
+        if (toolButtonOption->features.testFlag(QStyleOptionToolButton::Menu)) {
+            menubuttonrect = subControlRect(CC_ToolButton, toolButtonOption, SC_ToolButtonMenu, widget);
+        }
+
+        if (!toolButtonOption->icon.isNull() && toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly) {
             childelements.append(QStringLiteral("Icon"));
         }
-        if (!toolButtonOption->text.isEmpty()) {
+        if (!toolButtonOption->text.isEmpty() && toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly) {
             childelements.append(QStringLiteral("Text"));
         }
         if (childelements.isEmpty()) {
@@ -565,7 +584,9 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         for (const auto &m : map) {
             unifiedRect = unifiedRect.united(m.rect.toRect());
         }
+        unifiedRect.setWidth(unifiedRect.width() + menubuttonrect.width());
         size = unifiedRect.size().grownBy(padding);
+
     } break;
     case QStyle::CT_ComboBox: {
         const auto option = qstyleoption_cast<const QStyleOptionComboBox *>(opt);
@@ -834,6 +855,55 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
 
 QRect UnionStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const
 {
+    if (cc == CC_ToolButton) {
+        const auto toolButtonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt);
+        auto elements = prepareElements(toolButtonOption, widget);
+
+        if (sc == SC_ToolButton) {
+            const auto properties = queryProperties(elements);
+            return visualRect(opt->direction, opt->rect, backgroundRectangle(toolButtonOption, properties).toRect());
+        }
+        // TODO: we need to handle this manually. Just move it on the right side of the button for now.
+        if (sc == SC_ToolButtonMenu) {
+            // Apply padding etc?
+            return QCommonStyle::subControlRect(cc, opt, sc, widget);
+        }
+    }
+
+    if (cc == CC_ComboBox) {
+        // cast option and check
+        const auto comboBoxOption(qstyleoption_cast<const QStyleOptionComboBox *>(opt));
+        if (!comboBoxOption) {
+            return QCommonStyle::subControlRect(CC_ComboBox, opt, sc, widget);
+        }
+
+        const bool editable(comboBoxOption->editable);
+        const bool flat(editable && !comboBoxOption->frame);
+
+        // copy rect
+        auto rect(opt->rect);
+
+        switch (sc) {
+        case SC_ComboBoxFrame:
+            return flat ? rect : QRect();
+        case SC_ComboBoxListBoxPopup:
+            return rect;
+
+        case SC_ComboBoxArrow: {
+            auto elements = prepareElements(opt, widget);
+            auto map = layoutMap(elements, opt, {QStringLiteral("Indicator")});
+            auto rect = map[QStringLiteral("Indicator")].rect;
+
+            return visualRect(opt->direction, opt->rect, rect.toRect());
+        }
+
+        case SC_ComboBoxEditField: {
+        }
+
+        default:
+            break;
+        }
+    }
     return QCommonStyle::subControlRect(cc, opt, sc, widget);
 }
 
