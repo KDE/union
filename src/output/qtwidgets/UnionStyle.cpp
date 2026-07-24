@@ -630,12 +630,13 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType ct, const QStyleOption *
         r.setRects({grooveRect, contentRect, textRect});
         size = r.boundingRect().size().grownBy(padding);
     } break;
-    case QStyle::CT_HeaderSection: {
-    } break;
+    case QStyle::CT_HeaderSection:
     case QStyle::CT_ItemViewItem: {
-    } break;
-    // QStyleOptionSlider, no text/icon
+        // unimplemented
+        break;
+    }
     case QStyle::CT_Slider:
+    // QStyleOptionSlider, no text/icon
     case QStyle::CT_ScrollBar:
     // QStyleOptionFrame, no text/icon
     case QStyle::CT_LineEdit:
@@ -829,6 +830,11 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
     }
 
     return visualRect(option->direction, option->rect, rect);
+}
+
+QRect UnionStyle::subControlRect(ComplexControl cc, const QStyleOptionComplex *opt, SubControl sc, const QWidget *widget) const
+{
+    return QCommonStyle::subControlRect(cc, opt, sc, widget);
 }
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
