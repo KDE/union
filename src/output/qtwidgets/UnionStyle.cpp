@@ -9,12 +9,44 @@
 #include <QApplication>
 #include <StyleRegistry.h>
 
+#include <QApplication>
+#include <QBitmap>
+#include <QCheckBox>
+#include <QComboBox>
+#include <QDial>
+#include <QDialog>
+#include <QDialogButtonBox>
+#include <QDockWidget>
+#include <QFormLayout>
+#include <QGraphicsItem>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsView>
+#include <QGroupBox>
+#include <QItemDelegate>
+#include <QLineEdit>
+#include <QMainWindow>
+#include <QMdiArea>
+#include <QMenu>
+#include <QMenuBar>
+#include <QMetaEnum>
 #include <QPainter>
 #include <QPushButton>
+#include <QRadioButton>
+#include <QScrollBar>
+#include <QSplitterHandle>
+#include <QStackedLayout>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QStyleOption>
+#include <QTableView>
+#include <QTextBrowser>
+#include <QTextEdit>
+#include <QToolBar>
+#include <QToolBox>
+#include <QToolButton>
+#include <QTreeView>
 #include <QWidget>
+#include <QWidgetAction>
 
 /*
  * How this works:
@@ -106,7 +138,8 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         return;
     case QStyle::CE_MenuItem: {
         const auto menuItem = qstyleoption_cast<const QStyleOptionMenuItem *>(option);
-        layoutAndDrawIconText(option, painter, widget, menuItem->icon, menuItem->text);
+        drawElement(queryProperties(prepareElements(menuItem, widget, {QStringLiteral("MenuItem")})), painter, menuItem);
+        layoutAndDrawIconText(menuItem, painter, widget, menuItem->icon, menuItem->text);
     }
         return;
     case QStyle::CE_ToolBoxTabShape:
@@ -233,13 +266,14 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
         drawControl(CE_ProgressBarContents, option, painter, widget);
         drawControl(CE_ProgressBarLabel, option, painter, widget);
         return;
-    case QStyle::CE_MenuScroller:
+    case QStyle::CE_MenuEmptyArea:
+        return; // This is what breeze does as well
+    case QStyle::CE_MenuBarItem:
+    case QStyle::CE_MenuBarEmptyArea:
     case QStyle::CE_MenuVMargin:
     case QStyle::CE_MenuHMargin:
     case QStyle::CE_MenuTearoff:
-    case QStyle::CE_MenuEmptyArea:
-    case QStyle::CE_MenuBarItem:
-    case QStyle::CE_MenuBarEmptyArea:
+    case QStyle::CE_MenuScroller:
     case QStyle::CE_Header:
     case QStyle::CE_HeaderSection:
     case QStyle::CE_HeaderLabel:
@@ -1009,6 +1043,102 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
+// Copied from Breeze.
+// TODO: Make these adjustable!
+int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
+{
+    switch (hint) {
+    case SH_RubberBand_Mask: {
+        if (auto mask = qstyleoption_cast<QStyleHintReturnMask *>(returnData)) {
+            mask->region = option->rect;
+
+            /*
+             * need to check on widget before removing inner region
+             * in order to still preserve rubberband in MainWindow and QGraphicsView
+             * in QMainWindow because it looks better
+             * in QGraphicsView because the painting fails completely otherwise
+             */
+            if (widget
+                && (qobject_cast<const QAbstractItemView *>(widget->parent()) || qobject_cast<const QGraphicsView *>(widget->parent())
+                    || qobject_cast<const QMainWindow *>(widget->parent()))) {
+                return true;
+            }
+
+            // also check if widget's parent is some itemView viewport
+            if (widget && widget->parent() && qobject_cast<const QAbstractItemView *>(widget->parent()->parent())
+                && static_cast<const QAbstractItemView *>(widget->parent()->parent())->viewport() == widget->parent()) {
+                return true;
+            }
+
+            // mask out center
+            mask->region -= option->rect.adjusted(1, 1, -1, -1);
+
+            return true;
+        }
+        return false;
+    }
+    case SH_ComboBox_ListMouseTracking:
+        return true;
+    case SH_MenuBar_MouseTracking:
+        return true;
+    case SH_Menu_Scrollable:
+        return true;
+    case SH_Menu_MouseTracking:
+        return true;
+    case SH_Menu_SubMenuPopupDelay:
+        return 150;
+    case SH_Menu_SloppySubMenus:
+        return true;
+
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+    case SH_Widget_Animate:
+        return StyleConfigData::animationsEnabled();
+#endif
+    case SH_Menu_SupportsSections:
+        return true;
+    case SH_Widget_Animation_Duration:
+        return 1;
+    case SH_DialogButtonBox_ButtonsHaveIcons:
+        return true;
+    case SH_GroupBox_TextLabelVerticalAlignment:
+        return Qt::AlignVCenter;
+    case SH_TabBar_Alignment:
+        return Qt::AlignLeft;
+    case SH_ToolBox_SelectedPageTitleBold:
+        return false;
+    case SH_ScrollBar_MiddleClickAbsolutePosition:
+        return true;
+    case SH_ScrollView_FrameOnlyAroundContents:
+        return false;
+    case SH_FormLayoutFormAlignment:
+        return Qt::AlignLeft | Qt::AlignTop;
+    case SH_FormLayoutLabelAlignment:
+        return Qt::AlignRight;
+    case SH_FormLayoutFieldGrowthPolicy:
+        return QFormLayout::ExpandingFieldsGrow;
+    case SH_FormLayoutWrapPolicy:
+        return QFormLayout::DontWrapRows;
+    case SH_MessageBox_TextInteractionFlags:
+        return Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse;
+    case SH_ProgressDialog_CenterCancelButton:
+        return false;
+    case SH_MessageBox_CenterButtons:
+        return false;
+    case SH_FocusFrame_AboveWidget:
+        return true;
+    case SH_FocusFrame_Mask:
+        return false;
+    case SH_RequestSoftwareInputPanel:
+        return RSIP_OnMouseClick;
+    case SH_TitleBar_NoBorder:
+        return true;
+    case SH_DockWidget_ButtonsHaveFrame:
+        return false;
+    default:
+        return QCommonStyle::styleHint(hint, option, widget, returnData);
+    }
+}
+
 void UnionStyle::polish(QApplication *application)
 {
     QCommonStyle::polish(application);
@@ -1031,8 +1161,36 @@ void UnionStyle::polish(QApplication *application)
 
 void UnionStyle::polish(QWidget *widget)
 {
-    if (qobject_cast<QPushButton *>(widget)) {
+    // WA_Hover setup stolen from Breeze
+    // enable mouse over effects for all necessary widgets
+    if (qobject_cast<QAbstractItemView *>(widget) || qobject_cast<QAbstractSpinBox *>(widget) || qobject_cast<QCheckBox *>(widget)
+        || qobject_cast<QComboBox *>(widget) || qobject_cast<QDial *>(widget) || qobject_cast<QLineEdit *>(widget) || qobject_cast<QPushButton *>(widget)
+        || qobject_cast<QRadioButton *>(widget) || qobject_cast<QScrollBar *>(widget) || qobject_cast<QSlider *>(widget)
+        || qobject_cast<QSplitterHandle *>(widget) || qobject_cast<QTabBar *>(widget) || qobject_cast<QTextEdit *>(widget)
+        || qobject_cast<QToolButton *>(widget) || widget->inherits("KTextEditor::View")) {
         widget->setAttribute(Qt::WA_Hover);
+    }
+    if (auto itemView = qobject_cast<QAbstractItemView *>(widget)) {
+        // enable mouse over effects in the viewport of the itemview
+        itemView->viewport()->setAttribute(Qt::WA_Hover);
+
+    } else if (auto groupBox = qobject_cast<QGroupBox *>(widget)) {
+        // checkable group boxes
+        if (groupBox->isCheckable()) {
+            groupBox->setAttribute(Qt::WA_Hover);
+        }
+
+    } else if (qobject_cast<QAbstractButton *>(widget) && qobject_cast<QDockWidget *>(widget->parent())) {
+        widget->setAttribute(Qt::WA_Hover);
+
+    } else if (qobject_cast<QAbstractButton *>(widget) && qobject_cast<QToolBox *>(widget->parent())) {
+        widget->setAttribute(Qt::WA_Hover);
+    }
+    // enable mouse over effect in sunken scrollareas that support focus
+    if (auto scrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
+        if (scrollArea->frameShadow() == QFrame::Sunken && scrollArea->focusPolicy() & Qt::StrongFocus) {
+            scrollArea->setAttribute(Qt::WA_Hover);
+        }
     }
 
     widget->setProperty(property_union_member_list, setupMemberList(widget));

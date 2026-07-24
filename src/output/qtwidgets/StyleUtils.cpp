@@ -162,9 +162,15 @@ QStringList hintsFromOption(const QStyleOption *option)
                 break;
             }
         }
-    }
+    } break;
+    case QStyleOption::SO_MenuItem: {
+        if (const auto opt = qstyleoption_cast<const QStyleOptionMenuItemV2 *>(option)) {
+            if (opt->checked) {
+                hints.append(QStringLiteral("with-submenu"));
+            }
+        }
+    } break;
     case QStyleOption::SO_Tab:
-    case QStyleOption::SO_MenuItem:
     case QStyleOption::SO_ProgressBar:
     case QStyleOption::SO_ToolBox:
     case QStyleOption::SO_DockWidget:
@@ -268,16 +274,22 @@ QVariantMap attributesFromOption(const QStyleOption *option)
     case QStyleOption::SO_Tab:
         if (const auto tabOption = static_cast<const QStyleOptionTab *>(option)) {
             QVariantMap map;
-            const bool north = tabOption->shape == QTabBar::RoundedNorth || tabOption->shape == QTabBar::TriangularNorth;
-            const bool south = tabOption->shape == QTabBar::RoundedSouth || tabOption->shape == QTabBar::TriangularSouth;
-            const bool west = tabOption->shape == QTabBar::RoundedWest || tabOption->shape == QTabBar::TriangularWest;
-            const bool east = tabOption->shape == QTabBar::RoundedEast || tabOption->shape == QTabBar::TriangularEast;
+            const bool top = tabOption->shape == QTabBar::RoundedNorth || tabOption->shape == QTabBar::TriangularNorth;
+            const bool bottom = tabOption->shape == QTabBar::RoundedSouth || tabOption->shape == QTabBar::TriangularSouth;
+            const bool left = tabOption->shape == QTabBar::RoundedWest || tabOption->shape == QTabBar::TriangularWest;
+            const bool right = tabOption->shape == QTabBar::RoundedEast || tabOption->shape == QTabBar::TriangularEast;
 
-            if (north) {
+            if (top) {
                 map[QStringLiteral("direction")] = QVariant(QStringLiteral("top"));
             }
-            if (south) {
+            if (bottom) {
                 map[QStringLiteral("direction")] = QVariant(QStringLiteral("bottom"));
+            }
+            if (left) {
+                map[QStringLiteral("direction")] = QVariant(QStringLiteral("left"));
+            }
+            if (right) {
+                map[QStringLiteral("direction")] = QVariant(QStringLiteral("right"));
             }
             return map;
         }
