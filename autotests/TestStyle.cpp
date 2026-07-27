@@ -17,18 +17,18 @@ class TestStyle : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto style = Style::create(std::filesystem::path(), std::make_unique<TestStyleLoader>());
+        auto style = Style::create(FINDTESTPATH("TestStylePackageData/ValidTestStyle"), std::make_unique<TestStyleLoader>());
 
         QVERIFY(style->load());
 
         const auto rules = style->rules();
 
-        QCOMPARE(rules.size(), 1);
+        QCOMPARE(rules.size(), 2);
     }
 
     void testMatches()
     {
-        auto style = Style::create(std::filesystem::path(), std::make_unique<TestStyleLoader>());
+        auto style = Style::create(FINDTESTPATH("TestStylePackageData/ValidTestStyle"), std::make_unique<TestStyleLoader>());
         QVERIFY(style->load());
 
         QList<Element::Ptr> elements;
@@ -42,6 +42,14 @@ private Q_SLOTS:
         elements.clear();
         element = Element::create();
         element->setType(u"test"_s);
+        elements.append(element);
+
+        result = style->matches(elements);
+        QCOMPARE(result.size(), 1);
+
+        elements.clear();
+        element = Element::create();
+        element->setHint(u"test"_s);
         elements.append(element);
 
         result = style->matches(elements);
