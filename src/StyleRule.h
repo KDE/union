@@ -39,6 +39,8 @@ public:
     StyleRule(std::unique_ptr<StyleRulePrivate> &&d);
     ~StyleRule() override;
 
+    bool isEmpty() const;
+
     SelectorList selectors() const;
     void setSelectors(const SelectorList &selectors);
 

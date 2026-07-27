@@ -6,19 +6,10 @@
 #include <Style.h>
 #include <StyleLoader.h>
 
+#include "TestInputPlugin.h"
+
 using namespace Union;
 using namespace Qt::StringLiterals;
-
-struct TestLoader : public StyleLoader {
-    bool load(std::shared_ptr<Style> style) override
-    {
-        auto testRule = StyleRule::create();
-        testRule->setSelectors({Selector::create<SelectorType::Id>(u"test"_s)});
-        style->insert(testRule);
-
-        return true;
-    }
-};
 
 class TestStyle : public QObject
 {
@@ -26,7 +17,7 @@ class TestStyle : public QObject
 private Q_SLOTS:
     void testLoad()
     {
-        auto style = Style::create(std::filesystem::path(), std::make_unique<TestLoader>());
+        auto style = Style::create(std::filesystem::path(), std::make_unique<TestStyleLoader>());
 
         QVERIFY(style->load());
 
@@ -37,7 +28,7 @@ private Q_SLOTS:
 
     void testMatches()
     {
-        auto style = Style::create(std::filesystem::path(), std::make_unique<TestLoader>());
+        auto style = Style::create(std::filesystem::path(), std::make_unique<TestStyleLoader>());
         QVERIFY(style->load());
 
         QList<Element::Ptr> elements;

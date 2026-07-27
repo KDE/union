@@ -22,6 +22,11 @@ StyleRule::StyleRule(std::unique_ptr<StyleRulePrivate> &&d)
 
 StyleRule::~StyleRule() = default;
 
+bool StyleRule::isEmpty() const
+{
+    return d->selectors.isEmpty() && d->properties->isEmpty();
+}
+
 SelectorList StyleRule::selectors() const
 {
     return d->selectors;

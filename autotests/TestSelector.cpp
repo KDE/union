@@ -8,24 +8,10 @@
 #include <Element.h>
 #include <Selector.h>
 
+#include "TestInputPlugin.h"
+
 using namespace Union;
 using namespace Qt::StringLiterals;
-
-Element::State stateFromString(const QString &string)
-{
-    const auto metaEnum = QMetaEnum::fromType<Element::States>();
-
-    QByteArray value = string.toUtf8();
-
-    auto count = metaEnum.keyCount();
-    for (int i = 0; i < count; ++i) {
-        if (qstrnicmp(metaEnum.key(i), value.data(), value.size()) == 0) {
-            return Element::State(metaEnum.value(i));
-        }
-    }
-
-    return Element::State::None;
-}
 
 struct ElementProperties {
     QString type;
@@ -92,109 +78,6 @@ ElementList structureFromJson(const QJsonArray &json)
         element->setAttributes(properties.attributes);
 
         result.append(element);
-    }
-
-    return result;
-}
-
-struct SelectorProperties {
-    ElementProperties element;
-    bool universal = false;
-    bool child = false;
-    bool descendant = false;
-    QVariantList attributes_exists;
-    QVariantMap attributes_equals;
-    QVariantMap attributes_substring;
-};
-
-SelectorProperties jsonToSelectorProperties(const QJsonObject &json)
-{
-    SelectorProperties result;
-
-    result.element = jsonToElementProperties(json);
-
-    if (json.contains(u"universal")) {
-        result.universal = json.value(u"universal").toBool();
-    }
-
-    if (json.contains(u"child")) {
-        result.child = json.value(u"child").toBool();
-    }
-
-    if (json.contains(u"descendant")) {
-        result.descendant = json.value(u"descendant").toBool();
-    }
-
-    if (json.contains(u"attributes_exists")) {
-        result.attributes_exists = json.value(u"attributes_exists").toArray().toVariantList();
-    }
-
-    if (json.contains(u"attributes_equals")) {
-        result.attributes_equals = json.value(u"attributes_equals").toObject().toVariantMap();
-    }
-
-    if (json.contains(u"attribute_substring")) {
-        result.attributes_substring = json.value(u"attributes_substring").toObject().toVariantMap();
-    }
-
-    return result;
-}
-
-SelectorList jsonToSelectorList(const QJsonArray &json)
-{
-    SelectorList result;
-    for (auto entry : json) {
-        auto properties = jsonToSelectorProperties(entry.toObject());
-
-        if (properties.universal) {
-            result.append(Selector::create<SelectorType::AnyElement>());
-            continue;
-        }
-
-        if (properties.child) {
-            result.append(Selector::create<SelectorType::ChildCombinator>());
-            continue;
-        }
-
-        if (properties.descendant) {
-            result.append(Selector::create<SelectorType::DescendantCombinator>());
-            continue;
-        }
-
-        if (!properties.element.type.isEmpty()) {
-            result.append(Selector::create<SelectorType::Type>(properties.element.type));
-        }
-
-        if (!properties.element.id.isEmpty()) {
-            result.append(Selector::create<SelectorType::Id>(properties.element.id));
-        }
-
-        if (properties.element.states != 0) {
-            QMetaEnum statesEnum = QMetaEnum::fromType<Element::States>();
-            const auto count = statesEnum.keyCount();
-            for (int i = 0; i < count; ++i) {
-                auto value = statesEnum.value(i);
-                if (properties.element.states & value) {
-                    result.append(Selector::create<SelectorType::State>(Element::State(value)));
-                }
-            }
-        }
-
-        for (const auto &hint : properties.element.hints) {
-            result.append(Selector::create<SelectorType::Hint>(hint));
-        }
-
-        for (const auto &exists : properties.attributes_exists) {
-            result.append(Selector::create<SelectorType::AttributeExists>(exists.toString()));
-        }
-
-        for (auto [key, value] : properties.attributes_equals.asKeyValueRange()) {
-            result.append(Selector::create<SelectorType::AttributeEquals>(std::make_pair(key, value)));
-        }
-
-        for (auto [key, value] : properties.attributes_substring.asKeyValueRange()) {
-            result.append(Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(key, value.toString())));
-        }
     }
 
     return result;
