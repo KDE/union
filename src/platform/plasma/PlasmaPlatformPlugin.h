@@ -30,4 +30,5 @@ private:
     bool m_smoothScroll = true;
     qreal m_animationSpeedMultiplier = 1.0;
     KConfigWatcher::Ptr m_kdeGlobalsWatcher;
+    KConfigWatcher::Ptr m_unionSettingsWatcher;
 };

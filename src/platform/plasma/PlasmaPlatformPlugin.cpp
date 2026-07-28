@@ -13,11 +13,14 @@
 #include <KIconColors>
 #include <KRuntimePlatform>
 
+#include "unionsettings.h"
+
 using namespace Qt::StringLiterals;
 
 PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     : Union::PlatformPlugin(parent)
     , m_kdeGlobalsWatcher(KConfigWatcher::create(KSharedConfig::openConfig()))
+    , m_unionSettingsWatcher(KConfigWatcher::create(UnionSettings::self()->sharedConfig()))
 {
     KConfigGroup generalCfg = KConfigGroup(KSharedConfig::openConfig(), u"KDE"_s);
     m_smoothScroll = generalCfg.readEntry(u"SmoothScroll"_s, true);
@@ -34,28 +37,53 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
             }
         }
     });
+
+    connect(m_unionSettingsWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
+        if (group.name() != u"General") {
+            return;
+        }
+
+        if (!names.contains("style")) {
+            return;
+        }
+
+        UnionSettings::self()->read();
+
+        sendDefaultStyleChangedEvent();
+    });
+
+    // Listen to smooth scroll changed events
+    QDBusConnection::sessionBus().connect(QString(),
+                                          QStringLiteral("/SmoothScroll"),
+                                          QStringLiteral("org.kde.SmoothScroll"),
+                                          QStringLiteral("notifyChange"),
+                                          this,
+                                          SLOT(setSmoothScroll(bool)));
 }
 
 QString PlasmaPlatformPlugin::defaultStyleName()
 {
+    auto styleName = UnionSettings::self()->style();
+
     // These values should really be queries by the CSS using media queries,
     // however those are currently unimplemented in cxx-rust-cssparser and will
     // take some time to implement. So until that time, we switch the default
     // style based on these values.
-    if (KRuntimePlatform::runtimePlatform().contains(u"phone"_s)) {
-        return u"breeze-mobile"_s;
+    if (styleName == u"breeze") {
+        if (KRuntimePlatform::runtimePlatform().contains(u"phone"_s)) {
+            return u"breeze-mobile"_s;
+        }
+
+        if (qEnvironmentVariableIsSet("QT_QUICK_CONTROLS_MOBILE")) {
+            return u"breeze-mobile"_s;
+        }
+
+        if (qGuiApp->layoutDirection() == Qt::LayoutDirection::RightToLeft) {
+            return u"breeze-rtl"_s;
+        }
     }
 
-    if (qEnvironmentVariableIsSet("QT_QUICK_CONTROLS_MOBILE")) {
-        return u"breeze-mobile"_s;
-    }
-
-    if (qGuiApp->layoutDirection() == Qt::LayoutDirection::RightToLeft) {
-        return u"breeze-rtl"_s;
-    }
-
-    // TODO: Read from config
-    return u"breeze"_s;
+    return styleName;
 }
 
 QIcon PlasmaPlatformPlugin::platformIcon(const QString &name, const QColor &color)
