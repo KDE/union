@@ -171,7 +171,13 @@ int handleListCommand([[maybe_unused]] const QStringList &arguments)
     });
 
     auto handler = Union::StyleRegistry::instance()->packageHandler();
-    auto packages = handler->allPackages();
+
+    auto packageFilter = Union::PackageHandler::PackageFilter::Default;
+    if (parser->isSet(u"hidden"_s)) {
+        packageFilter = Union::PackageHandler::PackageFilter::IncludeHidden;
+    }
+
+    auto packages = handler->allPackages(packageFilter);
     if (packages.isEmpty()) {
         std::cerr << "No styles could be found.\n";
         return 1;

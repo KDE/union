@@ -63,6 +63,25 @@ public:
         UnknownInputType,
     };
 
+    /*!
+     * \enum PackageHandler::PackageFilter
+     *
+     * What kind of filtering to perform on the list of all packages.
+     *
+     * \value Default
+     *      Use the default, which excludes style packages explicitly marked as
+     *      hidden.
+     * \value IncludeHidden
+     *      Include hidden packages.
+     */
+    enum class PackageFilter {
+        Default,
+        IncludeHidden,
+    };
+
+    /*!
+     * A struct containing data for the create() method.
+     */
     struct CreateInfo {
         std::filesystem::path path;
         QString inputType;
@@ -85,7 +104,7 @@ public:
     /*!
      * Returns a list of all installed packages.
      */
-    QList<StylePackage> allPackages();
+    QList<StylePackage> allPackages(PackageFilter filter = PackageFilter::Default);
 
     /*!
      * Create a new package.

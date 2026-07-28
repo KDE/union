@@ -48,7 +48,7 @@ StylePackage PackageHandler::package(const QString &id)
     return StylePackage{};
 }
 
-QList<StylePackage> PackageHandler::allPackages()
+QList<StylePackage> PackageHandler::allPackages(PackageFilter filter)
 {
     QSet<QString> seenPackages;
     QList<StylePackage> result;
@@ -62,6 +62,10 @@ QList<StylePackage> PackageHandler::allPackages()
 
             auto package = StylePackage{entry.path()};
             if (package.isValid() && !seenPackages.contains(package.id())) {
+                if (filter != PackageFilter::IncludeHidden && package.isHidden()) {
+                    continue;
+                }
+
                 result.append(package);
                 seenPackages.insert(package.id());
             }
