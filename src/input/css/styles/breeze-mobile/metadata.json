@@ -8,5 +8,6 @@
     "authors": [
         "Arjen Hiemstra",
         "Akseli Lahtinen"
-    ]
+    ],
+    "hidden": true
 }
