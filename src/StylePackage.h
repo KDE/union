@@ -98,6 +98,10 @@ public:
      * This is just a list of author names.
      */
     QStringList authors() const;
+    /*!
+     * Returns if this package should be shown in listings of packages.
+     */
+    bool isHidden() const;
 
     /*!
      * Returns if the package is valid.
