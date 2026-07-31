@@ -46,8 +46,6 @@ KT.NavigationTabButton {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    Layout.fillHeight: true
-
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding,
                             Union.Positioner.implicitWidth)
