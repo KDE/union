@@ -193,9 +193,6 @@ inlinemessage
 
 navigationtabbar {
     background-color: var(--window-background-color);
-    padding: var(--small-spacing);
-    spacing: var(--small-spacing);
-    height: 64px;
 
     &.header {
         border-bottom: 1px solid var(--window-border-color);
@@ -207,15 +204,19 @@ navigationtabbar {
 }
 
 navigationtabbutton {
-    border-radius: var(--corner-radius);
-    color: var(--window-text-color);
-    icon-size: var(--icon-size-smallmedium);
-    inset: var(--minimal-spacing);
+    height: 54px; /* grid-unit * 3 */
     padding: var(--small-spacing);
+    inset: var(--small-spacing);
+    spacing: var(--small-spacing);
+
+    icon-size: var(--icon-size-smallmedium);
+    border-radius: var(--corner-radius);
 
     layout-alignment: content fill fill 0;
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
+    text-alignment-horizontal: start;
+    icon-alignment-horizontal: start;
+
+    color: var(--window-text-color);
 
     &:disabled {
         color: var(--window-disabled-text-color);
@@ -240,9 +241,16 @@ navigationtabbutton {
         border: 1px solid var(--highlight-color);
     }
 
+    &[display="text-beside-icon"] {
+        height: 0px;
+        padding: 12px var(--small-spacing) 12px var(--grid-unit); /* small-spacing + large-spacing */
+        spacing: var(--grid-unit);
+        icon-size: var(--icon-size-small);
+    }
+
     &[display="text-under-icon"] {
-        icon-alignment-vertical: stack-center;
-        text-alignment-vertical: stack-center;
+        icon-alignment: content center stack-center 0;
+        text-alignment: content center stack-center 1;
     }
 }
 
@@ -261,5 +269,11 @@ overlaydrawer
     itemdelegate {
         width: var(--icon-size-medium);
         height: var(--icon-size-medium);
+    }
+
+    &[colorset="window"]
+    {
+        background-color: var(--window-background-color);
+        color: var(--window-text-color);
     }
 }
