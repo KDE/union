@@ -158,7 +158,7 @@ void OutlineBorderRectangleNode::update()
     }
 
     if (m_background && m_background->image() && m_background->image()->source()) {
-        setTexture(1, 1, m_background->image()->source().value(), m_window, m_itemRect.size(), QQuickWindow::TextureCanUseAtlas);
+        setTexture(1, 1, m_background->image()->source().value(), m_window, m_itemRect.size(), ShaderNode::TextureCanUseAtlas);
     }
 
     updateVertices(m_itemRect, m_radius, borderSize, outlineSize);

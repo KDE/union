@@ -164,11 +164,13 @@ void ShaderNode::setUvChannels(unsigned char count)
     m_geometryRebuildNeeded = true;
 }
 
-void ShaderNode::setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, ShaderNode::TextureFlags flags)
 {
+    QQuickWindow::CreateTextureOptions options =
+        flags.testFlag(ShaderNode::TextureCanUseAtlas) ? QQuickWindow::TextureCanUseAtlas : QQuickWindow::CreateTextureOptions{};
     auto texture = TextureCache::loadTexture(window, image, options);
     if (texture) {
-        setTexture(channel, binding, texture, options);
+        setTexture(channel, binding, texture, flags);
     }
 }
 
@@ -177,15 +179,17 @@ void ShaderNode::setTexture(Channel channel,
                             const std::filesystem::path &path,
                             QQuickWindow *window,
                             const QSizeF &size,
-                            QQuickWindow::CreateTextureOptions options)
+                            ShaderNode::TextureFlags flags)
 {
+    QQuickWindow::CreateTextureOptions options =
+        flags.testFlag(ShaderNode::TextureCanUseAtlas) ? QQuickWindow::TextureCanUseAtlas : QQuickWindow::CreateTextureOptions{};
     auto texture = TextureCache::loadTexture(window, path, size, options);
     if (texture) {
-        setTexture(channel, sampler, texture, options);
+        setTexture(channel, sampler, texture, flags);
     }
 }
 
-void ShaderNode::setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, ShaderNode::TextureFlags flags)
 {
     if (!m_shaderMaterial) {
         return;
@@ -194,7 +198,7 @@ void ShaderNode::setTexture(Channel channel, Binding binding, const std::shared_
     auto info = TextureInfo{
         .channel = channel,
         .binding = binding,
-        .options = options,
+        .flags = flags,
         .texture = texture,
         .provider = nullptr,
         .providerConnection = {},
@@ -211,11 +215,17 @@ void ShaderNode::setTexture(Channel channel, Binding binding, const std::shared_
 
     setUVs(channel, texture->normalizedTextureSubRect());
 
+    if (flags.testFlag(ShaderNode::TextureNearestInterpolation)) {
+        texture->setFiltering(QSGTexture::Nearest);
+    } else {
+        texture->setFiltering(QSGTexture::Linear);
+    }
+
     m_shaderMaterial->setTexture(binding, texture.get());
     markDirty(QSGNode::DirtyMaterial);
 }
 
-void ShaderNode::setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options)
+void ShaderNode::setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, ShaderNode::TextureFlags flags)
 {
     if (!m_shaderMaterial) {
         return;
@@ -228,7 +238,7 @@ void ShaderNode::setTexture(Channel channel, Binding binding, QSGTextureProvider
     auto info = TextureInfo{
         .channel = channel,
         .binding = binding,
-        .options = options,
+        .flags = flags,
         .texture = nullptr,
         .provider = provider,
         .providerConnection = connection,
@@ -409,9 +419,21 @@ void ShaderNode::preprocessTexture(const TextureInfo &info)
         return;
     }
 
-    if (provider->texture()->isAtlasTexture() && !info.options.testFlag(QQuickWindow::TextureCanUseAtlas)) {
-        m_shaderMaterial->setTexture(info.binding, provider->texture()->removedFromAtlas());
+    if (provider->texture()->isAtlasTexture() && !info.flags.testFlag(ShaderNode::TextureCanUseAtlas)) {
+        auto texture = provider->texture()->removedFromAtlas();
+        if (info.flags.testFlag(ShaderNode::TextureNearestInterpolation)) {
+            texture->setFiltering(QSGTexture::Nearest);
+        } else {
+            texture->setFiltering(QSGTexture::Linear);
+        }
+        m_shaderMaterial->setTexture(info.binding, texture);
     } else {
+        auto texture = provider->texture();
+        if (info.flags.testFlag(ShaderNode::TextureNearestInterpolation)) {
+            texture->setFiltering(QSGTexture::Nearest);
+        } else {
+            texture->setFiltering(QSGTexture::Linear);
+        }
         m_shaderMaterial->setTexture(info.binding, provider->texture());
     }
     if (QSGDynamicTexture *dynamic_texture = qobject_cast<QSGDynamicTexture *>(provider->texture())) {

@@ -18,14 +18,22 @@ class ShaderMaterial;
  */
 class ShaderNode : public QSGGeometryNode
 {
+    Q_GADGET
 public:
     using Channel = uint8_t;
     using Binding = uint8_t;
 
+    enum TextureFlag {
+        TextureCanUseAtlas,
+        TextureNearestInterpolation,
+    };
+    Q_ENUM(TextureFlag)
+    Q_DECLARE_FLAGS(TextureFlags, TextureFlag)
+
     struct TextureInfo {
         Channel channel = 0;
         Binding binding = 0;
-        QQuickWindow::CreateTextureOptions options;
+        TextureFlags flags;
         std::shared_ptr<QSGTexture> texture = nullptr;
         QPointer<QSGTextureProvider> provider = nullptr;
         QMetaObject::Connection providerConnection;
@@ -111,7 +119,7 @@ public:
      * coordinates for the texture, such that textures from a texture atlas work
      * correctly.
      */
-    void setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, const QImage &image, QQuickWindow *window, TextureFlags flags = {});
 
     /*!
      * Set the texture for a channel to an image loaded from disk.
@@ -128,12 +136,8 @@ public:
      * coordinates for the texture, such that textures from a texture atlas work
      * correctly.
      */
-    void setTexture(Channel channel,
-                    Binding binding,
-                    const std::filesystem::path &path,
-                    QQuickWindow *window,
-                    const QSizeF &size = {},
-                    QQuickWindow::CreateTextureOptions options = {});
+    void
+    setTexture(Channel channel, Binding binding, const std::filesystem::path &path, QQuickWindow *window, const QSizeF &size = {}, TextureFlags flags = {});
 
     /*!
      * Set the texture for a binding to a texture.
@@ -146,7 +150,7 @@ public:
      * coordinates for the texture, such that textures from a texture atlas work
      * correctly.
      */
-    void setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, const std::shared_ptr<QSGTexture> &texture, TextureFlags flags = {});
 
     /*!
      * Set the texture for a channel to a texture provider.
@@ -159,7 +163,7 @@ public:
      * coordinates for the texture, such that textures from a texture atlas work
      * correctly.
      */
-    void setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, QQuickWindow::CreateTextureOptions options = {});
+    void setTexture(Channel channel, Binding binding, QSGTextureProvider *provider, TextureFlags flags = {});
 
     /*!
      * Set the number of extra vertex data channels to \p count.
@@ -270,3 +274,5 @@ private:
 
     QSGGeometry::AttributeSet *m_attributeSet = nullptr;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(ShaderNode::TextureFlags)

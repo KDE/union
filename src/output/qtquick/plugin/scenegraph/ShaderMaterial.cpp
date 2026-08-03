@@ -144,7 +144,6 @@ void ShaderMaterialShader::updateSampledImage(QSGMaterialShader::RenderState &st
     auto material = static_cast<ShaderMaterial *>(newMaterial);
     auto source = material->texture(binding);
     if (source) {
-        source->setFiltering(QSGTexture::Filtering::Linear);
         source->commitTextureOperations(state.rhi(), state.resourceUpdateBatch());
         *texture = source;
     } else {
