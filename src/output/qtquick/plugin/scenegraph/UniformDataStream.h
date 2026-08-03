@@ -13,6 +13,7 @@ struct UniformDataStream {
     enum class Placeholder {
         ModelViewProjectionMatrix,
         Opacity,
+        Viewport,
     };
 
     inline UniformDataStream(std::span<char> data) noexcept
@@ -118,6 +119,14 @@ struct UniformDataStream {
             stream.offset += FloatSize;
             stream.remainingSize -= FloatSize;
             break;
+        case Placeholder::Viewport:
+            stream.align(Vector4Size);
+            Q_ASSERT(stream.remainingSize - Vector4Size >= 0);
+            memcpy(stream.bytes, &ViewportPlaceholder, sizeof(ViewportPlaceholder));
+            stream.bytes += Vector4Size;
+            stream.offset += Vector4Size;
+            stream.remainingSize -= Vector4Size;
+            break;
         }
 
         return stream;
@@ -141,9 +150,11 @@ struct UniformDataStream {
 
     static constexpr int ModelViewProjectionPlaceholder = 0x87654321;
     static constexpr int OpacityPlaceholder = 0x12345678;
+    static constexpr int ViewportPlaceholder = 0x56784321;
 
 private:
     static constexpr int FloatSize = sizeof(float);
+    static constexpr int Vector4Size = FloatSize * 4;
     static constexpr int ColorSize = FloatSize * 4;
     static constexpr int Matrix4x4Size = FloatSize * 4 * 4;
 

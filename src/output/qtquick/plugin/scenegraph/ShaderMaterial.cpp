@@ -124,6 +124,12 @@ bool ShaderMaterialShader::updateUniformData(RenderState &state, QSGMaterial *ne
                 memcpy(dataBytes + i * sizeof(int), &opacity, sizeof(float));
                 break;
             }
+            case UniformDataStream::ViewportPlaceholder: {
+                auto viewport = state.viewportRect();
+                auto vec = QVector4D{float(viewport.x()), float(viewport.y()), float(viewport.width()), float(viewport.height())};
+                memcpy(dataBytes + i * sizeof(int), &vec, sizeof(float) * 4);
+                break;
+            }
             }
         }
 
