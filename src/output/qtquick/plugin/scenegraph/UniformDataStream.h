@@ -51,21 +51,6 @@ struct UniformDataStream {
         remainingSize -= skipCount;
     }
 
-    inline void skipMatrixOpacity()
-    {
-        align(Matrix4x4Size);
-        Q_ASSERT(remainingSize - Matrix4x4Size >= 0);
-        bytes += Matrix4x4Size;
-        offset += Matrix4x4Size;
-        remainingSize -= Matrix4x4Size;
-
-        align(FloatSize);
-        Q_ASSERT(remainingSize - FloatSize >= 0);
-        bytes += FloatSize;
-        offset += FloatSize;
-        remainingSize -= FloatSize;
-    }
-
     template<typename Data>
     friend inline UniformDataStream &operator<<(UniformDataStream &stream, const Data &data)
     {

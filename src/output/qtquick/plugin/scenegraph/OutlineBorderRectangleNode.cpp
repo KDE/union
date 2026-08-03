@@ -165,8 +165,9 @@ void OutlineBorderRectangleNode::update()
     requestGeometryUpdate();
 
     UniformDataStream stream(uniformData());
-    stream.skipMatrixOpacity();
-    stream << aspect // aspect
+    stream << UniformDataStream::Placeholder::ModelViewProjectionMatrix // matrix
+           << UniformDataStream::Placeholder::Opacity // opacity
+           << aspect // aspect
            << borderSize / minDimension // border_width
            << outlineSize / minDimension // outline_width
            << m_radius / minDimension // radius

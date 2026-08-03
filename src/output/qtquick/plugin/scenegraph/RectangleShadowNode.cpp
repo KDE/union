@@ -93,8 +93,9 @@ void RectangleShadowNode::update()
     auto minDimension = std::min(r.width(), r.height());
 
     UniformDataStream stream(uniformData());
-    stream.skipMatrixOpacity();
-    stream << aspect // aspect
+    stream << UniformDataStream::Placeholder::ModelViewProjectionMatrix // matrix
+           << UniformDataStream::Placeholder::Opacity // opacity
+           << aspect // aspect
            << float(m_spread / minDimension) // spread
            << float(m_blur / minDimension) // blur
            << m_radius / minDimension // radius
