@@ -53,4 +53,20 @@ T.Dialog {
     footer: DialogButtonBox {
         visible: count > 0
     }
+
+    T.Overlay.modal: Union.StyledRectangle {
+        Union.Element.type: "Overlay"
+        Union.Element.hints: [
+            Union.ElementHint { name: "dialog" },
+            Union.ElementHint { name: "modal" }
+        ]
+    }
+
+    T.Overlay.modeless: Union.StyledRectangle {
+        Union.Element.type: "Overlay"
+        Union.Element.hints: [
+            Union.ElementHint { name: "dialog" },
+            Union.ElementHint { name: "modeless" }
+        ]
+    }
 }
