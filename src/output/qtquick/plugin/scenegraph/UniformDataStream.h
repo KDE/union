@@ -10,6 +10,11 @@
  * A helper that simplifies writing uniform data for QSGMaterialShader.
  */
 struct UniformDataStream {
+    enum class Placeholder {
+        ModelViewProjectionMatrix,
+        Opacity,
+    };
+
     inline UniformDataStream(std::span<char> data) noexcept
         : bytes(data.data())
         , remainingSize(data.size())
@@ -109,6 +114,30 @@ struct UniformDataStream {
         return stream;
     }
 
+    friend inline UniformDataStream &operator<<(UniformDataStream &stream, UniformDataStream::Placeholder placeholder)
+    {
+        switch (placeholder) {
+        case Placeholder::ModelViewProjectionMatrix:
+            stream.align(Matrix4x4Size);
+            Q_ASSERT(stream.remainingSize - Matrix4x4Size >= 0);
+            memcpy(stream.bytes, &ModelViewProjectionPlaceholder, sizeof(ModelViewProjectionPlaceholder));
+            stream.bytes += Matrix4x4Size;
+            stream.offset += Matrix4x4Size;
+            stream.remainingSize -= Matrix4x4Size;
+            break;
+        case Placeholder::Opacity:
+            stream.align(FloatSize);
+            Q_ASSERT(stream.remainingSize - FloatSize >= 0);
+            memcpy(stream.bytes, &OpacityPlaceholder, sizeof(OpacityPlaceholder));
+            stream.bytes += FloatSize;
+            stream.offset += FloatSize;
+            stream.remainingSize -= FloatSize;
+            break;
+        }
+
+        return stream;
+    }
+
     template<typename T>
     friend inline UniformDataStream &operator<<(UniformDataStream &stream, const QList<T> &v)
     {
@@ -124,6 +153,9 @@ struct UniformDataStream {
     int remainingSize;
     int padding = 16;
     int offset = 0;
+
+    static constexpr int ModelViewProjectionPlaceholder = 0x87654321;
+    static constexpr int OpacityPlaceholder = 0x12345678;
 
 private:
     static constexpr int FloatSize = sizeof(float);

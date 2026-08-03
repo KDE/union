@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #include "ShaderMaterial.h"
+#include "scenegraph/UniformDataStream.h"
 
 #include <QSGTexture>
 #include <QVariant>
@@ -101,29 +102,31 @@ bool ShaderMaterialShader::updateUniformData(RenderState &state, QSGMaterial *ne
 {
     bool changed = false;
 
-    auto data = state.uniformData()->data();
-    auto remainingSize = std::size_t(state.uniformData()->size());
-
-    if (state.isMatrixDirty()) {
-        auto matrix = state.combinedMatrix();
-        memcpy(data, matrix.data(), sizeof(float) * 16);
-        changed = true;
-    }
-    data += sizeof(float) * 16;
-    remainingSize -= sizeof(float) * 16;
-
-    if (state.isOpacityDirty()) {
-        auto opacity = state.opacity();
-        memcpy(data, &opacity, sizeof(float));
-        changed = true;
-    }
-
-    data += sizeof(float);
-    remainingSize -= sizeof(float);
+    auto data = state.uniformData();
 
     if (!oldMaterial || newMaterial->compare(oldMaterial) != 0) {
-        const auto uniformData = static_cast<ShaderMaterial *>(newMaterial)->uniformData();
-        memcpy(data, uniformData.data() + sizeof(float) * 17, remainingSize);
+        auto uniformData = static_cast<ShaderMaterial *>(newMaterial)->uniformData();
+        Q_ASSERT(std::size_t(data->size()) == uniformData.size());
+
+        data->assign(uniformData);
+
+        auto dataBytes = data->data();
+        auto intData = reinterpret_cast<int *>(dataBytes);
+        for (std::size_t i = 0; i < (data->size() / sizeof(int)); ++i) {
+            switch (intData[i]) {
+            case UniformDataStream::ModelViewProjectionPlaceholder: {
+                auto matrix = state.combinedMatrix();
+                memcpy(dataBytes + i * sizeof(int), matrix.data(), sizeof(float) * 16);
+                break;
+            }
+            case UniformDataStream::OpacityPlaceholder: {
+                auto opacity = state.opacity();
+                memcpy(dataBytes + i * sizeof(int), &opacity, sizeof(float));
+                break;
+            }
+            }
+        }
+
         changed = true;
     }
 
