@@ -46,6 +46,7 @@ Icon::Icon(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents, true);
+    setFlag(QQuickItem::ItemObservesViewport, true);
     setSmooth(false);
 }
 
@@ -173,12 +174,18 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
 
     auto imageNode = static_cast<QSGImageNode *>(node);
 
-    auto bounds = boundingRect();
+    auto renderWindow = QQuickRenderControl::renderWindowFor(window());
+    if (!renderWindow) {
+        renderWindow = window();
+    }
 
-    imageNode->setRect(QRectF{std::round(bounds.x() + (bounds.width() - m_iconSize.width()) / 2.0),
-                              std::round(bounds.y() + (bounds.height() - m_iconSize.height()) / 2.0),
-                              qreal(m_iconSize.width()),
-                              qreal(m_iconSize.height())});
+    auto dpr = renderWindow->devicePixelRatio();
+
+    auto bounds = boundingRect();
+    auto centerPos = mapToScene(QPointF{std::round(bounds.x() + (bounds.width() - m_iconSize.width()) / 2.0), //
+                                        std::round(bounds.y() + (bounds.height() - m_iconSize.height()) / 2.0)});
+    auto correctedPos = mapFromScene(QPointF{std::round(centerPos.x() * dpr) / dpr, std::round(centerPos.y() * dpr) / dpr});
+    imageNode->setRect(QRectF{correctedPos, m_iconSize.toSizeF()});
     imageNode->setOwnsTexture(true);
 
     if (smooth()) {
@@ -187,18 +194,12 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
         imageNode->setFiltering(QSGTexture::Nearest);
     }
 
-    auto renderWindow = QQuickRenderControl::renderWindowFor(window());
-    if (!renderWindow) {
-        renderWindow = window();
-    }
-
-    auto dpr = renderWindow->devicePixelRatio();
-
     if (m_iconChanged || !imageNode->texture() || !qFuzzyCompare(m_iconDpr, dpr)) {
         const auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
         auto image = m_icon.pixmap(m_iconSize, dpr, mode).toImage();
         imageNode->setTexture(window()->createTextureFromImage(image, QQuickWindow::TextureCanUseAtlas));
         m_iconChanged = false;
+        m_iconDpr = dpr;
     }
 
     return node;
@@ -218,6 +219,10 @@ void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChang
 {
     if (change == QQuickItem::ItemChange::ItemEnabledHasChanged) {
         m_iconChanged = true;
+        update();
+    }
+
+    if (change == QQuickItem::ItemChange::ItemTransformHasChanged) {
         update();
     }
 
