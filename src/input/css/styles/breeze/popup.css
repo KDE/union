@@ -34,6 +34,11 @@ menu, popup
     }
 }
 
+overlay.modal
+{
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
 menu
 {
     padding: var(--small-spacing);
