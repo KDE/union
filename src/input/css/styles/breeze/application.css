@@ -49,6 +49,7 @@ page
 
 toolbar
 {
+    height: 46px; /* large-element-size + medium-spacing + large-spacing */
     padding: var(--small-spacing);
     padding-top: var(--medium-spacing);
     padding-bottom: var(--large-spacing);
