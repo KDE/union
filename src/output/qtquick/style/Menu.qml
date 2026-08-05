@@ -31,6 +31,10 @@ T.Menu {
     topInset: Union.Style.properties.layout.inset.top 
     bottomInset: Union.Style.properties.layout.inset.bottom 
 
+    // Margins *must* be set to a non-negative value otherwise the popup is not
+    // positioned correctly.
+    margins: 0
+
     delegate: MenuItem { }
 
     contentItem: ListView {
