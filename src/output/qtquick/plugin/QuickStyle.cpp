@@ -17,9 +17,8 @@ using namespace Union;
 using namespace Union::Quick;
 
 UNIONQUICKIMPL_EXPORT QEvent::Type QuickStyleUpdatedEvent::s_type = QEvent::None;
-static EventTypeRegistration<QuickStyleUpdatedEvent> quickStyleUpdatedRegistration;
 UNIONQUICKIMPL_EXPORT QEvent::Type QuickStyleColorsChangedEvent::s_type = QEvent::None;
-static EventTypeRegistration<QuickStyleColorsChangedEvent> quickStyleColorsChangedRegistration;
+static EventTypeRegistration<QuickStyleUpdatedEvent, QuickStyleColorsChangedEvent> quickStyleEventRegistration;
 
 QuickStyle::QuickStyle(QQmlEngine *engine, QObject *parent)
     : QQuickAttachedPropertyPropagator(parent)
