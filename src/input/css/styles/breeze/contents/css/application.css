@@ -148,12 +148,12 @@ pageindicatordelegate {
 pane
 {
     padding: var(--large-spacing);
+    background-color: var(--window-background-color);
 }
 
 frame,
 groupbox
 {
-    background-color: var(--window-background-color);
     padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
@@ -161,6 +161,7 @@ groupbox
 
 groupbox {
     color: var(--window-text-color);
+    background-color: var(--window-background-color);
 
     & > header {
         color: var(--window-text-color);
