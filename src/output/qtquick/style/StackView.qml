@@ -38,9 +38,8 @@ T.StackView {
 
     background: Union.StyledRectangle { }
 
-    // TODO: Find some way of getting this value from input, modified by
-    // animation speed multiplier.
-    property int __longDuration: 400
+    // TODO: Find some way of getting this value from input.
+    property int __longDuration: 400 * Union.StyleHints.animationSpeedMultiplier
 
     pushEnter: Transition {
         NumberAnimation {
