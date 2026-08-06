@@ -12,7 +12,8 @@ using namespace Union;
 using namespace Qt::StringLiterals;
 
 UNION_EXPORT QEvent::Type DefaultStyleChangedEvent::s_type = QEvent::None;
-static EventTypeRegistration<DefaultStyleChangedEvent> defaultStyleChangedEventRegistration;
+UNION_EXPORT QEvent::Type AnimationSpeedMultiplierChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<DefaultStyleChangedEvent, AnimationSpeedMultiplierChangedEvent> platformPluginEventRegistration;
 
 PlatformPlugin::PlatformPlugin(QObject *parent)
     : Plugin(parent)
@@ -55,7 +56,18 @@ void PlatformPlugin::sendDefaultStyleChangedEvent()
     QCoreApplication::sendEvent(this, &event);
 }
 
+void PlatformPlugin::sendAnimationSpeedMultiplierChangedEvent()
+{
+    AnimationSpeedMultiplierChangedEvent event;
+    QCoreApplication::sendEvent(this, &event);
+}
+
 DefaultStyleChangedEvent::DefaultStyleChangedEvent()
     : QEvent(DefaultStyleChangedEvent::s_type)
+{
+}
+
+AnimationSpeedMultiplierChangedEvent::AnimationSpeedMultiplierChangedEvent()
+    : QEvent(AnimationSpeedMultiplierChangedEvent::s_type)
 {
 }

@@ -81,12 +81,21 @@ public:
 
 protected:
     void sendDefaultStyleChangedEvent();
+    void sendAnimationSpeedMultiplierChangedEvent();
 };
 
 class DefaultStyleChangedEvent : public QEvent
 {
 public:
     DefaultStyleChangedEvent();
+
+    static QEvent::Type s_type;
+};
+
+class AnimationSpeedMultiplierChangedEvent : public QEvent
+{
+public:
+    AnimationSpeedMultiplierChangedEvent();
 
     static QEvent::Type s_type;
 };
