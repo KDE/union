@@ -43,8 +43,14 @@ T.Drawer {
 
     spacing: Union.Style.properties.layout.spacing
 
-    enter: Transition { SmoothedAnimation { velocity: 5 } }
-    exit: Transition { SmoothedAnimation { velocity: 5 } }
+    enter: Transition {
+        enabled: Union.StyleHints.animationSpeedMultiplier > 0
+        SmoothedAnimation { velocity: 5 }
+    }
+    exit: Transition {
+        enabled: Union.StyleHints.animationSpeedMultiplier > 0
+        SmoothedAnimation { velocity: 5 }
+    }
 
     background: Union.StyledRectangle { }
 
