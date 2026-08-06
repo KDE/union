@@ -9,6 +9,8 @@
 
 #include <Element.h>
 #include <EventHelper.h>
+#include <PlatformPlugin.h>
+#include <StyleRegistry.h>
 #include <StyleRule.h>
 
 using namespace Union;
@@ -20,6 +22,7 @@ static EventTypeRegistration<StyleHintsChangedEvent> styleHintsRegistration;
 StyleHints::StyleHints(QObject *parent)
     : QObject(parent)
 {
+    StyleRegistry::instance()->platform()->installEventFilter(this);
     update();
 }
 
@@ -115,9 +118,25 @@ void StyleHints::setSpellCheckEnabled(const bool &enabled)
     }
 }
 
+qreal StyleHints::animationSpeedMultiplier()
+{
+    return StyleRegistry::instance()->platform()->animationSpeedMultiplier();
+}
+
 StyleHints *StyleHints::qmlAttachedProperties(QObject *parent)
 {
     return new StyleHints(parent);
+}
+
+bool Union::Quick::StyleHints::eventFilter([[maybe_unused]] QObject *target, QEvent *event)
+{
+    if (event->type() == AnimationSpeedMultiplierChangedEvent::s_type) {
+        Q_EMIT animationSpeedMultiplierChanged();
+        update();
+        return false;
+    }
+
+    return true;
 }
 
 void StyleHints::update()

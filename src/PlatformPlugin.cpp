@@ -5,8 +5,13 @@
 
 #include <QIcon>
 
+#include "EventHelper.h"
+
 using namespace Union;
 using namespace Qt::StringLiterals;
+
+UNION_EXPORT QEvent::Type AnimationSpeedMultiplierChangedEvent::s_type = QEvent::None;
+static EventTypeRegistration<AnimationSpeedMultiplierChangedEvent> platformPluginEventRegistration;
 
 PlatformPlugin::PlatformPlugin(QObject *parent)
     : Plugin(parent)
@@ -31,4 +36,15 @@ bool PlatformPlugin::smoothScroll()
 qreal PlatformPlugin::animationSpeedMultiplier()
 {
     return 1.0;
+}
+
+void PlatformPlugin::sendAnimationSpeedMultiplierChangedEvent()
+{
+    AnimationSpeedMultiplierChangedEvent event;
+    QCoreApplication::sendEvent(this, &event);
+}
+
+AnimationSpeedMultiplierChangedEvent::AnimationSpeedMultiplierChangedEvent()
+    : QEvent(AnimationSpeedMultiplierChangedEvent::s_type)
+{
 }

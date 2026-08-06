@@ -104,6 +104,18 @@ public:
     Q_SIGNAL void spellCheckEnabledChanged();
 
     /*!
+     * \qmlattachedproperty qreal StyleHints::animationSpeedMultiplier
+     *
+     * A multiplier to globally change animation speeds.
+     *
+     * This value should be used with animation speeds to ensure a* platform's
+     * preferences with regards to animation speed is respected.
+     */
+    Q_PROPERTY(qreal animationSpeedMultiplier READ animationSpeedMultiplier NOTIFY animationSpeedMultiplierChanged)
+    qreal animationSpeedMultiplier();
+    Q_SIGNAL void animationSpeedMultiplierChanged();
+
+    /*!
      * \qmlattachedsignal StyleHints::updated
      *
      * Emitted whenever something in StyleHints changes.
@@ -111,6 +123,9 @@ public:
     Q_SIGNAL void updated();
 
     static StyleHints *qmlAttachedProperties(QObject *parent);
+
+protected:
+    bool eventFilter(QObject *target, QEvent *event) override;
 
 private:
     void update();

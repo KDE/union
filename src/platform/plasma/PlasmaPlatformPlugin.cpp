@@ -102,4 +102,5 @@ void PlasmaPlatformPlugin::setAnimationSpeedMultiplier(qreal multiplier)
 
     m_animationSpeedMultiplier = multiplier;
     Q_EMIT animationSpeedMultiplierChanged();
+    sendAnimationSpeedMultiplierChangedEvent();
 }
