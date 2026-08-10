@@ -1,0 +1,109 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+/*
+ * Style rules that apply to interactive controls.
+ */
+
+button,
+toolbutton,
+combobox,
+delaybutton,
+roundbutton,
+checkbox,
+radiobutton,
+switch,
+itemdelegate,
+checkdelegate,
+radiodelegate,
+switchdelegate,
+swipedelegate,
+textfield,
+textarea,
+spinbox,
+* > indicator,
+card
+{
+    width: var(--size-medium);
+    height: var(--size-medium);
+
+    &:hovered {
+        background-color: var(--color-hover);
+    }
+
+    &:visual-focus
+    {
+        outline: var(--border-focus);
+    }
+
+    &:pressed {
+        background-color: var(--color-foreground);
+        color: var(--color-background);
+    }
+}
+
+* > indicator
+{
+    layout-alignment: content start center 0;
+    width: var(--size-small);
+    height: var(--size-small);
+}
+
+button,
+toolbutton:hovered,
+combobox,
+textfield,
+textarea,
+spinbox,
+* > indicator,
+card
+{
+    border: var(--border-normal);
+}
+
+toolbutton,
+button.flat,
+combobox.flat
+{
+    background-color: var(--color-hover);
+}
+
+spinbox > indicator
+{
+    layout-alignment-container: item;
+    margin: 1px;
+
+    &.increase {
+        layout-alignment-horizontal: end;
+        layout-alignment-order: 1;
+    }
+
+    &.decrease {
+        layout-alignment-horizontal: end;
+        layout-alignment-order: 0;
+    }
+}
+
+checkbox,
+checkdelegate
+{
+    &:checked > indicator {
+        background-image: url(images/checkmark.svg);
+    }
+}
+
+radiobutton,
+radiodelegate
+{
+    & > indicator
+    {
+        border-radius: var(--size-small);
+    }
+
+    &:checked > indicator
+    {
+        background-image: url(images/radio.svg);
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "input-type": "css",
+    "input-version": 1,
+    "name": "Default",
+    "description": "A default style that is used when nothing else works.",
+    "version": "6.8",
+    "license": "BSD-2-Clause",
+    "url": "https://invent.kde.org/plasma/union",
+    "authors": [
+        "Arjen Hiemstra"
+    ],
+    "hidden": true
+}
