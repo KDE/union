@@ -29,6 +29,7 @@ KT.AbstractApplicationHeader {
     background: Union.StyledRectangle {
         DragHandler {
             target: null
+            grabPermissions: PointerHandler.TakeOverForbidden | PointerHandler.ApprovesTakeOverByAnything
             onActiveChanged: {
                 if (active) {
                     Union.WindowHandler.startSystemMove(root)

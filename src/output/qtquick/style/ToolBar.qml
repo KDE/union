@@ -42,6 +42,7 @@ T.ToolBar {
     background: Union.StyledRectangle {
         DragHandler {
             target: null
+            grabPermissions: PointerHandler.TakeOverForbidden | PointerHandler.ApprovesTakeOverByAnything
             onActiveChanged: {
                 if (active && control.position == T.ToolBar.Header) {
                     Union.WindowHandler.startSystemMove(control)
