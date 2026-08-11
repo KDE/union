@@ -45,8 +45,12 @@ T.ScrollBar {
 
     minimumSize: horizontal ? height / width : width / height
 
+    // Set to false when visibility is managed externally (e.g. by ScrollAreaLayout).
+    property bool autoVisible: true
+
     Binding on visible {
-        delayed: true
+        delayed: true // breaks the binding loop with space reservation
+        when: control.autoVisible
         restoreMode: Binding.RestoreBindingOrValue
         value: control.size < 1.0 && control.size > 0 && control.policy !== T.ScrollBar.AlwaysOff && control.parent !== null
     }

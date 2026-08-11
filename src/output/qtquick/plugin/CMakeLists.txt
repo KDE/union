@@ -29,6 +29,9 @@ target_sources(UnionQuickImpl PRIVATE
     WindowHandler.cpp
     WindowHandler.h
 
+    ScrollAreaLayout.h
+    ScrollAreaLayout.cpp
+
     positioner/PositionerLayout.h
     positioner/PositionerLayout.cpp
 

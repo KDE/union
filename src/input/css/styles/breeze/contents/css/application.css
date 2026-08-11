@@ -92,14 +92,6 @@ drawer
 }
 
 scrollview {
-    &.vertical-scroll {
-        padding-right: var(--scrollbar-size);
-    }
-
-    &.horizontal-scroll {
-        padding-bottom: var(--scrollbar-size);
-    }
-
     &.framed-background
     {
         background-color: var(--view-background-color);

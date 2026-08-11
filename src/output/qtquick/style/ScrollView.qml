@@ -28,10 +28,14 @@ T.ScrollView {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-    leftPadding: Union.Style.properties.layout.padding.left
-    rightPadding: Union.Style.properties.layout.padding.right
+    // Scroll bar space added here, not in the style, so scrollAreaLayout sees unpadded size.
+    leftPadding: (Union.Style.properties.layout.padding.left ?? 0.0)
+        + (control.mirrored ? scrollAreaLayout.reservedWidth : 0.0)
+    rightPadding: (Union.Style.properties.layout.padding.right ?? 0.0)
+        + (control.mirrored ? 0.0 : scrollAreaLayout.reservedWidth)
     topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: Union.Style.properties.layout.padding.bottom
+    bottomPadding: (Union.Style.properties.layout.padding.bottom ?? 0.0)
+        + scrollAreaLayout.reservedHeight
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
@@ -42,7 +46,11 @@ T.ScrollView {
 
     ScrollBar.vertical: ScrollBar {
         parent: control
-        x: control.mirrored ? 0.0 : control.width - control.rightPadding
+        autoVisible: false
+        visible: scrollAreaLayout.verticalVisible
+        x: control.mirrored
+            ? control.leftPadding - scrollAreaLayout.reservedWidth
+            : control.width - control.rightPadding
         y: control.topPadding
         height: control.availableHeight
         active: control.ScrollBar.horizontal.active
@@ -50,6 +58,8 @@ T.ScrollView {
 
     ScrollBar.horizontal: ScrollBar {
         parent: control
+        autoVisible: false
+        visible: scrollAreaLayout.horizontalVisible
         x: control.leftPadding
         y: control.height - control.bottomPadding
         width: control.availableWidth
@@ -59,6 +69,12 @@ T.ScrollView {
     data: [
         Union.WheelHandler {
             target: control.contentItem
+        },
+        Union.ScrollAreaLayout {
+            id: scrollAreaLayout
+            flickable: control.contentItem
+            verticalScrollBar: control.ScrollBar.vertical
+            horizontalScrollBar: control.ScrollBar.horizontal
         }
     ]
 }
