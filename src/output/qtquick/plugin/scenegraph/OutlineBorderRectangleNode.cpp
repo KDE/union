@@ -9,13 +9,13 @@ using namespace Union;
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-inline QColor mix(const QColor &first, const QColor &second, float amount = 0.5)
+inline QVector4D mix(const QVector4D &first, const QVector4D &second, float amount = 0.5)
 {
-    const auto inverseAmount = 1.0 - amount;
-    return QColor::fromRgbF(first.redF() * amount + second.redF() * inverseAmount,
-                            first.greenF() * amount + second.greenF() * inverseAmount,
-                            first.blueF() * amount + second.blueF() * inverseAmount,
-                            first.alphaF() * amount + second.alphaF() * inverseAmount);
+    const float inverseAmount = 1.0f - amount;
+    return QVector4D{first.x() * amount + second.x() * inverseAmount,
+                     first.y() * amount + second.y() * inverseAmount,
+                     first.z() * amount + second.z() * inverseAmount,
+                     first.w() * amount + second.w() * inverseAmount};
 }
 
 template<typename T>
@@ -38,6 +38,11 @@ inline QVector4D toVector4D(const T *property)
     result.setW(directionValue(property->bottom()));
 
     return result;
+}
+
+inline QVector4D toVector4D(const QColor &color)
+{
+    return QVector4D{color.redF(), color.greenF(), color.blueF(), color.alphaF()};
 }
 
 /* Index data for the following geometry:
@@ -98,7 +103,7 @@ OutlineBorderRectangleNode::OutlineBorderRectangleNode()
     setVertexCount(m_vertices.size());
     setIndexCount(Indices.size());
 
-    setUvChannels(2);
+    setUvChannels(1);
     setExtraDataChannels(2);
 }
 
@@ -122,43 +127,19 @@ void OutlineBorderRectangleNode::update()
         }
     }
 
-    auto maskColor = QColor(Qt::GlobalColor::transparent);
-    if (m_background && m_background->image() && !m_background->image()->isEmpty()) {
-        auto imageProperties = m_background->image();
-
-        auto source = imageProperties->source();
-        if (source.has_value()) {
-            shaderName += u"-texture"_s;
-            if (imageProperties->flags().has_value()) {
-                if (imageProperties->flags().value().testFlag(ImageFlag::Mask)) {
-                    shaderName += u"-mask"_s;
-                } else if (imageProperties->flags().value().testFlag(ImageFlag::InvertedMask)) {
-                    shaderName += u"-invertedmask"_s;
-                }
-                maskColor = imageProperties->maskColor().value_or(Color{}).toQColor();
-            }
-        }
-    }
-
     setShader(shaderName);
-    setUniformBufferSize(sizeof(float) * 40);
+    setUniformBufferComponents(32);
 
     auto aspect = m_itemRect.width() > m_itemRect.height() ? QVector2D{float(m_itemRect.width() / m_itemRect.height()), 1.0}
                                                            : QVector2D{1.0, float(m_itemRect.height() / m_itemRect.width())};
     auto minDimension = float(std::min(m_itemRect.width(), m_itemRect.height()));
 
-    auto backgroundColor = (m_background ? m_background->color().value_or(Color{}) : Color{}).toQColor();
-
     if (m_border && !borderSize.isNull()) {
-        updateBorderColors(m_border, backgroundColor);
+        updateBorderColors(m_border);
     }
 
     if (m_outline && !outlineSize.isNull()) {
-        updateOutlineColors(m_outline, backgroundColor);
-    }
-
-    if (m_background && m_background->image() && m_background->image()->source()) {
-        setTexture(1, 1, m_background->image()->source().value(), m_window, m_itemRect.size(), ShaderNode::TextureCanUseAtlas);
+        updateOutlineColors(m_outline);
     }
 
     updateVertices(m_itemRect, m_radius, borderSize, outlineSize);
@@ -170,9 +151,7 @@ void OutlineBorderRectangleNode::update()
            << aspect // aspect
            << borderSize / minDimension // border_width
            << outlineSize / minDimension // outline_width
-           << m_radius / minDimension // radius
-           << ShaderNode::toPremultiplied(backgroundColor) // color
-           << ShaderNode::toPremultiplied(maskColor); // mask-color
+           << m_radius / minDimension; // radius
 
     markDirty(QSGNode::DirtyMaterial);
 
@@ -183,33 +162,11 @@ void OutlineBorderRectangleNode::updateGeometry(QSGGeometry *geometry)
 {
     geometry->setDrawingMode(QSGGeometry::DrawingMode::DrawTriangles);
 
-    auto vertexData = static_cast<float *>(geometry->vertexData());
-    const auto vertexCount = geometry->vertexCount();
+    auto vertexData = std::span<Vertex>(static_cast<Vertex *>(geometry->vertexData()), geometry->vertexCount());
+    std::ranges::copy(m_vertices, vertexData.begin());
 
-    for (int i = 0; i < vertexCount; ++i) {
-        auto vertex = m_vertices[i];
-
-        *vertexData++ = vertex.position.x();
-        *vertexData++ = vertex.position.y();
-
-        *vertexData++ = vertex.texture0.x();
-        *vertexData++ = vertex.texture0.y();
-
-        *vertexData++ = vertex.texture1.x();
-        *vertexData++ = vertex.texture1.y();
-
-        *vertexData++ = vertex.border.redF();
-        *vertexData++ = vertex.border.greenF();
-        *vertexData++ = vertex.border.blueF();
-        *vertexData++ = vertex.border.alphaF();
-
-        *vertexData++ = vertex.outline.redF();
-        *vertexData++ = vertex.outline.greenF();
-        *vertexData++ = vertex.outline.blueF();
-        *vertexData++ = vertex.outline.alphaF();
-    }
-
-    memcpy(geometry->indexData(), Indices.data(), geometry->indexCount() * sizeof(uint16_t));
+    auto indexData = std::span<uint16_t>(static_cast<uint16_t *>(geometry->indexData()), geometry->indexCount());
+    std::ranges::copy(Indices, indexData.begin());
 
     // TODO: Be more intelligent about change detection
     geometry->markVertexDataDirty();
@@ -276,41 +233,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
                                                  vBottomMost - float(rightBottomHeight / height), // top side of bottom edge
                                                  vBottomMost}; // right
 
-    auto textureUV = uvs(1);
-
-    const float leftWidthNorm = outlineSize.x() / width;
-    const float rightWidthNorm = outlineSize.z() / width;
-    const float topHeightNorm = outlineSize.y() / height;
-    const float bottomHeightNorm = outlineSize.w() / height;
-
-    QVector4D uv1HorizontalTop = QVector4D{uLeftMost - leftWidthNorm, // left
-                                           uv0HorizontalTop[1] - leftWidthNorm, // right side of left edge
-                                           uv0HorizontalTop[2] + rightWidthNorm, // left side of right edge
-                                           uRightMost + rightWidthNorm}; // right
-    QVector4D uv1HorizontalBottom = QVector4D{uLeftMost - leftWidthNorm, // left
-                                              uv0HorizontalBottom[1] - leftWidthNorm, // right side of left edge
-                                              uv0HorizontalBottom[2] + rightWidthNorm, // left side of right edge
-                                              uRightMost + rightWidthNorm}; // right
-
-    uv1HorizontalTop *= textureUV.width();
-    uv1HorizontalBottom *= textureUV.width();
-    uv1HorizontalTop += QVector4D(textureUV.x(), textureUV.x(), textureUV.x(), textureUV.x());
-    uv1HorizontalBottom += QVector4D(textureUV.x(), textureUV.x(), textureUV.x(), textureUV.x());
-
-    QVector4D uv1VerticalLeft = QVector4D{vTopMost - topHeightNorm, // top
-                                          uv0VerticalLeft[1] - topHeightNorm, // bottom side of top edge
-                                          uv0VerticalLeft[2] + topHeightNorm, // top side of bottom edge
-                                          vBottomMost + topHeightNorm}; // bottom
-    QVector4D uv1VerticalRight = QVector4D{vTopMost - bottomHeightNorm, // top
-                                           uv0VerticalRight[1] - bottomHeightNorm, // bottom side of top edge
-                                           uv0VerticalRight[2] + bottomHeightNorm, // top side of bottom edge
-                                           vBottomMost + bottomHeightNorm}; // bottom
-
-    uv1VerticalLeft *= textureUV.height();
-    uv1VerticalRight *= textureUV.height();
-    uv1VerticalLeft += QVector4D(textureUV.y(), textureUV.y(), textureUV.y(), textureUV.y());
-    uv1VerticalRight += QVector4D(textureUV.y(), textureUV.y(), textureUV.y(), textureUV.y());
-
     // Left-Top
     m_vertices[0].position = QVector2D(left, top);
     m_vertices[1].position = QVector2D(left, top + leftTopHeight);
@@ -322,11 +244,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[2].texture0 = QVector2D(uv0HorizontalTop[1], uv0VerticalLeft[0]);
     m_vertices[3].texture0 = QVector2D(uv0HorizontalTop[1], uv0VerticalLeft[1]);
 
-    m_vertices[0].texture1 = QVector2D(uv1HorizontalTop[0], uv1VerticalLeft[0]);
-    m_vertices[1].texture1 = QVector2D(uv1HorizontalTop[0], uv1VerticalLeft[1]);
-    m_vertices[2].texture1 = QVector2D(uv1HorizontalTop[1], uv1VerticalLeft[0]);
-    m_vertices[3].texture1 = QVector2D(uv1HorizontalTop[1], uv1VerticalLeft[1]);
-
     // Top
     m_vertices[4].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
     m_vertices[5].position = QVector2D(right - rightTopWidth, top);
@@ -335,10 +252,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[4].texture0 = QVector2D(uv0HorizontalTop[1], uv0VerticalLeft[1]);
     m_vertices[5].texture0 = QVector2D(uv0HorizontalTop[2], uv0VerticalRight[0]);
     m_vertices[6].texture0 = QVector2D(uv0HorizontalTop[2], uv0VerticalRight[1]);
-
-    m_vertices[4].texture1 = QVector2D(uv1HorizontalTop[1], uv1VerticalLeft[1]);
-    m_vertices[5].texture1 = QVector2D(uv1HorizontalTop[2], uv1VerticalRight[0]);
-    m_vertices[6].texture1 = QVector2D(uv1HorizontalTop[2], uv1VerticalRight[1]);
 
     // Right-Top
     m_vertices[7].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
@@ -349,10 +262,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[8].texture0 = QVector2D(uv0HorizontalTop[3], uv0VerticalRight[1]);
     m_vertices[9].texture0 = QVector2D(uv0HorizontalTop[3], uv0VerticalRight[0]);
 
-    m_vertices[7].texture1 = QVector2D(uv1HorizontalTop[2], uv1VerticalRight[1]);
-    m_vertices[8].texture1 = QVector2D(uv1HorizontalTop[3], uv1VerticalRight[1]);
-    m_vertices[9].texture1 = QVector2D(uv1HorizontalTop[3], uv1VerticalRight[0]);
-
     // Left
     m_vertices[10].position = QVector2D(left, bottom - leftBottomHeight);
     m_vertices[11].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
@@ -361,10 +270,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[10].texture0 = QVector2D(uv0HorizontalBottom[0], uv0VerticalLeft[2]);
     m_vertices[11].texture0 = QVector2D(uv0HorizontalTop[1], uv0VerticalLeft[1]);
     m_vertices[12].texture0 = QVector2D(uv0HorizontalBottom[1], uv0VerticalLeft[2]);
-
-    m_vertices[10].texture1 = QVector2D(uv1HorizontalBottom[0], uv1VerticalLeft[2]);
-    m_vertices[11].texture1 = QVector2D(uv1HorizontalTop[1], uv1VerticalLeft[1]);
-    m_vertices[12].texture1 = QVector2D(uv1HorizontalBottom[1], uv1VerticalLeft[2]);
 
     // Left-Bottom
     m_vertices[13].position = QVector2D(left, bottom);
@@ -375,10 +280,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[14].texture0 = QVector2D(uv0HorizontalBottom[1], uv0VerticalLeft[3]);
     m_vertices[15].texture0 = QVector2D(uv0HorizontalBottom[1], uv0VerticalLeft[2]);
 
-    m_vertices[13].texture1 = QVector2D(uv1HorizontalBottom[0], uv1VerticalLeft[3]);
-    m_vertices[14].texture1 = QVector2D(uv1HorizontalBottom[1], uv1VerticalLeft[3]);
-    m_vertices[15].texture1 = QVector2D(uv1HorizontalBottom[1], uv1VerticalLeft[2]);
-
     // Right
     m_vertices[16].position = QVector2D(right - rightTopWidth, top + rightTopHeight);
     m_vertices[17].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
@@ -387,10 +288,6 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[16].texture0 = QVector2D(uv0HorizontalTop[2], uv0VerticalRight[1]);
     m_vertices[17].texture0 = QVector2D(uv0HorizontalBottom[2], uv0VerticalRight[2]);
     m_vertices[18].texture0 = QVector2D(uv0HorizontalBottom[3], uv0VerticalRight[2]);
-
-    m_vertices[16].texture1 = QVector2D(uv1HorizontalTop[2], uv1VerticalRight[1]);
-    m_vertices[17].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[2]);
-    m_vertices[18].texture1 = QVector2D(uv1HorizontalBottom[3], uv1VerticalRight[2]);
 
     // Right-Bottom
     m_vertices[19].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
@@ -401,19 +298,12 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[20].texture0 = QVector2D(uv0HorizontalBottom[2], uv0VerticalRight[3]);
     m_vertices[21].texture0 = QVector2D(uv0HorizontalBottom[3], uv0VerticalRight[3]);
 
-    m_vertices[19].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[2]);
-    m_vertices[20].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[3]);
-    m_vertices[21].texture1 = QVector2D(uv1HorizontalBottom[3], uv1VerticalRight[3]);
-
     // Bottom
     m_vertices[22].position = QVector2D(left + leftBottomWidth, bottom - leftBottomHeight);
     m_vertices[23].position = QVector2D(right - rightBottomWidth, bottom - rightBottomHeight);
 
     m_vertices[22].texture0 = QVector2D(uv0HorizontalBottom[1], uv0VerticalLeft[2]);
     m_vertices[23].texture0 = QVector2D(uv0HorizontalBottom[2], uv0VerticalRight[2]);
-
-    m_vertices[22].texture1 = QVector2D(uv1HorizontalBottom[1], uv1VerticalLeft[2]);
-    m_vertices[23].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[2]);
 
     // Center
     m_vertices[24].position = QVector2D(left + leftTopWidth, top + leftTopHeight);
@@ -425,47 +315,41 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     m_vertices[25].texture0 = QVector2D(uv0HorizontalBottom[1], uv0VerticalLeft[2]);
     m_vertices[26].texture0 = QVector2D(uv0HorizontalTop[2], uv0VerticalRight[1]);
     m_vertices[27].texture0 = QVector2D(uv0HorizontalBottom[2], uv0VerticalRight[2]);
-
-    m_vertices[24].texture1 = QVector2D(uv1HorizontalTop[1], uv1VerticalLeft[1]);
-    m_vertices[25].texture1 = QVector2D(uv1HorizontalBottom[1], uv1VerticalLeft[2]);
-    m_vertices[26].texture1 = QVector2D(uv1HorizontalTop[2], uv1VerticalRight[1]);
-    m_vertices[27].texture1 = QVector2D(uv1HorizontalBottom[2], uv1VerticalRight[2]);
 }
 
-void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderPropertyGroup *border, const QColor &center)
+void OutlineBorderRectangleNode::updateBorderColors(const Union::Properties::BorderPropertyGroup *border)
 {
     auto borderColor = [](auto border) {
         return (border ? border->color().value_or(Union::Color{}) : Union::Color{}).toQColor();
     };
 
-    auto left = ShaderNode::toPremultiplied(borderColor(border->left()));
-    auto right = ShaderNode::toPremultiplied(borderColor(border->right()));
-    auto top = ShaderNode::toPremultiplied(borderColor(border->top()));
-    auto bottom = ShaderNode::toPremultiplied(borderColor(border->bottom()));
+    auto left = toVector4D(ShaderNode::toPremultiplied(borderColor(border->left())));
+    auto right = toVector4D(ShaderNode::toPremultiplied(borderColor(border->right())));
+    auto top = toVector4D(ShaderNode::toPremultiplied(borderColor(border->top())));
+    auto bottom = toVector4D(ShaderNode::toPremultiplied(borderColor(border->bottom())));
 
-    updateColors(&Vertex::border, left, right, top, bottom, center);
+    updateColors(&Vertex::border, left, right, top, bottom);
 }
 
-void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlinePropertyGroup *outline, const QColor &center)
+void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::OutlinePropertyGroup *outline)
 {
     auto outlineColor = [](auto outline) {
         return (outline ? outline->color().value_or(Union::Color{}) : Union::Color{}).toQColor();
     };
 
-    auto left = ShaderNode::toPremultiplied(outlineColor(outline->left()));
-    auto right = ShaderNode::toPremultiplied(outlineColor(outline->right()));
-    auto top = ShaderNode::toPremultiplied(outlineColor(outline->top()));
-    auto bottom = ShaderNode::toPremultiplied(outlineColor(outline->bottom()));
+    auto left = toVector4D(ShaderNode::toPremultiplied(outlineColor(outline->left())));
+    auto right = toVector4D(ShaderNode::toPremultiplied(outlineColor(outline->right())));
+    auto top = toVector4D(ShaderNode::toPremultiplied(outlineColor(outline->top())));
+    auto bottom = toVector4D(ShaderNode::toPremultiplied(outlineColor(outline->bottom())));
 
-    updateColors(&Vertex::outline, left, right, top, bottom, center);
+    updateColors(&Vertex::outline, left, right, top, bottom);
 }
 
-void OutlineBorderRectangleNode::updateColors(QColor(Vertex::*destination),
-                                              const QColor &left,
-                                              const QColor &right,
-                                              const QColor &top,
-                                              const QColor &bottom,
-                                              const QColor &center)
+void OutlineBorderRectangleNode::updateColors(QVector4D(Vertex::*destination),
+                                              const QVector4D &left,
+                                              const QVector4D &right,
+                                              const QVector4D &top,
+                                              const QVector4D &bottom)
 {
     // Left-Top
     m_vertices[0].*destination = mix(left, top);
@@ -506,10 +390,4 @@ void OutlineBorderRectangleNode::updateColors(QColor(Vertex::*destination),
     // Bottom
     m_vertices[22].*destination = bottom;
     m_vertices[23].*destination = bottom;
-
-    // Center
-    m_vertices[24].*destination = center;
-    m_vertices[25].*destination = center;
-    m_vertices[26].*destination = center;
-    m_vertices[27].*destination = center;
 }

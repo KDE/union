@@ -15,9 +15,8 @@ public:
     OutlineBorderRectangleNode();
 
     QRectF m_itemRect;
-    Union::Properties::BackgroundPropertyGroup *m_background;
-    Union::Properties::BorderPropertyGroup *m_border;
-    Union::Properties::OutlinePropertyGroup *m_outline;
+    Union::Properties::BorderPropertyGroup *m_border = nullptr;
+    Union::Properties::OutlinePropertyGroup *m_outline = nullptr;
     QVector4D m_radius;
     QQuickWindow *m_window = nullptr;
 
@@ -30,15 +29,14 @@ private:
     struct Vertex {
         QVector2D position;
         QVector2D texture0;
-        QVector2D texture1;
-        QColor border;
-        QColor outline;
+        QVector4D border;
+        QVector4D outline;
     };
 
     void updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize);
-    void updateBorderColors(const Union::Properties::BorderPropertyGroup *border, const QColor &center);
-    void updateOutlineColors(const Union::Properties::OutlinePropertyGroup *border, const QColor &center);
-    void updateColors(QColor(Vertex::*destination), const QColor &left, const QColor &right, const QColor &top, const QColor &bottom, const QColor &center);
+    void updateBorderColors(const Union::Properties::BorderPropertyGroup *border);
+    void updateOutlineColors(const Union::Properties::OutlinePropertyGroup *border);
+    void updateColors(QVector4D(Vertex::*destination), const QVector4D &left, const QVector4D &right, const QVector4D &top, const QVector4D &bottom);
 
     std::array<Vertex, 28> m_vertices;
 };
