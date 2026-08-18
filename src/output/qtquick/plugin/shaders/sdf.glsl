@@ -208,12 +208,12 @@ const lowp float sdf_default_smoothing = 0.625;
 //
 lowp vec4 sdf_render(in lowp float sdf, in lowp vec4 sourceColor, in lowp vec4 sdfColor, in lowp float alpha, in lowp float smoothing)
 {
+    // This uses max to prevent a divide by zero when fwidth returns 0.0.
+    highp float g = smoothing * max(fwidth(sdf), 0.0001);
 #ifdef ENABLE_LOWPOWER
-    lowp float g = smoothing * fwidth(sdf);
     return mix(sourceColor, sdfColor, alpha * (1.0 - clamp(sdf / g, 0.0, 1.0)));
 #else
-    lowp float g = fwidth(sdf);
-    return mix(sourceColor, sdfColor, alpha * (1.0 - smoothstep(-smoothing * g, smoothing * g, sdf)));
+    return mix(sourceColor, sdfColor, alpha * (1.0 - smoothstep(-g, g, sdf)));
 #endif
 }
 
