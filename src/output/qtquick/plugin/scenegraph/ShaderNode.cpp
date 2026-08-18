@@ -140,6 +140,11 @@ void ShaderNode::setUniformBufferSize(qsizetype size)
     m_shaderMaterial->setUniformBufferSize(size);
 }
 
+void ShaderNode::setUniformBufferComponents(qsizetype count)
+{
+    setUniformBufferSize(sizeof(float) * count);
+}
+
 std::span<char> ShaderNode::uniformData()
 {
     if (!m_shaderMaterial) {

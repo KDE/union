@@ -81,12 +81,19 @@ public:
     void setShader(const QString &shader);
 
     /*!
-     * Set the size of buffer used by the material for storing uniform values.
+     * Set the size of the buffer used by the material for storing uniform values.
      *
      * The given size is in bytes. Note that you should account for all uniforms
      * in your shader's uniform buffer.
      */
     void setUniformBufferSize(qsizetype size);
+    /*!
+     * Set the size of the uniform buffer used by the material to a number of components.
+     *
+     * A "component" is a single float. This effectively calls
+     * \c{setUniformBufferSize(count * sizeof(float))}.
+     */
+    void setUniformBufferComponents(qsizetype count);
 
     /*!
      * A writeable view of the material's uniform data buffer.
