@@ -1,24 +1,28 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
-// SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #pragma once
 
-#include <properties/StylePropertyGroup.h>
+#include <properties/ImagePropertyGroup.h>
 
-#include "UnionNode.h"
+#include "ShaderNode.h"
 
-class RectangleNode : public HierarchyNode
+class RectangleNode : public ShaderNode
 {
 public:
     RectangleNode();
 
-    Union::Properties::StylePropertyGroup style() const;
-    void setStyle(const Union::Properties::StylePropertyGroup &newStyle);
+    void setColor(const QColor &color);
+    void setRadius(const QVector4D &radius);
+    void setImage(Union::Properties::ImagePropertyGroup *image);
+    void setWindow(QQuickWindow *window);
 
-    void update(QQuickWindow *window) override;
+    void update() override;
 
 private:
-    void buildNodeHierarchy() override;
-
-    Union::Properties::StylePropertyGroup m_style;
+    bool m_changed = true;
+    QColor m_color;
+    QVector4D m_radius;
+    Union::Properties::ImagePropertyGroup *m_image = nullptr;
+    QQuickWindow *m_window = nullptr;
 };

@@ -72,3 +72,8 @@ add_variants("styledrectangle" INPUT styledrectangle VARIANTS
     "border-outline-texture-invertedmask"
 )
 
+add_variants("rectangle" INPUT rectangle VARIANTS
+    "texture"
+    "mask"
+    "invertedmask"
+)

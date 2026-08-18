@@ -44,6 +44,8 @@ target_sources(UnionQuickImpl PRIVATE
     scenegraph/RectangleShadowNode.h
     scenegraph/OutlineBorderRectangleNode.cpp
     scenegraph/OutlineBorderRectangleNode.h
+    scenegraph/RectangleNode.cpp
+    scenegraph/RectangleNode.h
 )
 
 target_sources(UnionQuickImplplugin PRIVATE
