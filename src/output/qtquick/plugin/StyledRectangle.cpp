@@ -3,12 +3,7 @@
 
 #include "StyledRectangle.h"
 
-#include <QQuickWindow>
-
-#include <properties/BackgroundPropertyGroup.h>
-#include <properties/LinePropertyGroup.h>
-#include <properties/ShadowPropertyGroup.h>
-
+#include "PixelAlignment.h"
 #include "StyleRule.h"
 
 #include "scenegraph/OutlineBorderRectangleNode.h"
@@ -24,6 +19,7 @@ StyledRectangle::StyledRectangle(QQuickItem *parent)
     : QQuickItem(parent)
 {
     setFlag(QQuickItem::ItemHasContents);
+    setFlag(QQuickItem::ItemObservesViewport);
 }
 
 QuickStyle *StyledRectangle::style() const
@@ -64,6 +60,13 @@ bool StyledRectangle::event(QEvent *event)
     }
 
     return QQuickItem::event(event);
+}
+
+void StyledRectangle::itemChange(QQuickItem::ItemChange change, [[maybe_unused]] const QQuickItem::ItemChangeData &value)
+{
+    if (change == QQuickItem::ItemTransformHasChanged) {
+        update();
+    }
 }
 
 QSGNode *StyledRectangle::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData * /*data*/)
@@ -165,7 +168,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGro
         }
     }
 
-    auto rect = boundingRect();
+    auto rect = alignRect(boundingRect(), this);
     auto cornerSizes = style->corners() ? style->corners()->radii() : CornersPropertyGroup::CornerRadii{};
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.

@@ -40,6 +40,7 @@ public:
 
 protected:
     bool event(QEvent *event) override;
+    void itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChangeData &value) override;
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *data) override;
 
 private:
