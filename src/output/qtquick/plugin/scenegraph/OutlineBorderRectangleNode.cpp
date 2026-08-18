@@ -176,27 +176,23 @@ void OutlineBorderRectangleNode::updateGeometry(QSGGeometry *geometry)
 
 void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize)
 {
-    // Make sure to reserve 1px extra on each side to account for any overflow
-    // in the SDF shaders.
+    // Correction factor for borders so that fractional borders are properly
+    // rendered rather than cut off.
+    const float borderCorrection = 1.0;
 
-    // const float dpr = m_window ? m_window->devicePixelRatio() : 1.0
-
-    const float horizontalCorrection = 1.0;
-    const float verticalCorrection = 1.0;
-
-    const float width = rect.width() + horizontalCorrection;
-    const float height = rect.height() + verticalCorrection;
+    const float width = rect.width();
+    const float height = rect.height();
 
     const float left = rect.x() - outlineSize.x();
-    const float right = rect.x() + width + outlineSize.z();
+    const float right = rect.x() + rect.width() + outlineSize.z();
     const float top = rect.y() - outlineSize.y();
-    const float bottom = rect.y() + height + outlineSize.w();
+    const float bottom = rect.y() + rect.height() + outlineSize.w();
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.
-    const float leftWidth = outlineSize.x() + borderSize.x();
-    const float rightWidth = outlineSize.z() + borderSize.z() + horizontalCorrection;
-    const float topHeight = outlineSize.y() + borderSize.y();
-    const float bottomHeight = outlineSize.w() + borderSize.w() + verticalCorrection;
+    const float leftWidth = outlineSize.x() + borderSize.x() + borderCorrection;
+    const float rightWidth = outlineSize.z() + borderSize.z() + borderCorrection;
+    const float topHeight = outlineSize.y() + borderSize.y() + borderCorrection;
+    const float bottomHeight = outlineSize.w() + borderSize.w() + borderCorrection;
 
     const float leftTopWidth = std::max(leftWidth, std::min(radii.w(), width / 2));
     const float leftBottomWidth = std::max(leftWidth, std::min(radii.z(), width / 2));
@@ -208,14 +204,10 @@ void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVecto
     const float rightTopHeight = std::max(topHeight, std::min(radii.y(), height / 2));
     const float rightBottomHeight = std::max(bottomHeight, std::min(radii.x(), height / 2));
 
-    const float uCorrection = horizontalCorrection / width;
-    const float vCorrection = verticalCorrection / height;
-
-    const float uLeftMost = 0.0;
-    const float uRightMost = 1.0f + uCorrection;
-    const float vTopMost = 0.0;
-    const float vBottomMost = 1.0f + vCorrection;
-
+    const float uLeftMost = 0.0f;
+    const float uRightMost = 1.0f;
+    const float vTopMost = 0.0f;
+    const float vBottomMost = 1.0f;
     const QVector4D uv0HorizontalTop = QVector4D{uLeftMost, // left
                                                  float(leftTopWidth / width), // right side of left edge
                                                  uRightMost - float(rightTopWidth / width), // left side of right edge
