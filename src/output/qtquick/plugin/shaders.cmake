@@ -30,27 +30,31 @@ macro(add_shaders ARG_NAME)
     install(TARGETS ${_targets} EXPORT KirigamiTargets ${KF_INSTALL_TARGETS_DEFAULT_ARGS})
 endmacro()
 
-add_shaders("rectangleshadow" INPUT rectangleshadow)
+macro(add_variants ARG_NAME)
+    cmake_parse_arguments(ARG "" "INPUT" "VARIANTS" ${ARGV})
 
-macro(name_to_define ARG_NAME ARG_OUTPUT)
-    if ("${ARG_NAME}" STREQUAL "border")
-        set(${ARG_OUTPUT} ENABLE_BORDER=1)
-    endif()
-    if ("${ARG_NAME}" STREQUAL "outline")
-        set(${ARG_OUTPUT} ENABLE_OUTLINE=1)
-    endif()
-    if ("${ARG_NAME}" STREQUAL "texture")
-        set(${ARG_OUTPUT} ENABLE_TEXTURE=1)
-    endif()
-    if ("${ARG_NAME}" STREQUAL "mask")
-        set(${ARG_OUTPUT} ENABLE_MASK=1)
-    endif()
-    if ("${ARG_NAME}" STREQUAL "invertedmask")
-        set(${ARG_OUTPUT} ENABLE_INVERTEDMASK=1)
-    endif()
+    add_shaders("${ARG_NAME}" INPUT "${ARG_NAME}")
+
+    message(STATUS ${ARG_VARIANTS})
+    foreach(_variant ${ARG_VARIANTS})
+        string(REPLACE "-" ";" _parts "${_variant}")
+
+        set(_defines "")
+        foreach(_part ${_parts})
+            string(TOUPPER "${_part}" _part_uc)
+            list(APPEND _defines "ENABLE_${_part_uc}=1")
+        endforeach()
+
+        add_shaders("${ARG_NAME}-${_variant}"
+            INPUT "${ARG_NAME}"
+            DEFINES ${_defines}
+        )
+    endforeach()
 endmacro()
 
-set(_variants
+add_shaders("rectangleshadow" INPUT rectangleshadow)
+
+add_variants("styledrectangle" INPUT styledrectangle VARIANTS
     "border"
     "border-outline"
     "border-texture"
@@ -68,19 +72,3 @@ set(_variants
     "border-outline-texture-invertedmask"
 )
 
-add_shaders("styledrectangle" INPUT styledrectangle)
-
-foreach(_variant ${_variants})
-    string(REPLACE "-" ";" _parts "${_variant}")
-
-    set(_defines "")
-    foreach(_part ${_parts})
-        name_to_define("${_part}" _define)
-        list(APPEND _defines "${_define}")
-    endforeach()
-
-    add_shaders("styledrectangle-${_variant}"
-        INPUT styledrectangle
-        DEFINES ${_defines}
-    )
-endforeach()
