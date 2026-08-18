@@ -47,6 +47,9 @@ private:
     QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::StylePropertyGroup *style);
 
     QuickStyle *m_style = nullptr;
+    int m_shadowCount = 0;
+    int m_backgroundCount = 0;
+    bool m_borderOutlineEnabled = false;
 };
 
 }

@@ -125,28 +125,56 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGro
         node = new QSGNode{};
     }
 
-    auto rect = boundingRect();
+    auto shadows = style->shadow() ? QList{style->shadow()} : QList<ShadowPropertyGroup *>{};
+    auto backgrounds = style->background() ? QList{style->background()} : QList<BackgroundPropertyGroup *>{};
+    auto border = style->border();
+    auto outline = style->outline();
+    auto borderOutlineEnabled = border || outline;
 
+    auto expectedChildCount = shadows.size() + backgrounds.size() + (borderOutlineEnabled ? 1 : 0);
+    auto shadowsChanged = shadows.size() != m_shadowCount;
+    auto backgroundsChanged = backgrounds.size() != m_backgroundCount;
+
+    if (node->childCount() != expectedChildCount || shadowsChanged || backgroundsChanged || borderOutlineEnabled != m_borderOutlineEnabled) {
+        while (node->childCount() > 0) {
+            auto childNode = node->firstChild();
+            node->removeChildNode(childNode);
+            delete childNode;
+        }
+
+        m_shadowCount = shadows.size();
+        m_backgroundCount = backgrounds.size();
+        m_borderOutlineEnabled = bool(border || outline);
+
+        for (int i = 0; i < m_shadowCount; ++i) {
+            auto shadowNode = new RectangleShadowNode{};
+            shadowNode->setFlag(QSGNode::OwnedByParent, true);
+            node->appendChildNode(shadowNode);
+        }
+
+        for (int i = 0; i < m_backgroundCount; ++i) {
+            auto rectangleNode = new RectangleNode{};
+            rectangleNode->setFlag(QSGNode::OwnedByParent, true);
+            node->appendChildNode(rectangleNode);
+        }
+
+        if (m_borderOutlineEnabled) {
+            auto borderNode = new OutlineBorderRectangleNode{};
+            borderNode->setFlag(QSGNode::OwnedByParent, true);
+            node->appendChildNode(borderNode);
+        }
+    }
+
+    auto rect = boundingRect();
     auto cornerSizes = style->corners() ? style->corners()->radii() : CornersPropertyGroup::CornerRadii{};
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.
     auto radii = QVector4D{float(cornerSizes.bottomRight), float(cornerSizes.topRight), float(cornerSizes.bottomLeft), float(cornerSizes.topLeft)};
 
-    OutlineBorderRectangleNode *borderNode = nullptr;
-
-    // Render the shadow as a separate node, followed by the actual rectangle.
-    // This is done because the shadow geometry can vary greatly from the
-    // rectangle geometry and separating them into different nodes made the
-    // whole thing a lot simpler.
-    if (auto shadow = style->shadow(); shadow && !shadow->isEmpty()) {
-        if (node->childCount() == 0) {
-            node->appendChildNode(new RectangleShadowNode{});
-            node->appendChildNode(new OutlineBorderRectangleNode{});
-        } else if (node->childCount() == 1) {
-            node->prependChildNode(new RectangleShadowNode{});
-        }
-
-        auto shadowNode = static_cast<RectangleShadowNode *>(node->firstChild());
+    int i = 0;
+    for (; i < m_shadowCount; ++i) {
+        auto shadow = shadows.at(i);
+        auto shadowNode = static_cast<RectangleShadowNode *>(node->childAtIndex(i));
         shadowNode->setItemRect(rect);
         shadowNode->setRadius(radii);
         shadowNode->setBlur(shadow->blur().value_or(0.0));
@@ -154,27 +182,28 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGro
         shadowNode->setOffset(shadow->offset() ? shadow->offset()->toVector2D() : QVector2D{});
         shadowNode->setColor(shadow->color().value_or(Union::Color{}).toQColor());
         shadowNode->update();
-
-        borderNode = static_cast<OutlineBorderRectangleNode *>(node->lastChild());
-    } else {
-        if (node->childCount() == 0) {
-            node->appendChildNode(new OutlineBorderRectangleNode{});
-        } else if (node->childCount() > 1) {
-            auto shadowNode = node->firstChild();
-            node->removeChildNode(shadowNode);
-            delete shadowNode;
-        }
-
-        borderNode = static_cast<OutlineBorderRectangleNode *>(node->firstChild());
     }
 
-    borderNode->m_itemRect = rect;
-    borderNode->m_background = style->background();
-    borderNode->m_border = style->border();
-    borderNode->m_outline = style->outline();
-    borderNode->m_radius = radii;
-    borderNode->m_window = window();
-    borderNode->update();
+    for (; i < m_shadowCount + m_backgroundCount; ++i) {
+        auto background = backgrounds.at(i - m_shadowCount);
+        auto backgroundNode = static_cast<RectangleNode *>(node->childAtIndex(i));
+        backgroundNode->setRect(rect);
+        backgroundNode->setRadius(radii);
+        backgroundNode->setColor(background->color().value_or(Color{}).toQColor());
+        backgroundNode->setImage(background->image());
+        backgroundNode->setWindow(window());
+        backgroundNode->update();
+    }
+
+    if (m_borderOutlineEnabled) {
+        auto borderNode = static_cast<OutlineBorderRectangleNode *>(node->childAtIndex(i));
+        borderNode->m_itemRect = rect;
+        borderNode->m_border = style->border();
+        borderNode->m_outline = style->outline();
+        borderNode->m_radius = radii;
+        borderNode->m_window = window();
+        borderNode->update();
+    }
 
     return node;
 }
