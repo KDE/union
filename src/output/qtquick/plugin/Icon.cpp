@@ -9,6 +9,7 @@
 
 #include <StyleRegistry.h>
 
+#include "PixelAlignment.h"
 #include "QuickStyle.h"
 
 #include "qtquick_logging.h"
@@ -182,10 +183,9 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
     auto dpr = renderWindow->devicePixelRatio();
 
     auto bounds = boundingRect();
-    auto centerPos = mapToScene(QPointF{std::round(bounds.x() + (bounds.width() - m_iconSize.width()) / 2.0), //
-                                        std::round(bounds.y() + (bounds.height() - m_iconSize.height()) / 2.0)});
-    auto correctedPos = mapFromScene(QPointF{std::round(centerPos.x() * dpr) / dpr, std::round(centerPos.y() * dpr) / dpr});
-    imageNode->setRect(QRectF{correctedPos, m_iconSize.toSizeF()});
+    auto centerPos = QPointF{std::round(bounds.x() + (bounds.width() - m_iconSize.width()) / 2.0), //
+                             std::round(bounds.y() + (bounds.height() - m_iconSize.height()) / 2.0)};
+    imageNode->setRect(QRectF{alignPoint(centerPos, this), m_iconSize.toSizeF()});
     imageNode->setOwnsTexture(true);
 
     if (smooth()) {
