@@ -23,6 +23,7 @@ class PlatformPlugin;
  */
 class UNION_EXPORT PackageHandler
 {
+    Q_GADGET
 public:
     /*!
      * \enum PackageHandler::Error
@@ -64,20 +65,22 @@ public:
     };
 
     /*!
-     * \enum PackageHandler::PackageFilter
+     * \enum PackageHandler::OperationFlag
      *
-     * What kind of filtering to perform on the list of all packages.
+     * Flags for various package operations.
      *
-     * \value Default
-     *      Use the default, which excludes style packages explicitly marked as
-     *      hidden.
      * \value IncludeHidden
-     *      Include hidden packages.
+     *      Include hidden packages in listings.
+     * \value SkipVersionCheck
+     *      Skip the version check for updates and install even if the package
+     *      is the same or an older version.
      */
-    enum class PackageFilter {
-        Default,
-        IncludeHidden,
+    enum class OperationFlag {
+        IncludeHidden = 1 << 0,
+        SkipVersionCheck = 1 << 1,
     };
+    Q_DECLARE_FLAGS(OperationFlags, OperationFlag)
+    Q_FLAG(OperationFlags)
 
     /*!
      * A struct containing data for the create() method.
@@ -104,7 +107,7 @@ public:
     /*!
      * Returns a list of all installed packages.
      */
-    QList<StylePackage> allPackages(PackageFilter filter = PackageFilter::Default);
+    QList<StylePackage> allPackages(OperationFlags flags = {});
 
     /*!
      * Create a new package.
@@ -138,13 +141,14 @@ public:
      * return Error::None if the update was successful. It will return
      * Error::NotInstalled if no installed package with the same ID could be
      * found. It will return Error::NotAnUpdate if the given package is not
-     * considered to be an update for the installed package.
+     * considered to be an update for the installed package and \a ignore is not
+     * set to IgnoreVersion::Ignore.
      *
      * Updating happens by first uninstalling the existing package and then
      * installing \p updatePackage. Any error that occurs during these steps
      * will cause the update to fail and will return the error.
      */
-    Error update(const StylePackage &updatePackage);
+    Error update(const StylePackage &updatePackage, OperationFlags flags = {});
 
 private:
     class Private;
@@ -152,3 +156,5 @@ private:
 };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::PackageHandler::OperationFlags);

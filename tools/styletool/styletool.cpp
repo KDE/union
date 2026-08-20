@@ -172,12 +172,12 @@ int handleListCommand([[maybe_unused]] const QStringList &arguments)
 
     auto handler = Union::StyleRegistry::instance()->packageHandler();
 
-    auto packageFilter = Union::PackageHandler::PackageFilter::Default;
+    auto flags = Union::PackageHandler::OperationFlags{};
     if (parser->isSet(u"hidden"_s)) {
-        packageFilter = Union::PackageHandler::PackageFilter::IncludeHidden;
+        flags = Union::PackageHandler::OperationFlag::IncludeHidden;
     }
 
-    auto packages = handler->allPackages(packageFilter);
+    auto packages = handler->allPackages(flags);
     if (packages.isEmpty()) {
         std::cerr << "No styles could be found.\n";
         return 1;
@@ -210,6 +210,7 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
     auto parser = parseCommand(u"update"_s, arguments, [](QCommandLineParser *parser) {
         parser->setApplicationDescription(u"Update a style."_s);
         parser->addPositionalArgument(u"<path>"_s, u"The path to the style to update."_s);
+        parser->addOption({u"force"_s, u"Force update even if the style has the same version."_s});
     });
 
     if (parser->positionalArguments().size() != 1) {
@@ -223,12 +224,17 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
         return printPackageError(package);
     }
 
+    auto flags = Union::PackageHandler::OperationFlags{};
+    if (parser->isSet(u"force"_s)) {
+        flags |= Union::PackageHandler::OperationFlag::SkipVersionCheck;
+    }
+
     auto handler = Union::StyleRegistry::instance()->packageHandler();
-    if (auto result = handler->update(package); result != Union::PackageHandler::Error::None) {
+    if (auto result = handler->update(package, flags); result != Union::PackageHandler::Error::None) {
         return printHandlerError(package, result);
     }
 
-    std::cout << "Updated style " << qPrintable(package.id()) << " to version " << qPrintable(package.version());
+    std::cout << "Updated style " << qPrintable(package.id()) << " to version " << qPrintable(package.version()) << "\n";
     return 0;
 }
 

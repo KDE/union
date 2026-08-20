@@ -48,7 +48,7 @@ StylePackage PackageHandler::package(const QString &id)
     return StylePackage{};
 }
 
-QList<StylePackage> PackageHandler::allPackages(PackageFilter filter)
+QList<StylePackage> PackageHandler::allPackages(OperationFlags flags)
 {
     QSet<QString> seenPackages;
     QList<StylePackage> result;
@@ -62,7 +62,7 @@ QList<StylePackage> PackageHandler::allPackages(PackageFilter filter)
 
             auto package = StylePackage{entry.path()};
             if (package.isValid() && !seenPackages.contains(package.id())) {
-                if (filter != PackageFilter::IncludeHidden && package.isHidden()) {
+                if (flags.testFlag(OperationFlag::IncludeHidden) && package.isHidden()) {
                     continue;
                 }
 
@@ -182,7 +182,7 @@ PackageHandler::Error PackageHandler::uninstall(const StylePackage &package)
     return Error::None;
 }
 
-PackageHandler::Error PackageHandler::update(const StylePackage &updatePackage)
+PackageHandler::Error PackageHandler::update(const StylePackage &updatePackage, OperationFlags flags)
 {
     if (!updatePackage.isValid()) {
         return Error::InvalidPackage;
@@ -193,8 +193,10 @@ PackageHandler::Error PackageHandler::update(const StylePackage &updatePackage)
         return Error::NotInstalled;
     }
 
-    if (installedPackage.version() == updatePackage.version()) {
-        return Error::NotAnUpdate;
+    if (!flags.testFlag(OperationFlag::SkipVersionCheck)) {
+        if (installedPackage.version() == updatePackage.version()) {
+            return Error::NotAnUpdate;
+        }
     }
 
     if (auto result = uninstall(installedPackage); result != Error::None) {
