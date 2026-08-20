@@ -45,10 +45,20 @@ T.ScrollBar {
 
     minimumSize: horizontal ? height / width : width / height
 
-    Binding on visible {
-        delayed: true
-        restoreMode: Binding.RestoreBindingOrValue
-        value: control.size < 1.0 && control.size > 0 && control.policy !== T.ScrollBar.AlwaysOff && control.parent !== null
+    // Use an explicit binding since an implicit binding gets broken when using
+    // ScrollBar with ScrollView.
+    Binding {
+        target: control
+        property: "visible"
+        value: {
+            if (policy === T.ScrollBar.AlwaysOff) {
+                return false
+            } else if (policy === T.ScrollBar.AlwaysOn) {
+                return true
+            } else {
+                return size > 0.0 && size < 1.0
+            }
+        }
     }
 
     contentItem: Union.StyledRectangle {

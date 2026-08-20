@@ -18,8 +18,30 @@ T.ScrollView {
         enabled: control.enabled
     }
     Union.Element.hints: [
-        Union.ElementHint { name: "horizontal-scroll"; when: control.ScrollBar.horizontal.visible },
-        Union.ElementHint { name: "vertical-scroll"; when: control.ScrollBar.vertical.visible },
+        Union.ElementHint {
+            name: "horizontal-scroll";
+            when: {
+                if (control.ScrollBar.horizontal.policy === T.ScrollBar.AlwaysOff) {
+                    return false
+                } else if (control.ScrollBar.horizontal.policy === T.ScrollBar.AlwaysOn) {
+                    return true
+                } else {
+                    return control.contentWidth > control.availableWidth
+                }
+            }
+        },
+        Union.ElementHint {
+            name: "vertical-scroll";
+            when: {
+                if (control.ScrollBar.vertical.policy === T.ScrollBar.AlwaysOff) {
+                    return false
+                } else if (control.ScrollBar.vertical.policy === T.ScrollBar.AlwaysOn) {
+                    return true
+                } else {
+                    return control.contentHeight > control.availableHeight
+                }
+            }
+        },
         Union.ElementHint { name: "framed-background"; when: control.Union.StyleHints.showFramedBackground },
     ]
 
@@ -46,6 +68,7 @@ T.ScrollView {
         y: control.topPadding
         height: control.availableHeight
         active: control.ScrollBar.horizontal.active
+        policy: ScrollBar.AsNeeded
     }
 
     ScrollBar.horizontal: ScrollBar {
@@ -54,6 +77,7 @@ T.ScrollView {
         y: control.height - control.bottomPadding
         width: control.availableWidth
         active: control.ScrollBar.vertical.active
+        policy: ScrollBar.AsNeeded
     }
 
     data: [
