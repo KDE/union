@@ -115,6 +115,10 @@ toolbutton.raised
         icon-name: "arrow-down";
         icon-color: var(--button-active-text-color)
     }
+
+    &[display="icon-only"].with-menu > indicator {
+        visibility: hidden;
+    }
 }
 
 button,
