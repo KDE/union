@@ -24,7 +24,7 @@ public:
     qreal animationSpeedMultiplier() override;
 
 private:
-    void setSmoothScroll(bool enabled);
+    Q_SLOT void setSmoothScroll(bool enabled);
     void setAnimationSpeedMultiplier(qreal multiplier);
 
     bool m_smoothScroll = true;
