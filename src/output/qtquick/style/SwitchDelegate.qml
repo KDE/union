@@ -30,6 +30,8 @@ T.SwitchDelegate {
         Union.ElementHint { name: "inside-list"; when: control.ListView?.view },
         Union.ElementHint { name: "inside-table"; when: control.TableView?.view },
         Union.ElementHint { name: "alternating-colors"; when: control.__alternatingColors },
+        Union.ElementHint { name: "changed"; when: false },
+        Union.ElementHint { name: "last-in-list"; when: typeof index !== "undefined" && control.ListView.view && index == control.ListView.view.count - 1 },
     ]
     Union.Element.attributes: [
         P.DisplayAttribute { control: control }
