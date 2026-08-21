@@ -7,15 +7,35 @@
  * View delegates
  */
 
+:root
+{
+    --delegate-spacing: var(--medium-spacing);
+    --delegate-padding: var(--small-spacing);
+    --delegate-total-padding: 10px; /* spacing + padding */
+}
+
 itemdelegate,
 checkdelegate,
 radiodelegate,
 switchdelegate,
 swipedelegate
 {
-    padding: var(--large-spacing);
-    inset: var(--small-spacing);
-    spacing: var(--small-spacing);
+    /*
+     We want to have some separation between delegates in a list, but we cannot
+     control list spacing, nor do we want to use that since the list spacing is
+     not considered to be part of any delegate so ends up as "dead space". So we
+     use insets to "fake" the spacing. Ideally, the inset would be
+     `--delegate-spacing / 2` but doing that leads to only half the wanted space
+     at the list's top and bottom items. Since we lack first/last child support,
+     we fake it by having the spacing all at the top, except for the last item
+     in the list.
+     */
+    padding: var(--delegate-total-padding);
+    inset: var(--delegate-spacing);
+    padding-bottom: var(--delegate-padding);
+    inset-bottom: 0px;
+
+    spacing: var(--medium-spacing);
     width: var(--icon-size-small);
     height: var(--icon-size-small);
 
@@ -44,10 +64,22 @@ swipedelegate
     {
         inset: 0px;
         border-radius: 0px;
+
         &.hover-enabled {
-            inset: var(--small-spacing);
+            inset: var(--delegate-spacing);
+            inset-bottom: 0px;
             border-radius: var(--corner-radius);
+
+            &.last-in-list {
+                inset-bottom: var(--delegate-spacing);
+            }
         }
+    }
+
+    &.last-in-list
+    {
+        padding-bottom: var(--delegate-total-padding);
+        inset-bottom: var(--delegate-spacing);
     }
 
     &:hovered
