@@ -3,6 +3,7 @@
 
 #include "Icon.h"
 
+#include <QQmlFile>
 #include <QQmlProperty>
 #include <QQuickRenderControl>
 #include <QSGImageNode>
@@ -16,32 +17,6 @@
 
 using namespace Union::Quick;
 using namespace Qt::StringLiterals;
-
-// Get the smallest of the icon's availableSizes that fits in size
-QSize iconSizeForSize(const QIcon &icon, const QSize &size)
-{
-    auto availableSizes = icon.availableSizes();
-    std::ranges::sort(availableSizes, [](const QSize &first, const QSize &second) {
-        return first.width() < second.width();
-    });
-    auto smallest = availableSizes.end();
-    for (auto itr = availableSizes.begin(); itr != availableSizes.end(); ++itr) {
-        if (itr->width() > size.width() || itr->height() > size.height()) {
-            if (itr != availableSizes.begin()) {
-                smallest = itr - 1;
-            } else {
-                smallest = itr;
-            }
-            break;
-        }
-    }
-
-    if (smallest == availableSizes.end()) {
-        return QSize{};
-    } else {
-        return *smallest;
-    }
-}
 
 Icon::Icon(QQuickItem *parent)
     : QQuickItem(parent)
@@ -83,7 +58,7 @@ void Icon::setSource(const QUrl &newSource)
         return;
     }
 
-    if (!newSource.isLocalFile()) {
+    if (!QQmlFile::isLocalFile(newSource)) {
         if (newSource.isRelative()) {
             // Some code might incorrectly set icon.source to an icon name, in that case
             // treat the URL as a name.
@@ -231,7 +206,7 @@ void Icon::itemChange(QQuickItem::ItemChange change, const QQuickItem::ItemChang
 
 void Icon::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 {
-    m_iconSize = iconSizeForSize(m_icon, newGeometry.size().toSize());
+    m_iconSize = m_icon.actualSize(newGeometry.size().toSize());
     update();
 
     QQuickItem::geometryChange(newGeometry, oldGeometry);
@@ -239,13 +214,13 @@ void Icon::geometryChange(const QRectF &newGeometry, const QRectF &oldGeometry)
 
 void Icon::updatePolish()
 {
-    if (!m_source.isEmpty() && m_source.isLocalFile()) {
-        m_icon = QIcon(m_source.toLocalFile());
+    if (!m_source.isEmpty() && QQmlFile::isLocalFile(m_source)) {
+        m_icon = QIcon(QQmlFile::urlToLocalFileOrQrc(m_source));
     } else {
         m_icon = Union::StyleRegistry::instance()->platform()->platformIcon(m_name, m_color);
     }
 
-    m_iconSize = iconSizeForSize(m_icon, boundingRect().size().toSize());
+    m_iconSize = m_icon.actualSize(boundingRect().size().toSize());
     m_iconChanged = true;
     update();
 }
