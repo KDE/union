@@ -62,7 +62,7 @@ QList<StylePackage> PackageHandler::allPackages(OperationFlags flags)
 
             auto package = StylePackage{entry.path()};
             if (package.isValid() && !seenPackages.contains(package.id())) {
-                if (flags.testFlag(OperationFlag::IncludeHidden) && package.isHidden()) {
+                if (!flags.testFlag(OperationFlag::IncludeHidden) && package.isHidden()) {
                     continue;
                 }
 
