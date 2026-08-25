@@ -54,3 +54,5 @@ Comment[zh_CN]=一款旨在统一 KDE 中的各种样式系统的样式引擎 (�
 Comment[zh_TW]=開發中的樣式引擎，希望統合 KDE 的各種風格樣式化系統。
 [KDE]
 WidgetStyle=Union
+[Desktop Entry]
+Hidden=true
