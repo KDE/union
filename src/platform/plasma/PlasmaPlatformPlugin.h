@@ -26,9 +26,11 @@ public:
 private:
     Q_SLOT void setSmoothScroll(bool enabled);
     void setAnimationSpeedMultiplier(qreal multiplier);
+    void setDefaultStyle(const QString &style);
 
     bool m_smoothScroll = true;
     qreal m_animationSpeedMultiplier = 1.0;
+    QString m_defaultStyle;
     KConfigWatcher::Ptr m_kdeGlobalsWatcher;
     KConfigWatcher::Ptr m_unionSettingsWatcher;
 };

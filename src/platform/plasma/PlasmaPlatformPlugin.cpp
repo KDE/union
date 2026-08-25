@@ -13,18 +13,18 @@
 #include <KIconColors>
 #include <KRuntimePlatform>
 
-#include "unionsettings.h"
-
 using namespace Qt::StringLiterals;
+
+static const QString DefaultStyleId = u"breeze"_s;
 
 PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     : Union::PlatformPlugin(parent)
     , m_kdeGlobalsWatcher(KConfigWatcher::create(KSharedConfig::openConfig()))
-    , m_unionSettingsWatcher(KConfigWatcher::create(UnionSettings::self()->sharedConfig()))
 {
     KConfigGroup generalCfg = KConfigGroup(KSharedConfig::openConfig(), u"KDE"_s);
     m_smoothScroll = generalCfg.readEntry(u"SmoothScroll"_s, true);
     m_animationSpeedMultiplier = std::max<double>(0.0, generalCfg.readEntry(u"AnimationDurationFactor"_s, 1.0));
+    m_defaultStyle = generalCfg.readEntry(u"unionStyle"_s, DefaultStyleId);
 
     connect(m_kdeGlobalsWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
         if (group.name() == "KDE"_L1) {
@@ -35,21 +35,11 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
             if (names.contains("SmoothScroll"_ba)) {
                 setSmoothScroll(group.readEntry(u"SmoothScroll"_s, true));
             }
+
+            if (names.contains("unionStyle"_ba)) {
+                setDefaultStyle(group.readEntry(u"unionStyle"_s, DefaultStyleId));
+            }
         }
-    });
-
-    connect(m_unionSettingsWatcher.get(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
-        if (group.name() != u"General") {
-            return;
-        }
-
-        if (!names.contains("style")) {
-            return;
-        }
-
-        UnionSettings::self()->read();
-
-        sendDefaultStyleChangedEvent();
     });
 
     // Listen to smooth scroll changed events
@@ -63,13 +53,11 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
 
 QString PlasmaPlatformPlugin::defaultStyleName()
 {
-    auto styleName = UnionSettings::self()->style();
-
     // These values should really be queries by the CSS using media queries,
     // however those are currently unimplemented in cxx-rust-cssparser and will
     // take some time to implement. So until that time, we switch the default
     // style based on these values.
-    if (styleName == u"breeze") {
+    if (m_defaultStyle == u"breeze") {
         if (KRuntimePlatform::runtimePlatform().contains(u"phone"_s)) {
             return u"breeze-mobile"_s;
         }
@@ -83,7 +71,7 @@ QString PlasmaPlatformPlugin::defaultStyleName()
         }
     }
 
-    return styleName;
+    return m_defaultStyle;
 }
 
 QIcon PlasmaPlatformPlugin::platformIcon(const QString &name, const QColor &color)
@@ -126,4 +114,14 @@ void PlasmaPlatformPlugin::setAnimationSpeedMultiplier(qreal multiplier)
     m_animationSpeedMultiplier = multiplier;
     Q_EMIT animationSpeedMultiplierChanged();
     sendAnimationSpeedMultiplierChangedEvent();
+}
+
+void PlasmaPlatformPlugin::setDefaultStyle(const QString &style)
+{
+    if (m_defaultStyle == style) {
+        return;
+    }
+
+    m_defaultStyle = style;
+    sendDefaultStyleChangedEvent();
 }
