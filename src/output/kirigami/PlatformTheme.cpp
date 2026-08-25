@@ -108,7 +108,7 @@ bool PlatformTheme::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == StyleChangedEvent::s_type) {
         syncColorSchemeColors();
-        return true;
+        return false;
     }
 
     if (event->type() == Union::Quick::QuickStyleColorsChangedEvent::s_type) {

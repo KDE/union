@@ -128,7 +128,7 @@ StyleHints *StyleHints::qmlAttachedProperties(QObject *parent)
     return new StyleHints(parent);
 }
 
-bool Union::Quick::StyleHints::eventFilter([[maybe_unused]] QObject *target, QEvent *event)
+bool StyleHints::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == AnimationSpeedMultiplierChangedEvent::s_type) {
         Q_EMIT animationSpeedMultiplierChanged();
@@ -136,7 +136,7 @@ bool Union::Quick::StyleHints::eventFilter([[maybe_unused]] QObject *target, QEv
         return false;
     }
 
-    return true;
+    return QObject::eventFilter(target, event);
 }
 
 void StyleHints::update()
