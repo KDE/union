@@ -47,3 +47,9 @@ SPDX-FileCopyrightText = "2026 Arjen Hiemstra <ahiemstra@heimr.nl>"
 path = "**/metadata.json"
 SPDX-License-Identifier = "BSD-2-Clause"
 SPDX-FileCopyrightText = "2026 Arjen Hiemstra <ahiemstra@heimr.nl>"
+
+[[annotations]]
+path = "extraJsonTranslationPaths.txt"
+SPDX-License-Identifier = "CC0-1.0"
+SPDX-FileCopyrightText = "None"
+

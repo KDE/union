@@ -17,14 +17,23 @@ using namespace Qt::StringLiterals;
 namespace fs = std::filesystem;
 
 struct StyleMetaData {
-    QString name;
-    QString description;
+    QHash<QString, QString> localizedNames;
+    QHash<QString, QString> localizedDescriptions;
     QString version;
     QString license;
     QUrl url;
     QStringList authors;
     bool hidden = false;
 };
+
+QString localizedValue(const QHash<QString, QString> &values)
+{
+    auto localeName = QLocale{}.name();
+    if (values.contains(localeName)) {
+        return values.value(localeName);
+    }
+    return values.value(u"en_US"_s);
+}
 
 class UNION_NO_EXPORT StylePackage::Private
 {
@@ -113,7 +122,7 @@ QString StylePackage::name() const
     loadMetadata();
 
     if (d->metaData) {
-        return d->metaData->name;
+        return localizedValue(d->metaData->localizedNames);
     }
 
     return {};
@@ -124,7 +133,7 @@ QString StylePackage::description() const
     loadMetadata();
 
     if (d->metaData) {
-        return d->metaData->description;
+        return localizedValue(d->metaData->localizedDescriptions);
     }
 
     return {};
@@ -277,20 +286,41 @@ void StylePackage::loadMetadata() const
         return;
     }
 
-    auto json = QJsonDocument::fromJson(metaDataFile.readAll()).object();
+    const auto json = QJsonDocument::fromJson(metaDataFile.readAll()).object();
 
     auto metaData = StyleMetaData{};
-    metaData.name = json.value(u"name").toString();
-    metaData.description = json.value(u"description").toString();
-    metaData.version = json.value(u"version").toString();
-    metaData.license = json.value(u"license").toString();
-    metaData.url = QUrl{json.value(u"url").toString()};
-    metaData.hidden = json.value(u"hidden").toBool();
 
-    const auto authors = json.value(u"authors").toArray();
-    std::ranges::transform(authors, std::back_inserter(metaData.authors), [](const QJsonValue &value) {
-        return value.toString();
-    });
+    for (const auto [key, value] : json.asKeyValueRange()) {
+        auto keyString = key.toString();
+        if (keyString.startsWith(u"name")) {
+            if (!keyString.endsWith(u"]")) {
+                metaData.localizedNames.insert(u"en_US"_s, value.toString());
+            } else {
+                auto localeName = keyString.mid(keyString.lastIndexOf(u'[') + 1).chopped(1);
+                metaData.localizedNames.insert(localeName, value.toString());
+            }
+        } else if (keyString.startsWith(u"description")) {
+            if (!keyString.endsWith(u"]")) {
+                metaData.localizedDescriptions.insert(u"en_US"_s, value.toString());
+            } else {
+                auto localeName = keyString.mid(keyString.lastIndexOf(u'[') + 1).chopped(1);
+                metaData.localizedDescriptions.insert(localeName, value.toString());
+            }
+        } else if (keyString == u"version") {
+            metaData.version = value.toString();
+        } else if (keyString == u"license") {
+            metaData.license = value.toString();
+        } else if (keyString == u"url") {
+            metaData.url = QUrl{value.toString()};
+        } else if (keyString == u"hidden") {
+            metaData.hidden = value.toBool();
+        } else if (keyString == u"authors") {
+            const auto authors = value.toArray();
+            std::ranges::transform(authors, std::back_inserter(metaData.authors), [](const QJsonValue &value) {
+                return value.toString();
+            });
+        }
+    }
 
     d->metaData = metaData;
 }
