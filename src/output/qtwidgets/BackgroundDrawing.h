@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QPainterPath>
+#include <QStyle>
 #include <properties/StylePropertyGroup.h>
 
 class QPainter;
@@ -19,26 +20,42 @@ enum class SubNodeIndex {
     BottomRight,
 };
 
+enum class PrimitiveType {
+    Standalone,
+    Panel,
+    Frame,
+    Indicator,
+};
+
+enum class BackgroundParts {
+    All,
+    PanelOnly,
+    FrameOnly
+};
+
 /*!
- * \brief Draw a Union StyleProperty, such as the center, border and corners.
+ * \brief Draw a Union StylePropertyGroup, such as the center, border and corners.
  */
-void drawBackground(QPainter *painter, const QRect &rect, const Union::Properties::StylePropertyGroup *style);
+void drawBackgroundRectangle(QPainter *painter,
+                             const QRectF &mainRect,
+                             const Union::Properties::StylePropertyGroup *style,
+                             BackgroundParts parts = BackgroundParts::All);
 
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
  */
-QPainterPath unevenRadiiRectPath(const auto &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
+QPainterPath unevenRadiiRectPath(const QRectF &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
 
 /*!
  * \brief Constrains the corner radii to not go over the rectangle's size or under zero.
  */
-Union::Properties::CornersPropertyGroup::CornerRadii constrainRadii(const QRect &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
+Union::Properties::CornersPropertyGroup::CornerRadii constrainRadii(const QRectF &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii);
 
 /*!
  * \brief Draw a Union LineProperty.
  */
 void drawLineProperty(QPainter *painter,
-                      const QRect &rect,
+                      const QRectF &rect,
                       SubNodeIndex subNodeIndex,
                       const QMarginsF &borderSizes,
                       const Union::Properties::LinePropertyGroup *line,
@@ -48,7 +65,7 @@ void drawLineProperty(QPainter *painter,
  * \brief Draw a Union CornerProperty.
  */
 void drawCornerProperty(QPainter *painter,
-                        const QRect &rect,
+                        const QRectF &rect,
                         SubNodeIndex subNodeIndex,
                         const Union::Properties::BorderPropertyGroup *border,
                         const Union::Properties::CornerPropertyGroup *corner);

@@ -18,7 +18,8 @@ itemdelegate,
 checkdelegate,
 radiodelegate,
 switchdelegate,
-swipedelegate
+swipedelegate,
+itemviewitem
 {
     /*
      We want to have some separation between delegates in a list, but we cannot
@@ -122,6 +123,79 @@ swipedelegate
     & > indicator
     {
         layout-alignment: content start center -1;
+    }
+}
+
+
+itemviewitem {
+    inset: 2px;
+    padding: 5px;
+    icon-alignment: content start center 0;
+    text-alignment: content start center 1;
+    icon-size: var(--small-element-size);
+    text-wrap-mode: no-wrap;
+    text-elide: right;
+
+    & > checkbox {
+        layout-alignment: content start center 0;
+        padding: 0px;
+        margin: 0px;
+        inset: 0px;
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+    }
+
+    &.position-invalid {
+        inset: 0px;
+        border-radius: 0px;
+    }
+
+    &.position-beginning {
+        inset-right: 0px;
+        border-right: none;
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    &.position-middle {
+        inset-left: 0px;
+        inset-right: 0px;
+        border-right: none;
+        border-left: none;
+        border-radius: 0px;
+    }
+
+    &.position-end {
+        inset-left: 0px;
+        border-left: none;
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    &.inside-table
+    {
+        inset: 0px;
+        &.position-invalid,
+        &.position-beginning,
+        &.position-middle,
+        &.position-end {
+            border: none;
+            border-radius: 0px;
+        }
+    }
+    &.inside-list {
+        &[display="text-under-icon"]
+        {
+            icon-alignment: content fill stack-center 0;
+            text-alignment: content center stack-fill 1;
+            text-wrap-mode: wrap;
+        }
+        &[display="text-below-icon"]
+        {
+            text-alignment: content center stack-center 0;
+            icon-alignment: content fill stack-fill 1;
+            text-wrap-mode: wrap;
+        }
     }
 }
 

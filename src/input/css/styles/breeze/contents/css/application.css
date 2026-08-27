@@ -74,6 +74,20 @@ toolbar
             border-color: var(--header-inactive-border-color);
         }
     }
+    & > separator {
+        width: 1px;
+        height: var(--small-element-size);
+        background-color: var(--window-border-color);
+    }
+
+    & > handle {
+        width: 4px;
+        height: var(--small-element-size);
+        border-left: 1px solid var(--window-border-color);
+        border-right: 1px solid var(--window-border-color);
+        border-top: none;
+        border-bottom: none;
+    }
 }
 
 drawer
@@ -152,7 +166,11 @@ pane
 }
 
 frame,
-groupbox
+splitter,
+groupbox,
+framemenu,
+dockwidget,
+framewindow
 {
     padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
@@ -160,10 +178,140 @@ groupbox
 }
 
 groupbox {
+    padding: var(--small-spacing);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
     color: var(--window-text-color);
     background-color: var(--window-background-color);
 
     & > header {
         color: var(--window-text-color);
     }
+    icon-alignment: content start start 0;
+    text-alignment: content fill start 1;
+    layout-alignment: content start stack-fill 1;
+    width: 200px;
+}
+
+dockwidget {
+    border-radius: var(--corner-radius);
+    &:visual-focus,
+    &:active-focus {
+        border: 1px solid var(--highlight-color);
+    }
+}
+
+dockwidget {
+    width: var(--small-element-size);
+    height: var(--small-element-size);
+    color: var(--header-text-color);
+    background-color: var(--header-background-color);
+    icon-alignment: content center center 0;
+    text-alignment: content center center 1;
+
+    floatbutton,
+    closebutton {
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+    }
+
+    floatbutton {
+        layout-alignment: content start center 0;
+        icon-name: "window-restore";
+    }
+
+    closebutton {
+        layout-alignment: content end center 0;
+        icon-name: "window-close-symbolic";
+    }
+}
+
+panel,
+scrollareacorner {
+    background-color: var(--window-background-color);
+    color: var(--window-text-color);
+}
+
+panel,
+groupbox,
+frame {
+    &.flat {
+        background-color: transparent;
+        border: none;
+    }
+}
+
+frame {
+    &:visual-focus {
+        border: 1px solid var(--highlight-color);
+    }
+}
+
+rubberband {
+    background-color: var(--highlight-hover-color);
+    border: 1px solid var(--highlight-color);
+    border-radius: var(--corner-radius);
+}
+
+titlebar {
+    width: var(--small-element-size);
+    height: var(--small-element-size);
+    color: var(--header-text-color);
+    background-color: var(--header-background-color);
+    icon-alignment: content center fill 0;
+    text-alignment: content center fill 1;
+    icon-size: var(--icon-size-small);
+
+    systemmenu,
+    minimizebutton,
+    maximizebutton,
+    closebutton,
+    normalbutton,
+    shadebutton,
+    helpbutton {
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+    }
+
+    systemmenu {
+        layout-alignment: content start fill 0;
+        icon-name: "application-menu-symbolic";
+    }
+    minimizebutton {
+        layout-alignment: content end fill 0;
+        icon-name: "window-minimize-symbolic";
+    }
+    maximizebutton {
+        layout-alignment: content end fill 1;
+        icon-name: "window-maximize-symbolic";
+    }
+    closebutton {
+        layout-alignment: content end fill 2;
+        icon-name: "window-close-symbolic";
+    }
+    shadebutton {
+        layout-alignment: content start fill 2;
+        icon-name: "window-shade-symbolic";
+    }
+    helpbutton {
+        layout-alignment: content start fill -1;
+        icon-name: "help-contextual-symbolic";
+    }
+
+    normalbutton {
+        layout-alignment: content start fill 1;
+    }
+
+    &.maximized {
+        maximizebutton {
+            icon-name: "window-restore-symbolic";
+        }
+    }
+
+    &.minimized {
+        minimizebutton {
+            icon-name: "empty";
+        }
+    }
+
 }

@@ -6,6 +6,7 @@
 #include "UnionStyle.h"
 
 #include <QApplication>
+using namespace Qt::StringLiterals;
 
 StylePlugin::StylePlugin(QObject *parent)
     : QStylePlugin(parent)
@@ -22,7 +23,7 @@ QStyle *StylePlugin::create(const QString &key)
 
 QStringList StylePlugin::keys() const
 {
-    return QStringList(QStringLiteral("Union"));
+    return QStringList(u"Union"_s);
 }
 
 #include "moc_UnionStylePlugin.cpp"

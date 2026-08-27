@@ -1,0 +1,88 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+/* Holds data for basic primitives such as arrow indicators. These are only the names for them,
+and they're mapped to PE_IndicatorArrowLeft etc. */
+
+/* Plain widget element */
+widget {
+    background-color: var(--window-background-color);
+}
+
+statusbar {
+    background-color: var(--window-background-color);
+    item {
+        border: var(--button-border);
+    }
+}
+
+toolbox {
+    tabbutton {
+        border-radius: var(--corner-radius);
+    }
+}
+
+/* Primitive Elements */
+
+indicatorarrowup {
+    icon-name: "arrow-up-symbolic";
+}
+
+indicatorarrowdown {
+    icon-name: "arrow-down-symbolic";
+}
+
+indicatorarrowleft {
+    icon-name: "arrow-left-symbolic";
+}
+
+indicatorarrowright {
+    icon-name: "arrow-right-symbolic";
+}
+
+indicatorbuttondropdown {
+    icon-name: "arrow-down-symbolic";
+}
+
+indicatorprogresschunk {
+    width: var(--small-element-size);
+    height: var(--small-element-size);
+    background-color: var(--highlight-color);
+    border-radius: var(--corner-radius);
+}
+
+/* Pixel Metrics. Anything named "size" only uses Width property */
+
+smalliconsize,
+tabbariconsize,
+buttoniconsize,
+toolbariconsize,
+lineediticonsize {
+    width: var(--icon-size-small);
+}
+
+listviewiconsize,
+headermarksize {
+    width: var(--icon-size-smallmedium);
+}
+iconviewiconsize {
+    width: var(--icon-size-medium);
+}
+largeiconsize,
+messageboxiconsize {
+    width: var(--icon-size-large);
+}
+
+sizegripsize,
+progressbarchunkwidth {
+    width: var(--large-element-size);
+}
+textcursorwidth {
+    width: 1px;
+}
+headerdefaultsectionsize {
+    width: 150px;
+    height: var(--large-element-size);
+}

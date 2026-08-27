@@ -113,7 +113,7 @@ headerviewdelegate
 
     layout-alignment: content fill center 0;
     text-alignment: content center center 0;
-    icon-alignment: content end center 0;
+    icon-alignment: content end center 1;
 
     icon-size: var(--icon-size-small);
 
@@ -126,12 +126,12 @@ headerviewdelegate
 
     &.sort-ascending
     {
-        icon-name: "arrow-up";
+        icon-name: "arrow-up-symbolic";
     }
 
     &.sort-descending
     {
-        icon-name: "arrow-down";
+        icon-name: "arrow-down-symbolic";
     }
 }
 

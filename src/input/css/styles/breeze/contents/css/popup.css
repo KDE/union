@@ -63,6 +63,7 @@ menuitem
     from.
     */
     &:hovered,
+    &:selected,
     &.with-submenu:highlighted
     {
         background-color: var(--focus-color);
@@ -102,6 +103,7 @@ menuitem
 
     & > shortcuttext {
         spacing: 40px;
+        text-alignment: content end center 1;
         color: mix(var(--window-background-color), var(--window-text-color), 0.5);
         &:disabled {
             color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
@@ -125,6 +127,17 @@ menuseparator {
     width: var(--large-element-size);
     height: 1px;
     background-color: var(--window-border-color);
+    &.with-title {
+        font-weight: bold;
+        padding: var(--small-spacing);
+        text-alignment: content fill center 0;
+        background-color: transparent;
+        border-bottom: 1px solid var(--window-border-color);
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        &:disabled {
+            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
+        }
+    }
 }
 
 menubar, menubaritem

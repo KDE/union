@@ -59,22 +59,29 @@ progressbar
     height: var(--medium-spacing);
     padding: 0px var(--large-spacing);
     inset: 0px var(--large-spacing);
+    text-alignment: content center center 0;
 
     background-color: var(--bar-active-background-color);
     border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
 
-    & > track {
+    & > track,
+    & > chunk {
         background-color: var(--bar-track-active-background-color);
         border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--corner-radius);
+    }
+
+    & > chunk {
+        width: 32px;
     }
 
     &:disabled {
         background-color: var(--bar-disabled-background-color);
         border-color: var(--bar-disabled-border-color);
 
-        & > track {
+        & > track,
+        & > chunk {
             background-color: var(--bar-track-disabled-background-color);
             border-color: var(--bar-track-disabled-border-color);
         }

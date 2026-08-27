@@ -49,6 +49,8 @@
     --tab-disabled-background-color: var(--button-disabled-background-color);
 
     --tab-highlight-size: 3px;
+    --tab-default-width: 100px;
+    --tab-default-height: 24px;
 
     /* Match Breeze QStyle color */
     --combobox-popup-background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
@@ -102,11 +104,6 @@ toolbutton.raised
         box-shadow: none;
     }
 
-    &[display="text-under-icon"] {
-        text-alignment-vertical: stack-center;
-        icon-alignment-vertical: stack-center;
-    }
-
     &.with-menu > indicator {
         visibility: visible;
         layout-alignment: content end center 0;
@@ -118,6 +115,15 @@ toolbutton.raised
 
     &[display="icon-only"].with-menu > indicator {
         visibility: hidden;
+    }
+
+    &[display="text-under-icon"] {
+        text-alignment-vertical: stack-center;
+        icon-alignment-vertical: stack-center;
+
+        &.with-menu > indicator {
+            layout-alignment: content center stack-center 1;
+        }
     }
 }
 
@@ -211,6 +217,7 @@ combobox
     text-alignment: content fill center 0;
     icon-alignment: content start center 0;
     box-shadow: var(--button-shadow);
+    text-wrap-mode: wrap;
 
     & > indicator {
         layout-alignment: content end center 0;
@@ -227,6 +234,7 @@ combobox
         background-color: var(--view-background-color);
         border: 1px solid var(--view-border-color);
         box-shadow: none;
+        text-wrap-mode: no-wrap;
 
         &:hovered {
             border-color: var(--button-active-border-highlight-color);
@@ -288,9 +296,9 @@ toolseparator {
 }
 
 tabbutton {
-    width: var(--button-default-size);
-    height: var(--button-default-size);
-    spacing: 0px;
+    width: var(--tab-default-width);
+    height: var(--tab-default-height);
+    spacing: var(--small-spacing);
     padding: var(--small-spacing);
     border-radius: var(--corner-radius);
     background-color: var(--tab-background-color);
@@ -298,8 +306,7 @@ tabbutton {
     color: var(--tab-text-color);
 
     icon-alignment: content start center 0;
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
+    text-alignment: content center center 0;
 
     &[direction="top"] {
         border-bottom-left-radius: 0px;
@@ -311,6 +318,24 @@ tabbutton {
         border-top-left-radius: 0px;
         border-top-right-radius: 0px;
         border-top: var(--button-border);
+    }
+
+    &[direction="left"] {
+        width: var(--tab-default-height);
+        height: var(--tab-default-width);
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-left: var(--button-border);
+        text-wrap-mode: wrap;
+    }
+
+    &[direction="right"] {
+        width: var(--tab-default-height);
+        height: var(--tab-default-width);
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-right: var(--button-border);
+        text-wrap-mode: wrap;
     }
 
     &:disabled {
@@ -331,7 +356,8 @@ tabbutton {
         box-shadow: none;
     }
 
-    &:checked
+    &:checked,
+    &:highlighted /* Widgets uses highlighted */
     {
         background-color: var(--tab-open-background-color);
         color: var(--tab-open-text-color);
@@ -348,11 +374,50 @@ tabbutton {
             border-bottom-color: var(--highlight-color);
             border-top-color: var(--tab-open-background-color);
         }
+
+        &[direction="left"] {
+            border-left-width: var(--tab-highlight-size);
+            border-left-color: var(--highlight-color);
+            border-right-color: var(--tab-open-background-color);
+        }
+
+        &[direction="right"] {
+            border-right-width: var(--tab-highlight-size);
+            border-right-color: var(--highlight-color);
+            border-left-color: var(--tab-open-background-color);
+        }
+    }
+
+    closebutton {
+        layout-alignment: content end center 0;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "tab-close-symbolic";
+
+        &:hovered,
+        &:pressed {
+            icon-color: var(--negative-text);
+            color: var(--negative-text);
+        }
+
+        &:disabled {
+            color: var(--button-disabled-text-color);
+            icon-color: var(--button-disabled-text-color);
+        }
     }
 }
 
 tabbar {
+    height: var(--tab-default-height);
+    width: var(--tab-default-width);
     spacing: 0px;
+}
+
+tabwidget {
+    padding: var(--small-spacing);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+    background-color: var(--view-background-color);
 }
 
 delaybutton {
@@ -385,4 +450,13 @@ roundbutton.changed,
 delaybutton.changed {
     background-color: var(--changed-background);
     border: 1px solid var(--changed-foreground);
+}
+
+
+tabscrollbutton {
+    icon-alignment: content fill fill 0;
+    layout-alignment: content center center 0;
+    icon-size: 16px;
+    width: var(--button-default-size);
+    height: var(--button-default-size);
 }

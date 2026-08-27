@@ -34,6 +34,7 @@ CheckablePage::CheckablePage(QWidget *parent)
     layout->addWidget(radioGroup);
 
     auto *checkboxGroup = new QGroupBox(QStringLiteral("Checkboxes"), this);
+    checkboxGroup->setCheckable(true);
     auto *checkboxLayout = new QVBoxLayout();
 
     auto *checkbox1 = new QCheckBox(QStringLiteral("Tomatoes"), this);
