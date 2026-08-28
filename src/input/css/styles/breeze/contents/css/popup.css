@@ -47,6 +47,7 @@ menu
 
 menuitem
 {
+    height: var(--large-element-size);
     width: var(--menu-item-width);
     padding: var(--medium-spacing);
     spacing: var(--small-spacing);
@@ -87,27 +88,24 @@ menuitem
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
+        layout-alignment: content start center 0;
+    }
 
-        layout-alignment: content start center -1;
+    & > shortcuttext {
+        spacing: 40px;
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        text-alignment: content end center 0;
+        &:disabled {
+            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
+        }
     }
 
     & > arrow
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
-
+        layout-alignment: content end center 1;
         icon-name: "arrow-right-symbolic";
-
-        layout-alignment: content end center 0;
-    }
-
-    & > shortcuttext {
-        spacing: 40px;
-        text-alignment: content end center 1;
-        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
-        &:disabled {
-            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
-        }
     }
 }
 
@@ -123,17 +121,23 @@ popup.combobox menuitem {
 }
 
 menuseparator {
-    inset: 0px var(--small-spacing);
-    width: var(--large-element-size);
+    layout-alignment-horizontal: fill;
     height: 1px;
     background-color: var(--window-border-color);
+    inset: var(--small-spacing);
+
     &.with-title {
-        font-weight: bold;
-        padding: var(--small-spacing);
         text-alignment: content fill center 0;
+        layout-alignment-horizontal: end;
+        inset: 0px;
         background-color: transparent;
-        border-bottom: 1px solid var(--window-border-color);
+        padding: var(--small-spacing);
+        /* TODO: italic, underline, or separator next to the text */
+        font-weight: bold;
+
         color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        border-bottom: 1px solid var(--window-border-color);
+
         &:disabled {
             color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
         }
