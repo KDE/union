@@ -141,7 +141,9 @@ protected:
     /*!
      * \brief Utilizes the background property to apply a padding to the given size.
      */
-    QSizeF applyPaddingToSize(QSizeF oldSize, PaddingDirection direction = PaddingDirection::Outward) const;
+    QSizeF applyPaddingToSize(QSizeF oldSize,
+                              PaddingDirection direction = PaddingDirection::Outward,
+                              Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
     /*!
      * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.

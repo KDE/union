@@ -176,23 +176,28 @@ Union::Element::States AbstractElement::elementStates() const
     return states;
 }
 
-QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection direction) const
+QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection direction, Union::Properties::StylePropertyGroup *properties) const
 {
     if (!m_isValid) {
         return oldSize;
     }
+    auto paddingProperties = properties;
+    // Use background properties as the default
+    if (!properties) {
+        paddingProperties = m_backgroundProperties;
+    }
     QSizeF preferredSize = oldSize;
     QSizeF size = preferredSize;
     QMarginsF padding;
-    if (m_backgroundProperties->layout()) {
-        auto width = m_backgroundProperties->layout()->width().value_or(1);
-        auto height = m_backgroundProperties->layout()->height().value_or(1);
+    if (paddingProperties->layout()) {
+        auto width = paddingProperties->layout()->width().value_or(1);
+        auto height = paddingProperties->layout()->height().value_or(1);
         preferredSize = QSize(width, height);
-        if (m_backgroundProperties->layout()->padding()) {
-            padding = m_backgroundProperties->layout()->padding()->toMargins().toMargins();
+        if (paddingProperties->layout()->padding()) {
+            padding = paddingProperties->layout()->padding()->toMargins().toMargins();
         }
-        if (m_backgroundProperties->layout()->inset()) {
-            padding += m_backgroundProperties->layout()->inset()->toMargins().toMargins();
+        if (paddingProperties->layout()->inset()) {
+            padding += paddingProperties->layout()->inset()->toMargins().toMargins();
         }
     }
     if (direction == PaddingDirection::Inward) {
