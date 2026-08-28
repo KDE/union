@@ -71,6 +71,11 @@ menuitem
         border: 1px solid var(--highlight-color);
     }
 
+    &:checked {
+        background-color: transparent;
+        border: none;
+    }
+
     &:pressed
     {
         border: 1px solid var(--highlight-color);

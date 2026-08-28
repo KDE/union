@@ -48,8 +48,6 @@ void MenuItemElement::update()
     if (m_hasCheckBox || m_hasRadioButton) {
         QStyleOptionButton button;
         button.initFrom(m_widget);
-        button.state = m_menuItemOption->state;
-        button.state.setFlag(QStyle::State_On, m_menuItemOption->checked);
         m_checkElementList =
             prepareElements(&button, m_widget, {m_hasCheckBox ? ElementString::CheckBox : ElementString::RadioButton, ElementString::Indicator});
         m_checkProperties = queryProperties(m_checkElementList);
@@ -296,4 +294,11 @@ QRectF MenuItemElement::adjustedRect() const
     const auto frameWidth = averageBorderSize();
     // Follow what breeze does here to center items. See BreezeStyle::drawMenuItemControl.
     return m_menuItemOption->rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
+}
+
+Union::Element::States MenuItemElement::elementStates() const
+{
+    auto states = AbstractElement::elementStates();
+    states.setFlag(Union::Element::State::Checked, m_menuItemOption->checked);
+    return states;
 }
