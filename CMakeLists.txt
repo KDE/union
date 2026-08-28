@@ -106,6 +106,10 @@ if (BUILD_PLATFORM_PLASMA)
     find_package(Qt6DBus ${QT_MIN_VERSION} CONFIG REQUIRED)
 endif()
 
+if (BUILD_TOOLS)
+    find_package(ZLIB REQUIRED)
+endif()
+
 add_subdirectory(src)
 
 if(BUILD_TOOLS)

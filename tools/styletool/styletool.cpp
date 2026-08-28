@@ -9,6 +9,7 @@
 #include <StyleRegistry.h>
 
 #include "Common.h"
+#include "Tar.h"
 
 int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
 {
@@ -271,6 +272,42 @@ int handleUninstallCommand([[maybe_unused]] const QStringList &arguments)
     return 0;
 }
 
+int handlePackageCommand([[maybe_unused]] const QStringList arguments)
+{
+    auto parser = parseCommand(u"package"_s, arguments, [](QCommandLineParser *parser) {
+        parser->setApplicationDescription(u"Package a style for easy sharing."_s);
+        parser->addPositionalArgument(u"<style>"_s, u"The style to package."_s);
+    });
+
+    if (parser->positionalArguments().size() != 1) {
+        showCommandHelp(parser.get(), u"inspect"_s, u"Invalid arguments for command \"inspect\""_s, 1);
+    }
+
+    auto pathOrId = parser->positionalArguments().first();
+
+    auto handler = Union::StyleRegistry::instance()->packageHandler();
+
+    auto package = handler->package(pathOrId);
+    if (!package.isValid()) {
+        package = Union::StylePackage{fs::absolute(fs::path(pathOrId.toStdString()))};
+    }
+
+    if (!package.isValid()) {
+        return printPackageError(package);
+    }
+
+    auto packagedPath = fs::current_path() / QString{package.id() + u".unionstyle"}.toStdString();
+
+    std::error_code errorCode;
+    tarDirectory(package.path(), packagedPath, errorCode);
+    if (errorCode) {
+        return printErrorCode(package, errorCode);
+    }
+
+    std::cout << "Packaged style " << package.path() << " to " << packagedPath << "\n";
+    return 0;
+}
+
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
@@ -288,6 +325,7 @@ int main(int argc, char **argv)
     commandHelp += u"   list       List installed styles.\n"_s;
     commandHelp += u"   update     Update an installed style.\n"_s;
     commandHelp += u"   uninstall  Uninstall an installed style.\n"_s;
+    commandHelp += u"   package    Package a style to a single shareable file.\n"_s;
 
     parser.addPositionalArgument(u"<command>"_s, commandHelp);
 
@@ -325,6 +363,8 @@ int main(int argc, char **argv)
         commandResult = handleUpdateCommand(remaining);
     } else if (command == u"uninstall") {
         commandResult = handleUninstallCommand(remaining);
+    } else if (command == u"package") {
+        commandResult = handlePackageCommand(remaining);
     } else {
         parser.showMessageAndExit(QCommandLineParser::MessageType::Error, u"Unknown command: "_s + command, 1);
     }
