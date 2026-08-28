@@ -30,12 +30,13 @@ Union::StylePackage::Error CssPlugin::validatePackage(const Union::StylePackage 
     return StylePackage::Error::None;
 }
 
-Union::PackageHandler::Error CssPlugin::createPackage(const Union::StylePackage &package)
+bool CssPlugin::createPackage(const Union::StylePackage &package, std::error_code &errorCode)
 {
     auto path = package.path();
 
-    if (!fs::create_directories(path / "contents" / "css")) {
-        return Union::PackageHandler::Error::FilesystemError;
+    fs::create_directories(path / "contents" / "css", errorCode);
+    if (errorCode) {
+        return false;
     }
 
     auto year = QDate::currentDate().year();
@@ -54,25 +55,28 @@ Union::PackageHandler::Error CssPlugin::createPackage(const Union::StylePackage 
         stream << "   here to include them in the style. */\n";
         // REUSE-IgnoreEnd
 
-        if (stream.fail()) {
-            return Union::PackageHandler::Error::FilesystemError;
+        if (!stream.good()) {
+            errorCode = std::error_code(errno, std::system_category());
+            return false;
         }
     }
 
-    if (!fs::create_directories(path / "contents" / "images")) {
-        return Union::PackageHandler::Error::FilesystemError;
+    fs::create_directories(path / "contents" / "images", errorCode);
+    if (errorCode) {
+        return false;
     }
 
     {
         std::ofstream stream{path / "contents" / "images" / "README", std::ios::out};
         stream << "This directory should contain any images your style uses.\n";
 
-        if (stream.fail()) {
-            return Union::PackageHandler::Error::FilesystemError;
+        if (!stream.good()) {
+            errorCode = std::error_code(errno, std::system_category());
+            return false;
         }
     }
 
-    return Union::PackageHandler::Error::None;
+    return true;
 }
 
 std::shared_ptr<Union::Style> CssPlugin::createStyle(const Union::StylePackage &package) const

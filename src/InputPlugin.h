@@ -43,7 +43,7 @@ public:
     /*!
      * Create any files required for the package to be valid.
      */
-    virtual PackageHandler::Error createPackage(const StylePackage &package) = 0;
+    virtual bool createPackage(const StylePackage &package, std::error_code &errorCode) = 0;
 
     /*!
      * Create an instance of a style from a package.

@@ -22,6 +22,66 @@ public:
     std::shared_ptr<PlatformPlugin> platform;
 };
 
+const char *PackageHandler::PackageErrorCategory::name() const noexcept
+{
+    return "package_error";
+}
+
+std::string Union::PackageHandler::PackageErrorCategory::message(int errorValue) const
+{
+    switch (static_cast<PackageHandler::Error>(errorValue)) {
+    case Error::InvalidPackage:
+        return "An invalid package was provided";
+    case Error::AlreadyInstalled:
+        return "The package is already installed";
+    case Error::NotInstalled:
+        return "The package is not installed";
+    case Error::NotAnUpdate:
+        return "The package is not an update";
+    case Error::PackageExists:
+        return "The package already exists";
+    case Error::UnknownInputType:
+        return "The package uses an unknown input type";
+    default:
+        break;
+    }
+
+    return "Unknown Error";
+}
+
+std::error_condition PackageHandler::PackageErrorCategory::default_error_condition(int errorValue) const noexcept
+{
+    switch (static_cast<PackageHandler::Error>(errorValue)) {
+    case Error::InvalidPackage:
+        return std::make_error_condition(std::errc::invalid_argument);
+    case Error::AlreadyInstalled:
+        return std::make_error_condition(std::errc::file_exists);
+    case Error::NotInstalled:
+        return std::make_error_condition(std::errc::no_such_file_or_directory);
+    case Error::NotAnUpdate:
+        return std::make_error_condition(std::errc::operation_not_supported);
+    case Error::PackageExists:
+        return std::make_error_condition(std::errc::file_exists);
+    case Error::UnknownInputType:
+        return std::make_error_condition(std::errc::protocol_not_supported);
+    default:
+        break;
+    }
+
+    return std::error_condition(errorValue, *this);
+}
+
+const PackageHandler::PackageErrorCategory &PackageHandler::PackageErrorCategory::instance()
+{
+    static PackageErrorCategory category;
+    return category;
+}
+
+std::error_code PackageHandler::PackageErrorCategory::make_package_error(PackageHandler::Error error)
+{
+    return std::error_code(static_cast<int>(error), instance());
+}
+
 PackageHandler::PackageHandler(const std::shared_ptr<PlatformPlugin> &platformPlugin)
     : d(std::make_unique<Private>())
 {
@@ -75,28 +135,37 @@ QList<StylePackage> PackageHandler::allPackages(OperationFlags flags)
     return result;
 }
 
-PackageHandler::Error PackageHandler::create(StylePackage &destination, const PackageHandler::CreateInfo &info)
+bool PackageHandler::create(StylePackage &destination, const PackageHandler::CreateInfo &info, std::error_code &errorCode)
 {
     if (fs::exists(info.path)) {
-        return Error::PackageExists;
+        errorCode = PackageErrorCategory::make_package_error(Error::PackageExists);
+        return false;
     }
 
-    if (!fs::create_directories(info.path)) {
-        return Error::FilesystemError;
+    fs::create_directories(info.path, errorCode);
+    if (errorCode) {
+        return false;
     }
 
-    if (!fs::create_directories(info.path / "contents")) {
-        return Error::FilesystemError;
+    fs::create_directories(info.path / "contents", errorCode);
+    if (errorCode) {
+        return false;
     }
 
     auto inputPlugin = InputPlugin::inputPlugin(info.inputType);
     if (!inputPlugin) {
-        return Error::UnknownInputType;
+        errorCode = PackageErrorCategory::make_package_error(Error::UnknownInputType);
+        return false;
     }
 
     QFile metaDataFile(info.path / "metadata.json");
     if (!metaDataFile.open(QIODevice::WriteOnly)) {
-        return Error::FilesystemError;
+        if (metaDataFile.error() == QFile::FileError::PermissionsError) {
+            errorCode = std::make_error_code(std::errc::permission_denied);
+        } else {
+            errorCode = std::make_error_code(std::errc::io_error);
+        }
+        return false;
     }
 
     QTextStream stream{&metaDataFile};
@@ -139,69 +208,79 @@ PackageHandler::Error PackageHandler::create(StylePackage &destination, const Pa
     metaDataFile.close();
 
     destination = StylePackage{info.path};
-    return inputPlugin->createPackage(destination);
+    return inputPlugin->createPackage(destination, errorCode);
 }
 
-PackageHandler::Error PackageHandler::install(const StylePackage &package)
+bool PackageHandler::install(const StylePackage &package, std::error_code &errorCode)
 {
     if (!package.isValid()) {
-        return Error::InvalidPackage;
+        errorCode = PackageErrorCategory::make_package_error(Error::InvalidPackage);
+        return false;
     }
 
     auto destination = d->platform->stylePackageInstallPath() / package.path().filename();
     if (fs::exists(destination)) {
-        return Error::AlreadyInstalled;
+        errorCode = PackageErrorCategory::make_package_error(Error::AlreadyInstalled);
+        return false;
     }
 
-    std::error_code ec;
-    fs::copy(package.path(), destination, fs::copy_options::recursive, ec);
-    if (ec) {
-        return Error::FilesystemError;
+    fs::copy(package.path(), destination, fs::copy_options::recursive, errorCode);
+    if (errorCode) {
+        return false;
     }
 
-    return Error::None;
+    return true;
 }
 
-PackageHandler::Error PackageHandler::uninstall(const StylePackage &package)
+bool PackageHandler::uninstall(const StylePackage &package, std::error_code &errorCode)
 {
     if (!package.isValid()) {
-        return Error::InvalidPackage;
+        errorCode = PackageErrorCategory::make_package_error(Error::InvalidPackage);
+        return false;
     }
 
     const auto installPaths = d->platform->stylePackagePaths();
     if (!installPaths.contains(package.path().parent_path())) {
-        return Error::NotInstalled;
+        errorCode = PackageErrorCategory::make_package_error(Error::NotInstalled);
+        return false;
     }
 
-    std::error_code ec;
-    fs::remove_all(package.path(), ec);
-    if (ec) {
-        return Error::FilesystemError;
+    if (!fs::is_directory(package.path())) {
+        errorCode = std::make_error_code(std::errc::not_a_directory);
+        return false;
     }
 
-    return Error::None;
+    fs::remove_all(package.path(), errorCode);
+    if (errorCode) {
+        return false;
+    }
+
+    return true;
 }
 
-PackageHandler::Error PackageHandler::update(const StylePackage &updatePackage, OperationFlags flags)
+bool PackageHandler::update(const StylePackage &updatePackage, std::error_code &errorCode, OperationFlags flags)
 {
     if (!updatePackage.isValid()) {
-        return Error::InvalidPackage;
+        errorCode = PackageErrorCategory::make_package_error(Error::InvalidPackage);
+        return false;
     }
 
     auto installedPackage = package(updatePackage.id());
     if (!installedPackage.isValid()) {
-        return Error::NotInstalled;
+        errorCode = PackageErrorCategory::make_package_error(Error::NotInstalled);
+        return false;
     }
 
     if (!flags.testFlag(OperationFlag::SkipVersionCheck)) {
         if (installedPackage.version() == updatePackage.version()) {
-            return Error::NotAnUpdate;
+            errorCode = PackageErrorCategory::make_package_error(Error::NotAnUpdate);
+            return false;
         }
     }
 
-    if (auto result = uninstall(installedPackage); result != Error::None) {
-        return result;
+    if (!uninstall(installedPackage, errorCode)) {
+        return false;
     }
 
-    return install(updatePackage);
+    return install(updatePackage, errorCode);
 }

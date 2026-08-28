@@ -54,14 +54,23 @@ public:
      *      The operation failed because an unknown input type was requested.
      */
     enum class Error {
-        None,
-        InvalidPackage,
+        InvalidPackage = 1,
         AlreadyInstalled,
-        FilesystemError,
         NotInstalled,
         NotAnUpdate,
         PackageExists,
         UnknownInputType,
+    };
+
+    class PackageErrorCategory : public std::error_category
+    {
+    public:
+        const char *name() const noexcept override;
+        std::string message(int errorValue) const override;
+        std::error_condition default_error_condition(int errorValue) const noexcept override;
+
+        static const PackageErrorCategory &instance();
+        static std::error_code make_package_error(Error error);
     };
 
     /*!
@@ -112,7 +121,7 @@ public:
     /*!
      * Create a new package.
      */
-    Error create(StylePackage &destination, const CreateInfo &info);
+    bool create(StylePackage &destination, const CreateInfo &info, std::error_code &errorCode);
     /*!
      * Install a package.
      *
@@ -123,7 +132,7 @@ public:
      * installed. It may also return Error::FilesystemError if any operating
      * system error occurs.
      */
-    Error install(const StylePackage &package);
+    bool install(const StylePackage &package, std::error_code &errorCode);
     /*!
      * Uninstall a package.
      *
@@ -132,7 +141,7 @@ public:
      * return Error::NotInstalled if the package is not installed. It will
      * return Error::FilesystemError if an operating system error occurs.
      */
-    Error uninstall(const StylePackage &package);
+    bool uninstall(const StylePackage &package, std::error_code &errorCode);
     /*!
      * Update a package.
      *
@@ -148,7 +157,7 @@ public:
      * installing \p updatePackage. Any error that occurs during these steps
      * will cause the update to fail and will return the error.
      */
-    Error update(const StylePackage &updatePackage, OperationFlags flags = {});
+    bool update(const StylePackage &updatePackage, std::error_code &errorCode, OperationFlags flags = {});
 
 private:
     class Private;

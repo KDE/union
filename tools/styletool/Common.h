@@ -121,35 +121,8 @@ int printPackageError(const Union::StylePackage &package)
     return 0;
 }
 
-int printHandlerError(const Union::StylePackage &package, Union::PackageHandler::Error error)
+int printErrorCode(const Union::StylePackage &package, const std::error_code &errorCode)
 {
-    auto path = package.path();
-    switch (error) {
-    case Union::PackageHandler::Error::InvalidPackage:
-        std::cerr << path << "is an invalid style:\n";
-        printPackageError(package);
-        return 5;
-    case Union::PackageHandler::Error::AlreadyInstalled:
-        std::cerr << "A style with ID " << qPrintable(package.id()) << " is already installed.\n";
-        return 6;
-    case Union::PackageHandler::Error::FilesystemError:
-        std::cerr << "A filesystem error occurred.\n";
-        return 7;
-    case Union::PackageHandler::Error::NotInstalled:
-        std::cerr << "The style " << qPrintable(package.id()) << " is not installed.\n";
-        return 8;
-    case Union::PackageHandler::Error::NotAnUpdate:
-        std::cerr << "The style " << qPrintable(package.id()) << " in not an update for the installed style.\n";
-        return 9;
-    case Union::PackageHandler::Error::PackageExists:
-        std::cerr << "A style already exists at " << package.path() << "\n";
-        return 10;
-    case Union::PackageHandler::Error::UnknownInputType:
-        std::cerr << "The input type " << qPrintable(package.inputType()) << " could not be found.\n";
-        return 11;
-    case Union::PackageHandler::Error::None:
-        break;
-    }
-
-    return 0;
+    std::cerr << "Operation on package " << package.path() << " failed: " << errorCode.message() << "\n";
+    return errorCode.value();
 }

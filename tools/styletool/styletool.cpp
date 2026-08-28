@@ -29,9 +29,10 @@ int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
         return printPackageError(package);
     }
 
+    std::error_code errorCode;
     auto handler = Union::StyleRegistry::instance()->packageHandler();
-    if (auto result = handler->install(package); result != Union::PackageHandler::Error::None) {
-        return printHandlerError(package, result);
+    if (!handler->install(package, errorCode)) {
+        return printErrorCode(package, errorCode);
     }
 
     std::cout << "Installed style " << qPrintable(package.id()) << "\n";
@@ -113,9 +114,10 @@ int handleCreateCommand([[maybe_unused]] const QStringList &arguments)
     }
 
     Union::StylePackage package;
+    std::error_code errorCode;
     auto handler = Union::StyleRegistry::instance()->packageHandler();
-    if (auto result = handler->create(package, info); result != Union::PackageHandler::Error::None) {
-        return printHandlerError(package, result);
+    if (!handler->create(package, info, errorCode)) {
+        return printErrorCode(package, errorCode);
     }
 
     std::cout << "Created style " << package.path() << "\n";
@@ -229,9 +231,10 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
         flags |= Union::PackageHandler::OperationFlag::SkipVersionCheck;
     }
 
+    std::error_code errorCode;
     auto handler = Union::StyleRegistry::instance()->packageHandler();
-    if (auto result = handler->update(package, flags); result != Union::PackageHandler::Error::None) {
-        return printHandlerError(package, result);
+    if (!handler->update(package, errorCode, flags)) {
+        return printErrorCode(package, errorCode);
     }
 
     std::cout << "Updated style " << qPrintable(package.id()) << " to version " << qPrintable(package.version()) << "\n";
@@ -259,8 +262,9 @@ int handleUninstallCommand([[maybe_unused]] const QStringList &arguments)
         return 1;
     }
 
-    if (auto result = handler->uninstall(package); result != Union::PackageHandler::Error::None) {
-        return printHandlerError(package, result);
+    std::error_code errorCode;
+    if (!handler->uninstall(package, errorCode)) {
+        return printErrorCode(package, errorCode);
     }
 
     std::cout << "Uninstalled style " << qPrintable(style) << "\n";

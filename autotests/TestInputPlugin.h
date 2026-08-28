@@ -179,9 +179,9 @@ struct TestInputPlugin : public Union::InputPlugin {
         return Union::StylePackage::Error::None;
     }
 
-    Union::PackageHandler::Error createPackage([[maybe_unused]] const Union::StylePackage &package) override
+    bool createPackage([[maybe_unused]] const Union::StylePackage &package, [[maybe_unused]] std::error_code &errorCode) override
     {
-        return Union::PackageHandler::Error::None;
+        return true;
     }
 
     std::shared_ptr<Union::Style> createStyle(const Union::StylePackage &package) const override

@@ -21,7 +21,7 @@ public:
 
     Union::StylePackage::Error validatePackage(const Union::StylePackage &package) override;
 
-    Union::PackageHandler::Error createPackage(const Union::StylePackage &package) override;
+    bool createPackage(const Union::StylePackage &package, std::error_code &errorCode) override;
 
     std::shared_ptr<Union::Style> createStyle(const Union::StylePackage &package) const override;
 };
