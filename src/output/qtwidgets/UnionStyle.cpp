@@ -156,12 +156,17 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
     if (cached) {
         cached->draw(painter, drawEnums);
     } else {
+        switch (controlElement) {
+        case CE_MenuEmptyArea:
+        case CE_MenuVMargin:
+        case CE_MenuHMargin:
+            return;
+        default:
+            break;
+        }
         // Unimplemented
         // CE_MenuScroller
         // CE_MenuTearoff
-        // CE_MenuEmptyArea
-        // CE_MenuVMargin
-        // CE_MenuHMargin
         // CE_ColumnViewGrip
         QCommonStyle::drawControl(controlElement, option, painter, widget);
     }

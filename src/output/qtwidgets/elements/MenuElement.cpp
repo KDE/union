@@ -63,10 +63,10 @@ qreal MenuElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         return averageVPadding();
     case QStyle::PM_MenuHMargin:
         return averageHPadding();
-    case QStyle::PM_MenuPanelWidth:
-        return width();
-    case QStyle::PM_MenuDesktopFrameWidth:
+    case QStyle::PM_MenuPanelWidth: // This is actually border width according docs
         return averageBorderSize();
+    case QStyle::PM_MenuDesktopFrameWidth:
+        return 0; // Fusion also returns 0, likely unused
     default:
         break;
     }

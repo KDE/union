@@ -36,6 +36,9 @@ void MenuItemElement::update()
     m_hasSubMenu = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::SubMenu);
     m_hasCheckBox = (m_menuItemOption->checkType == QStyleOptionMenuItem::NonExclusive);
     m_hasRadioButton = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
+    m_menuHMargin = m_style->pixelMetric(QStyle::PM_MenuHMargin, m_styleOption, m_widget);
+    m_menuVMargin = m_style->pixelMetric(QStyle::PM_MenuVMargin, m_styleOption, m_widget);
+
     setIndicator(QIcon());
     if (m_hasSubMenu) {
         m_indicatorElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
@@ -155,7 +158,9 @@ void MenuItemElement::layout()
         m_contentProperties = queryProperties(m_contentElementList);
     }
 
-    m_layoutMap = layoutMap(m_contentElementList, m_menuItemOption, subElements);
+    auto adjustedOpt = *m_menuItemOption;
+    adjustedOpt.rect = adjustedRect().toRect();
+    m_layoutMap = layoutMap(m_contentElementList, &adjustedOpt, subElements);
     m_isValid = true;
 }
 
@@ -182,7 +187,7 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                     separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
                 }
 
-                return applyPaddingToSize(separatorSize, PaddingDirection::Outward, m_contentProperties);
+                preferredSize = applyPaddingToSize(separatorSize, PaddingDirection::Outward, m_contentProperties);
             }
         } else {
             if (m_contentProperties->layout()) {
@@ -199,10 +204,14 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                     itemSize.rwidth() +=
                         m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing;
                 }
-                return applyPaddingToSize(itemSize);
+                preferredSize = applyPaddingToSize(itemSize);
             }
         }
     }
+    // Adjust the contents according to the menu margins.
+    // Otherwise they wont be centered properly.
+    preferredSize.rwidth() += m_menuHMargin;
+    preferredSize.rheight() += m_menuVMargin;
     return preferredSize;
 }
 
@@ -219,7 +228,7 @@ void MenuItemElement::drawBackground(QPainter *painter) const
         }
         drawBackgroundRectangle(painter, rect, m_contentProperties);
     } else {
-        drawBackgroundRectangle(painter, m_menuItemOption->rect, m_backgroundProperties);
+        drawBackgroundRectangle(painter, m_menuItemOption->rect.adjusted(0, 0, -3, -3), m_backgroundProperties);
     }
 }
 
@@ -235,7 +244,9 @@ void MenuItemElement::drawText(QPainter *painter) const
         const bool enabled = m_menuItemOption->state.testFlag(QStyle::State_Enabled);
         auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
         const auto properties = queryProperties(shortcutElements);
-        auto map = layoutMap(m_contentElementList, m_menuItemOption, {ElementString::ShortcutText});
+        auto adjustedOpt = *m_menuItemOption;
+        adjustedOpt.rect = adjustedRect().toRect();
+        auto map = layoutMap(m_contentElementList, &adjustedOpt, {ElementString::ShortcutText});
         QRectF textRect = map[ElementString::ShortcutText].rect;
         QColor shortcutColor = m_menuItemOption->palette.text().color();
         if (properties->text() && properties->text()->color().has_value()) {
@@ -278,4 +289,11 @@ qreal MenuItemElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         break;
     }
     return 0;
+}
+
+QRectF MenuItemElement::adjustedRect() const
+{
+    const auto frameWidth = averageBorderSize();
+    // Follow what breeze does here to center items. See BreezeStyle::drawMenuItemControl.
+    return m_menuItemOption->rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
 }
