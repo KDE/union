@@ -22,6 +22,7 @@ class UnionStyle : public QCommonStyle
 
 public:
     UnionStyle();
+    ~UnionStyle() override;
 
     void drawControl(QStyle::ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = nullptr) const override;

@@ -99,6 +99,11 @@ UnionStyle::UnionStyle()
     Union::StyleRegistry::instance()->load();
 }
 
+UnionStyle::~UnionStyle() noexcept
+{
+    ElementCache::clear();
+}
+
 void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
     // Make lines not look completely terrible on fractional scales
