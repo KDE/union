@@ -618,6 +618,10 @@ void UnionStyle::polish(QApplication *application)
 
     const auto style = Union::StyleRegistry::instance()->defaultStyle();
     const auto matches = style->matches({element});
+    if (matches.isEmpty()) {
+        return;
+    }
+
     const auto properties = matches.first()->properties();
 
     QPalette palette;
