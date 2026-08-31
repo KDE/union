@@ -1,0 +1,137 @@
+# SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+# SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>*
+
+# Elements that are specifically for QtWidgets elements
+
+-   name: Widget
+    group: QtWidget Elements
+    description: |
+        Styling for plain QWidget (PE_Widget), used as a fallback if we do not know what the element is.
+
+    type: Widget
+
+
+-   name: Status Bar
+    group: QtWidget Elements
+    description: |
+        Styling for QStatusBar.
+
+    type: StatusBar
+    subelements:
+    -   name: Item
+        description: |
+            Styling for Items (PE_FrameStatusBarItem) inside statusbar.
+
+-   name: Tool Box
+    group: QtWidget Elements
+    description: |
+        Styling for QToolBox.
+
+    type: ToolBox
+    subelements:
+    -   name: TabButton
+        description: |
+            Styling for the toolbox's tab and label (CE_ToolBoxTab).
+
+-   name: Indicator Arrow Up
+    group: QtWidget Elements
+    description: |
+        Sets the icon to be used when PE_IndicatorArrowUp is called.
+
+    type: IndicatorArrowUp
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the primitive element.
+
+-   name: Indicator Arrow Down
+    group: QtWidget Elements
+    description: |
+        Sets the icon to be used when PE_IndicatorArrowDown is called.
+
+    type: IndicatorArrowDown
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the primitive element.
+
+-   name: Indicator Arrow Left
+    group: QtWidget Elements
+    description: |
+        Sets the icon to be used when PE_IndicatorArrowLeft is called.
+
+    type: IndicatorArrowLeft
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the primitive element.
+
+-   name: Indicator Arrow Right
+    group: QtWidget Elements
+    description: |
+        Sets the icon to be used when PE_IndicatorArrowRight is called.
+
+    type: IndicatorArrowRight
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the primitive element.
+
+-   name: Indicator Button Drop Down
+    group: QtWidget Elements
+    description: |
+        Sets the icon to be used when PE_IndicatorButtonDropDown is called.
+
+    type: IndicatorButtonDropDown
+    subelements:
+    -   name: Icon
+        description: |
+            The icon displayed by the primitive element.
+
+-   name: Small Icon Size
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_SmallIconSize is called: Default small icon size.
+        Only Width value is used.
+
+    type: SmallIconSize
+
+-   name: List View Icon Size
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_ListViewIconSize is called: The default size for icons in a list view.
+        Only Width value is used.
+
+    type: ListViewIconSize
+
+-   name: Icon View Icon Size
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_IconViewIconSize is called: The default size for icons in an icon view.
+        Only Width value is used.
+
+    type: IconViewIconSize
+
+-   name: Large Icon Size
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_LargeIconSize is called: Default large icon size
+        Only Width value is used.
+
+    type: LargeIconSize
+
+-   name: Message Box Icon Size
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_MessageBoxIconSize is called: The size of the standard icons in a message box.
+        Only Width value is used.
+
+    type: MessageBoxIconSize
+
+-   name: Text Cursor Width
+    group: QtWidget Elements
+    description: |
+        Sets the size to be used when PM_TextCursorWidth is called: The width of the cursor in a line edit or text edit.
+        Only Width value is used.
+
+    type: TextCursorWidth

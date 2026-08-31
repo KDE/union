@@ -30,6 +30,10 @@
         description: |
             A rectangle displaying the progress.
         type: Track
+    -   name: Chunk
+        description: |
+            In QtWidgets applications, section for the progress bar indicator.
+        type: Chunk
 
 -   name: Slider
     group: Progress Indicators and Sliders

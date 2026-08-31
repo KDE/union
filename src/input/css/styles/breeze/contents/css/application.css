@@ -226,13 +226,11 @@ dockwidget {
     }
 }
 
-panel,
 scrollareacorner {
     background-color: var(--window-background-color);
     color: var(--window-text-color);
 }
 
-panel,
 groupbox,
 frame {
     &.flat {

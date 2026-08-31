@@ -121,7 +121,8 @@
 -   name: MenuSeparator
     group: Popups and Menus
     description: A separator between different menu items.
-
+    hints:
+        with-title: Set when the QtWidgets separator has a title text assigned to it.
     type: MenuSeparator
     states:
     -   Enabled

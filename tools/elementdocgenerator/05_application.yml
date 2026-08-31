@@ -39,6 +39,8 @@
     -   ActiveFocus
     -   VisualFocus
     -   Enabled
+    hints:
+        flat: Set whenever the frame should use a flat appearance.
 
 -   name: GroupBox
     group: Application Structure
@@ -50,6 +52,8 @@
     -   ActiveFocus
     -   VisualFocus
     -   Enabled
+    hints:
+        flat: Set whenever the GroupBox should use a flat appearance.
 
     subelements:
     -   name: Header
@@ -243,6 +247,13 @@
     hints:
         header: Set when the toolbar is located in the header of an application window or page.
         footer: Set when the toolbar is located in the footer of an application window or page.
+    subelements:
+    -   name: Separator
+        description: Separators for QtWidgets toolbars.
+        type: Separator
+    -   name: Handle
+        description: Resize handles for QtWidgets toolbars.
+        type: Handle
 
 -   name: ToolSeparator
     group: Application Structure
@@ -316,6 +327,8 @@
             values:
                 top: The tab is located at the top of content.
                 bottom: The tab is located at the bottom of content.
+                left: The tab is located at the left of content.
+                right: The tab is located at the right of content.
     subelements:
     -   name: Icon
         description: |
@@ -325,3 +338,82 @@
         description: |
             The text displayed by the button. Style it using the text related
             properties.
+    -   name: CloseButton
+        description: |
+            The styling of a CloseButton in QtWidgets applications.
+
+-   name: DockWidget
+    group: Application Structure
+    description: Widget for floating panels that can be docked in QtWidgets applications.
+
+    type: DockWidget
+    states:
+    -   Hovered
+    -   ActiveFocus
+    -   VisualFocus
+    -   Pressed
+    -   Checked
+    -   Enabled
+    subelements:
+    -   name: Float Button
+        description: |
+            Button that shows the floating status.
+        type: Button
+    -   name: Close Button
+        description: |
+            Button used to close a dockwidget.
+        type: Button
+
+-   name: RubberBand
+    group: Application Structure
+    description: The selection rectangle when selecting multiple items with mouse.
+    type: RubberBand
+
+-   name: TitleBar
+    group: Application Structure
+    description: |
+        The titlebar of floating QMdiSubWindows. All the buttons are their own
+        subelements, which can be set with specific icons.
+    hints:
+        maximized: Set when the subwindow is maximized.
+        minimized: Set when the subwindow is minimized.
+
+
+    type: TitleBar
+    subelements:
+    -   name: SystemMenu
+        description: |
+            System menu button (i.e., restore, close, etc.).
+        type: Button
+    -   name: MinimizeButton
+        description: |
+            Minimize button.
+        type: Button
+    -   name: MaximizeButton
+        description: |
+            Maximize button.
+        type: Button
+    -   name: CloseButton
+        description: |
+            Close button.
+        type: Button
+    -   name: NormalButton
+        description: |
+            Normal (restore) button.
+        type: Button
+    -   name: ShadeButton
+        description: |
+            Shade button.
+        type: Button
+    -   name: HelpButton
+        description: |
+            Help button.
+        type: Button
+
+-   name: TabWidget
+    description: The container for TabBar controlled items in QtWidgets applications.
+    type: TabWidget
+
+-   name: TabScrollButton
+    description: The buttons used to scroll hidden buttons in TabBar in QtWidgets applications.
+    type: TabScrollButton
