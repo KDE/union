@@ -33,16 +33,40 @@ void ToolButtonElement::update()
     m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
     m_hasIcon = !m_toolButtonOption->icon.isNull() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
     m_hasText = !m_toolButtonOption->text.isEmpty() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly;
+    setIcon(m_toolButtonOption->icon);
+    setText(m_toolButtonOption->text);
+    updateSubElementList();
+    layout();
+}
+
+void ToolButtonElement::layout()
+{
     m_indicatorElementList = prepareElements(m_toolButtonOption, m_widget, {ElementString::Indicator});
     setIndicator(QIcon());
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
     }
-    setIcon(m_toolButtonOption->icon);
-    setText(m_toolButtonOption->text);
-    updateSubElementList();
-    layout();
+
+    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
+    if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+        m_indicatorMap = layoutMap(m_backgroundElementList, m_styleOption, {ElementString::Indicator});
+        layoutButtons();
+        // Update layoutmap so that the text and icon are within the main button
+        auto subopt = *m_toolButtonOption;
+        subopt.rect = m_mainButtonRect.toRect();
+        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
+    }
+
+    m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);
+    if (!m_contentElementList.isEmpty()) {
+        m_contentProperties = queryProperties(m_contentElementList);
+        m_isValid = true;
+    } else {
+        m_isValid = false;
+        qCWarning(UNION_QTWIDGETS) << "Could not find elementlist for this element!";
+    }
 }
 
 void ToolButtonElement::updateSubElementList()
@@ -54,24 +78,12 @@ void ToolButtonElement::updateSubElementList()
     if (m_hasText) {
         m_subElementList.append(ElementString::Text);
     }
-    if (m_hasIndicator) {
-        m_subElementList.append(ElementString::Indicator);
-    }
 }
 
 QSizeF ToolButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    QSizeF size = subControlRect(QStyle::SC_ToolButton).size().boundedTo(contentsSizeFromStyle);
-    size = applyPaddingToSize(size);
-
-    if (m_indicatorProperties && m_indicatorProperties->layout()) {
-        if (m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextUnderIcon) {
-            size.rwidth() += m_indicatorProperties->layout()->width().value_or(0);
-        } else {
-            size.rheight() += m_indicatorProperties->layout()->height().value_or(0);
-        }
-    }
-
+    QSizeF size = applyPaddingToSize(contentsSizeFromStyle);
+    size = size.expandedTo(m_menuButtonRect.size());
     return size;
 }
 
@@ -82,27 +94,11 @@ QRectF ToolButtonElement::subControlRect(QStyle::SubControl subControl) const
         return QRect();
     }
 
-    QRectF backgroundRect = backgroundRectangle(m_toolButtonOption, m_backgroundProperties).toRect();
     if (subControl == QStyle::SC_ToolButton) {
-        QRectF rect = m_toolButtonOption->rect;
-        QRectF unifiedRect;
-        for (const auto &m : m_layoutMap) {
-            unifiedRect = unifiedRect.united(m.rect.toRect());
-        }
-        rect = unifiedRect;
-        return rect;
+        return m_mainButtonRect;
     }
     if (subControl == QStyle::SC_ToolButtonMenu) {
-        QRectF menuRect = m_layoutMap[ElementString::Indicator].rect;
-        // Set the click area to full height/width, so that its easier to click
-        if (m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextUnderIcon) {
-            menuRect.setTop(backgroundRect.top());
-            menuRect.setBottom(backgroundRect.bottom());
-        } else {
-            menuRect.setLeft(backgroundRect.left());
-            menuRect.setRight(backgroundRect.right());
-        }
-        return menuRect;
+        return m_menuButtonRect;
     }
     return QRect();
 }
@@ -138,14 +134,6 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-void ToolButtonElement::drawText(QPainter *painter) const
-{
-    if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonIconOnly) {
-        return;
-    }
-    AbstractElement::drawText(painter);
-}
-
 void ToolButtonElement::drawIcon(QPainter *painter) const
 {
     if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
@@ -176,6 +164,15 @@ void ToolButtonElement::drawIcon(QPainter *painter) const
     } else if (hasIcon()) {
         drawIconAtRect(painter, m_icon, iconRect);
     }
+}
+
+void ToolButtonElement::drawIndicator(QPainter *painter) const
+{
+    auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
+    auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
+    indicatorRect.moveCenter(rect.center());
+    drawBackgroundRectangle(painter, rect, m_indicatorProperties);
+    drawIconAtRect(painter, m_indicator, indicatorRect);
 }
 
 QVariantMap ToolButtonElement::elementAttributes() const
@@ -213,4 +210,67 @@ QStringList ToolButtonElement::elementHints() const
         hints.append(u"raised"_s);
     }
     return hints;
+}
+
+void ToolButtonElement::layoutButtons()
+{
+    m_mainButtonRect = m_toolButtonOption->rect;
+    if (!m_hasIndicator) {
+        return;
+    }
+    m_menuButtonRect = m_indicatorMap[ElementString::Indicator].rect;
+
+    // Align the second button around the main button
+    if (m_indicatorProperties && m_indicatorProperties->layout() && m_indicatorProperties->layout()->alignment()) {
+        auto alignH = m_indicatorProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
+        auto alignV = m_indicatorProperties->layout()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+
+        QMarginsF padding;
+        if (m_indicatorProperties->layout()->padding()) {
+            padding = m_indicatorProperties->layout()->padding()->toMargins();
+        }
+        m_menuButtonRect = m_menuButtonRect.marginsAdded(padding);
+
+        switch (alignH) {
+        case Union::Properties::Alignment::Start:
+            m_menuButtonRect.moveLeft(m_mainButtonRect.left());
+            m_mainButtonRect.setLeft(m_menuButtonRect.right());
+            break;
+        case Union::Properties::Alignment::Center:
+            m_menuButtonRect.moveCenter(QPoint(m_mainButtonRect.center().x(), m_menuButtonRect.center().y()));
+            break;
+        case Union::Properties::Alignment::End:
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::StackCenter:
+            m_menuButtonRect.moveRight(m_mainButtonRect.right());
+            m_mainButtonRect.setRight(m_menuButtonRect.left());
+            break;
+        case Union::Properties::Alignment::StackFill:
+        case Union::Properties::Alignment::Fill:
+            m_menuButtonRect.setRight(m_mainButtonRect.right());
+            m_menuButtonRect.setLeft(m_mainButtonRect.left());
+            break;
+        }
+
+        switch (alignV) {
+        case Union::Properties::Alignment::Start:
+            m_menuButtonRect.moveTop(m_mainButtonRect.top());
+            m_mainButtonRect.setTop(m_menuButtonRect.bottom());
+            break;
+        case Union::Properties::Alignment::Center:
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::StackCenter:
+            m_menuButtonRect.moveCenter(QPoint(m_menuButtonRect.center().x(), m_mainButtonRect.center().y()));
+            break;
+        case Union::Properties::Alignment::End:
+            m_menuButtonRect.moveBottom(m_mainButtonRect.bottom());
+            m_mainButtonRect.setBottom(m_menuButtonRect.top());
+            break;
+        case Union::Properties::Alignment::Fill:
+        case Union::Properties::Alignment::StackFill:
+            m_menuButtonRect.setTop(m_mainButtonRect.top());
+            m_menuButtonRect.setBottom(m_mainButtonRect.bottom());
+            break;
+        }
+    }
 }

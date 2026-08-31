@@ -38,6 +38,7 @@ public:
 
     void update() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+    void layout() override;
 
     QRectF subControlRect(QStyle::SubControl subControl) const override;
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
@@ -46,11 +47,18 @@ private:
     QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
     void updateSubElementList() override;
-    void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;
+    void drawIndicator(QPainter *painter) const override;
+    void layoutButtons();
+
     const QStyleOptionToolButton *m_toolButtonOption = nullptr;
     bool m_hasIndicator;
     bool m_hasArrows;
     bool m_hasIcon;
     bool m_hasText;
+
+    QRectF m_mainButtonRect;
+    QRectF m_menuButtonRect;
+
+    QMap<QString, LayoutItem> m_indicatorMap;
 };
