@@ -10,7 +10,10 @@
 #include <QPainter>
 #include <QStyle>
 
+#include "PropertiesTypes.h"
+
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 ButtonElement::ButtonElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -99,10 +102,7 @@ QSizeF ButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
     // to get the proper contentSize
     if (hasIndicator()) {
-        qreal spacing = 0;
-        if (m_backgroundProperties->layout()) {
-            spacing = m_backgroundProperties->layout()->spacing().value_or(0);
-        }
+        qreal spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
         size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing;
     }
     return size;
