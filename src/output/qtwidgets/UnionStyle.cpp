@@ -630,44 +630,15 @@ void UnionStyle::polish(QApplication *application)
 
 void UnionStyle::polish(QWidget *widget)
 {
-    // WA_Hover setup stolen from Breeze
     // enable mouse over effects for all necessary widgets
-    if (qobject_cast<QAbstractItemView *>(widget) || qobject_cast<QAbstractSpinBox *>(widget) || qobject_cast<QCheckBox *>(widget)
-        || qobject_cast<QComboBox *>(widget) || qobject_cast<QDial *>(widget) || qobject_cast<QLineEdit *>(widget) || qobject_cast<QPushButton *>(widget)
-        || qobject_cast<QRadioButton *>(widget) || qobject_cast<QScrollBar *>(widget) || qobject_cast<QSlider *>(widget)
-        || qobject_cast<QSplitterHandle *>(widget) || qobject_cast<QTabBar *>(widget) || qobject_cast<QTextEdit *>(widget)
-        || qobject_cast<QToolButton *>(widget) || widget->inherits("KTextEditor::View")) {
+    if (widget) {
         widget->setAttribute(Qt::WA_Hover);
-    }
-    if (auto itemView = qobject_cast<QAbstractItemView *>(widget)) {
-        // enable mouse over effects in the viewport of the itemview
-        itemView->viewport()->setAttribute(Qt::WA_Hover);
-
-    } else if (auto groupBox = qobject_cast<QGroupBox *>(widget)) {
-        // checkable group boxes
-        if (groupBox->isCheckable()) {
-            groupBox->setAttribute(Qt::WA_Hover);
-        }
-
-    } else if (qobject_cast<QAbstractButton *>(widget) && qobject_cast<QDockWidget *>(widget->parent())) {
-        widget->setAttribute(Qt::WA_Hover);
-
-    } else if (qobject_cast<QAbstractButton *>(widget) && qobject_cast<QToolBox *>(widget->parent())) {
-        widget->setAttribute(Qt::WA_Hover);
-    }
-    // enable mouse over effect in sunken scrollareas that support focus
-    if (auto scrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
-        if (scrollArea->frameShadow() == QFrame::Sunken && scrollArea->focusPolicy() & Qt::StrongFocus) {
-            scrollArea->setAttribute(Qt::WA_Hover);
-        }
+        widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars
         widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
     }
-
-    widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
-
     QCommonStyle::polish(widget);
 }
 
