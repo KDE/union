@@ -82,53 +82,23 @@ void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
 void MenuItemElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_menuItemOption->text.isEmpty()) {
-        m_subElementList.append(ElementString::Text);
-    }
-    if (!m_menuItemOption->icon.isNull()) {
-        m_subElementList.append(ElementString::Icon);
-    }
-    if (m_menuItemOption->menuHasCheckableItems) {
-        m_subElementList.append(ElementString::CheckBox);
-    }
-    if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::SubMenu) {
-        m_subElementList.append(ElementString::Arrow);
-    }
-    if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-        m_subElementList.append(ElementString::MenuSeparator);
-    }
-    if (m_menuItemOption->checkType != QStyleOptionMenuItem::NotCheckable) {
-        m_subElementList.append(ElementString::Indicator);
-    }
-}
-
-void MenuItemElement::layout()
-{
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
-
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-    }
-
-    QStringList subElements;
     QString itemText = text();
     if (m_isSeparator) {
         if (hasText()) {
-            subElements.append(ElementString::Text);
+            m_subElementList.append(ElementString::Text);
         }
     } else {
         if (m_hasCheckBox || m_hasRadioButton) {
-            subElements.append(ElementString::Indicator);
+            m_subElementList.append(ElementString::Indicator);
         }
         if (hasIcon()) {
-            subElements.append(ElementString::Icon);
+            m_subElementList.append(ElementString::Icon);
         }
         if (hasText()) {
-            subElements.append(ElementString::Text);
+            m_subElementList.append(ElementString::Text);
             const int tabPosition(itemText.indexOf(QLatin1Char('\t')));
             if (tabPosition >= 0) {
-                subElements.append(ElementString::ShortcutText);
+                m_subElementList.append(ElementString::ShortcutText);
                 m_shortcutText = itemText.mid(tabPosition + 1);
                 m_text = itemText.left(tabPosition);
             } else {
@@ -138,28 +108,32 @@ void MenuItemElement::layout()
             m_shortcutText = QString();
         }
         if (hasIndicator()) {
-            subElements.append(ElementString::Arrow);
+            m_subElementList.append(ElementString::Arrow);
         }
 
-        if (subElements.empty()) {
+        if (m_subElementList.empty()) {
             m_isValid = false;
             return;
         }
     }
+}
 
+void MenuItemElement::layout()
+{
     if (m_isSeparator) {
-        m_contentElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuSeparator});
+        m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuSeparator});
     } else {
-        m_contentElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
-    }
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
+        m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
     }
 
-    auto adjustedOpt = *m_menuItemOption;
-    adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
-    m_layoutMap = layoutMap(m_contentElementList, &adjustedOpt, subElements);
-    m_isValid = true;
+    if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+        auto adjustedOpt = *m_menuItemOption;
+        adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
+        m_layoutMap = layoutMap(m_backgroundElementList, &adjustedOpt, m_subElementList);
+        m_isValid = true;
+    }
 }
 
 QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
@@ -168,9 +142,9 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // Handle separator separately (pun not intended)
     if (m_menuItemOption) {
         if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-            if (m_contentProperties->layout()) {
-                int width = m_contentProperties->layout()->width().value_or(1);
-                int height = m_contentProperties->layout()->height().value_or(1);
+            if (m_backgroundProperties->layout()) {
+                int width = m_backgroundProperties->layout()->width().value_or(1);
+                int height = m_backgroundProperties->layout()->height().value_or(1);
                 if (hasText()) {
                     if (preferredSize.width() > width) {
                         width = preferredSize.width();
@@ -180,18 +154,18 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                     }
                 }
                 QSizeF separatorSize(width, height);
-                if (m_contentProperties->layout()->inset()) {
-                    auto pad = m_contentProperties->layout()->inset()->toMargins();
+                if (m_backgroundProperties->layout()->inset()) {
+                    auto pad = m_backgroundProperties->layout()->inset()->toMargins();
                     separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
                 }
 
                 // If we have text, we want to apply padding normally. If not, we want to remove padding and utilize the insets.
-                preferredSize = applyPaddingToSize(separatorSize, hasText() ? PaddingDirection::Outward : PaddingDirection::Inward, m_contentProperties);
+                preferredSize = applyPaddingToSize(separatorSize, hasText() ? PaddingDirection::Outward : PaddingDirection::Inward, m_backgroundProperties);
             }
         } else {
-            if (m_contentProperties->layout()) {
+            if (m_backgroundProperties->layout()) {
                 QSizeF itemSize(contentsSizeFromStyle);
-                int spacing = m_contentProperties->layout()->spacing().value_or(0);
+                int spacing = m_backgroundProperties->layout()->spacing().value_or(0);
                 if (hasIcon()) {
                     itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
                 }
@@ -218,16 +192,16 @@ void MenuItemElement::drawBackground(QPainter *painter) const
 {
     // Draw the  separator rectangle full width if its set to fill
     if (m_isSeparator) {
-        QRectF rect = backgroundRectangle(m_menuItemOption, m_contentProperties);
-        if (m_contentProperties->layout()
-            && m_contentProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Fill) == Union::Properties::Alignment::Fill) {
+        QRectF rect = backgroundRectangle(m_menuItemOption, m_backgroundProperties);
+        if (m_backgroundProperties->layout()
+            && m_backgroundProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Fill) == Union::Properties::Alignment::Fill) {
             rect = centerRect(rect,
-                              m_contentProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
-                              m_contentProperties->layout()->height().value_or(1));
+                              m_backgroundProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
+                              m_backgroundProperties->layout()->height().value_or(1));
         }
         // Adjust only the width, as we want to keep the height as is
         const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
-        drawBackgroundRectangle(painter, rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), 0), m_contentProperties);
+        drawBackgroundRectangle(painter, rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), 0), m_backgroundProperties);
     } else {
         drawBackgroundRectangle(painter, adjustedRect(m_menuItemOption->rect), m_backgroundProperties);
     }
@@ -247,7 +221,7 @@ void MenuItemElement::drawText(QPainter *painter) const
         const auto properties = queryProperties(shortcutElements);
         auto adjustedOpt = *m_menuItemOption;
         adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
-        auto map = layoutMap(m_contentElementList, &adjustedOpt, {ElementString::ShortcutText});
+        auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::ShortcutText});
         QRectF textRect = map[ElementString::ShortcutText].rect;
         QColor shortcutColor = m_menuItemOption->palette.text().color();
         if (properties->text() && properties->text()->color().has_value()) {
