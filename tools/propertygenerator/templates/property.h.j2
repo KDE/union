@@ -80,6 +80,33 @@ public:
      */
     {{ type }} &operator=({{ type }} &&other);
 
+    /*!
+     * Perform safe property lookup of a property or the property of a subgroup.
+     *
+     * This should be called with a list of property getter pointer-to-member
+     * functions in \a functions that indicate which properties to access. Each
+     * subgroup access will be checked to make sure the subgroup exists. If any
+     * of them does not exist, \a defaultValue will be returned. The final
+     * property lookup can be any member function of the final group. If that
+     * returns a pointer or std::optional<>, it is checked to see if it has a
+     * value. If it does, that value is returned. If not, \a defaultValue is
+     * returned. For functions returning anything else, the value returned by
+     * the function is returned.
+     *
+     * Example usage:
+     *
+     * \code
+     * // Lookup the value of the property "spacing" of the "layout" group.
+     * auto spacing = StylePropertyGroup->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+     * \endcode
+     */
+    template<typename T, typename... LookupFunctions>
+        requires(std::is_member_function_pointer_v<LookupFunctions> && ...)
+    inline T safePropertyLookup(const T &defaultValue, LookupFunctions... functions) const
+    {
+        return Union::Properties::safePropertyLookup(this, defaultValue, functions...);
+    }
+
 {% for property in children %}
 {% if property.children %}
 {% if property.api_documentation %}
