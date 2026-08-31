@@ -114,10 +114,10 @@ void StyledRectangle::updateImplicitSize()
         return;
     }
 
-    if (query->properties()->layout()) {
-        auto layout = query->properties()->layout();
-        setImplicitSize(layout->width().value_or(0.0), layout->height().value_or(0.0));
-    }
+    auto properties = query->properties();
+    auto width = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    auto height = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    setImplicitSize(width, height);
 
     update();
 }
@@ -169,7 +169,7 @@ QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGro
     }
 
     auto rect = alignRect(boundingRect(), this);
-    auto cornerSizes = style->corners() ? style->corners()->radii() : CornersPropertyGroup::CornerRadii{};
+    auto cornerSizes = style->safePropertyLookup(CornersPropertyGroup::CornerRadii{}, &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
 
     // Shader corner radius order is bottom right, top right, bottom left, top left.
     auto radii = QVector4D{float(cornerSizes.bottomRight), float(cornerSizes.topRight), float(cornerSizes.bottomLeft), float(cornerSizes.topLeft)};

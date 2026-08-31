@@ -263,9 +263,8 @@ void PositionerLayout::updatePolish()
                                             positionedItemAttached->minimumHeight() > 0.0 ? positionedItemAttached->minimumHeight() : 0.0};
         }
 
-        if (source == PositionerSource::Source::Layout && layoutProperties && layoutProperties->margins()) {
-            auto margins = layoutProperties->margins()->toMargins();
-            layoutItem.margins = QMarginsF(margins.left(), margins.top(), margins.right(), margins.bottom());
+        if (source == PositionerSource::Source::Layout && layoutProperties) {
+            layoutItem.margins = layoutProperties->safePropertyLookup(QMarginsF{}, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
         }
 
         LayoutContainer *container = &(layout.itemContainer);
@@ -327,11 +326,11 @@ void PositionerLayout::updatePolish()
     }
 
     const auto properties = query->properties();
-    const auto &layoutGroup = properties->layout() ? *(properties->layout()) : Private::EmptyLayoutGroup;
+    const auto layoutGroup = properties->layout();
 
     layout.size = containerItem->size();
 
-    layout.spacing = d->spacingProperty.isValid() ? d->spacingProperty.read().toReal() : layoutGroup.spacing().value_or(0.0);
+    layout.spacing = d->spacingProperty.isValid() ? d->spacingProperty.read().toReal() : safePropertyLookup(layoutGroup, 0.0, &LayoutPropertyGroup::spacing);
 
     if (d->paddingValid) {
         layout.padding = QMarginsF{d->leftPaddingProperty.read().toReal(),
@@ -339,7 +338,7 @@ void PositionerLayout::updatePolish()
                                    d->rightPaddingProperty.read().toReal(),
                                    d->bottomPaddingProperty.read().toReal()};
     } else {
-        layout.padding = layoutGroup.padding() ? layoutGroup.padding()->toMargins() : QMarginsF{};
+        layout.padding = safePropertyLookup(layoutGroup, QMarginsF{}, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     }
 
     if (d->insetValid) {
@@ -348,7 +347,7 @@ void PositionerLayout::updatePolish()
                                  d->rightInsetProperty.read().toReal(),
                                  d->bottomInsetProperty.read().toReal()};
     } else {
-        layout.inset = layoutGroup.inset() ? layoutGroup.inset()->toMargins() : QMarginsF{};
+        layout.inset = safePropertyLookup(layoutGroup, QMarginsF{}, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
     }
 
     layout.layout();
