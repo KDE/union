@@ -157,7 +157,7 @@ void MenuItemElement::layout()
     }
 
     auto adjustedOpt = *m_menuItemOption;
-    adjustedOpt.rect = adjustedRect().toRect();
+    adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
     m_layoutMap = layoutMap(m_contentElementList, &adjustedOpt, subElements);
     m_isValid = true;
 }
@@ -185,7 +185,8 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                     separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
                 }
 
-                preferredSize = applyPaddingToSize(separatorSize, PaddingDirection::Outward, m_contentProperties);
+                // If we have text, we want to apply padding normally. If not, we want to remove padding and utilize the insets.
+                preferredSize = applyPaddingToSize(separatorSize, hasText() ? PaddingDirection::Outward : PaddingDirection::Inward, m_contentProperties);
             }
         } else {
             if (m_contentProperties->layout()) {
@@ -221,12 +222,14 @@ void MenuItemElement::drawBackground(QPainter *painter) const
         if (m_contentProperties->layout()
             && m_contentProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Fill) == Union::Properties::Alignment::Fill) {
             rect = centerRect(rect,
-                              m_contentProperties->layout()->width().value_or(m_menuItemOption->menuRect.width()),
+                              m_contentProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
                               m_contentProperties->layout()->height().value_or(1));
         }
-        drawBackgroundRectangle(painter, rect, m_contentProperties);
+        // Adjust only the width, as we want to keep the height as is
+        const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
+        drawBackgroundRectangle(painter, rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), 0), m_contentProperties);
     } else {
-        drawBackgroundRectangle(painter, m_menuItemOption->rect.adjusted(0, 0, -3, -3), m_backgroundProperties);
+        drawBackgroundRectangle(painter, adjustedRect(m_menuItemOption->rect), m_backgroundProperties);
     }
 }
 
@@ -243,7 +246,7 @@ void MenuItemElement::drawText(QPainter *painter) const
         auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
         const auto properties = queryProperties(shortcutElements);
         auto adjustedOpt = *m_menuItemOption;
-        adjustedOpt.rect = adjustedRect().toRect();
+        adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
         auto map = layoutMap(m_contentElementList, &adjustedOpt, {ElementString::ShortcutText});
         QRectF textRect = map[ElementString::ShortcutText].rect;
         QColor shortcutColor = m_menuItemOption->palette.text().color();
@@ -289,11 +292,11 @@ qreal MenuItemElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     return 0;
 }
 
-QRectF MenuItemElement::adjustedRect() const
+QRectF MenuItemElement::adjustedRect(QRectF rect) const
 {
-    const auto frameWidth = averageBorderSize();
+    const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
     // Follow what breeze does here to center items. See BreezeStyle::drawMenuItemControl.
-    return m_menuItemOption->rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
+    return rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
 }
 
 Union::Element::States MenuItemElement::elementStates() const

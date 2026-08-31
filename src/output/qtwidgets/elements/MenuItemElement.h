@@ -47,7 +47,7 @@ private:
     void drawIndicator(QPainter *painter) const override;
     void drawText(QPainter *painter) const override;
     void updateSubElementList() override;
-    QRectF adjustedRect() const;
+    QRectF adjustedRect(QRectF rect) const;
     Union::Element::States elementStates() const override;
     const QStyleOptionMenuItem *m_menuItemOption = nullptr;
     Union::ElementList m_indicatorElementList;
