@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <type_traits>
+
 #include <QColor>
 #include <QMetaEnum>
 #include <QMetaObject>
@@ -162,6 +164,58 @@ template<>
 inline QColor emptyValue<QColor>()
 {
     return Qt::transparent;
+}
+
+// Simple helper concept that constraints things to be pointer-to-member-function
+// that removes the need to specify this in a requires clause.
+template<typename T>
+concept MemberFunctionPointer = std::is_member_function_pointer_v<T>;
+
+/*!
+ * Perform safe property lookup on a property group.
+ *
+ * This will return the value of the property that is accessed by calling
+ * \a function which is required to be a pointer-to-member-function of \a group.
+ * If the value is a pointer or std::optional<>, the value is checked to be
+ * valid before returning. If it is not, \a defaultValue is returned.
+ */
+template<typename T, typename PropertyGroup, MemberFunctionPointer LookupFunction>
+    requires std::is_invocable_v<LookupFunction, PropertyGroup>
+static inline T safePropertyLookup(const PropertyGroup *group, const T &defaultValue, LookupFunction function)
+{
+    auto value = (group->*function)();
+    if constexpr (std::is_pointer_v<decltype(value)>) {
+        if (value) {
+            return value;
+        }
+    } else if constexpr (std::is_same_v<decltype(value), std::optional<T>>) {
+        if (value) {
+            return value.value();
+        }
+    } else {
+        return value;
+    }
+    return defaultValue;
+}
+
+/*!
+ * Perform safe property lookup on a property group.
+ *
+ * This will return the value of a property specified as final function of
+ * \a functions using \a function and the other entries in \a functions to look
+ * up property groups along the way. If any of the property groups return
+ * nullptr, \a defaultValue will be returned.
+ */
+template<typename T, typename PropertyGroup, MemberFunctionPointer LookupFunction, MemberFunctionPointer... LookupFunctions>
+    requires std::is_invocable_v<LookupFunction, PropertyGroup>
+static inline T safePropertyLookup(const PropertyGroup *group, const T &defaultValue, LookupFunction function, LookupFunctions... functions)
+{
+    auto value = (group->*function)();
+    if (value) {
+        return safePropertyLookup(value, defaultValue, functions...);
+    } else {
+        return defaultValue;
+    }
 }
 }
 }
