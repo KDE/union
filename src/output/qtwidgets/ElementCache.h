@@ -63,7 +63,7 @@ static std::shared_ptr<AbstractElement> element(int enumValue, size_t hash, cons
     return result;
 }
 
-static void clear()
+inline static void clear()
 {
     detail::s_elementCache.clear();
 }
