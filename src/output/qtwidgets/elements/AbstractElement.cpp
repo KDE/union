@@ -248,16 +248,16 @@ void AbstractElement::drawText(QPainter *painter) const
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
         const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
         QColor penColor = m_styleOption->palette.text().color();
-        if (m_contentProperties->text()) {
-            auto textColor = m_contentProperties->text()->color();
+        if (m_backgroundProperties->text()) {
+            auto textColor = m_backgroundProperties->text()->color();
             if (textColor) {
                 penColor = textColor->toQColor();
             }
-            textFlags = textFlagsFromProperties(m_contentProperties, true);
+            textFlags = textFlagsFromProperties(m_backgroundProperties, true);
         }
         painter->save();
-        if (m_contentProperties->text() && m_contentProperties->text()->font().has_value()) {
-            painter->setFont(m_contentProperties->text()->font().value());
+        if (m_backgroundProperties->text() && m_backgroundProperties->text()->font().has_value()) {
+            painter->setFont(m_backgroundProperties->text()->font().value());
         }
         painter->setPen(penColor);
         m_style->drawItemText(painter, textRect.toRect(), textFlags, m_styleOption->palette, enabled, m_text);
