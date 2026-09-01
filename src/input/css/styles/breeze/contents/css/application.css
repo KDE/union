@@ -177,6 +177,23 @@ framewindow
     border-radius: var(--corner-radius);
 }
 
+frame {
+    &[shape="no-frame"] {
+        border: none;
+    }
+    &[shape="panel"] {
+        background-color: var(--complementary-background-color);
+    }
+    &[shape="vertical-line"],
+    &[shape="horizontal-line"] {
+        border-radius: 0px;
+        border: none;
+        background-color: var(--window-border-color);
+        padding: 0px;
+        inset: 1px;
+    }
+}
+
 groupbox {
     padding: var(--small-spacing);
     border: 1px solid var(--window-border-color);
@@ -231,8 +248,8 @@ scrollareacorner {
     color: var(--window-text-color);
 }
 
-groupbox,
-frame {
+panel,
+groupbox {
     &.flat {
         background-color: transparent;
         border: none;

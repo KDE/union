@@ -37,9 +37,11 @@ public:
 
     void update() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+    void drawFrame(QPainter *painter) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
     void updateSubElementList() override;
     const QStyleOptionFrame *m_frameOption = nullptr;
