@@ -114,7 +114,7 @@ QStringList CheckBoxElement::elementHints() const
     }
     // Used for "partial" checkbox
     if (m_buttonOption->state.testFlag(QStyle::State_NoChange)) {
-        hints.append(u"no-change"_s);
+        hints.append(u"indeterminate"_s);
     }
     return hints;
 }

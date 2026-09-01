@@ -118,7 +118,7 @@ menuitem
     {
         background-image: url("../images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
     }
-    &.no-change indicator {
+    &.indeterminate indicator {
         background-image: url("../images/indeterminate.svg") mask var(--checkable-indicator-active-text-color);
     }
 }

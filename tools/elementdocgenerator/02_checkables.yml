@@ -18,7 +18,7 @@
     hints:
         with-icon: Set whenever the element has an icon set.
         changed: Set whenever the element should visualize a changed state.
-        no-change: |
+        indeterminate: |
             Set whenever the element state is indeterminate. For example, in tree-view where
             main item is checked but some it's children are not checked.
     attributes:
