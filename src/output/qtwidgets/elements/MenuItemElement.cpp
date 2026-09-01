@@ -22,6 +22,7 @@ MenuItemElement::MenuItemElement(const QStyleOptionMenuItem *option, const Union
     , m_hasSubMenu(false)
     , m_hasCheckBox(false)
     , m_hasRadioButton(false)
+    , m_hasCheckableItems(false)
     , m_shortcutText(QString())
 {
     update();
@@ -37,6 +38,7 @@ void MenuItemElement::update()
     m_hasSubMenu = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::SubMenu);
     m_hasCheckBox = (m_menuItemOption->checkType == QStyleOptionMenuItem::NonExclusive);
     m_hasRadioButton = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
+    m_hasCheckableItems = m_menuItemOption->menuHasCheckableItems;
     m_menuHMargin = m_style->pixelMetric(QStyle::PM_MenuHMargin, m_styleOption, m_widget);
     m_menuVMargin = m_style->pixelMetric(QStyle::PM_MenuVMargin, m_styleOption, m_widget);
 
@@ -54,7 +56,9 @@ void MenuItemElement::update()
         m_checkProperties = queryProperties(m_checkElementList);
     }
 
-    setIcon(m_menuItemOption->icon);
+    if (!QApplication::testAttribute(Qt::AA_DontShowIconsInMenus)) {
+        setIcon(m_menuItemOption->icon);
+    }
     setText(m_menuItemOption->text);
 
     updateSubElementList();
@@ -70,12 +74,12 @@ void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
     switch (enums.ControlElement) {
     case QStyle::CE_MenuItem:
         drawBackground(painter);
-        drawIcon(painter);
-        drawText(painter);
-        drawIndicator(painter);
         if (m_hasCheckBox || m_hasRadioButton) {
             drawBackgroundRectangle(painter, m_layoutMap[ElementString::Indicator].rect, m_checkProperties);
         }
+        drawIcon(painter);
+        drawIndicator(painter);
+        drawText(painter);
         break;
     }
 }
@@ -89,7 +93,7 @@ void MenuItemElement::updateSubElementList()
             m_subElementList.append(ElementString::Text);
         }
     } else {
-        if (m_hasCheckBox || m_hasRadioButton) {
+        if (m_hasCheckableItems) {
             m_subElementList.append(ElementString::Indicator);
         }
         if (hasIcon()) {
@@ -237,7 +241,11 @@ void MenuItemElement::drawText(QPainter *painter) const
 void MenuItemElement::drawIndicator(QPainter *painter) const
 {
     if (hasIndicator()) {
-        QRectF indicatorRect = m_layoutMap[ElementString::Arrow].rect;
+        auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
+        auto adjustedOpt = *m_menuItemOption;
+        adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
+        auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::Arrow});
+        QRectF indicatorRect = map[ElementString::Arrow].rect;
         drawIconAtRect(painter, m_indicator, indicatorRect);
     }
 }

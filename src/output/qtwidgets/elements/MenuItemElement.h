@@ -58,6 +58,7 @@ private:
     bool m_hasSubMenu;
     bool m_hasCheckBox;
     bool m_hasRadioButton;
+    bool m_hasCheckableItems;
     QString m_shortcutText;
     qreal m_menuHMargin;
     qreal m_menuVMargin;
