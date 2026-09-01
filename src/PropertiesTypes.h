@@ -210,6 +210,10 @@ template<typename T, typename PropertyGroup, MemberFunctionPointer LookupFunctio
     requires std::is_invocable_v<LookupFunction, PropertyGroup>
 static inline T safePropertyLookup(const PropertyGroup *group, const T &defaultValue, LookupFunction function, LookupFunctions... functions)
 {
+    if (!group) {
+        return defaultValue;
+    }
+
     auto value = (group->*function)();
     if (value) {
         return safePropertyLookup(value, defaultValue, functions...);
