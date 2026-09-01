@@ -64,16 +64,10 @@ menuitem
     from.
     */
     &:hovered,
-    &:selected,
     &.with-submenu:highlighted
     {
         background-color: var(--focus-color);
         border: 1px solid var(--highlight-color);
-    }
-
-    &:checked {
-        background-color: transparent;
-        border: none;
     }
 
     &:pressed

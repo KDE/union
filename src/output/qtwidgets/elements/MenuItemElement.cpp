@@ -246,7 +246,7 @@ void MenuItemElement::drawIndicator(QPainter *painter) const
 QStringList MenuItemElement::elementHints() const
 {
     QStringList hints;
-    if (m_menuItemOption->checked) {
+    if (m_hasSubMenu) {
         hints.append(u"with-submenu"_s);
     }
     if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
@@ -277,5 +277,7 @@ Union::Element::States MenuItemElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
     states.setFlag(Union::Element::State::Checked, m_menuItemOption->checked);
+    // Menuitems for some reason do not get mouseover, but they get selected instead
+    states.setFlag(Union::Element::State::Hovered, m_menuItemOption->state.testFlag(QStyle::State_Selected));
     return states;
 }
