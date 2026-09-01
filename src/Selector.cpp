@@ -61,6 +61,37 @@ void appendFromStream<SelectorType::Type>(QDataStream &stream, Union::SelectorLi
     destination.append(Selector::create<SelectorType::Type>(type));
 }
 
+/***** SelectorType::SubElement *****/
+template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::SubElement, QString>::weight() const
+{
+    return 1;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::SubElement, QString>::matches(Element *element) const
+{
+    if (data.isEmpty()) {
+        return false;
+    }
+
+    return QString::compare(element->subElement(), data, Qt::CaseSensitivity::CaseInsensitive) == 0;
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::SubElement, QString>::toString() const
+{
+    return u"SubElement(%1)"_s.arg(data);
+}
+
+template<>
+void appendFromStream<SelectorType::SubElement>(QDataStream &stream, Union::SelectorList &destination)
+{
+    QString type;
+    stream >> type;
+    destination.append(Selector::create<SelectorType::SubElement>(type));
+}
+
 /***** SelectorType::Id *****/
 template<>
 UNION_EXPORT int SelectorPrivateModel<SelectorType::Id, QString>::weight() const
@@ -393,7 +424,10 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
         if (!sitr->matches(eitr->get())) {
             return false;
         }
-        sitr++;
+
+        if (sitr->type() != SelectorType::SubElement) {
+            sitr++;
+        }
 
         if (sitr != rend() && sitr->isCombinator()) {
             switch (sitr->type()) {
@@ -407,6 +441,10 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
                 while (eitr != elements.rend() && !sitr->matches(eitr->get())) {
                     eitr++;
                 }
+                break;
+            case SelectorType::SubElement:
+                eitr++;
+                sitr++;
                 break;
             default:
                 return false;
@@ -494,6 +532,7 @@ QDataStream &operator>>(QDataStream &stream, Union::SelectorList &selectors)
                        SelectorType::AttributeEquals,
                        SelectorType::AttributeSubstringMatch,
                        SelectorType::AnyElement,
+                       SelectorType::SubElement,
                        SelectorType::ChildCombinator,
                        SelectorType::DescendantCombinator>(selectorType, stream, selectors);
     }

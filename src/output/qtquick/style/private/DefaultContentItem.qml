@@ -20,15 +20,17 @@ Item {
     Union.Mnemonics.label: root.control.text
 
     Union.Icon {
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        Union.Element.subElement: "Icon"
+
         Union.PositionedItem.minimumWidth: control.icon?.width ?? 0.0
         Union.PositionedItem.minimumHeight: control.icon?.height ?? 0.0
+
         control: root.control
         visible: (name || source.toString()) && root.control.display != T.AbstractButton.TextOnly
     }
 
     Text {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+        Union.Element.subElement: "Text"
 
         text: root.Union.Mnemonics.richTextLabel ?? root.control.text
         font: root.control.font

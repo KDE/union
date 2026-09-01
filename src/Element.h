@@ -83,23 +83,6 @@ public:
     Q_FLAG(States)
 
     /*!
-     * \enum Union::Element::ColorSet
-     *
-     * Which set of colours should be used to render the element.
-     */
-    enum class ColorSet {
-        None,
-        View,
-        Window,
-        Button,
-        Selection,
-        Tooltip,
-        Complementary,
-        Header,
-    };
-    Q_ENUM(ColorSet)
-
-    /*!
      * \enum Union::Element::Change
      *
      * A set of flags to indicate what changed about an element.
@@ -111,6 +94,7 @@ public:
         States = 1 << 2,
         Hints = 1 << 3,
         Attributes = 1 << 4,
+        SubElement = 1 << 5,
     };
     Q_DECLARE_FLAGS(Changes, Change)
     Q_FLAG(Changes)
@@ -139,6 +123,19 @@ public:
     Q_SIGNAL void typeChanged();
 
     /*!
+     * \property Union::Element::subElement
+     *
+     * The name of the sub-element.
+     *
+     * This can be used to name different parts of an element that need their
+     * own styling rules applied, such as the text on a button.
+     */
+    Q_PROPERTY(QString subElement READ subElement WRITE setSubElement NOTIFY subElementChanged)
+    QString subElement() const;
+    void setSubElement(const QString &subElement);
+    Q_SIGNAL void subElementChanged();
+
+    /*!
      * \property Union::Element::id
      *
      * A unique ID to identify a specific element.
@@ -164,16 +161,6 @@ public:
     States states() const;
     void setStates(States newStates);
     Q_SIGNAL void statesChanged();
-
-    /*!
-     * \property Union::Element::colorSet
-     *
-     * The ColorSet to use to render this element.
-     */
-    Q_PROPERTY(ColorSet colorSet READ colorSet WRITE setColorSet NOTIFY colorSetChanged)
-    ColorSet colorSet() const;
-    void setColorSet(ColorSet newColorSet);
-    Q_SIGNAL void colorSetChanged();
 
     /*!
      * \property Union::Element::hints

@@ -428,9 +428,15 @@ bool CssLoader::load(Style::Ptr style)
 Union::SelectorList CssLoader::createSelectorList(const cssparser::Selector &selector)
 {
     Union::SelectorList result;
-    std::ranges::transform(selector.parts(), std::back_inserter(result), [this](const auto &part) {
-        return createSelector(part);
-    });
+
+    const auto parts = selector.parts();
+    auto itr = parts.begin();
+    while (itr != parts.end()) {
+        const auto &part = *itr;
+        result.append(createSelector(part));
+        itr++;
+    }
+
     return result;
 }
 
@@ -481,6 +487,8 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     case cssparser::SelectorPart::Kind::DocumentRoot:
         // TODO
         break;
+    case cssparser::SelectorPart::Kind::Part:
+        return Union::Selector::create<Union::SelectorType::SubElement>(QString::fromStdString(part.value().get<std::string>()));
     case cssparser::SelectorPart::Kind::DescendantCombinator:
         return Union::Selector::create<Union::SelectorType::DescendantCombinator>();
     case cssparser::SelectorPart::Kind::ChildCombinator:

@@ -355,6 +355,16 @@ public:
     Q_SIGNAL void typeChanged();
 
     /*!
+     * \qmlattachedproperty string Element::subElement
+     *
+     * The name of the subelement.
+     */
+    Q_PROPERTY(QString subElement READ subElement WRITE setSubElement NOTIFY subElementChanged)
+    QString subElement() const;
+    void setSubElement(const QString &newSubElement);
+    Q_SIGNAL void subElementChanged();
+
+    /*!
      * \qmlattachedproperty string Element::elementId
      *
      * A unique id for the element.

@@ -72,7 +72,7 @@ T.ComboBox {
     }
 
     indicator: Union.Icon {
-        Union.Element.type: "Indicator"
+        Union.Element.subElement: "Indicator"
 
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0

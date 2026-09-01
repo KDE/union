@@ -189,6 +189,11 @@ children:
 
                 doc: The opacity of the element.
 
+            color:
+                type: Union::Color
+
+                doc: The color of the element.
+
     layout:
         type: group
 
@@ -291,19 +296,19 @@ children:
                 weight name.
 
         children:
-            alignment:
-                type: alignment
-
-                doc:
-                    css: |
-                        The alignment of text of an element.
+            # alignment:
+            #     type: alignment
+            #
+            #     doc:
+            #         css: |
+            #             The alignment of text of an element.
 
             font:
                 type: QFont
 
-            color:
-                type: Union::Color
-                doc: The color of text of an element.
+            # color:
+            #     type: Union::Color
+            #     doc: The color of text of an element.
 
             wrapMode:
                 type: Union::Properties::TextWrapMode
@@ -315,12 +320,6 @@ children:
 
         extra_code:
             "properties.css.j2": |4
-                @property color {
-                    syntax: "<color>";
-                    inherits: true;
-                    initial-value: #ffffff;
-                }
-
                 @property font-size {
                     syntax: "<length-percentage>";
                 }
@@ -344,18 +343,18 @@ children:
                 A shorthand to set both icon width and icon height in one property.
 
         children:
-            alignment:
-                type: alignment
-
-            width:
-                type: qreal
-
-                doc: The width of the icon.
-
-            height:
-                type: qreal
-
-                doc: The height of the icon.
+            # alignment:
+            #     type: alignment
+            #
+            # width:
+            #     type: qreal
+            #
+            #     doc: The width of the icon.
+            #
+            # height:
+            #     type: qreal
+            #
+            #     doc: The height of the icon.
 
             name:
                 type: QString
@@ -369,16 +368,16 @@ children:
                     A URL to a file to use for the icon. Currently only local files are
                     supported.
 
-            color:
-                type: Union::Color
+            # color:
+            #     type: Union::Color
+            #
+            #     doc: The color of the icon.
 
-                doc: The color of the icon.
-
-        extra_code:
-            "properties.css.j2": |4
-                @property icon-size {
-                    syntax: "<length>";
-                }
+        # extra_code:
+        #     "properties.css.j2": |4
+        #         @property icon-size {
+        #             syntax: "<length>";
+        #         }
 
     background:
         type: group

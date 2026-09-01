@@ -72,12 +72,21 @@ toolbutton.raised
     border-radius: var(--corner-radius);
 
     layout-alignment: content fill fill 0;
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
 
-    color: var(--button-active-text-color);
     border: var(--button-border);
     background-color: var(--button-active-background-color);
+
+    &::part(icon) {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content center center 0;
+        color: var(--button-active-text-color);
+    }
+
+    &::part(text) {
+        layout-alignment: content center center 1;
+        color: var(--button-active-text-color);
+    }
 
     &:checked
     {
@@ -98,30 +107,38 @@ toolbutton.raised
 
     &:disabled
     {
-        color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
         border-color: var(--button-disabled-border-color);
         box-shadow: none;
+
+        &::part(icon),
+        &::part(text)
+        {
+            color: var(--button-disabled-text-color);
+        }
     }
 
-    &.with-menu > indicator {
+    &.with-menu::part(indicator) {
         visibility: visible;
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         icon-name: "arrow-down";
-        icon-color: var(--button-active-text-color)
+        color: var(--button-active-text-color)
     }
 
-    &[display="icon-only"].with-menu > indicator {
+    &[display="icon-only"].with-menu::part(indicator) {
         visibility: hidden;
     }
 
     &[display="text-under-icon"] {
-        text-alignment-vertical: stack-center;
-        icon-alignment-vertical: stack-center;
+        &::part(icon),
+        &::part(text)
+        {
+            layout-alignment-vertical: stack-center;
+        }
 
-        &.with-menu > indicator {
+        &.with-menu::part(indicator) {
             layout-alignment: content center stack-center 1;
         }
     }
@@ -219,10 +236,11 @@ combobox
     box-shadow: var(--button-shadow);
     text-wrap-mode: wrap;
 
-    & > indicator {
+    &::part(indicator) {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
+        visibility: visible;
         icon-name: "arrow-down-symbolic";
         icon-color: var(--button-active-text-color);
         visibility: visible;
@@ -243,7 +261,7 @@ combobox
         &:pressed {
             border-color: var(--button-active-border-highlight-color);
 
-            & > indicator {
+            &::part(indicator) {
                 icon-color: var(--button-active-border-highlight-color);
             }
         }
@@ -388,7 +406,7 @@ tabbutton {
         }
     }
 
-    closebutton {
+    &::part(close) {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -421,7 +439,7 @@ tabwidget {
 }
 
 delaybutton {
-    & > fill {
+    &::part(fill) {
         border-radius: var(--corner-radius);
         border: var(--button-border-highlight);
         background-color: var(--highlight-color);
@@ -433,7 +451,7 @@ tumbler {
     height: 200px;
     background-color: var(--view-background-color);
 
-    text {
+    &::part(text) {
         text-alignment-horizontal: center;
         color: mix(var(--view-background-color), var(--view-text-color), 0.75);
 

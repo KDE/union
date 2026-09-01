@@ -72,6 +72,7 @@ enum class SelectorType {
     AttributeEquals,
     AttributeSubstringMatch,
     AnyElement,
+    SubElement,
     ChildCombinator,
     DescendantCombinator,
 };
@@ -94,6 +95,7 @@ template <> inline constexpr bool ArgumentTypesMatch<SelectorType::AnyElement, E
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::ChildCombinator, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCombinator, Empty> = true;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
@@ -137,7 +139,7 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
 
     inline bool isCombinator() const override
     {
-        return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator;
+        return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator || _type == SelectorType::SubElement;
     }
 
     inline void writeToDataStream(QDataStream &stream) const override
