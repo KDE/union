@@ -13,6 +13,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 MenuItemElement::MenuItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -128,7 +129,6 @@ void MenuItemElement::layout()
 
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
         auto adjustedOpt = *m_menuItemOption;
         adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
         m_layoutMap = layoutMap(m_backgroundElementList, &adjustedOpt, m_subElementList);
@@ -140,45 +140,42 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     QSizeF preferredSize = contentsSizeFromStyle;
     // Handle separator separately (pun not intended)
-    if (m_menuItemOption) {
+    if (m_menuItemOption && m_backgroundProperties) {
         if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-            if (m_backgroundProperties->layout()) {
-                int width = m_backgroundProperties->layout()->width().value_or(1);
-                int height = m_backgroundProperties->layout()->height().value_or(1);
-                if (hasText()) {
-                    if (preferredSize.width() > width) {
-                        width = preferredSize.width();
-                    }
-                    if (preferredSize.height() > height) {
-                        height = preferredSize.height();
-                    }
+            int width = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+            int height = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+            if (hasText()) {
+                if (preferredSize.width() > width) {
+                    width = preferredSize.width();
                 }
-                QSizeF separatorSize(width, height);
-                if (m_backgroundProperties->layout()->inset()) {
-                    auto pad = m_backgroundProperties->layout()->inset()->toMargins();
-                    separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
+                if (preferredSize.height() > height) {
+                    height = preferredSize.height();
                 }
+            }
+            QSizeF separatorSize(width, height);
+            auto pad = m_backgroundProperties->safePropertyLookup(QMarginsF{},
+                                                                  &StylePropertyGroup::layout,
+                                                                  &LayoutPropertyGroup::inset,
+                                                                  &SizePropertyGroup::toMargins);
+            separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
 
-                // If we have text, we want to apply padding normally. If not, we want to remove padding and utilize the insets.
-                preferredSize = applyPaddingToSize(separatorSize, hasText() ? PaddingDirection::Outward : PaddingDirection::Inward, m_backgroundProperties);
-            }
+            // If we have text, we want to apply padding normally. If not, we want to remove padding and utilize the insets.
+            preferredSize = applyPaddingToSize(separatorSize, hasText() ? PaddingDirection::Outward : PaddingDirection::Inward, m_backgroundProperties);
         } else {
-            if (m_backgroundProperties->layout()) {
-                QSizeF itemSize(contentsSizeFromStyle);
-                int spacing = m_backgroundProperties->layout()->spacing().value_or(0);
-                if (hasIcon()) {
-                    itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
-                }
-                if (hasIndicator()) {
-                    itemSize.rwidth() += m_layoutMap[ElementString::Arrow].rect.width() + spacing;
-                }
-                if (m_menuItemOption->menuHasCheckableItems) {
-                    const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
-                    itemSize.rwidth() +=
-                        m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing;
-                }
-                preferredSize = applyPaddingToSize(itemSize);
+            QSizeF itemSize(contentsSizeFromStyle);
+            int spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+            if (hasIcon()) {
+                itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
             }
+            if (hasIndicator()) {
+                itemSize.rwidth() += m_layoutMap[ElementString::Arrow].rect.width() + spacing;
+            }
+            if (m_menuItemOption->menuHasCheckableItems) {
+                const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
+                itemSize.rwidth() +=
+                    m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing;
+            }
+            preferredSize = applyPaddingToSize(itemSize);
         }
     }
     // Adjust the contents according to the menu margins.
@@ -193,11 +190,16 @@ void MenuItemElement::drawBackground(QPainter *painter) const
     // Draw the  separator rectangle full width if its set to fill
     if (m_isSeparator) {
         QRectF rect = backgroundRectangle(m_menuItemOption, m_backgroundProperties);
-        if (m_backgroundProperties->layout()
-            && m_backgroundProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Fill) == Union::Properties::Alignment::Fill) {
-            rect = centerRect(rect,
-                              m_backgroundProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
-                              m_backgroundProperties->layout()->height().value_or(1));
+        if (m_backgroundProperties) {
+            auto alignment = m_backgroundProperties->safePropertyLookup(Union::Properties::Alignment::Fill,
+                                                                        &StylePropertyGroup::layout,
+                                                                        &LayoutPropertyGroup::alignment,
+                                                                        &AlignmentPropertyGroup::horizontal);
+            if (alignment == Union::Properties::Alignment::Fill) {
+                rect = centerRect(rect,
+                                  m_backgroundProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
+                                  m_backgroundProperties->layout()->height().value_or(1));
+            }
         }
         // Adjust only the width, as we want to keep the height as is
         const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
@@ -223,13 +225,10 @@ void MenuItemElement::drawText(QPainter *painter) const
         adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
         auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::ShortcutText});
         QRectF textRect = map[ElementString::ShortcutText].rect;
-        QColor shortcutColor = m_menuItemOption->palette.text().color();
-        if (properties->text() && properties->text()->color().has_value()) {
-            shortcutColor = properties->text()->color()->toQColor();
-        }
+        auto color = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
         textFlags = textFlagsFromProperties(properties, true);
         painter->save();
-        painter->setPen(shortcutColor);
+        painter->setPen(color.isValid() ? color.toQColor() : m_menuItemOption->palette.text().color());
         m_style->drawItemText(painter, textRect.toRect(), textFlags, m_menuItemOption->palette, enabled, m_shortcutText);
         painter->restore();
     }
