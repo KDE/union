@@ -204,7 +204,7 @@ QStringList ToolButtonElement::elementHints() const
         return hints;
     }
     if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::Menu)) {
-        hints.append(u"with-menu"_s);
+        hints.append(u"with-menu-button"_s);
     }
     if (!m_toolButtonOption->state.testFlag(QStyle::State_AutoRaise)) {
         hints.append(u"raised"_s);

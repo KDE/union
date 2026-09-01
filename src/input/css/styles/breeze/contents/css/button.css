@@ -40,6 +40,7 @@
     --button-default-size: 32px; /* 16 + 2 * 6 + 2 * 2  */
     --button-padding: 8px; /* 6 + 2 */
     --button-spacing: 4px;
+    --toolbutton-menu-padding: 2px;
 
     --tab-background-color: mix(var(--view-background-color), var(--view-text-color), 0.17);
     --tab-text-color: var(--view-text-color);
@@ -106,14 +107,24 @@ toolbutton.raised
 
     &.with-menu > indicator {
         visibility: visible;
+        layout-alignment: content end center 0;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "arrow-down";
+        icon-color: var(--button-active-text-color);
+    }
+
+    &.with-menu-button > indicator {
+        visibility: visible;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         /* half of small-spacing */
-        padding-left: 2px;
-        padding-right: 2px;
+        padding-left: var(--toolbutton-menu-padding);
+        padding-right: var(--toolbutton-menu-padding);
         layout-alignment: content end fill 0;
         icon-name: "arrow-down";
         icon-color: var(--button-active-text-color);
+        border-left: var(--button-border);
         &:hovered
         {
             border-left: 1px solid var(--button-active-border-highlight-color);
@@ -193,6 +204,19 @@ roundbutton.flat
     &:disabled {
         border: none;
         background: none;
+    }
+
+    &.with-menu-button > indicator {
+        visibility: visible;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        /* half of small-spacing */
+        padding-left: var(--toolbutton-menu-padding);
+        padding-right: var(--toolbutton-menu-padding);
+        layout-alignment: content end fill 0;
+        icon-name: "arrow-down";
+        icon-color: var(--button-active-text-color);
+        border-left: none;
     }
 }
 
