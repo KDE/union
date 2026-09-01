@@ -228,10 +228,6 @@
         inside-list: Set when the delegate is used inside a list view.
         inside-table: Set when the delegate is used inside a table view.
         alternating-colors: Set when the delegate should be using alternating row colors.
-        position-invalid: Set when the delegate column position is unknown. Usually used in table views for cells.
-        position-beginning: Set when the delegate column position is the first item.
-        position-middle: Set when the delegate column position is between the first and last item.
-        position-end: Set when the delegate column position is the last item.
     attributes:
         display:
             description: A hint indicating what sub-controls should be visible.
@@ -240,6 +236,14 @@
                 text-only: Only display the text.
                 text-beside-icon: Display both icon and text in a row.
                 text-below-icon: Display both icon and text with the text below the icon.
+        position:
+            description: A hint indicating which part of the ItemViewItem is being drawn.
+            values:
+                invalid: Set when the delegate column position is unknown. Usually used in table views for cells.
+                beginning: Set when the delegate column position is the first item.
+                middle: Set when the delegate column position is between the first and last item.
+                end: Set when the delegate column position is the last item.
+                onlyone: Set when the delegate is just one item. Usually used for full-width itemviews with one column.
     subelements:
     -   name: Icon
         description: |

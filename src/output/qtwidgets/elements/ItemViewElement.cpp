@@ -214,13 +214,31 @@ QVariantMap ItemViewElement::elementAttributes() const
     if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Right) {
         map[u"display"_s] = QVariant(u"text-before-icon"_s);
     }
+
+    auto viewItemPosition = m_viewItemOption->viewItemPosition;
+    switch (viewItemPosition) {
+    case QStyleOptionViewItem::Invalid:
+        map[u"position"_s] = QVariant(u"invalid"_s);
+        break;
+    case QStyleOptionViewItem::Beginning:
+        map[u"position"_s] = QVariant(u"beginning"_s);
+        break;
+    case QStyleOptionViewItem::Middle:
+        map[u"position"_s] = QVariant(u"middle"_s);
+        break;
+    case QStyleOptionViewItem::End:
+        map[u"position"_s] = QVariant(u"end"_s);
+        break;
+    case QStyleOptionViewItem::OnlyOne:
+        map[u"position"_s] = QVariant(u"onlyone"_s);
+        break;
+    }
     return map;
 }
 
 QStringList ItemViewElement::elementHints() const
 {
     QStringList hints;
-    auto viewItemPosition = m_viewItemOption->viewItemPosition;
     const auto table = qobject_cast<const QTableView *>(m_viewItemOption->widget);
     const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
     const auto list = qobject_cast<const QListView *>(m_viewItemOption->widget);
@@ -237,24 +255,6 @@ QStringList ItemViewElement::elementHints() const
 
     // These always have hover effect, i think
     hints.append(u"hover-enabled"_s);
-
-    switch (viewItemPosition) {
-    case QStyleOptionViewItem::Invalid:
-        hints.append(u"position-invalid"_s);
-        break;
-    case QStyleOptionViewItem::Beginning:
-        hints.append(u"position-beginning"_s);
-        break;
-    case QStyleOptionViewItem::Middle:
-        hints.append(u"position-middle"_s);
-        break;
-    case QStyleOptionViewItem::End:
-        hints.append(u"position-end"_s);
-        break;
-    case QStyleOptionViewItem::OnlyOne:
-        hints.append(u"position-onlyone"_s);
-        break;
-    }
 
     if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
         hints.append(u"expanded"_s);

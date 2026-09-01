@@ -145,19 +145,19 @@ itemviewitem {
         height: var(--small-element-size);
     }
 
-    &.position-invalid {
+    &[position="invalid"] {
         inset: 0px;
         border-radius: 0px;
     }
 
-    &.position-beginning {
+    &[position="beginning"] {
         inset-right: 0px;
         border-right: none;
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
     }
 
-    &.position-middle {
+    &[position="middle"] {
         inset-left: 0px;
         inset-right: 0px;
         border-right: none;
@@ -165,7 +165,7 @@ itemviewitem {
         border-radius: 0px;
     }
 
-    &.position-end {
+    &[position="end"] {
         inset-left: 0px;
         border-left: none;
         border-top-left-radius: 0px;
@@ -182,10 +182,10 @@ itemviewitem {
 
     &.inside-table {
         inset: 0px;
-        &.position-invalid,
-        &.position-beginning,
-        &.position-middle,
-        &.position-end {
+        &[position="invalid"],
+        &[position="beginning"],
+        &[position="middle"],
+        &[position="end"]{
             border: none;
             border-radius: 0px;
         }
