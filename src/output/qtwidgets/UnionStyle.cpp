@@ -644,11 +644,18 @@ void UnionStyle::polish(QWidget *widget)
     if (widget) {
         widget->setAttribute(Qt::WA_Hover);
         widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
+        if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
+            widget->setAttribute(Qt::WA_TranslucentBackground);
+        }
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars
         widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
     }
+    if (qobject_cast<QMenu *>(widget)) {
+        widget->setAttribute(Qt::WA_TranslucentBackground);
+    }
+
     QCommonStyle::polish(widget);
 }
 
