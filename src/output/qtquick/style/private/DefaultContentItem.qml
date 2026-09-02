@@ -26,7 +26,7 @@ Item {
         Union.PositionedItem.minimumHeight: control.icon?.height ?? 0.0
 
         control: root.control
-        visible: (name || source.toString()) && root.control.display != T.AbstractButton.TextOnly
+        visible: (name || source.toString()) && (Union.Style.properties.display.visible ?? true)
     }
 
     Text {
@@ -34,11 +34,11 @@ Item {
 
         text: root.Union.Mnemonics.richTextLabel ?? root.control.text
         font: root.control.font
-        color: Union.Style.properties.text.color ?? "black"
+        color: Union.Style.properties.display.color ?? "black"
         elide: root.wrapMode == Text.NoWrap ? root.elide : Text.ElideNone
         wrapMode: root.wrapMode
 
-        visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0
+        visible: text.length > 0 && (Union.Style.properties.display.visible ?? true)
 
         horizontalAlignment: Qt.AlignLeft
     }

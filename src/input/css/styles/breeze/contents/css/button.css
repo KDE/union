@@ -127,7 +127,17 @@ toolbutton.raised
         color: var(--button-active-text-color)
     }
 
-    &[display="icon-only"].with-menu::part(indicator) {
+    &[display="icon-only"] {
+        &::part(text) {
+            visibility: hidden;
+        }
+        &.with-menu::part(indicator) {
+            visibility: hidden;
+        }
+    }
+
+    &[display="text-only"]::part(icon)
+    {
         visibility: hidden;
     }
 
