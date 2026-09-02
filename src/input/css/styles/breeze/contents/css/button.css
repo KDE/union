@@ -114,6 +114,16 @@ toolbutton.raised
         icon-color: var(--button-active-text-color);
     }
 
+    &.with-inline-arrow > indicator {
+        visibility: visible;
+        layout-alignment: content end end 0;
+        width: 8px;
+        height: 8px;
+        padding: 1px;
+        icon-name: "arrow-down";
+        icon-color: var(--button-active-text-color);
+    }
+
     &.with-menu-button > indicator {
         visibility: visible;
         width: var(--icon-size-small);

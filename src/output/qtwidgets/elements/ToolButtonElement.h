@@ -28,6 +28,13 @@ namespace detail
 }
 }
 
+enum class ArrowStyle {
+    None,
+    Menu,
+    InlineArrow,
+    MenuButton,
+};
+
 class ToolButtonElement : public AbstractElement
 {
     Q_OBJECT
@@ -50,12 +57,14 @@ private:
     void drawIcon(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;
     void layoutButtons();
+    ArrowStyle arrowStyle() const;
 
     const QStyleOptionToolButton *m_toolButtonOption = nullptr;
     bool m_hasIndicator;
     bool m_hasArrows;
     bool m_hasIcon;
     bool m_hasText;
+    ArrowStyle m_arrowStyle;
 
     QRectF m_mainButtonRect;
     QRectF m_menuButtonRect;

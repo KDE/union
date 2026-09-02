@@ -203,8 +203,20 @@ QStringList ToolButtonElement::elementHints() const
     if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
         return hints;
     }
-    if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::Menu)) {
+
+    auto style = arrowStyle();
+    switch (style) {
+    case ArrowStyle::None:
+        break;
+    case ArrowStyle::Menu:
+        hints.append(u"with-menu"_s);
+        break;
+    case ArrowStyle::InlineArrow:
+        hints.append(u"with-inline-arrow"_s);
+        break;
+    case ArrowStyle::MenuButton:
         hints.append(u"with-menu-button"_s);
+        break;
     }
     if (!m_toolButtonOption->state.testFlag(QStyle::State_AutoRaise)) {
         hints.append(u"raised"_s);
@@ -220,6 +232,9 @@ void ToolButtonElement::layoutButtons()
     }
     m_menuButtonRect = m_indicatorMap[ElementString::Indicator].rect;
 
+    // With inline arrow, the main element does not care about making room to it,
+    // as this arrow lives within the padding area.
+    bool arrowInline = (arrowStyle() == ArrowStyle::InlineArrow);
     // Align the second button around the main button
     if (m_indicatorProperties && m_indicatorProperties->layout() && m_indicatorProperties->layout()->alignment()) {
         auto alignH = m_indicatorProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
@@ -234,7 +249,9 @@ void ToolButtonElement::layoutButtons()
         switch (alignH) {
         case Union::Properties::Alignment::Start:
             m_menuButtonRect.moveLeft(m_mainButtonRect.left());
-            m_mainButtonRect.setLeft(m_menuButtonRect.right());
+            if (!arrowInline) {
+                m_mainButtonRect.setLeft(m_menuButtonRect.right());
+            }
             break;
         case Union::Properties::Alignment::Center:
             m_menuButtonRect.moveCenter(QPoint(m_mainButtonRect.center().x(), m_menuButtonRect.center().y()));
@@ -243,7 +260,9 @@ void ToolButtonElement::layoutButtons()
         case Union::Properties::Alignment::Unspecified:
         case Union::Properties::Alignment::StackCenter:
             m_menuButtonRect.moveRight(m_mainButtonRect.right());
-            m_mainButtonRect.setRight(m_menuButtonRect.left());
+            if (!arrowInline) {
+                m_mainButtonRect.setRight(m_menuButtonRect.left());
+            }
             break;
         case Union::Properties::Alignment::StackFill:
         case Union::Properties::Alignment::Fill:
@@ -255,7 +274,9 @@ void ToolButtonElement::layoutButtons()
         switch (alignV) {
         case Union::Properties::Alignment::Start:
             m_menuButtonRect.moveTop(m_mainButtonRect.top());
-            m_mainButtonRect.setTop(m_menuButtonRect.bottom());
+            if (!arrowInline) {
+                m_mainButtonRect.setTop(m_menuButtonRect.bottom());
+            }
             break;
         case Union::Properties::Alignment::Center:
         case Union::Properties::Alignment::Unspecified:
@@ -264,7 +285,9 @@ void ToolButtonElement::layoutButtons()
             break;
         case Union::Properties::Alignment::End:
             m_menuButtonRect.moveBottom(m_mainButtonRect.bottom());
-            m_mainButtonRect.setBottom(m_menuButtonRect.top());
+            if (!arrowInline) {
+                m_mainButtonRect.setBottom(m_menuButtonRect.top());
+            }
             break;
         case Union::Properties::Alignment::Fill:
         case Union::Properties::Alignment::StackFill:
@@ -273,4 +296,28 @@ void ToolButtonElement::layoutButtons()
             break;
         }
     }
+}
+
+ArrowStyle ToolButtonElement::arrowStyle() const
+{
+    // Behavior taken from breeze
+    const bool hasPopupMenu = (m_hasIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::MenuButtonPopup));
+    const bool hasInlineIndicator = (m_hasIndicator && !hasPopupMenu);
+    const bool hasDelayedMenu = (hasInlineIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::PopupDelay));
+    const bool hasIcon = !m_toolButtonOption->icon.isNull() || (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow));
+    const bool iconOnly = m_toolButtonOption->toolButtonStyle == Qt::ToolButtonIconOnly || (m_toolButtonOption->text.isEmpty() && hasIcon);
+
+    if (hasPopupMenu) {
+        return ArrowStyle::MenuButton;
+    }
+
+    if (hasDelayedMenu) {
+        return ArrowStyle::InlineArrow;
+    }
+
+    if (hasInlineIndicator && !iconOnly) {
+        return ArrowStyle::Menu;
+    }
+
+    return ArrowStyle::None;
 }
