@@ -45,10 +45,10 @@ QIcon HeaderElement::sortIndicator()
         case QStyleOptionHeader::None:
             break;
         case QStyleOptionHeader::SortUp:
-            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-up-symbolic"_s);
+            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-down-symbolic"_s);
             break;
         case QStyleOptionHeader::SortDown:
-            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-down-symbolic"_s);
+            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-up-symbolic"_s);
             break;
         }
     }
@@ -179,11 +179,13 @@ QStringList HeaderElement::elementHints() const
     switch (m_headerOption->sortIndicator) {
     case QStyleOptionHeader::None:
         return hints;
+    // Due to how Breeze style does this, these need to be inverted
+    // to follow QtQuick style
     case QStyleOptionHeader::SortUp:
-        hints.append(u"sort-ascending"_s);
+        hints.append(u"sort-descending"_s);
         break;
     case QStyleOptionHeader::SortDown:
-        hints.append(u"sort-descending"_s);
+        hints.append(u"sort-ascending"_s);
         break;
     }
     return hints;
