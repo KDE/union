@@ -10,6 +10,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 HeaderElement::HeaderElement(const QStyleOptionHeader *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -33,24 +34,21 @@ void HeaderElement::update()
     setText(m_headerOption->text);
     updateSubElementList();
     layout();
+    setIcon(sortIndicator());
 }
 
 QIcon HeaderElement::sortIndicator()
 {
     QIcon sortIndicator;
-    if (m_contentProperties) {
+    if (m_backgroundProperties && m_isValid) {
         switch (m_headerOption->sortIndicator) {
         case QStyleOptionHeader::None:
             break;
         case QStyleOptionHeader::SortUp:
-            if (m_contentProperties->icon()) {
-                sortIndicator = m_style->unionIcon(m_contentProperties, u"arrow-up-symbolic"_s);
-            }
+            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-up-symbolic"_s);
             break;
         case QStyleOptionHeader::SortDown:
-            if (m_contentProperties->icon()) {
-                sortIndicator = m_style->unionIcon(m_contentProperties, u"arrow-down-symbolic"_s);
-            }
+            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-down-symbolic"_s);
             break;
         }
     }
@@ -60,17 +58,10 @@ QIcon HeaderElement::sortIndicator()
 void HeaderElement::layout()
 {
     // Background and content is separate
-
     m_backgroundElementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
         m_layoutMap = layoutMap(m_backgroundElementList, m_headerOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
-        setIcon(sortIndicator());
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -97,6 +88,7 @@ void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
         drawText(painter);
         break;
     case QStyle::CE_HeaderEmptyArea:
+        drawBackground(painter);
         break;
     }
 
@@ -104,6 +96,14 @@ void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
     case QStyle::PE_IndicatorHeaderArrow:
         drawIcon(painter);
         break;
+    }
+}
+
+void HeaderElement::drawText(QPainter *painter) const
+{
+    if (!m_text.isEmpty() && isValid()) {
+        QRectF textRect = subElementRect(QStyle::SE_HeaderLabel);
+        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
     }
 }
 
@@ -118,12 +118,19 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
         return QRect();
     }
-    QRectF rect;
-    if (element == QStyle::SE_HeaderArrow || element == QStyle::SE_HeaderLabel) {
-        auto mapItem = (element == QStyle::SE_HeaderLabel) ? ElementString::Text : ElementString::Icon;
-        rect = m_layoutMap[mapItem].rect;
+    auto textRect = m_layoutMap[ElementString::Text].rect;
+    auto iconRect = m_layoutMap[ElementString::Icon].rect;
+    switch (element) {
+    case QStyle::SE_HeaderLabel:
+        // Make sure to adjust to the width of the styleoption
+        textRect.setWidth(m_styleOption->rect.width() - iconRect.width() - spacing());
+        return textRect;
+    case QStyle::SE_HeaderArrow:
+        return iconRect;
+    default:
+        break;
     }
-    return rect;
+    return QRectF();
 }
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const

@@ -59,6 +59,8 @@ tableviewdelegate {
 
 treeviewdelegate {
     spacing: 0px;
+    text-wrap-mode: no-wrap;
+    text-elide: right;
 
     & > * {
         layout-alignment: content fill fill 0;
@@ -114,6 +116,8 @@ headerviewdelegate
     layout-alignment: content fill center 0;
     text-alignment: content center center 0;
     icon-alignment: content end center 1;
+    text-wrap-mode: no-wrap;
+    text-elide: right;
 
     icon-size: var(--icon-size-small);
 

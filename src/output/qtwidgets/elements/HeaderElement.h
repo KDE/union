@@ -47,6 +47,7 @@ public:
     void update() override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+    void drawText(QPainter *painter) const override;
 
     QRectF subElementRect(QStyle::SubElement element) const override;
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
