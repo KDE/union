@@ -28,22 +28,27 @@ toolbox {
 
 indicatorarrowup {
     icon-name: "arrow-up-symbolic";
+    color: var(--window-text-color);
 }
 
 indicatorarrowdown {
     icon-name: "arrow-down-symbolic";
+    color: var(--window-text-color);
 }
 
 indicatorarrowleft {
     icon-name: "arrow-left-symbolic";
+    color: var(--window-text-color);
 }
 
 indicatorarrowright {
     icon-name: "arrow-right-symbolic";
+    color: var(--window-text-color);
 }
 
 indicatorbuttondropdown {
     icon-name: "arrow-down-symbolic";
+    color: var(--window-text-color);
 }
 
 indicatorprogresschunk {
