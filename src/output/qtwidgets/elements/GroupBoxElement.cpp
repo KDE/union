@@ -123,23 +123,7 @@ void GroupBoxElement::drawText(QPainter *painter) const
 {
     if ((m_groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && hasText()) {
         QRectF textRect = subControlRect(QStyle::SC_GroupBoxLabel);
-        int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
-        const bool enabled = m_groupBoxOption->state.testFlag(QStyle::State_Enabled);
-        QColor penColor = m_groupBoxOption->palette.text().color();
-        if (m_backgroundProperties->text()) {
-            auto textColor = m_backgroundProperties->text()->color();
-            if (textColor) {
-                penColor = textColor->toQColor();
-            }
-            textFlags = textFlagsFromProperties(m_backgroundProperties, false);
-        }
-        painter->save();
-        if (m_backgroundProperties->text() && m_backgroundProperties->text()->font().has_value()) {
-            painter->setFont(m_backgroundProperties->text()->font().value());
-        }
-        painter->setPen(penColor);
-        m_style->drawItemText(painter, textRect.toRect(), textFlags, m_groupBoxOption->palette, enabled, m_text);
-        painter->restore();
+        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
     }
 }
 

@@ -13,6 +13,7 @@
 #include <StyleRegistry.h>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : QObject(nullptr)
@@ -244,24 +245,7 @@ void AbstractElement::drawPanel(QPainter *painter) const
 void AbstractElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        QRectF textRect = m_layoutMap[ElementString::Text].rect;
-        int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
-        const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        QColor penColor = m_styleOption->palette.text().color();
-        if (m_backgroundProperties->text()) {
-            auto textColor = m_backgroundProperties->text()->color();
-            if (textColor) {
-                penColor = textColor->toQColor();
-            }
-            textFlags = textFlagsFromProperties(m_backgroundProperties, true);
-        }
-        painter->save();
-        if (m_backgroundProperties->text() && m_backgroundProperties->text()->font().has_value()) {
-            painter->setFont(m_backgroundProperties->text()->font().value());
-        }
-        painter->setPen(penColor);
-        m_style->drawItemText(painter, textRect.toRect(), textFlags, m_styleOption->palette, enabled, m_text);
-        painter->restore();
+        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_backgroundProperties);
     }
 }
 
@@ -291,6 +275,26 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
         const QPixmap pixmap = icon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
         painter->save();
         m_style->drawItemPixmap(painter, rect.toRect(), Qt::AlignCenter, pixmap);
+        painter->restore();
+    }
+}
+
+void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const
+{
+    if (m_isValid && m_styleOption) {
+        int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
+        const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
+        auto textColor = m_styleOption->palette.text().color();
+        auto unionColor = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
+        auto font = safePropertyLookup(properties, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font);
+        if (unionColor.isValid()) {
+            textColor = unionColor.toQColor();
+        }
+        textFlags = textFlagsFromProperties(properties, true);
+        painter->save();
+        painter->setPen(textColor);
+        painter->setFont(font);
+        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, properties));
         painter->restore();
     }
 }
@@ -389,6 +393,16 @@ qreal AbstractElement::averageBorderSize() const
         return 0;
     }
     return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
+}
+
+QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const
+{
+    if (!text.isEmpty() && m_styleOption) {
+        auto elide = safePropertyLookup(properties, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
+        const qreal elideWidth = textRect.width() < m_styleOption->rect.width() ? textRect.width() : m_styleOption->rect.width();
+        return m_styleOption->fontMetrics.elidedText(text, toQtElideMode(elide), elideWidth);
+    }
+    return text;
 }
 
 QSizeF AbstractElement::querySize(QStringList targetHierarchy) const

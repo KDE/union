@@ -215,26 +215,20 @@ void MenuItemElement::drawBackground(QPainter *painter) const
 
 void MenuItemElement::drawText(QPainter *painter) const
 {
-    int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
     if (hasText()) {
         AbstractElement::drawText(painter);
     }
     // ShortcutText is just like a regular text element but handled with different name
     // and has different coloration, so override the default colors
     if (!m_shortcutText.isEmpty()) {
-        const bool enabled = m_menuItemOption->state.testFlag(QStyle::State_Enabled);
         auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
         const auto properties = queryProperties(shortcutElements);
         auto adjustedOpt = *m_menuItemOption;
         adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
+        // Use our own map for shortcut, as we do not care about the position of other items
         auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::ShortcutText});
         QRectF textRect = map[ElementString::ShortcutText].rect;
-        auto color = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
-        textFlags = textFlagsFromProperties(properties, true);
-        painter->save();
-        painter->setPen(color.isValid() ? color.toQColor() : m_menuItemOption->palette.text().color());
-        m_style->drawItemText(painter, textRect.toRect(), textFlags, m_menuItemOption->palette, enabled, m_shortcutText);
-        painter->restore();
+        drawTextAtRect(painter, m_shortcutText, textRect, properties);
     }
 }
 

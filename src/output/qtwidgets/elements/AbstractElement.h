@@ -193,10 +193,17 @@ protected:
 
     qreal averageHPadding() const;
 
+    QString elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const;
+
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
     void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect) const;
+
+    /*!
+     * \brief Draw text at the given rectangle. Handles coloring, elision and enabled status.
+     */
+    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
 
     const QStyleOption *m_styleOption;
     const UnionStyle *m_style;

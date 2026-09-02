@@ -172,23 +172,7 @@ void ItemViewElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
         QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, m_widget);
-        int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
-        const bool enabled = m_viewItemOption->state.testFlag(QStyle::State_Enabled);
-        QColor penColor = m_viewItemOption->palette.text().color();
-        if (m_backgroundProperties->text()) {
-            auto textColor = m_backgroundProperties->text()->color();
-            if (textColor) {
-                penColor = textColor->toQColor();
-            }
-            textFlags = textFlagsFromProperties(m_backgroundProperties, false);
-        }
-        painter->save();
-        if (m_backgroundProperties->text() && m_backgroundProperties->text()->font().has_value()) {
-            painter->setFont(m_backgroundProperties->text()->font().value());
-        }
-        painter->setPen(penColor);
-        m_style->drawItemText(painter, textRect.toRect(), textFlags, m_viewItemOption->palette, enabled, m_text);
-        painter->restore();
+        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
     }
 }
 
