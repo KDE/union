@@ -90,6 +90,7 @@
 #include "ElementCache.h"
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 UnionStyle::UnionStyle()
     : QCommonStyle()
@@ -701,15 +702,13 @@ bool UnionStyle::eventFilter(QObject *object, QEvent *event)
 
 QIcon UnionStyle::unionIcon(Union::Properties::StylePropertyGroup *properties, const QString &defaultName) const
 {
-    if (properties && properties->icon()) {
-        auto name = properties->icon()->name().value_or(defaultName);
-        if (!name.isEmpty()) {
-            QColor color = standardPalette().text().color();
-            if (properties->icon()->color()) {
-                color = properties->icon()->color()->toQColor();
-            }
-            return Union::StyleRegistry::instance()->platform()->platformIcon(name, color);
+    auto name = safePropertyLookup(properties, defaultName, &StylePropertyGroup::icon, &IconPropertyGroup::name);
+    if (!name.isEmpty()) {
+        QColor color = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::icon, &IconPropertyGroup::color).toQColor();
+        if (!color.isValid()) {
+            color = standardPalette().text().color();
         }
+        return Union::StyleRegistry::instance()->platform()->platformIcon(name, color);
     }
     return QIcon::fromTheme(defaultName);
 }
