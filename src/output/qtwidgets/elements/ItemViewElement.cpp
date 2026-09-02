@@ -135,6 +135,13 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
     QRectF rect;
     if (element == QStyle::SE_ItemViewItemText) {
         rect = m_layoutMap[ElementString::Text].rect;
+        // Keep the text within bounds of the styleoption rectangle
+        if (rect.left() < m_styleOption->rect.left()) {
+            rect.setLeft(m_styleOption->rect.left());
+        }
+        if (rect.right() > m_styleOption->rect.right()) {
+            rect.setRight(m_styleOption->rect.right());
+        }
     }
     if (element == QStyle::SE_ItemViewItemDecoration) {
         // DecorationSize can be changed by user, so use it by default
