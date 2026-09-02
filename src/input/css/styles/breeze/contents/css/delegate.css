@@ -172,8 +172,15 @@ itemviewitem {
         border-bottom-left-radius: 0px;
     }
 
-    &.inside-table
-    {
+    /* Widgets do not have last-in-list support, so reverse any changes to hover insets */
+    &.inside-list {
+        inset: 0px;
+        &.hover-enabled {
+            inset: 2px;
+        }
+    }
+
+    &.inside-table {
         inset: 0px;
         &.position-invalid,
         &.position-beginning,
@@ -182,7 +189,11 @@ itemviewitem {
             border: none;
             border-radius: 0px;
         }
+        &.hover-enabled {
+            inset: 0px;
+        }
     }
+
     &.inside-list {
         &[display="text-under-icon"]
         {
