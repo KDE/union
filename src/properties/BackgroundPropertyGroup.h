@@ -33,7 +33,6 @@ class BackgroundPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group containing properties related to an element's background.
-
 */
 class UNION_EXPORT BackgroundPropertyGroup
 {

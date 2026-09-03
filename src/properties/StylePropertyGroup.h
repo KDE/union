@@ -102,7 +102,6 @@ public:
 
     /*!
      * \brief A property group containing properties related to how the element is displayed.
-
      */
     DisplayPropertyGroup *display() const;
 
@@ -115,7 +114,6 @@ public:
 
     /*!
      * \brief A property group containing properties related to the layout of an element.
-
      */
     LayoutPropertyGroup *layout() const;
 
@@ -128,7 +126,6 @@ public:
 
     /*!
      * \brief A property group containing properties related to the text of an element.
-
      */
     TextPropertyGroup *text() const;
 
@@ -141,7 +138,6 @@ public:
 
     /*!
      * \brief A property group containing properties related to an element's icon.
-
      */
     IconPropertyGroup *icon() const;
 
@@ -154,7 +150,6 @@ public:
 
     /*!
      * \brief A property group containing properties related to an element's background.
-
      */
     BackgroundPropertyGroup *background() const;
 

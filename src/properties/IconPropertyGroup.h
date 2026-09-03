@@ -35,7 +35,6 @@ class IconPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group containing properties related to an element's icon.
-
 */
 class UNION_EXPORT IconPropertyGroup
 {
@@ -94,8 +93,7 @@ public:
     }
 
     /*!
-     * \brief A property group with properties related to alignment.
-
+     * The alignment of the icon of an element.
      */
     AlignmentPropertyGroup *alignment() const;
 
@@ -107,7 +105,7 @@ public:
     void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
 
     /*!
-        The width of the icon.
+        The width of the icon of an element.
      */
     std::optional<qreal> width() const;
 
@@ -119,7 +117,7 @@ public:
     void setWidth(const std::optional<qreal> &newValue);
 
     /*!
-        The height of the icon.
+        The height of the icon of an element.
      */
     std::optional<qreal> height() const;
 
@@ -157,7 +155,7 @@ supported.
     void setSource(const std::optional<QUrl> &newValue);
 
     /*!
-        The color of the icon.
+        The color of the icon of an element.
      */
     std::optional<Union::Color> color() const;
 

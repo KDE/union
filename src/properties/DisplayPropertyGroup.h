@@ -31,7 +31,6 @@ class DisplayPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group containing properties related to how the element is displayed.
-
 */
 class UNION_EXPORT DisplayPropertyGroup
 {

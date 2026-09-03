@@ -31,7 +31,6 @@ class AlignmentPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group with properties related to alignment.
-
 */
 class UNION_EXPORT AlignmentPropertyGroup
 {
@@ -90,7 +89,7 @@ public:
     }
 
     /*!
-        The alignment container. This determines relative to what the element is placed.
+        The alignment container. This determines relative to what an element is placed.
      */
     std::optional<Union::Properties::AlignmentContainer> container() const;
 

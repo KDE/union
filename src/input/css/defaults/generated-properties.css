@@ -7,8 +7,6 @@
 */
 
 
-
-
 @property visibility {
     syntax: "visible | hidden";
 }
@@ -16,7 +14,6 @@
 @property opacity {
     syntax: "<number>";
 }
-
 
 @property layout-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
@@ -27,7 +24,7 @@
 }
 
 @property layout-alignment-horizontal {
-    syntax: "start | center | end | fill | stack-center | stack-fill";
+    syntax: "start | center | end | fill";
 }
 
 @property layout-alignment-vertical {
@@ -37,7 +34,6 @@
 @property layout-alignment-order {
     syntax: "<integer>";
 }
-
 
 @property width {
     syntax: "<length>";
@@ -71,7 +67,6 @@
     syntax: "<length>";
 }
 
-
 @property inset {
     syntax: "<length>{1,4}";
 }
@@ -91,7 +86,6 @@
 @property inset-bottom {
     syntax: "<length>";
 }
-
 
 @property margin {
     syntax: "<length>{1,4}";
@@ -113,12 +107,8 @@
     syntax: "<length>";
 }
 
-
-
 @property color {
     syntax: "<color>";
-    inherits: true;
-    initial-value: #ffffff;
 }
 
 @property font-size {
@@ -127,6 +117,10 @@
 
 @property font-weight {
     syntax: "<integer> | (normal | bold | bolder | lighter)";
+}
+
+@property font-family {
+    syntax: "<string>";
 }
 
 @property text-alignment {
@@ -138,7 +132,7 @@
 }
 
 @property text-alignment-horizontal {
-    syntax: "start | center | end | fill | stack-center | stack-fill";
+    syntax: "start | center | end | fill";
 }
 
 @property text-alignment-vertical {
@@ -147,11 +141,6 @@
 
 @property text-alignment-order {
     syntax: "<integer>";
-}
-
-
-@property font-family {
-    syntax: "<string>";
 }
 
 @property text-color {
@@ -166,7 +155,6 @@
     syntax: "none | left | middle | right";
 }
 
-
 @property icon-size {
     syntax: "<length>";
 }
@@ -180,7 +168,7 @@
 }
 
 @property icon-alignment-horizontal {
-    syntax: "start | center | end | fill | stack-center | stack-fill";
+    syntax: "start | center | end | fill";
 }
 
 @property icon-alignment-vertical {
@@ -190,7 +178,6 @@
 @property icon-alignment-order {
     syntax: "<integer>";
 }
-
 
 @property icon-width {
     syntax: "<length>";
@@ -212,17 +199,20 @@
     syntax: "<color>";
 }
 
-
 @property background {
     syntax: "none | <color> | <url>";
 }
 
-@property background-image {
-    syntax: "(<url> (mask | inverted-mask) <color>) | <url>"
-}
-
 @property background-color {
     syntax: "<color>";
+}
+
+@property background-image {
+    syntax: "(<url> (mask | inverted-mask) <color>) | <url>";
+}
+
+@property background-image-source {
+    syntax: "<url>";
 }
 
 @property background-image-width {
@@ -233,19 +223,17 @@
     syntax: "<length>";
 }
 
-@property background-image-x-offset {
+@property background-image-offset-x {
     syntax: "<length>";
 }
 
-@property background-image-y-offset {
+@property background-image-offset-y {
     syntax: "<length>";
 }
 
 @property background-image-mask-color {
     syntax: "<color>";
 }
-
-
 
 @property border {
     syntax: "none | (<length> (none | solid) <color>)";
@@ -279,7 +267,6 @@
     syntax: "none | solid";
 }
 
-
 @property border-right {
     syntax: "none | (<length> (none | solid) <color>)";
 }
@@ -295,7 +282,6 @@
 @property border-right-style {
     syntax: "none | solid";
 }
-
 
 @property border-top {
     syntax: "none | (<length> (none | solid) <color>)";
@@ -313,7 +299,6 @@
     syntax: "none | solid";
 }
 
-
 @property border-bottom {
     syntax: "none | (<length> (none | solid) <color>)";
 }
@@ -330,8 +315,6 @@
     syntax: "none | solid";
 }
 
-
-
 @property outline {
     syntax: "none | (<length> (none | solid) <color>)";
 }
@@ -340,7 +323,7 @@
     syntax: "none | (<length> (none | solid) <color>)";
 }
 
-@property outline-left-size {
+@property outline-left-width {
     syntax: "<length>";
 }
 
@@ -352,12 +335,11 @@
     syntax: "none | solid";
 }
 
-
 @property outline-right {
     syntax: "none | (<length> (none | solid) <color>)";
 }
 
-@property outline-right-size {
+@property outline-right-width {
     syntax: "<length>";
 }
 
@@ -369,12 +351,11 @@
     syntax: "none | solid";
 }
 
-
 @property outline-top {
     syntax: "none | (<length> (none | solid) <color>)";
 }
 
-@property outline-top-size {
+@property outline-top-width {
     syntax: "<length>";
 }
 
@@ -386,12 +367,11 @@
     syntax: "none | solid";
 }
 
-
 @property outline-bottom {
     syntax: "none | (<length> (none | solid) <color>)";
 }
 
-@property outline-bottom-size {
+@property outline-bottom-width {
     syntax: "<length>";
 }
 
@@ -403,8 +383,6 @@
     syntax: "none | solid";
 }
 
-
-
 @property border-radius {
     syntax: "<length> | (<length> <length> <length> <length>)";
 }
@@ -413,22 +391,17 @@
     syntax: "<length>";
 }
 
-
 @property border-top-right-radius {
     syntax: "<length>";
 }
-
 
 @property border-bottom-left-radius {
     syntax: "<length>";
 }
 
-
 @property border-bottom-right-radius {
     syntax: "<length>";
 }
-
-
 
 @property box-shadow {
     syntax: "none | (<length> <length> <length> <length> <color>)";
@@ -442,7 +415,6 @@
     syntax: "<length>";
 }
 
-
 @property shadow-color {
     syntax: "<color>";
 }
@@ -454,6 +426,5 @@
 @property shadow-blur {
     syntax: "<length>";
 }
-
 
 

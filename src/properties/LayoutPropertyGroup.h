@@ -33,7 +33,6 @@ class LayoutPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group containing properties related to the layout of an element.
-
 */
 class UNION_EXPORT LayoutPropertyGroup
 {
@@ -92,7 +91,7 @@ public:
     }
 
     /*!
-     * Returns alignment if set or nullptr if not.
+     * \brief A property group with properties related to alignment.
      */
     AlignmentPropertyGroup *alignment() const;
 
@@ -140,7 +139,7 @@ public:
     void setSpacing(const std::optional<qreal> &newValue);
 
     /*!
-     * Returns padding if set or nullptr if not.
+     * Padding defines extra spacing around the content of an element.
      */
     SizePropertyGroup *padding() const;
 
@@ -152,7 +151,7 @@ public:
     void setPadding(std::unique_ptr<SizePropertyGroup> &&newValue);
 
     /*!
-     * Returns inset if set or nullptr if not.
+     * Inset defines extra spacing around the background of an element.
      */
     SizePropertyGroup *inset() const;
 

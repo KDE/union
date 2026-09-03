@@ -32,7 +32,6 @@ class SizePropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group representing a set of sizes for cardinal directions.
-
 */
 class UNION_EXPORT SizePropertyGroup
 {

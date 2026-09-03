@@ -33,7 +33,6 @@ class ImagePropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group describing properties of an image.
-
 */
 class UNION_EXPORT ImagePropertyGroup
 {

@@ -34,7 +34,6 @@ class TextPropertyGroupPrivate;
 \ingroup core-properties
 
 \brief A property group containing properties related to the text of an element.
-
 */
 class UNION_EXPORT TextPropertyGroup
 {
@@ -93,7 +92,8 @@ public:
     }
 
     /*!
-     * Returns alignment if set or nullptr if not.
+     * The alignment of the text of an element.
+
      */
     AlignmentPropertyGroup *alignment() const;
 
@@ -105,7 +105,7 @@ public:
     void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
 
     /*!
-     * Returns the value of font.
+        The font used for the text of an element.
      */
     std::optional<QFont> font() const;
 
@@ -117,7 +117,7 @@ public:
     void setFont(const std::optional<QFont> &newValue);
 
     /*!
-        The color of text of an element.
+        The color of the text of an element.
      */
     std::optional<Union::Color> color() const;
 

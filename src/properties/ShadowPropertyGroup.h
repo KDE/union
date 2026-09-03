@@ -117,7 +117,7 @@ as if the light were cast from a different angle.
     void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
-        The size of the shadow. This expands the area used for the shadow compared to the element.
+        The size of the shadow. This expands the area used for the shadow compared to the size of an element.
      */
     std::optional<qreal> size() const;
 
