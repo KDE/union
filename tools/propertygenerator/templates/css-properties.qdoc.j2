@@ -22,77 +22,30 @@ To regenerate, run `tools/propertygenerator/generate_properties.py`.
 \page css-properties.html
 \title CSS Property Reference
 
-{#
-This mapping is used to map property names to more familiar CSS property names
-from web CSS, without needing to change the structure of properties.
+{% macro print_css_property(object) %}
+{% if object.syntax %}
+\section3 {{ object.implicit_name }} ({{ object.syntax }})
 
-Note: Keep in sync with the mapping in properties.css.j2
-#}
-{%- set name_map = {
-    "display-visible": "visibility",
-    "display-opacity": "opacity",
-    "layout-width": "width",
-    "layout-height": "height",
-    "layout-spacing": "spacing",
-    "layout-padding-left": "padding-left",
-    "layout-padding-right": "padding-right",
-    "layout-padding-top": "padding-top",
-    "layout-padding-bottom": "padding-bottom",
-    "layout-inset-left": "inset-left",
-    "layout-inset-right": "inset-right",
-    "layout-inset-top": "inset-top",
-    "layout-inset-bottom": "inset-bottom",
-    "layout-margins-left": "margin-left",
-    "layout-margins-right": "margin-right",
-    "layout-margins-top": "margin-top",
-    "layout-margins-bottom": "margin-bottom",
-    "palette-tool-tip-base": "palette-tooltip-base",
-    "palette-tool-tip-text": "palette-tooltip-text",
-    "text-font": "font-family",
-    "border-left-size": "border-left-width",
-    "border-right-size": "border-right-width",
-    "border-top-size": "border-top-width",
-    "border-bottom-size": "border-bottom-width",
-    "corners-top-left-radius": "border-top-left-radius",
-    "corners-top-right-radius": "border-top-right-radius",
-    "corners-bottom-left-radius": "border-bottom-left-radius",
-    "corners-bottom-right-radius": "border-bottom-right-radius",
-}%}
-
-{# A map of C++ property types to CSS syntax strings. #}
-{%- set type_map = {
-    "bool": "true | false",
-    "Union::Color": "<color>",
-    "qreal": "<length>",
-    "int": "<integer>",
-    "QString": "<string>",
-    "QUrl": "<url>",
-    "QFont": "<string>",
-    "Union::Properties::AlignmentContainer": "item | content | background",
-    "Union::Properties::Alignment": "start | center | end | fill | stack-center | stack-fill",
-    "Union::Properties::LineStyle": "none | solid",
-    "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
-    "Union::Properties::TextElide": "none | left | middle | right",
-    "visibility": "visible | hidden",
-    "opacity": "<number>",
-}%}
+{{ object.documentation }}
+{% endif %}
+{% endmacro %}
 
 {# Recursively print all properties of an object, with a prefix #}
-{% macro print_properties(name, object) %}
+{% macro print_properties(object) %}
 {% for property in object.children %}
-{% set prop_name = (name + "-" + property.name if name else property.name) | css_name %}
 {%- if property.children %}
-\section2 {{ prop_name }}
+\section2 {{ property.css.implicit_name }}
 
-{{ property.css_documentation }}
+{{ property.css.documentation }}
 
-{{ print_properties(prop_name, property) }}
-{% elif property.type in type_map %}
-{% set prop_name = name_map[prop_name] if prop_name in name_map else prop_name %}
-{% set type = type_map[prop_name] if prop_name in type_map else type_map[property.type] %}
-\section3 {{ prop_name }} ({{ type }})
+{% for extra in property.css.extra_properties %}
+{{ print_css_property(extra) }}
 
-{{ property.css_documentation }}
+{% endfor %}
+
+{{ print_properties(property) }}
+{% else %}
+{{ print_css_property(property.css) }}
 
 {% endif %}
 {% endfor -%}
@@ -100,7 +53,7 @@ Note: Keep in sync with the mapping in properties.css.j2
 
 {%- for type in types %}
 {% if type.name == "style" %}
-{{ print_properties("", type) }}
+{{ print_properties(type) }}
 {% endif %}
 {% endfor %}
 

@@ -13,7 +13,7 @@ import re
 import ruamel.yaml as yaml
 import jinja2
 
-from yaml_helpers import *
+from yaml_helpers import AliasNode, PreserveAliasesComposer, mapping_value
 
 
 base_directory = Path(__file__).parent
@@ -35,6 +35,32 @@ include_patterns = [
     {"pattern": "Union::Color", "use_include": "../Color.h"},
 ]
 
+# A mapping to map C++ types to CSS syntax
+css_type_map = {
+    "bool": "true | false",
+    "Union::Color": "<color>",
+    "qreal": "<length>",
+    "int": "<integer>",
+    "QString": "<string>",
+    "QUrl": "<url>",
+    "std::filesystem::path": "<url>",
+    "Union::Properties::AlignmentContainer": "item | content | background",
+    "Union::Properties::Alignment": "start | center | end | fill | stack-center | stack-fill",
+    "Union::Properties::LineStyle": "none | solid",
+    "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
+    "Union::Properties::TextElide": "none | left | middle | right",
+}
+
+
+@dataclasses.dataclass
+class CssDescription:
+    implicit_name: str = ""
+    explicit_name: str = ""
+    syntax: str = ""
+    documentation: str = ""
+    ignore: bool = False
+    extra_properties: list["CssDescription"] = dataclasses.field(default_factory=list)
+
 
 @dataclasses.dataclass
 class Description:
@@ -47,19 +73,20 @@ class Description:
     local_includes: dict[str, set[str]] = dataclasses.field(default_factory=dict)
     extra_code: dict[str, str] = dataclasses.field(default_factory=dict)
 
-    api_documentation: str = ""
-    css_documentation: str = ""
+    documentation: str = ""
+
+    css: CssDescription | None = None
 
     def __lt__(self, other):
         return self.type < other.type
 
     def add_system_include(self, file: str, include: str) -> None:
-        if not file in self.system_includes:
+        if file not in self.system_includes:
             self.system_includes[file] = set()
         self.system_includes[file].add(include)
 
     def add_local_include(self, file: str, include: str) -> None:
-        if not file in self.local_includes:
+        if file not in self.local_includes:
             self.local_includes[file] = set()
         self.local_includes[file].add(include)
 
@@ -77,10 +104,48 @@ def group_name(type_name):
     return f"{ucfirst(type_name)}PropertyGroup"
 
 
-def css_name(name):
-    parts = re.split(r"([A-Z][a-z]+)", name)
-    result = "-".join(part.lower() for part in parts if part)
-    return result.replace("--", "-")
+def implicit_css_name(description):
+    parts = []
+    while description:
+        css = description.css
+        if css and css.ignore:
+            pass
+        elif css and css.explicit_name:
+            parts.append(css.explicit_name)
+            break
+        else:
+            parts.append(description.name)
+        description = description.parent
+
+    return "-".join(reversed(parts))
+
+
+def process_css_node(node, description):
+    if not isinstance(node, yaml.MappingNode):
+        raise RuntimeError(f"Node {node} is not a mapping node!")
+
+    if description is None:
+        description = CssDescription()
+
+    for key_node, value_node in node.value:
+        if key_node.value == "name":
+            description.explicit_name = value_node.value
+            description.implicit_name = value_node.value
+
+        if key_node.value == "syntax":
+            description.syntax = value_node.value
+
+        if key_node.value == "doc":
+            description.documentation = value_node.value
+
+        if key_node.value == "ignore":
+            description.ignore = value_node.value
+
+        if key_node.value == "extra_properties":
+            for entry in value_node.value:
+                description.extra_properties.append(process_css_node(entry, None))
+
+    return description
 
 
 def process_node(node, name: str, parent: Description, memo: dict[str, Description], type_name: str | None = None):
@@ -125,21 +190,17 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
                     description.add_system_include(template_name.value, include_name.value)
 
         elif key_node.value == "doc":
-            if isinstance(value_node, yaml.MappingNode):
-                description.api_documentation = mapping_value(value_node, "api", "")
-                description.css_documentation = mapping_value(value_node, "css", "")
-            else:
-                description.api_documentation = value_node.value
-                description.css_documentation = value_node.value
+            description.documentation = value_node.value
 
         elif key_node.value == "types":
             for key_node, value_node in value_node.value:
                 memo = memo | process_node(value_node, key_node.value, description, memo, type_name = key_node.value)
 
+        elif key_node.value == "css":
+            description.css = process_css_node(value_node, description.css)
+
         elif key_node.value == "children":
             for key_node, value_node in value_node.value:
-                prop = None
-
                 if isinstance(value_node, AliasNode):
                     child = copy.deepcopy(memo[value_node.value])
                     child.name = key_node.value
@@ -164,10 +225,33 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
         else:
             parent.add_local_include("property.h.j2", include)
 
+    if description.css is None:
+        description.css = CssDescription()
+
+    if not description.css.syntax:
+        description.css.syntax = css_type_map.get(description.type, "")
+
+    if not description.css.documentation:
+        description.css.documentation = description.documentation
+
     if parent and node_type != "type":
         parent.add_child(description)
 
     return memo
+
+
+def postprocess_css_names(types):
+    for type in types:
+        type.css.implicit_name = implicit_css_name(type)
+
+        if "{prefix}" in type.css.implicit_name:
+            type.css.implicit_name = type.css.implicit_name.replace("{prefix}", type.parent.css.implicit_name)
+
+        for p in type.css.extra_properties:
+            if "{prefix}" in p.implicit_name:
+                p.implicit_name = p.implicit_name.replace("{prefix}", type.css.implicit_name)
+
+        postprocess_css_names(type.children)
 
 
 @jinja2.pass_context
@@ -199,6 +283,8 @@ if __name__ == "__main__":
 
     types = process_node(structure, "style", None, {}, "style")
 
+    postprocess_css_names(types.values())
+
     jinja_env = jinja2.Environment(
         loader=jinja2.FileSystemLoader(template_directory),
         autoescape=False,
@@ -207,7 +293,6 @@ if __name__ == "__main__":
     )
     jinja_env.filters["ucfirst"] = ucfirst
     jinja_env.filters["render"] = render_template_filter
-    jinja_env.filters["css_name"] = css_name
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)

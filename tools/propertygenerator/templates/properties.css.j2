@@ -15,88 +15,30 @@ REUSE-IgnoreStart
 */
 {# REUSE-IgnoreEnd #}
 
-{#
-This mapping is used to map property names to more familiar CSS property names
-from web CSS, without needing to change the structure of properties.
-
-Note: Keep in sync with the mapping in css-properties.qdoc.j2
-#}
-{%- set name_map = {
-    "display-visible": "visibility",
-    "display-opacity": "opacity",
-    "layout-width": "width",
-    "layout-height": "height",
-    "layout-spacing": "spacing",
-    "layout-padding": "padding",
-    "layout-padding-left": "padding-left",
-    "layout-padding-right": "padding-right",
-    "layout-padding-top": "padding-top",
-    "layout-padding-bottom": "padding-bottom",
-    "layout-inset": "inset",
-    "layout-inset-left": "inset-left",
-    "layout-inset-right": "inset-right",
-    "layout-inset-top": "inset-top",
-    "layout-inset-bottom": "inset-bottom",
-    "layout-margins": "margin",
-    "layout-margins-left": "margin-left",
-    "layout-margins-right": "margin-right",
-    "layout-margins-top": "margin-top",
-    "layout-margins-bottom": "margin-bottom",
-    "palette-tool-tip-base": "palette-tooltip-base",
-    "palette-tool-tip-text": "palette-tooltip-text",
-    "text-font": "font-family",
-    "border-left-size": "border-left-width",
-    "border-right-size": "border-right-width",
-    "border-top-size": "border-top-width",
-    "border-bottom-size": "border-bottom-width",
-    "corners-top-left-radius": "border-top-left-radius",
-    "corners-top-right-radius": "border-top-right-radius",
-    "corners-bottom-left-radius": "border-bottom-left-radius",
-    "corners-bottom-right-radius": "border-bottom-right-radius",
-}%}
-
-{# A map of C++ property types to CSS syntax strings. #}
-{%- set type_map = {
-    "bool": "true | false",
-    "Union::Color": "<color>",
-    "qreal": "<length>",
-    "int": "<integer>",
-    "QString": "<string>",
-    "QUrl": "<url>",
-    "QFont": "<string>",
-    "Union::Properties::AlignmentContainer": "item | content | background",
-    "Union::Properties::Alignment": "start | center | end | fill | stack-center | stack-fill",
-    "Union::Properties::LineStyle": "none | solid",
-    "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
-    "Union::Properties::TextElide": "none | left | middle | right",
-    "visibility": "visible | hidden",
-    "opacity": "<number>",
-}%}
-
-{# Recursively print all properties of an object, with a prefix #}
-{% macro print_properties(name, object) %}
-{% for property in object.children %}
-{% if property.children %}
-{% set name = name + "-" + property.name if name else property.name %}
-{% if property.extra_code and "properties.css.j2" in property.extra_code %}
-{{ property.extra_code["properties.css.j2"] | render(name = name_map[name] if name in name_map else name) }}
-
-{% endif %}
-{{ print_properties(name, property) }}
-{% elif property.type in type_map %}
-{% set name = ((name + "-" + property.name) if name else property.name) | css_name %}
-{% set name = name_map[name] if name in name_map else name %}
-{% set type = type_map[name] if name in type_map else type_map[property.type] %}
-@property {{ name }} {
-    syntax: "{{ type }}";
+{% macro print_css_description(description) %}
+{% if description.syntax %}
+@property {{ description.implicit_name }} {
+    syntax: "{{ description.syntax }}";
 }
 
 {% endif %}
+{% for property in description.extra_properties %}
+{{- print_css_description(property) -}}
 {% endfor %}
 {% endmacro %}
 
-{% for type in types %}
+{% macro print_properties(object) %}
+
+{{- print_css_description(object.css) -}}
+
+{%- for property in object.children %}
+{{- print_properties(property) -}}
+{% endfor -%}
+
+{%- endmacro %}
+
+{%- for type in types %}
 {% if type.name == "style" %}
-{{ print_properties("", type) }}
+{{ print_properties(type) }}
 {% endif %}
 {% endfor %}
