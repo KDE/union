@@ -647,6 +647,11 @@ void UnionStyle::polish(QWidget *widget)
         if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
+        // Do not draw unnecessary background for QComboBoxListView
+        if (widget->parent() && widget->parent()->inherits("QComboBoxListView")) {
+            widget->setAttribute(Qt::WA_TranslucentBackground);
+            widget->setAutoFillBackground(false);
+        }
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars
