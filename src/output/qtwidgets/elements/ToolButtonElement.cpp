@@ -221,6 +221,11 @@ QStringList ToolButtonElement::elementHints() const
     if (!m_toolButtonOption->state.testFlag(QStyle::State_AutoRaise)) {
         hints.append(u"raised"_s);
     }
+    // If menuButton is pressed, both sunken and raised are active
+    if (m_toolButtonOption->state.testFlags({QStyle::State_Sunken, QStyle::State_Raised})) {
+        hints.append(u"menu-open"_s);
+    }
+
     return hints;
 }
 

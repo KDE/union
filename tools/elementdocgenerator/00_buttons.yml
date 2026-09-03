@@ -63,6 +63,8 @@
         raised: Set whenever the button should use a raised appearance.
         with-menu: Set whenever the button has a menu attached to it.
         changed: Set whenever the button should visualize a changed state.
+        with-menu-button: Set whenever the menu has a separate button (subcontrol) for the menu popup. Used mostly by QWidgets.
+        menu-open: Set whenever the subcontrol button is clicked. Used mostly by QWidgets.
     attributes:
         display:
             description: A hint indicating what sub-controls should be visible.

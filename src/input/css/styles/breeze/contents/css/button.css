@@ -134,10 +134,17 @@ toolbutton.raised
         layout-alignment: content end fill 0;
         icon-name: "arrow-down";
         icon-color: var(--button-active-text-color);
-        border-left: var(--button-border);
-        &:hovered
-        {
-            border-left: 1px solid var(--button-active-border-highlight-color);
+        border-left:  var(--button-border);
+    }
+
+    &.menu-open {
+        border: var(--button-border-highlight);
+        & > indicator {
+            border: var(--button-border-highlight);
+            background-color: var(--button-active-highlight-color);
+            border-radius: var(--corner-radius);
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
         }
     }
 
@@ -217,16 +224,16 @@ roundbutton.flat
     }
 
     &.with-menu-button > indicator {
-        visibility: visible;
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        /* half of small-spacing */
-        padding-left: var(--toolbutton-menu-padding);
-        padding-right: var(--toolbutton-menu-padding);
-        layout-alignment: content end fill 0;
-        icon-name: "arrow-down";
-        icon-color: var(--button-active-text-color);
         border-left: none;
+        &:hovered {
+            border-left: var(--button-border-highlight);
+        }
+    }
+
+    &.menu-open {
+        & > indicator {
+            border-left: var(--button-border-highlight);
+        }
     }
 }
 
