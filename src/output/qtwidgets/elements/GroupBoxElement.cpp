@@ -35,6 +35,7 @@ void GroupBoxElement::update()
     }
 
     setText(m_groupBoxOption->text);
+    updateSubElementList();
     layout();
 }
 
@@ -60,6 +61,17 @@ void GroupBoxElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
+void GroupBoxElement::updateSubElementList()
+{
+    m_subElementList.clear();
+    if (m_isCheckable) {
+        m_subElementList.append(ElementString::Icon);
+    }
+    if (hasText()) {
+        m_subElementList.append(ElementString::Text);
+    }
+}
+
 void GroupBoxElement::layout()
 {
     // We only layout by background, m_contentElementList etc are ignored
@@ -67,6 +79,7 @@ void GroupBoxElement::layout()
     m_backgroundElementList = prepareElements(m_groupBoxOption, m_widget);
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
+        m_layoutMap = layoutMap(m_backgroundElementList, m_groupBoxOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -84,12 +97,10 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
 
     switch (subControl) {
     case QStyle::SC_GroupBoxLabel: {
-        auto map = layoutMap(m_backgroundElementList, m_groupBoxOption, {ElementString::Text});
-        finalRect = map[ElementString::Text].rect;
+        finalRect = m_layoutMap[ElementString::Text].rect;
     } break;
     case QStyle::SC_GroupBoxContents: {
-        auto map = layoutMap(m_backgroundElementList, m_groupBoxOption, {ElementString::GroupBox, ElementString::Text});
-        auto textRect = map[ElementString::Text].rect;
+        auto textRect = m_layoutMap[ElementString::Text].rect;
         QMarginsF padding;
         QRectF frameRect = m_groupBoxOption->rect;
         frameRect = frameRect.adjusted(0, textRect.height(), 0, 0);
@@ -106,8 +117,7 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
         return frameRect.adjusted(padding.left(), padding.top() + topMargin, -padding.bottom(), -padding.right());
     } break;
     case QStyle::SC_GroupBoxCheckBox: {
-        auto map = layoutMap(m_backgroundElementList, m_groupBoxOption, {ElementString::Icon});
-        finalRect = map[ElementString::Icon].rect;
+        finalRect = m_layoutMap[ElementString::Icon].rect;
     } break;
     case QStyle::SC_GroupBoxFrame: {
         return m_groupBoxOption->rect;

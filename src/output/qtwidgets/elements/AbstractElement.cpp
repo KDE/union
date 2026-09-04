@@ -555,129 +555,125 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
         items.append(item);
     }
 
-    // Sort the list according to order. Set any filled items as last
-    std::sort(items.begin(), items.end(), [](const LayoutItem &lhs, const LayoutItem &rhs) {
-        if (lhs.horizontalAlignment == rhs.horizontalAlignment || lhs.verticalAlignment == rhs.verticalAlignment) {
-            // We reverse the order here to make sure the layouter reads this in correct order (0 1 2 instead of 2 1 0)
-            if (lhs.horizontalAlignment == Union::Properties::Alignment::End || lhs.verticalAlignment == Union::Properties::Alignment::End) {
-                return lhs.order > rhs.order;
-            } else {
-                return lhs.order < rhs.order;
-            }
-        }
-        return false;
-    });
-
     // Actual layouting starts here
     // QtWidgets containment is always within Widget, since we can't draw outside of a widget due
     // widgets limitations.
 
-    int counter = 1;
-    int spacing = globalSpacing;
-    QRectF horizontalSpace = availableSpace;
-    QRectF verticalSpace = availableSpace;
+    // Create buckets
+    QList<LayoutItem> startBucket;
+    QList<LayoutItem> centerBucket;
+    QList<LayoutItem> endBucket;
+    QList<LayoutItem> fillBucket;
 
-    // First, layout the start/end only
     for (auto &item : items) {
-        // Skip spacing for last/only item
-        if (counter >= items.count()) {
-            spacing = 0;
-        }
-
-        auto itemWidth = item.rect.width() + spacing;
-        auto itemHeight = item.rect.height() + spacing;
         switch (item.horizontalAlignment) {
-        case Union::Properties::Alignment::StackFill:
-        case Union::Properties::Alignment::StackCenter:
-            qCWarning(UNION_QTWIDGETS) << "StackFill/StackCenter is not supported for horizontal alignment!";
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            item.rect.moveLeft(horizontalSpace.left());
-            horizontalSpace.setLeft(item.rect.left() + itemWidth);
+        case Alignment::Unspecified:
+        case Alignment::StackCenter:
+        case Alignment::StackFill:
+        case Alignment::Start:
+            startBucket.append(item);
             break;
-        case Union::Properties::Alignment::Center:
-            // Center is bit confusing. It is meant to center the drawing inside the rectangle,
-            // so we do that for stackcenter/stackfill items.
-            if (item.horizontalAlignment == Union::Properties::Alignment::Center
-                && (item.verticalAlignment == Union::Properties::Alignment::StackCenter || item.verticalAlignment == Union::Properties::Alignment::StackFill)) {
-                item.rect = centerRect(horizontalSpace.toRect(), item.rect.width(), item.rect.height());
-            } else {
-                // When layouting normally we need to move it to next to the other item anyway.
-                if (items.count() > 1) {
-                    item.rect.moveLeft(horizontalSpace.left());
-                    horizontalSpace.setLeft(item.rect.left() + itemWidth);
+        case Alignment::Center:
+            centerBucket.append(item);
+            break;
+        case Alignment::End:
+            endBucket.append(item);
+            break;
+        case Alignment::Fill:
+            fillBucket.append(item);
+            break;
+        }
+    }
+
+    auto layoutBucket = [availableSpace, globalSpacing](QMap<QString, LayoutItem> &map, QList<LayoutItem> bucket, QRectF &space) {
+        auto spacing = globalSpacing;
+        int counter = 1;
+        int width = 0;
+        std::sort(bucket.begin(), bucket.end(), [](const LayoutItem &lhs, const LayoutItem &rhs) {
+            if (lhs.horizontalAlignment == rhs.horizontalAlignment || lhs.verticalAlignment == rhs.verticalAlignment) {
+                // We reverse the order here to make sure the layouter reads this in correct order (0 1 2 instead of 2 1 0)
+                if (lhs.horizontalAlignment == Union::Properties::Alignment::End || lhs.verticalAlignment == Union::Properties::Alignment::End) {
+                    return lhs.order > rhs.order;
                 } else {
-                    // For single items, we can just center it completely
-                    item.rect.moveCenter(availableSpace.center());
+                    return lhs.order < rhs.order;
                 }
             }
-            break;
-        case Union::Properties::Alignment::End:
-            item.rect.moveRight(horizontalSpace.right());
-            horizontalSpace.setRight(item.rect.right() - itemWidth);
-            break;
-        default:
-            break;
+            return false;
+        });
+        for (auto &item : bucket) {
+            if (counter >= bucket.count()) {
+                spacing = 0;
+            }
+            auto itemWidth = item.rect.width() + spacing;
+            auto itemHeight = item.rect.height() + spacing;
+
+            // For stackcenter/stackfill, we just want to center the rectangle based on its size.
+            if (item.horizontalAlignment == Union::Properties::Alignment::Center
+                && (item.verticalAlignment == Union::Properties::Alignment::StackCenter || item.verticalAlignment == Union::Properties::Alignment::StackFill)) {
+                item.rect = centerRect(availableSpace.toRect(), item.rect.width(), item.rect.height());
+            } else {
+                switch (item.horizontalAlignment) {
+                case Alignment::Unspecified:
+                case Alignment::StackCenter:
+                case Alignment::StackFill:
+                case Alignment::Start:
+                case Alignment::Center:
+                case Alignment::End:
+                    item.rect.moveLeft(space.left());
+                    space.setLeft(item.rect.left() + itemWidth);
+                    break;
+                case Alignment::Fill:
+                    item.rect.setLeft(space.left());
+                    item.rect.setRight(space.right());
+                    space.setLeft(item.rect.left() + itemWidth);
+                    break;
+                }
+            }
+
+            width += itemWidth;
+
+            switch (item.verticalAlignment) {
+            case Union::Properties::Alignment::Unspecified:
+            case Union::Properties::Alignment::Start:
+                item.rect.moveTop(space.top());
+                break;
+                // We can safely center the element within its rectangle here
+            case Union::Properties::Alignment::Center:
+                item.rect.moveCenter(QPoint(item.rect.center().x(), space.center().y()));
+                break;
+            case Union::Properties::Alignment::End:
+                item.rect.moveBottom(space.bottom());
+                break;
+            case Union::Properties::Alignment::Fill:
+                item.rect.setTop(space.top());
+                item.rect.setBottom(space.bottom());
+                break;
+            case Union::Properties::Alignment::StackFill:
+            case Union::Properties::Alignment::StackCenter:
+                item.rect.moveTop(space.top());
+                space.moveTop(item.rect.top() + itemHeight);
+                break;
+            }
+            map[item.elementName] = item;
+            counter++;
         }
+        space.setWidth(width);
+    };
 
-        switch (item.verticalAlignment) {
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            item.rect.moveTop(verticalSpace.top());
-            verticalSpace.setTop(item.rect.top() + itemHeight);
-            break;
-            // We can safely center the element within its rectangle here
-        case Union::Properties::Alignment::Center:
-            item.rect.moveCenter(QPoint(item.rect.center().x(), verticalSpace.center().y()));
-            break;
-        case Union::Properties::Alignment::End:
-            item.rect.moveBottom(verticalSpace.bottom());
-            verticalSpace.setBottom(item.rect.bottom() - itemHeight);
-            break;
-        default:
-            break;
-        }
+    QRectF startSpace = availableSpace;
+    QRectF endSpace = availableSpace;
+    QRectF centerSpace = availableSpace;
+    QRectF fillSpace = availableSpace;
 
-        map[item.elementName] = item;
-        counter++;
-    }
-
-    // Then, layout the fills and stacks
-    counter = 0;
-    spacing = globalSpacing;
-    for (auto &item : items) {
-        // Skip spacing for last/only item
-        if (counter >= items.count()) {
-            spacing = 0;
-        }
-
-        auto itemHeight = item.rect.height() + spacing;
-        switch (item.horizontalAlignment) {
-        case Union::Properties::Alignment::Fill:
-            item.rect.moveLeft(horizontalSpace.left());
-            item.rect.setRight(horizontalSpace.right());
-            break;
-        default:
-            break;
-        }
-
-        switch (item.verticalAlignment) {
-        case Union::Properties::Alignment::Fill:
-            item.rect.setTop(verticalSpace.top());
-            item.rect.setBottom(verticalSpace.bottom());
-            break;
-        case Union::Properties::Alignment::StackFill:
-        case Union::Properties::Alignment::StackCenter:
-            item.rect.moveTop(verticalSpace.top());
-            verticalSpace.moveTop(item.rect.top() + itemHeight);
-            break;
-        default:
-            break;
-        }
-
-        map[item.elementName] = item;
-        counter++;
-    }
+    layoutBucket(map, startBucket, startSpace);
+    // TODO: Get size of the items first, then use that for the bucket size, then move it
+    layoutBucket(map, endBucket, endSpace);
+    endSpace.moveRight(availableSpace.right());
+    layoutBucket(map, endBucket, endSpace);
+    layoutBucket(map, centerBucket, centerSpace);
+    centerSpace.moveCenter(availableSpace.center());
+    layoutBucket(map, centerBucket, centerSpace);
+    layoutBucket(map, fillBucket, fillSpace);
 
     return map;
 }

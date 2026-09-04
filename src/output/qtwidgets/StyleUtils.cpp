@@ -309,6 +309,11 @@ QString textFromOption(const QStyleOption *opt)
             return option->text;
         }
         break;
+    case QStyleOption::SO_GroupBox:
+        if (const auto option = qstyleoption_cast<const QStyleOptionGroupBox *>(opt)) {
+            return option->text;
+        }
+        break;
     default:
         break;
     }
