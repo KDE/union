@@ -15,11 +15,21 @@ REUSE-IgnoreStart
 
 #include "{{ type }}.h"
 
-#include <QRegularExpression>
+{% if system_includes %}
+{% for include in system_includes | sort %}
+#include <{{ include }}>
+{% endfor %}
 
+{% endif %}
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
+{% if local_includes %}
+{% for include in local_includes | sort %}
+#include "{{ include }}"
+{% endfor %}
+
+{% endif %}
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 

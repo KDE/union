@@ -30,6 +30,7 @@ include_patterns = [
     {"pattern": "int", "use_include": None},
     {"pattern": "std::filesystem::path", "use_include": "filesystem", "system_include": True},
     {"pattern": "Qt::", "use_include": "QtGlobal", "system_include": True},
+    {"pattern": "QFont::", "use_include": "QFont", "system_include": True},
     {"pattern": "Q", "system_include": True},
     {"pattern": "Union::Properties::", "use_include": None},
     {"pattern": "Union::Color", "use_include": "../Color.h"},
@@ -44,11 +45,14 @@ css_type_map = {
     "QString": "<string>",
     "QUrl": "<url>",
     "std::filesystem::path": "<url>",
+    "QFont::Style": "normal | italic | oblique",
+    "QFont::Capitalization": "normal | uppercase | lowercase | small-caps | capitalize",
     "Union::Properties::AlignmentContainer": "item | content | background",
     "Union::Properties::Alignment": "start | center | end | fill | stack-center | stack-fill",
     "Union::Properties::LineStyle": "none | solid",
     "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
     "Union::Properties::TextElide": "none | left | middle | right",
+    "Union::Properties::TextDecorations": "none | (underline | overline | line-through)+)"
 }
 
 
@@ -224,6 +228,8 @@ def process_node(node, name: str, parent: Description, memo: dict[str, Descripti
             parent.add_system_include("property.h.j2", include)
         else:
             parent.add_local_include("property.h.j2", include)
+
+        break
 
     if description.css is None:
         description.css = CssDescription()
