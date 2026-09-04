@@ -325,7 +325,6 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, b
         textAlign = toQtAlignment(properties->text()->alignment());
     }
     auto textWrap = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
-    auto textColor = properties->text()->color();
     textFlags |= textAlign;
     // Do not add wrap flags if we get DontClip
     // This could be done better
