@@ -16,10 +16,13 @@
 
 #include <CssParser.h>
 
+#include "CssTypes.h"
+
 #include "css_logging.h"
 
 using namespace Qt::StringLiterals;
 using namespace std::string_literals;
+using namespace CssInput;
 
 namespace fs = std::filesystem;
 
@@ -64,106 +67,6 @@ struct PropertyGroupBuilder {
     Setter setter;
 };
 
-inline float to_px(const cssparser::Dimension &value)
-{
-    switch (value.unit()) {
-    case cssparser::Dimension::Unit::Px:
-        return value.value();
-    default:
-        return 0.0;
-    }
-}
-
-inline float to_px(const cssparser::Value &value)
-{
-    if (value.type() != cssparser::Value::Type::Dimension) {
-        return 0.0;
-    }
-
-    return to_px(value.get<cssparser::Dimension>());
-}
-
-inline float to_number(const cssparser::Value &value)
-{
-    if (value.type() != cssparser::Value::Type::Dimension) {
-        return 0.0;
-    }
-
-    auto dimension = value.get<cssparser::Dimension>();
-    if (dimension.unit() != cssparser::Dimension::Unit::Number) {
-        return 0.0;
-    }
-
-    return dimension.value();
-}
-
-Color to_color(const cssparser::Color::Color &color)
-{
-    switch (color.type()) {
-    case cssparser::Color::Color::Type::Empty: {
-        return Color{};
-    }
-    case cssparser::Color::Color::Type::Rgba: {
-        auto value = color.get<cssparser::Color::RgbaData>();
-        return Color::rgba(value.r(), value.g(), value.b(), value.a());
-    }
-    case cssparser::Color::Color::Type::Custom: {
-        auto value = color.get<cssparser::Color::CustomColorData>();
-        QStringList arguments;
-        std::ranges::transform(value.arguments(), std::back_inserter(arguments), QString::fromStdString);
-        return Color::custom(QString::fromStdString(value.source()), arguments);
-    }
-    case cssparser::Color::Color::Type::Modified: {
-        auto modifiedColor = color.get<cssparser::Color::ModifiedColorData>();
-
-        switch (modifiedColor.operation()) {
-        case cssparser::Color::ModifiedColorData::Operation::Unknown:
-            return Color{};
-        case cssparser::Color::ModifiedColorData::Operation::Add: {
-            auto other = modifiedColor.get<std::shared_ptr<cssparser::Color::Color>>();
-            return Color::add(to_color(*modifiedColor.color()), to_color(*other));
-        }
-        case cssparser::Color::ModifiedColorData::Operation::Subtract: {
-            auto other = modifiedColor.get<std::shared_ptr<cssparser::Color::Color>>();
-            return Color::subtract(to_color(*modifiedColor.color()), to_color(*other));
-        }
-        case cssparser::Color::ModifiedColorData::Operation::Multiply: {
-            auto other = modifiedColor.get<std::shared_ptr<cssparser::Color::Color>>();
-            return Color::multiply(to_color(*modifiedColor.color()), to_color(*other));
-        }
-        case cssparser::Color::ModifiedColorData::Operation::Set: {
-            auto data = modifiedColor.get<cssparser::Color::SetOperationData>();
-            return Color::set(to_color(*modifiedColor.color()), data.r(), data.g(), data.b(), data.a());
-        }
-        case cssparser::Color::ModifiedColorData::Operation::Mix: {
-            auto data = modifiedColor.get<cssparser::Color::MixOperationData>();
-            return Color::mix(to_color(*modifiedColor.color()), to_color(*data.other()), data.amount());
-        }
-        }
-    }
-    }
-
-    return Color{};
-}
-
-inline Color to_color(const cssparser::Value &value)
-{
-    if (value.type() != cssparser::Value::Type::Color) {
-        return Color{};
-    }
-
-    return to_color(value.get<cssparser::Color::Color>());
-}
-
-inline fs::path to_path(const cssparser::Value &value)
-{
-    if (value.type() != cssparser::Value::Type::Url) {
-        return fs::path{};
-    }
-
-    return value.get<std::string>();
-}
-
 bool matches_keyword(const cssparser::Value &value, const QString &keyword)
 {
     if (value.type() != cssparser::Value::Type::String) {
@@ -172,50 +75,6 @@ bool matches_keyword(const cssparser::Value &value, const QString &keyword)
 
     auto string = QString::fromStdString(value.get<std::string>());
     return string.compare(keyword, Qt::CaseInsensitive) == 0;
-}
-
-inline QVariant to_qvariant(const cssparser::Value &value)
-{
-    switch (value.type()) {
-    case cssparser::Value::Type::Empty:
-        return QVariant{};
-    case cssparser::Value::Type::Dimension:
-        return to_px(value);
-    case cssparser::Value::Type::String:
-        return QString::fromStdString(value.get<std::string>());
-    case cssparser::Value::Type::Color:
-        return QVariant::fromValue(to_color(value));
-    case cssparser::Value::Type::Image:
-    case cssparser::Value::Type::Url:
-        return QVariant::fromValue(to_path(value));
-    case cssparser::Value::Type::Integer:
-        return value.get<int>();
-    }
-
-    return QVariant{};
-}
-
-template<typename T>
-inline int toEnumIntValue(/* intentional copy */ std::string value)
-{
-    const auto metaEnum = QMetaEnum::fromType<T>();
-
-    std::erase(value, '-');
-
-    auto count = metaEnum.keyCount();
-    for (int i = 0; i < count; ++i) {
-        if (qstrnicmp(metaEnum.key(i), value.c_str(), value.size()) == 0) {
-            return metaEnum.value(i);
-        }
-    }
-
-    return -1;
-}
-
-template<typename T>
-inline T toEnumValue(const std::string &value)
-{
-    return T{toEnumIntValue<T>(value)};
 }
 
 template<typename T>
