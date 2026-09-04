@@ -56,7 +56,7 @@ T.ItemDelegate {
 
     spacing: Union.Style.properties.layout.spacing
 
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font.qFont
 
     icon {
         color: Union.Style.properties.icon.color

@@ -25,7 +25,7 @@ T.Label {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.properties.text.font ?? Application.font
+    font: Union.Style.properties.text.font.qFont ?? Application.font
 
     color: Union.Style.properties.text.color ?? "black"
     linkColor: control.palette.link

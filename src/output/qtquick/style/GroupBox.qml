@@ -43,7 +43,7 @@ T.GroupBox {
             anchors.fill: parent
 
             text: control.title
-            font: Union.Style.properties.text.font ?? Application.font
+            font: Union.Style.properties.text.font.qFont ?? Application.font
             color: Union.Style.properties.text.color ?? control.palette.text
             elide: Text.ElideRight
 

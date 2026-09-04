@@ -43,7 +43,7 @@ T.ToolTip {
     bottomMargin: Union.Style.properties.layout.margins.bottom
 
 
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font.qFont
 
     closePolicy: T.Popup.CloseOnEscape | T.Popup.CloseOnPressOutsideParent | T.Popup.CloseOnReleaseOutsideParent
     delay: 700

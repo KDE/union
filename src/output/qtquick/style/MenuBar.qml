@@ -11,7 +11,7 @@ T.MenuBar {
     id: control
 
     Union.Element.type: "MenuBar"
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font.qFont
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding)

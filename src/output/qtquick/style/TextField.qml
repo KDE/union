@@ -42,7 +42,7 @@ T.TextField {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    font: Union.Style.properties.text.font ?? Application.font
+    font: Union.Style.properties.text.font.qFont ?? Application.font
     color: Union.Style.properties.text.color ?? palette.text
 
     selectionColor: control.palette.highlight
@@ -62,7 +62,7 @@ T.TextField {
         height: control.height - (control.topPadding + control.bottomPadding)
 
         text: control.placeholderText
-        font: Union.Style.properties.text.font ?? Application.font
+        font: Union.Style.properties.text.font.qFont ?? Application.font
         color: Union.Style.properties.text.color ?? control.palette.placeholderText
         horizontalAlignment: control.horizontalAlignment
         verticalAlignment: control.verticalAlignment

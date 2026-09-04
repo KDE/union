@@ -42,7 +42,7 @@ T.SearchField {
 
     spacing: Union.Style.properties.layout.spacing
 
-    font: Union.Style.properties.text.font ?? Application.font
+    font: Union.Style.properties.text.font.qFont ?? Application.font
 
     Union.Positioner.positionItems: [searchIndicator.indicator, contentItem, clearIndicator.indicator]
 

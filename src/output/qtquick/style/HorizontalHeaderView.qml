@@ -46,7 +46,7 @@ T.HorizontalHeaderView {
             id: text
 
             text: delegate.model[control.textRole]
-            font: Union.Style.properties.text.font ?? Application.font
+            font: Union.Style.properties.text.font.qFont ?? Application.font
             color: Union.Style.properties.text.color
             wrapMode: Text.NoWrap
             elide: Text.ElideRight
