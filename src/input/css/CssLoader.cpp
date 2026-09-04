@@ -3,8 +3,6 @@
 
 #include "CssLoader.h"
 
-#include <source_location>
-
 #include <QFile>
 #include <QMetaEnum>
 #include <QRegularExpression>
@@ -64,71 +62,78 @@ inline void setImage(T *output, const fs::path &rootPath, const cssparser::Prope
 template<typename T>
 inline void setAlignment(T *output, const cssparser::Property &property)
 {
-    std::unique_ptr<AlignmentPropertyGroup> tempAlignment;
-    AlignmentPropertyGroup *alignment;
-    if (output->alignment()) {
-        alignment = output->alignment();
-    } else {
-        tempAlignment = std::make_unique<AlignmentPropertyGroup>();
-        alignment = tempAlignment.get();
-    }
+    PropertyGroupBuilder alignment(output, &T::alignment, &T::setAlignment);
 
-    if (property.name().ends_with("alignment-container"s)) {
-        alignment->setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>()));
-    } else if (property.name().ends_with("alignment-horizontal"s)) {
-        alignment->setHorizontal(toEnumValue<Alignment>(property.value<std::string>()));
-    } else if (property.name().ends_with("alignment-vertical"s)) {
-        alignment->setVertical(toEnumValue<Alignment>(property.value<std::string>()));
-    } else if (property.name().ends_with("alignment-order"s)) {
-        alignment->setOrder(property.value<int>(0));
-    } else if (property.values().size() == 4) {
-        alignment->setContainer(toEnumValue<AlignmentContainer>(property.value<std::string>(0)));
-        alignment->setHorizontal(toEnumValue<Alignment>(property.value<std::string>(1)));
-        alignment->setVertical(toEnumValue<Alignment>(property.value<std::string>(2)));
-        alignment->setOrder(property.value<int>(3));
-    }
-
-    if (tempAlignment && tempAlignment->hasAnyValue()) {
-        output->setAlignment(std::move(tempAlignment));
-    }
+    /* clang-format off */
+    switchString(property
+        ,Default{[&]{
+            if (property.values().size() == 4) {
+                alignment->setContainer(toEnumValue<AlignmentContainer>(property.value(0)));
+                alignment->setHorizontal(toEnumValue<Alignment>(property.value(1)));
+                alignment->setVertical(toEnumValue<Alignment>(property.value(2)));
+                alignment->setOrder(property.value<int>(3));
+            }
+        }}
+        ,Case{EndsWith{"container"}, [&](auto &&value) {
+            alignment->setContainer(toEnumValue<AlignmentContainer>(value));
+        }}
+        ,Case{EndsWith{"horizontal"}, [&](auto &&value) {
+            alignment->setHorizontal(toEnumValue<Alignment>(value));
+        }}
+        ,Case{EndsWith{"vertical"}, [&](auto &&value) {
+            alignment->setVertical(toEnumValue<Alignment>(value));
+        }}
+        ,Case{EndsWith{"order"}, [&](CssValue &&value) {
+            alignment->setOrder(value.get<int>());
+        }}
+    );
+    /* clang-format on */
 }
 
 inline void sizeFromProperty(SizePropertyGroup *output, const cssparser::Property &property)
 {
-    if (property.name().ends_with("left")) {
-        output->setLeft(to_px(property.value()));
-    } else if (property.name().ends_with("right")) {
-        output->setRight(to_px(property.value()));
-    } else if (property.name().ends_with("top")) {
-        output->setTop(to_px(property.value()));
-    } else if (property.name().ends_with("bottom")) {
-        output->setBottom(to_px(property.value()));
-    } else {
-        if (property.values().size() == 1) {
-            auto value = to_px(property.value());
-            output->setLeft(value);
-            output->setRight(value);
-            output->setTop(value);
-            output->setBottom(value);
-        } else if (property.values().size() == 2) {
-            auto horizontal = to_px(property.value(0));
-            auto vertical = to_px(property.value(1));
-            output->setLeft(horizontal);
-            output->setRight(horizontal);
-            output->setTop(vertical);
-            output->setBottom(vertical);
-        } else if (property.values().size() == 3) {
-            output->setTop(to_px(property.value(0)));
-            output->setRight(to_px(property.value(1)));
-            output->setBottom(to_px(property.value(2)));
-            output->setLeft(to_px(property.value(1)));
-        } else if (property.values().size() == 4) {
-            output->setTop(to_px(property.value(0)));
-            output->setRight(to_px(property.value(1)));
-            output->setBottom(to_px(property.value(2)));
-            output->setLeft(to_px(property.value(3)));
-        }
-    }
+    /* clang-format off */
+    switchString(property
+        ,Default{[&] {
+            if (property.values().size() == 1) {
+                auto value = to_px(property.value());
+                output->setLeft(value);
+                output->setRight(value);
+                output->setTop(value);
+                output->setBottom(value);
+            } else if (property.values().size() == 2) {
+                auto horizontal = to_px(property.value(0));
+                auto vertical = to_px(property.value(1));
+                output->setLeft(horizontal);
+                output->setRight(horizontal);
+                output->setTop(vertical);
+                output->setBottom(vertical);
+            } else if (property.values().size() == 3) {
+                output->setTop(to_px(property.value(0)));
+                output->setRight(to_px(property.value(1)));
+                output->setBottom(to_px(property.value(2)));
+                output->setLeft(to_px(property.value(1)));
+            } else if (property.values().size() == 4) {
+                output->setTop(to_px(property.value(0)));
+                output->setRight(to_px(property.value(1)));
+                output->setBottom(to_px(property.value(2)));
+                output->setLeft(to_px(property.value(3)));
+            }
+        }}
+        ,Case{EndsWith{"left"}, [&](auto &&value) {
+            output->setLeft(to_px(value));
+        }}
+        ,Case{EndsWith{"right"}, [&](auto &&value) {
+            output->setRight(to_px(value));
+        }}
+        ,Case{EndsWith{"top"}, [&](auto &&value) {
+            output->setTop(to_px(value));
+        }}
+        ,Case{EndsWith{"bottom"}, [&](auto &&value) {
+            output->setBottom(to_px(value));
+        }}
+    );
+    /* clang-format on */
 }
 
 template<typename T>
@@ -311,111 +316,145 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
 
 void CssLoader::createProperties(StylePropertyGroup *output, std::span<const cssparser::Property> properties)
 {
+    /* clang-format off */
     for (const auto &property : properties) {
-        if (property.name() == "visibility"s || property.name() == "opacity"s) {
-            setDisplayProperty(output, property);
-        } else if (property.name() == "width"s || property.name() == "height"s || property.name() == "spacing"s) {
-            setLayoutProperty(output, property);
-        } else if (property.name().starts_with("padding")) {
-            setLayoutProperty(output, property);
-        } else if (property.name().starts_with("inset")) {
-            setLayoutProperty(output, property);
-        } else if (property.name().starts_with("margin")) {
-            setLayoutProperty(output, property);
-        } else if (property.name().starts_with("layout")) {
-            setLayoutProperty(output, property);
-        } else if (property.name().starts_with("background")) {
-            setBackgroundProperty(output, property);
-        } else if (property.name().starts_with("border")) {
-            setBorderProperty(output, property);
-        } else if (property.name().starts_with("outline")) {
-            setOutlineProperty(output, property);
-        } else if (property.name().starts_with("text") || property.name().starts_with("font")) {
-            setTextProperty(output, property);
-        } else if (property.name().starts_with("icon")) {
-            setIconProperty(output, property);
-        } else if (property.name() == "color"s) {
-            setTextProperty(output, property);
-            setIconProperty(output, property);
-        } else if (property.name().starts_with("shadow") || property.name().starts_with("box-shadow")) {
-            setShadowProperty(output, property);
-        }
+        switchString(property
+            ,Case{{"visibility", u"opacity"}, [&]{
+                setDisplayProperty(output, property);
+            }}
+            ,Case{{"width", "height", "spacing"}, [&]{
+                setLayoutProperty(output, property);
+            }}
+            ,Case{StartsWith{"padding"}, [&]{
+                setLayoutProperty(output, property);
+            }}
+            ,Case{StartsWith{"inset"}, [&]{
+                setLayoutProperty(output, property);
+            }}
+            ,Case{StartsWith{"margin"}, [&]{
+                setLayoutProperty(output, property);
+            }}
+            ,Case{StartsWith{"layout"}, [&]{
+                setLayoutProperty(output, property);
+            }}
+            ,Case{StartsWith{"background"}, [&]{
+                setBackgroundProperty(output, property);
+            }}
+            ,Case{StartsWith{"border"}, [&]{
+                setBorderProperty(output, property);
+            }}
+            ,Case{StartsWith{"outline"}, [&]{
+                setOutlineProperty(output, property);
+            }}
+            ,Case{StartsWith{"text"}, [&]{
+                setTextProperty(output, property);
+            }}
+            ,Case{StartsWith{"font"}, [&]{
+                setTextProperty(output, property);
+            }}
+            ,Case{StartsWith{"icon"}, [&]{
+                setIconProperty(output, property);
+            }}
+            ,Case{"color", [&]{
+                setTextProperty(output, property);
+                setIconProperty(output, property);
+            }}
+            ,Case{StartsWith{"shadow"}, [&]{
+                setShadowProperty(output, property);
+            }}
+            ,Case{StartsWith{"box-shadow"}, [&]{
+                setShadowProperty(output, property);
+            }}
+        );
     }
+    /* clang-format on */
 }
 
 void CssLoader::setDisplayProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder display(output, &StylePropertyGroup::display, &StylePropertyGroup::setDisplay);
 
-    if (property.name() == "visibility") {
-        if (matches_keyword(property.value(), u"visible"_s)) {
-            display->setVisible(true);
-        } else if (matches_keyword(property.value(), u"hidden"_s)) {
-            display->setVisible(false);
-        }
-    }
-
-    if (property.name() == "opacity") {
-        display->setOpacity(to_number(property.value()));
-    }
+    /* clang-format off */
+    switchString(property
+        ,Case{"visibility", [&](auto &&value) {
+            switchString(value
+                ,Case{"visible", [&]{ display->setVisible(true); }}
+                ,Case{"hidden", [&]{ display->setVisible(false); }}
+            );
+        }}
+        ,Case{"opacity", [&](auto &&value) {
+            display->setOpacity(to_number(value));
+        }}
+    );
+    /* clang-format on */
 }
 
 void CssLoader::setLayoutProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder layout(output, &StylePropertyGroup::layout, &StylePropertyGroup::setLayout);
 
-    if (property.name() == "width"s) {
-        layout->setWidth(to_px(property.value()));
-    } else if (property.name() == "height"s) {
-        layout->setHeight(to_px(property.value()));
-    } else if (property.name() == "spacing"s) {
-        layout->setSpacing(to_px(property.value()));
-    } else if (property.name().starts_with("layout-alignment")) {
-        setAlignment(layout.instance, property);
-    } else if (property.name().starts_with("padding")) {
-        PropertyGroupBuilder padding(layout.instance, &LayoutPropertyGroup::padding, &LayoutPropertyGroup::setPadding);
-        sizeFromProperty(padding.instance, property);
-    } else if (property.name().starts_with("inset")) {
-        PropertyGroupBuilder inset(layout.instance, &LayoutPropertyGroup::inset, &LayoutPropertyGroup::setInset);
-        sizeFromProperty(inset.instance, property);
-    } else if (property.name().starts_with("margin")) {
-        PropertyGroupBuilder margins(layout.instance, &LayoutPropertyGroup::margins, &LayoutPropertyGroup::setMargins);
-        sizeFromProperty(margins.instance, property);
-    }
+    /* clang-format off */
+    switchString(property
+        ,Case{"width", [&](auto &&value) {
+            layout->setWidth(to_px(value));
+        }}
+        ,Case{"height", [&](auto &&value) {
+            layout->setHeight(to_px(value));
+        }}
+        ,Case{"spacing", [&](auto &&value) {
+            layout->setSpacing(to_px(value));
+        }}
+        ,Case{StartsWith{"layout-alignment"}, [&]{
+            setAlignment(layout.instance, property);
+        }}
+        ,Case{StartsWith{"padding"}, [&]{
+            PropertyGroupBuilder padding(layout.instance, &LayoutPropertyGroup::padding, &LayoutPropertyGroup::setPadding);
+            sizeFromProperty(padding.instance, property);
+        }}
+        ,Case{StartsWith{"inset"}, [&]{
+            PropertyGroupBuilder inset(layout.instance, &LayoutPropertyGroup::inset, &LayoutPropertyGroup::setInset);
+            sizeFromProperty(inset.instance, property);
+        }}
+        ,Case{StartsWith{"margin"}, [&]{
+            PropertyGroupBuilder margins(layout.instance, &LayoutPropertyGroup::margins, &LayoutPropertyGroup::setMargins);
+            sizeFromProperty(margins.instance, property);
+        }}
+    );
+    /* clang-format on */
 }
 
 void CssLoader::setBackgroundProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder background(output, &StylePropertyGroup::background, &StylePropertyGroup::setBackground);
 
-    if (property.name() == "background"s) {
-        auto value = property.value();
-        if (matches_keyword(value, u"none"_s)) {
-            background->setColor(Union::Color{});
-            background->setImage(ImagePropertyGroup::empty());
-        } else if (value.type() == cssparser::Value::Type::Color) {
+    /* clang-format off */
+    switchString(property
+        ,Case{"background", [&](auto &&value) {
+            if (matches_keyword(value, u"none"_s)) {
+                background->setColor(Union::Color{});
+                background->setImage(ImagePropertyGroup::empty());
+            } else if (value.type() == cssparser::Value::Type::Color) {
+                background->setColor(to_color(value));
+            } else if (value.type() == cssparser::Value::Type::Url) {
+                setImage(background.instance, m_stylePath, property);
+            }
+        }}
+        ,Case{"background-color", [&](auto &&value) {
             background->setColor(to_color(value));
-        } else if (value.type() == cssparser::Value::Type::Url) {
-            setImage(background.instance, m_stylePath, property);
-        }
-    }
-
-    if (property.name() == "background-color"s) {
-        background->setColor(to_color(property.value()));
-    }
-
-    if (property.name() == "background-image") {
-        if (matches_keyword(property.value(), u"none"_s)) {
-            background->setImage(ImagePropertyGroup::empty());
-        } else {
-            setImage(background.instance, m_stylePath, property);
-        }
-    }
-
-    if (property.name() == "background-image-mask-color") {
-        PropertyGroupBuilder image(background.instance, &BackgroundPropertyGroup::image, &BackgroundPropertyGroup::setImage);
-        image->setMaskColor(to_color(property.value()));
-    }
+        }}
+        ,Case{"background-image", [&](auto &&value) {
+            if (matches_keyword(value, u"none"_s)) {
+                background->setImage(ImagePropertyGroup::empty());
+            } else {
+                setImage(background.instance, m_stylePath, property);
+            }
+        }}
+        ,Case{"background-image-mask-color", [&](auto &&value) {
+            PropertyGroupBuilder image(background.instance, &BackgroundPropertyGroup::image, &BackgroundPropertyGroup::setImage);
+            image->setMaskColor(to_color(value));
+        }}
+    );
+    /* clang-format on */
 }
 
 void CssLoader::setBorderProperty(StylePropertyGroup *output, const cssparser::Property &property)
@@ -429,35 +468,40 @@ void CssLoader::setBorderProperty(StylePropertyGroup *output, const cssparser::P
             corner->setRadius(radius);
         };
 
-        if (property.name() == "border-radius"s) {
-            if (property.values().size() == 1) {
-                auto radius = to_px(property.value());
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft), radius);
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight), radius);
-            } else if (property.values().size() == 4) {
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft),
-                                to_px(property.value(0)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight),
-                                to_px(property.value(1)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight),
-                                to_px(property.value(2)));
-                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft),
-                                to_px(property.value(3)));
-            }
-        } else if (property.name() == "border-top-left-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), to_px(property.value()));
-        } else if (property.name() == "border-top-right-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight),
-                            to_px(property.value()));
-        } else if (property.name() == "border-bottom-left-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft),
-                            to_px(property.value()));
-        } else if (property.name() == "border-bottom-right-radius") {
-            setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight),
-                            to_px(property.value()));
-        }
+        /* clang-format off */
+        switchString(property
+            ,Default{[&]{
+                if (property.values().size() == 1) {
+                    auto radius = to_px(property.value());
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), radius);
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight), radius);
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft), radius);
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight), radius);
+                } else if (property.values().size() == 4) {
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft),
+                                    to_px(property.value(0)));
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight),
+                                    to_px(property.value(1)));
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight),
+                                    to_px(property.value(2)));
+                    setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft),
+                                    to_px(property.value(3)));
+                }
+            }}
+            ,Case{"border-top-left-radius", [&](auto &&value) {
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topLeft, &CornersPropertyGroup::setTopLeft), to_px(value));
+            }}
+            ,Case{"border-top-right-radius", [&](auto &&value) {
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::topRight, &CornersPropertyGroup::setTopRight), to_px(value));
+            }}
+            ,Case{"border-bottom-left-radius", [&](auto &&value) {
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomLeft, &CornersPropertyGroup::setBottomLeft), to_px(value));
+            }}
+            ,Case{"border-bottom-right-radius", [&](auto &&value) {
+                setCornerRadius(PropertyGroupBuilder(corners.instance, &CornersPropertyGroup::bottomRight, &CornersPropertyGroup::setBottomRight), to_px(value));
+            }}
+        );
+        /* clang-format on */
 
         return;
     }
@@ -475,90 +519,102 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
 {
     PropertyGroupBuilder text(output, &StylePropertyGroup::text, &StylePropertyGroup::setText);
 
-    if (property.name().starts_with("text-alignment")) {
-        setAlignment(text.instance, property);
-    }
+    /* clang-format off */
+    switchString(property
+        ,Case{StartsWith{"text-alignment"}, [&] {
+            setAlignment(text.instance, property);
+        }}
+        ,Case{StartsWith{"font"}, [&]{
+            auto font = text->font().value_or(QFont{});
 
-    if (property.name().starts_with("font")) {
-        auto font = text->font().value_or(QFont{});
+            switchString(property
+                ,Case{"font-familty", [&](auto &&value) {
+                    font.setFamily(QString::fromStdString(property.value<std::string>()));
+                }}
+                ,Case{"font-size", [&](CssValue &&value) {
+                    auto dimension = value.get<cssparser::Dimension>();
+                    switch (dimension.unit()) {
+                        case cssparser::Dimension::Unit::Px:
+                            font.setPixelSize(int(dimension.value()));
+                            break;
+                        case cssparser::Dimension::Unit::Pt:
+                            font.setPointSizeF(dimension.value());
+                            break;
+                        case cssparser::Dimension::Unit::Percent:
+                            font.setPointSizeF(font.pointSizeF() * dimension.value());
+                            break;
+                        default:
+                            qCWarning(UNION_CSS) << "Invalid unit for font-size";
+                            break;
+                    }
+                }}
+                ,Case{"font-weight", [&](CssValue &&value) {
+                    if (value.type() == cssparser::Value::Type::Integer) {
+                        font.setWeight(QFont::Weight(value.get<int>()));
+                    } else {
+                        switchString(value
+                            ,Case{"normal", [&]{ font.setWeight(QFont::Weight::Normal); }}
+                            ,Case{"bold", [&]{ font.setWeight(QFont::Weight::Bold); }}
+                            ,Case{"bolder", [&]{ font.setWeight(QFont::Weight(font.weight() + 100)); }}
+                            ,Case{"lighter", [&]{ font.setWeight(QFont::Weight(font.weight() - 100); }}
+                        );
+                    }
+                }}
+            );
 
-        if (property.name() == "font-family") {
-            font.setFamily(QString::fromStdString(property.value<std::string>()));
-        } else if (property.name() == "font-size") {
-            auto dimension = property.value<cssparser::Dimension>();
-            switch (dimension.unit()) {
-            case cssparser::Dimension::Unit::Px:
-                font.setPixelSize(int(dimension.value()));
-                break;
-            case cssparser::Dimension::Unit::Pt:
-                font.setPointSizeF(dimension.value());
-                break;
-            case cssparser::Dimension::Unit::Percent:
-                font.setPointSizeF(font.pointSizeF() * dimension.value());
-                break;
-            default:
-                qCWarning(UNION_CSS) << "Invalid unit for font-size";
-                break;
-            }
-        } else if (property.name() == "font-weight") {
-            if (property.value().type() == cssparser::Value::Type::Integer) {
-                font.setWeight(QFont::Weight(property.value<int>()));
+            text->setFont(font);
+        }}
+        ,Case{{"color", "text-color"}, [&](auto &&value) {
+            text->setColor(to_color(value));
+        }}
+        ,Case{"text-wrap-mode", [&](auto &&value) {
+            // Wrap is shorthand for WrapAtWordBoundaryOrAnywhere
+            if (matches_keyword(value, "wrap")) {
+                text->setWrapMode(TextWrapMode::WrapAtWordBoundaryOrAnywhere);
             } else {
-                auto name = property.value<std::string>();
-                if (name == "normal") {
-                    font.setWeight(QFont::Weight::Normal);
-                } else if (name == "bold") {
-                    font.setWeight(QFont::Weight::Bold);
-                } else if (name == "bolder") {
-                    font.setWeight(QFont::Weight(font.weight() + 100));
-                } else if (name == "lighter") {
-                    font.setWeight(QFont::Weight(font.weight() - 100));
-                }
+                text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
             }
-        }
-
-        text->setFont(font);
-    }
-
-    if (property.name() == "color" || property.name() == "text-color") {
-        text->setColor(to_color(property.value()));
-    }
-
-    if (property.name() == "text-wrap-mode") {
-        const auto val = property.value<std::string>();
-        // Wrap is shorthand for WrapAtWordBoundaryOrAnywhere
-        if (val == "wrap") {
-            text->setWrapMode(TextWrapMode::WrapAtWordBoundaryOrAnywhere);
-        } else {
-            text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
-        }
-    }
-
-    if (property.name() == "text-elide") {
-        text->setElide(toEnumValue<TextElide>(property.value<std::string>()));
-    }
+        }}
+        ,Case{"text-elide", [&](auto &&value) {
+            text->setElide(toEnumValue<TextElide>(value));
+        }}
+    );
+    /* clang-format on */
 }
 
 void CssLoader::setIconProperty(StylePropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder icon(output, &StylePropertyGroup::icon, &StylePropertyGroup::setIcon);
 
-    if (property.name().starts_with("icon-alignment")) {
-        setAlignment(icon.instance, property);
-    }
-
-    if (property.name() == "icon-name") {
-        icon->setName(QString::fromStdString(property.value<std::string>()));
-    } else if (property.name() == "icon-width") {
-        icon->setWidth(to_px(property.value()));
-    } else if (property.name() == "icon-height") {
-        icon->setHeight(to_px(property.value()));
-    } else if (property.name() == "icon-size") {
-        icon->setWidth(to_px(property.value()));
-        icon->setHeight(to_px(property.value()));
-    } else if (property.name() == "color" || property.name() == "icon-color") {
-        icon->setColor(to_color(property.value()));
-    }
+    /* clang-format off */
+    switchString(property
+        ,Case{StartsWith{"icon-alignment"}, [&]{
+            setAlignment(icon.instance, property);
+        }}
+        ,Case{u"icon-width"_s, [&](auto &&value) {
+            icon->setWidth(to_px(value));
+        }}
+        ,Case{u"icon-height"_s, [&](auto &&value) {
+            icon->setHeight(to_px(value));
+        }}
+        ,Case{u"icon-size"_s, [&](auto &&value) {
+            icon->setWidth(to_px(value));
+            icon->setHeight(to_px(value));
+        }}
+        ,Case{u"icon-name"_s, [&](auto &&value) {
+            icon->setName(to_string(value));
+        }}
+        ,Case{u"icon-source"_s, [&](auto &&value) {
+            icon->setSource(QUrl{to_string(value)});
+        }}
+        ,Case{u"color"_s, [&](auto &&value) {
+            icon->setColor(to_color(value));
+        }}
+        ,Case{u"icon-color"_s, [&](auto &&value) {
+            icon->setColor(to_color(value));
+        }}
+    );
+    /* clang-format on */
 }
 
 void CssLoader::setShadowProperty(StylePropertyGroup *output, const cssparser::Property &property)
