@@ -16,6 +16,7 @@
 #include <properties/TextPropertyGroup.h>
 
 #include "AlignmentPropertyGroupQuick.h"
+#include "FontPropertyGroupQuick.h"
 // clang-format on
 
 namespace Union
@@ -53,13 +54,12 @@ public:
     AlignmentPropertyGroupQuick *alignment() const;
 
     /*!
-     * \qmlproperty QFont TextPropertyGroupQuick::font
+     * \qmlproperty FontPropertyGroupQuick TextPropertyGroupQuick::font
      *
-     * Exposes TextPropertyGroup::font to QML.
+     * Exposes TextPropertyGroup::FontPropertyGroup to QML.
      */
-    Q_PROPERTY(QJSValue font READ font NOTIFY fontChanged)
-    QJSValue font() const;
-    Q_SIGNAL void fontChanged();
+    Q_PROPERTY(Union::Quick::FontPropertyGroupQuick *font READ font CONSTANT)
+    FontPropertyGroupQuick *font() const;
 
     /*!
      * \qmlproperty Union::Color TextPropertyGroupQuick::color
@@ -91,6 +91,7 @@ public:
 private:
     QuickStyle *m_style = nullptr;
     std::unique_ptr<AlignmentPropertyGroupQuick> m_alignment;
+    std::unique_ptr<FontPropertyGroupQuick> m_font;
 
     Union::Properties::TextPropertyGroup *m_state = nullptr;
 };

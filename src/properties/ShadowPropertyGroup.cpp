@@ -6,8 +6,6 @@
 
 #include "ShadowPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -276,7 +274,11 @@ bool Union::Properties::operator==(const ShadowPropertyGroup &left, const Shadow
 QDebug operator<<(QDebug debug, Union::Properties::ShadowPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "ShadowPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

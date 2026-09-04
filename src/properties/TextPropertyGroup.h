@@ -10,10 +10,10 @@
 
 #include <QDebug>
 
-#include <QFont>
 
 #include "../Color.h"
 #include "AlignmentPropertyGroup.h"
+#include "FontPropertyGroup.h"
 
 #include "PropertiesTypes.h"
 
@@ -104,16 +104,16 @@ public:
     void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
 
     /*!
-        The font used for the text of an element.
+     * \brief A group containing properties relating to the font used for an element.
      */
-    std::optional<QFont> font() const;
+    FontPropertyGroup *font() const;
 
     /*!
      * Set the value of font.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setFont(const std::optional<QFont> &newValue);
+    void setFont(std::unique_ptr<FontPropertyGroup> &&newValue);
 
     /*!
         The color of the text of an element.

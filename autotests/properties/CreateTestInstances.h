@@ -14,6 +14,7 @@
 #include <properties/CornerPropertyGroup.h>
 #include <properties/CornersPropertyGroup.h>
 #include <properties/DisplayPropertyGroup.h>
+#include <properties/FontPropertyGroup.h>
 #include <properties/IconPropertyGroup.h>
 #include <properties/ImagePropertyGroup.h>
 #include <properties/LayoutPropertyGroup.h>
@@ -56,6 +57,7 @@ std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance();
 std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance();
 std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance();
 std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance();
+std::unique_ptr<FontPropertyGroup> testFontPropertyGroupInstance();
 std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance();
 std::unique_ptr<BackgroundPropertyGroup> testBackgroundPropertyGroupInstance();
 std::unique_ptr<BorderPropertyGroup> testBorderPropertyGroupInstance();
@@ -170,10 +172,27 @@ std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance()
     auto instance = std::make_unique<TextPropertyGroup>();
 
     instance->setAlignment(testAlignmentPropertyGroupInstance());
-    instance->setFont(testQFontInstance());
+    instance->setFont(testFontPropertyGroupInstance());
     instance->setColor(Union::Color{});
     instance->setWrapMode(Union::Properties::TextWrapMode{});
     instance->setElide(Union::Properties::TextElide{});
+
+    return instance;
+}
+
+std::unique_ptr<FontPropertyGroup> testFontPropertyGroupInstance()
+{
+    auto instance = std::make_unique<FontPropertyGroup>();
+
+    instance->setFamily(QString{});
+    instance->setSize(testQrealInstance());
+    instance->setWeight(QFont::Weight{});
+    instance->setStyle(QFont::Style{});
+    instance->setStretch(int{});
+    instance->setCapitalization(QFont::Capitalization{});
+    instance->setDecorations(Union::Properties::TextDecorations{});
+    instance->setLetterSpacing(testQrealInstance());
+    instance->setWordSpacing(testQrealInstance());
 
     return instance;
 }

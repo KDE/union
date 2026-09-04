@@ -14,6 +14,7 @@ target_sources(Union PRIVATE
     DisplayPropertyGroup.cpp
     LayoutPropertyGroup.cpp
     TextPropertyGroup.cpp
+    FontPropertyGroup.cpp
     IconPropertyGroup.cpp
     BackgroundPropertyGroup.cpp
     BorderPropertyGroup.cpp
@@ -35,6 +36,7 @@ target_sources(Union PUBLIC
     DisplayPropertyGroup.h
     LayoutPropertyGroup.h
     TextPropertyGroup.h
+    FontPropertyGroup.h
     IconPropertyGroup.h
     BackgroundPropertyGroup.h
     BorderPropertyGroup.h

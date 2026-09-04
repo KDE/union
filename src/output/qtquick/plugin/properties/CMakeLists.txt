@@ -23,6 +23,8 @@ target_sources(UnionQuickImpl PRIVATE
     LayoutPropertyGroupQuick.h
     TextPropertyGroupQuick.cpp
     TextPropertyGroupQuick.h
+    FontPropertyGroupQuick.cpp
+    FontPropertyGroupQuick.h
     IconPropertyGroupQuick.cpp
     IconPropertyGroupQuick.h
     BackgroundPropertyGroupQuick.cpp

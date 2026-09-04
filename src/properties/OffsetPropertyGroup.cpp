@@ -6,8 +6,6 @@
 
 #include "OffsetPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -205,7 +203,11 @@ bool Union::Properties::operator==(const OffsetPropertyGroup &left, const Offset
 QDebug operator<<(QDebug debug, Union::Properties::OffsetPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "OffsetPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 
