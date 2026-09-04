@@ -23,7 +23,7 @@ T.MenuBarItem {
     Union.Mnemonics.controlType: Union.Mnemonics.MenuItem
     Union.Mnemonics.label: control.text
 
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font.qFont
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right

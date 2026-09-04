@@ -44,7 +44,7 @@ KT.NavigationTabBar {
 	// TabBar template expects 0 spacing
 	spacing: 0
 
-	font: Union.Style.properties.text.font
+	font: Union.Style.properties.text.font.qFont
 
 	background: Union.StyledRectangle { }
 }

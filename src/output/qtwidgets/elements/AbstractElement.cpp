@@ -286,7 +286,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
         auto textColor = m_styleOption->palette.text().color();
         auto unionColor = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
-        auto font = safePropertyLookup(properties, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font);
+        auto font = safePropertyLookup(properties, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
         if (unionColor.isValid()) {
             textColor = unionColor.toQColor();
         }
@@ -534,8 +534,8 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
             auto textFlags = textFlagsFromProperties(properties, true);
             textFlags |= Qt::TextShowMnemonic;
             auto fontMetrics = opt->fontMetrics;
-            if (properties->text() && properties->text()->font().has_value()) {
-                fontMetrics = QFontMetrics(properties->text()->font().value());
+            if (properties->text() && properties->text()->font()) {
+                fontMetrics = QFontMetrics(properties->text()->font()->toQFont());
             }
             elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optiontext);
             order = properties->text()->alignment()->order().value_or(0);

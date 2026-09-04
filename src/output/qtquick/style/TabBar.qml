@@ -40,7 +40,7 @@ T.TabBar {
 
     spacing: Union.Style.properties.layout.spacing
 
-    font: Union.Style.properties.text.font
+    font: Union.Style.properties.text.font.qFont
 
     contentItem: ListView {
         model: control.contentModel
