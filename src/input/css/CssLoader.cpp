@@ -16,6 +16,7 @@
 
 #include <CssParser.h>
 
+#include "CssHelpers.h"
 #include "CssTypes.h"
 
 #include "css_logging.h"
@@ -25,47 +26,6 @@ using namespace std::string_literals;
 using namespace CssInput;
 
 namespace fs = std::filesystem;
-
-template<typename Target, typename Getter, typename Setter>
-struct PropertyGroupBuilder {
-    using PropertyGroup = std::remove_pointer_t<std::invoke_result_t<Getter, Target *>>;
-
-    PropertyGroupBuilder(Target *_target, Getter _getter, Setter _setter)
-        : target(_target)
-        , getter(_getter)
-        , setter(_setter)
-    {
-        instance = std::invoke(getter, target);
-        if (!instance) {
-            temporary = std::make_unique<PropertyGroup>();
-            instance = temporary.get();
-        }
-    }
-
-    ~PropertyGroupBuilder()
-    {
-        if (temporary && temporary->hasAnyValue()) {
-            std::invoke(setter, target, std::move(temporary));
-        }
-    }
-
-    inline PropertyGroup *operator->()
-    {
-        return instance;
-    }
-
-    PropertyGroupBuilder &operator=(const PropertyGroup &group)
-    {
-        *instance = group;
-        return *this;
-    }
-
-    std::unique_ptr<PropertyGroup> temporary;
-    PropertyGroup *instance;
-    Target *target;
-    Getter getter;
-    Setter setter;
-};
 
 bool matches_keyword(const cssparser::Value &value, const QString &keyword)
 {
