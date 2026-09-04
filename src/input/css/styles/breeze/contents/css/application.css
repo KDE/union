@@ -54,26 +54,32 @@ toolbar
     padding-top: var(--medium-spacing);
     padding-bottom: var(--large-spacing);
     color: var(--window-active-text-color);
-    background-color: var(--window-active-background-color);
-
-    &.header {
-        border-bottom: 1px solid var(--header-active-border-color);
-        background-color: var(--header-active-background-color);
-    }
 
     &.footer {
         border-top: 1px solid var(--window-active-border-color);
     }
 
+    &.header {
+        border-bottom: 1px solid var(--header-active-border-color);
+    }
+
+    background-color: var(--window-active-background-color);
     .inactive & {
         background-color: var(--window-inactive-background-color);
         border-color: var(--window-inactive-border-color);
+    }
 
-        &.header {
+    &.header,
+    &[colorset="header"],
+    [colorset="header"] & {
+        background-color: var(--header-active-background-color);
+
+        .inactive & {
             background-color: var(--header-inactive-background-color);
             border-color: var(--header-inactive-border-color);
         }
     }
+
     & > separator {
         width: 1px;
         height: var(--small-element-size);
