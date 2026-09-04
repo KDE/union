@@ -56,7 +56,6 @@ private:
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;
     bool m_isClosable;
-    void tabLayout(QRectF *textRect, QRectF *iconRect) const;
     bool isVertical() const;
     int hSpace() const;
     int vSpace() const;

@@ -370,7 +370,6 @@ tabbutton {
         border-top-right-radius: 0px;
         border-bottom-right-radius: 0px;
         border-left: var(--button-border);
-        text-wrap-mode: wrap;
     }
 
     &[direction="right"] {
@@ -379,7 +378,24 @@ tabbutton {
         border-top-left-radius: 0px;
         border-bottom-left-radius: 0px;
         border-right: var(--button-border);
-        text-wrap-mode: wrap;
+    }
+
+    &[display="icon-only"] {
+        icon-alignment: content center center 0;
+    }
+
+    &[direction="top"],
+    &[direction="bottom"] {
+        &[display="icon-only"] {
+            width: var(--icon-size-small);
+        }
+    }
+
+    &[direction="left"],
+    &[direction="right"] {
+        &[display="icon-only"] {
+            height: var(--icon-size-small);
+        }
     }
 
     &:disabled {
