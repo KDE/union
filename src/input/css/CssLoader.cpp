@@ -4,6 +4,7 @@
 #include "CssLoader.h"
 
 #include <QFile>
+#include <QGuiApplication>
 #include <QMetaEnum>
 #include <QRegularExpression>
 #include <QStandardPaths>
@@ -525,44 +526,10 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
             setAlignment(text.instance, property);
         }}
         ,Case{StartsWith{"font"}, [&]{
-            auto font = text->font().value_or(QFont{});
-
-            switchString(property
-                ,Case{"font-familty", [&](auto &&value) {
-                    font.setFamily(QString::fromStdString(value));
-                }}
-                ,Case{"font-size", [&](CssValue &&value) {
-                    auto dimension = value.get<cssparser::Dimension>();
-                    switch (dimension.unit()) {
-                        case cssparser::Dimension::Unit::Px:
-                            font.setPixelSize(int(dimension.value()));
-                            break;
-                        case cssparser::Dimension::Unit::Pt:
-                            font.setPointSizeF(dimension.value());
-                            break;
-                        case cssparser::Dimension::Unit::Percent:
-                            font.setPointSizeF(font.pointSizeF() * dimension.value());
-                            break;
-                        default:
-                            qCWarning(UNION_CSS) << "Invalid unit for font-size";
-                            break;
-                    }
-                }}
-                ,Case{"font-weight", [&](CssValue &&value) {
-                    if (value.type() == cssparser::Value::Type::Integer) {
-                        font.setWeight(QFont::Weight(value.get<int>()));
-                    } else {
-                        switchString(value
-                            ,Case{"normal", [&]{ font.setWeight(QFont::Weight::Normal); }}
-                            ,Case{"bold", [&]{ font.setWeight(QFont::Weight::Bold); }}
-                            ,Case{"bolder", [&]{ font.setWeight(QFont::Weight(font.weight() + 100)); }}
-                            ,Case{"lighter", [&]{ font.setWeight(QFont::Weight(font.weight() - 100)); }}
-                        );
-                    }
-                }}
-            );
-
-            text->setFont(font);
+            setFontProperty(text.instance, property);
+        }}
+        ,Case{{"letter-spacing", "word-spacing", "text-transform"}, [&]{
+            setFontProperty(text.instance, property);
         }}
         ,Case{{"color", "text-color"}, [&](auto &&value) {
             text->setColor(to_color(value));
@@ -572,11 +539,109 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
             if (matches_keyword(value, u"wrap"_s)) {
                 text->setWrapMode(TextWrapMode::WrapAtWordBoundaryOrAnywhere);
             } else {
-                text->setWrapMode(toEnumValue<TextWrapMode>(property.value<std::string>()));
+                text->setWrapMode(toEnumValue<TextWrapMode>(value));
             }
         }}
         ,Case{"text-elide", [&](auto &&value) {
             text->setElide(toEnumValue<TextElide>(value));
+        }}
+    );
+    /* clang-format on */
+}
+void CssLoader::setFontProperty(TextPropertyGroup *output, const cssparser::Property &property)
+{
+    PropertyGroupBuilder font(output, &TextPropertyGroup::font, &TextPropertyGroup::setFont);
+
+    /* clang-format off */
+    switchString(property
+        ,Case{u"font-family"_s, [&](auto &&value) {
+            font->setFamily(to_string(value));
+        }}
+        ,Case{u"font-size"_s, [&](CssValue &&value) {
+            if (value.type() == cssparser::Value::Type::Dimension) {
+                auto dimension = value.get<cssparser::Dimension>();
+                if (dimension.unit() == cssparser::Dimension::Unit::Percent || dimension.unit() == cssparser::Dimension::Unit::Rem) {
+                    // TODO: We should have a Dimension type in core with units so that we can pass these
+                    // on to the output and have it resolve the size to a pixel value.
+                    auto appFont = QGuiApplication::font();
+                    if (appFont.pointSize() > 0) {
+                        font->setSize(appFont.pointSizeF() * 1.333 * dimension.value());
+                    } else {
+                        font->setSize(appFont.pixelSize() * dimension.value());
+                    }
+                } else {
+                    font->setSize(to_px(value));
+                }
+            }
+        }}
+        ,Case{u"font-weight"_s, [&](auto &&value) {
+            if (value.type() == cssparser::Value::Type::Integer) {
+                // Qt uses fixed weight steps, even though the QFont documentation sort of disagrees.
+                int clampedWeight = std::clamp(int((value.template get<int>() / 100.0) * 100), 100, 900);
+                font->setWeight(static_cast<QFont::Weight>(clampedWeight));
+            } else {
+                switchString(value
+                    ,Case{"normal", [&]{ font->setWeight(QFont::Weight::Normal); }}
+                    ,Case{"bold", [&]{ font->setWeight(QFont::Weight::Bold); }}
+                    ,Case{"bolder", [&]{
+                        auto appFont = QGuiApplication::font();
+                        font->setWeight(QFont::Weight(appFont.weight() + 100));
+                    }}
+                    ,Case{"lighter", [&]{
+                        auto appFont = QGuiApplication::font();
+                        font->setWeight(QFont::Weight(appFont.weight() - 100));
+                    }}
+                );
+            }
+        }}
+        ,Case{u"font-style"_s, [&](auto &&value) {
+            switchString(value
+                ,Case{u"normal"_s, [&]{ font->setStyle(QFont::StyleNormal); }}
+                ,Case{u"italic"_s, [&]{ font->setStyle(QFont::StyleItalic); }}
+                ,Case{u"oblique"_s, [&]{ font->setStyle(QFont::StyleOblique); }}
+            );
+        }}
+        ,Case{u"font-stretch"_s, [&](CssValue &&value) {
+            if (value.type() == cssparser::Value::Type::Dimension) {
+                auto dimension = value.get<cssparser::Dimension>();
+                font->setStretch(dimension.value());
+            } else {
+                switchString(value
+                    ,Case{u"ultra-condensed"_s, [&]{ font->setStretch(QFont::Stretch::UltraCondensed); }}
+                    ,Case{u"extra-condensed"_s, [&]{ font->setStretch(QFont::Stretch::ExtraCondensed); }}
+                    ,Case{u"condensed"_s, [&]{ font->setStretch(QFont::Stretch::Condensed); }}
+                    ,Case{u"semi-condensed"_s, [&]{ font->setStretch(QFont::Stretch::SemiCondensed); }}
+                    ,Case{u"normal"_s, [&]{ font->setStretch(QFont::Stretch::Unstretched); }}
+                    ,Case{u"semi-expanded"_s, [&]{ font->setStretch(QFont::Stretch::SemiExpanded); }}
+                    ,Case{u"expanded"_s, [&]{ font->setStretch(QFont::Stretch::Expanded); }}
+                    ,Case{u"extra-expanded"_s, [&]{ font->setStretch(QFont::Stretch::ExtraExpanded); }}
+                    ,Case{u"ultra-expanded"_s, [&]{ font->setStretch(QFont::Stretch::UltraExpanded); }}
+                );
+            }
+        }}
+        ,Case{u"font-capitalization"_s, [&](CssValue &&value) {
+            font->setCapitalization(toEnumValue<QFont::Capitalization>(value.get<std::string>()));
+        }}
+        ,Case{u"text-decoration"_s, [&](auto &&value) {
+            if (matches_keyword(value, u"none"_s)) {
+                font->setDecorations(Union::Properties::TextDecorations{});
+            } else {
+                Union::Properties::TextDecorations decorations;
+                for (const auto &v : property.values()) {
+                    switchString(v
+                        ,Case{u"underline"_s, [&]{ decorations.setFlag(Union::Properties::TextDecoration::Underline); }}
+                        ,Case{u"overline"_s, [&]{ decorations.setFlag(Union::Properties::TextDecoration::Overline); }}
+                        ,Case{u"line-through"_s, [&]{ decorations.setFlag(Union::Properties::TextDecoration::StrikeThrough); }}
+                    );
+                }
+                font->setDecorations(decorations);
+            }
+        }}
+        ,Case{u"letter-spacing"_s, [&](auto &&value) {
+            font->setLetterSpacing(to_px(value));
+        }}
+        ,Case{u"word-spacing"_s, [&](auto &&value) {
+            font->setWordSpacing(to_px(value));
         }}
     );
     /* clang-format on */
