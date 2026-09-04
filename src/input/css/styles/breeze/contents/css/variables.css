@@ -90,6 +90,8 @@
     --header-disabled-background-color: custom-color("kcolorscheme", "disabled", "header", "background", "normal");
     --header-disabled-border-color: custom-color("kcolorscheme", "disabled", "header", "decoration", "frame");
 
+    --complementary-disabled-text-color: custom-color("kcolorscheme", "disabled", "complementary", "foreground", "text");
+
     --highlight-disabled-color: mix(var(--window-disabled-background-color), var(--highlight-color), 0.2);
     --highlight-disabled-text-color: mix(var(--window-disabled-text-color), var(--highlight-text-color), 0.2);
 
