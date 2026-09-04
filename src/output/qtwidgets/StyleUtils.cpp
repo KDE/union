@@ -18,6 +18,7 @@
 #include <qstyleoption.h>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup)
 {
@@ -309,22 +310,28 @@ QString textFromOption(const QStyleOption *opt)
             return option->text;
         }
         break;
+    case QStyleOption::SO_GroupBox:
+        if (const auto option = qstyleoption_cast<const QStyleOptionGroupBox *>(opt)) {
+            return option->text;
+        }
+        break;
     default:
         break;
     }
     return QString();
 }
 
-int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, bool skipAlign)
+int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
 {
     int textFlags = Qt::AlignVCenter;
     // Handle alignment case-by-case basis. Sometimes we want to just use default
     // alignleft and center, especially if we have an icon to work with.
-    auto textAlign = QFlags(Qt::AlignAbsolute);
-    if (!skipAlign) {
+    auto textAlign = QFlags(Qt::AlignVCenter);
+    if (properties && properties->text()) {
         textAlign = toQtAlignment(properties->text()->alignment());
     }
-    auto textWrap = toQtWrapMode(properties->text()->wrapMode().value_or(Union::Properties::TextWrapMode::NoWrap));
+    auto textWrap =
+        toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
     textFlags |= textAlign;
     // Do not add wrap flags if we get DontClip
     // This could be done better

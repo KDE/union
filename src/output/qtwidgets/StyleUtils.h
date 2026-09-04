@@ -14,12 +14,26 @@
 
 class QStyleOption;
 
+enum class BucketType {
+    Start,
+    Center,
+    End,
+    Fill
+};
+
 struct LayoutItem {
     QString elementName;
     int order;
     Union::Properties::Alignment horizontalAlignment;
     Union::Properties::Alignment verticalAlignment;
     QRectF rect;
+};
+
+struct LayoutBucket {
+    BucketType type;
+    QRectF rect;
+    qreal spacing = 0;
+    QList<LayoutItem> items;
 };
 
 const char property_union_member_list[] = "_union_member_list";
@@ -46,10 +60,9 @@ QStringList widgetToElementHierarchy(const QWidget *widget);
 QString textFromOption(const QStyleOption *opt);
 
 /*!
- * \brief Returns flags for text drawing purposes. If using LayoutMap for alignment, it's best to
- * skip the Qt alignment by setting skipAlign to true.
+ * \brief Returns flags for text drawing purposes. Applies the text alignment based on the layouting.
  */
-int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties, bool skipAlign);
+int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties);
 
 /*!
  * \brief Centers a rectangle depending on width and height. Copied from Breeze.

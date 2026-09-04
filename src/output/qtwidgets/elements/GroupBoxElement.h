@@ -38,6 +38,7 @@ public:
     QRectF subControlRect(QStyle::SubControl subControl) const override;
 
 private:
+    void updateSubElementList() override;
     QStringList elementHints() const override;
     void layout() override;
     void drawText(QPainter *painter) const override;

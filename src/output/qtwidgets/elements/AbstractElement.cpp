@@ -290,7 +290,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         if (unionColor.isValid()) {
             textColor = unionColor.toQColor();
         }
-        textFlags = textFlagsFromProperties(properties, true);
+        textFlags = textFlagsFromProperties(properties);
         painter->save();
         painter->setPen(textColor);
         painter->setFont(font);
@@ -301,7 +301,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
 
 QMarginsF AbstractElement::padding() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
+    if (m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
         return m_backgroundProperties->layout()->padding()->toMargins();
     }
     return QMarginsF();
@@ -309,7 +309,7 @@ QMarginsF AbstractElement::padding() const
 
 QMarginsF AbstractElement::borderSize() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->border()) {
+    if (m_backgroundProperties && m_backgroundProperties->border()) {
         return m_backgroundProperties->border()->sizes();
     }
     return QMarginsF();
@@ -317,7 +317,7 @@ QMarginsF AbstractElement::borderSize() const
 
 qreal AbstractElement::height() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout()) {
+    if (m_backgroundProperties && m_backgroundProperties->layout()) {
         return m_backgroundProperties->layout()->height().value_or(1);
     }
     return m_styleOption->rect.height();
@@ -325,7 +325,7 @@ qreal AbstractElement::height() const
 
 qreal AbstractElement::width() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout()) {
+    if (m_backgroundProperties && m_backgroundProperties->layout()) {
         return m_backgroundProperties->layout()->width().value_or(1);
     }
     return m_styleOption->rect.width();
@@ -333,7 +333,7 @@ qreal AbstractElement::width() const
 
 qreal AbstractElement::spacing() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout()) {
+    if (m_backgroundProperties && m_backgroundProperties->layout()) {
         return m_backgroundProperties->layout()->spacing().value_or(1);
     }
     return 0;
@@ -341,7 +341,7 @@ qreal AbstractElement::spacing() const
 
 QSizeF AbstractElement::indicatorSize() const
 {
-    if (m_isValid && m_indicatorProperties && m_indicatorProperties->layout()) {
+    if (m_indicatorProperties && m_indicatorProperties->layout()) {
         auto width = m_indicatorProperties->layout()->width().value_or(0);
         auto height = m_indicatorProperties->layout()->height().value_or(0);
         return QSizeF(width, height);
@@ -351,7 +351,7 @@ QSizeF AbstractElement::indicatorSize() const
 
 QSizeF AbstractElement::iconSize() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->icon()) {
+    if (m_backgroundProperties && m_backgroundProperties->icon()) {
         auto width = m_backgroundProperties->icon()->width().value_or(1);
         auto height = m_backgroundProperties->icon()->height().value_or(1);
         return QSizeF(width, height);
@@ -472,25 +472,14 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
         subElements = {ElementString::Widget};
     }
 
-    // TODO: Go through all elements, create rectangles for them
-    // Then place and resize those rectangles according to hierarchy
-    // Use the original opt->rect as the main container
-    // move any subelements in it according their given rules
-
-    // Get spacing for main item
+    // Setup the container rectangle
     auto properties = queryProperties(elements);
     QRectF availableSpace = backgroundRectangle(opt, properties);
-    int globalSpacing = 0;
-    QMarginsF padding;
-    if (properties->layout()->padding()) {
-        padding = properties->layout()->padding()->toMargins().toMargins();
-    }
+    QMarginsF padding = safePropertyLookup(properties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     availableSpace = availableSpace.marginsRemoved(padding);
-    if (subElements.count() > 1) {
-        globalSpacing = properties->layout()->spacing().value_or(0);
-    }
     auto currentHierarchy = elements;
-    // this could be turned into its own method
+
+    // Prepare all subelements
     for (const auto &subElement : subElements) {
         // NOTE: Currently text and icon are part of the main element, but eventually
         // will be moved as their own elements
@@ -531,7 +520,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
                 }
             }
             // When layouting, ensure we take mnemonics into account
-            auto textFlags = textFlagsFromProperties(properties, true);
+            auto textFlags = textFlagsFromProperties(properties);
             textFlags |= Qt::TextShowMnemonic;
             auto fontMetrics = opt->fontMetrics;
             if (properties->text() && properties->text()->font().has_value()) {
@@ -555,129 +544,30 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
         items.append(item);
     }
 
-    // Sort the list according to order. Set any filled items as last
-    std::sort(items.begin(), items.end(), [](const LayoutItem &lhs, const LayoutItem &rhs) {
-        if (lhs.horizontalAlignment == rhs.horizontalAlignment || lhs.verticalAlignment == rhs.verticalAlignment) {
-            // We reverse the order here to make sure the layouter reads this in correct order (0 1 2 instead of 2 1 0)
-            if (lhs.horizontalAlignment == Union::Properties::Alignment::End || lhs.verticalAlignment == Union::Properties::Alignment::End) {
-                return lhs.order > rhs.order;
-            } else {
-                return lhs.order < rhs.order;
-            }
-        }
-        return false;
-    });
-
     // Actual layouting starts here
     // QtWidgets containment is always within Widget, since we can't draw outside of a widget due
     // widgets limitations.
 
-    int counter = 1;
-    int spacing = globalSpacing;
-    QRectF horizontalSpace = availableSpace;
-    QRectF verticalSpace = availableSpace;
+    // Create buckets
+    LayoutBucket startBucket = createBucket(items, BucketType::Start, availableSpace);
+    LayoutBucket centerBucket = createBucket(items, BucketType::Center, availableSpace);
+    LayoutBucket endBucket = createBucket(items, BucketType::End, availableSpace);
+    LayoutBucket fillBucket = createBucket(items, BucketType::Fill, availableSpace);
 
-    // First, layout the start/end only
-    for (auto &item : items) {
-        // Skip spacing for last/only item
-        if (counter >= items.count()) {
-            spacing = 0;
-        }
+    startBucket.rect.moveLeft(availableSpace.left());
+    mapBucketItems(startBucket, map);
 
-        auto itemWidth = item.rect.width() + spacing;
-        auto itemHeight = item.rect.height() + spacing;
-        switch (item.horizontalAlignment) {
-        case Union::Properties::Alignment::StackFill:
-        case Union::Properties::Alignment::StackCenter:
-            qCWarning(UNION_QTWIDGETS) << "StackFill/StackCenter is not supported for horizontal alignment!";
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            item.rect.moveLeft(horizontalSpace.left());
-            horizontalSpace.setLeft(item.rect.left() + itemWidth);
-            break;
-        case Union::Properties::Alignment::Center:
-            // Center is bit confusing. It is meant to center the drawing inside the rectangle,
-            // so we do that for stackcenter/stackfill items.
-            if (item.horizontalAlignment == Union::Properties::Alignment::Center
-                && (item.verticalAlignment == Union::Properties::Alignment::StackCenter || item.verticalAlignment == Union::Properties::Alignment::StackFill)) {
-                item.rect = centerRect(horizontalSpace.toRect(), item.rect.width(), item.rect.height());
-            } else {
-                // When layouting normally we need to move it to next to the other item anyway.
-                if (items.count() > 1) {
-                    item.rect.moveLeft(horizontalSpace.left());
-                    horizontalSpace.setLeft(item.rect.left() + itemWidth);
-                } else {
-                    // For single items, we can just center it completely
-                    item.rect.moveCenter(availableSpace.center());
-                }
-            }
-            break;
-        case Union::Properties::Alignment::End:
-            item.rect.moveRight(horizontalSpace.right());
-            horizontalSpace.setRight(item.rect.right() - itemWidth);
-            break;
-        default:
-            break;
-        }
+    endBucket.rect.moveRight(availableSpace.right());
+    mapBucketItems(endBucket, map);
 
-        switch (item.verticalAlignment) {
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            item.rect.moveTop(verticalSpace.top());
-            verticalSpace.setTop(item.rect.top() + itemHeight);
-            break;
-            // We can safely center the element within its rectangle here
-        case Union::Properties::Alignment::Center:
-            item.rect.moveCenter(QPoint(item.rect.center().x(), verticalSpace.center().y()));
-            break;
-        case Union::Properties::Alignment::End:
-            item.rect.moveBottom(verticalSpace.bottom());
-            verticalSpace.setBottom(item.rect.bottom() - itemHeight);
-            break;
-        default:
-            break;
-        }
+    centerBucket.rect.moveCenter(availableSpace.center());
+    centerBucket.rect.setLeft(startBucket.rect.right());
+    centerBucket.rect.setRight(endBucket.rect.left());
+    mapBucketItems(centerBucket, map);
 
-        map[item.elementName] = item;
-        counter++;
-    }
-
-    // Then, layout the fills and stacks
-    counter = 0;
-    spacing = globalSpacing;
-    for (auto &item : items) {
-        // Skip spacing for last/only item
-        if (counter >= items.count()) {
-            spacing = 0;
-        }
-
-        auto itemHeight = item.rect.height() + spacing;
-        switch (item.horizontalAlignment) {
-        case Union::Properties::Alignment::Fill:
-            item.rect.moveLeft(horizontalSpace.left());
-            item.rect.setRight(horizontalSpace.right());
-            break;
-        default:
-            break;
-        }
-
-        switch (item.verticalAlignment) {
-        case Union::Properties::Alignment::Fill:
-            item.rect.setTop(verticalSpace.top());
-            item.rect.setBottom(verticalSpace.bottom());
-            break;
-        case Union::Properties::Alignment::StackFill:
-        case Union::Properties::Alignment::StackCenter:
-            item.rect.moveTop(verticalSpace.top());
-            verticalSpace.moveTop(item.rect.top() + itemHeight);
-            break;
-        default:
-            break;
-        }
-
-        map[item.elementName] = item;
-        counter++;
-    }
+    fillBucket.rect.setLeft(startBucket.rect.right());
+    fillBucket.rect.setRight(endBucket.rect.left());
+    mapBucketItems(fillBucket, map);
 
     return map;
 }
@@ -690,4 +580,145 @@ Union::Element::Ptr AbstractElement::createElement(const QString &name) const
     unionElement->setHints(elementHints());
     unionElement->setAttributes(elementAttributes());
     return unionElement;
+}
+
+LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const
+{
+    LayoutBucket bucket;
+    bucket.type = type;
+    bucket.rect = containerRect;
+    bucket.spacing = spacing();
+
+    for (auto &item : items) {
+        switch (item.horizontalAlignment) {
+        case Alignment::Unspecified:
+        case Alignment::StackCenter:
+        case Alignment::StackFill:
+        case Alignment::Start:
+            if (bucket.type == BucketType::Start) {
+                bucket.items.append(item);
+            }
+            break;
+        case Alignment::Center:
+            if (bucket.type == BucketType::Center) {
+                bucket.items.append(item);
+            }
+            break;
+        case Alignment::End:
+            if (bucket.type == BucketType::End) {
+                bucket.items.append(item);
+            }
+            break;
+        case Alignment::Fill:
+            if (bucket.type == BucketType::Fill) {
+                bucket.items.append(item);
+            }
+            break;
+        }
+    }
+
+    // Sort the items according their order
+    std::sort(bucket.items.begin(), bucket.items.end(), [bucket](const LayoutItem &lhs, const LayoutItem &rhs) {
+        // We reverse the order here to make sure the layouter reads this in correct order (0 1 2 instead of 2 1 0)
+        if (bucket.type == BucketType::End) {
+            return lhs.order > rhs.order;
+        } else {
+            return lhs.order < rhs.order;
+        }
+    });
+
+    bucket.rect = resizeBucket(bucket);
+    return bucket;
+}
+
+QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
+{
+    qreal width = 0;
+    qreal height = 0;
+    QRectF bucketRect = bucket.rect;
+    for (auto &item : bucket.items) {
+        const qreal itemWidth = item.rect.width() + bucket.spacing;
+        const qreal itemHeight = item.rect.height();
+        const bool stacked =
+            (item.verticalAlignment == Union::Properties::Alignment::StackFill || item.verticalAlignment == Union::Properties::Alignment::StackCenter);
+
+        if (stacked) {
+            width = qMax(bucketRect.width(), itemWidth);
+            height += (itemHeight + bucket.spacing);
+        } else {
+            width += itemWidth;
+            height = qMax(bucketRect.height(), itemHeight);
+        }
+    }
+    bucketRect.setWidth(width);
+    bucketRect.setHeight(height);
+
+    return bucketRect;
+}
+
+void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const
+{
+    auto bucketRect = bucket.rect;
+    int spacing = bucket.spacing;
+    for (auto &item : bucket.items) {
+        const auto itemWidth = item.rect.width() + spacing;
+        const auto itemHeight = item.rect.height() + spacing;
+
+        // For stackcenter/stackfill, we just want to center the rectangle based on its size.
+        if (item.horizontalAlignment == Union::Properties::Alignment::Center
+            && (item.verticalAlignment == Union::Properties::Alignment::StackCenter || item.verticalAlignment == Union::Properties::Alignment::StackFill)) {
+            item.rect = centerRect(bucketRect.toRect(), item.rect.width(), item.rect.height());
+        } else {
+            switch (item.horizontalAlignment) {
+            case Alignment::Unspecified:
+            case Alignment::StackCenter:
+            case Alignment::StackFill:
+            case Alignment::Start:
+            case Alignment::End:
+                item.rect.moveLeft(bucketRect.left());
+                bucketRect.setLeft(item.rect.left() + itemWidth);
+                break;
+            case Alignment::Center:
+                if (bucket.items.count() > 1) {
+                    item.rect.moveLeft(bucketRect.left());
+                    bucketRect.setLeft(item.rect.left() + itemWidth);
+                } else {
+                    item.rect.setLeft(bucketRect.left());
+                    item.rect.setRight(bucketRect.right());
+                }
+                break;
+            case Alignment::Fill:
+                item.rect.setLeft(bucketRect.left());
+                item.rect.setRight(bucketRect.right());
+                bucketRect.setLeft(item.rect.left() + itemWidth);
+                break;
+            }
+        }
+
+        switch (item.verticalAlignment) {
+        case Union::Properties::Alignment::Unspecified:
+        case Union::Properties::Alignment::Start:
+            item.rect.moveTop(bucketRect.top());
+            break;
+            // We can safely center the element within its rectangle here
+        case Union::Properties::Alignment::Center:
+            item.rect.moveCenter(QPoint(item.rect.center().x(), bucketRect.center().y()));
+            break;
+        case Union::Properties::Alignment::End:
+            item.rect.moveBottom(bucketRect.bottom());
+            break;
+        case Union::Properties::Alignment::Fill:
+            item.rect.setTop(bucketRect.top());
+            item.rect.setBottom(bucketRect.bottom());
+            break;
+        case Union::Properties::Alignment::StackFill:
+        case Union::Properties::Alignment::StackCenter:
+            item.rect.moveTop(bucketRect.top());
+            bucketRect.moveTop(item.rect.top() + itemHeight);
+            break;
+        }
+
+        map[item.elementName] = item;
+    }
+    bucket.rect = bucketRect;
 }

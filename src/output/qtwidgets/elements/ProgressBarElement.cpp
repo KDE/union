@@ -108,7 +108,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         if (!textVisible || busy) {
             return QRect();
         }
-        auto textFlags = textFlagsFromProperties(m_backgroundProperties, false);
+        auto textFlags = textFlagsFromProperties(m_backgroundProperties);
         int textWidth = qMax(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
                              m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
         auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());

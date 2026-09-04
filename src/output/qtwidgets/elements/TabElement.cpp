@@ -113,6 +113,7 @@ void TabElement::layout()
 
     m_backgroundElementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
     if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
         QRect tabRect = m_tabOption->rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
@@ -129,7 +130,6 @@ void TabElement::layout()
 
         auto subopt = *m_tabOption;
         subopt.rect = tabRect;
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
         m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
         m_isValid = true;
     }
@@ -180,14 +180,7 @@ QRectF TabElement::subElementRect(QStyle::SubElement element) const
     }
 
     if (element == QStyle::SE_TabBarTabText) {
-        QRectF unifiedRect;
-        for (const auto &m : m_layoutMap) {
-            unifiedRect = unifiedRect.united(m.rect.toRect());
-        }
-        unifiedRect.setSize(applyPaddingToSize(unifiedRect.size()));
-        if (m_isVertical) {
-            unifiedRect = unifiedRect.transposed();
-        }
+        return m_layoutMap[ElementString::Text].rect;
     }
     return m_tabOption->rect;
 }

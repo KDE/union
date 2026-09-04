@@ -230,4 +230,8 @@ protected:
 
 private:
     Union::Element::Ptr createElement(const QString &name) const;
+
+    LayoutBucket createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const;
+    QRectF resizeBucket(const LayoutBucket &bucket) const;
+    void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
 };
