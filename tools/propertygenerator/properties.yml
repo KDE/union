@@ -290,15 +290,6 @@ children:
             -   name: color
                 syntax: "<color>"
                 doc: A shorthand for setting both text and icon color in one property.
-            -   name: font-size
-                syntax: "<length-percentage>"
-                doc: The size of the font used for the text of an element.
-            -   name: font-weight
-                syntax: "<integer> | (normal | bold | bolder | lighter)"
-                doc: The weight of the font used for the text of an element.
-            -   name: font-family
-                syntax: "<string>"
-                doc: The name of the font family used for the text of an element.
 
         children:
             alignment:
@@ -306,8 +297,137 @@ children:
                 doc: The alignment of the text of an element.
 
             font:
-                type: QFont
-                doc: The font used for the text of an element.
+                type: group
+                doc: \brief A group containing properties relating to the font used for an element.
+
+                css:
+                    name: font
+
+                children:
+                    family:
+                        type: QString
+                        doc: The name of the font family used for an element.
+
+                    size:
+                        type: qreal
+                        doc: The size of the font used for an element.
+                        css:
+                            syntax: "<length-percentage>"
+
+                    weight:
+                        type: QFont::Weight
+                        doc: The weight of the font used for an element.
+                        css:
+                            syntax: "<integer> | (normal | bold | bolder | lighter)"
+
+                    style:
+                        type: QFont::Style
+                        doc: The style of the font used for an element.
+
+                    stretch:
+                        type: int
+                        doc: The amount the font used for an element is stretched.
+
+                        css:
+                            syntax: "<percentage> | (ultra-condensed | extra-condensed | condensed | semi-condensed | normal | semi-expanded | expanded | extra-expanded | ultra-expanded)"
+
+                    capitalization:
+                        type: QFont::Capitalization
+                        doc: The capitalization style of the font used for an element.
+
+                        css:
+                            name: text-transform
+
+                    decorations:
+                        type: Union::Properties::TextDecorations
+                        doc: The decorations enabled for the font used for an element.
+
+                        css:
+                            name: text-decoration
+
+                    letterSpacing:
+                        type: qreal
+                        doc: The spacing between individual letters of the font used for an element.
+
+                        css:
+                            name: letter-spacing
+                            syntax: "<length-percentage>"
+
+                    wordSpacing:
+                        type: qreal
+                        doc: The spacing between words of the font used for an element.
+
+                        css:
+                            name: word-spacing
+                            syntax: "<length-percentage>"
+
+                extra_system_includes:
+                    "property.h.j2":
+                    -   QFont
+                    "property.cpp.j2":
+                    -   QGuiApplication
+
+                extra_code:
+                    "property.h.j2":
+                        public: |4
+                                /*! Returns a QFont representing the font. */
+                                QFont toQFont() const;
+
+                    "property.cpp.j2":
+                        global: |4
+                            QFont {{ type }}::toQFont() const
+                            {
+                                QFont result;
+
+                                result.setFamily(d->family.value_or(QGuiApplication::font().family()));
+
+                                // TODO This needs a type with a proper unit so we can
+                                // distinguish pixel and point size.
+                                if (d->size) {
+                                    result.setPixelSize(d->size.value());
+                                }
+
+                                result.setWeight(d->weight.value_or(QFont::Normal));
+                                result.setStyle(d->style.value_or(QFont::StyleNormal));
+                                result.setStretch(d->stretch.value_or(0));
+                                result.setCapitalization(d->capitalization.value_or(QFont::MixedCase));
+
+                                if (d->decorations) {
+                                    if (d->decorations.value().testFlag(Union::Properties::TextDecoration::Underline)) {
+                                        result.setUnderline(true);
+                                    }
+
+                                    if (d->decorations.value().testFlag(Union::Properties::TextDecoration::Overline)) {
+                                        result.setOverline(true);
+                                    }
+
+                                    if (d->decorations.value().testFlag(Union::Properties::TextDecoration::StrikeThrough)) {
+                                        result.setStrikeOut(true);
+                                    }
+                                }
+
+                                result.setLetterSpacing(QFont::AbsoluteSpacing, d->letterSpacing.value_or(0.0));
+                                result.setWordSpacing(d->wordSpacing.value_or(0.0));
+
+                                return result;
+                            }
+
+                    "qml_group.h.j2":
+                        public: |4
+                                /*! Returns a QFont representing the font. */
+                                Q_PROPERTY(QFont qFont READ toQFont NOTIFY updated)
+                                QFont toQFont() const;
+
+                    "qml_group.cpp.j2":
+                        global: |4
+                            QFont {{ type }}Quick::toQFont() const
+                            {
+                                if (!m_state) {
+                                    return QFont{};
+                                }
+
+                                return m_state->toQFont();
+                            }
 
             color:
                 type: Union::Color

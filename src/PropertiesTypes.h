@@ -133,6 +133,18 @@ enum class TextElide {
 };
 Q_ENUM_NS(TextElide)
 
+/*!
+ * \enum Union::Properties::TextDecoration
+ */
+enum class TextDecoration {
+    None,
+    Underline,
+    Overline,
+    StrikeThrough,
+};
+Q_ENUM_NS(TextDecoration)
+Q_DECLARE_FLAGS(TextDecorations, TextDecoration)
+
 /*
  * A template method to get an empty value of a certain type.
  *
@@ -226,6 +238,7 @@ static inline T safePropertyLookup(const PropertyGroup *group, const T &defaultV
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Properties::ImageFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Properties::ToStringFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Properties::TextDecorations)
 
 // Helper templates to more easily use enums with QTextStream
 template<typename T>
