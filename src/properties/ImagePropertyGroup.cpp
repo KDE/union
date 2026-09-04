@@ -6,8 +6,6 @@
 
 #include "ImagePropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -380,7 +378,11 @@ bool Union::Properties::operator==(const ImagePropertyGroup &left, const ImagePr
 QDebug operator<<(QDebug debug, Union::Properties::ImagePropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "ImagePropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

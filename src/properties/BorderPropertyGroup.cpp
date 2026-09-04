@@ -6,8 +6,6 @@
 
 #include "BorderPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -308,7 +306,11 @@ bool Union::Properties::operator==(const BorderPropertyGroup &left, const Border
 QDebug operator<<(QDebug debug, Union::Properties::BorderPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "BorderPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

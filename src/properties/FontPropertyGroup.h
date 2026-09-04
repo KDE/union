@@ -10,10 +10,9 @@
 
 #include <QDebug>
 
+#include <QFont>
+#include <QString>
 
-#include "../Color.h"
-#include "AlignmentPropertyGroup.h"
-#include "FontPropertyGroup.h"
 
 #include "PropertiesTypes.h"
 
@@ -26,16 +25,16 @@ namespace Union
 namespace Properties
 {
 
-class TextPropertyGroupPrivate;
+class FontPropertyGroupPrivate;
 
 /*!
-\class Union::Properties::TextPropertyGroup
+\class Union::Properties::FontPropertyGroup
 \inmodule core
 \ingroup core-properties
 
-\brief A property group containing properties related to the text of an element.
+\brief A group containing properties relating to the font used for an element.
 */
-class UNION_EXPORT TextPropertyGroup
+class UNION_EXPORT FontPropertyGroup
 {
 public:
     /*!
@@ -44,25 +43,25 @@ public:
      * A null instance in this case means an instance that does not have any
      * values for its properties. This includes property groups.
      */
-    TextPropertyGroup();
+    FontPropertyGroup();
     /*!
      * Copy constructor.
      */
-    TextPropertyGroup(const TextPropertyGroup &other);
+    FontPropertyGroup(const FontPropertyGroup &other);
     /*!
      * Move constructor.
      */
-    TextPropertyGroup(TextPropertyGroup &&other);
-    ~TextPropertyGroup();
+    FontPropertyGroup(FontPropertyGroup &&other);
+    ~FontPropertyGroup();
 
     /*!
      * Copy assignment operator.
      */
-    TextPropertyGroup &operator=(const TextPropertyGroup &other);
+    FontPropertyGroup &operator=(const FontPropertyGroup &other);
     /*!
      * Move assignment operator.
      */
-    TextPropertyGroup &operator=(TextPropertyGroup &&other);
+    FontPropertyGroup &operator=(FontPropertyGroup &&other);
 
     /*!
      * Perform safe property lookup of a property or the property of a subgroup.
@@ -92,64 +91,112 @@ public:
     }
 
     /*!
-     * The alignment of the text of an element.
+        The name of the font family used for an element.
      */
-    AlignmentPropertyGroup *alignment() const;
+    std::optional<QString> family() const;
 
     /*!
-     * Set the value of alignment.
+     * Set the value of family.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
+    void setFamily(const std::optional<QString> &newValue);
 
     /*!
-     * \brief A group containing properties relating to the font used for an element.
+        The size of the font used for an element.
      */
-    FontPropertyGroup *font() const;
+    std::optional<qreal> size() const;
 
     /*!
-     * Set the value of font.
+     * Set the value of size.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setFont(std::unique_ptr<FontPropertyGroup> &&newValue);
+    void setSize(const std::optional<qreal> &newValue);
 
     /*!
-        The color of the text of an element.
+        The weight of the font used for an element.
      */
-    std::optional<Union::Color> color() const;
+    std::optional<QFont::Weight> weight() const;
 
     /*!
-     * Set the value of color.
+     * Set the value of weight.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setColor(const std::optional<Union::Color> &newValue);
+    void setWeight(const std::optional<QFont::Weight> &newValue);
 
     /*!
-        The wrap mode for the text of an element.
+        The style of the font used for an element.
      */
-    std::optional<Union::Properties::TextWrapMode> wrapMode() const;
+    std::optional<QFont::Style> style() const;
 
     /*!
-     * Set the value of wrapMode.
+     * Set the value of style.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setWrapMode(const std::optional<Union::Properties::TextWrapMode> &newValue);
+    void setStyle(const std::optional<QFont::Style> &newValue);
 
     /*!
-        The elide mode for the text of an element.
+        The amount the font used for an element is stretched.
      */
-    std::optional<Union::Properties::TextElide> elide() const;
+    std::optional<int> stretch() const;
 
     /*!
-     * Set the value of elide.
+     * Set the value of stretch.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setElide(const std::optional<Union::Properties::TextElide> &newValue);
+    void setStretch(const std::optional<int> &newValue);
+
+    /*!
+        The capitalization style of the font used for an element.
+     */
+    std::optional<QFont::Capitalization> capitalization() const;
+
+    /*!
+     * Set the value of capitalization.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setCapitalization(const std::optional<QFont::Capitalization> &newValue);
+
+    /*!
+        The decorations enabled for the font used for an element.
+     */
+    std::optional<Union::Properties::TextDecorations> decorations() const;
+
+    /*!
+     * Set the value of decorations.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setDecorations(const std::optional<Union::Properties::TextDecorations> &newValue);
+
+    /*!
+        The spacing between individual letters of the font used for an element.
+     */
+    std::optional<qreal> letterSpacing() const;
+
+    /*!
+     * Set the value of letterSpacing.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setLetterSpacing(const std::optional<qreal> &newValue);
+
+    /*!
+        The spacing between words of the font used for an element.
+     */
+    std::optional<qreal> wordSpacing() const;
+
+    /*!
+     * Set the value of wordSpacing.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setWordSpacing(const std::optional<qreal> &newValue);
 
     /*!
      * Returns if this property group has any value set.
@@ -185,35 +232,38 @@ public:
      * \a source      The source property group to copy from.
      * \a destination The destination property group to copy to.
      */
-    static void resolveProperties(const TextPropertyGroup *source, TextPropertyGroup *destination);
+    static void resolveProperties(const FontPropertyGroup *source, FontPropertyGroup *destination);
 
     /*!
-     * Create and return an empty TextPropertyGroup instance.
+     * Create and return an empty FontPropertyGroup instance.
      *
-     * This will create an empty TextPropertyGroup instance, which is defined as
+     * This will create an empty FontPropertyGroup instance, which is defined as
      * an instance with all of its values default-constructed. Note that this is
      * different from a default-constructed instance which will have all its
      * values unset.
      */
-    static std::unique_ptr<TextPropertyGroup> empty();
+    static std::unique_ptr<FontPropertyGroup> empty();
+
+    /*! Returns a QFont representing the font. */
+    QFont toQFont() const;
 
 private:
-    std::unique_ptr<TextPropertyGroupPrivate> d;
+    std::unique_ptr<FontPropertyGroupPrivate> d;
 };
 
 /*!
- * \relates Union::Properties::TextPropertyGroup
- * Equality comparison for TextPropertyGroup.
+ * \relates Union::Properties::FontPropertyGroup
+ * Equality comparison for FontPropertyGroup.
  */
-UNION_EXPORT bool operator==(const TextPropertyGroup &left, const TextPropertyGroup &right);
+UNION_EXPORT bool operator==(const FontPropertyGroup &left, const FontPropertyGroup &right);
 }
 }
 
 /*!
- * \relates Union::Properties::TextPropertyGroup
- * QDebug support for TextPropertyGroup.
+ * \relates Union::Properties::FontPropertyGroup
+ * QDebug support for FontPropertyGroup.
  */
-UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::TextPropertyGroup *type);
+UNION_EXPORT QDebug operator<<(QDebug debug, Union::Properties::FontPropertyGroup *type);
 
-UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::TextPropertyGroup *type);
-UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::TextPropertyGroup> &type);
+UNION_EXPORT QDataStream &operator<<(QDataStream &stream, const Union::Properties::FontPropertyGroup *type);
+UNION_EXPORT QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::FontPropertyGroup> &type);

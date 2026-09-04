@@ -220,21 +220,6 @@ if the element has no visible text.
 A shorthand for setting both text and icon color in one property.
 
 
-\section3 font-size (<length-percentage>)
-
-The size of the font used for the text of an element.
-
-
-\section3 font-weight (<integer> | (normal | bold | bolder | lighter))
-
-The weight of the font used for the text of an element.
-
-
-\section3 font-family (<string>)
-
-The name of the font family used for the text of an element.
-
-
 
 \section2 text-alignment
 
@@ -266,6 +251,55 @@ The vertical alignment.
 The order determines which elements come before others in the same alignment group.
 
 
+
+\section2 font
+
+\brief A group containing properties relating to the font used for an element.
+
+
+\section3 font-family (<string>)
+
+The name of the font family used for an element.
+
+
+\section3 font-size (<length-percentage>)
+
+The size of the font used for an element.
+
+
+\section3 font-weight (<integer> | (normal | bold | bolder | lighter))
+
+The weight of the font used for an element.
+
+
+\section3 font-style (normal | italic | oblique)
+
+The style of the font used for an element.
+
+
+\section3 font-stretch (<percentage> | (ultra-condensed | extra-condensed | condensed | semi-condensed | normal | semi-expanded | expanded | extra-expanded | ultra-expanded))
+
+The amount the font used for an element is stretched.
+
+
+\section3 text-transform (normal | uppercase | lowercase | small-caps | capitalize)
+
+The capitalization style of the font used for an element.
+
+
+\section3 text-decoration (none | (underline | overline | line-through)+))
+
+The decorations enabled for the font used for an element.
+
+
+\section3 letter-spacing (<length-percentage>)
+
+The spacing between individual letters of the font used for an element.
+
+
+\section3 word-spacing (<length-percentage>)
+
+The spacing between words of the font used for an element.
 
 
 

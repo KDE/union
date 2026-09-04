@@ -6,8 +6,6 @@
 
 #include "DisplayPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -200,7 +198,11 @@ bool Union::Properties::operator==(const DisplayPropertyGroup &left, const Displ
 QDebug operator<<(QDebug debug, Union::Properties::DisplayPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "DisplayPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

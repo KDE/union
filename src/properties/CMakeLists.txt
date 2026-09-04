@@ -23,6 +23,8 @@ target_sources(Union PRIVATE
     LayoutPropertyGroup.h
     TextPropertyGroup.cpp
     TextPropertyGroup.h
+    FontPropertyGroup.cpp
+    FontPropertyGroup.h
     IconPropertyGroup.cpp
     IconPropertyGroup.h
     BackgroundPropertyGroup.cpp

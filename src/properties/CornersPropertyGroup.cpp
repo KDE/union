@@ -6,8 +6,6 @@
 
 #include "CornersPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -308,7 +306,11 @@ bool Union::Properties::operator==(const CornersPropertyGroup &left, const Corne
 QDebug operator<<(QDebug debug, Union::Properties::CornersPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "CornersPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

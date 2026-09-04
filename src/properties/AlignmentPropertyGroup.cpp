@@ -6,8 +6,6 @@
 
 #include "AlignmentPropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -272,7 +270,11 @@ bool Union::Properties::operator==(const AlignmentPropertyGroup &left, const Ali
 QDebug operator<<(QDebug debug, Union::Properties::AlignmentPropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "AlignmentPropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

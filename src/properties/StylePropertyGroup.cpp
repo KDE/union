@@ -6,8 +6,6 @@
 
 #include "StylePropertyGroup.h"
 
-#include <QRegularExpression>
-
 #include "PropertiesTypes.h"
 #include "QDataStreamExtras.h"
 
@@ -488,7 +486,11 @@ bool Union::Properties::operator==(const StylePropertyGroup &left, const StylePr
 QDebug operator<<(QDebug debug, Union::Properties::StylePropertyGroup *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "StylePropertyGroup(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 

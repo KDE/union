@@ -111,18 +111,6 @@
     syntax: "<color>";
 }
 
-@property font-size {
-    syntax: "<length-percentage>";
-}
-
-@property font-weight {
-    syntax: "<integer> | (normal | bold | bolder | lighter)";
-}
-
-@property font-family {
-    syntax: "<string>";
-}
-
 @property text-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
 }
@@ -141,6 +129,42 @@
 
 @property text-alignment-order {
     syntax: "<integer>";
+}
+
+@property font-family {
+    syntax: "<string>";
+}
+
+@property font-size {
+    syntax: "<length-percentage>";
+}
+
+@property font-weight {
+    syntax: "<integer> | (normal | bold | bolder | lighter)";
+}
+
+@property font-style {
+    syntax: "normal | italic | oblique";
+}
+
+@property font-stretch {
+    syntax: "<percentage> | (ultra-condensed | extra-condensed | condensed | semi-condensed | normal | semi-expanded | expanded | extra-expanded | ultra-expanded)";
+}
+
+@property text-transform {
+    syntax: "normal | uppercase | lowercase | small-caps | capitalize";
+}
+
+@property text-decoration {
+    syntax: "none | (underline | overline | line-through)+)";
+}
+
+@property letter-spacing {
+    syntax: "<length-percentage>";
+}
+
+@property word-spacing {
+    syntax: "<length-percentage>";
 }
 
 @property text-color {
