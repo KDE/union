@@ -96,9 +96,7 @@ void ButtonElement::updateSubElementList()
 
 QSizeF ButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    Q_UNUSED(contentsSizeFromStyle);
-    QSizeF size = subElementRect(QStyle::SE_PushButtonContents).size();
-    size = applyPaddingToSize(size);
+    auto size = applyPaddingToSize(contentsSizeFromStyle);
     // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
     // to get the proper contentSize
     if (hasIndicator()) {
