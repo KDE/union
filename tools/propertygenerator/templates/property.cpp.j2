@@ -282,7 +282,11 @@ bool Union::Properties::operator==(const {{ type }} &left, const {{ type}} &righ
 QDebug operator<<(QDebug debug, Union::Properties::{{ type }} *type)
 {
     QDebugStateSaver saver(debug);
-    debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    if (!type) {
+        debug << "{{ type }}(nullptr)";
+    } else {
+        debug.nospace() << qPrintable(type->toString(0, ToStringFlag::Types));
+    }
     return debug;
 }
 
