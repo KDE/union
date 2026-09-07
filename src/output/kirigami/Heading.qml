@@ -34,6 +34,8 @@ KT.Heading {
 
     font: Union.Style.properties.text.font.qFont
 
+    opacity: Union.Style.properties.display.opacity ?? 1.0
+
     // Don't set the color as Headings in the plasma shell would
     // break otherwise. a proper solution involves own union style for plasmashell
 

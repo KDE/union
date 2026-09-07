@@ -52,6 +52,8 @@ KT.InlineMessage {
 
     spacing: Union.Style.properties.layout.spacing
 
+    opacity: Union.Style.properties.display.opacity
+
     icon {
         width: Union.Style.properties.icon.width ?? 0
         height: Union.Style.properties.icon.height ?? 0
