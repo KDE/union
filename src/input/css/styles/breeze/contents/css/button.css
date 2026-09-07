@@ -110,6 +110,9 @@ toolbutton.raised
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
+        /* half of small-spacing */
+        padding-left: var(--toolbutton-menu-padding);
+        padding-right: var(--toolbutton-menu-padding);
         icon-name: "arrow-down";
         icon-color: var(--button-active-text-color);
     }

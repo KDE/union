@@ -34,7 +34,6 @@ void ToolButtonElement::update()
     m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
     m_hasIcon = !m_toolButtonOption->icon.isNull() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
     m_hasText = !m_toolButtonOption->text.isEmpty() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly;
-    m_menuArrow = (arrowStyle() == ArrowStyle::Menu);
     setIcon(m_toolButtonOption->icon);
     setText(m_toolButtonOption->text);
     updateSubElementList();
@@ -53,17 +52,12 @@ void ToolButtonElement::layout()
     m_backgroundElementList = prepareElements(m_styleOption, m_widget);
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
-
-        if (m_menuArrow) {
-            m_layoutMap = layoutMap(m_backgroundElementList, m_toolButtonOption, m_subElementList);
-        } else {
-            m_indicatorMap = layoutMap(m_backgroundElementList, m_styleOption, {ElementString::Indicator});
-            layoutButtons();
-            // Update layoutmap so that the text and icon are within the main button
-            auto subopt = *m_toolButtonOption;
-            subopt.rect = m_mainButtonRect.toRect();
-            m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
-        }
+        m_indicatorMap = layoutMap(m_backgroundElementList, m_styleOption, {ElementString::Indicator});
+        layoutButtons();
+        // Update layoutmap so that the text and icon are within the main button
+        auto subopt = *m_toolButtonOption;
+        subopt.rect = m_mainButtonRect.toRect();
+        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -80,19 +74,14 @@ void ToolButtonElement::updateSubElementList()
     if (m_hasText) {
         m_subElementList.append(ElementString::Text);
     }
-    if (m_menuArrow) {
-        m_subElementList.append(ElementString::Indicator);
-    }
 }
 
 QSizeF ToolButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     QSizeF size = applyPaddingToSize(contentsSizeFromStyle);
-    if (m_menuArrow) {
-        const qreal spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
-        size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing;
-    } else {
-        size = size.expandedTo(m_menuButtonRect.size());
+    size = size.expandedTo(m_menuButtonRect.size());
+    if (arrowStyle() == ArrowStyle::Menu && hasIndicator()) {
+        size.rwidth() += m_indicatorMap[ElementString::Indicator].rect.width();
     }
     return size;
 }
@@ -178,15 +167,11 @@ void ToolButtonElement::drawIcon(QPainter *painter) const
 
 void ToolButtonElement::drawIndicator(QPainter *painter) const
 {
-    if (m_menuArrow) {
-        AbstractElement::drawIndicator(painter);
-    } else {
-        auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
-        auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
-        indicatorRect.moveCenter(rect.center());
-        drawBackgroundRectangle(painter, rect, m_indicatorProperties);
-        drawIconAtRect(painter, m_indicator, indicatorRect);
-    }
+    auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
+    auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
+    indicatorRect.moveCenter(rect.center());
+    drawBackgroundRectangle(painter, rect, m_indicatorProperties);
+    drawIconAtRect(painter, m_indicator, indicatorRect);
 }
 
 QVariantMap ToolButtonElement::elementAttributes() const
@@ -246,7 +231,7 @@ QStringList ToolButtonElement::elementHints() const
 void ToolButtonElement::layoutButtons()
 {
     m_mainButtonRect = m_toolButtonOption->rect;
-    if (!m_hasIndicator || m_menuArrow) {
+    if (!m_hasIndicator) {
         return;
     }
     m_menuButtonRect = m_indicatorMap[ElementString::Indicator].rect;
