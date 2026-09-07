@@ -16,7 +16,6 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     : AbstractElement(option, style, widget)
     , m_tabOption(option)
     , m_isVertical(false)
-    , m_isClosable(false)
 {
     update();
 }
@@ -29,12 +28,6 @@ void TabElement::update()
 {
     m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
         || m_tabOption->shape == QTabBar::TriangularWest;
-
-    if (const auto tabbarwidget = qobject_cast<const QTabBar *>(m_widget)) {
-        if (tabbarwidget->tabsClosable()) {
-            m_isClosable = true;
-        }
-    }
 
     setIcon(m_tabOption->icon);
     setText(m_tabOption->text);
@@ -93,9 +86,6 @@ void TabElement::draw(QPainter *painter, DrawEnums enums) const
 void TabElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (m_isClosable) {
-        m_subElementList.append(ElementString::CloseButton);
-    }
     if (!m_tabOption->icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
