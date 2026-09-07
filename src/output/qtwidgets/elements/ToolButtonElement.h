@@ -65,6 +65,7 @@ private:
     bool m_hasIcon;
     bool m_hasText;
     ArrowStyle m_arrowStyle;
+    bool m_menuArrow;
 
     QRectF m_mainButtonRect;
     QRectF m_menuButtonRect;
