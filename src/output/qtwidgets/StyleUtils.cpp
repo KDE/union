@@ -53,14 +53,16 @@ Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignment
     case Union::Properties::Alignment::Start:
         horizontalAlignment = Qt::AlignLeft;
         break;
-    case Union::Properties::Alignment::Fill:
     case Union::Properties::Alignment::Center:
-    case Union::Properties::Alignment::StackFill:
-    case Union::Properties::Alignment::StackCenter:
         horizontalAlignment = Qt::AlignHCenter;
         break;
     case Union::Properties::Alignment::End:
         horizontalAlignment = Qt::AlignRight;
+        break;
+    case Union::Properties::Alignment::Fill:
+    case Union::Properties::Alignment::StackFill:
+    case Union::Properties::Alignment::StackCenter:
+        horizontalAlignment = Qt::AlignJustify;
         break;
     }
 
@@ -324,9 +326,7 @@ QString textFromOption(const QStyleOption *opt)
 int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
 {
     int textFlags = Qt::AlignVCenter;
-    // Handle alignment case-by-case basis. Sometimes we want to just use default
-    // alignleft and center, especially if we have an icon to work with.
-    auto textAlign = QFlags(Qt::AlignVCenter);
+    auto textAlign = QFlags(Qt::AlignLeft);
     if (properties && properties->text()) {
         textAlign = toQtAlignment(properties->text()->alignment());
     }
