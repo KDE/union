@@ -99,7 +99,12 @@ heading
 
     &.primary
     {
-        font-weight: 600;
+        font-weight: bold;
+    }
+
+    &.secondary
+    {
+        opacity: 0.75;
     }
 
     &.level-1
@@ -107,21 +112,9 @@ heading
         font-size: 135%;
     }
 
-    &.primary.level-1
-    {
-        font-size: 135%;
-        font-weight: 600;
-    }
-
     &.level-2
     {
         font-size: 120%;
-    }
-
-    &.primary.level-2
-    {
-        font-size: 120%;
-        font-weight: 600;
     }
 
     &.level-3
@@ -129,26 +122,9 @@ heading
         font-size: 115%;
     }
 
-    &.primary.level-3
-    {
-        font-size: 115%;
-        font-weight: 600;
-    }
-
     &.level-4
     {
         font-size: 110%;
-    }
-
-    &.primary.level-4
-    {
-        font-size: 110%;
-        font-weight: 600;
-    }
-
-    &.secondary
-    {
-        color: modify-color(var(--window-text-color) set-alpha 0.75);
     }
 }
 
