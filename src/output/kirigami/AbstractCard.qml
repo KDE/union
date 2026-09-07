@@ -37,6 +37,8 @@ KT.AbstractCard {
 
     spacing: Union.Style.properties.layout.spacing
 
+    opacity: Union.Style.properties.display.opacity
+
     icon {
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
