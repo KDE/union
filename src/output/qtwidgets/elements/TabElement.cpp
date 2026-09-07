@@ -128,6 +128,9 @@ void TabElement::layout()
 QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
+    if (!m_isValid) {
+        return contentsSizeFromStyle;
+    }
 
     const bool leftButton = !m_tabOption->leftButtonSize.isEmpty();
     const bool rightButton = !m_tabOption->leftButtonSize.isEmpty();
