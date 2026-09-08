@@ -33,11 +33,15 @@ public:
     TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TreeViewElement() override;
 
+    void update() override;
+    void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    QStringList elementHints() const override;
     void drawIndicator(QPainter *painter) const override;
     const QStyleOption *m_treeViewOption = nullptr;
     qreal indentation() const;
+    bool m_itemIsOpen;
 };
