@@ -53,7 +53,8 @@ css_type_map = {
     "Union::Properties::TextWrapMode": "no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap",
     "Union::Properties::TextElide": "none | left | middle | right",
     # Note: This syntax is rather long because we currently do not support lists of keywords
-    "Union::Properties::TextDecorations": "none | ((underline | overline | line-through) (underline | overline | line-through) (underline | overline | line-through)) | ((underline | overline | line-through) (underline | overline | line-through)) | (underline | overline | line-through)"
+    "Union::Properties::TextDecorations": "none | ((underline | overline | line-through) (underline | overline | line-through) (underline | overline | line-through)) | ((underline | overline | line-through) (underline | overline | line-through)) | (underline | overline | line-through)",
+    "Union::Properties::TextAlignment": "start | center | end | justify",
 }
 
 
