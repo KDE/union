@@ -320,7 +320,10 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
     /* clang-format off */
     for (const auto &property : properties) {
         switchString(property
-            ,Case{{"visibility", u"opacity"}, [&]{
+            ,Case{StartsWith{"display"}, [&]{
+                setDisplayProperty(output, property);
+            }}
+            ,Case{{"visibility", u"opacity", u"color"}, [&]{
                 setDisplayProperty(output, property);
             }}
             ,Case{{"width", "height", "spacing"}, [&]{
@@ -356,10 +359,6 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
             ,Case{StartsWith{"icon"}, [&]{
                 setIconProperty(output, property);
             }}
-            ,Case{"color", [&]{
-                setTextProperty(output, property);
-                setIconProperty(output, property);
-            }}
             ,Case{StartsWith{"shadow"}, [&]{
                 setShadowProperty(output, property);
             }}
@@ -385,6 +384,9 @@ void CssLoader::setDisplayProperty(StylePropertyGroup *output, const cssparser::
         }}
         ,Case{"opacity", [&](auto &&value) {
             display->setOpacity(to_number(value));
+        }}
+        ,Case{"color", [&](auto &&value) {
+            display->setColor(to_color(value));
         }}
     );
     /* clang-format on */
@@ -522,17 +524,14 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
 
     /* clang-format off */
     switchString(property
-        ,Case{StartsWith{"text-alignment"}, [&] {
-            setAlignment(text.instance, property);
+        ,Case{"text-align", [&](auto &&value) {
+            text->setAlignment(toEnumValue<TextAlignment>(value));
         }}
         ,Case{StartsWith{"font"}, [&]{
             setFontProperty(text.instance, property);
         }}
         ,Case{{"text-transform", "text-decoration", "letter-spacing", "word-spacing"}, [&]{
             setFontProperty(text.instance, property);
-        }}
-        ,Case{{"color", "text-color"}, [&](auto &&value) {
-            text->setColor(to_color(value));
         }}
         ,Case{"text-wrap-mode", [&](auto &&value) {
             // Wrap is shorthand for WrapAtWordBoundaryOrAnywhere
@@ -548,6 +547,7 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
     );
     /* clang-format on */
 }
+
 void CssLoader::setFontProperty(TextPropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder font(output, &TextPropertyGroup::font, &TextPropertyGroup::setFont);
@@ -653,30 +653,11 @@ void CssLoader::setIconProperty(StylePropertyGroup *output, const cssparser::Pro
 
     /* clang-format off */
     switchString(property
-        ,Case{StartsWith{"icon-alignment"}, [&]{
-            setAlignment(icon.instance, property);
-        }}
-        ,Case{u"icon-width"_s, [&](auto &&value) {
-            icon->setWidth(to_px(value));
-        }}
-        ,Case{u"icon-height"_s, [&](auto &&value) {
-            icon->setHeight(to_px(value));
-        }}
-        ,Case{u"icon-size"_s, [&](auto &&value) {
-            icon->setWidth(to_px(value));
-            icon->setHeight(to_px(value));
-        }}
         ,Case{u"icon-name"_s, [&](auto &&value) {
             icon->setName(to_string(value));
         }}
         ,Case{u"icon-source"_s, [&](auto &&value) {
             icon->setSource(QUrl{to_string(value)});
-        }}
-        ,Case{u"color"_s, [&](auto &&value) {
-            icon->setColor(to_color(value));
-        }}
-        ,Case{u"icon-color"_s, [&](auto &&value) {
-            icon->setColor(to_color(value));
         }}
     );
     /* clang-format on */
