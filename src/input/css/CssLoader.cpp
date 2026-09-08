@@ -320,8 +320,16 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
     /* clang-format off */
     for (const auto &property : properties) {
         switchString(property
-            ,Case{{"visibility", u"opacity"}, [&]{
+            ,Case{StartsWith{"display"}, [&]{
                 setDisplayProperty(output, property);
+            }}
+            ,Case{{"visibility", "opacity"}, [&]{
+                setDisplayProperty(output, property);
+            }}
+            ,Case{"color", [&]{
+                setDisplayProperty(output, property);
+                setTextProperty(output, property);
+                setIconProperty(output, property);
             }}
             ,Case{{"width", "height", "spacing"}, [&]{
                 setLayoutProperty(output, property);
@@ -353,11 +361,10 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
             ,Case{StartsWith{"font"}, [&]{
                 setTextProperty(output, property);
             }}
-            ,Case{StartsWith{"icon"}, [&]{
-                setIconProperty(output, property);
-            }}
-            ,Case{"color", [&]{
+            ,Case{"vertical-align", [&]{
                 setTextProperty(output, property);
+            }}
+            ,Case{StartsWith{"icon"}, [&]{
                 setIconProperty(output, property);
             }}
             ,Case{StartsWith{"shadow"}, [&]{
@@ -385,6 +392,9 @@ void CssLoader::setDisplayProperty(StylePropertyGroup *output, const cssparser::
         }}
         ,Case{"opacity", [&](auto &&value) {
             display->setOpacity(to_number(value));
+        }}
+        ,Case{"color", [&](auto &&value) {
+            display->setColor(to_color(value));
         }}
     );
     /* clang-format on */
@@ -525,6 +535,12 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
         ,Case{StartsWith{"text-alignment"}, [&] {
             setAlignment(text.instance, property);
         }}
+        ,Case{"text-align", [&](auto &&value) {
+            text->setHorizontalAlignment(toEnumValue<HorizontalTextAlignment>(value));
+        }}
+        ,Case{"vertical-align", [&](auto &&value) {
+            text->setVerticalAlignment(toEnumValue<VerticalTextAlignment>(value));
+        }}
         ,Case{StartsWith{"font"}, [&]{
             setFontProperty(text.instance, property);
         }}
@@ -548,6 +564,7 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
     );
     /* clang-format on */
 }
+
 void CssLoader::setFontProperty(TextPropertyGroup *output, const cssparser::Property &property)
 {
     PropertyGroupBuilder font(output, &TextPropertyGroup::font, &TextPropertyGroup::setFont);
@@ -656,26 +673,23 @@ void CssLoader::setIconProperty(StylePropertyGroup *output, const cssparser::Pro
         ,Case{StartsWith{"icon-alignment"}, [&]{
             setAlignment(icon.instance, property);
         }}
-        ,Case{u"icon-width"_s, [&](auto &&value) {
+        ,Case{"icon-width", [&](auto &&value) {
             icon->setWidth(to_px(value));
         }}
-        ,Case{u"icon-height"_s, [&](auto &&value) {
+        ,Case{"icon-height", [&](auto &&value) {
             icon->setHeight(to_px(value));
         }}
-        ,Case{u"icon-size"_s, [&](auto &&value) {
+        ,Case{"icon-size", [&](auto &&value) {
             icon->setWidth(to_px(value));
             icon->setHeight(to_px(value));
         }}
-        ,Case{u"icon-name"_s, [&](auto &&value) {
+        ,Case{"icon-name", [&](auto &&value) {
             icon->setName(to_string(value));
         }}
-        ,Case{u"icon-source"_s, [&](auto &&value) {
+        ,Case{"icon-source", [&](auto &&value) {
             icon->setSource(QUrl{to_string(value)});
         }}
-        ,Case{u"color"_s, [&](auto &&value) {
-            icon->setColor(to_color(value));
-        }}
-        ,Case{u"icon-color"_s, [&](auto &&value) {
+        ,Case{{"color", "icon-color"}, [&](auto &&value) {
             icon->setColor(to_color(value));
         }}
     );
