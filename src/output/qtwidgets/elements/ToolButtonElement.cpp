@@ -79,9 +79,8 @@ void ToolButtonElement::updateSubElementList()
 QSizeF ToolButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     QSizeF size = applyPaddingToSize(contentsSizeFromStyle);
-    size = size.expandedTo(m_menuButtonRect.size());
-    if (arrowStyle() == ArrowStyle::Menu && hasIndicator()) {
-        size.rwidth() += m_indicatorMap[ElementString::Indicator].rect.width();
+    if (hasIndicator()) {
+        size = size.expandedTo(m_menuButtonRect.size());
     }
     return size;
 }
@@ -167,6 +166,9 @@ void ToolButtonElement::drawIcon(QPainter *painter) const
 
 void ToolButtonElement::drawIndicator(QPainter *painter) const
 {
+    if (!m_hasIndicator) {
+        return;
+    }
     auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
     auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
     indicatorRect.moveCenter(rect.center());
@@ -232,6 +234,7 @@ void ToolButtonElement::layoutButtons()
 {
     m_mainButtonRect = m_toolButtonOption->rect;
     if (!m_hasIndicator) {
+        m_menuButtonRect = QRectF();
         return;
     }
     m_menuButtonRect = m_indicatorMap[ElementString::Indicator].rect;
