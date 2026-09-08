@@ -109,7 +109,10 @@ void HeaderElement::drawText(QPainter *painter) const
 
 void HeaderElement::updateSubElementList()
 {
-    m_subElementList = {ElementString::Text, ElementString::Icon};
+    m_subElementList = {ElementString::Text};
+    if (m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+        m_subElementList.append(ElementString::Icon);
+    }
 }
 
 QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
