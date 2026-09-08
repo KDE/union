@@ -64,37 +64,6 @@ children:
                         return QMarginsF{d->left.value_or(0.0), d->top.value_or(0.0), d->right.value_or(0.0), d->bottom.value_or(0.0)};
                     }
 
-    alignment:
-        type: type
-
-        doc: \brief A property group with properties related to alignment.
-
-        css:
-            extra_properties:
-            -   name: "{prefix}"
-                syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>"
-                doc: A shorthand for setting the various alignment properties.
-
-        children:
-            container:
-                type: Union::Properties::AlignmentContainer
-                doc: The alignment container. This determines relative to what an element is placed.
-
-            horizontal:
-                type: Union::Properties::Alignment
-                doc: The horizontal alignment.
-
-                css:
-                    syntax: "start | center | end | fill"
-
-            vertical:
-                type: Union::Properties::Alignment
-                doc: The vertical alignment.
-
-            order:
-                type: int
-                doc: The order determines which elements come before others in the same alignment group.
-
     image:
         type: type
 
@@ -224,7 +193,9 @@ children:
 
         children:
             alignment:
-                type: alignment
+                type: group
+
+                doc: \brief A property group with properties related to alignment.
 
                 css:
                     doc: |
@@ -235,6 +206,31 @@ children:
 
                         Horizontal and vertical alignment is specified in relative terms that do not
                         imply a writing direction.
+
+                    extra_properties:
+                    -   name: layout-alignment
+                        syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>"
+                        doc: A shorthand for setting the various alignment properties.
+
+                children:
+                    container:
+                        type: Union::Properties::AlignmentContainer
+                        doc: The alignment container. This determines relative to what an element is placed.
+
+                    horizontal:
+                        type: Union::Properties::Alignment
+                        doc: The horizontal alignment.
+
+                        css:
+                            syntax: "start | center | end | fill"
+
+                    vertical:
+                        type: Union::Properties::Alignment
+                        doc: The vertical alignment.
+
+                    order:
+                        type: int
+                        doc: The order determines which elements come before others in the same alignment group.
 
             width:
                 type: qreal
@@ -294,16 +290,7 @@ children:
                 These properties all relate to the text of an element. They will have no effect
                 if the element has no visible text.
 
-            extra_properties:
-            -   name: color
-                syntax: "<color>"
-                doc: A shorthand for setting both text and icon color in one property.
-
         children:
-            alignment:
-                type: alignment
-                doc: The alignment of the text of an element.
-
             font:
                 type: group
                 doc: \brief A group containing properties relating to the font used for an element.
@@ -437,9 +424,6 @@ children:
                                 return m_state->toQFont();
                             }
 
-            color:
-                type: Union::Color
-                doc: The color of the text of an element.
 
             wrapMode:
                 type: Union::Properties::TextWrapMode
@@ -461,24 +445,8 @@ children:
             doc: |
                 These properties all relate to the icon of an element. They will have no
                 effect if the element does not have an icon.
-            extra_properties:
-            -   name: icon-size
-                syntax: "<length>"
-                doc: A shorthand to set both icon-width and icon-height in a single property.
 
         children:
-            alignment:
-                type: alignment
-                doc: The alignment of the icon of an element.
-
-            width:
-                type: qreal
-                doc: The width of the icon of an element.
-
-            height:
-                type: qreal
-                doc: The height of the icon of an element.
-
             name:
                 type: QString
                 doc: The name of an icon of the icon theme to use for this icon.
@@ -489,10 +457,6 @@ children:
                 doc: |
                     A URL to a file to use for the icon. Currently only local files are
                     supported.
-
-            color:
-                type: Union::Color
-                doc: The color of the icon of an element.
 
     background:
         type: group
