@@ -695,7 +695,7 @@ children:
         doc: \brief A property group containing properties relating to an element's shadow.
 
         css:
-            # name: box-shadow
+            name: box-shadow
             doc: These properties describe an element's shadow.
 
             extra_properties:
