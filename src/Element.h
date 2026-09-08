@@ -83,23 +83,6 @@ public:
     Q_FLAG(States)
 
     /*!
-     * \enum Union::Element::ColorSet
-     *
-     * Which set of colours should be used to render the element.
-     */
-    enum class ColorSet {
-        None,
-        View,
-        Window,
-        Button,
-        Selection,
-        Tooltip,
-        Complementary,
-        Header,
-    };
-    Q_ENUM(ColorSet)
-
-    /*!
      * \enum Union::Element::Change
      *
      * A set of flags to indicate what changed about an element.
@@ -164,16 +147,6 @@ public:
     States states() const;
     void setStates(States newStates);
     Q_SIGNAL void statesChanged();
-
-    /*!
-     * \property Union::Element::colorSet
-     *
-     * The ColorSet to use to render this element.
-     */
-    Q_PROPERTY(ColorSet colorSet READ colorSet WRITE setColorSet NOTIFY colorSetChanged)
-    ColorSet colorSet() const;
-    void setColorSet(ColorSet newColorSet);
-    Q_SIGNAL void colorSetChanged();
 
     /*!
      * \property Union::Element::hints
