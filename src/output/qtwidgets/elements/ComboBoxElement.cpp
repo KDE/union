@@ -15,7 +15,6 @@ using namespace Qt::StringLiterals;
 ComboBoxElement::ComboBoxElement(const QStyleOptionComboBox *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_comboBoxOption(option)
-    , m_spacing(0)
     , m_editable(false)
 {
     update();
@@ -26,15 +25,11 @@ void ComboBoxElement::update()
     m_editable = m_comboBoxOption->editable;
 
     setIndicator(QIcon());
-    m_spacing = 0;
     m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         if (m_indicatorProperties->icon()) {
             setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
-        }
-        if (m_indicatorProperties->layout()) {
-            m_spacing = m_indicatorProperties->layout()->spacing().value_or(1);
         }
     }
 
@@ -98,9 +93,7 @@ QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // Follow the contents width
     rect.setWidth(contentsSizeFromStyle.width());
     auto size = applyPaddingToSize(rect.size());
-    if (m_indicatorProperties && m_indicatorProperties->layout()) {
-        size.rwidth() += m_indicatorProperties->layout()->spacing().value_or(20);
-    }
+    size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
     return size;
 }
 
@@ -118,9 +111,8 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
         return m_comboBoxOption->rect;
 
     case QStyle::SC_ComboBoxArrow: {
-        auto map = layoutMap(m_backgroundElementList, m_comboBoxOption, {ElementString::Indicator});
-        auto rect = map[ElementString::Indicator].rect;
-        rect = rect.adjusted(-m_spacing, 0, m_spacing, 0);
+        auto rect = m_layoutMap[ElementString::Indicator].rect;
+        rect = rect.adjusted(-spacing(), 0, spacing(), 0);
         return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect.toRect());
     }
 
@@ -130,9 +122,8 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
         auto indicatorRect = subControlRect(QStyle::SC_ComboBoxArrow);
         labelRect = QRect(rect.left(), rect.top(), rect.width() - indicatorRect.width(), rect.height());
         // Add some spacing between the icon and text in edit field
-        if (m_backgroundProperties->layout() && !m_comboBoxOption->currentIcon.isNull()) {
-            auto spacing = m_backgroundProperties->layout()->spacing().value_or(5);
-            labelRect.adjust(spacing, 0, spacing, 0);
+        if (!m_comboBoxOption->currentIcon.isNull()) {
+            labelRect.adjust(spacing(), 0, spacing(), 0);
         }
         return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, labelRect.toRect());
     }

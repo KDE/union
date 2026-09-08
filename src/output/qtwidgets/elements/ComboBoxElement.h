@@ -47,6 +47,5 @@ private:
     void updateSubElementList() override;
     void drawText(QPainter *painter) const override;
     const QStyleOptionComboBox *m_comboBoxOption = nullptr;
-    qreal m_spacing;
     bool m_editable;
 };
