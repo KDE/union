@@ -7,12 +7,12 @@
 ecm_add_tests(
     TestStylePropertyGroup.cpp
     TestSizePropertyGroup.cpp
-    TestAlignmentPropertyGroup.cpp
     TestImagePropertyGroup.cpp
     TestLinePropertyGroup.cpp
     TestCornerPropertyGroup.cpp
     TestDisplayPropertyGroup.cpp
     TestLayoutPropertyGroup.cpp
+    TestAlignmentPropertyGroup.cpp
     TestTextPropertyGroup.cpp
     TestFontPropertyGroup.cpp
     TestIconPropertyGroup.cpp

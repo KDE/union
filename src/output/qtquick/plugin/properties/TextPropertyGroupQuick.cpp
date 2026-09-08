@@ -18,7 +18,6 @@ TextPropertyGroupQuick::TextPropertyGroupQuick(QuickStyle *style)
     : QObject()
     , m_style(style)
 {
-    m_alignment = std::make_unique<AlignmentPropertyGroupQuick>(m_style);
     m_font = std::make_unique<FontPropertyGroupQuick>(m_style);
 }
 
@@ -31,14 +30,12 @@ void TextPropertyGroupQuick::update(TextPropertyGroup *newState)
     m_state = newState;
 
     if (!newState) {
-        m_alignment->update(nullptr);
         m_font->update(nullptr);
     } else {
-        m_alignment->update(newState->alignment());
         m_font->update(newState->font());
     }
 
-    Q_EMIT colorChanged();
+    Q_EMIT alignmentChanged();
     Q_EMIT wrapModeChanged();
     Q_EMIT elideChanged();
     Q_EMIT updated();
@@ -46,14 +43,7 @@ void TextPropertyGroupQuick::update(TextPropertyGroup *newState)
 
 void TextPropertyGroupQuick::refreshColors()
 {
-    m_alignment->refreshColors();
     m_font->refreshColors();
-    Q_EMIT colorChanged();
-}
-
-AlignmentPropertyGroupQuick *TextPropertyGroupQuick::alignment() const
-{
-    return m_alignment.get();
 }
 
 FontPropertyGroupQuick *TextPropertyGroupQuick::font() const
@@ -61,15 +51,15 @@ FontPropertyGroupQuick *TextPropertyGroupQuick::font() const
     return m_font.get();
 }
 
-QJSValue TextPropertyGroupQuick::color() const
+QJSValue TextPropertyGroupQuick::alignment() const
 {
     if (!m_state) {
         return QJSValue(QJSValue::UndefinedValue);
     }
 
-    auto value = m_state->color();
+    auto value = m_state->alignment();
     if (value) {
-        return m_style->engine()->toScriptValue(value.value().toQColor());
+        return m_style->engine()->toScriptValue(value.value());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

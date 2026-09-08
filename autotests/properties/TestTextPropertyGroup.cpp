@@ -22,9 +22,8 @@ private Q_SLOTS:
         auto property = std::make_unique<TextPropertyGroup>();
 
         // A null instance should not have any values for its properties.
-        QVERIFY(!property->alignment());
         QVERIFY(!property->font());
-        QVERIFY(!property->color().has_value());
+        QVERIFY(!property->alignment().has_value());
         QVERIFY(!property->wrapMode().has_value());
         QVERIFY(!property->elide().has_value());
     }
@@ -34,9 +33,8 @@ private Q_SLOTS:
         auto property = TextPropertyGroup::empty();
 
         // An empty instance should only have values that are considered "empty".
-        QCOMPARE(*property->alignment(), *AlignmentPropertyGroup::empty());
         QCOMPARE(*property->font(), *FontPropertyGroup::empty());
-        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(property->alignment().value(), emptyValue<Union::Properties::TextAlignment>());
         QCOMPARE(property->wrapMode().value(), emptyValue<Union::Properties::TextWrapMode>());
         QCOMPARE(property->elide().value(), emptyValue<Union::Properties::TextElide>());
     }
@@ -50,17 +48,6 @@ private Q_SLOTS:
 
         {
             // Assigning an empty value to a property should have no effect.
-            property->setAlignment(std::make_unique<AlignmentPropertyGroup>());
-            QVERIFY(!property->hasAnyValue());
-
-            property->setAlignment(testAlignmentPropertyGroupInstance());
-            QVERIFY(property->hasAnyValue());
-
-            property->setAlignment(nullptr);
-            QVERIFY(!property->hasAnyValue());
-        }
-        {
-            // Assigning an empty value to a property should have no effect.
             property->setFont(std::make_unique<FontPropertyGroup>());
             QVERIFY(!property->hasAnyValue());
 
@@ -71,10 +58,10 @@ private Q_SLOTS:
             QVERIFY(!property->hasAnyValue());
         }
         {
-            Union::Color value;
-            property->setColor(value);
+            Union::Properties::TextAlignment value;
+            property->setAlignment(value);
             QVERIFY(property->hasAnyValue());
-            property->setColor(std::nullopt);
+            property->setAlignment(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
         {
@@ -106,9 +93,8 @@ private Q_SLOTS:
 
         QVERIFY(!destination->hasAnyValue());
 
-        source->setAlignment(testAlignmentPropertyGroupInstance());
         source->setFont(testFontPropertyGroupInstance());
-        source->setColor(Union::Color{});
+        source->setAlignment(Union::Properties::TextAlignment{});
         source->setWrapMode(Union::Properties::TextWrapMode{});
         source->setElide(Union::Properties::TextElide{});
 
@@ -119,9 +105,8 @@ private Q_SLOTS:
 
         QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(*destination->alignment(), *source->alignment());
         QCOMPARE(*destination->font(), *source->font());
-        QCOMPARE(destination->color(), source->color());
+        QCOMPARE(destination->alignment(), source->alignment());
         QCOMPARE(destination->wrapMode(), source->wrapMode());
         QCOMPARE(destination->elide(), source->elide());
     }

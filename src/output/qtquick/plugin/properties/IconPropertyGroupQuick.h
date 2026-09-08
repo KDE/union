@@ -15,7 +15,6 @@
 
 #include <properties/IconPropertyGroup.h>
 
-#include "AlignmentPropertyGroupQuick.h"
 // clang-format on
 
 namespace Union
@@ -45,32 +44,6 @@ public:
     void refreshColors();
 
     /*!
-     * \qmlproperty AlignmentPropertyGroupQuick IconPropertyGroupQuick::alignment
-     *
-     * Exposes IconPropertyGroup::AlignmentPropertyGroup to QML.
-     */
-    Q_PROPERTY(Union::Quick::AlignmentPropertyGroupQuick *alignment READ alignment CONSTANT)
-    AlignmentPropertyGroupQuick *alignment() const;
-
-    /*!
-     * \qmlproperty qreal IconPropertyGroupQuick::width
-     *
-     * Exposes IconPropertyGroup::width to QML.
-     */
-    Q_PROPERTY(QJSValue width READ width NOTIFY widthChanged)
-    QJSValue width() const;
-    Q_SIGNAL void widthChanged();
-
-    /*!
-     * \qmlproperty qreal IconPropertyGroupQuick::height
-     *
-     * Exposes IconPropertyGroup::height to QML.
-     */
-    Q_PROPERTY(QJSValue height READ height NOTIFY heightChanged)
-    QJSValue height() const;
-    Q_SIGNAL void heightChanged();
-
-    /*!
      * \qmlproperty QString IconPropertyGroupQuick::name
      *
      * Exposes IconPropertyGroup::name to QML.
@@ -88,18 +61,8 @@ public:
     QJSValue source() const;
     Q_SIGNAL void sourceChanged();
 
-    /*!
-     * \qmlproperty Union::Color IconPropertyGroupQuick::color
-     *
-     * Exposes IconPropertyGroup::color to QML.
-     */
-    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
-    QJSValue color() const;
-    Q_SIGNAL void colorChanged();
-
 private:
     QuickStyle *m_style = nullptr;
-    std::unique_ptr<AlignmentPropertyGroupQuick> m_alignment;
 
     Union::Properties::IconPropertyGroup *m_state = nullptr;
 };
