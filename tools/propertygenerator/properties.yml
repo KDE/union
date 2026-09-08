@@ -206,6 +206,14 @@ children:
                     name: opacity
                     syntax: "<number>"
 
+            color:
+                type: Union::Color
+
+                doc: The color of the element.
+
+                css:
+                    name: color
+
     layout:
         type: group
 
