@@ -598,7 +598,6 @@ LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const
     LayoutBucket bucket;
     bucket.type = type;
     bucket.rect = containerRect;
-    bucket.spacing = spacing();
 
     for (auto &item : items) {
         switch (item.horizontalAlignment) {
@@ -638,7 +637,9 @@ LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const
         }
     });
 
-    bucket.rect = resizeBucket(bucket);
+    // No need for spacing as there are no items
+    bucket.spacing = bucket.items.count() > 0 ? spacing() : 0;
+    bucket.rect = bucket.items.count() > 0 ? resizeBucket(bucket) : QRectF();
     return bucket;
 }
 
@@ -694,8 +695,7 @@ void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutI
                     item.rect.moveLeft(bucketRect.left());
                     bucketRect.setLeft(item.rect.left() + itemWidth);
                 } else {
-                    item.rect.setLeft(bucketRect.left());
-                    item.rect.setRight(bucketRect.right());
+                    item.rect.moveCenter(bucketRect.center());
                 }
                 break;
             case Alignment::Fill:
