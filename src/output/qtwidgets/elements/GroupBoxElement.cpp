@@ -113,7 +113,7 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
         if (m_isCheckable) {
             indicatorHeight = m_style->pixelMetric(QStyle::PM_IndicatorHeight, m_groupBoxOption, m_widget);
         }
-        const int topMargin = qMax(indicatorHeight, fontMetricsHeight);
+        const int topMargin = std::max(indicatorHeight, fontMetricsHeight);
         return frameRect.adjusted(padding.left(), padding.top() + topMargin, -padding.bottom(), -padding.right());
     } break;
     case QStyle::SC_GroupBoxCheckBox: {

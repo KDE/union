@@ -188,7 +188,7 @@ int TabElement::hSpace() const
 {
     if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
         auto padding = m_backgroundProperties->layout()->padding()->toMargins();
-        return qMax(padding.left(), padding.right());
+        return std::max(padding.left(), padding.right());
     }
     return 0;
 }
@@ -197,7 +197,7 @@ int TabElement::vSpace() const
 {
     if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
         auto padding = m_backgroundProperties->layout()->padding()->toMargins();
-        return qMax(padding.top(), padding.bottom());
+        return std::max(padding.top(), padding.bottom());
     }
     return 0;
 }

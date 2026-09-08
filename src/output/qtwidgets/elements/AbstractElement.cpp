@@ -655,11 +655,11 @@ QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
             (item.verticalAlignment == Union::Properties::Alignment::StackFill || item.verticalAlignment == Union::Properties::Alignment::StackCenter);
 
         if (stacked) {
-            width = qMax(bucketRect.width(), itemWidth);
+            width = std::max(bucketRect.width(), itemWidth);
             height += (itemHeight + bucket.spacing);
         } else {
             width += itemWidth;
-            height = qMax(bucketRect.height(), itemHeight);
+            height = std::max(bucketRect.height(), itemHeight);
         }
     }
     bucketRect.setWidth(width);

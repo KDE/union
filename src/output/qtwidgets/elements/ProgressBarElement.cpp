@@ -109,8 +109,8 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
             return QRect();
         }
         auto textFlags = textFlagsFromProperties(m_backgroundProperties);
-        int textWidth = qMax(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
-                             m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
+        int textWidth = std::max(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
+                                 m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
         auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());
         rect.setLeft(rect.right() - textWidth + 1);
         rect = m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect.toRect());
@@ -128,7 +128,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
             reverse = !reverse;
         }
         const int progress(m_progressBarOption->progress - m_progressBarOption->minimum);
-        const int steps(qMax(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
+        const int steps(std::max(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
         const qreal position = qreal(progress) / qreal(steps);
         const int indicatorSize(position * (horizontal ? rect.width() : rect.height()));
         QRectF indicatorRect;

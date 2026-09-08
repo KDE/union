@@ -104,8 +104,8 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
     const QRectF buttonRect = m_layoutMap[ElementString::Indicator].rect;
     QRectF bgRect = m_spinBoxOption->rect;
     if (m_backgroundProperties->layout()) {
-        bgRect.setWidth(qMax(bgRect.width(), m_backgroundProperties->layout()->width().value_or(0)));
-        bgRect.setHeight(qMax(bgRect.height(), m_backgroundProperties->layout()->height().value_or(0)));
+        bgRect.setWidth(std::max(bgRect.width(), m_backgroundProperties->layout()->width().value_or(0)));
+        bgRect.setHeight(std::max(bgRect.height(), m_backgroundProperties->layout()->height().value_or(0)));
     }
     const bool noButtons = (m_spinBoxOption->buttonSymbols == QAbstractSpinBox::NoButtons);
     const int y = m_spinBoxOption->rect.y();

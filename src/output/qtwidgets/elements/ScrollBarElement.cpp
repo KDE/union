@@ -159,7 +159,7 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
         }
 
         int sliderSize = space * qreal(m_scrollBarOption->pageStep) / (m_scrollBarOption->maximum - m_scrollBarOption->minimum + m_scrollBarOption->pageStep);
-        sliderSize = qMax(sliderSize, qMax(thickness, m_style->pixelMetric(QStyle::PM_ScrollBarSliderMin, m_scrollBarOption, m_widget)));
+        sliderSize = std::max({sliderSize, thickness, m_style->pixelMetric(QStyle::PM_ScrollBarSliderMin, m_scrollBarOption, m_widget)});
         sliderSize = qMin(sliderSize, space);
         space -= sliderSize;
         if (space <= 0) {

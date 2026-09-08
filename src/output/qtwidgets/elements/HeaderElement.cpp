@@ -158,13 +158,13 @@ QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // contents height
     qreal contentsHeight(hasText() ? textSize.height() : m_headerOption->fontMetrics.height());
     if (hasIcon()) {
-        contentsHeight = qMax(contentsHeight, iconSize().height());
+        contentsHeight = std::max(contentsHeight, iconSize().height());
     }
 
     if (m_isHorizontal && m_headerOption->sortIndicator != QStyleOptionHeader::None) {
         // also add space for sort indicator
         contentsWidth += arrowWidth + space;
-        contentsHeight = qMax(contentsHeight, arrowWidth);
+        contentsHeight = std::max(contentsHeight, arrowWidth);
     }
 
     // update contents size, add margins and return
