@@ -553,6 +553,8 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
     LayoutBucket centerBucket = createBucket(items, BucketType::Center, availableSpace);
     LayoutBucket endBucket = createBucket(items, BucketType::End, availableSpace);
     LayoutBucket fillBucket = createBucket(items, BucketType::Fill, availableSpace);
+    auto startOffset = startBucket.rect.width();
+    auto endOffSet = endBucket.rect.width();
 
     startBucket.rect.moveLeft(availableSpace.left());
     mapBucketItems(startBucket, map);
@@ -560,11 +562,18 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
     endBucket.rect.moveRight(availableSpace.right());
     mapBucketItems(endBucket, map);
 
-    centerBucket.rect.moveCenter(availableSpace.center());
+    // Do not apply offsets if the items do not even exist.
     // Remove the spacing to avoid resizing the item too much:
-    // the spacing is already accounted in mapBucketItems
-    centerBucket.rect.setLeft(startBucket.rect.right() - centerBucket.spacing);
-    centerBucket.rect.setRight(endBucket.rect.left() + centerBucket.spacing);
+    // the spacing is already accounted in mapBucketItems.
+    centerBucket.rect.moveCenter(availableSpace.center());
+    centerBucket.rect.setLeft(availableSpace.left() - startBucket.spacing);
+    if (startBucket.items.count() > 0) {
+        centerBucket.rect.setLeft(centerBucket.rect.left() + startOffset);
+    }
+    centerBucket.rect.setRight(availableSpace.right() + endBucket.spacing);
+    if (endBucket.items.count() > 0) {
+        centerBucket.rect.setRight(centerBucket.rect.right() - endOffSet);
+    }
     mapBucketItems(centerBucket, map);
 
     fillBucket.rect.setLeft(startBucket.rect.right());
