@@ -35,6 +35,11 @@ to hidden also removes the element's box from any layout. Effectively
 The opacity of the element.
 
 
+\section3 color (<color>)
+
+The color of the element.
+
+
 
 \section2 layout
 
@@ -215,46 +220,10 @@ These properties all relate to the text of an element. They will have no effect
 if the element has no visible text.
 
 
-\section3 color (<color>)
-
-A shorthand for setting both text and icon color in one property.
-
-
-
-\section2 text-alignment
-
-\brief A property group with properties related to alignment.
-
-\section3 text-alignment ((item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>)
-
-A shorthand for setting the various alignment properties.
-
-
-
-\section3 text-alignment-container (item | content | background)
-
-The alignment container. This determines relative to what an element is placed.
-
-
-\section3 text-alignment-horizontal (start | center | end | fill)
-
-The horizontal alignment.
-
-
-\section3 text-alignment-vertical (start | center | end | fill | stack-center | stack-fill)
-
-The vertical alignment.
-
-
-\section3 text-alignment-order (<integer>)
-
-The order determines which elements come before others in the same alignment group.
-
-
 
 \section2 font
 
-\brief A group containing properties relating to the font used for an element.
+These properties all relate to the font used for the text of an element.
 
 
 \section3 font-family (<string>)
@@ -303,9 +272,13 @@ The spacing between words of the font used for an element.
 
 
 
-\section3 text-color (<color>)
+\section3 text-align (start | center | end | justify)
 
-The color of the text of an element.
+The alignment of the text of an element. This is distinct from layout
+alignment in that layout alignment determines the alignment of an element's
+box within an item, but the text alignment determines how the text aligns
+within that box.
+
 
 
 \section3 text-wrap-mode (no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap)
@@ -325,52 +298,6 @@ These properties all relate to the icon of an element. They will have no
 effect if the element does not have an icon.
 
 
-\section3 icon-size (<length>)
-
-A shorthand to set both icon-width and icon-height in a single property.
-
-
-
-\section2 icon-alignment
-
-\brief A property group with properties related to alignment.
-
-\section3 icon-alignment ((item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>)
-
-A shorthand for setting the various alignment properties.
-
-
-
-\section3 icon-alignment-container (item | content | background)
-
-The alignment container. This determines relative to what an element is placed.
-
-
-\section3 icon-alignment-horizontal (start | center | end | fill)
-
-The horizontal alignment.
-
-
-\section3 icon-alignment-vertical (start | center | end | fill | stack-center | stack-fill)
-
-The vertical alignment.
-
-
-\section3 icon-alignment-order (<integer>)
-
-The order determines which elements come before others in the same alignment group.
-
-
-
-\section3 icon-width (<length>)
-
-The width of the icon of an element.
-
-
-\section3 icon-height (<length>)
-
-The height of the icon of an element.
-
 
 \section3 icon-name (<string>)
 
@@ -382,11 +309,6 @@ The name of an icon of the icon theme to use for this icon.
 A URL to a file to use for the icon. Currently only local files are
 supported.
 
-
-
-\section3 icon-color (<color>)
-
-The color of the icon of an element.
 
 
 
@@ -771,7 +693,7 @@ The radius of the corner.
 
 
 
-\section2 shadow
+\section2 box-shadow
 
 These properties describe an element's shadow.
 
@@ -784,35 +706,35 @@ size, blur and finally color.
 
 
 
-\section2 shadow-offset
+\section2 box-shadow-offset
 
 The offset of the shadow from its element. Setting this will move the entire shadow,
 as if the light were cast from a different angle.
 
 
 
-\section3 shadow-offset-horizontal (<length>)
+\section3 box-shadow-offset-horizontal (<length>)
 
 The horizontal offset of the shadow.
 
 
-\section3 shadow-offset-vertical (<length>)
+\section3 box-shadow-offset-vertical (<length>)
 
 The vertical offset of the shadow.
 
 
 
-\section3 shadow-color (<color>)
+\section3 box-shadow-color (<color>)
 
 The color of the shadow.
 
 
-\section3 shadow-size (<length>)
+\section3 box-shadow-size (<length>)
 
 The size of the shadow. This expands the area used for the shadow compared to the size of an element.
 
 
-\section3 shadow-blur (<length>)
+\section3 box-shadow-blur (<length>)
 
 The amount of blur to use for the shadow. Increasing this will increase how smooth the shadow
 goes from fully transparent to the full shadow color.

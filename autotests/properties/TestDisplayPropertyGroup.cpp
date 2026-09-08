@@ -24,6 +24,7 @@ private Q_SLOTS:
         // A null instance should not have any values for its properties.
         QVERIFY(!property->visible().has_value());
         QVERIFY(!property->opacity().has_value());
+        QVERIFY(!property->color().has_value());
     }
 
     void testEmpty()
@@ -33,6 +34,7 @@ private Q_SLOTS:
         // An empty instance should only have values that are considered "empty".
         QCOMPARE(property->visible().value(), emptyValue<bool>());
         QCOMPARE(property->opacity().value(), emptyValue<qreal>());
+        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
     }
 
     void testHasAnyValue()
@@ -56,6 +58,13 @@ private Q_SLOTS:
             property->setOpacity(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
+        {
+            Union::Color value;
+            property->setColor(value);
+            QVERIFY(property->hasAnyValue());
+            property->setColor(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
     }
 
     void testResolveProperties()
@@ -73,6 +82,7 @@ private Q_SLOTS:
 
         source->setVisible(bool{});
         source->setOpacity(qreal{});
+        source->setColor(Union::Color{});
 
         QVERIFY(source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
@@ -83,6 +93,7 @@ private Q_SLOTS:
 
         QCOMPARE(destination->visible(), source->visible());
         QCOMPARE(destination->opacity(), source->opacity());
+        QCOMPARE(destination->color(), source->color());
     }
 
     void testDataStream()

@@ -13,8 +13,6 @@
 #include <QString>
 #include <QUrl>
 
-#include "../Color.h"
-#include "AlignmentPropertyGroup.h"
 
 #include "PropertiesTypes.h"
 
@@ -93,42 +91,6 @@ public:
     }
 
     /*!
-     * The alignment of the icon of an element.
-     */
-    AlignmentPropertyGroup *alignment() const;
-
-    /*!
-     * Set the value of alignment.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
-
-    /*!
-        The width of the icon of an element.
-     */
-    std::optional<qreal> width() const;
-
-    /*!
-     * Set the value of width.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setWidth(const std::optional<qreal> &newValue);
-
-    /*!
-        The height of the icon of an element.
-     */
-    std::optional<qreal> height() const;
-
-    /*!
-     * Set the value of height.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setHeight(const std::optional<qreal> &newValue);
-
-    /*!
         The name of an icon of the icon theme to use for this icon.
      */
     std::optional<QString> name() const;
@@ -153,18 +115,6 @@ supported.
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setSource(const std::optional<QUrl> &newValue);
-
-    /*!
-        The color of the icon of an element.
-     */
-    std::optional<Union::Color> color() const;
-
-    /*!
-     * Set the value of color.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
      * Returns if this property group has any value set.

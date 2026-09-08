@@ -15,9 +15,8 @@ using namespace Qt::StringLiterals;
 class Union::Properties::TextPropertyGroupPrivate
 {
 public:
-    std::unique_ptr<AlignmentPropertyGroup> alignment;
     std::unique_ptr<FontPropertyGroup> font;
-    std::optional<Union::Color> color;
+    std::optional<Union::Properties::TextAlignment> alignment;
     std::optional<Union::Properties::TextWrapMode> wrapMode;
     std::optional<Union::Properties::TextElide> elide;
 };
@@ -30,11 +29,9 @@ TextPropertyGroup::TextPropertyGroup()
 TextPropertyGroup::TextPropertyGroup(const TextPropertyGroup &other)
     : d(std::make_unique<TextPropertyGroupPrivate>())
 {
-    d->alignment = std::make_unique<AlignmentPropertyGroup>();
-    *(d->alignment) = *(other.d->alignment);
     d->font = std::make_unique<FontPropertyGroup>();
     *(d->font) = *(other.d->font);
-    d->color = other.d->color;
+    d->alignment = other.d->alignment;
     d->wrapMode = other.d->wrapMode;
     d->elide = other.d->elide;
 }
@@ -49,9 +46,8 @@ TextPropertyGroup::~TextPropertyGroup() = default;
 TextPropertyGroup &TextPropertyGroup::operator=(const TextPropertyGroup &other)
 {
     if (this != &other) {
-        *(d->alignment) = *(other.d->alignment);
         *(d->font) = *(other.d->font);
-        d->color = other.d->color;
+        d->alignment = other.d->alignment;
         d->wrapMode = other.d->wrapMode;
         d->elide = other.d->elide;
     }
@@ -64,16 +60,6 @@ TextPropertyGroup &TextPropertyGroup::operator=(TextPropertyGroup &&other)
     return *this;
 }
 
-AlignmentPropertyGroup *TextPropertyGroup::alignment() const
-{
-    return d->alignment.get();
-}
-
-void TextPropertyGroup::setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue)
-{
-    d->alignment = std::move(newValue);
-}
-
 FontPropertyGroup *TextPropertyGroup::font() const
 {
     return d->font.get();
@@ -84,18 +70,18 @@ void TextPropertyGroup::setFont(std::unique_ptr<FontPropertyGroup> &&newValue)
     d->font = std::move(newValue);
 }
 
-std::optional<Union::Color> TextPropertyGroup::color() const
+std::optional<Union::Properties::TextAlignment> TextPropertyGroup::alignment() const
 {
-    return d->color;
+    return d->alignment;
 }
 
-void TextPropertyGroup::setColor(const std::optional<Union::Color> &newValue)
+void TextPropertyGroup::setAlignment(const std::optional<Union::Properties::TextAlignment> &newValue)
 {
-    if (newValue == d->color) {
+    if (newValue == d->alignment) {
         return;
     }
 
-    d->color = newValue;
+    d->alignment = newValue;
 }
 
 std::optional<Union::Properties::TextWrapMode> TextPropertyGroup::wrapMode() const
@@ -128,13 +114,10 @@ void TextPropertyGroup::setElide(const std::optional<Union::Properties::TextElid
 
 bool TextPropertyGroup::hasAnyValue() const
 {
-    if (d->alignment && d->alignment->hasAnyValue()) {
-        return true;
-    }
     if (d->font && d->font->hasAnyValue()) {
         return true;
     }
-    if (d->color.has_value()) {
+    if (d->alignment.has_value()) {
         return true;
     }
     if (d->wrapMode.has_value()) {
@@ -152,13 +135,10 @@ bool TextPropertyGroup::isEmpty() const
         return true;
     }
 
-    if (d->alignment && !d->alignment->isEmpty()) {
-        return false;
-    }
     if (d->font && !d->font->isEmpty()) {
         return false;
     }
-    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+    if (d->alignment.has_value() && d->alignment.value() != emptyValue<Union::Properties::TextAlignment>()) {
         return false;
     }
     if (d->wrapMode.has_value() && d->wrapMode.value() != emptyValue<Union::Properties::TextWrapMode>()) {
@@ -202,21 +182,15 @@ QString TextPropertyGroup::toString(int indentation, ToStringFlags flags) const
         out << maybeNewLine;
     }
 
-    out << indent(indentation, multiline, true) << "alignment: ";
-    if (d->alignment) {
-        out << d->alignment->toString(indentation + 2, flags);
-    } else {
-        out << empty << maybeNewLine;
-    }
-    out << indent(indentation, multiline, false) << "font: ";
+    out << indent(indentation, multiline, true) << "font: ";
     if (d->font) {
         out << d->font->toString(indentation + 2, flags);
     } else {
         out << empty << maybeNewLine;
     }
-    out << indent(indentation, multiline, false) << "color: ";
-    if (d->color) {
-        out << d->color->toString() << maybeNewLine;
+    out << indent(indentation, multiline, false) << "alignment: ";
+    if (d->alignment) {
+        out << d->alignment.value() << maybeNewLine;
     } else {
         out << empty << maybeNewLine;
     }
@@ -249,20 +223,14 @@ void TextPropertyGroup::resolveProperties(const TextPropertyGroup *source, TextP
         return;
     }
 
-    if (source->d->alignment) {
-        if (!destination->d->alignment) {
-            destination->d->alignment = std::make_unique<AlignmentPropertyGroup>();
-        }
-        AlignmentPropertyGroup::resolveProperties(source->d->alignment.get(), destination->d->alignment.get());
-    }
     if (source->d->font) {
         if (!destination->d->font) {
             destination->d->font = std::make_unique<FontPropertyGroup>();
         }
         FontPropertyGroup::resolveProperties(source->d->font.get(), destination->d->font.get());
     }
-    if (!destination->d->color.has_value()) {
-        destination->d->color = source->d->color;
+    if (!destination->d->alignment.has_value()) {
+        destination->d->alignment = source->d->alignment;
     }
     if (!destination->d->wrapMode.has_value()) {
         destination->d->wrapMode = source->d->wrapMode;
@@ -275,9 +243,8 @@ void TextPropertyGroup::resolveProperties(const TextPropertyGroup *source, TextP
 std::unique_ptr<TextPropertyGroup> TextPropertyGroup::empty()
 {
     auto result = std::make_unique<TextPropertyGroup>();
-    result->d->alignment = AlignmentPropertyGroup::empty();
     result->d->font = FontPropertyGroup::empty();
-    result->d->color = emptyValue<Union::Color>();
+    result->d->alignment = emptyValue<Union::Properties::TextAlignment>();
     result->d->wrapMode = emptyValue<Union::Properties::TextWrapMode>();
     result->d->elide = emptyValue<Union::Properties::TextElide>();
     return result;
@@ -285,13 +252,6 @@ std::unique_ptr<TextPropertyGroup> TextPropertyGroup::empty()
 
 bool Union::Properties::operator==(const TextPropertyGroup &left, const TextPropertyGroup &right)
 {
-    if (left.alignment() && right.alignment()) {
-        if (*(left.alignment()) != *(right.alignment())) {
-            return false;
-        }
-    } else if (left.alignment() != right.alignment()) {
-        return false;
-    }
     if (left.font() && right.font()) {
         if (*(left.font()) != *(right.font())) {
             return false;
@@ -299,7 +259,7 @@ bool Union::Properties::operator==(const TextPropertyGroup &left, const TextProp
     } else if (left.font() != right.font()) {
         return false;
     }
-    if (left.color() != right.color()) {
+    if (left.alignment() != right.alignment()) {
         return false;
     }
     if (left.wrapMode() != right.wrapMode()) {
@@ -325,20 +285,13 @@ QDebug operator<<(QDebug debug, Union::Properties::TextPropertyGroup *type)
 QDataStream &operator<<(QDataStream &stream, const Union::Properties::TextPropertyGroup *type)
 {
     {
-        auto data = type->alignment();
-        stream << bool(data);
-        if (data) {
-            stream << data;
-        }
-    }
-    {
         auto data = type->font();
         stream << bool(data);
         if (data) {
             stream << data;
         }
     }
-    stream << type->color();
+    stream << type->alignment();
     stream << type->wrapMode();
     stream << type->elide();
     return stream;
@@ -351,25 +304,15 @@ QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::
         stream >> hasData;
 
         if (hasData) {
-            auto data = std::make_unique<AlignmentPropertyGroup>();
-            stream >> data;
-            type->setAlignment(std::move(data));
-        }
-    }
-    {
-        bool hasData;
-        stream >> hasData;
-
-        if (hasData) {
             auto data = std::make_unique<FontPropertyGroup>();
             stream >> data;
             type->setFont(std::move(data));
         }
     }
     {
-        std::optional<Union::Color> data;
+        std::optional<Union::Properties::TextAlignment> data;
         stream >> data;
-        type->setColor(data);
+        type->setAlignment(data);
     }
     {
         std::optional<Union::Properties::TextWrapMode> data;

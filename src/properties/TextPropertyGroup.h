@@ -11,8 +11,6 @@
 #include <QDebug>
 
 
-#include "../Color.h"
-#include "AlignmentPropertyGroup.h"
 #include "FontPropertyGroup.h"
 
 #include "PropertiesTypes.h"
@@ -92,18 +90,6 @@ public:
     }
 
     /*!
-     * The alignment of the text of an element.
-     */
-    AlignmentPropertyGroup *alignment() const;
-
-    /*!
-     * Set the value of alignment.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
-
-    /*!
      * \brief A group containing properties relating to the font used for an element.
      */
     FontPropertyGroup *font() const;
@@ -116,16 +102,20 @@ public:
     void setFont(std::unique_ptr<FontPropertyGroup> &&newValue);
 
     /*!
-        The color of the text of an element.
+        The alignment of the text of an element. This is distinct from layout
+alignment in that layout alignment determines the alignment of an element's
+box within an item, but the text alignment determines how the text aligns
+within that box.
+
      */
-    std::optional<Union::Color> color() const;
+    std::optional<Union::Properties::TextAlignment> alignment() const;
 
     /*!
-     * Set the value of color.
+     * Set the value of alignment.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setColor(const std::optional<Union::Color> &newValue);
+    void setAlignment(const std::optional<Union::Properties::TextAlignment> &newValue);
 
     /*!
         The wrap mode for the text of an element.

@@ -50,12 +50,12 @@ QFont testQFontInstance()
 
 std::unique_ptr<StylePropertyGroup> testStylePropertyGroupInstance();
 std::unique_ptr<SizePropertyGroup> testSizePropertyGroupInstance();
-std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance();
 std::unique_ptr<ImagePropertyGroup> testImagePropertyGroupInstance();
 std::unique_ptr<LinePropertyGroup> testLinePropertyGroupInstance();
 std::unique_ptr<CornerPropertyGroup> testCornerPropertyGroupInstance();
 std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance();
 std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance();
+std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance();
 std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance();
 std::unique_ptr<FontPropertyGroup> testFontPropertyGroupInstance();
 std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance();
@@ -91,18 +91,6 @@ std::unique_ptr<SizePropertyGroup> testSizePropertyGroupInstance()
     instance->setRight(testQrealInstance());
     instance->setTop(testQrealInstance());
     instance->setBottom(testQrealInstance());
-
-    return instance;
-}
-
-std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance()
-{
-    auto instance = std::make_unique<AlignmentPropertyGroup>();
-
-    instance->setContainer(Union::Properties::AlignmentContainer{});
-    instance->setHorizontal(Union::Properties::Alignment{});
-    instance->setVertical(Union::Properties::Alignment{});
-    instance->setOrder(int{});
 
     return instance;
 }
@@ -148,6 +136,7 @@ std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance()
 
     instance->setVisible(bool{});
     instance->setOpacity(testQrealInstance());
+    instance->setColor(Union::Color{});
 
     return instance;
 }
@@ -167,13 +156,24 @@ std::unique_ptr<LayoutPropertyGroup> testLayoutPropertyGroupInstance()
     return instance;
 }
 
+std::unique_ptr<AlignmentPropertyGroup> testAlignmentPropertyGroupInstance()
+{
+    auto instance = std::make_unique<AlignmentPropertyGroup>();
+
+    instance->setContainer(Union::Properties::AlignmentContainer{});
+    instance->setHorizontal(Union::Properties::Alignment{});
+    instance->setVertical(Union::Properties::Alignment{});
+    instance->setOrder(int{});
+
+    return instance;
+}
+
 std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance()
 {
     auto instance = std::make_unique<TextPropertyGroup>();
 
-    instance->setAlignment(testAlignmentPropertyGroupInstance());
     instance->setFont(testFontPropertyGroupInstance());
-    instance->setColor(Union::Color{});
+    instance->setAlignment(Union::Properties::TextAlignment{});
     instance->setWrapMode(Union::Properties::TextWrapMode{});
     instance->setElide(Union::Properties::TextElide{});
 
@@ -201,12 +201,8 @@ std::unique_ptr<IconPropertyGroup> testIconPropertyGroupInstance()
 {
     auto instance = std::make_unique<IconPropertyGroup>();
 
-    instance->setAlignment(testAlignmentPropertyGroupInstance());
-    instance->setWidth(testQrealInstance());
-    instance->setHeight(testQrealInstance());
     instance->setName(QString{});
     instance->setSource(QUrl{});
-    instance->setColor(Union::Color{});
 
     return instance;
 }
