@@ -15,6 +15,10 @@
     syntax: "<number>";
 }
 
+@property color {
+    syntax: "<color>";
+}
+
 @property layout-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
 }
@@ -107,30 +111,6 @@
     syntax: "<length>";
 }
 
-@property color {
-    syntax: "<color>";
-}
-
-@property text-alignment {
-    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
-}
-
-@property text-alignment-container {
-    syntax: "item | content | background";
-}
-
-@property text-alignment-horizontal {
-    syntax: "start | center | end | fill";
-}
-
-@property text-alignment-vertical {
-    syntax: "start | center | end | fill | stack-center | stack-fill";
-}
-
-@property text-alignment-order {
-    syntax: "<integer>";
-}
-
 @property font-family {
     syntax: "<string>";
 }
@@ -167,8 +147,8 @@
     syntax: "<length-percentage>";
 }
 
-@property text-color {
-    syntax: "<color>";
+@property text-align {
+    syntax: "start | center | end | justify";
 }
 
 @property text-wrap-mode {
@@ -179,48 +159,12 @@
     syntax: "none | left | middle | right";
 }
 
-@property icon-size {
-    syntax: "<length>";
-}
-
-@property icon-alignment {
-    syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
-}
-
-@property icon-alignment-container {
-    syntax: "item | content | background";
-}
-
-@property icon-alignment-horizontal {
-    syntax: "start | center | end | fill";
-}
-
-@property icon-alignment-vertical {
-    syntax: "start | center | end | fill | stack-center | stack-fill";
-}
-
-@property icon-alignment-order {
-    syntax: "<integer>";
-}
-
-@property icon-width {
-    syntax: "<length>";
-}
-
-@property icon-height {
-    syntax: "<length>";
-}
-
 @property icon-name {
     syntax: "<string>";
 }
 
 @property icon-source {
     syntax: "<url>";
-}
-
-@property icon-color {
-    syntax: "<color>";
 }
 
 @property background {
@@ -431,23 +375,23 @@
     syntax: "none | (<length> <length> <length> <length> <color>)";
 }
 
-@property shadow-offset-horizontal {
+@property box-shadow-offset-horizontal {
     syntax: "<length>";
 }
 
-@property shadow-offset-vertical {
+@property box-shadow-offset-vertical {
     syntax: "<length>";
 }
 
-@property shadow-color {
+@property box-shadow-color {
     syntax: "<color>";
 }
 
-@property shadow-size {
+@property box-shadow-size {
     syntax: "<length>";
 }
 
-@property shadow-blur {
+@property box-shadow-blur {
     syntax: "<length>";
 }
 
