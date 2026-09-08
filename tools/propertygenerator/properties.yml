@@ -424,6 +424,16 @@ children:
                                 return m_state->toQFont();
                             }
 
+            alignment:
+                type: Union::Properties::TextAlignment
+                doc: |
+                    The alignment of the text of an element. This is distinct from layout
+                    alignment in that layout alignment determines the alignment of an element's
+                    box within an item, but the text alignment determines how the text aligns
+                    within that box.
+
+                css:
+                    name: text-align
 
             wrapMode:
                 type: Union::Properties::TextWrapMode
