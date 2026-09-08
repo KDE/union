@@ -96,6 +96,7 @@ public:
         States = 1 << 2,
         Hints = 1 << 3,
         Attributes = 1 << 4,
+        SubElement = 1 << 5,
     };
     Q_DECLARE_FLAGS(Changes, Change)
     Q_FLAG(Changes)
@@ -122,6 +123,19 @@ public:
     Identifier type() const;
     void setType(const Identifier &type);
     Q_SIGNAL void typeChanged();
+
+    /*!
+     * \property Union::Element::subElement
+     *
+     * The name of the sub-element.
+     *
+     * This can be used to name different parts of an element that need their
+     * own styling rules applied, such as the text on a button.
+     */
+    Q_PROPERTY(Identifier subElement READ subElement WRITE setSubElement NOTIFY subElementChanged)
+    Identifier subElement() const;
+    void setSubElement(const Identifier &subElement);
+    Q_SIGNAL void subElementChanged();
 
     /*!
      * \property Union::Element::id
