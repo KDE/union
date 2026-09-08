@@ -648,12 +648,19 @@ QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
     qreal width = 0;
     qreal height = 0;
     QRectF bucketRect = bucket.rect;
+    bool stacked = false;
+
+    // Check if we are stacking or not
+    for (auto &item : bucket.items) {
+        if (item.verticalAlignment == Union::Properties::Alignment::StackFill || item.verticalAlignment == Union::Properties::Alignment::StackCenter) {
+            stacked = true;
+            break;
+        }
+    }
+
     for (auto &item : bucket.items) {
         const qreal itemWidth = item.rect.width() + bucket.spacing;
         const qreal itemHeight = item.rect.height();
-        const bool stacked =
-            (item.verticalAlignment == Union::Properties::Alignment::StackFill || item.verticalAlignment == Union::Properties::Alignment::StackCenter);
-
         if (stacked) {
             width = std::max(bucketRect.width(), itemWidth);
             height += (itemHeight + bucket.spacing);
