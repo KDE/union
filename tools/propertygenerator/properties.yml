@@ -441,6 +441,28 @@ children:
                 type: Union::Color
                 doc: The color of the text of an element.
 
+            horizontalAlignment:
+                type: Union::Properties::HorizontalTextAlignment
+                doc: |
+                    The horizontal alignment of the text of an element. This is distinct from
+                    layout alignment in that layout alignment determines the alignment of an
+                    element's box within an item, but the text alignment determines how the
+                    text aligns within that box.
+
+                css:
+                    name: text-align
+
+            verticalAlignment:
+                type: Union::Properties::VerticalTextAlignment
+                doc: |
+                    The vertical alignment of the text of an element. This is distinct from
+                    layout alignment in that layout alignment determines the alignment of an
+                    element's box within an item, but the text alignment determines how the
+                    text aligns within that box.
+
+                css:
+                    name: vertical-align
+
             wrapMode:
                 type: Union::Properties::TextWrapMode
                 doc: The wrap mode for the text of an element.
