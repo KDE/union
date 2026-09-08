@@ -24,7 +24,6 @@ public:
     QString type;
     QString id;
     Element::States states;
-    Element::ColorSet colorSet;
     QStringList hints;
     QVariantMap attributes;
 };
@@ -91,23 +90,6 @@ void Element::setStates(States newStates)
     sendChangeEvent(Change::States);
 
     Q_EMIT statesChanged();
-    Q_EMIT updated();
-}
-
-Element::ColorSet Element::colorSet() const
-{
-    return d->colorSet;
-}
-
-void Element::setColorSet(ColorSet newColorSet)
-{
-    if (d->colorSet == newColorSet) {
-        return;
-    }
-
-    d->colorSet = newColorSet;
-
-    Q_EMIT colorSetChanged();
     Q_EMIT updated();
 }
 
