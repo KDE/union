@@ -341,6 +341,16 @@ void QuickElement::setType(const QString &newType)
     m_element->setType(newType);
 }
 
+QString QuickElement::subElement() const
+{
+    return m_element->subElement();
+}
+
+void Union::Quick::QuickElement::setSubElement(const QString &newSubElement)
+{
+    m_element->setSubElement(newSubElement);
+}
+
 QString QuickElement::elementId() const
 {
     return m_element->id();
