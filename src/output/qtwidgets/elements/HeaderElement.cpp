@@ -121,15 +121,11 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
         return QRect();
     }
-    auto textRect = m_layoutMap[ElementString::Text].rect;
-    auto iconRect = m_layoutMap[ElementString::Icon].rect;
     switch (element) {
     case QStyle::SE_HeaderLabel:
-        // Make sure to adjust to the width of the styleoption
-        textRect.setWidth(m_styleOption->rect.width() - iconRect.width() - spacing());
-        return textRect;
+        return m_layoutMap[ElementString::Text].rect;
     case QStyle::SE_HeaderArrow:
-        return iconRect;
+        return m_layoutMap[ElementString::Icon].rect;
     default:
         break;
     }
