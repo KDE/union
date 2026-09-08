@@ -16,6 +16,12 @@ Item {
     Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
     Union.Mnemonics.label: root.control.text
 
+    readonly property real iconWidth: iconItem.Union.Style.properties.layout.width
+    readonly property real iconHeight: iconItem.Union.Style.properties.layout.width
+    readonly property real iconColor: iconItem.Union.Style.properties.display.color
+    readonly property real iconName: iconItem.Union.Style.properties.icon.name
+    readonly property real iconSource: iconItem.Union.Style.properties.icon.source
+
     Union.Icon {
         id: iconItem
 
