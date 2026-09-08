@@ -22,6 +22,7 @@ class Union::ElementPrivate
 {
 public:
     QString type;
+    QString subElement;
     QString id;
     Element::States states;
     QStringList hints;
@@ -52,6 +53,25 @@ void Element::setType(const QString &type)
     sendChangeEvent(Change::Type);
 
     Q_EMIT typeChanged();
+    Q_EMIT updated();
+}
+
+QString Element::subElement() const
+{
+    return d->subElement;
+}
+
+void Element::setSubElement(const QString &newSubElement)
+{
+    if (newSubElement == d->subElement) {
+        return;
+    }
+
+    d->subElement = newSubElement;
+
+    sendChangeEvent(Change::SubElement);
+
+    Q_EMIT subElementChanged();
     Q_EMIT updated();
 }
 
@@ -189,6 +209,10 @@ QString Element::toString() const
         properties << u"type: "_s + d->type;
     }
 
+    if (!d->subElement.isEmpty()) {
+        properties << u"subElement: "_s + d->subElement;
+    }
+
     if (!d->id.isEmpty()) {
         properties << u"id: "_s + d->id;
     }
@@ -232,7 +256,7 @@ std::size_t Union::Element::cacheKey(std::size_t seed) const
     buffer.open(QIODevice::WriteOnly);
 
     QDataStream stream(&buffer);
-    stream << d->type << d->id << d->states << d->hints << d->attributes;
+    stream << d->type << d->subElement << d->id << d->states << d->hints << d->attributes;
 
     return qHash(serialized, seed);
 }
