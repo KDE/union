@@ -189,18 +189,14 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection dire
     }
     QSizeF preferredSize = oldSize;
     QSizeF size = preferredSize;
-    QMarginsF padding;
-    if (paddingProperties->layout()) {
-        auto width = paddingProperties->layout()->width().value_or(1);
-        auto height = paddingProperties->layout()->height().value_or(1);
-        preferredSize = QSize(width, height);
-        if (paddingProperties->layout()->padding()) {
-            padding = paddingProperties->layout()->padding()->toMargins().toMargins();
-        }
-        if (paddingProperties->layout()->inset()) {
-            padding += paddingProperties->layout()->inset()->toMargins().toMargins();
-        }
-    }
+    QMarginsF padding =
+        safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    QMarginsF inset =
+        safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
+    auto width = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    auto height = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    preferredSize = QSizeF(width, height);
+    padding += inset;
     if (direction == PaddingDirection::Inward) {
         size = size.shrunkBy(padding);
         if (size.width() < 0) {
@@ -301,62 +297,47 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
 
 QMarginsF AbstractElement::padding() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
-        return m_backgroundProperties->layout()->padding()->toMargins();
-    }
-    return QMarginsF();
+    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
 QMarginsF AbstractElement::borderSize() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->border()) {
-        return m_backgroundProperties->border()->sizes();
-    }
-    return QMarginsF();
+    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
 }
 
 qreal AbstractElement::height() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->layout()) {
-        return m_backgroundProperties->layout()->height().value_or(1);
+    if (m_backgroundProperties) {
+        return m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     }
     return m_styleOption->rect.height();
 }
 
 qreal AbstractElement::width() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->layout()) {
-        return m_backgroundProperties->layout()->width().value_or(1);
+    if (m_backgroundProperties) {
+        return m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     }
-    return m_styleOption->rect.width();
+    return m_styleOption->rect.height();
 }
 
 qreal AbstractElement::spacing() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->layout()) {
-        return m_backgroundProperties->layout()->spacing().value_or(1);
-    }
-    return 0;
+    return safePropertyLookup(m_backgroundProperties, 1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
 }
 
 QSizeF AbstractElement::indicatorSize() const
 {
-    if (m_indicatorProperties && m_indicatorProperties->layout()) {
-        auto width = m_indicatorProperties->layout()->width().value_or(0);
-        auto height = m_indicatorProperties->layout()->height().value_or(0);
-        return QSizeF(width, height);
-    }
-    return QSizeF();
+    auto width = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    auto height = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    return QSizeF(width, height);
 }
 
 QSizeF AbstractElement::iconSize() const
 {
-    if (m_backgroundProperties && m_backgroundProperties->icon()) {
-        auto width = m_backgroundProperties->icon()->width().value_or(1);
-        auto height = m_backgroundProperties->icon()->height().value_or(1);
-        return QSizeF(width, height);
-    }
-    return QSizeF();
+    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
+    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
+    return QSizeF(width, height);
 }
 
 qreal AbstractElement::averagePadding() const
@@ -499,15 +480,27 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
                 elementRect.setWidth(toolButtonOption->iconSize.width());
                 elementRect.setHeight(toolButtonOption->iconSize.height());
             } else {
-                elementRect.setWidth(properties->icon()->width().value_or(0));
-                elementRect.setHeight(properties->icon()->height().value_or(0));
+                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
+                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
             }
-            horizontalAlignment = properties->icon()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-            verticalAlignment = properties->icon()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
-            order = properties->icon()->alignment()->order().value_or(0);
+            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                                 &StylePropertyGroup::icon,
+                                                                 &IconPropertyGroup::alignment,
+                                                                 &AlignmentPropertyGroup::horizontal);
+            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                               &StylePropertyGroup::icon,
+                                                               &IconPropertyGroup::alignment,
+                                                               &AlignmentPropertyGroup::vertical);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else if (subElement == ElementString::Text || subElement == ElementString::ShortcutText) {
-            horizontalAlignment = properties->text()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-            verticalAlignment = properties->text()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
+            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                                 &StylePropertyGroup::text,
+                                                                 &TextPropertyGroup::alignment,
+                                                                 &AlignmentPropertyGroup::horizontal);
+            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                               &StylePropertyGroup::text,
+                                                               &TextPropertyGroup::alignment,
+                                                               &AlignmentPropertyGroup::vertical);
             auto optiontext = textFromOption(opt);
             // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
             const int tabPosition(optiontext.indexOf(QLatin1Char('\t')));
@@ -523,17 +516,24 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
             auto textFlags = textFlagsFromProperties(properties);
             textFlags |= Qt::TextShowMnemonic;
             auto fontMetrics = opt->fontMetrics;
-            if (properties->text() && properties->text()->font().has_value()) {
-                fontMetrics = QFontMetrics(properties->text()->font().value());
+            auto styleFont = properties->safePropertyLookup(std::optional<QFont>(), &StylePropertyGroup::text, &TextPropertyGroup::font);
+            if (styleFont.has_value()) {
+                fontMetrics = QFontMetrics(styleFont.value());
             }
             elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optiontext);
             order = properties->text()->alignment()->order().value_or(0);
         } else {
-            elementRect.setWidth(properties->layout()->width().value_or(0));
-            elementRect.setHeight(properties->layout()->height().value_or(0));
-            horizontalAlignment = properties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-            verticalAlignment = properties->layout()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
-            order = properties->layout()->alignment()->order().value_or(0);
+            elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
+            elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));
+            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                                 &StylePropertyGroup::layout,
+                                                                 &LayoutPropertyGroup::alignment,
+                                                                 &AlignmentPropertyGroup::horizontal);
+            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                               &StylePropertyGroup::layout,
+                                                               &LayoutPropertyGroup::alignment,
+                                                               &AlignmentPropertyGroup::vertical);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         }
         LayoutItem item = LayoutItem();
         item.elementName = subElement;
