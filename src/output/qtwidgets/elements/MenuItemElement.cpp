@@ -42,11 +42,10 @@ void MenuItemElement::update()
     m_menuHMargin = m_style->pixelMetric(QStyle::PM_MenuHMargin, m_styleOption, m_widget);
     m_menuVMargin = m_style->pixelMetric(QStyle::PM_MenuVMargin, m_styleOption, m_widget);
 
-    setIndicator(QIcon());
     if (m_hasSubMenu) {
-        m_indicatorElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
-        m_indicatorProperties = queryProperties(m_indicatorElementList);
-        setIndicator(m_style->unionIcon(m_indicatorProperties, u"arrow-right-symbolic"_s));
+        m_arrowElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
+        m_arrowProperties = queryProperties(m_arrowElementList);
+        m_subMenuArrow = m_style->unionIcon(m_arrowProperties, u"arrow-right-symbolic"_s);
     }
     if (m_hasCheckBox || m_hasRadioButton) {
         QStyleOptionButton button;
@@ -78,8 +77,8 @@ void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
             drawBackgroundRectangle(painter, m_layoutMap[ElementString::Indicator].rect, m_checkProperties);
         }
         drawIcon(painter);
-        drawIndicator(painter);
         drawText(painter);
+        drawSubMenuArrow(painter);
         break;
     }
 }
@@ -112,7 +111,7 @@ void MenuItemElement::updateSubElementList()
         } else {
             m_shortcutText = QString();
         }
-        if (hasIndicator()) {
+        if (m_hasSubMenu) {
             m_subElementList.append(ElementString::Arrow);
         }
 
@@ -171,7 +170,7 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
             if (hasIcon()) {
                 itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
             }
-            if (hasIndicator()) {
+            if (m_hasSubMenu) {
                 itemSize.rwidth() += m_layoutMap[ElementString::Arrow].rect.width() + spacing;
             }
             if (m_menuItemOption->menuHasCheckableItems) {
@@ -223,24 +222,15 @@ void MenuItemElement::drawText(QPainter *painter) const
     if (!m_shortcutText.isEmpty()) {
         auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
         const auto properties = queryProperties(shortcutElements);
-        auto adjustedOpt = *m_menuItemOption;
-        adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
-        // Use our own map for shortcut, as we do not care about the position of other items
-        auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::ShortcutText});
-        QRectF textRect = map[ElementString::ShortcutText].rect;
+        QRectF textRect = m_layoutMap[ElementString::ShortcutText].rect;
         drawTextAtRect(painter, m_shortcutText, textRect, properties);
     }
 }
 
-void MenuItemElement::drawIndicator(QPainter *painter) const
+void MenuItemElement::drawSubMenuArrow(QPainter *painter) const
 {
-    if (hasIndicator()) {
-        auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
-        auto adjustedOpt = *m_menuItemOption;
-        adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
-        auto map = layoutMap(m_backgroundElementList, &adjustedOpt, {ElementString::Arrow});
-        QRectF indicatorRect = map[ElementString::Arrow].rect;
-        drawIconAtRect(painter, m_indicator, indicatorRect);
+    if (m_hasSubMenu && m_isValid) {
+        drawIconAtRect(painter, m_subMenuArrow, m_layoutMap[ElementString::Arrow].rect);
     }
 }
 
@@ -260,7 +250,9 @@ qreal MenuItemElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuButtonIndicator:
-        return indicatorSize().width();
+        if (m_hasSubMenu) {
+            return m_layoutMap[ElementString::Arrow].rect.width();
+        }
     default:
         break;
     }

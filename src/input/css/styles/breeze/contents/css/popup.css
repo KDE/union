@@ -83,14 +83,21 @@ menuitem
         color: var(--window-disabled-text-color);
     }
 
-    & > indicator
+    arrow {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content end center 1;
+        icon-name: "arrow-right-symbolic";
+    }
+
+    indicator
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         layout-alignment: content start center 0;
     }
 
-    & > shortcuttext {
+    shortcuttext {
         spacing: 40px;
         color: mix(var(--window-background-color), var(--window-text-color), 0.5);
         text-alignment: content end center 0;
@@ -99,13 +106,6 @@ menuitem
         }
     }
 
-    & > arrow
-    {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        layout-alignment: content end center 1;
-        icon-name: "arrow-right-symbolic";
-    }
 }
 
 overlay {

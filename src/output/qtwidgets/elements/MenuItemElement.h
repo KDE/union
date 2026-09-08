@@ -44,8 +44,8 @@ public:
 private:
     QStringList elementHints() const override;
     void drawBackground(QPainter *painter) const override;
-    void drawIndicator(QPainter *painter) const override;
     void drawText(QPainter *painter) const override;
+    void drawSubMenuArrow(QPainter *painter) const;
     void updateSubElementList() override;
     QRectF adjustedRect(QRectF rect) const;
     Union::Element::States elementStates() const override;
@@ -54,6 +54,8 @@ private:
     Union::Properties::StylePropertyGroup *m_indicatorProperties;
     Union::ElementList m_checkElementList;
     Union::Properties::StylePropertyGroup *m_checkProperties;
+    Union::ElementList m_arrowElementList;
+    Union::Properties::StylePropertyGroup *m_arrowProperties;
     bool m_isSeparator;
     bool m_hasSubMenu;
     bool m_hasCheckBox;
@@ -62,4 +64,5 @@ private:
     QString m_shortcutText;
     qreal m_menuHMargin;
     qreal m_menuVMargin;
+    QIcon m_subMenuArrow;
 };
