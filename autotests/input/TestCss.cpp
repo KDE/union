@@ -41,7 +41,7 @@ private Q_SLOTS:
         if (styleSheet.errors().size() > 0) {
             qWarning() << "Errors encountered while parsing CSS:";
             for (const auto &error : styleSheet.errors()) {
-                qWarning() << error.message.data();
+                qWarning() << "In file" << error.file << "on line" << error.line << "column" << error.column << error.message.data();
             }
 
             QFAIL("Parsing stylesheet produced errors!");
