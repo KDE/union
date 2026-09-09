@@ -475,13 +475,14 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
         // NOTE: For now icon and text are their own things, so check them separately.
         // in future this should be unnecessary.
         if (subElement == ElementString::Icon) {
-            // Toolbutton can override the icon size
-            if (const auto *toolButtonOption = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
-                elementRect.setWidth(toolButtonOption->iconSize.width());
-                elementRect.setHeight(toolButtonOption->iconSize.height());
-            } else {
+            // Some styleoptions provide us an icon size, use it if its not null
+            auto iconSize = iconSizeFromOption(opt);
+            if (!iconSize.isValid()) {
                 elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
                 elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
+            } else {
+                elementRect.setWidth(iconSize.width());
+                elementRect.setHeight(iconSize.height());
             }
             horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
                                                                  &StylePropertyGroup::icon,
@@ -501,15 +502,15 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
                                                                &StylePropertyGroup::text,
                                                                &TextPropertyGroup::alignment,
                                                                &AlignmentPropertyGroup::vertical);
-            auto optiontext = textFromOption(opt);
+            auto optionText = textFromOption(opt);
             // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
-            const int tabPosition(optiontext.indexOf(QLatin1Char('\t')));
+            const int tabPosition(optionText.indexOf(QLatin1Char('\t')));
             if (tabPosition >= 0) {
-                QString accelerator(optiontext.mid(tabPosition + 1));
+                QString accelerator(optionText.mid(tabPosition + 1));
                 if (subElement == ElementString::ShortcutText) {
-                    optiontext = optiontext.mid(tabPosition + 1);
+                    optionText = optionText.mid(tabPosition + 1);
                 } else {
-                    optiontext = optiontext.left(tabPosition);
+                    optionText = optionText.left(tabPosition);
                 }
             }
             // When layouting, ensure we take mnemonics into account
@@ -520,7 +521,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
             if (styleFont.has_value()) {
                 fontMetrics = QFontMetrics(styleFont.value());
             }
-            elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optiontext);
+            elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optionText);
             order = properties->text()->alignment()->order().value_or(0);
         } else {
             elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
