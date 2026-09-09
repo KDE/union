@@ -53,12 +53,6 @@ void ItemViewElement::layout()
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
         m_layoutMap = layoutMap(m_backgroundElementList, m_viewItemOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_viewItemOption, m_widget, m_subElementList);
-
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -83,13 +77,7 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
             break;
         }
         checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption->state.testFlag(QStyle::State_Enabled));
-        auto checkBoxRect = m_style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
-        // Use iconSize to make sure the checkbox is correct size here
-        if (m_contentProperties && m_contentProperties->icon()) {
-            checkBoxRect =
-                centerRect(checkBoxRect, m_contentProperties->icon()->width().value_or(0), m_contentProperties->icon()->height().value_or(0)).toRect();
-        }
-        checkbox.rect = checkBoxRect;
+        checkbox.rect = m_style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
         painter->save();
         m_style->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
         painter->restore();
@@ -100,25 +88,27 @@ void ItemViewElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::ItemViewItem);
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_subElementList.append(ElementString::CheckBox);
-    }
     if (!m_viewItemOption->icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
     if (!m_viewItemOption->text.isEmpty()) {
         m_subElementList.append(ElementString::Text);
     }
+    // As for now Icon and Text are "pseudo" elements, so they are ignored by the hierarchy.
+    // Thus calculate CheckBox last in the layouter, otherwise the icon would become its child
+    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+        m_subElementList.append(ElementString::CheckBox);
+    }
 }
 
 QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    Q_UNUSED(contentsSizeFromStyle);
     const auto textSize = subElementRect(QStyle::SE_ItemViewItemText).size();
     const auto decorationSize = subElementRect(QStyle::SE_ItemViewItemDecoration).size();
     const auto checkboxSize = subElementRect(QStyle::SE_ItemViewItemCheckIndicator).size();
-    const auto combinedSize = textSize.expandedTo(decorationSize.expandedTo(checkboxSize));
-    return applyPaddingToSize(combinedSize);
+    const auto combinedSize = QSizeF(std::max({textSize.width(), decorationSize.width(), checkboxSize.width()}),
+                                     std::max({textSize.height(), decorationSize.height(), checkboxSize.height()}));
+    return contentsSizeFromStyle.expandedTo(applyPaddingToSize(combinedSize));
 }
 
 QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
@@ -145,12 +135,15 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
     }
     if (element == QStyle::SE_ItemViewItemDecoration) {
         // DecorationSize can be changed by user, so use it by default
-        rect = centerRect(m_layoutMap[ElementString::Icon].rect, m_viewItemOption->decorationSize.width(), m_viewItemOption->decorationSize.height());
+        rect = m_layoutMap[ElementString::Icon].rect;
     }
     if (element == QStyle::SE_ItemViewItemCheckIndicator) {
         rect = m_layoutMap[ElementString::CheckBox].rect;
     }
-    return rect;
+    // Ensure the item is centered within the itemview for compatibility reasons:
+    // This may stop layouting items to top/bottom instead of center, but readability is more important.
+    rect.moveCenter(QPointF(rect.center().x(), m_styleOption->rect.center().y()));
+    return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect.toRect());
 }
 
 void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const

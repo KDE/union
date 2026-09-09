@@ -129,18 +129,14 @@ itemviewitem
 
 itemviewitem {
     inset: 2px;
-    padding: 5px;
     icon-alignment: content start center 0;
     text-alignment: content start center 1;
     icon-size: var(--small-element-size);
     text-wrap-mode: no-wrap;
     text-elide: right;
 
-    & > checkbox {
+    checkbox {
         layout-alignment: content start center 0;
-        padding: 0px;
-        margin: 0px;
-        inset: 0px;
         width: var(--small-element-size);
         height: var(--small-element-size);
     }
