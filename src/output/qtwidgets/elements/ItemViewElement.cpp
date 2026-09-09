@@ -28,26 +28,19 @@ ItemViewElement::~ItemViewElement()
 void ItemViewElement::update()
 {
     if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::CheckBox});
+        m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
         if (!m_indicatorElementList.isEmpty()) {
             m_indicatorProperties = queryProperties(m_indicatorElementList);
         }
     }
-    setIcon(QIcon());
-    setText(QString());
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDecoration)) {
-        setIcon(m_viewItemOption->icon);
-    }
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDisplay)) {
-        setText(m_viewItemOption->text);
-    }
+    setIcon(m_viewItemOption->icon);
+    setText(m_viewItemOption->text);
     updateSubElementList();
     layout();
 }
 
 void ItemViewElement::layout()
 {
-    // Background and content is separate
     m_backgroundElementList = prepareElements(m_viewItemOption, m_widget, {ElementString::ItemViewItem});
 
     if (!m_backgroundElementList.isEmpty()) {
@@ -78,6 +71,14 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
         }
         checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption->state.testFlag(QStyle::State_Enabled));
         checkbox.rect = m_style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
+        // Use QCommonStyle as a fallback. It's not perfect but some applications just do not give us enough information to work with
+        if (checkbox.rect.isNull()) {
+            checkbox.rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
+            if (!checkbox.rect.isNull()) {
+                checkbox.rect.setSize(indicatorSize().toSize());
+                checkbox.rect.moveCenter(QPointF(checkbox.rect.center().x() + spacing(), m_styleOption->rect.center().y()).toPoint());
+            }
+        }
         painter->save();
         m_style->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
         painter->restore();
@@ -88,10 +89,10 @@ void ItemViewElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::ItemViewItem);
-    if (!m_viewItemOption->icon.isNull()) {
+    if (!m_viewItemOption->icon.isNull() || m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDecoration)) {
         m_subElementList.append(ElementString::Icon);
     }
-    if (!m_viewItemOption->text.isEmpty()) {
+    if (!m_viewItemOption->text.isEmpty() || m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDisplay)) {
         m_subElementList.append(ElementString::Text);
     }
     // As for now Icon and Text are "pseudo" elements, so they are ignored by the hierarchy.
@@ -136,6 +137,7 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
     // Ensure the item is centered within the itemview for compatibility reasons:
     // This may stop layouting items to top/bottom instead of center, but readability is more important.
     rect.moveCenter(QPointF(rect.center().x(), m_styleOption->rect.center().y()));
+
     return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect.toRect());
 }
 
@@ -193,6 +195,13 @@ QVariantMap ItemViewElement::elementAttributes() const
     }
 
     auto viewItemPosition = m_viewItemOption->viewItemPosition;
+
+    // Override situations where we have treeview but only select one item
+    const auto treeItemView = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
+    if (treeItemView && treeItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
+        viewItemPosition = QStyleOptionViewItem::OnlyOne;
+    }
+
     switch (viewItemPosition) {
     case QStyleOptionViewItem::Invalid:
         map[u"position"_s] = QVariant(u"invalid"_s);

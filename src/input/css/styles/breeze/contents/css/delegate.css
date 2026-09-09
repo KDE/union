@@ -136,7 +136,7 @@ itemviewitem {
     text-elide: right;
 
     checkbox {
-        layout-alignment: content start center 0;
+        layout-alignment: content start center -1;
         width: var(--small-element-size);
         height: var(--small-element-size);
     }
