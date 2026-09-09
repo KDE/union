@@ -439,6 +439,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
                                         QStyle::PM_ExclusiveIndicatorWidth,
                                         QStyle::PM_ExclusiveIndicatorHeight,
                                         QStyle::PM_HeaderMargin,
+                                        QStyle::PM_HeaderGripMargin,
                                         QStyle::PM_HeaderMarkSize,
                                         QStyle::PM_TabBarScrollButtonWidth,
                                         QStyle::PM_ToolBarFrameWidth,
@@ -491,7 +492,6 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     // QStyle::PM_DialogButtonsButtonWidth // Deprecated
     // QStyle::PM_DialogButtonsButtonHeight // Deprecated
     // QStyle::PM_MdiSubWindowMinimizedWidth
-    // QStyle::PM_HeaderGripMargin
     // QStyle::PM_DockWidgetTitleMargin
     // QStyle::PM_DockWidgetTitleBarButtonMargin
     // QStyle::PM_SubMenuOverlap

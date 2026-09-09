@@ -30,6 +30,7 @@ namespace detail
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderMargin> : public TypeHelper<HeaderElement, QStyleOptionHeader>{};
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderDefaultSectionSizeHorizontal> : public TypeHelper<HeaderElement, QStyleOptionHeader>{};
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderDefaultSectionSizeVertical> : public TypeHelper<HeaderElement, QStyleOptionHeader>{};
+    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderGripMargin> : public TypeHelper<HeaderElement, QStyleOptionHeader>{};
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderMarkSize> : public TypeHelper<HeaderElement, QStyleOptionHeader>{};
 
 /* clang-format on */

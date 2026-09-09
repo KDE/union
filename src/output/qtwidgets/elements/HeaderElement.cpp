@@ -194,6 +194,7 @@ qreal HeaderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_HeaderMargin:
+    case QStyle::PM_HeaderGripMargin:
         return spacing();
     case QStyle::PM_HeaderDefaultSectionSizeHorizontal:
         return width();
