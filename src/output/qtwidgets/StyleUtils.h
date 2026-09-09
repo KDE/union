@@ -60,6 +60,11 @@ QStringList widgetToElementHierarchy(const QWidget *widget);
 QString textFromOption(const QStyleOption *opt);
 
 /*!
+ * \brief Helper function to get the icon size from any QStyleOption that has it declared
+ */
+QSizeF iconSizeFromOption(const QStyleOption *opt);
+
+/*!
  * \brief Returns flags for text drawing purposes. Applies the text alignment based on the layouting.
  */
 int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties);

@@ -323,6 +323,47 @@ QString textFromOption(const QStyleOption *opt)
     return QString();
 }
 
+QSizeF iconSizeFromOption(const QStyleOption *opt)
+{
+    switch ((QStyleOption::OptionType)opt->type) {
+    case QStyleOption::SO_Button:
+        if (const auto option = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
+            return option->iconSize;
+        }
+        break;
+    case QStyleOption::SO_ToolButton:
+        if (const auto option = qstyleoption_cast<const QStyleOptionToolButton *>(opt)) {
+            return option->iconSize;
+        }
+        break;
+    case QStyleOption::SO_MenuItem:
+        if (const auto option = qstyleoption_cast<const QStyleOptionMenuItem *>(opt)) {
+            return QSizeF(option->maxIconWidth, option->maxIconWidth);
+        }
+        break;
+    case QStyleOption::SO_Tab:
+        if (const auto option = qstyleoption_cast<const QStyleOptionTab *>(opt)) {
+            return option->iconSize;
+        }
+        break;
+    case QStyleOption::SO_ViewItem:
+        if (const auto option = qstyleoption_cast<const QStyleOptionViewItem *>(opt)) {
+            if (!option->icon.isNull()) {
+                return option->decorationSize;
+            }
+        }
+        break;
+    case QStyleOption::SO_ComboBox:
+        if (const auto option = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
+            return option->iconSize;
+        }
+        break;
+    default:
+        break;
+    }
+    return QSizeF(-1, -1);
+}
+
 int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
 {
     int textFlags = Qt::AlignVCenter;
