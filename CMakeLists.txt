@@ -5,6 +5,7 @@ cmake_minimum_required(VERSION 3.27)
 
 set(PROJECT_VERSION "6.7.90") # handled by release scripts
 set(KF6_MIN_VERSION "6.30.0") # handled by release scripts
+set(CSS_PARSER_VERSION "1.1.0")
 
 project(Union VERSION ${PROJECT_VERSION})
 
@@ -92,7 +93,7 @@ if (BUILD_OUTPUT_KIRIGAMI)
 endif()
 
 if (BUILD_INPUT_CSS)
-    find_package(cxx-rust-cssparser REQUIRED)
+    find_package(cxx-rust-cssparser ${CSS_PARSER_VERSION} REQUIRED)
 endif()
 
 if (BUILD_INPUT_PLASMASVG)
