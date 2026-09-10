@@ -56,6 +56,9 @@ menuitem
 
     color: var(--window-text-color);
 
+    icon-alignment: content start center 0;
+    text-alignment: content start center 1;
+
     /*
     highlight is "sticky", that is, when hovering outside of the menu or
     over a disabled item, the last hovered item will be considered highlighted.
@@ -94,7 +97,7 @@ menuitem
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
-        layout-alignment: content start center 0;
+        layout-alignment: content start center -1;
     }
 
     shortcuttext {
