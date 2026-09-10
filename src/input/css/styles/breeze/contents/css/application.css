@@ -188,7 +188,7 @@ frame {
         border: none;
     }
     &[shape="panel"] {
-        background-color: var(--complementary-background-color);
+        background-color: var(--view-background-alternate-color);
     }
     &[shape="vertical-line"],
     &[shape="horizontal-line"] {
