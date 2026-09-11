@@ -181,6 +181,9 @@ framewindow
     padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
+    .inactive & {
+        border-color: var(--window-inactive-border-color);
+    }
 }
 
 frame {

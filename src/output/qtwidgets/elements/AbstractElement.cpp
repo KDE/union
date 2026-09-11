@@ -589,8 +589,20 @@ Union::Element::Ptr AbstractElement::createElement(const QString &name) const
     auto unionElement = Union::Element::create();
     unionElement->setType(name);
     unionElement->setStates(elementStates());
-    unionElement->setHints(elementHints());
     unionElement->setAttributes(elementAttributes());
+    auto hints = elementHints();
+
+    // Window is a bit special and needs to be handled during element hierarchy creation,
+    // as the QStyle does not directly draw the window element.
+    if (m_widget && name == u"ApplicationWindow"_s) {
+        if (auto window = m_widget->window()) {
+            if (!window->isActiveWindow()) {
+                hints.append(u"inactive"_s);
+            }
+        }
+    }
+
+    unionElement->setHints(hints);
     return unionElement;
 }
 
