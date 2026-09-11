@@ -4,6 +4,7 @@
 #include "FrameElement.h"
 #include "SharedNames.h"
 #include "UnionStyle.h"
+#include <QAbstractScrollArea>
 #include <QApplication>
 #include <QDebug>
 #include <QLineEdit>
@@ -11,6 +12,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 FrameElement::FrameElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -27,6 +29,24 @@ void FrameElement::update()
 {
     updateSubElementList();
     layout();
+}
+
+void FrameElement::layout()
+{
+    // Backwards compatibility for borders, as applications used this custom Breeze property to declare
+    // which borders are applied to the widget.
+
+    // Background and content is separate
+    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
+    if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+        m_layoutMap = layoutMap(m_backgroundElementList, m_styleOption, m_subElementList);
+    }
+    if (m_backgroundProperties) {
+        m_isValid = true;
+    } else {
+        m_isValid = false;
+    }
 }
 
 void FrameElement::draw(QPainter *painter, DrawEnums enums) const
@@ -119,7 +139,22 @@ QVariantMap FrameElement::elementAttributes() const
 
 QStringList FrameElement::elementHints() const
 {
-    return frameHints(m_frameOption);
+    auto hints = frameHints(m_frameOption);
+
+    // Backwards compatibility:
+    // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
+    if (auto scrollArea = qobject_cast<const QAbstractScrollArea *>(m_widget)) {
+        if (scrollArea->inherits("KDEPrivate::KPageListView") || scrollArea->inherits("KDEPrivate::KPageTreeView")) {
+            const bool reverseLayout(m_styleOption->direction == Qt::RightToLeft);
+            if (reverseLayout) {
+                hints.append(u"panel-right"_s);
+            } else {
+                hints.append(u"panel-left"_s);
+            }
+        }
+    }
+
+    return hints;
 }
 
 qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
@@ -131,4 +166,9 @@ qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         break;
     }
     return 0;
+}
+
+QRectF FrameElement::subElementRect(QStyle::SubElement element) const
+{
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
