@@ -131,10 +131,6 @@ QStringList ToolBarElement::elementHints() const
         break;
     }
 
-    if (!m_toolBarOption->state.testFlag(QStyle::State_Active)) {
-        hints.append(u"inactive"_s);
-    }
-
     return hints;
 }
 
