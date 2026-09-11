@@ -47,6 +47,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    QStringList elementHints() const override;
     void updateSubElementList() override;
     void drawHandle(QPainter *painter) const;
     void drawSeparator(QPainter *painter) const;

@@ -109,6 +109,35 @@ void ToolBarElement::updateSubElementList()
     m_subElementList.append(ElementString::Frame);
 }
 
+QStringList ToolBarElement::elementHints() const
+{
+    QStringList hints;
+
+    switch (m_toolBarOption->toolBarArea) {
+    case Qt::TopToolBarArea:
+        hints.append(u"header"_s);
+        break;
+    case Qt::BottomToolBarArea:
+        hints.append(u"footer"_s);
+        break;
+    case Qt::LeftToolBarArea:
+        hints.append(u"left"_s);
+        break;
+    case Qt::RightToolBarArea:
+        hints.append(u"right"_s);
+        break;
+    case Qt::ToolBarArea_Mask:
+    case Qt::NoToolBarArea:
+        break;
+    }
+
+    if (!m_toolBarOption->state.testFlag(QStyle::State_Active)) {
+        hints.append(u"inactive"_s);
+    }
+
+    return hints;
+}
+
 qreal ToolBarElement::separatorExtent() const
 {
     if (m_isValid && m_separatorProperties && m_separatorProperties->layout()) {
