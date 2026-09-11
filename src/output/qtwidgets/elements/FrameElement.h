@@ -23,6 +23,7 @@ namespace detail
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameWindow> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_Frame> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DefaultFrameWidth> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_FrameContents> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
 /* clang-format on */
 }
 }
@@ -36,9 +37,11 @@ public:
     ~FrameElement() override;
 
     void update() override;
+    void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawFrame(QPainter *painter) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    QRectF subElementRect(QStyle::SubElement element) const override;
 
 private:
     QVariantMap elementAttributes() const override;

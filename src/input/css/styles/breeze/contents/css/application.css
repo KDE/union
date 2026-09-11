@@ -191,7 +191,23 @@ frame {
         border: none;
     }
     &[shape="panel"] {
+        border: 1px solid var(--window-border-color);
         background-color: var(--view-background-alternate-color);
+        /* Declared by widgets property "_kde_side_panel_view" */
+        &.panel-left {
+            border: none;
+            border-radius: 0px;
+            border-right: 1px solid var(--window-border-color);
+        }
+        &.panel-right {
+            border: none;
+            border-radius: 0px;
+            border-left: 1px solid var(--window-border-color);
+        }
+        .inactive & {
+            background-color: var(--window-inactive-background-color);
+            border-color: var(--window-inactive-border-color);
+        }
     }
     &[shape="vertical-line"],
     &[shape="horizontal-line"] {
