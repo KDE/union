@@ -160,7 +160,7 @@ QStringList widgetToElementHierarchy(const QWidget *widget)
                                                        {"QToolBar", ElementString::ToolBar},
                                                        {"QAbstractScrollArea", ElementString::ScrollArea},
                                                        {"QListView", ElementString::ListView},
-                                                       {"QTreeView", ElementString::TreeViewDelegate},
+                                                       {"QTreeView", ElementString::TreeView},
                                                        {"QSplitter", ElementString::Splitter}};
 
     auto currentWidget = widget;
