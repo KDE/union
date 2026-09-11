@@ -49,6 +49,7 @@ KT.InlineMessage {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     font: Union.Style.properties.text.font
+    textColor: Union.Style.properties.text.color ?? "black"
 
     spacing: Union.Style.properties.layout.spacing
 
@@ -57,6 +58,7 @@ KT.InlineMessage {
         height: Union.Style.properties.icon.height ?? 0
         name: Union.Style.properties.icon.name ?? ""
         source: Union.Style.properties.icon.source ?? ""
+        color: Union.Style.properties.icon.color
     }
 
     background: Union.StyledRectangle { }
