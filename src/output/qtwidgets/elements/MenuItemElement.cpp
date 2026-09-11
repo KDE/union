@@ -135,6 +135,14 @@ void MenuItemElement::layout()
         auto adjustedOpt = *m_menuItemOption;
         adjustedOpt.rect = adjustedRect(m_menuItemOption->rect).toRect();
         m_layoutMap = layoutMap(m_backgroundElementList, &adjustedOpt, m_subElementList);
+
+        // IconRect in MenuItemElements are the maximum size by default.
+        // Instead center the icon rectangle within the maximum size rect.
+        if (hasIcon() && (iconSize().width() > 0 && iconSize().height() > 0)) {
+            auto iconRect = m_layoutMap[ElementString::Icon].rect;
+            m_layoutMap[ElementString::Icon].rect = centerRect(iconRect, iconSize().width(), iconSize().height());
+        }
+
         m_isValid = true;
     }
 }
@@ -204,9 +212,8 @@ void MenuItemElement::drawBackground(QPainter *painter) const
                                   m_backgroundProperties->layout()->height().value_or(1));
             }
         }
-        // Adjust only the width, as we want to keep the height as is
-        const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
-        drawBackgroundRectangle(painter, rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), 0), m_backgroundProperties);
+        // Ensure the rectangle is resized according to the menu margins
+        drawBackgroundRectangle(painter, rect.adjusted(0, 0, -(m_menuHMargin), -(m_menuVMargin)), m_backgroundProperties);
     } else {
         drawBackgroundRectangle(painter, adjustedRect(m_menuItemOption->rect), m_backgroundProperties);
     }
@@ -263,7 +270,7 @@ QRectF MenuItemElement::adjustedRect(QRectF rect) const
 {
     const auto frameWidth = m_style->pixelMetric(QStyle::PM_MenuPanelWidth, m_styleOption, m_widget);
     // Follow what breeze does here to center items. See BreezeStyle::drawMenuItemControl.
-    return rect.adjusted(0, 0, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
+    return rect.adjusted(0, frameWidth, -(m_menuHMargin - frameWidth), -(m_menuVMargin - frameWidth));
 }
 
 Union::Element::States MenuItemElement::elementStates() const
