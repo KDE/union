@@ -126,17 +126,16 @@ itemviewitem
     }
 }
 
-
+/* ItemViewItem delegate is often misused by QtWidgets applications, so
+ * we do not allow layouting inside it. */
 itemviewitem {
     inset: 2px;
-    icon-alignment: content start center 0;
-    text-alignment: content start center 1;
     icon-size: var(--small-element-size);
     text-wrap-mode: no-wrap;
     text-elide: right;
+    padding: var(--small-spacing);
 
     checkbox {
-        layout-alignment: content start center -1;
         width: var(--small-element-size);
         height: var(--small-element-size);
     }
@@ -191,16 +190,9 @@ itemviewitem {
     }
 
     &.inside-list {
-        &[display="text-under-icon"]
+        &[display="text-below-icon"],
+        &[display="text-above-icon"]
         {
-            icon-alignment: content fill stack-center 0;
-            text-alignment: content center stack-fill 1;
-            text-wrap-mode: wrap;
-        }
-        &[display="text-below-icon"]
-        {
-            text-alignment: content center stack-center 0;
-            icon-alignment: content fill stack-fill 1;
             text-wrap-mode: wrap;
         }
     }
