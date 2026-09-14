@@ -39,6 +39,7 @@ void MenuBarItemElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ControlElement) {
     case QStyle::CE_MenuBarItem:
+        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, m_styleOption, painter, m_widget);
         drawBackground(painter);
         drawIcon(painter);
         drawText(painter);
