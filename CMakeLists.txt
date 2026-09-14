@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.27)
 
-set(PROJECT_VERSION "6.7.90") # handled by release scripts
+set(PROJECT_VERSION "6.8.90") # handled by release scripts
 set(KF6_MIN_VERSION "6.30.0") # handled by release scripts
 set(CSS_PARSER_VERSION "1.1.0")
 
