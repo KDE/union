@@ -146,7 +146,12 @@ menuseparator {
     }
 }
 
-menubar, menubaritem
+menubar
+{
+    background-color: var(--header-background-color);
+}
+
+menubaritem
 {
     width: var(--medium-element-size);
     height: var(--medium-element-size);
@@ -156,9 +161,7 @@ menubar, menubaritem
     border-radius: var(--corner-radius);
 
     color: var(--window-text-color);
-}
 
-menubaritem {
     &:hovered,
     &:pressed,
     &:highlighted {
