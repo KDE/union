@@ -40,8 +40,8 @@ public:
 
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     int styleHint(QStyle::StyleHint styleHint) const override;
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    QHash<Union::Identifier, QVariant> elementAttributes() const override;
+    QList<Union::Identifier> elementHints() const override;
 
 private:
     void drawBackground(QPainter *painter) const override;

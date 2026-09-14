@@ -1,0 +1,13 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+/* Foundation Tokens */
+
+@import "border.css";
+@import "color.css";
+@import "font.css";
+@import "size.css";
+@import "spacing.css";
+@import "stroke.css";

@@ -177,9 +177,9 @@ QIcon TitleBarElement::queryIcon(const QString &defaultIconName, const QStringLi
     return m_style->unionIcon(props, defaultIconName);
 }
 
-QStringList TitleBarElement::elementHints() const
+QList<Union::Identifier> TitleBarElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_titleBarOption) {
         return hints;
     }

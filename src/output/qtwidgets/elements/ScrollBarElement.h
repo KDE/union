@@ -51,7 +51,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     void drawBackground(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;
     void updateSubElementList() override;

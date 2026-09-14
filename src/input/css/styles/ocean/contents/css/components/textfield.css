@@ -1,0 +1,45 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root
+{
+    --comp-textfield-width: 132px;
+    --comp-textfield-height: 44px;
+    --comp-textfield-spacing-horizontal: 14px;
+    --comp-textfield-spacing-vertical: 10px;
+    --comp-textfield-radius: 6px;
+
+    --comp-textfield-color-surface: var(--pd-ref-color-white);
+    --comp-textfield-color-outline: var(--pd-sys-color-outline);
+
+    --comp-textarea-height: 320px;
+}
+
+textfield,
+textarea,
+searchfield
+{
+    width: var(--comp-textfield-width);
+    height: var(--comp-textfield-height);
+    padding: var(--comp-textfield-spacing-horizontal) var(--comp-textfield-spacing-vertical);
+    border-radius: var(--comp-textfield-radius);
+
+    background-color: var(--comp-textfield-color-surface);
+    border: 1px solid var(--comp-textfield-color-outline);
+
+    &:hovered {
+        border-color: var(--pd-ref-color-primary70);
+    }
+
+    &:visual-focus
+    {
+        border-color: var(--pd-ref-color-primary70);
+    }
+}
+
+textarea
+{
+    height: var(--comp-textfield-height);
+}

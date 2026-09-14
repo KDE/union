@@ -1,0 +1,71 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-ref-font-decoration-underline: underline;
+    --pd-ref-font-family: Inter;
+    --pd-ref-font-size-display-2xl: 72px;
+    --pd-ref-font-size-display-lg: 48px;
+    --pd-ref-font-size-display-md: 36px;
+    --pd-ref-font-size-display-sm: 30px;
+    --pd-ref-font-size-display-xl: 60px;
+    --pd-ref-font-size-display-xs: 24px;
+    --pd-ref-font-size-text-lg: 18px;
+    --pd-ref-font-size-text-md: 16px;
+    --pd-ref-font-size-text-sm: 14px;
+    --pd-ref-font-size-text-xl: 20px;
+    --pd-ref-font-size-text-xs: 12px;
+    --pd-ref-font-tracking-display: -2;
+    --pd-ref-font-weight-bold: 700;
+    --pd-ref-font-weight-medium: 500;
+    --pd-ref-font-weight-regular: 400;
+    --pd-ref-font-weight-semibold: 600;
+
+    --pd-ref-font-display-2xl-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-2xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-2xl-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-2xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-2xl-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-2xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-2xl-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-2xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-lg-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-lg) var(--pd-ref-font-family);
+    --pd-ref-font-display-lg-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-lg) var(--pd-ref-font-family);
+    --pd-ref-font-display-lg-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-lg) var(--pd-ref-font-family);
+    --pd-ref-font-display-lg-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-lg) var(--pd-ref-font-family);
+    --pd-ref-font-display-md-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-md) var(--pd-ref-font-family);
+    --pd-ref-font-display-md-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-md) var(--pd-ref-font-family);
+    --pd-ref-font-display-md-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-md) var(--pd-ref-font-family);
+    --pd-ref-font-display-md-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-md) var(--pd-ref-font-family);
+    --pd-ref-font-display-sm-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-sm) var(--pd-ref-font-family);
+    --pd-ref-font-display-sm-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-sm) var(--pd-ref-font-family);
+    --pd-ref-font-display-sm-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-sm) var(--pd-ref-font-family);
+    --pd-ref-font-display-sm-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-sm) var(--pd-ref-font-family);
+    --pd-ref-font-display-xl-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-xl-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-xl-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-xl-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-xl) var(--pd-ref-font-family);
+    --pd-ref-font-display-xs-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-display-xs) var(--pd-ref-font-family);
+    --pd-ref-font-display-xs-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-display-xs) var(--pd-ref-font-family);
+    --pd-ref-font-display-xs-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-display-xs) var(--pd-ref-font-family);
+    --pd-ref-font-display-xs-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-display-xs) var(--pd-ref-font-family);
+
+    --pd-ref-font-text-lg-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-text-lg) var(--pd-ref-font-family);
+    --pd-ref-font-text-lg-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-text-lg) var(--pd-ref-font-family);
+    --pd-ref-font-text-lg-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-lg) var(--pd-ref-font-family);
+    --pd-ref-font-text-lg-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-text-lg) var(--pd-ref-font-family);
+    --pd-ref-font-text-md-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-text-md) var(--pd-ref-font-family);
+    --pd-ref-font-text-md-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-text-md) var(--pd-ref-font-family);
+    --pd-ref-font-text-md-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-md) var(--pd-ref-font-family);
+    --pd-ref-font-text-md-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-text-md) var(--pd-ref-font-family);
+    --pd-ref-font-text-sm-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-text-sm) var(--pd-ref-font-family);
+    --pd-ref-font-text-sm-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-text-sm) var(--pd-ref-font-family);
+    --pd-ref-font-text-sm-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-sm) var(--pd-ref-font-family);
+    --pd-ref-font-text-sm-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-text-sm) var(--pd-ref-font-family);
+    --pd-ref-font-text-xl-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-text-xl) var(--pd-ref-font-family);
+    --pd-ref-font-text-xl-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-text-xl) var(--pd-ref-font-family);
+    --pd-ref-font-text-xl-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-xl) var(--pd-ref-font-family);
+    --pd-ref-font-text-xl-semibold: var(--pd-ref-font-weight-semibold) var(--pd-ref-font-size-text-xl) var(--pd-ref-font-family);
+    --pd-ref-font-text-xs-bold: var(--pd-ref-font-weight-bold) var(--pd-ref-font-size-text-xs) var(--pd-ref-font-family);
+    --pd-ref-font-text-xs-medium: var(--pd-ref-font-weight-medium) var(--pd-ref-font-size-text-xs) var(--pd-ref-font-family);
+    --pd-ref-font-text-xs-regular: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-xs) var(--pd-ref-font-family);
+    --pd-ref-font-text-xs-semibold: var(--pd-ref-font-weight-regular) var(--pd-ref-font-size-text-xs) var(--pd-ref-font-family);
+}

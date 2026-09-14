@@ -66,12 +66,13 @@ QStringList TabBarElement::elementHints() const
     return hints;
 }
 
-QVariantMap TabBarElement::elementAttributes() const
+QHash<Union::Identifier, QVariant> TabBarElement::elementAttributes() const
 {
-    QVariantMap map;
+    QHash<Union::Identifier, QVariant> map;
     if (!m_tabBarOption) {
         return map;
     }
+
     const bool top = m_tabBarOption->shape == QTabBar::RoundedNorth || m_tabBarOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabBarOption->shape == QTabBar::RoundedSouth || m_tabBarOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabBarOption->shape == QTabBar::RoundedWest || m_tabBarOption->shape == QTabBar::TriangularWest;

@@ -59,15 +59,17 @@ T.DoubleSpinBox {
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         implicitWidth: Math.ceil(priv.metrics.width)
         implicitHeight: priv.metrics.height
         clip: true
         text: control.displayText
-        font: control.font
-        color: Union.Style.properties.text.color
+        font: Union.Style.properties.text.font.qFont
+        color: Union.Style.properties.display.color
 
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
+        verticalAlignment: Qt.AlignVCenter
 
         readOnly: !control.editable
         validator: control.validator
@@ -76,43 +78,21 @@ T.DoubleSpinBox {
         hoverEnabled: false
     }
 
-    up.indicator: Union.StyledRectangle {
-        id: upIndicator
-
-        Union.Element.type: "Indicator"
+    up.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "IndicatorIncrease"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
             enabled: upIndicator.enabled
         }
-        Union.Element.hints: Union.ElementHint { name: "increase" }
-
-        Union.Icon {
-            anchors.centerIn: parent
-            width: Union.Style.properties.icon.width
-            height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
-        }
     }
 
-    down.indicator: Union.StyledRectangle {
-        id: downIndicator
-
-        Union.Element.type: "Indicator"
+    down.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "IndicatorDecrease"
         Union.Element.states {
-            hovered: control.down.hovered
-            pressed: control.down.pressed
-            enabled: downIndicator.enabled
-        }
-        Union.Element.hints: Union.ElementHint { name: "decrease" }
-
-        Union.Icon {
-            anchors.centerIn: parent
-            width: Union.Style.properties.icon.width
-            height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
+            hovered: control.up.hovered
+            pressed: control.up.pressed
+            enabled: upIndicator.enabled
         }
     }
 
@@ -138,8 +118,14 @@ T.DoubleSpinBox {
             Union.Element.type: "SpinBox"
 
             Item {
-                id: unconstrainedIndicator
-                Union.Element.type: "Indicator"
+                id: unconstrainedIncreaseIndicator
+                Union.Element.subElement: "IncreaseIndicator"
+                width: Union.Style.properties.layout.width
+            }
+
+            Item {
+                id: unconstrainedDecreaseIndicator
+                Union.Element.subElement: "DecreaseIndicator"
                 width: Union.Style.properties.layout.width
             }
         }
@@ -158,7 +144,7 @@ T.DoubleSpinBox {
                 constrained = control.Layout.maximumWidth
             }
 
-            return (metrics.width + unconstrainedIndicator.width * 2 + control.spacing * 2) > constrained
+            return (metrics.width + unconstrainedIncreaseIndicator.width + unconstrainedDecreaseIndicator + control.spacing * 2) > constrained
         }
     }
 }

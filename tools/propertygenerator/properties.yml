@@ -297,6 +297,7 @@ children:
 
                 css:
                     name: font
+                    doc: These properties all relate to the font used for the text of an element.
 
                 children:
                     family:

@@ -10,6 +10,7 @@
 #include <QVariant>
 
 #include "Element.h"
+#include "Identifier.h"
 
 #include "union_export.h"
 
@@ -94,14 +95,14 @@ template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = fal
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::AnyElement, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::ChildCombinator, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCombinator, Empty> = true;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, Identifier>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeSubstringMatch, T> = std::is_same_v<T, std::pair<QString, QString>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<Identifier, QVariant>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeSubstringMatch, T> = std::is_same_v<T, std::pair<Identifier, QString>>;
 /* clang-format on */
 
 // Partial type-erasure implementation for Selector.

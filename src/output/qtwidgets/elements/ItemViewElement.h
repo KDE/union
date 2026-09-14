@@ -47,8 +47,8 @@ public:
 
 private:
     void drawBackground(QPainter *painter) const override;
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    QHash<Union::Identifier, QVariant> elementAttributes() const override;
+    QList<Union::Identifier> elementHints() const override;
     void drawIndicator(QPainter *painter) const override;
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;

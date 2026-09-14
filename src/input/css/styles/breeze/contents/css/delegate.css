@@ -43,17 +43,25 @@ itemviewitem
 
     border-radius: var(--corner-radius);
 
-    icon-size: var(--icon-size-smallmedium);
-
     layout-alignment: content fill fill 0;
-    icon-alignment: content start center 0;
-    text-alignment: content fill center 0;
-    text-wrap-mode: wrap;
 
     color: var(--window-text-color);
 
     & > * {
         layout-alignment: content fill fill 0;
+    }
+
+    &::part(icon)
+    {
+        width: var(--icon-size-smallmedium);
+        height: var(--icon-size-smallmedium);
+        layout-alignment: content start center 0;
+    }
+
+    &::part(text)
+    {
+        layout-alignment: content fill center 0;
+        text-wrap-mode: wrap;
     }
 
     &.alternating-colors
@@ -120,12 +128,24 @@ itemviewitem
 
     &[display="text-under-icon"]
     {
-        icon-alignment: content center stack-center 0;
-        text-alignment: content center stack-center 1;
+/*         icon-alignment: content center stack-center 0; */
+/*         text-alignment: content center stack-center 1; */
 
-        icon-size: var(--icon-size-medium);
+/*         icon-size: var(--icon-size-medium); */
         width: var(--icon-size-large);
         height: var(--icon-size-large);
+
+        &::part(icon)
+        {
+            width: var(--icon-size-medium);
+            height: var(--icon-size-medium);
+            layout-alignment: content center stack-center 0;
+        }
+
+        &::part(text)
+        {
+            layout-alignment: content center stack-center 1;
+        }
     }
 
     & > indicator

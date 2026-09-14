@@ -9,6 +9,8 @@
 #include <QEvent>
 #include <QObject>
 
+#include "Identifier.h"
+
 #include "union_export.h"
 
 /*!
@@ -117,9 +119,9 @@ public:
      * This can be any arbitrary string that can be used to describe an object
      * in a user interface, such as "Button".
      */
-    Q_PROPERTY(QString type READ type WRITE setType NOTIFY typeChanged)
-    QString type() const;
-    void setType(const QString &type);
+    Q_PROPERTY(Identifier type READ type WRITE setType NOTIFY typeChanged)
+    Identifier type() const;
+    void setType(const Identifier &type);
     Q_SIGNAL void typeChanged();
 
     /*!
@@ -130,9 +132,9 @@ public:
      * This can be used to name different parts of an element that need their
      * own styling rules applied, such as the text on a button.
      */
-    Q_PROPERTY(QString subElement READ subElement WRITE setSubElement NOTIFY subElementChanged)
-    QString subElement() const;
-    void setSubElement(const QString &subElement);
+    Q_PROPERTY(Identifier subElement READ subElement WRITE setSubElement NOTIFY subElementChanged)
+    Identifier subElement() const;
+    void setSubElement(const Identifier &subElement);
     Q_SIGNAL void subElementChanged();
 
     /*!
@@ -144,9 +146,9 @@ public:
      * an application. These IDs should be unique to ensure style rules intended
      * to style a specific element aren't suddenly applied to other elements.
      */
-    Q_PROPERTY(QString id READ id WRITE setId NOTIFY idChanged)
-    QString id() const;
-    void setId(const QString &newId);
+    Q_PROPERTY(Identifier id READ id WRITE setId NOTIFY idChanged)
+    Identifier id() const;
+    void setId(const Identifier &newId);
     Q_SIGNAL void idChanged();
 
     /*!
@@ -174,9 +176,9 @@ public:
      * usually should not be used for state information, the \l states property
      * should cover most of those.
      */
-    Q_PROPERTY(QStringList hints READ hints WRITE setHints NOTIFY hintsChanged)
-    QStringList hints() const;
-    void setHints(const QStringList &newHints);
+    Q_PROPERTY(QList<Identifier> hints READ hints WRITE setHints NOTIFY hintsChanged)
+    QList<Identifier> hints() const;
+    void setHints(const QList<Identifier> &newHints);
     Q_SIGNAL void hintsChanged();
 
     /*!
@@ -186,14 +188,14 @@ public:
      * yet added. It will remove the hint if \p present is \c{false} and the
      * hint is present.
      */
-    void setHint(const QString &name, bool present = true);
+    void setHint(const Identifier &name, bool present = true);
 
     /*!
      * Check if a hint is set.
      *
      * Returns \c{true} if \p name is present, otherwise returns \c{false}.
      */
-    bool hasHint(const QString &name);
+    bool hasHint(const Identifier &name);
 
     /*!
      * \property Union::Element::attributes
@@ -203,15 +205,15 @@ public:
      * This can contain an arbitrary amount of key-value pairs that can be
      * useful for rule matching.
      */
-    Q_PROPERTY(QVariantMap attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
-    QVariantMap attributes() const;
-    void setAttributes(const QVariantMap &attributes);
+    Q_PROPERTY(QHash<Identifier, QVariant> attributes READ attributes WRITE setAttributes NOTIFY attributesChanged)
+    QHash<Identifier, QVariant> attributes() const;
+    void setAttributes(const QHash<Identifier, QVariant> &attributes);
     Q_SIGNAL void attributesChanged();
 
     /*!
      * Set a single attribute value.
      */
-    void setAttribute(const QString &name, const QVariant &value);
+    void setAttribute(const Identifier &name, const QVariant &value);
 
     /*!
      * Check if a certain attribute is set on this element.
@@ -220,7 +222,7 @@ public:
      *
      * Returns true if the attribute is set, false if not.
      */
-    bool hasAttribute(const QString &name) const;
+    bool hasAttribute(const Identifier &name) const;
 
     /*!
      * Get the value of a certain attribute.
@@ -230,7 +232,7 @@ public:
      * Returns the value of the attribute if it is set, or an empty QVariant if
      * not.
      */
-    QVariant attribute(const QString &name) const;
+    QVariant attribute(const Identifier &name) const;
 
     /*!
      * Emitted whenever any of the properties of the element have changed.

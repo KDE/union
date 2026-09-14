@@ -1,0 +1,104 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-comp-button-container-width: 40px;
+    --pd-comp-button-container-height: 40px;
+    --pd-comp-button-container-spacing-horizontal: 16px;
+    --pd-comp-button-container-spacing-vertical: 10px;
+    --pd-comp-button-container-spacing-middle: 8px;
+    --pd-comp-button-container-color: var(--pd-ref-color-white);
+    --pd-comp-button-container-border: 1px solid var(--pd-ref-color-neutral95);
+    --pd-comp-button-container-radius: var(--pd-sys-border-radius);
+    --pd-comp-button-container-shadow: 0px 2px 6px 0px rgba(0.0, 0.0, 0.0, 0.094);
+
+    --pd-comp-button-hovered-container-color: var(--pd-ref-color-neutral95);
+    --pd-comp-button-hovered-outline-color: var(--pd-ref-color-neutral95);
+
+    --pd-comp-button-focused-outline: 2px solid var(--pd-ref-color-neutral95);
+
+    --pd-comp-button-label-color: var(--pd-ref-color-neutral30);
+    --pd-comp-button-label-font: var(--pd-ref-font-text-sm-semibold);
+
+    --pd-comp-button-disabled-label-color: var(--pd-ref-color-neutral70);
+
+    --pd-comp-button-icon-size: var(--pd-sys-spacing06);
+}
+
+button,
+toolbutton.raised,
+roundbutton,
+delaybutton,
+combobox
+{
+    width: var(--pd-comp-button-container-width);
+    height: var(--pd-comp-button-container-height);
+    padding: var(--pd-comp-button-container-spacing-horizontal) var(--pd-comp-button-container-spacing-vertical);
+    spacing: var(--pd-comp-button-container-spacing-middle);
+
+    background-color: var(--pd-comp-button-container-color);
+    border: var(--pd-comp-button-container-border);
+    border-radius: var(--pd-comp-button-container-radius);
+    box-shadow: var(--pd-comp-button-container-shadow);
+
+    color: var(--pd-comp-button-label-color);
+/*     font: var(--pd-comp-button-label-font); */
+
+    icon-size: var(--pd-comp-button-icon-size);
+
+    layout-alignment: content fill fill 0;
+    text-alignment-horizontal: center;
+    icon-alignment-horizontal: center;
+
+    &:hovered {
+        background-color: var(--pd-comp-button-hovered-container-color);
+        border-color: var(--pd-comp-button-hovered-outline-color);
+        color: var(--pd-ref-color-neutral20);
+    }
+
+    &:visual-focus {
+        outline: var(--pd-comp-button-focused-outline);
+    }
+
+    &:pressed {
+        background-color: var(--pd-comp-button-hovered-container-color);
+        border-color: var(--pd-comp-button-hovered-outline-color);
+        box-shadow: none;
+    }
+
+    &:disabled {
+        color: var(--pd-comp-button-disabled-label-color);
+        background-color: var(--pd-comp-button-container-color);
+    }
+}
+
+button,
+toolbutton.raised,
+roundbutton,
+delaybutton
+{
+    &:highlighted {
+        color: var(--pd-sys-color-onprimary);
+        background-color: var(--pd-ref-color-primary50);
+
+        &:hovered {
+            background-color: var(--pd-ref-color-primary30);
+        }
+    }
+}
+
+combobox
+{
+    text-alignment: content start center 1;
+
+    & > indicator {
+        layout-alignment: content end center 0;
+        width: var(--pd-comp-button-icon-size);
+        height: var(--pd-comp-button-icon-size);
+        icon-name: "arrow-down-symbolic";
+/*         icon-color: var(--button-active-text-color); */
+        visibility: visible;
+    }
+}

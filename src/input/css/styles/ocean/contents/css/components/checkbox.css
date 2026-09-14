@@ -1,0 +1,68 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root
+{
+    --comp-checkbox-spacing: 12px;
+
+    --comp-checkbox-indicator-width: 20px;
+    --comp-checkbox-indicator-height: 20px;
+    --comp-checkbox-indicator-radius: 4px;
+    --comp-checkbox-indicator-color-surface: var(--pd-ref-color-white);
+    --comp-checkbox-indicator-color-outline: var(--pd-ref-color-neutral70);
+    --comp-checkbox-indicator-border: 1px solid var(--comp-checkbox-indicator-color-outline);
+}
+
+checkbox,
+radiobutton,
+checkdelegate,
+radiodelegate
+{
+    icon-size: 16px;
+    spacing: var(--comp-checkbox-spacing);
+
+    & > indicator {
+        width: var(--comp-checkbox-indicator-width);
+        height: var(--comp-checkbox-indicator-height);
+        layout-alignment: content start center -1;
+
+        border: var(--comp-checkbox-indicator-border);
+        border-radius: var(--comp-checkbox-indicator-radius);
+
+        background-color: var(--comp-checkbox-indicator-color-surface);
+    }
+
+    &:hovered > indicator {
+        /*border-color: var(--pd-ref-color-primary70);*/
+    }
+
+    &:checked > indicator {
+        background-color: var(--pd-ref-color-primary98);
+        border-color: var(--pd-ref-color-primary50);
+    }
+}
+
+radiobutton,
+radiodelegate
+{
+    & > indicator
+    {
+        border-radius: var(--comp-checkbox-indicator-width);
+    }
+
+    &:checked > indicator
+    {
+        background-image: url("../../images/radio.svg") mask var(--pd-ref-color-primary50);
+    }
+}
+
+checkbox,
+checkdelegate
+{
+    &:checked > indicator
+    {
+        background-image: url("../../images/checkmark.svg") mask var(--pd-ref-color-primary50);
+    }
+}

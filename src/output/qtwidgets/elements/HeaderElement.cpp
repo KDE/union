@@ -180,9 +180,9 @@ QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     return applyPaddingToSize(size);
 }
 
-QStringList HeaderElement::elementHints() const
+QList<Union::Identifier> HeaderElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     switch (m_headerOption->sortIndicator) {
     case QStyleOptionHeader::None:
         return hints;

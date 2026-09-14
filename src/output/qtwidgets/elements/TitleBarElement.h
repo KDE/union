@@ -46,7 +46,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     const QStyleOptionTitleBar *m_titleBarOption = nullptr;
     QIcon queryIcon(const QString &defaultIconName, const QStringList &targetHierarchy) const;

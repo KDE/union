@@ -44,7 +44,7 @@ public:
 
 private:
     void updateSubElementList() override;
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     QSizeF iconSize() const override;
     QMarginsF iconPadding() const;
     const QStyleOptionFrame *m_frameOption = nullptr;

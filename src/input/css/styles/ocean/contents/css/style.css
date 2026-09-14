@@ -1,0 +1,13 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+/*
+ * Base style definition. Don't put any rules here, place them in a separate
+ * file and use @import to import it.
+ */
+
+@import "foundations/foundations.css";
+@import "system/system.css";
+@import "components/components.css";

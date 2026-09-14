@@ -1,0 +1,32 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-sys-color-background: var(--pd-ref-color-neutral98);
+    --pd-sys-color-error: var(--pd-ref-color-error50);
+    --pd-sys-color-errorcontainer: var(--pd-ref-color-error90);
+    --pd-sys-color-inverseonsurface: var(--pd-ref-color-neutral95);
+    --pd-sys-color-inverseprimary: var(--pd-ref-color-primary80);
+    --pd-sys-color-inversesurface: var(--pd-ref-color-neutral20);
+    --pd-sys-color-onbackground: var(--pd-ref-color-neutral00);
+    --pd-sys-color-onerror: var(--pd-ref-color-error100);
+    --pd-sys-color-onerrorcontainer: var(--pd-ref-color-error10);
+    --pd-sys-color-onprimary: var(--pd-ref-color-primary100);
+    --pd-sys-color-onprimarycontainer: var(--pd-ref-color-primary10);
+    --pd-sys-color-onsurface: var(--pd-ref-color-neutral10);
+    --pd-sys-color-onsurfacevariant: var(--pd-ref-color-neutralvariant30);
+    --pd-sys-color-outline: var(--pd-ref-color-neutralvariant50);
+    --pd-sys-color-outlinevariant: #C5C6D0;
+    --pd-sys-color-primary: var(--pd-ref-color-primary40);
+    --pd-sys-color-primarycontainer: var(--pd-ref-color-primary90);
+    --pd-sys-color-scrim: var(--pd-ref-color-neutral00);
+    --pd-sys-color-shadow: var(--pd-ref-color-neutral00);
+    --pd-sys-color-surface: var(--pd-ref-color-neutral98);
+    --pd-sys-color-surfacecontainerhighest: var(--pd-ref-color-neutral90);
+    --pd-sys-color-surfacecontainerlow: var(--pd-ref-color-neutral96);
+    --pd-sys-color-surfacecontainerlowest: #FFF;
+    --pd-sys-color-surfacecontainer: var(--pd-ref-color-neutral94);
+    --pd-sys-color-surfacecontainerhigh: var(--pd-ref-color-neutral92);
+}

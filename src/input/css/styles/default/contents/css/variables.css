@@ -1,0 +1,18 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --size-small: 16px;
+    --size-medium: 32px;
+    --spacing: 4px;
+
+    --color-foreground: black;
+    --color-background: white;
+    --color-hover: #eee;
+    --color-disabled: #aaa;
+
+    --border-normal: 1px solid var(--color-foreground);
+    --border-focus: 2px solid var(--color-foreground);
+}

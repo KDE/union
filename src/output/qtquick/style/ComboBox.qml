@@ -8,6 +8,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.ComboBox {
     id: control
 
@@ -71,35 +73,25 @@ T.ComboBox {
         LayoutMirroring.enabled: control.mirrored
     }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
-
-        visible: Union.Style.properties.display.visible ?? false
-        opacity: Union.Style.properties.display.opacity ?? 1.0
-    }
+    indicator: P.DefaultIndicator { control: control }
 
     contentItem: T.TextField {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+        Union.Element.subElement: "Text"
 
         implicitWidth: Math.max(contentWidth, 1)
         implicitHeight: Math.max(contentHeight, metrics.height)
         clip: true
 
-        color: Union.Style.properties.text.color ?? control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
         autoScroll: control.editable
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
-        font: control.font
+        font: Union.Style.properties.text.font.qFont
 
-        horizontalAlignment: Qt.AlignLeft
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
 
         selectByMouse: control.selectTextByMouse
         selectionColor: control.palette.highlight
@@ -119,7 +111,7 @@ T.ComboBox {
     Union.Icon {
         id: icon
 
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        Union.Element.subElement: "Icon"
 
         implicitWidth: Union.Style.properties.icon.width ?? 0
         implicitHeight: Union.Style.properties.icon.height ?? 0

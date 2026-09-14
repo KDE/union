@@ -1,0 +1,17 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-sys-icon-size08: 8px;
+    --pd-sys-icon-size16: 16px;
+    --pd-sys-icon-size22: 22px;
+    --pd-sys-icon-size24: 24px;
+    --pd-sys-icon-size32: 32px;
+    --pd-sys-icon-size48: 48px;
+    --pd-sys-icon-size64: 64px;
+    --pd-sys-icon-size96: 96px;
+    --pd-sys-icon-size128: 128px;
+    --pd-sys-icon-size256: 256px;
+}

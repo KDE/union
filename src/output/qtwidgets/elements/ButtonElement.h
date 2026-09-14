@@ -54,7 +54,7 @@ public:
 
 private:
     void updateSubElementList() override;
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     Union::Element::States elementStates() const override;
 
     const QStyleOptionButton *m_buttonOption = nullptr;

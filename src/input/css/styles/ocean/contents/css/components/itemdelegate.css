@@ -1,0 +1,60 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root
+{
+    --pd-comp-delegate-container-width: 100px;
+    --pd-comp-delegate-container-height: 40px;
+    --pd-comp-delegate-icon-size: 24px;
+    --pd-comp-delegate-radius: 6px;
+    --pd-comp-delegate-spacing: 4px;
+    --pd-comp-delegate-padding: 16px;
+    --pd-comp-delegate-margin: 8px;
+
+    --pd-comp-delegate-color-surface: var(--pd-ref-color-white);
+    --pd-comp-delegate-color-onsurface: var(--pd-ref-color-neutral30);
+    --pd-comp-delegate-color-outline: var(--pd-ref-color-neutral80);
+}
+
+itemdelegate,
+checkdelegate,
+radiodelegate,
+switchdelegate
+{
+    width: var(--pd-comp-delegate-container-width);
+    height: var(--pd-comp-delegate-container-height);
+    icon-size: var(--pd-comp-delegate-icon-size);
+    spacing: var(--pd-comp-delegate-spacing);
+    padding: 24px;
+    padding-bottom: var(--pd-comp-delegate-padding);
+    inset: var(--pd-comp-delegate-margin);
+    inset-bottom: 0px;
+    border-radius: var(--pd-comp-delegate-radius);
+
+    background: var(--pd-comp-delegate-color-surface);
+    color: var(--pd-comp-delegate-color-onsurface);
+    border: 1px solid var(--pd-comp-delegate-color-outline);
+
+    layout-alignment: content fill fill 0;
+    icon-alignment: content start center 0;
+    text-alignment: content fill center 0;
+    text-wrap-mode: wrap;
+
+    &:hovered {
+        border-color: var(--pd-ref-color-neutral70);
+        background-color: var(--pd-ref-color-neutral98);
+    }
+
+    &:pressed {
+        border-color: var(--pd-ref-color-primary50);
+        background-color: var(--pd-ref-color-neutral95);
+    }
+
+    &:highlighted {
+        border-color: var(--pd-ref-color-primary50);
+        color: var(--pd-ref-color-primary50);
+        background-color: var(--pd-ref-color-primary95);
+    }
+}

@@ -1,0 +1,78 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-comp-toolbutton-container-width: 36px;
+    --pd-comp-toolbutton-container-height: 36px;
+    --pd-comp-toolbutton-container-spacing-horizontal: 16px;
+    --pd-comp-toolbutton-container-spacing-vertical: 10px;
+    --pd-comp-toolbutton-container-spacing-middle: 8px;
+    --pd-comp-toolbutton-container-radius: var(--pd-sys-border-radius);
+    --pd-comp-toolbutton-container-shadow: 0px 2px 6px 0px rgba(0.0, 0.0, 0.0, 0.094);
+
+/*    --pd-comp-toolbutton-hovered-container-color: var(--pd-ref-color-primary30);
+    --pd-comp-toolbutton-hovered-outline-color: var(--pd-ref-color-primary30);
+    --pd-comp-toolbutton-hovered-color: var(--pd-sys-color-onprimary);*/
+    --pd-comp-toolbutton-focused-outline: 4px solid var(--pd-ref-color-neutral70);
+
+/*     --pd-comp-toolbutton-label-color: var(--pd-sys-color-onsurface); */
+/*     --pd-comp-toolbutton-label-font: var(--pd-ref-font-text-sm-semibold); */
+    --pd-comp-toolbutton-color-surface: transparent;
+    --pd-comp-toolbutton-color-onsurface: var(--pd-ref-color-neutral30);
+
+    --pd-comp-toolbutton-disabled-label-color: var(--pd-ref-color-neutral70);
+
+    --pd-comp-toolbutton-icon-size: 24px;
+}
+
+toolbutton,
+button.flat,
+combobox.flat
+{
+    width: var(--pd-comp-toolbutton-container-width);
+    height: var(--pd-comp-toolbutton-container-height);
+    padding: var(--pd-comp-toolbutton-container-spacing-horizontal) var(--pd-comp-toolbutton-container-spacing-vertical);
+    spacing: var(--pd-comp-toolbutton-container-spacing-middle);
+
+    border-radius: var(--pd-comp-toolbutton-container-radius);
+
+    background-color: var(--pd-comp-toolbutton-color-surface);
+    color: var(--pd-comp-toolbutton-color-onsurface);
+    box-shadow: none;
+
+    /*     font: var(--pd-comp-toolbutton-label-font); */
+
+    icon-size: var(--pd-comp-toolbutton-icon-size);
+
+    &:hovered {
+        background-color: var(--pd-ref-color-neutral95);
+        /*border-color: var(--pd-comp-toolbutton-hovered-outline-color);*/
+        color: var(--pd-ref-color-neutral20);
+        box-shadow: var(--pd-comp-toolbutton-container-shadow);
+    }
+
+    &:visual-focus {
+        outline: var(--pd-comp-toolbutton-focused-outline);
+    }
+
+    &:pressed {
+        box-shadow: none;
+    }
+
+    &:disabled {
+        color: var(--pd-comp-toolbutton-disabled-label-color);
+/*         background-color: var(--pd-comp-toolbutton-container-color); */
+    }
+
+    &:highlighted {
+        color: var(--pd-sys-color-onprimary);
+        background-color: var(--pd-ref-color-primary40);
+
+        &:hovered {
+            background-color: var(--pd-ref-color-primary30);
+        }
+    }
+}
+

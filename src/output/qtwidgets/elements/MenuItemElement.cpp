@@ -244,9 +244,9 @@ void MenuItemElement::drawSubMenuArrow(QPainter *painter) const
     }
 }
 
-QStringList MenuItemElement::elementHints() const
+QList<Union::Identifier> MenuItemElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_menuItemOption) {
         return hints;
     }

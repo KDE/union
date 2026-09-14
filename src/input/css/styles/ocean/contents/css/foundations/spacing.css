@@ -1,0 +1,25 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-ref-spacing04: 4px;
+    --pd-ref-spacing08: 8px;
+    --pd-ref-spacing12: 12px;
+    --pd-ref-spacing16: 16px;
+    --pd-ref-spacing20: 20px;
+    --pd-ref-spacing24: 24px;
+    --pd-ref-spacing32: 32px;
+    --pd-ref-spacing36: 36px;
+    --pd-ref-spacing40: 40px;
+    --pd-ref-spacing48: 48;
+    --pd-ref-spacing64: 64px;
+    --pd-ref-spacing80: 80px;
+    --pd-ref-spacing96: 96px;
+    --pd-ref-spacing128: 128px;
+    --pd-ref-spacing160: 160px;
+    --pd-ref-spacing192: 192px;
+    --pd-ref-spacing224: 224px;
+    --pd-ref-spacing256: 256px;
+}

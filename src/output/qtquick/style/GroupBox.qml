@@ -37,18 +37,17 @@ T.GroupBox {
     spacing: Union.Style.properties.layout.spacing
 
     label: Union.StyledRectangle {
-        Union.Element.type: "Header"
+        Union.Element.subElement: "Header"
 
         Text {
             anchors.fill: parent
 
             text: control.title
             font: Union.Style.properties.text.font.qFont ?? Application.font
-            color: Union.Style.properties.text.color ?? control.palette.text
-            elide: Text.ElideRight
+            color: Union.Style.properties.display.color ?? control.palette.text
+            elide: Union.Style.properties.text.elide
 
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            horizontalAlignment: Union.Style.properties.text.alignment
         }
     }
 

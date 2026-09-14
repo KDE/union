@@ -111,9 +111,9 @@ void RadioButtonElement::drawIndicator(QPainter *painter) const
     drawBackgroundRectangle(painter, subElementRect(QStyle::SE_RadioButtonIndicator), m_indicatorProperties);
 }
 
-QStringList RadioButtonElement::elementHints() const
+QList<Union::Identifier> RadioButtonElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (m_buttonOption && !m_buttonOption->icon.isNull()) {
         hints.append(u"with-icon"_s);
     }

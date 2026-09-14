@@ -1,0 +1,11 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-sys-dimension-windowsm: var(--pd-ref-size-window64);
+    --pd-sys-dimension-windowmd: var(--pd-ref-size-window768);
+    --pd-sys-dimension-windowlg: var(--pd-ref-size-window1024);
+    --pd-sys-dimension-windowxl: var(--pd-ref-size-window1280);
+}

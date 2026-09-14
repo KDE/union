@@ -220,9 +220,9 @@ qreal ScrollBarElement::minimumSize() const
     return extent() * 2;
 }
 
-QStringList ScrollBarElement::elementHints() const
+QList<Union::Identifier> ScrollBarElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_scrollBarOption) {
         return hints;
     }

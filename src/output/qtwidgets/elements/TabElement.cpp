@@ -238,12 +238,13 @@ Union::Element::States TabElement::elementStates() const
     return states;
 }
 
-QVariantMap TabElement::elementAttributes() const
+QHash<Union::Identifier, QVariant> TabElement::elementAttributes() const
 {
-    QVariantMap map;
+    QHash<Union::Identifier, QVariant> map;
     if (!m_tabOption) {
         return map;
     }
+
     const bool top = m_tabOption->shape == QTabBar::RoundedNorth || m_tabOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabOption->shape == QTabBar::RoundedSouth || m_tabOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularWest;
@@ -272,9 +273,9 @@ QVariantMap TabElement::elementAttributes() const
     return map;
 }
 
-QStringList TabElement::elementHints() const
+QList<Union::Identifier> TabElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
 
     if (m_isStatic) {
         hints.append(u"immutable"_s);

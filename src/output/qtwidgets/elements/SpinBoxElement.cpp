@@ -167,9 +167,9 @@ void SpinBoxElement::drawSpinIndicator(QPainter *painter, const QStyle::Primitiv
     drawIconAtRect(painter, indicatorIcon, m_styleOption->rect, m_backgroundProperties);
 }
 
-QStringList SpinBoxElement::elementHints() const
+QList<Union::Identifier> SpinBoxElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     // Force the constrained look, as no other spinbox look will work due to QStyle expectations.
     hints.append(u"constrained"_s);
     return hints;

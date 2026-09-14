@@ -33,6 +33,7 @@ target_sources(Union PUBLIC
     StyleRule.h
     Element.h
     ElementQuery.h
+    Identifier.h
     InputPlugin.h
     Selector.h
     PropertiesTypes.h

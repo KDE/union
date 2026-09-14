@@ -1,0 +1,48 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root
+{
+    --comp-switch-spacing: 8px;
+
+    --comp-switch-indicator-width: 44px;
+    --comp-switch-indicator-height: 24px;
+    --comp-switch-indicator-radius: 12px;
+    --comp-switch-indicator-color-surface: var(--pd-ref-color-neutral90);
+
+    --comp-switch-handle-width: 20px;
+    --comp-switch-handle-height: 20px;
+    --comp-switch-handle-radius: 10px;
+    --comp-switch-handle-color-surface: var(--pd-ref-color-white);
+}
+
+switch,
+switchdelegate
+{
+    icon-size: 16px;
+    spacing: var(--comp-switch-spacing);
+
+    & > indicator {
+        width: var(--comp-switch-indicator-width);
+        height: var(--comp-switch-indicator-height);
+        layout-alignment: content start center -1;
+
+        border-radius: var(--comp-switch-indicator-radius);
+        background-color: var(--comp-switch-indicator-color-surface);
+
+        & > handle {
+            width: var(--comp-switch-handle-width);
+            height: var(--comp-switch-handle-height);
+            border-radius: var(--comp-switch-handle-radius);
+            margin: 2px;
+
+            background-color: var(--comp-switch-handle-color-surface);
+        }
+    }
+
+    &:checked > indicator {
+        background-color: var(--pd-ref-color-primary50);
+    }
+}

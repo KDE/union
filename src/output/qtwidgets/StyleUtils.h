@@ -78,4 +78,4 @@ QString styleOptionToElementName(const QStyleOption *option);
 QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap);
 
 // Shared hints for frameOptions
-QStringList frameHints(const QStyleOptionFrame *frameOption);
+QList<Union::Identifier> frameHints(const QStyleOptionFrame *frameOption);

@@ -40,7 +40,7 @@ checkbox,
 radiobutton,
 switch
 {
-    icon-alignment-horizontal: start;
+/*     icon-alignment-horizontal: start; */
     text-wrap-mode: wrap;
 
     padding: 0px var(--small-spacing);
@@ -48,7 +48,16 @@ switch
 
     color: var(--window-text-color);
 
-    text-alignment: content fill center 0;
+/*     text-alignment: content fill center 0; */
+    &::part(icon)
+    {
+        layout-alignment-horizontal: start;
+    }
+
+    &::part(text)
+    {
+        layout-alignment: content fill center 0;
+    }
 }
 
 checkbox,
@@ -59,7 +68,8 @@ radiodelegate
 {
     width: var(--medium-element-size);
     height: var(--medium-element-size);
-    & > indicator
+
+    &::part(indicator)
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -74,18 +84,18 @@ radiodelegate
         border-radius: var(--corner-radius);
     }
 
-    &:hovered > indicator
+    &:hovered::part(indicator)
     {
         border-color: var(--checkable-indicator-active-highlight-border-color);
     }
 
-    &:checked > indicator
+    &:checked::part(indicator)
     {
         background-color: var(--checkable-indicator-active-highlight-color);
         border-color: var(--checkable-indicator-active-highlight-border-color);
     }
 
-    &:visual-focus > indicator
+    &:visual-focus::part(indicator)
     {
         outline: var(--focus-outline);
         border-color: var(--checkable-indicator-active-highlight-border-color);
@@ -95,7 +105,7 @@ radiodelegate
     {
         color: var(--checkable-disabled-text-color);
 
-        & > indicator
+        &::part(indicator)
         {
             border: 1px solid var(--checkable-indicator-disabled-border-color);
             color: var(--checkable-indicator-disabled-text-color);
@@ -103,7 +113,7 @@ radiodelegate
         }
     }
 
-    &:checked:disabled > indicator
+    &:checked:disabled::part(indicator)
     {
         background-color: var(--checkable-indicator-disabled-background-color);
         background-image-mask-color: var(--checkable-indicator-disabled-text-color);
@@ -114,11 +124,12 @@ checkbox,
 checkdelegate,
 menuitem
 {
-    &:checked > indicator
+    &:checked::part(indicator)
     {
         background-image: url("../images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
     }
-    &.indeterminate > indicator {
+
+    &.indeterminate::part(indicator) {
         background-image: url("../images/indeterminate.svg") mask var(--checkable-indicator-active-text-color);
     }
 }
@@ -127,12 +138,12 @@ radiobutton,
 radiodelegate,
 menuitem.exclusive
 {
-    & > indicator
+    &::part(indicator)
     {
         border-radius: 8px;
     }
 
-    &:checked > indicator
+    &:checked::part(indicator)
     {
         background-image: url("../images/radio.svg") mask var(--checkable-indicator-active-text-color);
     }
@@ -141,7 +152,7 @@ menuitem.exclusive
 switch,
 switchdelegate
 {
-    & > indicator
+    &::part(indicator)
     {
         layout-alignment-container: content;
         layout-alignment-horizontal: start;

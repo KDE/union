@@ -9,18 +9,18 @@ import org.kde.union.impl as Union
 Item {
     id: root
 
-    required property T.AbstractButton control
+    required property T.Control control
 
     Union.PositionedItem.positionChildren: true
     Union.Mnemonics.enabled: root.control.enabled && root.control.visible
     Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
-    Union.Mnemonics.label: root.control.text
+    Union.Mnemonics.label: root.control.text ?? ""
 
-    readonly property real iconWidth: iconItem.Union.Style.properties.layout.width
-    readonly property real iconHeight: iconItem.Union.Style.properties.layout.width
-    readonly property real iconColor: iconItem.Union.Style.properties.display.color
-    readonly property real iconName: iconItem.Union.Style.properties.icon.name
-    readonly property real iconSource: iconItem.Union.Style.properties.icon.source
+    readonly property real iconWidth: iconItem.Union.Style.properties.layout.width ?? 0
+    readonly property real iconHeight: iconItem.Union.Style.properties.layout.width ?? 0
+    readonly property color iconColor: iconItem.Union.Style.properties.display.color ?? "transparent"
+    readonly property string iconName: iconItem.Union.Style.properties.icon.name ?? ""
+    readonly property url iconSource: iconItem.Union.Style.properties.icon.source ?? ""
 
     Union.Icon {
         id: iconItem
@@ -38,7 +38,7 @@ Item {
     Text {
         Union.Element.subElement: "Text"
 
-        text: root.Union.Mnemonics.richTextLabel ?? root.control.text
+        text: root.Union.Mnemonics.richTextLabel ?? (root.control.text ?? "")
         font: root.control.font
         color: Union.Style.properties.display.color ?? "black"
         elide: wrapMode == Text.NoWrap && Union.Style.properties.text.elide ? Union.Style.properties.text.elide : Text.ElideNone

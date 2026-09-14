@@ -1,0 +1,22 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-sys-spacing01: var(--pd-ref-spacing04);
+    --pd-sys-spacing02: var(--pd-ref-spacing08);
+    --pd-sys-spacing04: var(--pd-ref-spacing16);
+    --pd-sys-spacing05: var(--pd-ref-spacing20);
+    --pd-sys-spacing06: var(--pd-ref-spacing24);
+    --pd-sys-spacing10: var(--pd-ref-spacing36);
+    --pd-sys-spacing12: var(--pd-ref-spacing48);
+    --pd-sys-spacing16: var(--pd-ref-spacing64);
+    --pd-sys-spacing20: var(--pd-ref-spacing80);
+    --pd-sys-spacing24: var(--pd-ref-spacing96);
+    --pd-sys-spacing32: var(--pd-ref-spacing128);
+    --pd-sys-spacing40: var(--pd-ref-spacing160);
+    --pd-sys-spacing48: var(--pd-ref-spacing192);
+    --pd-sys-spacing56: var(--pd-ref-spacing224);
+    --pd-sys-spacing64: var(--pd-ref-spacing256);
+}

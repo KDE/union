@@ -25,9 +25,7 @@ class StyleRegistryPrivate;
  *
  * \brief A class to load and keep track of Style instances.
  *
- * This can be considered to be the main entry point to Union. It loads input
- * plugins and uses those to create new Style instances. It also handles caching
- * of the Style instances.
+ * This can be considered to be the main entry point to Union.
  */
 class UNION_EXPORT StyleRegistry : public QObject
 {

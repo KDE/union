@@ -45,7 +45,7 @@ T.Dialog {
     }
 
     header: Label {
-        Union.Element.hints: Union.ElementHint { name: "header" }
+        Union.Element.subElement: "Header"
         text: control.title
         visible: control.title
     }

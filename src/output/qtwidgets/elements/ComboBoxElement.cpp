@@ -134,9 +134,9 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
     return {};
 }
 
-QStringList ComboBoxElement::elementHints() const
+QList<Union::Identifier> ComboBoxElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_comboBoxOption->frame) {
         hints.append(u"flat"_s);
     }

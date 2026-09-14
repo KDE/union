@@ -56,46 +56,36 @@ T.SearchField {
         required property int index
     }
 
-    searchIndicator.indicator: Union.Icon {
-        Union.Element.type: "SearchIndicator"
-        color: Union.Style.properties.icon.color
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
+    searchIndicator.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "IndicatorSearch"
+        control: control
     }
 
-    clearIndicator.indicator: Union.Icon {
-        Union.Element.type: "ClearIndicator"
-        color: Union.Style.properties.icon.color
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
-        visible: control.text.length > 0
+    clearIndicator.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "IndicatorClear"
     }
 
     contentItem: T.TextField {
         text: control.text
-        placeholderText: control.placeholderText
-        selectByMouse: control.selectTextByMouse
+        // placeholderText: control.placeholderText
+        // selectByMouse: control.selectTextByMouse
         color: control.palette.text
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
-        horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
+        // horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
+        // verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
 
         Text {
             id: placeholder
 
-            Union.Element.hints: Union.ElementHint { name: "placeholder" }
+            Union.Element.subElement: "Placeholder"
 
             x: parent.leftPadding
             y: parent.topPadding
             width: parent.width - parent.leftPadding - parent.rightPadding
             height: parent.height - parent.topPadding - parent.bottomPadding
 
-            text: control.placeholderText
+            // text: control.placeholderText
             font: parent.font
             color: control.palette.placeholderText
             visible: !parent.length && !parent.preeditText && (!parent.activeFocus || parent.horizontalAlignment !== Qt.AlignHCenter)

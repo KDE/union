@@ -1,0 +1,11 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+:root {
+    --pd-ref-size-window64: 64px;
+    --pd-ref-size-window768: 768px;
+    --pd-ref-size-window1024: 1024px;
+    --pd-ref-size-window1280: 1280px;
+}

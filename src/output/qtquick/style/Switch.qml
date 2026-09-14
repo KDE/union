@@ -69,10 +69,7 @@ T.Switch {
         }
     }
 
-    contentItem: P.DefaultContentItem {
-        control: control
-        wrapMode: Text.Wrap
-    }
+    contentItem: P.DefaultContentItem { control: control }
 
     background: Union.StyledRectangle { }
 }

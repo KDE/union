@@ -1,0 +1,10 @@
+{
+    "input-type": "css",
+    "name": "Ocean",
+    "description": "The Ocean style for KDE Plasma.",
+    "version": "1.0",
+    "license": "BSD-2-Clause",
+    "authors": [
+        "Arjen Hiemstra"
+    ]
+}

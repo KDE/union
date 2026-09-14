@@ -38,7 +38,7 @@ public:
     void layout() override;
 
 private:
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     const QStyleOptionMenuItem *m_menuItemOption = nullptr;
 };

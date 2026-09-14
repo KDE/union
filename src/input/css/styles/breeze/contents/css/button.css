@@ -62,12 +62,21 @@ toolbutton.raised
     border-radius: var(--corner-radius);
 
     layout-alignment: content fill fill 0;
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
 
-    color: var(--button-active-text-color);
     border: var(--button-border);
     background-color: var(--button-active-background-color);
+
+    &::part(icon) {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content center center 0;
+        color: var(--button-active-text-color);
+    }
+
+    &::part(text) {
+        layout-alignment: content center center 1;
+        color: var(--button-active-text-color);
+    }
 
     &:checked
     {
@@ -88,13 +97,18 @@ toolbutton.raised
 
     &:disabled
     {
-        color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
         border-color: var(--button-disabled-border-color);
         box-shadow: none;
+
+        &::part(icon),
+        &::part(text)
+        {
+            color: var(--button-disabled-text-color);
+        }
     }
 
-    &.with-menu > indicator {
+    &.with-menu::part(indicator) {
         visibility: visible;
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
@@ -102,21 +116,21 @@ toolbutton.raised
         /* half of small-spacing */
         padding-left: var(--toolbutton-menu-padding);
         padding-right: var(--toolbutton-menu-padding);
+        color: var(--button-active-text-color);
         icon-name: "arrow-down";
-        icon-color: var(--button-active-text-color);
     }
 
-    &.with-inline-arrow > indicator {
+    &.with-inline-arrow::part(indicator) {
         visibility: visible;
         layout-alignment: content end end 0;
         width: 8px;
         height: 8px;
         padding: 1px;
+        color: var(--button-active-text-color);
         icon-name: "arrow-down";
-        icon-color: var(--button-active-text-color);
     }
 
-    &.with-menu-button > indicator {
+    &.with-menu-button::part(indicator) {
         visibility: visible;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -124,14 +138,15 @@ toolbutton.raised
         padding-left: var(--toolbutton-menu-padding);
         padding-right: var(--toolbutton-menu-padding);
         layout-alignment: content end fill 0;
+        color: var(--button-active-text-color);
         icon-name: "arrow-down";
-        icon-color: var(--button-active-text-color);
         border-left:  var(--button-border);
     }
 
     &.menu-open {
         border: var(--button-border-highlight);
-        & > indicator {
+
+        &::part(indicator) {
             border: var(--button-border-highlight);
             background-color: var(--button-active-highlight-color);
             border-radius: var(--corner-radius);
@@ -140,13 +155,26 @@ toolbutton.raised
         }
     }
 
-    &[display="icon-only"].with-menu > indicator {
+    &[display="icon-only"] {
+        &::part(text) {
+            visibility: hidden;
+        }
+        &.with-menu::part(indicator) {
+            visibility: hidden;
+        }
+    }
+
+    &[display="text-only"]::part(icon)
+    {
         visibility: hidden;
     }
 
     &[display="text-under-icon"] {
-        text-alignment-vertical: stack-center;
-        icon-alignment-vertical: stack-center;
+        &::part(icon),
+        &::part(text)
+        {
+            layout-alignment-vertical: stack-center;
+        }
     }
 }
 
@@ -272,14 +300,24 @@ roundbutton.flat
 toolbutton
 {
     /* Ensure default toolbuttons end up with 32px height, not 34px. */
-    icon-size: 24px;
     padding: var(--medium-spacing) var(--small-spacing);
+
+    &::part(icon)
+    {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 toolbutton.raised
 {
-    icon-size: var(--icon-size-small);
     padding: var(--button-padding);
+
+    &::part(icon)
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+    }
 }
 
 roundbutton
@@ -290,19 +328,19 @@ roundbutton
 combobox
 {
     layout-alignment: content fill center 0;
-    text-alignment: content fill center 0;
-    icon-alignment: content start center 0;
+/*     text-alignment: content fill center 0; */
+/*     icon-alignment: content start center 0; */
     box-shadow: var(--button-shadow);
     text-wrap-mode: no-wrap;
     text-elide: right;
 
-    & > indicator {
+    &::part(indicator) {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
-        icon-name: "arrow-down-symbolic";
-        icon-color: var(--button-active-text-color);
         visibility: visible;
+        icon-name: "arrow-down-symbolic";
+        color: var(--button-active-text-color);
     }
 
     &.editable,
@@ -320,8 +358,8 @@ combobox
         &:pressed {
             border-color: var(--button-active-border-highlight-color);
 
-            & > indicator {
-                icon-color: var(--button-active-border-highlight-color);
+            &::part(indicator) {
+                color: var(--button-active-border-highlight-color);
             }
         }
 
@@ -374,7 +412,7 @@ toolseparator {
 }
 
 delaybutton {
-    & > fill {
+    &::part(fill) {
         border-radius: var(--corner-radius);
         border: var(--button-border-highlight);
         background-color: var(--highlight-color);
@@ -386,8 +424,8 @@ tumbler {
     height: 200px;
     background-color: var(--view-background-color);
 
-    text {
-        text-alignment-horizontal: center;
+    &::part(text) {
+/*         text-alignment-horizontal: center; */
         color: mix(var(--view-background-color), var(--view-text-color), 0.75);
 
         &:highlighted {
@@ -407,9 +445,16 @@ delaybutton.changed {
 
 
 tabscrollbutton {
-    icon-alignment: content fill fill 0;
+/*     icon-alignment: content fill fill 0; */
     layout-alignment: content center center 0;
-    icon-size: 16px;
+/*     icon-size: 16px; */
     width: var(--button-default-size);
     height: var(--button-default-size);
+
+    &::part(icon)
+    {
+        width: 16px;
+        height: 16px;
+        layout-alignment: content fill fill 0;
+    }
 }

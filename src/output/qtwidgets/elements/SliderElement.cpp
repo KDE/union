@@ -314,9 +314,9 @@ qreal SliderElement::controlThickness() const
     return 0;
 }
 
-QStringList SliderElement::elementHints() const
+QList<Union::Identifier> SliderElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_sliderOption) {
         return hints;
     }

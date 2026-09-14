@@ -87,29 +87,29 @@ menuitem
         color: var(--window-disabled-text-color);
     }
 
-    arrow {
+    &::part(arrow)
+    {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         layout-alignment: content end center 1;
         icon-name: "arrow-right-symbolic";
     }
 
-    indicator
+    &::part(indicator)
     {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         layout-alignment: content start center -1;
     }
 
-    shortcuttext {
+    &::part(shortcuttext) {
         spacing: 40px;
+        layout-alignment: content end center 0;
         color: mix(var(--window-background-color), var(--window-text-color), 0.5);
-        text-alignment: content end center 0;
         &:disabled {
             color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
         }
     }
-
 }
 
 overlay {
@@ -132,7 +132,7 @@ menuseparator {
 
     &.with-title {
         height: var(--large-element-size);
-        text-alignment: content start center 0;
+/*         text-alignment: content start center 0; */
         layout-alignment-horizontal: end;
         background-color: transparent;
         padding: var(--small-spacing);
@@ -170,8 +170,8 @@ menubaritem
 
     color: var(--window-text-color);
 
-    text-alignment-horizontal: center;
-    text-alignment-vertical: center;
+/*     text-alignment-horizontal: center; */
+/*     text-alignment-vertical: center; */
 
     &:hovered,
     &:highlighted
@@ -192,8 +192,8 @@ dialog
     padding: var(--large-spacing);
     border-radius: var(--corner-radius);
 
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
+/*     text-alignment-horizontal: center; */
+/*     icon-alignment-horizontal: center; */
 
     color: var(--view-text-color);
     border: 1px solid var(--view-border-color);

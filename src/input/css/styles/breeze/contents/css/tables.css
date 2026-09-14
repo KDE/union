@@ -13,11 +13,11 @@ tableviewdelegate {
     border-radius: 0px;
 
     layout-alignment: content fill center 0;
-    icon-alignment: content start center 1;
-    text-alignment: content fill center 2;
+/*     icon-alignment: content start center 1; */
+/*     text-alignment: content fill center 2; */
 
-    icon-width: var(--icon-size-small);
-    icon-height: var(--icon-size-small);
+/*     icon-width: var(--icon-size-small); */
+/*     icon-height: var(--icon-size-small); */
 
     color: var(--view-text-color);
     background-color: var(--view-background-color);
@@ -83,8 +83,8 @@ treeviewdelegate {
     & > checkbox {
         text-wrap-mode: no-wrap;
         layout-alignment: content fill center 0;
-        icon-alignment: content start center 1;
-        text-alignment: content fill center 2;
+/*         icon-alignment: content start center 1; */
+/*         text-alignment: content fill center 2; */
     }
 
     &.expanded > indicator {
@@ -114,12 +114,12 @@ headerviewdelegate
     color: var(--button-active-text-color);
 
     layout-alignment: content fill center 0;
-    icon-alignment: content center center 0;
-    text-alignment: content center center 1;
+    /*icon-alignment: content center center 0;
+    text-alignment: content center center 1;*/
     text-wrap-mode: no-wrap;
     text-elide: right;
 
-    icon-size: var(--icon-size-small);
+/*     icon-size: var(--icon-size-small); */
 
     & > indicator {
         color: var(--button-active-text-color);

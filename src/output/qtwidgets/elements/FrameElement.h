@@ -44,8 +44,8 @@ public:
     QRectF subElementRect(QStyle::SubElement element) const override;
 
 private:
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    QHash<Union::Identifier, QVariant> elementAttributes() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     const QStyleOptionFrame *m_frameOption = nullptr;
 };

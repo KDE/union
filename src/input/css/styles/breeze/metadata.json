@@ -9,5 +9,29 @@
     "authors": [
         "Arjen Hiemstra",
         "Akseli Lahtinen"
-    ]
+    ],
+
+    "variants": {
+        "density": {
+            "name": "Density",
+            "description": "",
+            "options": [
+                {
+                    "name": "Dense",
+                    "import": "density-dense.css",
+                    "position": "after"
+                },
+                {
+                    "name": "Normal",
+                    "import": "density-normal.css",
+                    "position": "after"
+                },
+                {
+                    "name": "Sparse",
+                    "import": "density-sparse.css",
+                    "position": "after"
+                }
+            ]
+        }
+    }
 }
