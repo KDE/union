@@ -14,6 +14,10 @@
 
 using namespace Qt::StringLiterals;
 
+// ItemViewElements are often used in many weird ways within applications, so we need to ensure they're
+// backwards compatible. This means we can't give them custom layouts without breaking everything.
+// Instead, we rely on QCommonStyle for most things, but apply our looks to the items.
+
 ItemViewElement::ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_viewItemOption(option)
@@ -45,7 +49,30 @@ void ItemViewElement::layout()
 
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_viewItemOption, m_subElementList);
+
+        auto opt = *m_viewItemOption;
+        opt.rect = backgroundRectangle(m_viewItemOption, m_backgroundProperties).toRect();
+
+        m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
+        m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
+        m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget);
+
+        // Apply our spacing
+        switch (m_viewItemOption->decorationPosition) {
+        case QStyleOptionViewItem::Left:
+            m_layoutMap[ElementString::Text].rect.moveLeft(m_layoutMap[ElementString::Icon].rect.right() + spacing());
+            break;
+        case QStyleOptionViewItem::Right:
+            m_layoutMap[ElementString::Text].rect.moveRight(m_layoutMap[ElementString::Icon].rect.left() - spacing());
+            break;
+        case QStyleOptionViewItem::Top:
+            m_layoutMap[ElementString::Text].rect.moveTop(m_layoutMap[ElementString::Icon].rect.bottom() + spacing());
+            break;
+        case QStyleOptionViewItem::Bottom:
+            m_layoutMap[ElementString::Text].rect.moveBottom(m_layoutMap[ElementString::Icon].rect.top() - spacing());
+            break;
+        }
+
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -70,46 +97,17 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
             break;
         }
         checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption->state.testFlag(QStyle::State_Enabled));
-        checkbox.rect = m_style->subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
-        // Use QCommonStyle as a fallback. It's not perfect but some applications just do not give us enough information to work with
-        if (checkbox.rect.isNull()) {
-            checkbox.rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_viewItemOption, m_widget);
-            if (!checkbox.rect.isNull()) {
-                checkbox.rect.setSize(indicatorSize().toSize());
-                checkbox.rect.moveCenter(QPointF(checkbox.rect.center().x() + spacing(), m_styleOption->rect.center().y()).toPoint());
-            }
-        }
+        checkbox.rect = subElementRect(QStyle::SE_ItemViewItemCheckIndicator).toRect();
         painter->save();
         m_style->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
         painter->restore();
     }
 }
 
-void ItemViewElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(ElementString::ItemViewItem);
-    if (!m_viewItemOption->icon.isNull() || m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDecoration)) {
-        m_subElementList.append(ElementString::Icon);
-    }
-    if (!m_viewItemOption->text.isEmpty() || m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasDisplay)) {
-        m_subElementList.append(ElementString::Text);
-    }
-    // As for now Icon and Text are "pseudo" elements, so they are ignored by the hierarchy.
-    // Thus calculate CheckBox last in the layouter, otherwise the icon would become its child
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_subElementList.append(ElementString::CheckBox);
-    }
-}
-
 QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    const auto textSize = subElementRect(QStyle::SE_ItemViewItemText).size();
-    const auto decorationSize = subElementRect(QStyle::SE_ItemViewItemDecoration).size();
-    const auto checkboxSize = subElementRect(QStyle::SE_ItemViewItemCheckIndicator).size();
-    const auto combinedSize = QSizeF(std::max({textSize.width(), decorationSize.width(), checkboxSize.width()}),
-                                     std::max({textSize.height(), decorationSize.height(), checkboxSize.height()}));
-    return contentsSizeFromStyle.expandedTo(applyPaddingToSize(combinedSize));
+    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
+    return applyPaddingToSize(commonSize);
 }
 
 QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
@@ -119,26 +117,21 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
         return QRect();
     }
 
-    if (m_subElementList.isEmpty()) {
-        return QRect();
-    }
-
     QRectF rect;
     if (element == QStyle::SE_ItemViewItemText) {
         rect = m_layoutMap[ElementString::Text].rect;
     }
     if (element == QStyle::SE_ItemViewItemDecoration) {
-        // DecorationSize can be changed by user, so use it by default
         rect = m_layoutMap[ElementString::Icon].rect;
     }
     if (element == QStyle::SE_ItemViewItemCheckIndicator) {
         rect = m_layoutMap[ElementString::CheckBox].rect;
+        // Center the checkbox with its proper size
+        rect = centerRect(rect, indicatorSize().width(), indicatorSize().height());
+        rect.moveCenter(QPointF(rect.center().x() + spacing() / 2.0, rect.center().y()));
     }
-    // Ensure the item is centered within the itemview for compatibility reasons:
-    // This may stop layouting items to top/bottom instead of center, but readability is more important.
-    rect.moveCenter(QPointF(rect.center().x(), m_styleOption->rect.center().y()));
 
-    return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect.toRect());
+    return rect;
 }
 
 void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
@@ -165,8 +158,11 @@ void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ItemViewElement::drawText(QPainter *painter) const
 {
-    if (hasText() && m_isValid) {
+    if (hasText()) {
         QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, m_widget);
+        if (textRect.isEmpty()) {
+            textRect = m_styleOption->rect;
+        }
         drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
     }
 }
@@ -182,10 +178,10 @@ QVariantMap ItemViewElement::elementAttributes() const
 {
     QVariantMap map;
     if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Top) {
-        map[u"display"_s] = QVariant(u"text-above-icon"_s);
+        map[u"display"_s] = QVariant(u"text-below-icon"_s);
     }
     if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Bottom) {
-        map[u"display"_s] = QVariant(u"text-below-icon"_s);
+        map[u"display"_s] = QVariant(u"text-above-icon"_s);
     }
     if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Left) {
         map[u"display"_s] = QVariant(u"text-after-icon"_s);
@@ -241,6 +237,10 @@ QStringList ItemViewElement::elementHints() const
 
     // These always have hover effect, i think
     hints.append(u"hover-enabled"_s);
+
+    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::Alternate)) {
+        hints.append(u"alternating-colors"_s);
+    }
 
     if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
         hints.append(u"expanded"_s);
