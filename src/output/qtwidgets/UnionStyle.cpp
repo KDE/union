@@ -432,7 +432,6 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
                                         QStyle::PM_MenuVMargin,
                                         QStyle::PM_MenuPanelWidth,
                                         QStyle::PM_MenuDesktopFrameWidth,
-                                        QStyle::PM_MenuBarPanelWidth,
                                         QStyle::PM_MenuBarItemSpacing,
                                         QStyle::PM_MenuBarVMargin,
                                         QStyle::PM_MenuBarHMargin,
@@ -514,6 +513,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     case QStyle::PM_TabBar_ScrollButtonOverlap:
     // Don't allow overlap
     case QStyle::PM_ScrollView_ScrollBarOverlap:
+    case QStyle::PM_MenuBarPanelWidth:
         return 0;
     default:
         break;
