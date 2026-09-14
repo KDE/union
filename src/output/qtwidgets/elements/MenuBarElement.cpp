@@ -10,9 +10,8 @@
 
 using namespace Qt::StringLiterals;
 
-MenuBarElement::MenuBarElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget)
+MenuBarElement::MenuBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuItemOption(option)
 {
     update();
 }
