@@ -205,9 +205,9 @@ protected:
      */
     void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
 
-    const QStyleOption *m_styleOption;
-    const UnionStyle *m_style;
-    const QWidget *m_widget;
+    const QStyleOption *m_styleOption = nullptr;
+    const UnionStyle *m_style = nullptr;
+    const QWidget *m_widget = nullptr;
     QIcon m_icon = QIcon();
     QString m_text = QString();
     QIcon m_indicator = QIcon();
@@ -216,13 +216,13 @@ protected:
     Union::ElementList m_indicatorElementList;
     // Holds the properties for the background:
     // This is the top-level properties of the item by default.
-    Union::Properties::StylePropertyGroup *m_backgroundProperties;
+    Union::Properties::StylePropertyGroup *m_backgroundProperties = nullptr;
     // Holds the properties for any contents, such as text and icon.
     // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_contentProperties;
+    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
     // Holds the properties for any indicators, such as dropdown arrows.
     // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_indicatorProperties;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
     QMap<QString, LayoutItem> m_layoutMap;
     QStringList m_subElementList;
     // Used to check if we have all elements properly prepared
