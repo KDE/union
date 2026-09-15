@@ -39,7 +39,6 @@ void ItemViewElement::update()
     }
     setIcon(m_viewItemOption->icon);
     setText(m_viewItemOption->text);
-    updateSubElementList();
     layout();
 }
 
