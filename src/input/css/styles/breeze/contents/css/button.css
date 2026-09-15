@@ -495,7 +495,7 @@ tabbutton {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
-        icon-name: "tab-close-symbolic";
+        icon-name: "window-close-symbolic";
 
         &:hovered,
         &:pressed {
