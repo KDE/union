@@ -64,6 +64,11 @@ textfield,
 searchfield {
     text-alignment: content start center 0;
     width: var(--text-field-width);
+    &.inside-table {
+        border: none;
+        border-radius: 0px;
+        background-color: var(--view-background-alternate-color);
+    }
 }
 
 textarea

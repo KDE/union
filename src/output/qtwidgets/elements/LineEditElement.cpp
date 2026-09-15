@@ -9,11 +9,12 @@
 #include <QLineEdit>
 #include <QPainter>
 #include <QStyle>
-#include <qstyle.h>
+#include <QTableWidget>
 
 #include "SharedNames.h"
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 LineEditElement::LineEditElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -42,7 +43,6 @@ void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
     if (!m_widget || m_widget->parentWidget()->inherits("QComboBox") || m_widget->parentWidget()->inherits("QAbstractSpinBox")) {
         return;
     }
-    drawBackground(painter);
     switch (enums.PrimitiveElement) {
     case QStyle::PE_PanelLineEdit:
         drawBackground(painter);
@@ -64,12 +64,20 @@ void LineEditElement::updateSubElementList()
     m_subElementList.append(ElementString::TextField);
 }
 
+QSizeF LineEditElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+{
+    // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
+    QMarginsF padding =
+        safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    return contentsSizeFromStyle.grownBy(padding);
+}
+
 QMarginsF LineEditElement::iconPadding() const
 {
-    if (m_isValid && m_contentProperties->layout() && m_contentProperties->layout()->padding()) {
-        return m_contentProperties->layout()->padding()->toMargins();
+    if (!m_isValid) {
+        return QMarginsF();
     }
-    return QMarginsF();
+    return safePropertyLookup(m_contentProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
 QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
@@ -83,7 +91,17 @@ QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 
 QStringList LineEditElement::elementHints() const
 {
-    return frameHints(m_frameOption);
+    auto hints = frameHints(m_frameOption);
+    // Due to how Line Edits work, we have to first check the parent, then it's parent
+    // to figure out if we're inside a table. The first parent is just the scrollview.
+    if (m_widget && m_widget->parentWidget()) {
+        if (auto realParent = m_widget->parentWidget()->parentWidget()) {
+            if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
+                hints.append(u"inside-table"_s);
+            }
+        }
+    }
+    return hints;
 }
 
 qreal LineEditElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
