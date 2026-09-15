@@ -6,7 +6,6 @@
 #include <QCoreApplication>
 #include <QMetaEnum>
 
-#include <KColorScheme>
 #include <KColorUtils>
 #include <KConfigGroup>
 
@@ -118,8 +117,7 @@ KColorSchemeProvider::KColorSchemeProvider(QObject *parent)
     , d(std::make_unique<Private>())
 {
     qApp->installEventFilter(this);
-
-    d->colorConfig = KSharedConfig::openConfig();
+    d->colorConfig = colorConfig();
 }
 
 KColorSchemeProvider::~KColorSchemeProvider() noexcept = default;
@@ -127,12 +125,24 @@ KColorSchemeProvider::~KColorSchemeProvider() noexcept = default;
 bool KColorSchemeProvider::eventFilter(QObject *obj, QEvent *event)
 {
     if (obj == qApp && event->type() == QEvent::ApplicationPaletteChange) {
+        d->colorConfig = colorConfig();
         d->cache.clear();
         // Important: If we don't reparse the global configuration, we will not
         // get any new colors.
         d->colorConfig->reparseConfiguration();
     }
     return QObject::eventFilter(obj, event);
+}
+
+KSharedConfig::Ptr KColorSchemeProvider::colorConfig() const
+{
+    // This property is used by the KColorSchemeMenu that allows applications to set their own
+    // individual colors.
+    const QString colorSchemePath = qApp->property("KDE_COLOR_SCHEME_PATH").toString();
+    if (!colorSchemePath.isEmpty()) {
+        return KSharedConfig::openConfig(colorSchemePath);
+    }
+    return d->colorConfig = KSharedConfig::openConfig();
 }
 
 std::optional<Union::ColorProvider::Rgba> KColorSchemeProvider::color(const QStringList &arguments) const

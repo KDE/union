@@ -4,6 +4,7 @@
 #pragma once
 
 #include "Color.h"
+#include <KColorScheme>
 
 class KColorSchemeProvider : public Union::ColorProvider
 {
@@ -22,4 +23,6 @@ protected:
 private:
     class Private;
     const std::unique_ptr<Private> d;
+
+    KSharedConfig::Ptr colorConfig() const;
 };
