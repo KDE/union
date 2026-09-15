@@ -56,6 +56,8 @@ private:
     Union::Properties::StylePropertyGroup *m_checkProperties;
     Union::ElementList m_arrowElementList;
     Union::Properties::StylePropertyGroup *m_arrowProperties;
+    Union::ElementList m_shortcutElementList;
+    Union::Properties::StylePropertyGroup *m_shortcutProperties;
     bool m_isSeparator;
     bool m_hasSubMenu;
     bool m_hasCheckBox;
@@ -65,4 +67,5 @@ private:
     qreal m_menuHMargin;
     qreal m_menuVMargin;
     QIcon m_subMenuArrow;
+    qreal m_shortcutSpacing;
 };
