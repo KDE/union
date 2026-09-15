@@ -13,9 +13,11 @@
 #include <QQuickItem>
 #include <QQuickRenderControl>
 #include <QRegularExpression>
+#include <QTextDocument>
 #include <QWindow>
 
 using namespace Union;
+using namespace Qt::StringLiterals;
 
 QHash<QKeySequence, Mnemonics *> Mnemonics::s_sequenceToObject = QHash<QKeySequence, Mnemonics *>();
 
@@ -213,7 +215,7 @@ void Mnemonics::onAltReleased()
     // Disabling menmonics again is always fine, e.g. on window deactivation,
     // don't check for enabled or window is active here.
 
-    m_actualRichTextLabel = removeAcceleratorMarker(m_label);
+    m_actualRichTextLabel = removeAcceleratorMarker(m_escapedRichTextLabel);
     Q_EMIT richTextLabelChanged();
     m_active = false;
     Q_EMIT activeChanged();
@@ -235,6 +237,38 @@ void Mnemonics::calculateWeights()
         if (!c.isLetterOrNumber() && c != QLatin1Char('&')) {
             start_character = true;
             ++pos;
+            continue;
+        }
+
+        // Skip characters that are part of html tags
+        if (pos > 0 && m_label[pos - 1] == u'<') {
+            int tag_end = pos;
+            while (tag_end < m_label.length() && m_label[tag_end] != u'>') {
+                ++tag_end;
+            }
+
+            if (tag_end < m_label.length()) {
+                pos = tag_end;
+                continue;
+            }
+        }
+
+        // Skip HTML entities
+        if (c == u'&') {
+            int entity_end = pos;
+            while (entity_end < m_label.length() && m_label[entity_end] != u';') {
+                ++entity_end;
+            }
+
+            if (entity_end < m_label.length() && entity_end - pos < 5) {
+                pos = entity_end;
+                continue;
+            }
+        }
+
+        // Skip escaped &
+        if (c == u'&' && pos != m_label.length() - 1 && m_label[pos + 1] == u'&') {
+            pos = pos + 2;
             continue;
         }
 
@@ -263,9 +297,9 @@ void Mnemonics::calculateWeights()
         // try to preserve the wanted accelerators
         /* clang-format off */
         if (c == QLatin1Char('&')
-            && (pos != m_label.length() - 1
+            && pos != m_label.length() - 1
             && m_label[pos + 1] != QLatin1Char('&')
-            && m_label[pos + 1].isLetterOrNumber())) { /* clang-format on */
+            && m_label[pos + 1].isLetterOrNumber()) { /* clang-format on */
             wanted_character = true;
             ++pos;
             continue;
@@ -302,8 +336,11 @@ void Mnemonics::updateSequence()
     calculateWeights();
 
     // Preserve strings like "One & Two" where & is not an accelerator escape
-    const QString text = label().replace(QStringLiteral("& "), QStringLiteral("&& "));
-    m_actualRichTextLabel = removeAcceleratorMarker(text);
+    m_escapedRichTextLabel = label().replace(QStringLiteral("& "), QStringLiteral("&& "));
+    // Also preserve HTML entities like "&lt;".
+    m_escapedRichTextLabel.replace(QRegularExpression(u"&([a-zA-Z#]{1,4});"_s), u"&&\\1;"_s);
+
+    m_actualRichTextLabel = removeAcceleratorMarker(m_escapedRichTextLabel);
 
     if (!m_enabled) {
         // was the label already completely plain text? try to limit signal emission
@@ -319,7 +356,7 @@ void Mnemonics::updateSequence()
         return;
     }
 
-    m_mnemonicLabel = text;
+    m_mnemonicLabel = m_escapedRichTextLabel;
     m_mnemonicLabel.replace(QRegularExpression(QLatin1String("\\&([^\\&])")), QStringLiteral("\\1"));
 
     if (!m_weights.isEmpty()) {
@@ -340,13 +377,26 @@ void Mnemonics::updateSequence()
 
                 s_sequenceToObject[ks] = this;
                 m_sequence = ks;
-                m_richTextLabel = text;
+                m_richTextLabel = m_escapedRichTextLabel;
                 m_richTextLabel.replace(QRegularExpression(QLatin1String("\\&([^\\&])")), QStringLiteral("\\1"));
-                m_mnemonicLabel = text;
+                m_mnemonicLabel = m_escapedRichTextLabel;
                 const int mnemonicPos = m_mnemonicLabel.indexOf(c);
 
-                if (mnemonicPos > -1 && (mnemonicPos == 0 || m_mnemonicLabel[mnemonicPos - 1] != QLatin1Char('&'))) {
-                    m_mnemonicLabel.replace(mnemonicPos, 1, QStringLiteral("&") % c);
+                if (mnemonicPos > -1) {
+                    bool replace = false;
+
+                    if (mnemonicPos == 0) {
+                        replace = true;
+                    } else if (mnemonicPos == 1) {
+                        replace = m_mnemonicLabel[0] != u'&';
+                    } else if (m_mnemonicLabel[mnemonicPos - 1] != u'&'
+                               || (m_mnemonicLabel[mnemonicPos - 1] == u'&' && m_mnemonicLabel[mnemonicPos - 2] == u'&')) {
+                        replace = true;
+                    }
+
+                    if (replace) {
+                        m_mnemonicLabel.replace(mnemonicPos, 1, QStringLiteral("&") % c);
+                    }
                 }
 
                 const int richTextPos = m_richTextLabel.indexOf(c);
