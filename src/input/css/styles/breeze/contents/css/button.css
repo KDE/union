@@ -395,6 +395,15 @@ tabbutton {
     icon-alignment: content start center 0;
     text-alignment: content center center 0;
 
+
+    &.immutable {
+        background-color: var(--button-active-background-color);
+        border: none;
+        border-radius: 0px;
+        padding: var(--medium-spacing);
+        /* TODO: Separators between buttons need outline property which has not been implemented yet */
+    }
+
     &[direction="top"] {
         border-bottom-left-radius: 0px;
         border-bottom-right-radius: 0px;
