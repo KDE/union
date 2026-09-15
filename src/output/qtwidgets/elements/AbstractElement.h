@@ -86,6 +86,11 @@ public:
     virtual int styleHint(QStyle::StyleHint styleHint) const;
 
     /*!
+    * \brief Return the given standard pixmap. If not found, returns an empty QIcon.
+     */
+    virtual QIcon standardPixmap(QStyle::StandardPixmap pixmap) const;
+
+    /*!
      * \brief Updates the properties of the element, such as text and layouting
      */
     virtual void update();

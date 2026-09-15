@@ -37,6 +37,8 @@ public:
     int pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const override;
     int styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const override;
 
+    QIcon standardIcon(StandardPixmap pixmap, const QStyleOption *option = nullptr, const QWidget *widget = nullptr) const override;
+
     void polish(QApplication *application) override;
     void polish(QWidget *) override;
 

@@ -545,6 +545,23 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     return QCommonStyle::pixelMetric(metric, option, widget);
 }
 
+QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption *option, const QWidget *widget) const
+{
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), pixmap, option, widget);
+    auto cached =
+        ElementCache::element<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton, QStyle::SP_TitleBarCloseButton, QStyle::SP_TitleBarNormalButton>(
+            pixmap,
+            hash,
+            this,
+            option,
+            widget);
+    if (cached) {
+        return cached->standardPixmap(pixmap);
+    }
+
+    return QCommonStyle::standardIcon(pixmap, option, widget);
+}
+
 // Copied from Breeze.
 // TODO: Make these adjustable!
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
