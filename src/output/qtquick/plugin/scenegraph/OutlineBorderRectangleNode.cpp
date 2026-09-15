@@ -132,7 +132,7 @@ void OutlineBorderRectangleNode::update()
 
     auto aspect = m_itemRect.width() > m_itemRect.height() ? QVector2D{float(m_itemRect.width() / m_itemRect.height()), 1.0}
                                                            : QVector2D{1.0, float(m_itemRect.height() / m_itemRect.width())};
-    auto minDimension = float(std::min(m_itemRect.width(), m_itemRect.height()));
+    auto minDimension = std::max(float(std::min(m_itemRect.width(), m_itemRect.height())), 0.0001f);
 
     if (m_border && !borderSize.isNull()) {
         updateBorderColors(m_border);

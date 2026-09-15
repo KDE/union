@@ -87,7 +87,7 @@ void RectangleNode::update()
     auto r = rect();
 
     auto aspect = r.width() > r.height() ? QVector2D{float(r.width() / r.height()), 1.0} : QVector2D{1.0, float(r.height() / r.width())};
-    auto minDimension = float(std::min(r.width(), r.height()));
+    auto minDimension = std::max(float(std::min(r.width(), r.height())), 0.0001f);
 
     UniformDataStream stream(uniformData());
     stream << UniformDataStream::Placeholder::ModelViewProjectionMatrix // matrix
