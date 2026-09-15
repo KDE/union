@@ -145,6 +145,11 @@ void MenuItemElement::layout()
 
         m_isValid = true;
     }
+
+    if (!m_shortcutText.isEmpty()) {
+        m_shortcutElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
+        m_shortcutProperties = queryProperties(m_shortcutElementList);
+    }
 }
 
 QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
@@ -185,6 +190,9 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                 const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
                 itemSize.rwidth() +=
                     m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing;
+            }
+            if (!m_shortcutText.isEmpty()) {
+                itemSize.rwidth() += m_layoutMap[ElementString::ShortcutText].rect.width() + spacing;
             }
             preferredSize = applyPaddingToSize(itemSize);
         }
@@ -227,10 +235,8 @@ void MenuItemElement::drawText(QPainter *painter) const
     // ShortcutText is just like a regular text element but handled with different name
     // and has different coloration, so override the default colors
     if (!m_shortcutText.isEmpty()) {
-        auto shortcutElements = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
-        const auto properties = queryProperties(shortcutElements);
         QRectF textRect = m_layoutMap[ElementString::ShortcutText].rect;
-        drawTextAtRect(painter, m_shortcutText, textRect, properties);
+        drawTextAtRect(painter, m_shortcutText, textRect, m_shortcutProperties);
     }
 }
 
