@@ -423,6 +423,12 @@ tabbutton {
         border-right: var(--button-border);
     }
 
+    &.document-mode {
+        background-color: var(--window-background-alternate-color);
+        border-color: var(--window-border-color);
+        border-radius: 0px;
+    }
+
     &[display="icon-only"] {
         icon-alignment: content center center 0;
     }

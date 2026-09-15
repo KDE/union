@@ -235,7 +235,13 @@ QVariantMap TabElement::elementAttributes() const
 
 QStringList TabElement::elementHints() const
 {
-    return QStringList();
+    QStringList hints;
+
+    if (m_tabOption->documentMode) {
+        hints.append(u"document-mode"_s);
+    }
+
+    return hints;
 }
 
 qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
