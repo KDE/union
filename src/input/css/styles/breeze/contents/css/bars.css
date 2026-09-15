@@ -55,8 +55,6 @@ busyindicator
 
 progressbar
 {
-    width: 200px;
-    height: var(--medium-spacing);
     padding: 0px var(--large-spacing);
     inset: 0px var(--large-spacing);
     text-alignment: content center center 0;
@@ -64,6 +62,19 @@ progressbar
     background-color: var(--bar-active-background-color);
     border: 1px solid var(--bar-active-border-color);
     border-radius: var(--corner-radius);
+
+    &.horizontal
+    {
+        width: 200px;
+        height: var(--medium-spacing);
+    }
+
+    &.vertical
+    {
+        width: var(--medium-spacing);
+        height: 200px;
+    }
+
 
     & > track,
     & > chunk {
