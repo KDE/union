@@ -11,6 +11,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 ProgressBarElement::ProgressBarElement(const QStyleOptionProgressBar *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -139,20 +140,13 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         }
         return indicatorRect;
     } else if (element == QStyle::SE_ProgressBarGroove) {
-        // Copied and repurposed from Breeze
-        qreal width = 0;
-        qreal height = 0;
-        if (m_backgroundProperties->layout()) {
-            width = m_backgroundProperties->layout()->width().value_or(width);
-            height = m_backgroundProperties->layout()->height().value_or(height);
-        }
+        // Copied and repurposed from Breeze. We ignore width, we only want the thickness of the bar.
+        qreal thickness = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
         auto rect = m_progressBarOption->rect;
-        rect.setHeight(height);
-        rect.setWidth(width);
         if (m_progressBarOption->state.testFlag(QStyle::State_Horizontal)) {
-            rect = centerRect(m_progressBarOption->rect, width, height).toRect();
+            rect = centerRect(m_progressBarOption->rect, m_progressBarOption->rect.width(), thickness).toRect();
         } else {
-            rect = centerRect(m_progressBarOption->rect, height, width).toRect();
+            rect = centerRect(m_progressBarOption->rect, thickness, m_progressBarOption->rect.height()).toRect();
         }
         return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
     };
