@@ -472,7 +472,8 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
                                         QStyle::PM_TitleBarButtonIconSize,
                                         QStyle::PM_TitleBarButtonSize,
                                         QStyle::PM_LineEditIconSize,
-                                        QStyle::PM_LineEditIconMargin>(metric, hash, this, option, widget);
+                                        QStyle::PM_LineEditIconMargin,
+                                        QStyle::PM_DockWidgetSeparatorExtent>(metric, hash, this, option, widget);
     if (cached) {
         return cached->pixelMetric(metric);
     }
@@ -484,7 +485,6 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     // QStyle::PM_MaximumDragDistance
     // QStyle::PM_SliderTickmarkOffset
     // QStyle::PM_SliderSpaceAvailable
-    // QStyle::PM_DockWidgetSeparatorExtent
     // QStyle::PM_DockWidgetHandleExtent
     // QStyle::PM_TabBarTabOverlap
     // QStyle::PM_TabBarBaseOverlap
@@ -505,6 +505,10 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     // QStyle::PM_LayoutBottomMargin
     // Overrides
     switch (metric) {
+        // If no QStyleOption is provided, return 1 so that we do not
+        // take extra space when there is no need, but we have click area for the mouse.
+    case QStyle::PM_DockWidgetSeparatorExtent:
+        return 1;
     // Don't shift button text when sunken
     case QStyle::PM_TabBarTabShiftHorizontal:
     case QStyle::PM_TabBarTabShiftVertical:

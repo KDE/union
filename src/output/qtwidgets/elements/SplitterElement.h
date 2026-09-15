@@ -20,6 +20,7 @@ namespace detail
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_Splitter> : public TypeHelper<SplitterElement, QStyleOption>{};
         template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_Splitter> : public TypeHelper<SplitterElement, QStyleOption>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SplitterWidth> : public TypeHelper<SplitterElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetSeparatorExtent> : public TypeHelper<SplitterElement, QStyleOption>{};
 /* clang-format on */
 }
 }
