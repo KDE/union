@@ -195,6 +195,7 @@ private:
 
     QString m_label;
     QString m_actualRichTextLabel;
+    QString m_escapedRichTextLabel;
     QString m_richTextLabel;
     QString m_mnemonicLabel;
     QKeySequence m_sequence;
