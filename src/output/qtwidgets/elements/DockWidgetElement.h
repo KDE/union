@@ -26,6 +26,9 @@ namespace detail
         template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetIcon> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_DockWidgetTitle> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetFrameWidth> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarNormalButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarCloseButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
 /* clang-format on */
 }
 }
@@ -44,6 +47,7 @@ public:
 
     QRectF subElementRect(QStyle::SubElement subElement) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    QIcon standardPixmap(QStyle::StandardPixmap pixmap) const override;
 
 private:
     void updateSubElementList() override;

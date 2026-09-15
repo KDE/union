@@ -119,6 +119,12 @@ qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     return 0;
 }
 
+QIcon AbstractElement::standardPixmap(QStyle::StandardPixmap pixmap) const
+{
+    Q_UNUSED(pixmap);
+    return QIcon();
+}
+
 void AbstractElement::updateSubElementList()
 {
 }

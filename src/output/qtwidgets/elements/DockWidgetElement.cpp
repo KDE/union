@@ -11,6 +11,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 DockWidgetElement::DockWidgetElement(const QStyleOptionDockWidget *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -110,4 +111,20 @@ qreal DockWidgetElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         break;
     }
     return 0;
+}
+
+QIcon DockWidgetElement::standardPixmap(QStyle::StandardPixmap pixmap) const
+{
+    switch (pixmap) {
+    case QStyle::SP_TitleBarNormalButton:
+        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::FloatButton})),
+                                  u"window-restore"_s);
+    case QStyle::SP_TitleBarCloseButton:
+    case QStyle::SP_DockWidgetCloseButton:
+        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::CloseButton})),
+                                  u"window-close-symbolic"_s);
+    default:
+        break;
+    }
+    return QIcon();
 }
