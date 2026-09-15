@@ -55,7 +55,7 @@ private:
     void updateSubElementList() override;
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;
-    bool isVertical() const;
+    bool m_isStatic;
     int hSpace() const;
     int vSpace() const;
 };

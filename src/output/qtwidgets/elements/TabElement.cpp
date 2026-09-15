@@ -16,6 +16,7 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     : AbstractElement(option, style, widget)
     , m_tabOption(option)
     , m_isVertical(false)
+    , m_isStatic(false)
 {
     update();
 }
@@ -28,6 +29,12 @@ void TabElement::update()
 {
     m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
         || m_tabOption->shape == QTabBar::TriangularWest;
+
+    if (const auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
+        m_isStatic = m_tabOption->documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
+    } else {
+        m_isStatic = false;
+    }
 
     setIcon(m_tabOption->icon);
     setText(m_tabOption->text);
@@ -178,11 +185,6 @@ QRectF TabElement::subElementRect(QStyle::SubElement element) const
     return m_tabOption->rect;
 }
 
-bool TabElement::isVertical() const
-{
-    return m_isVertical;
-}
-
 // Padding of the tab content and the edge, only one value is taken so take the largest one
 int TabElement::hSpace() const
 {
@@ -235,7 +237,13 @@ QVariantMap TabElement::elementAttributes() const
 
 QStringList TabElement::elementHints() const
 {
-    return QStringList();
+    QStringList hints;
+
+    if (m_isStatic) {
+        hints.append(u"immutable"_s);
+    }
+
+    return hints;
 }
 
 qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
