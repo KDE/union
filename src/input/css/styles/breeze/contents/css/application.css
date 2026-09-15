@@ -175,7 +175,6 @@ frame,
 splitter,
 groupbox,
 framemenu,
-dockwidget,
 framewindow
 {
     padding: var(--large-spacing);
@@ -241,13 +240,6 @@ groupbox {
     width: 200px;
 }
 
-dockwidget {
-    border-radius: var(--corner-radius);
-    &:visual-focus,
-    &:active-focus {
-        border: 1px solid var(--highlight-color);
-    }
-}
 
 dockwidget {
     width: var(--small-element-size);
@@ -256,6 +248,11 @@ dockwidget {
     background-color: var(--header-background-color);
     icon-alignment: content center center 0;
     text-alignment: content center center 1;
+    padding: var(--small-spacing);
+    &:visual-focus,
+    &:active-focus {
+        border: 1px solid var(--highlight-color);
+    }
 
     floatbutton,
     closebutton {
