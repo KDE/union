@@ -7,9 +7,13 @@
 #include <QAbstractScrollArea>
 #include <QApplication>
 #include <QDebug>
+#include <QLayout>
 #include <QLineEdit>
+#include <QMenu>
 #include <QPainter>
+#include <QStackedLayout>
 #include <QStyle>
+#include <QTextBrowser>
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
@@ -157,13 +161,97 @@ QStringList FrameElement::elementHints() const
     return hints;
 }
 
+QLayout *findParentLayout(const QWidget *widget)
+{
+    if (!widget->parentWidget()) {
+        return nullptr;
+    }
+
+    auto layout = widget->parentWidget()->layout();
+    if (!layout) {
+        return nullptr;
+    }
+
+    if (layout->indexOf(const_cast<QWidget *>(widget)) > -1) {
+        return layout;
+    }
+
+    QList<QObject *> children = layout->children();
+
+    while (!children.isEmpty()) {
+        layout = qobject_cast<QLayout *>(children.takeFirst());
+        if (!layout) {
+            continue;
+        }
+
+        if (layout->indexOf(const_cast<QWidget *>(widget)) > -1) {
+            return layout;
+        }
+        children += layout->children();
+    }
+
+    return nullptr;
+}
+
 qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
-    switch (pixelMetric) {
-    case QStyle::PM_DefaultFrameWidth:
-        return averageBorderSize();
-    default:
-        break;
+    // Use same heuristics for drawing frames as Breeze does.
+    // TODO: We may want to expose this to the user somehow.
+    if (pixelMetric == QStyle::PM_DefaultFrameWidth) {
+        if (!m_widget) {
+            return 0;
+        }
+        const auto frameWidth = averageBorderSize();
+
+        if (qobject_cast<const QMenu *>(m_widget)) {
+            return frameWidth;
+        }
+        if (qobject_cast<const QLineEdit *>(m_widget)) {
+            return frameWidth;
+        }
+
+        const auto forceFrame = m_widget->property("_breeze_force_frame");
+        if (forceFrame.isValid() && !forceFrame.toBool()) {
+            return 0;
+        }
+        if ((forceFrame.isValid() && forceFrame.toBool()) || m_widget->property("_breeze_borders_sides").isValid()) {
+            return frameWidth;
+        }
+
+        if (qobject_cast<const QAbstractScrollArea *>(m_widget)) {
+            auto layout = findParentLayout(m_widget);
+
+            if (!layout) {
+                if (m_widget->parentWidget() && m_widget->parentWidget()->layout()) {
+                    layout = m_widget->parentWidget()->layout();
+                }
+            }
+
+            if (layout) {
+                if (layout->inherits("QDockWidgetLayout") || layout->inherits("QMainWindowLayout") || qobject_cast<const QStackedLayout *>(layout)) {
+                    return 0;
+                }
+
+                if (auto grid = qobject_cast<const QGridLayout *>(layout)) {
+                    if (grid->horizontalSpacing() > 0 || grid->verticalSpacing() > 0) {
+                        return frameWidth;
+                    }
+                }
+
+                // Add frame when scroll area is in a layout with more than an item and the
+                // layout has some spacing.
+                if (layout->spacing() > 0 && layout->count() > 1) {
+                    return frameWidth;
+                }
+            }
+        }
+
+        if (qobject_cast<const QTabWidget *>(m_widget) || qobject_cast<const QTextBrowser *>(m_widget)) {
+            return frameWidth;
+        }
+
+        // fallback
+        return 0;
     }
     return 0;
 }
