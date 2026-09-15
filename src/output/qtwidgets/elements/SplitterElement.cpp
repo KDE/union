@@ -54,6 +54,7 @@ qreal SplitterElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SplitterWidth:
+    case QStyle::PM_DockWidgetSeparatorExtent:
         return width();
     default:
         break;

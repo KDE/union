@@ -185,6 +185,10 @@ framewindow
     }
 }
 
+splitter {
+    width: 1px;
+}
+
 frame {
     &[shape="no-frame"] {
         border: none;
