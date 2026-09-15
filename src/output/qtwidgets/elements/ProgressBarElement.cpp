@@ -11,10 +11,12 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 ProgressBarElement::ProgressBarElement(const QStyleOptionProgressBar *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_progressBarOption(option)
+    , m_isHorizontal(true)
 {
     update();
 }
@@ -25,6 +27,8 @@ ProgressBarElement::~ProgressBarElement()
 
 void ProgressBarElement::update()
 {
+    m_isHorizontal = m_progressBarOption->state.testFlag(QStyle::State_Horizontal);
+
     setText(m_progressBarOption->text);
     updateSubElementList();
     layout();
@@ -99,6 +103,16 @@ void ProgressBarElement::layout()
     }
 }
 
+QSizeF ProgressBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+{
+    // If the bar is vertical, make sure text has room
+    auto size = applyPaddingToSize(contentsSizeFromStyle);
+    if (!m_isHorizontal && hasText()) {
+        size.rwidth() += m_layoutMap[ElementString::Text].rect.width();
+    }
+    return size;
+}
+
 QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 {
     if (element == QStyle::SE_ProgressBarLabel) {
@@ -122,37 +136,33 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         if (busy) {
             return rect;
         }
-        const bool horizontal(m_progressBarOption->state.testFlag(QStyle::State_Horizontal));
-        bool reverse = (horizontal && (m_progressBarOption->direction == Qt::RightToLeft)) || !horizontal;
+        bool reverse = (m_isHorizontal && (m_progressBarOption->direction == Qt::RightToLeft)) || !m_isHorizontal;
         if (m_progressBarOption->invertedAppearance) {
             reverse = !reverse;
         }
         const int progress(m_progressBarOption->progress - m_progressBarOption->minimum);
         const int steps(std::max(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
         const qreal position = qreal(progress) / qreal(steps);
-        const int indicatorSize(position * (horizontal ? rect.width() : rect.height()));
+        const int indicatorSize(position * (m_isHorizontal ? rect.width() : rect.height()));
         QRectF indicatorRect;
-        if (horizontal) {
+        if (m_isHorizontal) {
             indicatorRect = QRect(rect.left() + (reverse ? rect.width() - indicatorSize : 0), rect.y(), indicatorSize, rect.height());
         } else {
             indicatorRect = QRect(rect.x(), reverse ? (rect.bottom() - indicatorSize + 1) : rect.top(), rect.width(), indicatorSize);
         }
         return indicatorRect;
     } else if (element == QStyle::SE_ProgressBarGroove) {
-        // Copied and repurposed from Breeze
-        qreal width = 0;
-        qreal height = 0;
-        if (m_backgroundProperties->layout()) {
-            width = m_backgroundProperties->layout()->width().value_or(width);
-            height = m_backgroundProperties->layout()->height().value_or(height);
-        }
+        // Copied and repurposed from Breeze. We ignore width, we only want the thickness of the bar.
+        const qreal styleHeight = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        const qreal styleWidth = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        const qreal height = m_progressBarOption->rect.height() <= 0 ? styleHeight : m_progressBarOption->rect.height();
+        const qreal width = m_progressBarOption->rect.width() <= 0 ? styleWidth : m_progressBarOption->rect.width();
+
         auto rect = m_progressBarOption->rect;
-        rect.setHeight(height);
-        rect.setWidth(width);
-        if (m_progressBarOption->state.testFlag(QStyle::State_Horizontal)) {
-            rect = centerRect(m_progressBarOption->rect, width, height).toRect();
+        if (m_isHorizontal) {
+            rect = centerRect(m_progressBarOption->rect, width, styleHeight).toRect();
         } else {
-            rect = centerRect(m_progressBarOption->rect, height, width).toRect();
+            rect = centerRect(m_progressBarOption->rect, styleWidth, height).toRect();
         }
         return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
     };
@@ -183,4 +193,15 @@ qreal ProgressBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         break;
     }
     return 0;
+}
+
+QStringList ProgressBarElement::elementHints() const
+{
+    QStringList hints;
+    if (m_isHorizontal) {
+        hints.append(u"horizontal"_s);
+    } else {
+        hints.append(u"vertical"_s);
+    }
+    return hints;
 }

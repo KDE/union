@@ -46,8 +46,11 @@ public:
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
+    QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
     QRectF subElementRect(QStyle::SubElement element) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+
+    QStringList elementHints() const override;
 
 private:
     void updateSubElementList() override;
@@ -56,4 +59,5 @@ private:
     void drawChunk(QPainter *painter) const;
     const QStyleOptionProgressBar *m_progressBarOption = nullptr;
     int chunkWidth() const;
+    bool m_isHorizontal;
 };
