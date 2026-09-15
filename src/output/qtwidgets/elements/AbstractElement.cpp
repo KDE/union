@@ -642,12 +642,7 @@ LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const
 
     // Sort the items according their order
     std::sort(bucket.items.begin(), bucket.items.end(), [bucket](const LayoutItem &lhs, const LayoutItem &rhs) {
-        // We reverse the order here to make sure the layouter reads this in correct order (0 1 2 instead of 2 1 0)
-        if (bucket.type == BucketType::End) {
-            return lhs.order > rhs.order;
-        } else {
-            return lhs.order < rhs.order;
-        }
+        return lhs.order < rhs.order;
     });
 
     // No need for spacing as there are no items
