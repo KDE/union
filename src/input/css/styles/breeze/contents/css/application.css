@@ -217,6 +217,12 @@ frame {
         padding: 0px;
         inset: 1px;
     }
+    &[shape="vertical-line"] {
+        width: 1px;
+    }
+    &[shape="horizontal-line"] {
+        height: 1px;
+    }
 }
 
 groupbox {

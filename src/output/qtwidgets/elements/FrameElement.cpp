@@ -98,7 +98,7 @@ void FrameElement::drawFrame(QPainter *painter) const
         break;
     case QFrame::HLine:
     case QFrame::VLine:
-        AbstractElement::drawFrame(painter);
+        AbstractElement::drawBackground(painter);
         break;
     }
 }
