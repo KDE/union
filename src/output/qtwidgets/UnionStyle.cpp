@@ -677,6 +677,13 @@ void UnionStyle::polish(QWidget *widget)
             widget->setAttribute(Qt::WA_TranslucentBackground);
             widget->setAutoFillBackground(false);
         }
+        // Skip the background autofill for any scrollarea widgets
+        if (widget->parent() && widget->parent()->inherits("QAbstractItemView")) {
+            widget->setAutoFillBackground(false);
+        }
+        if (widget->parent() && widget->parent()->inherits("QTextEdit")) {
+            widget->setAutoFillBackground(false);
+        }
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars
@@ -727,14 +734,12 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (qobject_cast<const QColumnView *>(currentWidget)) {
             members.prepend(ElementString::ColumnView);
             // HeaderView is not castable with QObject_Cast
-        } else if (qobject_cast<const QListView *>(currentWidget)) {
-            members.prepend(ElementString::ListView);
         } else if (qobject_cast<const QTableView *>(currentWidget)) {
             members.prepend(ElementString::TableView);
         } else if (qobject_cast<const QTreeView *>(currentWidget)) {
             members.prepend(ElementString::TreeView);
-        } else if (qobject_cast<const QGraphicsView *>(currentWidget)) {
-            members.prepend(ElementString::GraphicsView);
+        } else if (qobject_cast<const QListView *>(currentWidget)) {
+            members.prepend(ElementString::ListView);
         } else if (qobject_cast<const QPlainTextEdit *>(currentWidget)) {
             members.prepend(ElementString::TextArea);
         } else if (qobject_cast<const QTextEdit *>(currentWidget)) {
@@ -745,13 +750,12 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
             members.prepend(ElementString::ScrollArea);
         } else if (qobject_cast<const QLabel *>(currentWidget)) {
             members.prepend(ElementString::Label);
-        } else if (qobject_cast<const QAbstractScrollArea *>(currentWidget)) {
-            members.prepend(ElementString::ScrollArea);
+
         } else if (qobject_cast<const QFrame *>(currentWidget)) {
             members.prepend(ElementString::Frame);
-        } else if (qobject_cast<const QSplitter *>(currentWidget)) {
-            members.prepend(ElementString::Splitter);
             // Toplevels
+        } else if (qobject_cast<const QSplitterHandle *>(currentWidget)) {
+            members.prepend(ElementString::SplitterHandle);
         } else if (qobject_cast<const QAbstractSpinBox *>(currentWidget)) {
             members.prepend(ElementString::SpinBox);
         } else if (qobject_cast<const QGroupBox *>(currentWidget)) {

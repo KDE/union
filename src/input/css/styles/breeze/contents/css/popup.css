@@ -196,6 +196,25 @@ dialog
         font-size: 20px;
         padding: var(--large-spacing);
     }
+
+    listview {
+        /* Declared by widgets property "_kde_side_panel_view" */
+
+        &.panel-left,
+        &.panel-right {
+            border: none;
+            border-radius: 0px;
+            background-color: var(--view-background-color);
+        }
+
+        &.panel-left {
+            border-right: 1px solid var(--window-border-color);
+        }
+
+        &.panel-right {
+            border-left: 1px solid var(--window-border-color);
+        }
+    }
 }
 
 dialogbuttonbox
