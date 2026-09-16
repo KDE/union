@@ -7,6 +7,7 @@
 #include <QAbstractScrollArea>
 #include <QApplication>
 #include <QDebug>
+#include <QDockWidget>
 #include <QLayout>
 #include <QLineEdit>
 #include <QMenu>
@@ -58,6 +59,14 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
     if (!m_isValid) {
         return;
     }
+    // Application has requested to disable frames for this element
+    if (m_widget) {
+        const auto forceFrame = m_widget->property("_breeze_force_frame");
+        if (forceFrame.isValid() && !forceFrame.toBool()) {
+            return;
+        }
+    }
+
     switch (enums.ControlElement) {
     case QStyle::CE_FocusFrame:
     case QStyle::CE_ShapedFrame:
@@ -147,8 +156,8 @@ QStringList FrameElement::elementHints() const
 
     // Backwards compatibility:
     // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
-    if (auto scrollArea = qobject_cast<const QAbstractScrollArea *>(m_widget)) {
-        if (scrollArea->inherits("KDEPrivate::KPageListView") || scrollArea->inherits("KDEPrivate::KPageTreeView")) {
+    if (m_widget) {
+        if (m_widget->inherits("KDEPrivate::KPageListView") || m_widget->inherits("KDEPrivate::KPageTreeView")) {
             const bool reverseLayout(m_styleOption->direction == Qt::RightToLeft);
             if (reverseLayout) {
                 hints.append(u"panel-right"_s);
@@ -158,6 +167,31 @@ QStringList FrameElement::elementHints() const
         }
     }
 
+    if (m_widget && m_widget->parentWidget()) {
+        if (const auto dock = qobject_cast<const QDockWidget *>(m_widget->parentWidget())) {
+            // For some reason the dock->dockLocation segfaults if there are no dockWidgetFeatures set
+            // so check for that.
+            if (!dock->features().testFlag(QDockWidget::NoDockWidgetFeatures)) {
+                switch (dock->dockLocation()) {
+                case Qt::LeftDockWidgetArea:
+                    hints.append(u"dock-left"_s);
+                    break;
+                case Qt::RightDockWidgetArea:
+                    hints.append(u"dock-right"_s);
+                    break;
+                case Qt::TopDockWidgetArea:
+                    hints.append(u"dock-top"_s);
+                    break;
+                case Qt::BottomDockWidgetArea:
+                    hints.append(u"dock-bottom"_s);
+                    break;
+                case Qt::DockWidgetArea_Mask:
+                case Qt::NoDockWidgetArea:
+                    break;
+                }
+            }
+        }
+    }
     return hints;
 }
 

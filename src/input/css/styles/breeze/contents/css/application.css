@@ -171,7 +171,6 @@ pane
     background-color: var(--window-background-color);
 }
 
-frame,
 groupbox,
 framemenu,
 framewindow
@@ -184,24 +183,21 @@ framewindow
     }
 }
 
-frame {
+frame,
+listview,
+treeview,
+tableview,
+columnview,
+scrollview {
+    border: none;
     &[shape="no-frame"] {
         border: none;
     }
     &[shape="panel"] {
+        border-radius: var(--corner-radius);
         border: 1px solid var(--window-border-color);
-        background-color: var(--view-background-alternate-color);
-        /* Declared by widgets property "_kde_side_panel_view" */
-        &.panel-left {
-            border: none;
-            border-radius: 0px;
-            border-right: 1px solid var(--window-border-color);
-        }
-        &.panel-right {
-            border: none;
-            border-radius: 0px;
-            border-left: 1px solid var(--window-border-color);
-        }
+        background-color: var(--view-background-color);
+
         .inactive & {
             background-color: var(--window-inactive-background-color);
             border-color: var(--window-inactive-border-color);
@@ -220,6 +216,26 @@ frame {
     }
     &[shape="horizontal-line"] {
         height: 1px;
+    }
+    &.dock-left,
+    &.dock-right,
+    &.dock-top,
+    &.dock-bottom {
+        border: none;
+        border-radius: 0px;
+    }
+
+    &.dock-left {
+        border-right: 1px solid var(--window-border-color);
+    }
+    &.dock-right {
+        border-left: 1px solid var(--window-border-color);
+    }
+    &.dock-top {
+        border-bottom: 1px solid var(--window-border-color);
+    }
+    &.dock-bottom {
+        border-top: 1px solid var(--window-border-color);
     }
 }
 
