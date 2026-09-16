@@ -172,7 +172,6 @@ pane
 }
 
 frame,
-splitter,
 groupbox,
 framemenu,
 framewindow
@@ -183,10 +182,6 @@ framewindow
     .inactive & {
         border-color: var(--window-inactive-border-color);
     }
-}
-
-splitter {
-    width: 1px;
 }
 
 frame {

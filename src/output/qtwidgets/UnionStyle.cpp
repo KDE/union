@@ -47,39 +47,58 @@
 #include <QApplication>
 #include <StyleRegistry.h>
 
+#include <QAbstractScrollArea>
+#include <QAbstractSpinBox>
 #include <QApplication>
 #include <QBitmap>
 #include <QCheckBox>
+#include <QColumnView>
 #include <QComboBox>
 #include <QDial>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDockWidget>
+#include <QFocusFrame>
 #include <QFormLayout>
+#include <QFrame>
 #include <QGraphicsItem>
 #include <QGraphicsProxyWidget>
 #include <QGraphicsView>
 #include <QGroupBox>
 #include <QItemDelegate>
+#include <QKeySequenceEdit>
+#include <QLabel>
 #include <QLineEdit>
+#include <QListView>
 #include <QMainWindow>
 #include <QMdiArea>
+#include <QMdiSubWindow>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMetaEnum>
 #include <QPainter>
+#include <QPlainTextEdit>
+#include <QProgressBar>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QRubberBand>
 #include <QScrollBar>
+#include <QSizeGrip>
+#include <QSlider>
+#include <QSplitter>
 #include <QSplitterHandle>
 #include <QStackedLayout>
+#include <QStatusBar>
 #include <QStyle>
 #include <QStyleFactory>
 #include <QStyleOption>
+#include <QStyleOptionFrame>
+#include <QTabBar>
+#include <QTabWidget>
 #include <QTableView>
 #include <QTextBrowser>
 #include <QTextEdit>
+#include <QTextOption>
 #include <QToolBar>
 #include <QToolBox>
 #include <QToolButton>
@@ -548,7 +567,7 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
 
             // also check if widget's parent is some itemView viewport
             if (widget && widget->parent() && qobject_cast<const QAbstractItemView *>(widget->parent()->parent())
-                && static_cast<const QAbstractItemView *>(widget->parent()->parent())->viewport() == widget->parent()) {
+                && qobject_cast<const QAbstractItemView *>(widget->parent()->parent())->viewport() == widget->parent()) {
                 return true;
             }
 
@@ -668,6 +687,118 @@ void UnionStyle::polish(QWidget *widget)
     }
 
     QCommonStyle::polish(widget);
+}
+
+QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
+{
+    if (!widget) {
+        return QStringList();
+    }
+    QStringList members;
+
+    // This mess of a ladder is used to create a proper order for the element hierarchy,
+    // based on the widget the item can be casted to.
+    // NOTE: These must be in correct order! See https://doc.qt.io/qt-6/hierarchy.html
+    // For example, QSplitter can be casted to both QFrame and QSplitter, so QSplitter is checked first.
+    // TODO: Probably need to implement all widgets?
+    auto currentWidget = widget;
+    while (currentWidget) {
+        // Buttons
+        if (qobject_cast<const QCheckBox *>(currentWidget)) {
+            members.prepend(ElementString::CheckBox);
+        } else if (qobject_cast<const QRadioButton *>(currentWidget)) {
+            members.prepend(ElementString::RadioButton);
+        } else if (qobject_cast<const QPushButton *>(currentWidget)) {
+            members.prepend(ElementString::Button);
+        } else if (qobject_cast<const QToolButton *>(currentWidget)) {
+            members.prepend(ElementString::ToolButton);
+        } else if (qobject_cast<const QAbstractButton *>(currentWidget)) {
+            members.prepend(ElementString::Button);
+            // Sliders
+        } else if (qobject_cast<const QDial *>(currentWidget)) {
+            members.prepend(ElementString::Dial);
+        } else if (qobject_cast<const QScrollBar *>(currentWidget)) {
+            members.prepend(ElementString::ScrollBar);
+        } else if (qobject_cast<const QSlider *>(currentWidget)) {
+            members.prepend(ElementString::Slider);
+        } else if (qobject_cast<const QAbstractSlider *>(currentWidget)) {
+            members.prepend(ElementString::Slider);
+            // Frames
+        } else if (qobject_cast<const QColumnView *>(currentWidget)) {
+            members.prepend(ElementString::ColumnView);
+            // HeaderView is not castable with QObject_Cast
+        } else if (qobject_cast<const QListView *>(currentWidget)) {
+            members.prepend(ElementString::ListView);
+        } else if (qobject_cast<const QTableView *>(currentWidget)) {
+            members.prepend(ElementString::TableView);
+        } else if (qobject_cast<const QTreeView *>(currentWidget)) {
+            members.prepend(ElementString::TreeView);
+        } else if (qobject_cast<const QGraphicsView *>(currentWidget)) {
+            members.prepend(ElementString::GraphicsView);
+        } else if (qobject_cast<const QPlainTextEdit *>(currentWidget)) {
+            members.prepend(ElementString::TextArea);
+        } else if (qobject_cast<const QTextEdit *>(currentWidget)) {
+            members.prepend(ElementString::TextArea);
+        } else if (qobject_cast<const QGraphicsView *>(currentWidget)) {
+            members.prepend(ElementString::GraphicsView);
+        } else if (qobject_cast<const QScrollArea *>(currentWidget)) {
+            members.prepend(ElementString::ScrollArea);
+        } else if (qobject_cast<const QLabel *>(currentWidget)) {
+            members.prepend(ElementString::Label);
+        } else if (qobject_cast<const QAbstractScrollArea *>(currentWidget)) {
+            members.prepend(ElementString::ScrollArea);
+        } else if (qobject_cast<const QFrame *>(currentWidget)) {
+            members.prepend(ElementString::Frame);
+        } else if (qobject_cast<const QSplitter *>(currentWidget)) {
+            members.prepend(ElementString::Splitter);
+            // Toplevels
+        } else if (qobject_cast<const QAbstractSpinBox *>(currentWidget)) {
+            members.prepend(ElementString::SpinBox);
+        } else if (qobject_cast<const QGroupBox *>(currentWidget)) {
+            members.prepend(ElementString::GroupBox);
+        } else if (qobject_cast<const QKeySequenceEdit *>(currentWidget)) {
+            members.prepend(ElementString::KeySequenceEdit);
+        } else if (qobject_cast<const QComboBox *>(currentWidget)) {
+            members.prepend(ElementString::ComboBox);
+        } else if (qobject_cast<const QDialog *>(currentWidget)) {
+            members.prepend(ElementString::Dialog);
+        } else if (qobject_cast<const QDialogButtonBox *>(currentWidget)) {
+            members.prepend(ElementString::DialogButtonBox);
+        } else if (qobject_cast<const QDockWidget *>(currentWidget)) {
+            members.prepend(ElementString::Dock);
+        } else if (qobject_cast<const QFocusFrame *>(currentWidget)) {
+            members.prepend(ElementString::FocusFrame);
+        } else if (qobject_cast<const QLineEdit *>(currentWidget)) {
+            members.prepend(ElementString::TextField);
+        } else if (qobject_cast<const QMainWindow *>(currentWidget)) {
+            members.prepend(ElementString::ApplicationWindow);
+        } else if (qobject_cast<const QMdiSubWindow *>(currentWidget)) {
+            members.prepend(ElementString::MdiSubWindow);
+        } else if (qobject_cast<const QMenu *>(currentWidget)) {
+            members.prepend(ElementString::Menu);
+        } else if (qobject_cast<const QMenuBar *>(currentWidget)) {
+            members.prepend(ElementString::MenuBar);
+        } else if (qobject_cast<const QProgressBar *>(currentWidget)) {
+            members.prepend(ElementString::ProgressBar);
+        } else if (qobject_cast<const QRubberBand *>(currentWidget)) {
+            members.prepend(ElementString::RubberBand);
+        } else if (qobject_cast<const QSizeGrip *>(currentWidget)) {
+            members.prepend(ElementString::SizeGrip);
+        } else if (qobject_cast<const QSplitterHandle *>(currentWidget)) {
+            members.prepend(ElementString::SplitterHandle);
+        } else if (qobject_cast<const QStatusBar *>(currentWidget)) {
+            members.prepend(ElementString::StatusBar);
+        } else if (qobject_cast<const QTabBar *>(currentWidget)) {
+            members.prepend(ElementString::TabBar);
+        } else if (qobject_cast<const QTabWidget *>(currentWidget)) {
+            members.prepend(ElementString::TabWidget);
+        } else if (qobject_cast<const QToolBar *>(currentWidget)) {
+            members.prepend(ElementString::ToolBar);
+        }
+        currentWidget = currentWidget->parentWidget();
+    }
+
+    return members;
 }
 
 void UnionStyle::drawItemText(QPainter *painter,

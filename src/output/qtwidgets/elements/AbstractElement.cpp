@@ -407,7 +407,7 @@ Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, con
     if (widget) {
         elementTypes = widget->property(property_union_member_list).toStringList();
         if (elementTypes.isEmpty()) {
-            elementTypes = widgetToElementHierarchy(widget);
+            elementTypes = m_style->widgetToElementHierarchy(widget);
         }
     } else {
         elementTypes = {styleOptionToElementName(opt)};
