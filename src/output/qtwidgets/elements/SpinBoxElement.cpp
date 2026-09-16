@@ -11,6 +11,7 @@
 #include <qstyle.h>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 SpinBoxElement::SpinBoxElement(const QStyleOptionSpinBox *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -103,10 +104,13 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
     // Based on QCommonStyle. We only draw the "constrained" look for now.
     const QRectF buttonRect = m_layoutMap[ElementString::Indicator].rect;
     QRectF bgRect = m_spinBoxOption->rect;
-    if (m_backgroundProperties->layout()) {
-        bgRect.setWidth(std::max(bgRect.width(), m_backgroundProperties->layout()->width().value_or(0)));
-        bgRect.setHeight(std::max(bgRect.height(), m_backgroundProperties->layout()->height().value_or(0)));
-    }
+
+    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+
+    bgRect.setWidth(std::max(bgRect.width(), width));
+    bgRect.setHeight(std::max(bgRect.height(), height));
+
     const bool noButtons = (m_spinBoxOption->buttonSymbols == QAbstractSpinBox::NoButtons);
     const int y = m_spinBoxOption->rect.y();
     const int x = m_spinBoxOption->rect.x() + m_spinBoxOption->rect.width() - buttonRect.width();
