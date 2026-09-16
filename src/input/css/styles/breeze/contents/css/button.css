@@ -392,15 +392,18 @@ tabbutton {
     border: 1px solid var(--tab-background-color);
     color: var(--tab-text-color);
 
+    text-wrap-mode: no-wrap;
+    text-elide: right;
+
     icon-alignment: content start center 0;
     text-alignment: content center center 0;
-
 
     &.immutable {
         background-color: var(--button-active-background-color);
         border: none;
         border-radius: 0px;
         padding: var(--medium-spacing);
+        text-elide: none;
         /* TODO: Separators between buttons need outline property which has not been implemented yet */
     }
 
