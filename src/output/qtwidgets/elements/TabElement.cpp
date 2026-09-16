@@ -175,14 +175,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF TabElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
-        return QRect();
-    }
-
-    if (element == QStyle::SE_TabBarTabText) {
-        return m_layoutMap[ElementString::Text].rect;
-    }
-    return m_tabOption->rect;
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 // Padding of the tab content and the edge, only one value is taken so take the largest one
