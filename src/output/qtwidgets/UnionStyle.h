@@ -52,6 +52,13 @@ public:
 
     QIcon unionIcon(Union::Properties::StylePropertyGroup *properties, const QString &defaultName) const;
 
+    /*!
+     * \brief Matches the widget name/class to a matching CSS element name, and sets up
+     * property "_union_member_list" to the widget. This can be used to get the whole parental
+     * hierarchy of the widget
+     */
+    QStringList widgetToElementHierarchy(const QWidget *widget) const;
+
 private:
     bool m_showMnemonics;
     void setMnemonics(bool enabled);

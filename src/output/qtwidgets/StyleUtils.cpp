@@ -121,62 +121,6 @@ QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::
     return rect;
 }
 
-QStringList widgetToElementHierarchy(const QWidget *widget)
-{
-    if (!widget) {
-        return QStringList();
-    }
-    QStringList members;
-    // We will have to check what items the widget inherits from,
-    // as far as I know there is no better way to do this.
-    const QMap<const char *, QString> parentClasses = {{"QCheckBox", ElementString::CheckBox},
-                                                       {"QRadioButton", ElementString::RadioButton},
-                                                       {"QPushButton", ElementString::Button},
-                                                       {"QToolButton", ElementString::ToolButton},
-                                                       {"QDial", ElementString::Dial},
-                                                       {"QScrollBar", ElementString::ScrollBar},
-                                                       {"QSlider", ElementString::Slider},
-                                                       {"QAbstractSpinBox", ElementString::SpinBox},
-                                                       {"QComboBox", ElementString::ComboBox},
-                                                       {"QDialog", ElementString::Dialog},
-                                                       {"QDialogButtonBox", ElementString::DialogButtonBox},
-                                                       {"QDockWidget", ElementString::Dock},
-                                                       {"QFocusFrame", ElementString::FocusFrame},
-                                                       {"QFrame", ElementString::Frame},
-                                                       {"QGroupBox", ElementString::GroupBox},
-                                                       {"QKeySequenceEdit", ElementString::KeySequenceEdit},
-                                                       {"QLineEdit", ElementString::TextField},
-                                                       {"QMainWindow", ElementString::ApplicationWindow},
-                                                       {"QMdiSubWinow", ElementString::MdiSubWindow},
-                                                       {"QMenu", ElementString::Menu},
-                                                       {"QMenuBar", ElementString::MenuBar},
-                                                       {"QProgressBar", ElementString::ProgressBar},
-                                                       {"QRubberBand", ElementString::RubberBand},
-                                                       {"QSizeGrip", ElementString::SizeGrip},
-                                                       {"QSplitterHandle", ElementString::SplitterHandle},
-                                                       {"QStatusBar", ElementString::StatusBar},
-                                                       {"QTabBar", ElementString::TabBar},
-                                                       {"QTabWidget", ElementString::TabWidget},
-                                                       {"QToolBar", ElementString::ToolBar},
-                                                       {"QAbstractScrollArea", ElementString::ScrollArea},
-                                                       {"QListView", ElementString::ListView},
-                                                       {"QTreeView", ElementString::TreeView},
-                                                       {"QSplitter", ElementString::Splitter}};
-
-    auto currentWidget = widget;
-    while (currentWidget) {
-        for (const auto classes : parentClasses.asKeyValueRange()) {
-            if (currentWidget->inherits(classes.first)) {
-                members.prepend(classes.second);
-                break;
-            }
-        }
-        currentWidget = currentWidget->parentWidget();
-    }
-
-    return members;
-}
-
 QString styleOptionToElementName(const QStyleOption *option)
 {
     if (!option) {

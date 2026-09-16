@@ -8,6 +8,7 @@
 #include <properties/SizePropertyGroup.h>
 #include <properties/StylePropertyGroup.h>
 
+#include "SharedNames.h"
 #include <QMargins>
 #include <QPainterPath>
 #include <QStyleOption>
@@ -46,13 +47,6 @@ Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
  * \brief Returns the background rectangle of an option, but removes its insets according to the properties first.
  */
 QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
-
-/*!
- * \brief Matches the widget name/class to a matching CSS element name, and sets up
- * property "_union_member_list" to the widget. This can be used to get the whole parental
- * hierarchy of the widget
- */
-QStringList widgetToElementHierarchy(const QWidget *widget);
 
 /*!
  * \brief Helper function to get text from any QStyleOption that has a field with QString (text/title)
