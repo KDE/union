@@ -393,7 +393,6 @@ tabbutton {
     color: var(--tab-text-color);
 
     text-wrap-mode: no-wrap;
-    text-elide: right;
 
     icon-alignment: content start center 0;
     text-alignment: content center center 0;
