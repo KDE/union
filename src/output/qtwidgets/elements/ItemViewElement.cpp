@@ -155,6 +155,17 @@ void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
+void ItemViewElement::drawBackground(QPainter *painter) const
+{
+    painter->save();
+    // Apply clip region in case the user has set one for painter.
+    const QRect rect = m_styleOption->rect;
+    const QRegion clipRegion = painter->hasClipping() ? (painter->clipRegion() & rect) : rect;
+    painter->setClipRegion(clipRegion);
+    AbstractElement::drawBackground(painter);
+    painter->restore();
+}
+
 void ItemViewElement::drawText(QPainter *painter) const
 {
     if (hasText()) {

@@ -193,7 +193,8 @@ scrollview {
     &[shape="no-frame"] {
         border: none;
     }
-    &[shape="panel"] {
+    &[shape="panel"],
+    &[shape="box"] {
         border-radius: var(--corner-radius);
         border: 1px solid var(--window-border-color);
         background-color: var(--view-background-color);

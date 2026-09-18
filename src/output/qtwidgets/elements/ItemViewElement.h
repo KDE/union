@@ -46,6 +46,7 @@ public:
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
 
 private:
+    void drawBackground(QPainter *painter) const override;
     QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
     void drawIndicator(QPainter *painter) const override;
