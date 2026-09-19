@@ -22,6 +22,10 @@ static Union::LruImageCache imageCache;
 
 void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Union::Properties::StylePropertyGroup *style, BackgroundParts parts)
 {
+    if (!style) {
+        return;
+    }
+
     QRectF rect = mainRect;
     // Remove any insets we may have, we do not want to draw them
     if (style->layout() && style->layout()->inset()) {
