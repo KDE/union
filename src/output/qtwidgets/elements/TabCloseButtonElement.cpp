@@ -25,6 +25,11 @@ TabCloseButtonElement::~TabCloseButtonElement()
 
 void TabCloseButtonElement::update()
 {
+    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
+    if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    }
+
     layout();
 }
 
@@ -47,6 +52,7 @@ void TabCloseButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.PrimitiveElement) {
     case QStyle::PE_IndicatorTabClose:
+        drawBackground(painter);
         drawIcon(painter);
         break;
     }
