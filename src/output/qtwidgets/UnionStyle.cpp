@@ -548,6 +548,12 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
 // TODO: Make these adjustable!
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), hint, option, widget);
+    auto cached = ElementCache::element<QStyle::StyleHint, QStyle::SH_TabBar_Alignment>(hint, hash, this, option, widget);
+    if (cached) {
+        return cached->styleHint(hint);
+    }
+
     switch (hint) {
     case SH_RubberBand_Mask: {
         if (auto mask = qstyleoption_cast<QStyleHintReturnMask *>(returnData)) {
@@ -598,8 +604,6 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
         return true;
     case SH_GroupBox_TextLabelVerticalAlignment:
         return Qt::AlignVCenter;
-    case SH_TabBar_Alignment:
-        return Qt::AlignLeft;
     case SH_ToolBox_SelectedPageTitleBold:
         return false;
     case SH_ScrollBar_MiddleClickAbsolutePosition:

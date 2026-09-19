@@ -12,6 +12,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 TabBarElement::TabBarElement(const QStyleOptionTabBarBase *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -89,6 +90,19 @@ qreal TabBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         return iconSize().width();
     default:
         break;
+    }
+    return 0;
+}
+
+int TabBarElement::styleHint(QStyle::StyleHint styleHint) const
+{
+    switch (styleHint) {
+    case QStyle::SH_TabBar_Alignment:
+        return toQtHorizontalAlignment(safePropertyLookup(m_backgroundProperties,
+                                                          Alignment::Start,
+                                                          &StylePropertyGroup::layout,
+                                                          &LayoutPropertyGroup::alignment,
+                                                          &AlignmentPropertyGroup::horizontal));
     }
     return 0;
 }

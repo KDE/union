@@ -81,6 +81,11 @@ public:
     virtual qreal pixelMetric(QStyle::PixelMetric pixelMetric) const;
 
     /*!
+     * \brief Return the given Stylehint value. If not found, returns 0
+     */
+    virtual int styleHint(QStyle::StyleHint styleHint) const;
+
+    /*!
      * \brief Updates the properties of the element, such as text and layouting
      */
     virtual void update();
@@ -201,7 +206,8 @@ protected:
     void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect) const;
 
     /*!
-     * \brief Draw text at the given rectangle. Handles coloring, elision and enabled status.
+     * \brief Draw text at the given rectangle. Handles coloring, elision and
+     * enabled status.
      */
     void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
 
