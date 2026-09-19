@@ -20,53 +20,42 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup)
+Qt::Alignment toQtVerticalAlignment(Union::Properties::Alignment alignment)
 {
-    Qt::Alignment verticalAlignment = Qt::AlignVCenter;
-    Qt::Alignment horizontalAlignment = Qt::AlignLeft;
-
-    if (!alignmentGroup) {
-        return verticalAlignment | horizontalAlignment;
-    }
-
-    auto unionVertical = alignmentGroup->vertical().value_or(Union::Properties::Alignment::Unspecified);
-    auto unionHorizontal = alignmentGroup->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-
-    switch (unionVertical) {
+    switch (alignment) {
     case Union::Properties::Alignment::Unspecified:
     case Union::Properties::Alignment::Fill:
     case Union::Properties::Alignment::StackCenter:
     case Union::Properties::Alignment::StackFill:
     case Union::Properties::Alignment::Center:
-        verticalAlignment = Qt::AlignVCenter;
+        return Qt::AlignVCenter;
         break;
     case Union::Properties::Alignment::Start:
-        verticalAlignment = Qt::AlignTop;
+        return Qt::AlignTop;
         break;
     case Union::Properties::Alignment::End:
-        verticalAlignment = Qt::AlignBottom;
+        return Qt::AlignBottom;
         break;
     }
+    return Qt::AlignVCenter;
+}
 
-    switch (unionHorizontal) {
+Qt::Alignment toQtHorizontalAlignment(Union::Properties::Alignment alignment)
+{
+    switch (alignment) {
     case Union::Properties::Alignment::Unspecified:
     case Union::Properties::Alignment::Start:
-        horizontalAlignment = Qt::AlignLeft;
-        break;
+        return Qt::AlignLeft;
     case Union::Properties::Alignment::Center:
-        horizontalAlignment = Qt::AlignHCenter;
-        break;
+        return Qt::AlignHCenter;
     case Union::Properties::Alignment::End:
-        horizontalAlignment = Qt::AlignRight;
-        break;
+        return Qt::AlignRight;
     case Union::Properties::Alignment::Fill:
     case Union::Properties::Alignment::StackFill:
     case Union::Properties::Alignment::StackCenter:
-        horizontalAlignment = Qt::AlignJustify;
-        break;
+        return Qt::AlignJustify;
     }
-
-    return verticalAlignment | horizontalAlignment;
+    return Qt::AlignHCenter;
 }
 
 Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode)
@@ -311,10 +300,11 @@ QSizeF iconSizeFromOption(const QStyleOption *opt)
 int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
 {
     int textFlags = Qt::AlignVCenter;
-    auto textAlign = QFlags(Qt::AlignLeft);
-    if (properties && properties->text()) {
-        textAlign = toQtAlignment(properties->text()->alignment());
-    }
+    const auto horizontalAlignment =
+        properties->safePropertyLookup(Alignment::Start, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::horizontal);
+    const auto verticalAlignment =
+        properties->safePropertyLookup(Alignment::Center, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::vertical);
+    const auto textAlign = toQtHorizontalAlignment(horizontalAlignment) | toQtVerticalAlignment(verticalAlignment);
     auto textWrap =
         toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
     textFlags |= textAlign;

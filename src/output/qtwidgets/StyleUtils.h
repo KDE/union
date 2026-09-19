@@ -39,7 +39,8 @@ struct LayoutBucket {
 
 const char property_union_member_list[] = "_union_member_list";
 
-Qt::Alignment toQtAlignment(Union::Properties::AlignmentPropertyGroup *alignmentGroup);
+Qt::Alignment toQtHorizontalAlignment(Union::Properties::Alignment alignment);
+Qt::Alignment toQtVerticalAlignment(Union::Properties::Alignment alignment);
 Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode);
 Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
 
