@@ -502,7 +502,7 @@ tabbutton {
         }
     }
 
-    closebutton {
+    & > closebutton {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -510,8 +510,9 @@ tabbutton {
 
         &:hovered,
         &:pressed {
-            icon-color: var(--negative-text);
-            color: var(--negative-text);
+            color: var(--highlight-text-color);
+            background-color: var(--negative-text);
+            border-radius: var(--icon-size-small);
         }
 
         &:disabled {
