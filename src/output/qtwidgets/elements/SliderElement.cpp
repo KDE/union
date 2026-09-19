@@ -132,7 +132,7 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
                 // adjust color
                 tickmarkElements.last()->setHint(u"active"_s, current <= m_sliderOption->sliderPosition);
                 auto props = queryProperties(tickmarkElements);
-                const auto color = props->background()->color()->toQColor();
+                const auto color = safePropertyLookup(props, Union::Color{}, &StylePropertyGroup::background, &BackgroundPropertyGroup::color).toQColor();
                 painter->setPen(color);
 
                 // calculate positions and draw lines
@@ -264,8 +264,11 @@ QList<QRect> SliderElement::tickLines() const
         interval = m_sliderOption->pageStep;
     }
     if (interval >= 1) {
-        const QSizeF tickSize(tickMarkProps->layout()->width().value_or(0), tickMarkProps->layout()->height().value_or(0));
-        const QMarginsF tickMargins = tickMarkProps->layout()->margins()->toMargins().toMargins();
+        const QSizeF tickSize{tickMarkProps->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width),
+                              tickMarkProps->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height)};
+
+        const QMarginsF tickMargins =
+            tickMarkProps->safePropertyLookup(QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
         const auto tickMarginsWidth = tickMargins.left() + tickMargins.right();
         const auto tickMarginsHeight = tickMargins.top() + tickMargins.bottom();
 
