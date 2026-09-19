@@ -549,7 +549,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
     const auto hash = qHashMulti(QHashSeed::globalSeed(), hint, option, widget);
-    auto cached = ElementCache::element<QStyle::StyleHint, QStyle::SH_TabBar_Alignment>(hint, hash, this, option, widget);
+    auto cached = ElementCache::element<QStyle::StyleHint, QStyle::SH_TabBar_Alignment, QStyle::SH_TabBar_ElideMode>(hint, hash, this, option, widget);
     if (cached) {
         return cached->styleHint(hint);
     }
