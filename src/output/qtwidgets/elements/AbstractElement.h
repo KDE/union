@@ -206,8 +206,7 @@ protected:
     void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect) const;
 
     /*!
-     * \brief Draw text at the given rectangle. Handles coloring, elision and
-     * enabled status.
+     * \brief Draw text at the given rectangle. Handles coloring, elision and enabled status.
      */
     void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
 

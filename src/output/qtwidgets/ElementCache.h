@@ -33,6 +33,14 @@ void element(std::shared_ptr<AbstractElement> &output, size_t hash, const UnionS
     using ElementType = EnumToType<EnumType, enumValue>::elementType;
     using OptionType = EnumToType<EnumType, enumValue>::optionType;
 
+    // If we do not have an option, create a default one to ensure default behavior.
+    if (!option) {
+        OptionType opt;
+        output = std::make_shared<ElementType>(&opt, style, widget);
+        detail::s_elementCache.insert(hash, output);
+        return;
+    }
+
     if (detail::s_elementCache.contains(hash)) {
         output = detail::s_elementCache.value(hash).value();
         output->update();
