@@ -245,6 +245,16 @@ QStringList TabElement::elementHints() const
         hints.append(u"immutable"_s);
     }
 
+    auto tabStyleOption = qstyleoption_cast<const QStyleOptionTab *>(m_styleOption);
+    auto tabBar = qobject_cast<const QTabBar *>(m_widget);
+    if (tabStyleOption && tabBar) {
+        if (tabStyleOption->tabIndex == 0) {
+            hints.append(u"first"_s);
+        } else if (tabStyleOption->tabIndex == tabBar->count() - 1) {
+            hints.append(u"last"_s);
+        }
+    }
+
     return hints;
 }
 

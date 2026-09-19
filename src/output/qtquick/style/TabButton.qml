@@ -23,6 +23,8 @@ T.TabButton {
     Union.Element.hints: [
         Union.ElementHint { name: "with-icon"; when: control.icon.name || control.icon.source.toString() },
         Union.ElementHint { name: "itemview-highlight"; when: control.ListView?.view?.highlightItem ?? false },
+        Union.ElementHint { name: "first"; when: control.T.TabBar.index === 0 },
+        Union.ElementHint { name: "last"; when: control.T.TabBar.index === control.T.TabBar.tabBar.count - 1 },
     ]
     Union.Element.attributes: [
         P.DisplayAttribute { control: control },
