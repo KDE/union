@@ -119,6 +119,12 @@ qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     return 0;
 }
 
+int AbstractElement::styleHint(QStyle::StyleHint styleHint) const
+{
+    Q_UNUSED(styleHint);
+    return 0;
+}
+
 void AbstractElement::updateSubElementList()
 {
 }

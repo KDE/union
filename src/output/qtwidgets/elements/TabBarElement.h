@@ -21,6 +21,7 @@ namespace detail
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarScrollButtonWidth> : public TypeHelper<TabBarElement, QStyleOptionTabBarBase>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarBaseHeight> : public TypeHelper<TabBarElement, QStyleOptionTabBarBase>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarIconSize> : public TypeHelper<TabBarElement, QStyleOptionTabBarBase>{};
+        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_TabBar_Alignment> : public TypeHelper<TabBarElement, QStyleOptionTabBarBase>{};
 /* clang-format on */
 }
 }
@@ -37,6 +38,7 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    int styleHint(QStyle::StyleHint styleHint) const override;
 
 private:
     QVariantMap elementAttributes() const override;
