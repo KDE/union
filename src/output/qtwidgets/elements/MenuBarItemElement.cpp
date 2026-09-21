@@ -24,6 +24,9 @@ MenuBarItemElement::~MenuBarItemElement()
 
 void MenuBarItemElement::update()
 {
+    if (!m_menuItemOption) {
+        return;
+    }
     setIndicator(QIcon());
     setIcon(m_menuItemOption->icon);
     setText(m_menuItemOption->text);
@@ -54,7 +57,7 @@ void MenuBarItemElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::Text);
-    if (!m_menuItemOption->icon.isNull()) {
+    if (m_menuItemOption && !m_menuItemOption->icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
 }
@@ -79,6 +82,9 @@ void MenuBarItemElement::layout()
 QStringList MenuBarItemElement::elementHints() const
 {
     QStringList hints;
+    if (!m_menuItemOption) {
+        return hints;
+    }
     if (m_menuItemOption->checked) {
         hints.append(u"with-submenu"_s);
     }

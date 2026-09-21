@@ -29,6 +29,9 @@ ToolButtonElement::~ToolButtonElement()
 
 void ToolButtonElement::update()
 {
+    if (!m_toolButtonOption) {
+        return;
+    }
     m_hasIndicator =
         m_toolButtonOption->features.testFlag(QStyleOptionToolButton::HasMenu) || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Menu);
     m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
@@ -134,6 +137,9 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolButtonElement::drawIcon(QPainter *painter) const
 {
+    if (!m_toolButtonOption) {
+        return;
+    }
     if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
         return;
     }
@@ -179,6 +185,9 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
 QVariantMap ToolButtonElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_toolButtonOption) {
+        return map;
+    }
     switch (m_toolButtonOption->toolButtonStyle) {
     case Qt::ToolButtonIconOnly:
         map[u"display"_s] = QVariant(u"icon-only"_s);
@@ -201,7 +210,7 @@ QVariantMap ToolButtonElement::elementAttributes() const
 QStringList ToolButtonElement::elementHints() const
 {
     QStringList hints;
-    if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
+    if (!m_toolButtonOption || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
         return hints;
     }
 
@@ -232,6 +241,9 @@ QStringList ToolButtonElement::elementHints() const
 
 void ToolButtonElement::layoutButtons()
 {
+    if (!m_toolButtonOption) {
+        return;
+    }
     m_mainButtonRect = m_toolButtonOption->rect;
     if (!m_hasIndicator) {
         m_menuButtonRect = QRectF();
@@ -243,14 +255,17 @@ void ToolButtonElement::layoutButtons()
     // as this arrow lives within the padding area.
     bool arrowInline = (arrowStyle() == ArrowStyle::InlineArrow);
     // Align the second button around the main button
-    if (m_indicatorProperties && m_indicatorProperties->layout() && m_indicatorProperties->layout()->alignment()) {
-        auto alignH = m_indicatorProperties->layout()->alignment()->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-        auto alignV = m_indicatorProperties->layout()->alignment()->vertical().value_or(Union::Properties::Alignment::Unspecified);
-
-        QMarginsF padding;
-        if (m_indicatorProperties->layout()->padding()) {
-            padding = m_indicatorProperties->layout()->padding()->toMargins();
-        }
+    if (m_indicatorProperties) {
+        auto alignH = m_indicatorProperties->safePropertyLookup(Alignment::Unspecified,
+                                                                &StylePropertyGroup::layout,
+                                                                &LayoutPropertyGroup::alignment,
+                                                                &AlignmentPropertyGroup::horizontal);
+        auto alignV = m_indicatorProperties->safePropertyLookup(Alignment::Unspecified,
+                                                                &StylePropertyGroup::layout,
+                                                                &LayoutPropertyGroup::alignment,
+                                                                &AlignmentPropertyGroup::vertical);
+        QMarginsF padding =
+            m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         m_menuButtonRect = m_menuButtonRect.marginsAdded(padding);
 
         switch (alignH) {
@@ -308,6 +323,9 @@ void ToolButtonElement::layoutButtons()
 ArrowStyle ToolButtonElement::arrowStyle() const
 {
     // Behavior taken from breeze
+    if (!m_toolButtonOption) {
+        return ArrowStyle::None;
+    }
     const bool hasPopupMenu = (m_hasIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::MenuButtonPopup));
     const bool hasInlineIndicator = (m_hasIndicator && !hasPopupMenu);
     const bool hasDelayedMenu = (hasInlineIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::PopupDelay));

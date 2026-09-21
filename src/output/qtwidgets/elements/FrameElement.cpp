@@ -99,6 +99,10 @@ void FrameElement::drawFrame(QPainter *painter) const
     // Follow the expectations: If frame has panel shape,
     // we need to draw the background too. In HLine/VLine cases
     // we can just skip it
+    if (!m_frameOption) {
+        return;
+    }
+
     switch (m_frameOption->frameShape) {
     case QFrame::NoFrame:
         // Draw nothing
@@ -125,6 +129,9 @@ void FrameElement::updateSubElementList()
 QVariantMap FrameElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_frameOption) {
+        return map;
+    }
     switch (m_frameOption->frameShape) {
     case QFrame::NoFrame:
         map[u"shape"_s] = u"no-frame"_s;
@@ -158,7 +165,7 @@ QStringList FrameElement::elementHints() const
     // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
     if (m_widget) {
         if (m_widget->inherits("KDEPrivate::KPageListView") || m_widget->inherits("KDEPrivate::KPageTreeView")) {
-            const bool reverseLayout(m_styleOption->direction == Qt::RightToLeft);
+            const bool reverseLayout(m_styleOption && m_styleOption->direction == Qt::RightToLeft);
             if (reverseLayout) {
                 hints.append(u"panel-right"_s);
             } else {

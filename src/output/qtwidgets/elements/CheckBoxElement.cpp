@@ -31,8 +31,10 @@ void CheckBoxElement::update()
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
 
-    setIcon(m_buttonOption->icon);
-    setText(m_buttonOption->text);
+    if (m_buttonOption) {
+        setIcon(m_buttonOption->icon);
+        setText(m_buttonOption->text);
+    }
     updateSubElementList();
     layout();
 }
@@ -76,7 +78,7 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
         return QRect();
     }
 
-    if (element == QStyle::SE_CheckBoxIndicator) {
+    if (m_buttonOption && element == QStyle::SE_CheckBoxIndicator) {
         if (m_buttonOption->styleObject || m_widget) {
             // The indicator is drawn as part of something
             return m_layoutMap[ElementString::Indicator].rect;
@@ -93,6 +95,9 @@ void CheckBoxElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::Indicator);
+    if (!m_buttonOption) {
+        return;
+    }
     if (!m_buttonOption->icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
@@ -109,6 +114,9 @@ void CheckBoxElement::drawIndicator(QPainter *painter) const
 QStringList CheckBoxElement::elementHints() const
 {
     QStringList hints;
+    if (!m_buttonOption) {
+        return hints;
+    }
     if (!m_buttonOption->icon.isNull()) {
         hints.append(u"with-icon"_s);
     }

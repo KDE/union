@@ -25,6 +25,9 @@ TitleBarElement::~TitleBarElement()
 
 void TitleBarElement::update()
 {
+    if (!m_titleBarOption) {
+        return;
+    }
     setIcon(m_titleBarOption->icon);
     setText(m_titleBarOption->text);
     updateSubElementList();
@@ -34,7 +37,7 @@ void TitleBarElement::update()
 void TitleBarElement::draw(QPainter *painter, DrawEnums enums) const
 {
     Q_UNUSED(enums);
-    if (!m_isValid) {
+    if (!m_isValid || !m_titleBarOption) {
         return;
     }
 
@@ -74,6 +77,9 @@ void TitleBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void TitleBarElement::updateSubElementList()
 {
+    if (!m_titleBarOption) {
+        return;
+    }
     m_subElementList.clear();
     if (!m_titleBarOption->text.isEmpty()
         && (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowTitleHint) || m_titleBarOption->titleBarFlags.testFlag(Qt::WindowSystemMenuHint))) {
@@ -174,6 +180,9 @@ QIcon TitleBarElement::queryIcon(const QString &defaultIconName, const QStringLi
 QStringList TitleBarElement::elementHints() const
 {
     QStringList hints;
+    if (!m_titleBarOption) {
+        return hints;
+    }
     if (m_titleBarOption->titleBarState & Qt::WindowMaximized) {
         hints.append(u"maximized"_s);
     }

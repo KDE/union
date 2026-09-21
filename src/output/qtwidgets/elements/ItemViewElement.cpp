@@ -31,6 +31,9 @@ ItemViewElement::~ItemViewElement()
 
 void ItemViewElement::update()
 {
+    if (!m_viewItemOption) {
+        return;
+    }
     if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
         m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
         if (!m_indicatorElementList.isEmpty()) {
@@ -157,6 +160,9 @@ void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ItemViewElement::drawBackground(QPainter *painter) const
 {
+    if (!m_styleOption) {
+        return;
+    }
     painter->save();
     // Apply clip region in case the user has set one for painter.
     const QRect rect = m_styleOption->rect;
@@ -187,6 +193,9 @@ void ItemViewElement::drawIcon(QPainter *painter) const
 QVariantMap ItemViewElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_viewItemOption) {
+        return map;
+    }
     if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Top) {
         map[u"display"_s] = QVariant(u"text-below-icon"_s);
     }

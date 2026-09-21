@@ -11,6 +11,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 SliderElement::SliderElement(const QStyleOptionSlider *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -28,6 +29,9 @@ SliderElement::~SliderElement()
 
 void SliderElement::update()
 {
+    if (!m_sliderOption) {
+        return;
+    }
     m_isHorizontal = m_sliderOption->state.testFlag(QStyle::State_Horizontal);
     m_isInverted = m_sliderOption->upsideDown;
     m_isReverse = m_isHorizontal && m_sliderOption->direction == Qt::RightToLeft;
@@ -69,7 +73,7 @@ void SliderElement::layout()
 void SliderElement::draw(QPainter *painter, DrawEnums enums) const
 {
     Q_UNUSED(enums);
-    if (!m_isValid) {
+    if (!m_isValid || !m_sliderOption) {
         return;
     }
 
@@ -184,7 +188,7 @@ QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_sliderOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return QRect();
     }
@@ -245,6 +249,9 @@ QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
 QList<QRect> SliderElement::tickLines() const
 {
     QList<QRect> tickLines;
+    if (!m_sliderOption) {
+        return tickLines;
+    }
     auto tickMarkProps = queryProperties(prepareElements(m_sliderOption, m_widget, {ElementString::TickMark}));
     if (!tickMarkProps && !tickMarkProps->layout()) {
         return tickLines;
@@ -293,11 +300,11 @@ QList<QRect> SliderElement::tickLines() const
 
 qreal SliderElement::controlThickness() const
 {
-    if (m_isValid && m_indicatorProperties && m_indicatorProperties->layout()) {
-        QSizeF size(m_indicatorProperties->layout()->width().value_or(1), m_indicatorProperties->layout()->height().value_or(1));
-        if (m_indicatorProperties->layout()->padding()) {
-            size = size.shrunkBy(m_indicatorProperties->layout()->padding()->toMargins().toMargins());
-        }
+    if (m_isValid && m_indicatorProperties) {
+        QSizeF size = indicatorSize();
+        QMarginsF padding =
+            m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+        size = size.shrunkBy(padding);
         if (m_sliderOption->orientation == Qt::Horizontal) {
             return size.height();
         } else {
@@ -310,6 +317,9 @@ qreal SliderElement::controlThickness() const
 QStringList SliderElement::elementHints() const
 {
     QStringList hints;
+    if (!m_sliderOption) {
+        return hints;
+    }
     if (m_sliderOption->orientation == Qt::Horizontal) {
         hints.append(u"horizontal"_s);
     } else {

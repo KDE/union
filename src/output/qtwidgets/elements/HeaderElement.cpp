@@ -40,7 +40,7 @@ void HeaderElement::update()
 QIcon HeaderElement::sortIndicator()
 {
     QIcon sortIndicator;
-    if (m_backgroundProperties && m_isValid) {
+    if (m_backgroundProperties && m_isValid && m_headerOption) {
         switch (m_headerOption->sortIndicator) {
         case QStyleOptionHeader::None:
             break;
@@ -134,7 +134,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_headerOption) {
         return QSizeF();
     }
     // Copied from Breeze

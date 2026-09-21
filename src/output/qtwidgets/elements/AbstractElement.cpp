@@ -313,18 +313,26 @@ QMarginsF AbstractElement::borderSize() const
 
 qreal AbstractElement::height() const
 {
+    const qreal defaultValue = 1.0;
     if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    } else if (m_styleOption) {
+        return m_styleOption->rect.height();
+    } else {
+        return defaultValue;
     }
-    return m_styleOption->rect.height();
 }
 
 qreal AbstractElement::width() const
 {
+    const qreal defaultValue = 1.0;
     if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    } else if (m_styleOption) {
+        return m_styleOption->rect.width();
+    } else {
+        return defaultValue;
     }
-    return m_styleOption->rect.height();
 }
 
 qreal AbstractElement::spacing() const
@@ -399,10 +407,9 @@ QSizeF AbstractElement::querySize(QStringList targetHierarchy) const
         return QSize(0, 0);
     }
     auto properties = queryProperties(elements);
-    if (properties && properties->layout()) {
-        return QSize(properties->layout()->width().value_or(0), properties->layout()->height().value_or(0));
-    }
-    return QSize(0, 0);
+    const auto width = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    const auto height = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    return QSize(width, height);
 }
 
 Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, const QWidget *widget, QStringList targetHierarchy) const
@@ -528,7 +535,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
                 fontMetrics = QFontMetrics(styleFont.value());
             }
             elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optionText);
-            order = properties->text()->alignment()->order().value_or(0);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::text, &TextPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else {
             elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
             elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));

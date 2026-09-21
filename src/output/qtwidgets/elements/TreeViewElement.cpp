@@ -27,6 +27,9 @@ TreeViewElement::~TreeViewElement()
 
 void TreeViewElement::update()
 {
+    if (!m_styleOption) {
+        return;
+    }
     if (!m_styleOption->state.testFlag(QStyle::State_Children)) {
         m_isValid = false;
         return;
@@ -93,7 +96,7 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
 QStringList TreeViewElement::elementHints() const
 {
     QStringList elementHints;
-    if (m_styleOption->state.testFlag(QStyle::State_Open)) {
+    if (m_styleOption && m_styleOption->state.testFlag(QStyle::State_Open)) {
         elementHints.append(u"expanded"_s);
     }
     return elementHints;

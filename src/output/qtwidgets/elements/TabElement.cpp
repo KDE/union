@@ -11,6 +11,7 @@
 #include <QTabBar>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -27,6 +28,9 @@ TabElement::~TabElement()
 
 void TabElement::update()
 {
+    if (!m_tabOption) {
+        return;
+    }
     m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
         || m_tabOption->shape == QTabBar::TriangularWest;
 
@@ -44,7 +48,7 @@ void TabElement::update()
 
 void TabElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_tabOption) {
         return;
     }
 
@@ -103,7 +107,7 @@ void TabElement::updateSubElementList()
 
 void TabElement::layout()
 {
-    if (m_subElementList.isEmpty()) {
+    if (m_subElementList.isEmpty() || !m_tabOption) {
         m_isValid = false;
         return;
     }
@@ -135,7 +139,7 @@ void TabElement::layout()
 QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
-    if (!m_isValid) {
+    if (!m_isValid || !m_tabOption) {
         return contentsSizeFromStyle;
     }
 
@@ -181,8 +185,9 @@ QRectF TabElement::subElementRect(QStyle::SubElement element) const
 // Padding of the tab content and the edge, only one value is taken so take the largest one
 int TabElement::hSpace() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
-        auto padding = m_backgroundProperties->layout()->padding()->toMargins();
+    if (m_isValid) {
+        auto padding =
+            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return std::max(padding.left(), padding.right());
     }
     return 0;
@@ -190,8 +195,9 @@ int TabElement::hSpace() const
 
 int TabElement::vSpace() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
-        auto padding = m_backgroundProperties->layout()->padding()->toMargins();
+    if (m_isValid) {
+        auto padding =
+            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return std::max(padding.top(), padding.bottom());
     }
     return 0;
@@ -200,6 +206,9 @@ int TabElement::vSpace() const
 QVariantMap TabElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_tabOption) {
+        return map;
+    }
     const bool top = m_tabOption->shape == QTabBar::RoundedNorth || m_tabOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabOption->shape == QTabBar::RoundedSouth || m_tabOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularWest;

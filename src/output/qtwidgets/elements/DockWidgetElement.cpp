@@ -48,6 +48,9 @@ void DockWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 void DockWidgetElement::updateSubElementList()
 {
     m_subElementList.clear();
+    if (!m_styleOption) {
+        return;
+    }
     if (m_dockWidgetOption->closable) {
         m_subElementList.append(ElementString::CloseButton);
     }

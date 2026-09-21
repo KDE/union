@@ -45,6 +45,9 @@ void TabBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void TabBarElement::drawBackground(QPainter *painter) const
 {
+    if (!m_tabBarOption) {
+        return;
+    }
     drawBackgroundRectangle(painter,
                             m_tabBarOption->rect,
                             m_backgroundProperties,
@@ -59,6 +62,9 @@ qreal TabBarElement::scrollButtonWidth() const
 QVariantMap TabBarElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_tabBarOption) {
+        return map;
+    }
     const bool top = m_tabBarOption->shape == QTabBar::RoundedNorth || m_tabBarOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabBarOption->shape == QTabBar::RoundedSouth || m_tabBarOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabBarOption->shape == QTabBar::RoundedWest || m_tabBarOption->shape == QTabBar::TriangularWest;
