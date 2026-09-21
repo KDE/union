@@ -6,6 +6,8 @@ import QtQuick.Layouts
 import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 
+import org.kde.union as Union
+
 Kirigami.Page {
     title: "Tabbar QtQuick.Controls"
     
@@ -18,6 +20,10 @@ Kirigami.Page {
     header: Controls.TabBar {
         id: tabBarHeader
 
+        property bool immutable: true
+
+        Union.Element.hints: Union.ElementHint { name: "immutable"; when: tabBarHeader.immutable }
+
         Controls.TabButton {
             text: "First"
         }
@@ -29,15 +35,22 @@ Kirigami.Page {
         }
     }
 
-    RowLayout {
-        Controls.TextArea {
-            readOnly: true
-            text: tabBarHeader.currentIndex
+    ColumnLayout {
+        Controls.CheckBox {
+            text: "Immutable"
+            onToggled: tabBarHeader.immutable = checked
         }
 
-        Controls.TextArea {
-            readOnly: true
-            text: tabBarFooter.currentIndex
+        RowLayout {
+            Controls.TextArea {
+                readOnly: true
+                text: tabBarHeader.currentIndex
+            }
+
+            Controls.TextArea {
+                readOnly: true
+                text: tabBarFooter.currentIndex
+            }
         }
     }
 
