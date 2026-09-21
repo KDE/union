@@ -393,6 +393,18 @@ public:
     Q_SIGNAL void hintsChanged();
 
     /*!
+     * \qmlattachedproperty list<string> Element::activeHints
+     *
+     * A list of strings with the names of active hints.
+     *
+     * This can be used if you need to know whether certain hints are currently
+     * set. This avoids having to figure out which of the Hint objects in
+     * \property hints is active, especially when multiple modify the same hint.
+     */
+    Q_PROPERTY(QStringList activeHints READ activeHints NOTIFY hintsChanged)
+    QStringList activeHints() const;
+
+    /*!
      * Get a hint by name.
      *
      * This will return the ElementHint corresponding to \p name, or nullptr if
