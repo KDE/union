@@ -299,7 +299,8 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
                                         QStyle::PE_PanelItemViewItem,
                                         QStyle::PE_PanelStatusBar,
                                         QStyle::PE_IndicatorTabClose,
-                                        QStyle::PE_PanelMenu>(element, hash, this, option, widget);
+                                        QStyle::PE_PanelMenu,
+                                        QStyle::PE_IndicatorDockWidgetResizeHandle>(element, hash, this, option, widget);
     if (cached) {
         cached->draw(painter, drawEnums);
     } else {
