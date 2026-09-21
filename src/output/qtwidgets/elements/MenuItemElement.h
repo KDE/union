@@ -47,7 +47,6 @@ private:
     void drawText(QPainter *painter) const override;
     void drawSubMenuArrow(QPainter *painter) const;
     void updateSubElementList() override;
-    QRectF adjustedRect(QRectF rect) const;
     Union::Element::States elementStates() const override;
     const QStyleOptionMenuItem *m_menuItemOption = nullptr;
     Union::ElementList m_indicatorElementList;
@@ -64,7 +63,5 @@ private:
     bool m_hasRadioButton;
     bool m_hasCheckableItems;
     QString m_shortcutText;
-    qreal m_menuHMargin;
-    qreal m_menuVMargin;
     QIcon m_subMenuArrow;
 };

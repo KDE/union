@@ -129,7 +129,7 @@ menuseparator {
     inset: var(--small-spacing);
 
     &.with-title {
-        text-alignment: content fill center 0;
+        text-alignment: content start center 0;
         layout-alignment-horizontal: end;
         inset: 0px;
         background-color: transparent;

@@ -53,7 +53,7 @@ void MenuElement::updateSubElementList()
 
 QSizeF MenuElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    return applyPaddingToSize(contentsSizeFromStyle);
+    return contentsSizeFromStyle;
 }
 
 qreal MenuElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
