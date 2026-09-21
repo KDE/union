@@ -39,6 +39,12 @@ void SplitterElement::draw(QPainter *painter, DrawEnums enums) const
         drawBackground(painter);
         break;
     }
+
+    switch (enums.PrimitiveElement) {
+    case QStyle::PE_IndicatorDockWidgetResizeHandle:
+        drawBackground(painter);
+        break;
+    }
 }
 
 void SplitterElement::layout()
