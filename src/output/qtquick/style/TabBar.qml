@@ -18,6 +18,7 @@ T.TabBar {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
+    Union.Element.hints: Union.ElementHint { name: "immutable"; }
     Union.Element.attributes: Union.ElementAttribute {
         name: "tab-position"
         value: control.position === T.TabBar.Footer ? "bottom" : "top"
