@@ -1,0 +1,265 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+ */
+
+/*
+ * Tab bars and buttons
+ */
+
+:root
+{
+    --tab-background-color: mix(var(--view-background-color), var(--view-text-color), 0.17);
+    --tab-text-color: var(--view-text-color);
+    --tab-open-background-color: var(--window-background-color);
+    --tab-open-text-color: var(--window-text-color);
+    --tab-disabled-text-color: var(--button-disabled-text-color);
+    --tab-disabled-background-color: var(--button-disabled-background-color);
+
+    --tab-highlight-size: 3px;
+    --tab-default-width: 100px;
+    --tab-default-height: 24px;
+
+    --tab-highlight-border: var(--tab-highlight-size) solid var(--highlight-color);
+}
+
+tabbutton {
+    width: var(--tab-default-width);
+    height: var(--tab-default-height);
+    padding: var(--medium-spacing);
+    background-color: var(--tab-background-color);
+    color: var(--tab-text-color);
+
+    text-wrap-mode: no-wrap;
+
+    icon-alignment: content start center 0;
+    text-alignment: content center center 0;
+
+    &[direction="top"] {
+        border-bottom: var(--button-border);
+
+        &.first {
+            border-top-left-radius: var(--corner-radius);
+        }
+
+        &.last {
+            border-top-right-radius: var(--corner-radius);
+        }
+    }
+
+    &[direction="bottom"] {
+        border-top: var(--button-border);
+
+        &.first {
+            border-bottom-left-radius: var(--corner-radius);
+        }
+
+        &.last {
+            border-bottom-right-radius: var(--corner-radius);
+        }
+    }
+
+    &[direction="left"] {
+        width: var(--tab-default-height);
+        height: var(--tab-default-width);
+        border-left: var(--button-border);
+
+        &.first {
+            border-top-left-radius: var(--corner-radius);
+        }
+
+        &.last {
+            border-bottom-left-radius: var(--corner-radius);
+        }
+    }
+
+    &[direction="right"] {
+        width: var(--tab-default-height);
+        height: var(--tab-default-width);
+        border-right: var(--button-border);
+
+        &.first {
+            border-top-right-radius: var(--corner-radius);
+        }
+
+        &.last {
+            border-bottom-right-radius: var(--corner-radius);
+        }
+    }
+
+    &[display="icon-only"] {
+        icon-alignment: content center center 0;
+    }
+
+    &[direction="top"],
+    &[direction="bottom"] {
+        &[display="icon-only"] {
+            width: var(--icon-size-small);
+        }
+    }
+
+    &[direction="left"],
+    &[direction="right"] {
+        &[display="icon-only"] {
+            height: var(--icon-size-small);
+        }
+    }
+
+    &:disabled {
+        background-color: var(--tab-disabled-background-color);
+        color: var(--button-disabled-text-color);
+    }
+
+    &:hovered
+    {
+        background-color: var(--button-active-highlight-color);
+        color: var(--button-active-text-color);
+    }
+
+    &:pressed
+    {
+        background-color: var(--button-active-highlight-color);
+        color: var(--button-active-text-color);
+    }
+
+    &:checked,
+    &:highlighted /* Widgets uses highlighted */
+    {
+        background-color: var(--tab-open-background-color);
+        color: var(--tab-open-text-color);
+        border: var(--button-border);
+        /*         border-radius: var(--corner-radius); */
+
+        &[direction="top"] {
+            border-top-width: var(--tab-highlight-size);
+            border-top-color: var(--highlight-color);
+            border-bottom-color: var(--tab-open-background-color);
+            border-top-left-radius: var(--corner-radius);
+            border-top-right-radius: var(--corner-radius);
+        }
+
+        &[direction="bottom"] {
+            border-bottom-width: var(--tab-highlight-size);
+            border-bottom-color: var(--highlight-color);
+            border-top-color: var(--tab-open-background-color);
+            border-bottom-left-radius: var(--corner-radius);
+            border-bottom-right-radius: var(--corner-radius);
+        }
+
+        &[direction="left"] {
+            border-left-width: var(--tab-highlight-size);
+            border-left-color: var(--highlight-color);
+            border-right-color: var(--tab-open-background-color);
+            border-top-left-radius: var(--corner-radius);
+            border-bottom-left-radius: var(--corner-radius);
+        }
+
+        &[direction="right"] {
+            border-right-width: var(--tab-highlight-size);
+            border-right-color: var(--highlight-color);
+            border-left-color: var(--tab-open-background-color);
+            border-top-right-radius: var(--corner-radius);
+            border-bottom-right-radius: var(--corner-radius);
+        }
+    }
+
+    & > closebutton {
+        layout-alignment: content end center 0;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        icon-name: "window-close-symbolic";
+
+        &:hovered,
+        &:pressed {
+            color: var(--highlight-text-color);
+            background-color: var(--negative-text);
+            border-radius: var(--icon-size-small);
+        }
+
+        &:disabled {
+            color: var(--button-disabled-text-color);
+            icon-color: var(--button-disabled-text-color);
+        }
+    }
+}
+
+tabbutton.immutable
+{
+    background-color: var(--button-active-background-color);
+    border: none;
+    border-radius: 0px;
+    border-right: 1px solid var(--button-active-border-color);
+    padding: var(--medium-spacing);
+    text-elide: none;
+
+    &:checked,
+    &:highlighted,
+    &.first,
+    &.last
+    {
+        border-radius: 0px;
+    }
+
+    &:checked
+    {
+        background-color: var(--tab-open-background-color);
+    }
+
+    &[direction="top"]
+    {
+        border-bottom: var(--button-border);
+
+        &:checked
+        {
+            border-top: var(--tab-highlight-border);
+        }
+    }
+
+    &[direction="bottom"]
+    {
+        border-top: var(--button-border);
+
+        &:checked
+        {
+            border-bottom: var(--tab-highlight-border);
+        }
+    }
+
+    &[direction="left"]
+    {
+        border-right: var(--button-border);
+
+        &:checked
+        {
+            border-left: var(--tab-highlight-border);
+        }
+    }
+
+    &[direction="right"]
+    {
+        border-left: var(--button-border);
+
+        &:checked
+        {
+            border-right: var(--tab-highlight-border);
+        }
+    }
+}
+
+tabbar {
+    height: var(--tab-default-height);
+    width: var(--tab-default-width);
+    spacing: 0px;
+    border-bottom: var(--button-border);
+
+    &.immutable {
+        background-color: var(--button-active-background-color);
+    }
+}
+
+tabwidget {
+    padding: var(--small-spacing);
+    border: 1px solid var(--window-border-color);
+    border-radius: var(--corner-radius);
+    background-color: var(--view-background-color);
+}
