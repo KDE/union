@@ -373,6 +373,11 @@ QObject *QuickElement::hint(const QString &name) const
     return itr != m_hints.end() ? *itr : nullptr;
 }
 
+QStringList QuickElement::activeHints() const
+{
+    return m_element->hints();
+}
+
 QQmlListProperty<ElementAttribute> QuickElement::attributes()
 {
     using AttributeFunctions = ListFunctions<ElementAttribute, &QuickElement::m_attributes, &QuickElement::attributesChanged>;
