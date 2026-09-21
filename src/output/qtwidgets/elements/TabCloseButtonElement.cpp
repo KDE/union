@@ -31,7 +31,7 @@ void TabCloseButtonElement::update()
 void TabCloseButtonElement::layout()
 {
     m_contentElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
-    if (!m_contentElementList.isEmpty()) {
+    if (!m_contentElementList.isEmpty() && m_widgetOption) {
         m_contentProperties = queryProperties(m_contentElementList);
         m_layoutMap[ElementString::Icon].rect = m_widgetOption->rect;
         setIcon(m_style->unionIcon(m_contentProperties, (u"window-close-symbolic"_s)));

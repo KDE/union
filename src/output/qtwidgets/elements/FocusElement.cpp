@@ -52,7 +52,7 @@ void FocusElement::layout()
 QStringList FocusElement::elementHints() const
 {
     QStringList hints;
-    if (m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
+    if (m_styleOption && m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
         hints.append(u"focus-at-border"_s);
     }
     return hints;

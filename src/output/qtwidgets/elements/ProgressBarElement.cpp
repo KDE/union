@@ -27,6 +27,9 @@ ProgressBarElement::~ProgressBarElement()
 
 void ProgressBarElement::update()
 {
+    if (!m_progressBarOption) {
+        return;
+    }
     m_isHorizontal = m_progressBarOption->state.testFlag(QStyle::State_Horizontal);
 
     setText(m_progressBarOption->text);
@@ -115,6 +118,9 @@ QSizeF ProgressBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 
 QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 {
+    if (!m_progressBarOption) {
+        return QRectF();
+    }
     if (element == QStyle::SE_ProgressBarLabel) {
         // Copied and repurposed from Breeze
         const bool textVisible(m_progressBarOption->textVisible);
@@ -166,7 +172,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         }
         return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
     };
-    return QRect();
+    return QRectF();
 }
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
@@ -178,10 +184,7 @@ void ProgressBarElement::drawChunk(QPainter *painter) const
 int ProgressBarElement::chunkWidth() const
 {
     auto props = queryProperties(prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
-    if (props->layout()) {
-        return props->layout()->width().value_or(0);
-    }
-    return 0;
+    return props->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
 }
 
 qreal ProgressBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

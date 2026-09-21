@@ -27,7 +27,7 @@ ScrollBarElement::~ScrollBarElement()
 
 void ScrollBarElement::update()
 {
-    m_horizontal = (m_scrollBarOption->state.testFlag(QStyle::State_Horizontal));
+    m_horizontal = (m_scrollBarOption && m_scrollBarOption->state.testFlag(QStyle::State_Horizontal));
     updateSubElementList();
     layout();
 }
@@ -91,7 +91,7 @@ void ScrollBarElement::drawBackground(QPainter *painter) const
 
 void ScrollBarElement::drawIndicator(QPainter *painter) const
 {
-    if (m_scrollBarOption->subControls & QStyle::SC_ScrollBarSlider) {
+    if (m_scrollBarOption && m_scrollBarOption->subControls & QStyle::SC_ScrollBarSlider) {
         QStyleOptionSlider subopt = *m_scrollBarOption;
         subopt.rect = m_scrollBarOption->rect;
         subopt.state = m_scrollBarOption->state;
@@ -122,7 +122,7 @@ QSizeF ScrollBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_scrollBarOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return QRect();
     }
@@ -225,6 +225,9 @@ qreal ScrollBarElement::minimumSize() const
 QStringList ScrollBarElement::elementHints() const
 {
     QStringList hints;
+    if (!m_scrollBarOption) {
+        return hints;
+    }
     if (m_scrollBarOption->orientation == Qt::Horizontal) {
         hints.append(u"horizontal"_s);
     } else {

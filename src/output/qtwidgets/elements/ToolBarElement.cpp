@@ -14,6 +14,7 @@
 #include "SharedNames.h"
 
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
 
 ToolBarElement::ToolBarElement(const QStyleOptionToolBar *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -91,14 +92,14 @@ void ToolBarElement::layout()
 
 void ToolBarElement::drawHandle(QPainter *painter) const
 {
-    if (m_isValid && m_toolBarOption && m_handleProperties && m_handleProperties->layout()) {
+    if (m_isValid && m_toolBarOption && m_handleProperties) {
         drawBackgroundRectangle(painter, m_toolBarOption->rect, m_handleProperties);
     }
 }
 
 void ToolBarElement::drawSeparator(QPainter *painter) const
 {
-    if (m_isValid && m_toolBarOption && m_separatorProperties && m_separatorProperties->layout()) {
+    if (m_isValid && m_toolBarOption && m_separatorProperties) {
         drawBackgroundRectangle(painter, m_toolBarOption->rect, m_separatorProperties);
     }
 }
@@ -136,14 +137,14 @@ QStringList ToolBarElement::elementHints() const
 
 qreal ToolBarElement::separatorExtent() const
 {
-    if (m_isValid && m_separatorProperties && m_separatorProperties->layout()) {
+    if (m_isValid && m_toolBarOption && m_separatorProperties && m_separatorProperties->layout()) {
         switch (m_toolBarOption->toolBarArea) {
         case Qt::LeftToolBarArea:
         case Qt::RightToolBarArea:
-            return m_separatorProperties->layout()->width().value_or(0);
+            return m_separatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
         case Qt::TopToolBarArea:
         case Qt::BottomToolBarArea:
-            return m_separatorProperties->layout()->height().value_or(0);
+            return m_separatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
         default:
             return 0;
             break;
@@ -154,14 +155,14 @@ qreal ToolBarElement::separatorExtent() const
 
 qreal ToolBarElement::handleExtent() const
 {
-    if (m_isValid && m_handleProperties && m_handleProperties->layout()) {
+    if (m_isValid && m_toolBarOption && m_handleProperties) {
         switch (m_toolBarOption->toolBarArea) {
         case Qt::LeftToolBarArea:
         case Qt::RightToolBarArea:
-            return m_handleProperties->layout()->width().value_or(0);
+            return m_handleProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
         case Qt::TopToolBarArea:
         case Qt::BottomToolBarArea:
-            return m_handleProperties->layout()->height().value_or(0);
+            return m_handleProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
         default:
             return 0;
             break;
@@ -172,14 +173,14 @@ qreal ToolBarElement::handleExtent() const
 
 qreal ToolBarElement::extensionExtent() const
 {
-    if (m_isValid && m_extensionProperties && m_extensionProperties->layout()) {
+    if (m_isValid && m_toolBarOption && m_extensionProperties) {
         switch (m_toolBarOption->toolBarArea) {
         case Qt::LeftToolBarArea:
         case Qt::RightToolBarArea:
-            return m_extensionProperties->layout()->width().value_or(0);
+            return m_extensionProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
         case Qt::TopToolBarArea:
         case Qt::BottomToolBarArea:
-            return m_extensionProperties->layout()->height().value_or(0);
+            return m_extensionProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
         default:
             return 0;
             break;

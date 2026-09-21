@@ -34,6 +34,9 @@ MenuItemElement::~MenuItemElement()
 
 void MenuItemElement::update()
 {
+    if (!m_menuItemOption) {
+        return;
+    }
     m_isSeparator = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator);
     m_hasSubMenu = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::SubMenu);
     m_hasCheckBox = (m_menuItemOption->checkType == QStyleOptionMenuItem::NonExclusive);
@@ -253,7 +256,7 @@ QStringList MenuItemElement::elementHints() const
     if (m_hasSubMenu) {
         hints.append(u"with-submenu"_s);
     }
-    if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
+    if (m_menuItemOption && m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
         hints.append(u"with-title"_s);
     }
     return hints;
@@ -282,8 +285,8 @@ QRectF MenuItemElement::adjustedRect(QRectF rect) const
 Union::Element::States MenuItemElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
-    states.setFlag(Union::Element::State::Checked, m_menuItemOption->checked);
+    states.setFlag(Union::Element::State::Checked, m_menuItemOption && m_menuItemOption->checked);
     // Menuitems for some reason do not get mouseover, but they get selected instead
-    states.setFlag(Union::Element::State::Hovered, m_menuItemOption->state.testFlag(QStyle::State_Selected));
+    states.setFlag(Union::Element::State::Hovered, m_menuItemOption && m_menuItemOption->state.testFlag(QStyle::State_Selected));
     return states;
 }

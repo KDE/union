@@ -26,6 +26,9 @@ RadioButtonElement::~RadioButtonElement()
 
 void RadioButtonElement::update()
 {
+    if (!m_buttonOption) {
+        return;
+    }
     m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::RadioButton, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
@@ -71,7 +74,7 @@ QSizeF RadioButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 
 QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_buttonOption) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
         return QRect();
     }
@@ -91,6 +94,9 @@ QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
 
 void RadioButtonElement::updateSubElementList()
 {
+    if (!m_buttonOption) {
+        return;
+    }
     m_subElementList.clear();
     m_subElementList.append(ElementString::Indicator);
     if (!m_buttonOption->icon.isNull()) {
@@ -109,7 +115,7 @@ void RadioButtonElement::drawIndicator(QPainter *painter) const
 QStringList RadioButtonElement::elementHints() const
 {
     QStringList hints;
-    if (!m_buttonOption->icon.isNull()) {
+    if (m_buttonOption && !m_buttonOption->icon.isNull()) {
         hints.append(u"with-icon"_s);
     }
     return hints;

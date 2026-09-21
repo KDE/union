@@ -26,6 +26,9 @@ ToolBoxTabElement::~ToolBoxTabElement()
 
 void ToolBoxTabElement::update()
 {
+    if (!m_toolBoxOption) {
+        return;
+    }
     setIcon(m_toolBoxOption->icon);
     setText(m_toolBoxOption->text);
     updateSubElementList();
@@ -56,6 +59,9 @@ void ToolBoxTabElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolBoxTabElement::updateSubElementList()
 {
+    if (!m_toolBoxOption) {
+        return;
+    }
     m_subElementList.clear();
     if (!m_toolBoxOption->icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
@@ -67,7 +73,7 @@ void ToolBoxTabElement::updateSubElementList()
 
 void ToolBoxTabElement::layout()
 {
-    if (m_subElementList.isEmpty()) {
+    if (m_subElementList.isEmpty() || !m_toolBoxOption) {
         m_isValid = false;
         return;
     }
@@ -92,7 +98,7 @@ void ToolBoxTabElement::layout()
 
 QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_toolBoxOption) {
         return QRect();
     }
 

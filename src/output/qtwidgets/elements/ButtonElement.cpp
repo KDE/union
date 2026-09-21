@@ -29,18 +29,17 @@ ButtonElement::~ButtonElement()
 void ButtonElement::update()
 {
     setIndicator(QIcon());
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-        m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
-        if (!m_indicatorElementList.isEmpty()) {
-            m_indicatorProperties = queryProperties(m_indicatorElementList);
-            if (m_indicatorProperties->icon()) {
+    if (m_buttonOption) {
+        if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
+            m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
+            if (!m_indicatorElementList.isEmpty()) {
+                m_indicatorProperties = queryProperties(m_indicatorElementList);
                 setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
             }
         }
+        setIcon(m_buttonOption->icon);
+        setText(m_buttonOption->text);
     }
-
-    setIcon(m_buttonOption->icon);
-    setText(m_buttonOption->text);
 
     updateSubElementList();
     layout();
@@ -123,9 +122,11 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
 Union::Element::States ButtonElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
-        || m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
-        states.setFlag(Union::Element::State::Highlighted, true);
+    if (m_buttonOption) {
+        if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
+            || m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
+            states.setFlag(Union::Element::State::Highlighted, true);
+        }
     }
     return states;
 }
@@ -133,6 +134,9 @@ Union::Element::States ButtonElement::elementStates() const
 QStringList ButtonElement::elementHints() const
 {
     QStringList hints;
+    if (!m_buttonOption) {
+        return hints;
+    }
     if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
         hints.append(u"flat"_s);
     }

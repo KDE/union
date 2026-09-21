@@ -27,6 +27,9 @@ SpinBoxElement::~SpinBoxElement()
 
 void SpinBoxElement::update()
 {
+    if (!m_spinBoxOption) {
+        return;
+    }
     m_indicatorElementList = prepareElements(m_spinBoxOption, m_widget, {ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
@@ -38,7 +41,7 @@ void SpinBoxElement::update()
 
 void SpinBoxElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_spinBoxOption) {
         return;
     }
 
@@ -95,7 +98,7 @@ QSizeF SpinBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_spinBoxOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return QRect();
     }
@@ -137,7 +140,7 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
 
 void SpinBoxElement::drawSpinIndicator(QPainter *painter, const QStyle::PrimitiveElement &primitive) const
 {
-    if (!m_isValid && !m_backgroundProperties && !m_backgroundProperties->icon()) {
+    if (!m_isValid) {
         return;
     }
 

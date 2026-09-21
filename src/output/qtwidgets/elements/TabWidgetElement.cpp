@@ -42,6 +42,9 @@ void TabWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 QVariantMap TabWidgetElement::elementAttributes() const
 {
     QVariantMap map;
+    if (!m_tabFrameOption) {
+        return map;
+    }
     const bool top = m_tabFrameOption->shape == QTabBar::RoundedNorth || m_tabFrameOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabFrameOption->shape == QTabBar::RoundedSouth || m_tabFrameOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabFrameOption->shape == QTabBar::RoundedWest || m_tabFrameOption->shape == QTabBar::TriangularWest;
