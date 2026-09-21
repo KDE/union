@@ -183,6 +183,12 @@ framewindow
     }
 }
 
+splitter {
+    width: 1px;
+    inset: var(--small-spacing);
+    background-color: var(--window-border-color);
+}
+
 frame,
 listview,
 treeview,
@@ -224,19 +230,6 @@ scrollview {
     &.dock-bottom {
         border: none;
         border-radius: 0px;
-    }
-
-    &.dock-left {
-        border-right: 1px solid var(--window-border-color);
-    }
-    &.dock-right {
-        border-left: 1px solid var(--window-border-color);
-    }
-    &.dock-top {
-        border-bottom: 1px solid var(--window-border-color);
-    }
-    &.dock-bottom {
-        border-top: 1px solid var(--window-border-color);
     }
 }
 
