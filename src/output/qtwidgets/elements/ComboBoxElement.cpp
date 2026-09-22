@@ -65,9 +65,6 @@ void ComboBoxElement::draw(QPainter *painter, DrawEnums enums) const
     case QStyle::CC_ComboBox:
         drawBackground(painter);
         drawIcon(painter);
-        if (!isEditable()) {
-            drawText(painter);
-        }
         drawIndicator(painter);
         break;
     }
@@ -92,11 +89,10 @@ void ComboBoxElement::updateSubElementList()
 
 QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    QRectF rect = unifiedRect(m_layoutMap);
     // Follow the contents width
-    rect.setWidth(contentsSizeFromStyle.width());
-    auto size = applyPaddingToSize(rect.size());
-    size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
+    auto size = applyPaddingToSize(contentsSizeFromStyle);
+    const auto indicatorSize = applyPaddingToSize(m_layoutMap[ElementString::Indicator].rect.size());
+    size.rwidth() += indicatorSize.width() + spacing();
     return size;
 }
 
