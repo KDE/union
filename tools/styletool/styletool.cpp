@@ -311,7 +311,7 @@ int handlePackageCommand([[maybe_unused]] const QStringList arguments)
 int main(int argc, char **argv)
 {
     QCoreApplication application(argc, argv);
-    QCoreApplication::setApplicationVersion(u"1.0"_s);
+    QCoreApplication::setApplicationVersion(QStringLiteral(PROJECT_VERSION));
 
     QCommandLineParser parser;
     parser.setOptionsAfterPositionalArgumentsMode(QCommandLineParser::ParseAsPositionalArguments);
