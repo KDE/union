@@ -16,8 +16,8 @@ Kirigami.ApplicationWindow {
 
     property var pagePatterns: [
         "%1_org_kde_union.qml",
-        "%1_org_kde_breeze.qml",
         "%1_org_kde_desktop.qml",
+        "%1_org_kde_breeze.qml",
         "%1_org_kde_plasma_components.qml"
     ]
 
