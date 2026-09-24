@@ -23,6 +23,11 @@ class AbstractElement : public QObject
     Q_OBJECT
 
 public:
+    enum class AbstractElementFlag {
+        ContentsSizeIncludesAveragePadding = 1 << 0,
+    };
+    Q_DECLARE_FLAGS(AbstractElementFlags, AbstractElementFlag)
+
     AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~AbstractElement() override;
 
@@ -37,6 +42,10 @@ public:
     QIcon indicator() const;
     void setIndicator(const QIcon &indicator);
     bool hasIndicator() const;
+
+    AbstractElementFlags flags();
+    void setFlags(AbstractElementFlags newFlags);
+    void setFlag(AbstractElementFlag flag, bool apply = true);
 
     /*!
      * \brief Returns the validity status. If the element has no properties loaded,
@@ -232,6 +241,8 @@ protected:
     // Used to check if we have all elements properly prepared
     bool m_isValid = false;
 
+    AbstractElementFlags m_flags;
+
 private:
     Union::Element::Ptr createElement(const QString &name) const;
 
@@ -239,3 +250,5 @@ private:
     QRectF resizeBucket(const LayoutBucket &bucket) const;
     void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
 };
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractElement::AbstractElementFlags);
