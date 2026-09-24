@@ -116,7 +116,7 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
         return backgroundRectangle(m_buttonOption, m_backgroundProperties).toRect();
     }
 
-    return unifiedRect(m_layoutMap);
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 Union::Element::States ButtonElement::elementStates() const
