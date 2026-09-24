@@ -195,6 +195,7 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection dire
     }
     QSizeF preferredSize = oldSize;
     QSizeF size = preferredSize;
+
     QMarginsF padding =
         safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     QMarginsF inset =
@@ -202,24 +203,25 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection dire
     auto width = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     auto height = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     preferredSize = QSizeF(width, height);
-    padding += inset;
-    if (direction == PaddingDirection::Inward) {
-        size = size.shrunkBy(padding);
-        if (size.width() < 0) {
-            size.setWidth(0);
-        }
-        if (size.height() < 0) {
-            size.setHeight(0);
-        }
-    } else {
-        size = size.grownBy(padding);
-        if (size.width() < preferredSize.width()) {
-            size.setWidth(preferredSize.width());
-        }
-        if (size.height() < preferredSize.height()) {
-            size.setHeight(preferredSize.height());
-        }
+
+    // We need to apply the maximum of each component of either padding or inset
+    // since we need to ensure things are large enough for either of these
+    // properties.
+    auto spacing = QMarginsF{
+        std::max(padding.left(), inset.left()),
+        std::max(padding.top(), inset.top()),
+        std::max(padding.right(), inset.right()),
+        std::max(padding.bottom(), inset.bottom()),
+    };
+
+    size = size.grownBy(spacing);
+    if (size.width() < preferredSize.width()) {
+        size.setWidth(preferredSize.width());
     }
+    if (size.height() < preferredSize.height()) {
+        size.setHeight(preferredSize.height());
+    }
+
     return size.toSize();
 }
 
