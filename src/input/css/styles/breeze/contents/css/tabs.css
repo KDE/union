@@ -202,7 +202,8 @@ tabbutton.immutable
 
     &:checked
     {
-        background-color: var(--tab-open-background-color);
+        background-color: var(--highlight-hover-color);
+        color: var(--button-active-text-color);
     }
 
     &[direction="top"]
