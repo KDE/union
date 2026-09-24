@@ -224,6 +224,13 @@ bool PackageHandler::install(const StylePackage &package, std::error_code &error
         return false;
     }
 
+    qCDebug(UNION_GENERAL) << "Copying style from" << package.path().string() << "to" << destination.string();
+
+    fs::create_directories(destination, errorCode);
+    if (errorCode) {
+        return false;
+    }
+
     fs::copy(package.path(), destination, fs::copy_options::recursive, errorCode);
     if (errorCode) {
         return false;
