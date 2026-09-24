@@ -19,6 +19,7 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     , m_isVertical(false)
     , m_isStatic(false)
 {
+    setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
     update();
 }
 
@@ -167,15 +168,8 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     QMarginsF padding =
         safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 
-    // contentSizeFromStyle includes hSpace and vSpace for which we return an
-    // average. Subtract that so applyPaddingToSize is handled correctly.
-    auto size = QSizeF{
-        contentsSizeFromStyle.width() - (padding.left() + padding.right()) / 2,
-        contentsSizeFromStyle.height() - (padding.top() + padding.bottom()) / 2,
-    };
-
     // add margins
-    size = applyPaddingToSize(size);
+    auto size = applyPaddingToSize(contentsSizeFromStyle);
 
     if (m_isVertical) {
         size.rheight() += widthIncrement;
