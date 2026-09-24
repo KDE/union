@@ -5,5 +5,6 @@ add_executable(union-styletool)
 target_sources(union-styletool PRIVATE styletool.cpp)
 
 target_link_libraries(union-styletool PRIVATE Union::Union Qt::Core ZLIB::ZLIB)
+target_compile_definitions(union-styletool PRIVATE PROJECT_VERSION="${PROJECT_VERSION}")
 
 install(TARGETS union-styletool ${KDE_INSTALL_DEFAULT_ARGS})
