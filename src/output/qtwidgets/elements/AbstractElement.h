@@ -12,11 +12,6 @@
 
 class UnionStyle;
 
-enum class PaddingDirection {
-    Inward,
-    Outward
-};
-
 struct DrawEnums {
     int ControlElement = -1;
     int ComplexControl = -1;
@@ -146,9 +141,7 @@ protected:
     /*!
      * \brief Utilizes the background property to apply a padding to the given size.
      */
-    QSizeF applyPaddingToSize(QSizeF oldSize,
-                              PaddingDirection direction = PaddingDirection::Outward,
-                              Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    QSizeF applyPaddingToSize(QSizeF oldSize, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
     /*!
      * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.

@@ -183,7 +183,7 @@ Union::Element::States AbstractElement::elementStates() const
     return states;
 }
 
-QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection direction, Union::Properties::StylePropertyGroup *properties) const
+QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::StylePropertyGroup *properties) const
 {
     if (!m_isValid) {
         return oldSize;
