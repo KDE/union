@@ -144,7 +144,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     }
 
     const bool leftButton = !m_tabOption->leftButtonSize.isEmpty();
-    const bool rightButton = !m_tabOption->leftButtonSize.isEmpty();
+    const bool rightButton = !m_tabOption->rightButtonSize.isEmpty();
     const bool text = hasText();
     const bool icon = hasIcon();
     const qreal offset = spacing();
