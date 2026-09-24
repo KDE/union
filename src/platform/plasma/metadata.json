@@ -3,7 +3,9 @@
     "union-pluginname": "plasma",
     "union-supported-platforms": [
         "wayland",
-        "xcb"
+        "xcb",
+        "wayland-org.kde.kwin.qpa",
+        "offscreen"
     ],
     "union-supported-sessions": [
         "kde"
