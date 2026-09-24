@@ -33,7 +33,6 @@ struct LayoutItem {
 struct LayoutBucket {
     BucketType type;
     QRectF rect;
-    qreal spacing = 0;
     QList<LayoutItem> items;
 };
 

@@ -580,16 +580,15 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
     // Remove the spacing to avoid resizing the item too much:
     // the spacing is already accounted in mapBucketItems.
     centerBucket.rect.moveCenter(availableSpace.center());
-    if (centerBucket.rect.intersects(startBucket.rect)) {
-        centerBucket.rect.setLeft(availableSpace.left() - startBucket.spacing);
+    if (startBucket.rect.intersects(centerBucket.rect)) {
         if (startBucket.items.count() > 0) {
-            centerBucket.rect.setLeft(centerBucket.rect.left() + startOffset);
+            centerBucket.rect.setLeft(centerBucket.rect.left() + startOffset + spacing());
         }
     }
     if (centerBucket.rect.intersects(endBucket.rect)) {
-        centerBucket.rect.setRight(availableSpace.right() + endBucket.spacing);
+        centerBucket.rect.setRight(availableSpace.right());
         if (endBucket.items.count() > 0) {
-            centerBucket.rect.setRight(centerBucket.rect.right() - endOffSet);
+            centerBucket.rect.setRight(centerBucket.rect.right() - endOffSet - spacing());
         }
     }
     mapBucketItems(centerBucket, map);
@@ -663,7 +662,6 @@ LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const
     });
 
     // No need for spacing as there are no items
-    bucket.spacing = bucket.items.count() > 0 ? spacing() : 0;
     bucket.rect = bucket.items.count() > 0 ? resizeBucket(bucket) : QRectF();
     return bucket;
 }
@@ -674,6 +672,7 @@ QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
     qreal height = 0;
     QRectF bucketRect = bucket.rect;
     bool stacked = false;
+    auto space = bucket.items.count() > 0 ? spacing() : 0;
 
     // Check if we are stacking or not
     for (auto &item : bucket.items) {
@@ -684,11 +683,11 @@ QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
     }
 
     for (auto &item : bucket.items) {
-        const qreal itemWidth = item.rect.width() + bucket.spacing;
+        const qreal itemWidth = item.rect.width() + space;
         const qreal itemHeight = item.rect.height();
         if (stacked) {
             width = std::max(bucketRect.width(), itemWidth);
-            height += (itemHeight + bucket.spacing);
+            height += (itemHeight + space);
         } else {
             width += itemWidth;
             height = std::max(bucketRect.height(), itemHeight);
@@ -703,10 +702,10 @@ QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
 void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const
 {
     auto bucketRect = bucket.rect;
-    int spacing = bucket.spacing;
+    int space = bucket.items.count() > 0 ? spacing() : 0;
     for (auto &item : bucket.items) {
-        const auto itemWidth = item.rect.width() + spacing;
-        const auto itemHeight = item.rect.height() + spacing;
+        const auto itemWidth = item.rect.width() + space;
+        const auto itemHeight = item.rect.height() + space;
 
         // For stackcenter/stackfill, we just want to center the rectangle based on its size.
         if (item.horizontalAlignment == Union::Properties::Alignment::Center
