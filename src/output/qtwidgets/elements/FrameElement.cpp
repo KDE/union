@@ -6,6 +6,7 @@
 #include "UnionStyle.h"
 #include <QAbstractScrollArea>
 #include <QApplication>
+#include <QComboBox>
 #include <QDebug>
 #include <QDockWidget>
 #include <QLayout>
@@ -70,7 +71,12 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
     switch (enums.ControlElement) {
     case QStyle::CE_FocusFrame:
     case QStyle::CE_ShapedFrame:
-        drawBackground(painter);
+        // Skip drawing frames for items that have framewidth of 0, draw only background
+        if (pixelMetric(QStyle::PM_DefaultFrameWidth) == 0) {
+            drawPanel(painter);
+        } else {
+            drawBackground(painter);
+        }
         break;
     }
     // We should be prepared to draw any potential frame element
@@ -246,8 +252,9 @@ qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 
         if (qobject_cast<const QMenu *>(m_widget)) {
             return frameWidth;
-        }
-        if (qobject_cast<const QLineEdit *>(m_widget)) {
+        } else if (qobject_cast<const QLineEdit *>(m_widget) || qobject_cast<const QLineEdit *>(m_widget->parentWidget())) {
+            return frameWidth;
+        } else if (qobject_cast<const QComboBox *>(m_widget) || qobject_cast<const QComboBox *>(m_widget->parentWidget())) {
             return frameWidth;
         }
 
