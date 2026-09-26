@@ -185,7 +185,6 @@ framewindow
 
 splitter {
     width: 1px;
-    inset: var(--small-spacing);
     background-color: var(--window-border-color);
 }
 
