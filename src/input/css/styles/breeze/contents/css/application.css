@@ -185,7 +185,6 @@ framewindow
 
 splitter {
     width: 1px;
-    inset: var(--small-spacing);
     background-color: var(--window-border-color);
 }
 
@@ -196,6 +195,9 @@ tableview,
 columnview,
 scrollview {
     border: none;
+    &:visual-focus {
+        border: 1px solid var(--highlight-color);
+    }
     &[shape="no-frame"] {
         border: none;
     }
@@ -290,12 +292,6 @@ groupbox {
     &.flat {
         background-color: transparent;
         border: none;
-    }
-}
-
-frame {
-    &:visual-focus {
-        border: 1px solid var(--highlight-color);
     }
 }
 
