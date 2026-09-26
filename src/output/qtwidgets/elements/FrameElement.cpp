@@ -111,7 +111,7 @@ void FrameElement::drawFrame(QPainter *painter) const
 
     switch (m_frameOption->frameShape) {
     case QFrame::NoFrame:
-        // Draw nothing
+        drawPanel(painter);
         return;
     case QFrame::Box:
     case QFrame::Panel:
