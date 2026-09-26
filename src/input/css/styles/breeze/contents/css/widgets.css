@@ -13,9 +13,7 @@ widget {
 
 statusbar {
     background-color: var(--window-background-color);
-    item {
-        border: var(--button-border);
-    }
+    border-top: 1px solid var(--window-active-border-color);
 }
 
 toolbox {
