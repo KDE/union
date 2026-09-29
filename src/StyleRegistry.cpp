@@ -23,13 +23,15 @@ using namespace Qt::StringLiterals;
 
 namespace fs = std::filesystem;
 
+static const QString DefaultFallbackStyle = u"breeze"_s;
+
 // This is implements the most minimal of PlatformPlugin that can be used as a
 // fallback if we have no existing platform plugin for the current platform.
 class FallbackPlatformPlugin : public PlatformPlugin
 {
     QString defaultStyleName() override
     {
-        return u"breeze"_s;
+        return DefaultFallbackStyle;
     }
 };
 
@@ -142,7 +144,12 @@ std::shared_ptr<Style> StyleRegistry::defaultStyle()
         name = platform()->defaultStyleName();
     }
 
-    return style(name);
+    auto defaultStyle = style(name);
+    if (defaultStyle) {
+        return defaultStyle;
+    }
+
+    return style(DefaultFallbackStyle);
 }
 
 std::shared_ptr<Style> StyleRegistry::style(const QString &styleId)
