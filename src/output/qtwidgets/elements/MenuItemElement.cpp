@@ -25,6 +25,7 @@ MenuItemElement::MenuItemElement(const QStyleOptionMenuItem *option, const Union
     , m_hasCheckableItems(false)
     , m_shortcutText(QString())
 {
+    setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
     update();
 }
 
