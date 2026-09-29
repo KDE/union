@@ -694,17 +694,20 @@ void UnionStyle::polish(QWidget *widget)
         if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
-        // Do not draw unnecessary background for QComboBoxListView
-        if (widget->parent() && widget->parent()->inherits("QComboBoxListView")) {
-            widget->setAttribute(Qt::WA_TranslucentBackground);
-            widget->setAutoFillBackground(false);
-        }
-        // Skip the background autofill for any scrollarea widgets
-        if (widget->parent() && widget->parent()->inherits("QAbstractItemView")) {
-            widget->setAutoFillBackground(false);
-        }
-        if (widget->parent() && widget->parent()->inherits("QTextEdit")) {
-            widget->setAutoFillBackground(false);
+        // Used to avoid korners bug, as the setAutoFillBackground is not rounded,
+        // but the frame around it may be rounded.
+        if (widget->parent()) {
+            // Do not draw unnecessary background for QComboBoxListView
+            if (widget->parent()->inherits("QComboBoxListView")) {
+                widget->setAttribute(Qt::WA_TranslucentBackground);
+                widget->setAutoFillBackground(false);
+            } // Skip the background autofill for any scrollarea widgets
+            else if (widget->parent()->inherits("QAbstractItemView")) {
+                widget->setAutoFillBackground(false);
+            } // Skip autofill for textEdit or plainTextEdit as they already have a frame
+            else if (widget->parent()->inherits("QTextEdit") || widget->parent()->inherits("QPlainTextEdit")) {
+                widget->setAutoFillBackground(false);
+            }
         }
     }
     if (qobject_cast<QScrollBar *>(widget)) {
