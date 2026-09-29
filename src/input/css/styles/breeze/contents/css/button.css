@@ -340,9 +340,10 @@ popup.combobox
 {
     padding: 0px;
     background-color: var(--combobox-popup-background-color);
+    border-radius: var(--corner-radius);
 
-    itemdelegate:highlight
-    {
+    itemviewitem:highlight,
+    itemdelegate:highlight {
         background-color: var(--combobox-popup-highlight-color);
         border-color: var(--highlight-color);
         color: var(--combobox-popup-text-color);

@@ -117,6 +117,7 @@ overlay {
 
 /* Menuitems are sometimes used in comboboxes instead of itemdelegates, adjust their padding to
  * same as itemdelegate in those cases */
+popup.combobox itemviewitem,
 popup.combobox menuitem {
     padding: var(--large-spacing);
     inset: var(--small-spacing);

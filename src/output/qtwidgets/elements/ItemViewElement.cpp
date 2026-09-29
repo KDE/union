@@ -264,5 +264,12 @@ QStringList ItemViewElement::elementHints() const
     if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
         hints.append(u"expanded"_s);
     }
+
+    // For combobox popups, we want similar selector as QtQuick has,
+    // (popup.combobox) so we need to insert the combobox hint here.
+    if (m_widget && m_widget->inherits("QComboBoxListView")) {
+        hints.append(u"combobox"_s);
+    }
+
     return hints;
 }
