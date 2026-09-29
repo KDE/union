@@ -35,4 +35,6 @@ public:
 
 private:
     const QStyleOption *m_widgetOption = nullptr;
+
+    void drawKMultiTabBar(QPainter *painter) const;
 };
