@@ -97,6 +97,7 @@ public:
     std::unique_ptr<StyleCache> styleCache;
 
     QHash<fs::path, Style::Ptr> styles;
+    QSet<QString> missingStyles;
 
     std::shared_ptr<PluginRegistry<PlatformPlugin>> platformRegistry;
     std::shared_ptr<PlatformPlugin> platform;
@@ -161,6 +162,10 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleId)
         return itr.value();
     }
 
+    if (d->missingStyles.contains(styleId)) {
+        return nullptr;
+    }
+
     if (!d->styleCache) {
         return nullptr;
     }
@@ -168,6 +173,7 @@ std::shared_ptr<Style> StyleRegistry::style(const QString &styleId)
     auto stylePackage = d->packageHandler->package(styleId);
     if (!stylePackage.isValid()) {
         qCWarning(UNION_GENERAL) << "Could not find style" << styleId;
+        d->missingStyles.insert(styleId);
         return nullptr;
     }
 
