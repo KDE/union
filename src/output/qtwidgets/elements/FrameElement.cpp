@@ -111,7 +111,10 @@ void FrameElement::drawFrame(QPainter *painter) const
 
     switch (m_frameOption->frameShape) {
     case QFrame::NoFrame:
-        drawPanel(painter);
+        // Only draw panel if we have autoFillBackground set
+        if (m_widget && m_widget->autoFillBackground()) {
+            drawPanel(painter);
+        }
         return;
     case QFrame::Box:
     case QFrame::Panel:
