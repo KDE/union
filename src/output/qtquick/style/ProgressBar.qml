@@ -14,7 +14,10 @@ T.ProgressBar {
     Union.Element.states {
         enabled: control.enabled
     }
-    Union.Element.hints: Union.ElementHint { name: "indeterminate"; when: control.indeterminate }
+    Union.Element.hints: [
+        Union.ElementHint { name: "horizontal" },
+        Union.ElementHint { name: "indeterminate"; when: control.indeterminate }
+    ]
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
