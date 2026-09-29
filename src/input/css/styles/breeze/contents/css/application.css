@@ -171,6 +171,7 @@ pane
     background-color: var(--window-background-color);
 }
 
+frame,
 groupbox,
 framemenu,
 framewindow
@@ -194,7 +195,6 @@ treeview,
 tableview,
 columnview,
 scrollview {
-    border: none;
     &:visual-focus {
         border: 1px solid var(--highlight-color);
     }
