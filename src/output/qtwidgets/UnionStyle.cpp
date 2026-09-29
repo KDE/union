@@ -761,7 +761,11 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (qobject_cast<const QTreeView *>(currentWidget)) {
             members.prepend(ElementString::TreeView);
         } else if (qobject_cast<const QListView *>(currentWidget)) {
-            members.prepend(ElementString::ListView);
+            if (widget->inherits("QComboBoxListView")) {
+                members.prepend(ElementString::Popup);
+            } else {
+                members.prepend(ElementString::ListView);
+            }
         } else if (qobject_cast<const QPlainTextEdit *>(currentWidget)) {
             members.prepend(ElementString::TextArea);
         } else if (qobject_cast<const QTextEdit *>(currentWidget)) {

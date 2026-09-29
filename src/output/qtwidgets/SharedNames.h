@@ -46,6 +46,7 @@ static const QString MdiSubWindow = u"MdiSubWindow"_s;
 static const QString Menu = u"Menu"_s;
 static const QString MenuBar = u"MenuBar"_s;
 static const QString MenuItem = u"MenuItem"_s;
+static const QString Popup = u"Popup"_s;
 static const QString MenuBarItem = u"MenuBarItem"_s;
 static const QString MenuSeparator = u"MenuSeparator"_s;
 static const QString MinimizeButton = u"MinimizeButton"_s;
