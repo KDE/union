@@ -82,17 +82,21 @@ toolbar
 
     & > separator {
         width: 1px;
-        height: var(--small-element-size);
+        height: 1px;
+        border: none;
+        border-radius: 0px;
         background-color: var(--window-border-color);
+        padding: 0px;
     }
 
     & > handle {
         width: 4px;
-        height: var(--small-element-size);
+        height: 4px;
+        border: none;
+        border-radius: 0px;
         border-left: 1px solid var(--window-border-color);
         border-right: 1px solid var(--window-border-color);
-        border-top: none;
-        border-bottom: none;
+        padding: 0px;
     }
 }
 
