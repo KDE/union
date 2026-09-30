@@ -226,13 +226,31 @@ scrollview {
     &[shape="horizontal-line"] {
         height: 1px;
     }
+    /* Legacy hints that applications use to drive Breeze style */
     &.dock-left,
     &.dock-right,
     &.dock-top,
-    &.dock-bottom {
+    &.dock-bottom,
+    &.left-edge,
+    &.right-edge,
+    &.top-edge,
+    &.bottom-edge {
         border: none;
         border-radius: 0px;
     }
+    &.left-edge {
+        border-left: 1px solid var(--window-border-color);
+    }
+    &.right-edge {
+        border-right: 1px solid var(--window-border-color);
+    }
+    &.top-edge {
+        border-top: 1px solid var(--window-border-color);
+    }
+    &.bottom-edge {
+        border-bottom: 1px solid var(--window-border-color);
+    }
+
 }
 
 groupbox {
