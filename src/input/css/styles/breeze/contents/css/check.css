@@ -114,11 +114,11 @@ checkbox,
 checkdelegate,
 menuitem
 {
-    &:checked indicator
+    &:checked > indicator
     {
         background-image: url("../images/checkmark.svg") mask var(--checkable-indicator-active-text-color);
     }
-    &.indeterminate indicator {
+    &.indeterminate > indicator {
         background-image: url("../images/indeterminate.svg") mask var(--checkable-indicator-active-text-color);
     }
 }
