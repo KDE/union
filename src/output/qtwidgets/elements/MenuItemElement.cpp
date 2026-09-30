@@ -179,7 +179,10 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
             preferredSize = applyPaddingToSize(separatorSize);
         } else {
             QSizeF itemSize(contentsSizeFromStyle);
-            int spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+            const qreal spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+            if (hasText()) {
+                itemSize.rwidth() += spacing;
+            }
             if (hasIcon()) {
                 itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
             }
@@ -188,8 +191,12 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
             }
             if (m_menuItemOption->menuHasCheckableItems) {
                 const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
+                const qreal labelSpacing =
+                    m_style->pixelMetric(exclusive ? QStyle::PM_RadioButtonLabelSpacing : QStyle::PM_CheckBoxLabelSpacing, m_menuItemOption, m_widget)
+                    + spacing;
                 itemSize.rwidth() +=
-                    m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing;
+                    m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing
+                    + labelSpacing;
             }
             if (!m_shortcutText.isEmpty()) {
                 itemSize.rwidth() += m_layoutMap[ElementString::ShortcutText].rect.width() + spacing;
