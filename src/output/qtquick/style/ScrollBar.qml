@@ -43,7 +43,7 @@ T.ScrollBar {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    minimumSize: (horizontal ? height / width : width / height) || 0
+    minimumSize: (horizontal ? availableHeight / availableWidth : availableWidth / availableHeight) || 0
 
     // Use an explicit binding since an implicit binding gets broken when using
     // ScrollBar with ScrollView.
