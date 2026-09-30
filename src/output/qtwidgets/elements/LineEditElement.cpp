@@ -82,11 +82,11 @@ QMarginsF LineEditElement::iconPadding() const
 
 QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 {
-    if (m_isValid && element == QStyle::SE_LineEditContents && m_backgroundProperties && m_backgroundProperties->layout()) {
-        int frameWidth = m_style->pixelMetric(QStyle::PM_DefaultFrameWidth, m_frameOption, m_widget);
-        return backgroundRectangle(m_frameOption, m_backgroundProperties).toRect().adjusted(frameWidth, frameWidth, -frameWidth, -frameWidth);
+    if (m_isValid && element == QStyle::SE_LineEditContents) {
+        auto rect = backgroundRectangle(m_frameOption, m_backgroundProperties).toRect();
+        return rect.marginsRemoved(padding().toMargins());
     }
-    return QRectF();
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 QStringList LineEditElement::elementHints() const
