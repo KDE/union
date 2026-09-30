@@ -102,12 +102,8 @@ QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::
         return QRectF();
     }
     QRectF rect = option->rect;
-    if (const auto layout = properties->layout()) {
-        if (layout->inset()) {
-            rect = rect.marginsRemoved(layout->inset()->toMargins());
-        }
-    }
-    return rect;
+    const auto insets = safePropertyLookup(properties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
+    return rect.marginsRemoved(insets);
 }
 
 QString styleOptionToElementName(const QStyleOption *option)
