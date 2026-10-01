@@ -60,4 +60,7 @@ private:
     qreal extent() const;
     qreal controlThickness() const;
     qreal minimumSize() const;
+
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

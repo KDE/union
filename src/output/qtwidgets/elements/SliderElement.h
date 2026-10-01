@@ -57,4 +57,8 @@ private:
 
     Union::ElementList m_tickElementList;
     Union::Properties::StylePropertyGroup *m_tickProperties = nullptr;
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::ElementList m_contentElementList;
+    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
 };

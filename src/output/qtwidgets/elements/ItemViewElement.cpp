@@ -48,13 +48,13 @@ void ItemViewElement::update()
 
 void ItemViewElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_viewItemOption, m_widget, {ElementString::ItemViewItem});
+    m_elementList = prepareElements(m_viewItemOption, m_widget, {ElementString::ItemViewItem});
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
 
         auto opt = *m_viewItemOption;
-        opt.rect = backgroundRectangle(m_viewItemOption, m_backgroundProperties).toRect();
+        opt.rect = backgroundRectangle(m_viewItemOption, m_elementProperties).toRect();
 
         m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
         m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
@@ -131,7 +131,7 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
     if (element == QStyle::SE_ItemViewItemCheckIndicator) {
         rect = m_layoutMap[ElementString::CheckBox].rect;
         // Center the checkbox with its proper size
-        rect = centerRect(rect, indicatorSize().width(), indicatorSize().height());
+        rect = centerRect(rect, width(m_indicatorProperties), height(m_indicatorProperties));
         rect.moveCenter(QPointF(rect.center().x() + spacing() / 2.0, rect.center().y()));
     }
 
@@ -175,7 +175,7 @@ void ItemViewElement::drawBackground(QPainter *painter) const
     const bool hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption->state.testFlag(QStyle::State_Selected);
     if (hasCustomBackground) {
         const auto radius =
-            safePropertyLookup(m_backgroundProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
+            safePropertyLookup(m_elementProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
         const auto path = unevenRadiiRectPath(rect, radius);
         painter->setPen(Qt::NoPen);
         painter->setBrush(m_viewItemOption->backgroundBrush);
@@ -193,7 +193,7 @@ void ItemViewElement::drawText(QPainter *painter) const
         if (textRect.isEmpty()) {
             textRect = m_styleOption->rect;
         }
-        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
+        drawTextAtRect(painter, m_text, textRect);
     }
 }
 
@@ -201,7 +201,7 @@ void ItemViewElement::drawIcon(QPainter *painter) const
 {
     if (hasIcon() && m_isValid) {
         auto iconRect = subElementRect(QStyle::SE_ItemViewItemDecoration);
-        drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
+        drawIconAtRect(painter, m_icon, iconRect);
     }
 }
 QVariantMap ItemViewElement::elementAttributes() const

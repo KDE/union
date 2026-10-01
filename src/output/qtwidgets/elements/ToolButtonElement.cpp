@@ -52,15 +52,15 @@ void ToolButtonElement::layout()
         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
     }
 
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_indicatorMap = layoutMap(m_backgroundElementList, m_styleOption, {ElementString::Indicator});
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_indicatorMap = layoutMap(m_elementList, m_styleOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
         auto subopt = *m_toolButtonOption;
         subopt.rect = m_mainButtonRect.toRect();
-        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -167,7 +167,7 @@ void ToolButtonElement::drawIcon(QPainter *painter) const
         }
         return;
     } else if (hasIcon()) {
-        drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
+        drawIconAtRect(painter, m_icon, iconRect);
     }
 }
 
@@ -266,17 +266,18 @@ void ToolButtonElement::layoutButtons()
                                                                 &StylePropertyGroup::layout,
                                                                 &LayoutPropertyGroup::alignment,
                                                                 &AlignmentPropertyGroup::vertical);
-        QMarginsF menuPadding =
-            m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+
+        const QMarginsF menuPadding = padding(m_indicatorProperties);
         m_menuButtonRect = m_menuButtonRect.marginsAdded(menuPadding);
+        const QMarginsF elementPadding = padding();
 
         switch (alignH) {
         case Union::Properties::Alignment::Start:
             // With regular Menu, ignore the paddings that would cause the button to grow too large
             // as the menu is embedded within the button
             if (arrowMenu) {
-                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.right() - padding().left());
-                m_menuButtonRect.moveLeft(m_mainButtonRect.left() + padding().left());
+                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.right() - elementPadding.left());
+                m_menuButtonRect.moveLeft(m_mainButtonRect.left() + elementPadding.left());
             } else {
                 m_menuButtonRect.moveLeft(m_mainButtonRect.left());
             }
@@ -291,8 +292,8 @@ void ToolButtonElement::layoutButtons()
         case Union::Properties::Alignment::Unspecified:
         case Union::Properties::Alignment::StackCenter:
             if (arrowMenu) {
-                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.left() - padding().right());
-                m_menuButtonRect.moveRight(m_mainButtonRect.right() - padding().right());
+                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.left() - elementPadding.right());
+                m_menuButtonRect.moveRight(m_mainButtonRect.right() - elementPadding.right());
             } else {
                 m_menuButtonRect.moveRight(m_mainButtonRect.right());
             }

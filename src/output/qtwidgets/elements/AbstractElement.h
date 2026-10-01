@@ -183,40 +183,40 @@ protected:
      */
     virtual QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements) const;
 
-    virtual QMarginsF padding() const;
+    virtual QMarginsF padding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual QMarginsF borderSize() const;
+    virtual QMarginsF borderSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual qreal height() const;
+    virtual qreal height(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual qreal width() const;
+    virtual qreal width(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual qreal spacing() const;
+    virtual qreal spacing(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual QSizeF indicatorSize() const;
+    virtual QSizeF propertySize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    virtual QSizeF iconSize() const;
+    virtual QSizeF iconSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    qreal averagePadding() const;
+    qreal averagePadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    qreal averageBorderSize() const;
+    qreal averageBorderSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    qreal averageVPadding() const;
+    qreal averageVPadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    qreal averageHPadding() const;
+    qreal averageHPadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    QString elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const;
+    QString elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const;
+    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
     /*!
      * \brief Draw text at the given rectangle. Handles coloring, elision and
      * enabled status.
      */
-    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
+    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
     const QStyleOption *m_styleOption = nullptr;
     const UnionStyle *m_style = nullptr;
@@ -224,18 +224,10 @@ protected:
     QIcon m_icon = QIcon();
     QString m_text = QString();
     QIcon m_indicator = QIcon();
-    Union::ElementList m_backgroundElementList;
-    Union::ElementList m_contentElementList;
-    Union::ElementList m_indicatorElementList;
+    Union::ElementList m_elementList;
     // Holds the properties for the background:
     // This is the top-level properties of the item by default.
-    Union::Properties::StylePropertyGroup *m_backgroundProperties = nullptr;
-    // Holds the properties for any contents, such as text and icon.
-    // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
-    // Holds the properties for any indicators, such as dropdown arrows.
-    // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::Properties::StylePropertyGroup *m_elementProperties = nullptr;
     QMap<QString, LayoutItem> m_layoutMap;
     QStringList m_subElementList;
     // Used to check if we have all elements properly prepared
@@ -249,6 +241,9 @@ private:
     LayoutBucket createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const;
     QRectF resizeBucket(const LayoutBucket &bucket) const;
     void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
+
+    // If given property is null, return m_elementProperties
+    Union::Properties::StylePropertyGroup *defaultPropertyGroup(Union::Properties::StylePropertyGroup *properties) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractElement::AbstractElementFlags);

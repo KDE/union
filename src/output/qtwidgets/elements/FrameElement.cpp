@@ -39,16 +39,12 @@ void FrameElement::update()
 
 void FrameElement::layout()
 {
-    // Backwards compatibility for borders, as applications used this custom Breeze property to declare
-    // which borders are applied to the widget.
-
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_styleOption, m_subElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
     }
-    if (m_backgroundProperties) {
+    if (m_elementProperties) {
         m_isValid = true;
     } else {
         m_isValid = false;

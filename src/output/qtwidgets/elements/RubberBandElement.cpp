@@ -43,10 +43,9 @@ void RubberBandElement::draw(QPainter *painter, DrawEnums enums) const
 
 void RubberBandElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::RubberBand});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::RubberBand});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
     }
 }

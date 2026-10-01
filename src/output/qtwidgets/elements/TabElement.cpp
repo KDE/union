@@ -117,7 +117,7 @@ void TabElement::drawText(QPainter *painter) const
             textRect.moveCenter(textContainer.center());
             break;
         }
-        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
+        drawTextAtRect(painter, m_text, textRect);
     }
 }
 
@@ -139,9 +139,9 @@ void TabElement::layout()
         return;
     }
 
-    m_backgroundElementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         QRect tabRect = m_tabOption->rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
@@ -158,7 +158,7 @@ void TabElement::layout()
 
         auto subopt = *m_tabOption;
         subopt.rect = tabRect;
-        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
         m_isValid = true;
     }
 }
@@ -199,7 +199,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     } else {
         size.rwidth() += widthIncrement;
     }
-    size = size.expandedTo(QSize(width(), height()));
+    size = size.expandedTo(propertySize());
 
     return applyPaddingToSize(size);
 }
@@ -214,7 +214,7 @@ int TabElement::hSpace() const
 {
     if (m_isValid) {
         auto padding =
-            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+            safePropertyLookup(m_elementProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return (padding.left() + padding.right()) / 2;
     }
     return 0;
@@ -224,7 +224,7 @@ int TabElement::vSpace() const
 {
     if (m_isValid) {
         auto padding =
-            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+            safePropertyLookup(m_elementProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return (padding.top() + padding.bottom()) / 2;
     }
     return 0;

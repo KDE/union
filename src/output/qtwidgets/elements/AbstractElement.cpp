@@ -94,16 +94,10 @@ void AbstractElement::setFlag(AbstractElementFlag flag, bool apply)
 
 void AbstractElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_styleOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -209,12 +203,7 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
     if (!m_isValid) {
         return oldSize;
     }
-    auto paddingProperties = properties;
-    // Use background properties as the default
-    if (!properties) {
-        paddingProperties = m_backgroundProperties;
-    }
-
+    auto paddingProperties = defaultPropertyGroup(properties);
     QMarginsF padding =
         safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     QMarginsF inset =
@@ -254,49 +243,50 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
 void AbstractElement::drawBackground(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawFrame(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties, BackgroundParts::FrameOnly);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::FrameOnly);
     }
 }
 
 void AbstractElement::drawPanel(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties, BackgroundParts::PanelOnly);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::PanelOnly);
     }
 }
 
 void AbstractElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_backgroundProperties);
+        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawIcon(QPainter *painter) const
 {
     if (hasIcon() && m_isValid) {
-        drawIconAtRect(painter, m_icon, m_layoutMap[ElementString::Icon].rect, m_backgroundProperties);
+        drawIconAtRect(painter, m_icon, m_layoutMap[ElementString::Icon].rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawIndicator(QPainter *painter) const
 {
     if (hasIndicator() && m_isValid) {
-        drawIconAtRect(painter, m_indicator, m_layoutMap[ElementString::Indicator].rect, m_backgroundProperties);
+        drawIconAtRect(painter, m_indicator, m_layoutMap[ElementString::Indicator].rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const
 {
     if (m_isValid) {
-        auto unionIcon = m_style->unionIcon(properties, icon.name());
+        const auto property = defaultPropertyGroup(properties);
+        auto unionIcon = m_style->unionIcon(property, icon.name());
         // Fallback if union icon cant be loaded
         if (unionIcon.isNull()) {
             unionIcon = icon;
@@ -318,38 +308,41 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
 void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const
 {
     if (m_isValid && m_styleOption) {
+        const auto property = defaultPropertyGroup(properties);
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
         const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
         auto textColor = m_styleOption->palette.text().color();
-        auto unionColor = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
-        auto font = safePropertyLookup(properties, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
+        auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
+        auto font = safePropertyLookup(property, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
         if (unionColor.isValid()) {
             textColor = unionColor.toQColor();
         }
-        textFlags = textFlagsFromProperties(properties);
+        textFlags = textFlagsFromProperties(property);
         painter->save();
         painter->setPen(textColor);
         painter->setFont(font);
-        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, properties));
+        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, property));
         painter->restore();
     }
 }
 
-QMarginsF AbstractElement::padding() const
+QMarginsF AbstractElement::padding(Union::Properties::StylePropertyGroup *properties) const
 {
-    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    const auto property = defaultPropertyGroup(properties);
+    return safePropertyLookup(property, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
-QMarginsF AbstractElement::borderSize() const
+QMarginsF AbstractElement::borderSize(Union::Properties::StylePropertyGroup *properties) const
 {
-    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
+    const auto property = defaultPropertyGroup(properties);
+    return safePropertyLookup(property, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
 }
 
-qreal AbstractElement::height() const
+qreal AbstractElement::height(Union::Properties::StylePropertyGroup *properties) const
 {
     constexpr qreal defaultValue = 0.0;
-    if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    if (const auto property = defaultPropertyGroup(properties)) {
+        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     } else if (m_styleOption) {
         return m_styleOption->rect.height();
     } else {
@@ -357,11 +350,11 @@ qreal AbstractElement::height() const
     }
 }
 
-qreal AbstractElement::width() const
+qreal AbstractElement::width(Union::Properties::StylePropertyGroup *properties) const
 {
     constexpr qreal defaultValue = 0.0;
-    if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    if (const auto property = defaultPropertyGroup(properties)) {
+        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     } else if (m_styleOption) {
         return m_styleOption->rect.width();
     } else {
@@ -369,55 +362,60 @@ qreal AbstractElement::width() const
     }
 }
 
-qreal AbstractElement::spacing() const
+qreal AbstractElement::spacing(Union::Properties::StylePropertyGroup *properties) const
 {
-    return safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+    const auto property = defaultPropertyGroup(properties);
+    return safePropertyLookup(property, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
 }
 
-QSizeF AbstractElement::indicatorSize() const
+QSizeF AbstractElement::propertySize(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto width = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    auto height = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    const auto property = defaultPropertyGroup(properties);
+    return QSizeF(width(property), height(property));
+}
+
+QSizeF AbstractElement::iconSize(Union::Properties::StylePropertyGroup *properties) const
+{
+    const auto property = defaultPropertyGroup(properties);
+    auto width = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
+    auto height = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
     return QSizeF(width, height);
 }
 
-QSizeF AbstractElement::iconSize() const
+qreal AbstractElement::averagePadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
-    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
-    return QSizeF(width, height);
-}
-
-qreal AbstractElement::averagePadding() const
-{
-    auto margins = padding();
+    const auto property = defaultPropertyGroup(properties);
+    const auto margins = padding(property);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
 }
 
-qreal AbstractElement::averageHPadding() const
+qreal AbstractElement::averageHPadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = padding();
+    const auto property = defaultPropertyGroup(properties);
+    const auto margins = padding(property);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.left() + margins.right()) / 2;
 }
 
-qreal AbstractElement::averageVPadding() const
+qreal AbstractElement::averageVPadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = padding();
+    const auto property = defaultPropertyGroup(properties);
+    const auto margins = padding(property);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.top() + margins.bottom()) / 2;
 }
 
-qreal AbstractElement::averageBorderSize() const
+qreal AbstractElement::averageBorderSize(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = borderSize();
+    const auto property = defaultPropertyGroup(properties);
+    auto margins = borderSize(property);
     if (margins.isNull()) {
         return 0;
     }
@@ -427,7 +425,8 @@ qreal AbstractElement::averageBorderSize() const
 QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const
 {
     if (!text.isEmpty() && m_styleOption) {
-        auto elide = safePropertyLookup(properties, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
+        const auto property = defaultPropertyGroup(properties);
+        auto elide = safePropertyLookup(property, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
         const qreal elideWidth = textRect.width() < m_styleOption->rect.width() ? textRect.width() : m_styleOption->rect.width();
         return m_styleOption->fontMetrics.elidedText(text, toQtElideMode(elide), elideWidth);
     }
@@ -801,4 +800,12 @@ void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutI
 
         map[item.elementName] = item;
     }
+}
+
+Union::Properties::StylePropertyGroup *AbstractElement::defaultPropertyGroup(Union::Properties::StylePropertyGroup *properties) const
+{
+    if (!properties) {
+        return m_elementProperties;
+    }
+    return properties;
 }

@@ -41,15 +41,15 @@ void HeaderElement::update()
 QIcon HeaderElement::sortIndicator()
 {
     QIcon sortIndicator;
-    if (m_backgroundProperties && m_isValid && m_headerOption) {
+    if (m_elementProperties && m_isValid && m_headerOption) {
         switch (m_headerOption->sortIndicator) {
         case QStyleOptionHeader::None:
             break;
         case QStyleOptionHeader::SortUp:
-            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-down-symbolic"_s);
+            sortIndicator = m_style->unionIcon(m_elementProperties, u"arrow-down-symbolic"_s);
             break;
         case QStyleOptionHeader::SortDown:
-            sortIndicator = m_style->unionIcon(m_backgroundProperties, u"arrow-up-symbolic"_s);
+            sortIndicator = m_style->unionIcon(m_elementProperties, u"arrow-up-symbolic"_s);
             break;
         }
     }
@@ -58,11 +58,10 @@ QIcon HeaderElement::sortIndicator()
 
 void HeaderElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_headerOption, m_subElementList);
+    m_elementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_headerOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -105,7 +104,7 @@ void HeaderElement::drawText(QPainter *painter) const
 {
     if (!m_text.isEmpty() && isValid()) {
         QRectF textRect = subElementRect(QStyle::SE_HeaderLabel);
-        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
+        drawTextAtRect(painter, m_text, textRect);
     }
 }
 
@@ -209,7 +208,7 @@ qreal HeaderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     case QStyle::PM_HeaderDefaultSectionSizeVertical:
         return height();
     case QStyle::PM_HeaderMarkSize:
-        return indicatorSize().width();
+        return iconSize().width();
     default:
         break;
     }

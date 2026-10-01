@@ -49,4 +49,7 @@ private:
     const QStyleOptionComboBox *m_comboBoxOption = nullptr;
     bool m_editable;
     bool m_hasFrame;
+
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

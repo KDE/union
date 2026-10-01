@@ -30,9 +30,9 @@ void TabCloseButtonElement::update()
 
 void TabCloseButtonElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         if (!m_widgetOption) {
             QStyleOption opt;
             if (m_widget) {
@@ -42,7 +42,7 @@ void TabCloseButtonElement::layout()
         } else {
             m_layoutMap[ElementString::Icon].rect = m_widgetOption->rect;
         }
-        setIcon(m_style->unionIcon(m_backgroundProperties, (u"window-close-symbolic"_s)));
+        setIcon(m_style->unionIcon(m_elementProperties, (u"window-close-symbolic"_s)));
         m_isValid = true;
     } else {
         m_isValid = false;

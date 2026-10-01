@@ -32,10 +32,6 @@ void SpinBoxElement::update()
         return;
     }
     m_hasFrame = m_spinBoxOption->frame;
-    m_indicatorElementList = prepareElements(m_spinBoxOption, m_widget, {ElementString::Indicator});
-    if (!m_indicatorElementList.isEmpty()) {
-        m_indicatorProperties = queryProperties(m_indicatorElementList);
-    }
     m_hasButtons = (m_spinBoxOption->buttonSymbols != QAbstractSpinBox::NoButtons);
     updateSubElementList();
     layout();
@@ -114,11 +110,8 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
     const QRectF buttonRect = m_layoutMap[ElementString::Indicator].rect;
     QRectF bgRect = m_spinBoxOption->rect;
 
-    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-
-    bgRect.setWidth(std::max(bgRect.width(), width));
-    bgRect.setHeight(std::max(bgRect.height(), height));
+    bgRect.setWidth(std::max(bgRect.width(), width()));
+    bgRect.setHeight(std::max(bgRect.height(), height()));
 
     const bool noButtons = (m_spinBoxOption->buttonSymbols == QAbstractSpinBox::NoButtons);
     const int y = m_spinBoxOption->rect.y();
@@ -150,21 +143,21 @@ void SpinBoxElement::drawSpinIndicator(QPainter *painter, const QStyle::Primitiv
     QIcon indicatorIcon;
     switch (primitive) {
     case QStyle::PE_IndicatorSpinPlus:
-        indicatorIcon = m_style->unionIcon(m_backgroundProperties, u"spinbox-increase"_s);
+        indicatorIcon = m_style->unionIcon(m_elementProperties, u"spinbox-increase"_s);
         break;
     case QStyle::PE_IndicatorSpinMinus:
-        indicatorIcon = m_style->unionIcon(m_backgroundProperties, u"spinbox-decrease"_s);
+        indicatorIcon = m_style->unionIcon(m_elementProperties, u"spinbox-decrease"_s);
         break;
     case QStyle::PE_IndicatorSpinUp:
-        indicatorIcon = m_style->unionIcon(m_backgroundProperties, u"arrow-up-symbolic"_s);
+        indicatorIcon = m_style->unionIcon(m_elementProperties, u"arrow-up-symbolic"_s);
         break;
     case QStyle::PE_IndicatorSpinDown:
-        indicatorIcon = m_style->unionIcon(m_backgroundProperties, u"arrow-down-symbolic"_s);
+        indicatorIcon = m_style->unionIcon(m_elementProperties, u"arrow-down-symbolic"_s);
         break;
     default:
         return;
     }
-    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect, m_backgroundProperties);
+    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect);
 }
 
 QStringList SpinBoxElement::elementHints() const

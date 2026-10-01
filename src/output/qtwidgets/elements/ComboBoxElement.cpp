@@ -111,7 +111,7 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 
     switch (subControl) {
     case QStyle::SC_ComboBoxFrame:
-        return backgroundRectangle(m_comboBoxOption, m_backgroundProperties).toRect();
+        return backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect();
     case QStyle::SC_ComboBoxListBoxPopup:
         return m_comboBoxOption->rect;
     case QStyle::SC_ComboBoxArrow: {

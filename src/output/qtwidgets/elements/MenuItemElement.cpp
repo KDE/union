@@ -127,20 +127,21 @@ void MenuItemElement::updateSubElementList()
 void MenuItemElement::layout()
 {
     if (m_isSeparator) {
-        m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuSeparator});
+        m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuSeparator});
     } else {
-        m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
+        m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
     }
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_menuItemOption, m_subElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_menuItemOption, m_subElementList);
 
         // IconRect in MenuItemElements are the maximum size by default.
         // Instead center the icon rectangle within the maximum size rect.
-        if (hasIcon() && (iconSize().width() > 0 && iconSize().height() > 0)) {
+        const auto iconsize = iconSize();
+        if (hasIcon() && (iconsize.width() > 0 && iconsize.height() > 0)) {
             auto iconRect = m_layoutMap[ElementString::Icon].rect;
-            m_layoutMap[ElementString::Icon].rect = centerRect(iconRect, iconSize().width(), iconSize().height());
+            m_layoutMap[ElementString::Icon].rect = centerRect(iconRect, iconsize.width(), iconsize.height());
         }
 
         m_isValid = true;
@@ -158,8 +159,8 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // Handle separator separately (pun not intended)
     if (m_menuItemOption) {
         if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-            auto width = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-            auto height = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+            auto width = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+            auto height = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
             if (hasText()) {
                 if (preferredSize.width() > width) {
                     width = preferredSize.width();
@@ -172,8 +173,7 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
             preferredSize = applyPaddingToSize(separatorSize);
         } else {
             QSizeF itemSize(contentsSizeFromStyle);
-            const qreal spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
-            itemSize.rwidth() += padding().left() + padding().right();
+            const qreal spacing = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
             if (hasText()) {
                 itemSize.rwidth() += spacing;
             }
@@ -205,22 +205,22 @@ void MenuItemElement::drawBackground(QPainter *painter) const
 {
     // Draw the  separator rectangle full width if its set to fill
     if (m_isSeparator) {
-        QRectF rect = backgroundRectangle(m_menuItemOption, m_backgroundProperties);
-        if (m_backgroundProperties) {
-            auto alignment = m_backgroundProperties->safePropertyLookup(Union::Properties::Alignment::Fill,
-                                                                        &StylePropertyGroup::layout,
-                                                                        &LayoutPropertyGroup::alignment,
-                                                                        &AlignmentPropertyGroup::horizontal);
+        QRectF rect = backgroundRectangle(m_menuItemOption, m_elementProperties);
+        if (m_elementProperties) {
+            auto alignment = m_elementProperties->safePropertyLookup(Union::Properties::Alignment::Fill,
+                                                                     &StylePropertyGroup::layout,
+                                                                     &LayoutPropertyGroup::alignment,
+                                                                     &AlignmentPropertyGroup::horizontal);
             if (alignment == Union::Properties::Alignment::Fill) {
                 rect = centerRect(rect,
-                                  m_backgroundProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
-                                  m_backgroundProperties->layout()->height().value_or(1));
+                                  m_elementProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
+                                  m_elementProperties->layout()->height().value_or(1));
             }
         }
         // Ensure the rectangle is resized according to the menu margins
-        drawBackgroundRectangle(painter, rect, m_backgroundProperties);
+        drawBackgroundRectangle(painter, rect, m_elementProperties);
     } else {
-        drawBackgroundRectangle(painter, m_menuItemOption->rect, m_backgroundProperties);
+        drawBackgroundRectangle(painter, m_menuItemOption->rect, m_elementProperties);
     }
 }
 
@@ -240,7 +240,7 @@ void MenuItemElement::drawText(QPainter *painter) const
 void MenuItemElement::drawSubMenuArrow(QPainter *painter) const
 {
     if (m_hasSubMenu && m_isValid) {
-        drawIconAtRect(painter, m_subMenuArrow, m_layoutMap[ElementString::Arrow].rect, m_backgroundProperties);
+        drawIconAtRect(painter, m_subMenuArrow, m_layoutMap[ElementString::Arrow].rect);
     }
 }
 

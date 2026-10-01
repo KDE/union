@@ -64,19 +64,12 @@ void MenuBarItemElement::updateSubElementList()
 
 void MenuBarItemElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuBarItem});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuBarItem});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_menuItemOption, m_subElementList);
+        m_isValid = true;
     }
-
-    m_contentElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuBarItem});
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
-    }
-
-    m_layoutMap = layoutMap(m_contentElementList, m_menuItemOption, m_subElementList);
-    m_isValid = true;
 }
 
 QStringList MenuBarItemElement::elementHints() const

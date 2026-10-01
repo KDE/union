@@ -48,8 +48,7 @@ void TabBarElement::drawBackground(QPainter *painter) const
     if (!m_tabBarOption) {
         return;
     }
-
-    drawBackgroundRectangle(painter, m_tabBarOption->rect, m_backgroundProperties, BackgroundParts::FrameOnly);
+    drawBackgroundRectangle(painter, m_tabBarOption->rect, m_elementProperties, BackgroundParts::FrameOnly);
 }
 
 qreal TabBarElement::scrollButtonWidth() const
@@ -111,14 +110,14 @@ int TabBarElement::styleHint(QStyle::StyleHint styleHint) const
 {
     switch (styleHint) {
     case QStyle::SH_TabBar_Alignment:
-        return toQtHorizontalAlignment(safePropertyLookup(m_backgroundProperties,
+        return toQtHorizontalAlignment(safePropertyLookup(m_elementProperties,
                                                           Alignment::Start,
                                                           &StylePropertyGroup::layout,
                                                           &LayoutPropertyGroup::alignment,
                                                           &AlignmentPropertyGroup::horizontal));
     case QStyle::SH_TabBar_ElideMode:
         return toQtElideMode(
-            safePropertyLookup(m_backgroundProperties, Union::Properties::TextElide::Right, &StylePropertyGroup::text, &TextPropertyGroup::elide));
+            safePropertyLookup(m_elementProperties, Union::Properties::TextElide::Right, &StylePropertyGroup::text, &TextPropertyGroup::elide));
     default:
         return 0;
     }
