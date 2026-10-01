@@ -169,17 +169,11 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
                 }
             }
             QSizeF separatorSize(width, height);
-            auto pad = m_backgroundProperties->safePropertyLookup(QMarginsF{},
-                                                                  &StylePropertyGroup::layout,
-                                                                  &LayoutPropertyGroup::inset,
-                                                                  &SizePropertyGroup::toMargins);
-            separatorSize = separatorSize.expandedTo(QSize(pad.left() + pad.right(), pad.top() + pad.bottom()));
-
-            // If we have text, we want to apply padding normally. If not, we want to remove padding and utilize the insets.
             preferredSize = applyPaddingToSize(separatorSize);
         } else {
             QSizeF itemSize(contentsSizeFromStyle);
             const qreal spacing = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+            itemSize.rwidth() += padding().left() + padding().right();
             if (hasText()) {
                 itemSize.rwidth() += spacing;
             }
