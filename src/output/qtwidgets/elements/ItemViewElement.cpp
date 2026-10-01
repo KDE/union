@@ -121,7 +121,8 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
 
     QRectF rect;
     if (element == QStyle::SE_ItemViewItemText) {
-        rect = m_layoutMap[ElementString::Text].rect;
+        const auto adjustment = spacing() / 2.0;
+        rect = m_layoutMap[ElementString::Text].rect.adjusted(adjustment, 0, -adjustment, 0);
     }
     if (element == QStyle::SE_ItemViewItemDecoration) {
         rect = m_layoutMap[ElementString::Icon].rect;
