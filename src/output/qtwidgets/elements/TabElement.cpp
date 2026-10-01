@@ -95,6 +95,32 @@ void TabElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
+void TabElement::drawText(QPainter *painter) const
+{
+    if (hasText() && m_isValid) {
+        auto textContainer = subElementRect(QStyle::SE_TabBarTabText);
+        auto alignment = m_layoutMap[ElementString::Text].horizontalAlignment;
+        auto textRect = m_layoutMap[ElementString::Text].rect;
+
+        switch (alignment) {
+        case Alignment::Unspecified:
+        case Alignment::Start:
+            textRect.moveLeft(textContainer.left());
+            break;
+        case Alignment::End:
+            textRect.moveRight(textContainer.right());
+            break;
+        case Alignment::Center:
+        case Alignment::Fill:
+        case Alignment::StackCenter:
+        case Alignment::StackFill:
+            textRect.moveCenter(textContainer.center());
+            break;
+        }
+        drawTextAtRect(painter, m_text, textRect, m_backgroundProperties);
+    }
+}
+
 void TabElement::updateSubElementList()
 {
     m_subElementList.clear();
@@ -165,11 +191,8 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
         widthIncrement += offset;
     }
 
-    QMarginsF padding =
-        safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-
     // add margins
-    auto size = applyPaddingToSize(contentsSizeFromStyle);
+    auto size = contentsSizeFromStyle;
 
     if (m_isVertical) {
         size.rheight() += widthIncrement;
@@ -178,7 +201,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     }
     size = size.expandedTo(QSize(width(), height()));
 
-    return size;
+    return applyPaddingToSize(size);
 }
 
 QRectF TabElement::subElementRect(QStyle::SubElement element) const
