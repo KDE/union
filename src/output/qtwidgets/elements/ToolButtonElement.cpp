@@ -52,15 +52,15 @@ void ToolButtonElement::layout()
         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
     }
 
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_indicatorMap = layoutMap(m_backgroundElementList, m_styleOption, {ElementString::Indicator});
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_indicatorMap = layoutMap(m_elementList, m_styleOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
         auto subopt = *m_toolButtonOption;
         subopt.rect = m_mainButtonRect.toRect();
-        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

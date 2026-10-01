@@ -110,18 +110,11 @@ void TitleBarElement::updateSubElementList()
 
 void TitleBarElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_titleBarOption, m_widget, {ElementString::TitleBar});
+    m_elementList = prepareElements(m_titleBarOption, m_widget, {ElementString::TitleBar});
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_titleBarOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_titleBarOption, m_widget, {ElementString::TitleBar});
-
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_titleBarOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -196,11 +189,11 @@ qreal TitleBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TitleBarHeight:
-        return height();
+        return height(m_elementProperties);
     case QStyle::PM_TitleBarButtonSize:
         return buttonWidth();
     case QStyle::PM_TitleBarButtonIconSize:
-        return iconSize().width();
+        return iconSize(m_elementProperties).width();
     default:
         break;
     }

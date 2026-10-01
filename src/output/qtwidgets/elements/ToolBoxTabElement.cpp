@@ -77,23 +77,14 @@ void ToolBoxTabElement::layout()
         m_isValid = false;
         return;
     }
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_toolBoxOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
-
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_toolBoxOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_toolBoxOption, m_subElementList);
+        m_isValid = true;
+    } else {
+        m_isValid = false;
     }
-
-    QStringList elements = {ElementString::ToolBox, ElementString::Tab};
-    elements.append(m_subElementList);
-    m_contentElementList = prepareElements(m_toolBoxOption, m_widget, elements);
-
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
-    }
-
-    m_layoutMap = layoutMap(m_backgroundElementList, m_toolBoxOption, m_subElementList);
-    m_isValid = true;
 }
 
 QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const

@@ -61,10 +61,10 @@ void ToolBarElement::draw(QPainter *painter, DrawEnums enums) const
 void ToolBarElement::layout()
 {
     // Background uses toolbarOption, separators etc use styleOption
-    m_backgroundElementList = prepareElements(m_toolBarOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_toolBarOption, m_subElementList);
+    m_elementList = prepareElements(m_toolBarOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_toolBarOption, m_subElementList);
     }
 
     m_handleElementList = prepareElements(m_styleOption, m_widget, {ElementString::Handle});
@@ -80,7 +80,7 @@ void ToolBarElement::layout()
         m_extensionProperties = queryProperties(m_extensionElementList);
     }
 
-    if (!m_backgroundElementList.isEmpty()) {
+    if (!m_elementList.isEmpty()) {
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -234,7 +234,7 @@ qreal ToolBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     case QStyle::PM_ToolBarSeparatorExtent:
         return separatorExtent();
     case QStyle::PM_ToolBarFrameWidth:
-        return averageBorderSize();
+        return averageBorderSize(m_elementProperties);
     case QStyle::PM_ToolBarHandleExtent:
         return handleExtent();
     case QStyle::PM_ToolBarExtensionExtent:
@@ -242,9 +242,9 @@ qreal ToolBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     case QStyle::PM_ToolBarItemSpacing:
         return spacing();
     case QStyle::PM_ToolBarItemMargin:
-        return averagePadding();
+        return averagePadding(m_elementProperties);
     case QStyle::PM_ToolBarIconSize:
-        return iconSize().width();
+        return iconSize(m_elementProperties).width();
     default:
         break;
     }

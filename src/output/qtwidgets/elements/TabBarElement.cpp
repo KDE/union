@@ -50,7 +50,7 @@ void TabBarElement::drawBackground(QPainter *painter) const
     }
     drawBackgroundRectangle(painter,
                             m_tabBarOption->rect,
-                            m_backgroundProperties,
+                            m_elementProperties,
                             m_tabBarOption->documentMode ? BackgroundParts::PanelOnly : BackgroundParts::All);
 }
 
@@ -91,9 +91,9 @@ qreal TabBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     case QStyle::PM_TabBarScrollButtonWidth:
         return scrollButtonWidth();
     case QStyle::PM_TabBarBaseHeight:
-        return height();
+        return height(m_elementProperties);
     case QStyle::PM_TabBarIconSize:
-        return iconSize().width();
+        return iconSize(m_elementProperties).width();
     default:
         break;
     }
@@ -104,14 +104,14 @@ int TabBarElement::styleHint(QStyle::StyleHint styleHint) const
 {
     switch (styleHint) {
     case QStyle::SH_TabBar_Alignment:
-        return toQtHorizontalAlignment(safePropertyLookup(m_backgroundProperties,
+        return toQtHorizontalAlignment(safePropertyLookup(m_elementProperties,
                                                           Alignment::Start,
                                                           &StylePropertyGroup::layout,
                                                           &LayoutPropertyGroup::alignment,
                                                           &AlignmentPropertyGroup::horizontal));
     case QStyle::SH_TabBar_ElideMode:
         return toQtElideMode(
-            safePropertyLookup(m_backgroundProperties, Union::Properties::TextElide::Right, &StylePropertyGroup::text, &TextPropertyGroup::elide));
+            safePropertyLookup(m_elementProperties, Union::Properties::TextElide::Right, &StylePropertyGroup::text, &TextPropertyGroup::elide));
     default:
         return 0;
     }

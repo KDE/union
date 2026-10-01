@@ -43,9 +43,9 @@ void FocusElement::draw(QPainter *painter, DrawEnums enums) const
 
 void FocusElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::FocusFrame});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::FocusFrame});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
     }
 }
 
@@ -62,9 +62,9 @@ qreal FocusElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_FocusFrameVMargin:
-        return averageVPadding();
+        return averageVPadding(m_elementProperties);
     case QStyle::PM_FocusFrameHMargin:
-        return averageHPadding();
+        return averageHPadding(m_elementProperties);
     default:
         break;
     }

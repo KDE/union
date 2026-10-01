@@ -94,16 +94,10 @@ void AbstractElement::setFlag(AbstractElementFlag flag, bool apply)
 
 void AbstractElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_styleOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -212,7 +206,7 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
     auto paddingProperties = properties;
     // Use background properties as the default
     if (!properties) {
-        paddingProperties = m_backgroundProperties;
+        paddingProperties = m_elementProperties;
     }
 
     QMarginsF padding =
@@ -254,28 +248,28 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
 void AbstractElement::drawBackground(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawFrame(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties, BackgroundParts::FrameOnly);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::FrameOnly);
     }
 }
 
 void AbstractElement::drawPanel(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_backgroundProperties, BackgroundParts::PanelOnly);
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::PanelOnly);
     }
 }
 
 void AbstractElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_backgroundProperties);
+        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_elementProperties);
     }
 }
 
@@ -329,21 +323,21 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
     }
 }
 
-QMarginsF AbstractElement::padding() const
+QMarginsF AbstractElement::padding(Union::Properties::StylePropertyGroup *properties) const
 {
-    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    return safePropertyLookup(properties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
-QMarginsF AbstractElement::borderSize() const
+QMarginsF AbstractElement::borderSize(Union::Properties::StylePropertyGroup *properties) const
 {
-    return safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
+    return safePropertyLookup(properties, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
 }
 
-qreal AbstractElement::height() const
+qreal AbstractElement::height(Union::Properties::StylePropertyGroup *properties) const
 {
     const qreal defaultValue = 1.0;
-    if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    if (properties) {
+        return properties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     } else if (m_styleOption) {
         return m_styleOption->rect.height();
     } else {
@@ -351,11 +345,11 @@ qreal AbstractElement::height() const
     }
 }
 
-qreal AbstractElement::width() const
+qreal AbstractElement::width(Union::Properties::StylePropertyGroup *properties) const
 {
     const qreal defaultValue = 1.0;
-    if (m_backgroundProperties) {
-        return m_backgroundProperties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    if (properties) {
+        return properties->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     } else if (m_styleOption) {
         return m_styleOption->rect.width();
     } else {
@@ -365,53 +359,51 @@ qreal AbstractElement::width() const
 
 qreal AbstractElement::spacing() const
 {
-    return safePropertyLookup(m_backgroundProperties, 1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+    return safePropertyLookup(m_elementProperties, 1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
 }
 
-QSizeF AbstractElement::indicatorSize() const
+QSizeF AbstractElement::propertySize(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto width = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    auto height = safePropertyLookup(m_indicatorProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    return QSizeF(width(properties), height(properties));
+}
+
+QSizeF AbstractElement::iconSize(Union::Properties::StylePropertyGroup *properties) const
+{
+    auto width = safePropertyLookup(properties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
+    auto height = safePropertyLookup(properties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
     return QSizeF(width, height);
 }
 
-QSizeF AbstractElement::iconSize() const
+qreal AbstractElement::averagePadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
-    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
-    return QSizeF(width, height);
-}
-
-qreal AbstractElement::averagePadding() const
-{
-    auto margins = padding();
+    auto margins = padding(properties);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
 }
 
-qreal AbstractElement::averageHPadding() const
+qreal AbstractElement::averageHPadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = padding();
+    auto margins = padding(properties);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.left() + margins.right()) / 2;
 }
 
-qreal AbstractElement::averageVPadding() const
+qreal AbstractElement::averageVPadding(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = padding();
+    auto margins = padding(properties);
     if (margins.isNull()) {
         return 0;
     }
     return (margins.top() + margins.bottom()) / 2;
 }
 
-qreal AbstractElement::averageBorderSize() const
+qreal AbstractElement::averageBorderSize(Union::Properties::StylePropertyGroup *properties) const
 {
-    auto margins = borderSize();
+    auto margins = borderSize(properties);
     if (margins.isNull()) {
         return 0;
     }

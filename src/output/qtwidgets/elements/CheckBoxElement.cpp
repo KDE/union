@@ -67,7 +67,7 @@ QSizeF CheckBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     auto size = applyPaddingToSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label
-    size.rwidth() += spacing() + indicatorSize().width();
+    size.rwidth() += spacing() + width(m_indicatorProperties);
     return size;
 }
 
@@ -131,9 +131,9 @@ qreal CheckBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_IndicatorWidth:
-        return indicatorSize().width();
+        return propertySize(m_indicatorProperties).width();
     case QStyle::PM_IndicatorHeight:
-        return indicatorSize().height();
+        return propertySize(m_indicatorProperties).height();
     case QStyle::PM_CheckBoxLabelSpacing:
         return spacing();
     default:

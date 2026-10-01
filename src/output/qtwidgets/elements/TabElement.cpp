@@ -113,9 +113,9 @@ void TabElement::layout()
         return;
     }
 
-    m_backgroundElementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         QRect tabRect = m_tabOption->rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
@@ -132,7 +132,7 @@ void TabElement::layout()
 
         auto subopt = *m_tabOption;
         subopt.rect = tabRect;
-        m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
         m_isValid = true;
     }
 }
@@ -166,7 +166,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     }
 
     QMarginsF padding =
-        safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+        safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 
     // add margins
     auto size = applyPaddingToSize(contentsSizeFromStyle);
@@ -176,7 +176,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     } else {
         size.rwidth() += widthIncrement;
     }
-    size = size.expandedTo(QSize(width(), height()));
+    size = size.expandedTo(propertySize(m_elementProperties));
 
     return size;
 }
@@ -191,7 +191,7 @@ int TabElement::hSpace() const
 {
     if (m_isValid) {
         auto padding =
-            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+            safePropertyLookup(m_elementProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return (padding.left() + padding.right()) / 2;
     }
     return 0;
@@ -201,7 +201,7 @@ int TabElement::vSpace() const
 {
     if (m_isValid) {
         auto padding =
-            safePropertyLookup(m_backgroundProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+            safePropertyLookup(m_elementProperties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         return (padding.top() + padding.bottom()) / 2;
     }
     return 0;
@@ -265,10 +265,6 @@ QStringList TabElement::elementHints() const
 qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
-    case QStyle::PM_TabCloseIndicatorWidth:
-        return indicatorSize().width();
-    case QStyle::PM_TabCloseIndicatorHeight:
-        return indicatorSize().height();
     case QStyle::PM_TabBarTabHSpace:
         return hSpace();
     case QStyle::PM_TabBarTabVSpace:

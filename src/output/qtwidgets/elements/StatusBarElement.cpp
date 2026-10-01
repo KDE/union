@@ -51,11 +51,11 @@ void StatusBarElement::updateSubElementList()
 
 void StatusBarElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_styleOption, m_subElementList);
+    // Background and content (items inside statusbar) is separate
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
     }
 
     m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);

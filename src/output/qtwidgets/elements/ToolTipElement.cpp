@@ -43,9 +43,9 @@ void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolTipElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_frameOption, m_widget, {ElementString::ToolTip});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_frameOption, m_widget, {ElementString::ToolTip});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
     }
 }
@@ -59,7 +59,7 @@ qreal ToolTipElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolTipLabelFrameWidth:
-        return averageBorderSize();
+        return averageBorderSize(m_elementProperties);
     default:
         break;
     }

@@ -44,4 +44,7 @@ private:
     const QStyleOption *m_treeViewOption = nullptr;
     qreal indentation() const;
     bool m_itemIsOpen;
+
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

@@ -60,4 +60,6 @@ private:
     const QStyleOptionProgressBar *m_progressBarOption = nullptr;
     int chunkWidth() const;
     bool m_isHorizontal;
+    Union::ElementList m_contentElementList;
+    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
 };

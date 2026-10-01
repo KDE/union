@@ -34,21 +34,16 @@ void ScrollBarElement::update()
 
 void ScrollBarElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_scrollBarOption, m_widget);
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_scrollBarOption, m_subElementList);
+    // Background and indicator (handle) is separate
+    m_elementList = prepareElements(m_scrollBarOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_scrollBarOption, m_subElementList);
     }
 
     m_indicatorElementList = prepareElements(m_scrollBarOption, m_widget, {ElementString::Handle});
     if (!m_indicatorElementList.empty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
-    }
-
-    m_contentElementList = prepareElements(m_scrollBarOption, m_widget, m_subElementList);
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -86,7 +81,7 @@ void ScrollBarElement::draw(QPainter *painter, DrawEnums enums) const
 void ScrollBarElement::drawBackground(QPainter *painter) const
 {
     const auto rect = subControlRect(QStyle::SC_ScrollBarGroove);
-    drawBackgroundRectangle(painter, rect, m_backgroundProperties);
+    drawBackgroundRectangle(painter, rect, m_elementProperties);
 }
 
 void ScrollBarElement::drawIndicator(QPainter *painter) const
@@ -139,12 +134,12 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
         int thickness = 0;
         QMarginsF padding;
 
-        if (m_backgroundProperties->layout() && m_backgroundProperties->layout()->padding()) {
-            padding = m_backgroundProperties->layout()->padding()->toMargins().toMargins();
+        if (m_elementProperties->layout() && m_elementProperties->layout()->padding()) {
+            padding = m_elementProperties->layout()->padding()->toMargins().toMargins();
             if (m_scrollBarOption->orientation == Qt::Horizontal) {
-                thickness = m_backgroundProperties->layout()->height().value_or(0);
+                thickness = m_elementProperties->layout()->height().value_or(0);
             } else {
-                thickness = m_backgroundProperties->layout()->width().value_or(0);
+                thickness = m_elementProperties->layout()->width().value_or(0);
             }
         }
 
@@ -191,11 +186,11 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
 
 qreal ScrollBarElement::extent() const
 {
-    if (m_isValid && m_backgroundProperties && m_backgroundProperties->layout()) {
+    if (m_isValid && m_elementProperties && m_elementProperties->layout()) {
         if (m_scrollBarOption->orientation == Qt::Horizontal) {
-            return m_backgroundProperties->layout()->height().value_or(0);
+            return m_elementProperties->layout()->height().value_or(0);
         } else {
-            return m_backgroundProperties->layout()->width().value_or(0);
+            return m_elementProperties->layout()->width().value_or(0);
         }
     }
     return 0;

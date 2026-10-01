@@ -45,9 +45,9 @@ void SizeGripElement::update()
 
 void SizeGripElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::SizeGrip});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::SizeGrip});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
     }
 }
@@ -56,7 +56,7 @@ qreal SizeGripElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SizeGripSize:
-        return width();
+        return width(m_elementProperties);
     default:
         break;
     }

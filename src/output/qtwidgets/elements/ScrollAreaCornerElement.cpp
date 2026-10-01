@@ -43,9 +43,8 @@ void ScrollAreaCornerElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ScrollAreaCornerElement::layout()
 {
-    // Background and content is separate
-    m_backgroundElementList = prepareElements(m_cornerOption, m_widget, {ElementString::ScrollAreaCorner});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    m_elementList = prepareElements(m_cornerOption, m_widget, {ElementString::ScrollAreaCorner});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
     }
 }

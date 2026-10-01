@@ -48,11 +48,11 @@ qreal MenuBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuBarVMargin:
-        return averageVPadding();
+        return averageVPadding(m_elementProperties);
     case QStyle::PM_MenuBarHMargin:
-        return averageHPadding();
+        return averageHPadding(m_elementProperties);
     case QStyle::PM_MenuBarPanelWidth:
-        return width();
+        return width(m_elementProperties);
     case QStyle::PM_MenuBarItemSpacing:
         return spacing();
     default:

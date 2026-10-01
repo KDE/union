@@ -53,11 +53,6 @@ void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-QSizeF LineEditElement::iconSize() const
-{
-    return querySize({ElementString::LineEditIconSize});
-}
-
 void LineEditElement::updateSubElementList()
 {
     m_subElementList.clear();
@@ -68,7 +63,7 @@ QSizeF LineEditElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
     QMarginsF padding =
-        safePropertyLookup(m_backgroundProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+        safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     return contentsSizeFromStyle.grownBy(padding);
 }
 
@@ -77,14 +72,14 @@ QMarginsF LineEditElement::iconPadding() const
     if (!m_isValid) {
         return QMarginsF();
     }
-    return safePropertyLookup(m_contentProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    return safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
 QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 {
     if (m_isValid && element == QStyle::SE_LineEditContents) {
-        auto rect = backgroundRectangle(m_frameOption, m_backgroundProperties).toRect();
-        return rect.marginsRemoved(padding().toMargins());
+        auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
+        return rect.marginsRemoved(padding(m_elementProperties).toMargins());
     }
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
@@ -112,7 +107,7 @@ qreal LineEditElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
     }
     case QStyle::PM_LineEditIconSize:
-        return iconSize().width();
+        return querySize({ElementString::LineEditIconSize}).width();
     default:
         break;
     }

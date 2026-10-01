@@ -53,4 +53,8 @@ private:
     bool m_isReverse;
     QList<QRect> tickLines() const;
     qreal controlThickness() const;
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::ElementList m_contentElementList;
+    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
 };

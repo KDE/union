@@ -65,17 +65,11 @@ void DockWidgetElement::updateSubElementList()
 
 void DockWidgetElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget});
+    m_elementList = prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget});
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_dockWidgetOption, m_subElementList);
-    }
-
-    m_contentElementList = prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget});
-
-    if (!m_contentElementList.isEmpty()) {
-        m_contentProperties = queryProperties(m_contentElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_dockWidgetOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -109,7 +103,7 @@ qreal DockWidgetElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_DockWidgetFrameWidth:
-        return averageBorderSize();
+        return averageBorderSize(m_elementProperties);
     default:
         break;
     }

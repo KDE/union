@@ -40,4 +40,6 @@ private:
     void drawItem(QPainter *painter) const;
     const QStyleOption *m_statusBarOption = nullptr;
     void updateSubElementList() override;
+    Union::ElementList m_contentElementList;
+    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
 };

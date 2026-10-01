@@ -70,4 +70,7 @@ private:
     QRectF m_menuButtonRect;
 
     QMap<QString, LayoutItem> m_indicatorMap;
+
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

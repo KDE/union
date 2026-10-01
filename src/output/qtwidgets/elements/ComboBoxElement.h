@@ -48,4 +48,6 @@ private:
     void drawText(QPainter *painter) const override;
     const QStyleOptionComboBox *m_comboBoxOption = nullptr;
     bool m_editable;
+    Union::ElementList m_indicatorElementList;
+    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

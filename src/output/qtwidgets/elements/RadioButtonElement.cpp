@@ -68,7 +68,7 @@ QSizeF RadioButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 {
     auto size = applyPaddingToSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label
-    size.rwidth() += spacing() + indicatorSize().width();
+    size.rwidth() += spacing() + width(m_indicatorProperties);
     return size;
 }
 
@@ -125,9 +125,9 @@ qreal RadioButtonElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ExclusiveIndicatorWidth:
-        return indicatorSize().width();
+        return width(m_indicatorProperties);
     case QStyle::PM_ExclusiveIndicatorHeight:
-        return indicatorSize().height();
+        return height(m_indicatorProperties);
     case QStyle::PM_RadioButtonLabelSpacing:
         return spacing();
     default:

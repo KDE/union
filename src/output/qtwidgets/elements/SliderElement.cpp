@@ -45,10 +45,10 @@ void SliderElement::update()
 void SliderElement::layout()
 {
     // Background is the groove
-    m_backgroundElementList = prepareElements(m_sliderOption, m_widget);
+    m_elementList = prepareElements(m_sliderOption, m_widget);
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
     }
 
     // Indicator is the handle
@@ -162,7 +162,7 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
 void SliderElement::drawBackground(QPainter *painter) const
 {
     auto grooveRect = subControlRect(QStyle::SC_SliderGroove);
-    drawBackgroundRectangle(painter, grooveRect, m_backgroundProperties);
+    drawBackgroundRectangle(painter, grooveRect, m_elementProperties);
 }
 
 void SliderElement::updateSubElementList()
@@ -224,9 +224,9 @@ QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
     } else if (subControl == QStyle::SC_SliderGroove) {
         int grooveHeight = 1;
         int grooveWidth = 1;
-        if (m_backgroundProperties->layout()) {
-            grooveHeight = m_backgroundProperties->layout()->height().value_or(6);
-            grooveWidth = m_backgroundProperties->layout()->width().value_or(6);
+        if (m_elementProperties->layout()) {
+            grooveHeight = m_elementProperties->layout()->height().value_or(6);
+            grooveWidth = m_elementProperties->layout()->width().value_or(6);
         }
 
         QRectF grooveRect = rect.adjusted(frameWidth, frameWidth, -frameWidth, -frameWidth);
@@ -304,14 +304,14 @@ QList<QRect> SliderElement::tickLines() const
 qreal SliderElement::controlThickness() const
 {
     if (m_isValid && m_indicatorProperties) {
-        QSizeF size = indicatorSize();
+        QSizeF controlSize = propertySize(m_indicatorProperties);
         QMarginsF padding =
             m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-        size = size.shrunkBy(padding);
+        controlSize = controlSize.shrunkBy(padding);
         if (m_sliderOption->orientation == Qt::Horizontal) {
-            return size.height();
+            return controlSize.height();
         } else {
-            return size.width();
+            return controlSize.width();
         }
     }
     return 0;
@@ -335,7 +335,7 @@ qreal SliderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SliderLength:
-        return height();
+        return height(m_elementProperties);
     case QStyle::PM_SliderThickness:
     case QStyle::PM_SliderControlThickness:
         return controlThickness();

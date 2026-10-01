@@ -70,7 +70,7 @@ void ProgressBarElement::draw(QPainter *painter, DrawEnums enums) const
 void ProgressBarElement::drawBackground(QPainter *painter) const
 {
     auto groove = subElementRect(QStyle::SE_ProgressBarGroove);
-    drawBackgroundRectangle(painter, groove, m_backgroundProperties);
+    drawBackgroundRectangle(painter, groove, m_elementProperties);
 }
 void ProgressBarElement::drawIndicator(QPainter *painter) const
 {
@@ -88,11 +88,11 @@ void ProgressBarElement::updateSubElementList()
 
 void ProgressBarElement::layout()
 {
-    m_backgroundElementList = prepareElements(m_progressBarOption, m_widget);
+    m_elementList = prepareElements(m_progressBarOption, m_widget);
 
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-        m_layoutMap = layoutMap(m_backgroundElementList, m_progressBarOption, m_subElementList);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_elementList, m_progressBarOption, m_subElementList);
     }
 
     m_contentElementList = prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Track});
@@ -128,7 +128,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         if (!textVisible || busy) {
             return QRect();
         }
-        auto textFlags = textFlagsFromProperties(m_backgroundProperties);
+        auto textFlags = textFlagsFromProperties(m_elementProperties);
         int textWidth = std::max(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
                                  m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
         auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());
@@ -159,8 +159,8 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         return indicatorRect;
     } else if (element == QStyle::SE_ProgressBarGroove) {
         // Copied and repurposed from Breeze. We ignore width, we only want the thickness of the bar.
-        const qreal styleHeight = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-        const qreal styleWidth = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        const qreal styleHeight = m_elementProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        const qreal styleWidth = m_elementProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
         const qreal height = m_progressBarOption->rect.height() <= 0 ? styleHeight : m_progressBarOption->rect.height();
         const qreal width = m_progressBarOption->rect.width() <= 0 ? styleWidth : m_progressBarOption->rect.width();
 
