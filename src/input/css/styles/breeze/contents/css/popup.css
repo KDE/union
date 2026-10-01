@@ -130,11 +130,14 @@ menuseparator {
     inset: var(--small-spacing);
 
     &.with-title {
+        height: var(--large-element-size);
         text-alignment: content start center 0;
         layout-alignment-horizontal: end;
-        inset: 0px;
         background-color: transparent;
         padding: var(--small-spacing);
+        /* Make the separator bit wider than rest of the content */
+        inset-left: -2px;
+        inset-right: -2px;
         /* TODO: italic, underline, or separator next to the text */
         font-weight: bold;
 
