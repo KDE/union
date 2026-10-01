@@ -134,8 +134,9 @@ itemviewitem {
     text-wrap-mode: no-wrap;
     text-elide: right;
     padding: var(--small-spacing);
+    height: 34px; /* 32 + inset */
 
-    checkbox {
+    & > checkbox {
         width: var(--small-element-size);
         height: var(--small-element-size);
     }
