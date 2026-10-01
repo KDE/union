@@ -51,6 +51,10 @@ private:
     bool m_isHorizontal;
     bool m_isInverted;
     bool m_isReverse;
-    QList<QRect> tickLines() const;
+    QList<QRectF> tickLines() const;
     qreal controlThickness() const;
+    QSizeF tickMarkSize() const;
+
+    Union::ElementList m_tickElementList;
+    Union::Properties::StylePropertyGroup *m_tickProperties = nullptr;
 };

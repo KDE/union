@@ -53,14 +53,18 @@ void SliderElement::layout()
 
     // Indicator is the handle
     m_indicatorElementList = prepareElements(m_sliderOption, m_widget, {ElementString::Handle});
-
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
 
+    // Tickmarks
+    m_tickElementList = prepareElements(m_sliderOption, m_widget, {ElementString::TickMark});
+    if (!m_tickElementList.isEmpty()) {
+        m_tickProperties = queryProperties(m_tickElementList);
+    }
+
     // Contents is the fill
     m_contentElementList = prepareElements(m_sliderOption, m_widget, m_subElementList);
-
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
@@ -107,44 +111,39 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
     drawBackgroundRectangle(painter, progress, m_contentProperties);
 
     // Tickmark drawing is copied from breeze
-    if (m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
-        auto tickmarkElements = prepareElements(m_sliderOption, m_widget, {ElementString::TickMark});
-        auto props = queryProperties(tickmarkElements);
-        if (!props->layout()) {
-            return;
-        }
-        auto rect = m_sliderOption->rect;
-        const int available(m_style->pixelMetric(QStyle::PM_SliderSpaceAvailable, m_sliderOption, m_widget));
+    if (m_sliderOption && m_tickProperties && m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
+        const auto &rect(m_sliderOption->rect);
+        const int available(m_style->pixelMetric(QStyle::PM_SliderSpaceAvailable, m_styleOption, m_widget));
         int interval = m_sliderOption->tickInterval;
-
         if (interval < 1) {
             interval = m_sliderOption->pageStep;
         }
         if (interval >= 1) {
-            const int fudge(m_style->pixelMetric(QStyle::PM_SliderLength, m_sliderOption, m_widget) / 2);
+            // Offset the tickmarks to the center of the handle
+            const int handleOffset(pixelMetric(QStyle::PM_SliderLength) / 2);
             int current(m_sliderOption->minimum);
+            auto tickmarkElements = m_tickElementList;
 
-            auto ticks = tickLines();
-
+            // store tick lines
+            QList<QRectF> ticks = tickLines();
             // colors
             const auto reverse(m_sliderOption->direction == Qt::RightToLeft);
             while (current <= m_sliderOption->maximum) {
-                // adjust color
+                // If tickmark is active, fetch the properties again with the active hint
                 tickmarkElements.last()->setHint(u"active"_s, current <= m_sliderOption->sliderPosition);
-                auto props = queryProperties(tickmarkElements);
-                const auto color = safePropertyLookup(props, Union::Color{}, &StylePropertyGroup::background, &BackgroundPropertyGroup::color).toQColor();
-                painter->setPen(color);
+                const auto props = queryProperties(tickmarkElements);
 
                 // calculate positions and draw lines
                 const int position(m_style->sliderPositionFromValue(m_sliderOption->minimum, m_sliderOption->maximum, current, available, m_isInverted)
-                                   + fudge);
-                for (const QRect &tickLine : std::as_const(ticks)) {
+                                   + handleOffset);
+                for (const auto &tickLine : std::as_const(ticks)) {
                     if (m_isHorizontal) {
-                        painter->drawRect(tickLine.translated(reverse ? (rect.width() - position) : position, 0));
+                        drawBackgroundRectangle(painter, tickLine.translated(reverse ? (rect.width() - position) : position, 0), props);
                     } else {
-                        painter->drawRect(tickLine.translated(0, position));
+                        drawBackgroundRectangle(painter, tickLine.translated(0, position), props);
                     }
                 }
+
                 // go to next position
                 current += interval;
             }
@@ -152,9 +151,6 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
     }
 
     // Handle
-    // TODO: the handle doesnt center on the tickmark yet.
-    // This requires making the contentSize large enough to hold the extents of the
-    // handle, and then drawing it in correct position.
     auto handle = subControlRect(QStyle::SC_SliderHandle);
     drawBackgroundRectangle(painter, handle, m_indicatorProperties);
 }
@@ -173,24 +169,45 @@ void SliderElement::updateSubElementList()
 
 QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    auto grooveRect = subControlRect(QStyle::SC_SliderGroove).size();
-    auto tickRect = subControlRect(QStyle::SC_SliderTickmarks).size();
-    auto handleRect = subControlRect(QStyle::SC_SliderHandle).size();
-    auto combinedSize = grooveRect.expandedTo(tickRect.expandedTo(handleRect));
-    // Add some extra spacing so that we can draw the handle outside of the groove
-    if (m_isHorizontal) {
-        combinedSize.rwidth() += handleRect.width();
-    } else {
-        combinedSize.rheight() += handleRect.height();
+    if (!m_sliderOption) {
+        return applyPaddingToSize(contentsSizeFromStyle);
     }
-    return contentsSizeFromStyle.expandedTo(applyPaddingToSize(combinedSize));
+
+    // store tick position and orientation
+    const QSlider::TickPosition tickPosition(m_sliderOption->tickPosition);
+    const bool horizontal(m_sliderOption->orientation == Qt::Horizontal);
+    const auto tick = tickMarkSize();
+
+    // do nothing if no ticks are requested
+    if (tickPosition == QSlider::NoTicks) {
+        return applyPaddingToSize(contentsSizeFromStyle);
+    }
+
+    QSizeF size(contentsSizeFromStyle);
+    if (horizontal) {
+        if (tickPosition & QSlider::TicksAbove) {
+            size.rheight() += tick.height();
+        }
+        if (tickPosition & QSlider::TicksBelow) {
+            size.rheight() += tick.height();
+        }
+    } else {
+        if (tickPosition & QSlider::TicksAbove) {
+            size.rwidth() += tick.width();
+        }
+        if (tickPosition & QSlider::TicksBelow) {
+            size.rwidth() += tick.width();
+        }
+    }
+
+    return applyPaddingToSize(size);
 }
 
 QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid || !m_sliderOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return QRectF();
     }
 
     // Copied from Breeze
@@ -238,22 +255,14 @@ QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
             grooveRect = centerRect(rect, grooveWidth, grooveRect.height());
         }
         return m_style->visualRect(m_sliderOption->direction, rect, grooveRect.toRect());
-    } else if (subControl == QStyle::SC_SliderTickmarks && m_sliderOption->tickPosition != QSlider::NoTicks) {
-        QRegion r;
-        r.setRects(tickLines());
-        return r.boundingRect();
     }
-    return QRect();
+    return QRectF();
 }
 
-QList<QRect> SliderElement::tickLines() const
+QList<QRectF> SliderElement::tickLines() const
 {
-    QList<QRect> tickLines;
+    QList<QRectF> tickLines;
     if (!m_sliderOption) {
-        return tickLines;
-    }
-    auto tickMarkProps = queryProperties(prepareElements(m_sliderOption, m_widget, {ElementString::TickMark}));
-    if (!tickMarkProps && !tickMarkProps->layout()) {
         return tickLines;
     }
     auto rect(m_sliderOption->rect);
@@ -264,37 +273,25 @@ QList<QRect> SliderElement::tickLines() const
         interval = m_sliderOption->pageStep;
     }
     if (interval >= 1) {
-        const QSizeF tickSize{tickMarkProps->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width),
-                              tickMarkProps->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height)};
-
+        const auto tickSize = tickMarkSize();
         const QMarginsF tickMargins =
-            tickMarkProps->safePropertyLookup(QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
+            safePropertyLookup(m_tickProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
         const auto tickMarginsWidth = tickMargins.left() + tickMargins.right();
         const auto tickMarginsHeight = tickMargins.top() + tickMargins.bottom();
 
-        // store tick lines
         if (m_isHorizontal) {
             if (tickPosition & QSlider::TicksAbove) {
-                tickLines.append(QRect(rect.left(),
-                                       grooveRect.top() - tickMarginsHeight,
-                                       rect.left(),
-                                       grooveRect.top() - tickMarginsHeight - tickSize.height() - grooveRect.height()));
+                tickLines.append(QRectF(rect.left() - 1, grooveRect.top() - tickMarginsHeight - tickSize.height(), tickSize.width(), tickSize.height()));
             }
             if (tickPosition & QSlider::TicksBelow) {
-                tickLines.append(
-                    QRect(rect.left(), grooveRect.bottom() + tickMarginsHeight, rect.left(), grooveRect.bottom() + tickMarginsHeight + tickSize.height()));
+                tickLines.append(QRectF(rect.left() - 1, grooveRect.bottom() + tickMarginsHeight, tickSize.width(), tickSize.height()));
             }
-
         } else {
             if (tickPosition & QSlider::TicksAbove) {
-                tickLines.append(QRect(grooveRect.left() - tickMarginsWidth,
-                                       rect.top(),
-                                       grooveRect.left() - tickMarginsWidth - tickSize.width() - grooveRect.width(),
-                                       rect.top()));
+                tickLines.append(QRectF(grooveRect.left() - tickMarginsWidth - tickSize.width(), rect.top() - 1, tickSize.width(), tickSize.height()));
             }
             if (tickPosition & QSlider::TicksBelow) {
-                tickLines.append(
-                    QRect(grooveRect.right() + tickMarginsWidth, rect.top(), grooveRect.right() + tickMarginsWidth + tickSize.width(), rect.top()));
+                tickLines.append(QRectF(grooveRect.right() + tickMarginsWidth, rect.top() - 1, tickSize.width(), tickSize.height()));
             }
         }
     }
@@ -335,7 +332,6 @@ qreal SliderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SliderLength:
-        return height();
     case QStyle::PM_SliderThickness:
     case QStyle::PM_SliderControlThickness:
         return controlThickness();
@@ -343,4 +339,14 @@ qreal SliderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         break;
     }
     return 0;
+}
+
+QSizeF SliderElement::tickMarkSize() const
+{
+    if (!m_sliderOption) {
+        return QSizeF();
+    }
+    const QSizeF tickSize{safePropertyLookup(m_tickProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width),
+                          safePropertyLookup(m_tickProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height)};
+    return tickSize;
 }
