@@ -111,7 +111,7 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
     case QStyle::SC_ComboBoxArrow: {
         auto rect = m_layoutMap[ElementString::Indicator].rect;
         rect = rect.adjusted(-spacing(), 0, spacing(), 0);
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect.toRect());
+        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
     }
     case QStyle::SC_ComboBoxEditField: {
         QRectF rect = m_comboBoxOption->rect.marginsRemoved(borderSize().toMargins());
@@ -120,7 +120,7 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
         // Remove our own padding and rely on the text editor padding.
         auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
         rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect.toRect());
+        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
     }
     default:
         break;
