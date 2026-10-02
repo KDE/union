@@ -236,7 +236,7 @@ QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
         } else {
             handleRect.moveTop(rect.y() + sliderPos);
         }
-        handleRect = m_style->visualRect(m_sliderOption->direction, rect, handleRect.toRect());
+        handleRect = m_style->visualRect(m_sliderOption->direction, rect, handleRect);
         return handleRect;
     } else if (subControl == QStyle::SC_SliderGroove) {
         int grooveHeight = 1;
@@ -254,7 +254,7 @@ QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
         } else {
             grooveRect = centerRect(rect, grooveWidth, grooveRect.height());
         }
-        return m_style->visualRect(m_sliderOption->direction, rect, grooveRect.toRect());
+        return m_style->visualRect(m_sliderOption->direction, rect, grooveRect);
     }
     return QRectF();
 }
