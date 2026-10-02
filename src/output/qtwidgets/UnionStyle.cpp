@@ -829,6 +829,26 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
     return members;
 }
 
+
+void UnionStyle::drawItemPixmap(QPainter *painter, const QRectF &rect, Qt::Alignment alignment, const QPixmap &pixmap) const
+{
+    // Try to align to physical pixels.
+    auto dpr = pixmap.devicePixelRatio();
+    QRectF pixmapRect = QRectF{rect.topLeft() * dpr, rect.size() * dpr}.toRect();
+    QRectF aligned = alignedRect(alignment, pixmap.size(), pixmapRect).toRect();
+    pixmapRect = aligned.intersected(pixmapRect);
+    auto sourceRect = pixmapRect.translated(-aligned.topLeft());
+    painter->drawPixmap({pixmapRect.topLeft() / dpr, pixmapRect.size() / dpr}, pixmap, sourceRect);
+}
+
+void UnionStyle::drawItemPixmap(QPainter *painter, const QRect &rect, int alignmentInt, const QPixmap &pixmap) const
+{
+    Qt::Alignment alignment{alignmentInt};
+    // It would be more correct to use QStyleOption::direction, but we don't have that here.
+    alignment = visualAlignment(QGuiApplication::layoutDirection(), alignment);
+    drawItemPixmap(painter, QRectF{rect}, alignment, pixmap);
+}
+
 void UnionStyle::drawItemText(QPainter *painter,
                               const QRect &rect,
                               int flags,

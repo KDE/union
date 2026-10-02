@@ -44,6 +44,75 @@ public:
 
     bool eventFilter(QObject *object, QEvent *event) override;
 
+    // QStyle::visualAlignment, but constexpr
+    static constexpr Qt::Alignment visualAlignment(Qt::LayoutDirection direction, Qt::Alignment alignment, Qt::Alignment defaultHorizontalAlignment = Qt::AlignLeft)
+    {
+        if (!alignment.testAnyFlags(Qt::AlignHorizontal_Mask)) {
+            alignment |= defaultHorizontalAlignment & Qt::AlignHorizontal_Mask;
+        }
+        if (alignment.testFlag(Qt::AlignAbsolute)) {
+            return alignment;
+        }
+        constexpr Qt::Alignment leftRightMask = Qt::AlignLeft | Qt::AlignRight;
+        if (direction == Qt::RightToLeft && alignment.testAnyFlags(leftRightMask)) {
+            alignment ^= leftRightMask;
+        }
+        return alignment | Qt::AlignAbsolute;
+    }
+
+    // QStyle::visualRect, but constexpr and using QRectF
+    static constexpr QRectF visualRect(Qt::LayoutDirection direction, const QRectF &boundingRect, const QRectF &logicalRect)
+    {
+        if (direction == Qt::LeftToRight) {
+            return logicalRect;
+        }
+        return {boundingRect.x() + boundingRect.right() - logicalRect.right(), logicalRect.y(), logicalRect.width(), logicalRect.height()};
+    }
+
+    // QStyle::visualPos, but constexpr and using QRectF/QPointF
+    static constexpr QPointF visualPos(Qt::LayoutDirection direction, const QRectF &boundingRect, const QPointF &logicalPos)
+    {
+        if (direction == Qt::LeftToRight) {
+            return logicalPos;
+        }
+        return {boundingRect.right() - logicalPos.x(), logicalPos.y()};
+    }
+
+    // QStyle::alignedRect, but constexpr, no direction parameter and using QSizeF/QRectF.
+    // Unlike QStyle::alignedRect, you need to do RTL alignment adjustments with
+    // visualAlignment outside of this function.
+    static constexpr QRectF alignedRect(Qt::Alignment alignment, const QSizeF &contentSize, const QRectF &containerRect)
+    {
+        QRectF contentRect{containerRect.topLeft(), contentSize};
+        if (alignment.testFlag(Qt::AlignVCenter)) {
+            contentRect.moveTop(containerRect.y() + (containerRect.height() - contentRect.height()) / 2);
+        } else if (alignment.testFlag(Qt::AlignBottom)) {
+            contentRect.moveBottom(containerRect.bottom());
+        }
+        if (alignment.testFlag(Qt::AlignRight)) {
+            contentRect.moveRight(containerRect.right());
+        } else if (alignment.testFlag(Qt::AlignHCenter)) {
+            contentRect.moveLeft(containerRect.x() + (containerRect.width() - contentRect.width()) / 2);
+        }
+        return contentRect;
+    }
+
+    // QStyle::alignedRect, but constexpr and using QSizeF/QRectF
+    // A mostly drop-in replacement for QStyle::alignedRect.
+    static constexpr QRectF alignedRect(Qt::LayoutDirection direction, Qt::Alignment alignment, const QSizeF &contentSize, const QRectF &containerRect)
+    {
+        alignment = visualAlignment(direction, alignment);
+        return alignedRect(alignment, contentSize, containerRect);
+    }
+
+    // QStyle::drawItemPixmap, but using QRectF.
+    // Not an override of QStyle::drawItemPixmap.
+    // Unlike QStyle::drawItemPixmap, you need to do RTL alignment adjustments with
+    // visualAlignment outside of this function.
+    void drawItemPixmap(QPainter *painter, const QRectF &rect, Qt::Alignment alignment, const QPixmap &pixmap) const;
+
+    void drawItemPixmap(QPainter *painter, const QRect &rect, int alignment, const QPixmap &pixmap) const override;
+
     void drawItemText(QPainter *painter,
                       const QRect &rect,
                       int flags,
