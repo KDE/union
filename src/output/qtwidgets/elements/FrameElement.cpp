@@ -233,23 +233,6 @@ QStringList FrameElement::elementHints() const
             }
         }
     }
-    // Some applications use the "_breeze_borders_sides" as a way to drive the Breeze application style,
-    // keep it for backwards compatibility.
-    if (m_widget && m_widget->property("_breeze_borders_sides").isValid()) {
-        const auto edges = m_widget->property("_breeze_borders_sides").value<Qt::Edges>();
-        if (edges & Qt::LeftEdge) {
-            hints.append(u"left-edge"_s);
-        }
-        if (edges & Qt::RightEdge) {
-            hints.append(u"right-edge"_s);
-        }
-        if (edges & Qt::TopEdge) {
-            hints.append(u"top-edge"_s);
-        }
-        if (edges & Qt::BottomEdge) {
-            hints.append(u"bottom-edge"_s);
-        }
-    }
     return hints;
 }
 
