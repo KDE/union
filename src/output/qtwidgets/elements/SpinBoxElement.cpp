@@ -131,7 +131,7 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
     if (subControl == QStyle::SC_SpinBoxFrame) {
         rect = bgRect;
     }
-    rect = m_style->visualRect(m_spinBoxOption->direction, m_spinBoxOption->rect, rect.toRect());
+    rect = m_style->visualRect(m_spinBoxOption->direction, m_spinBoxOption->rect, rect);
     return rect;
 }
 
