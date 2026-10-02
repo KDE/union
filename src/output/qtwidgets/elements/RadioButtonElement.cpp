@@ -80,13 +80,12 @@ QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
     }
 
     if (element == QStyle::SE_RadioButtonIndicator) {
-        if (m_buttonOption->styleObject || !m_widget) {
+        if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
             // The indicator is drawn as part of something
             return m_layoutMap[ElementString::Indicator].rect;
-        } else {
-            // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
-            return m_buttonOption->rect;
         }
+        // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
+        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
     }
 
     return unifiedRect(m_layoutMap);
