@@ -128,7 +128,7 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
         break;
     }
 
-    return m_style->visualRect(m_groupBoxOption->direction, m_groupBoxOption->rect, finalRect.toRect());
+    return m_style->visualRect(m_groupBoxOption->direction, m_groupBoxOption->rect, finalRect);
 }
 
 void GroupBoxElement::drawText(QPainter *painter) const
