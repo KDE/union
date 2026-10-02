@@ -304,7 +304,7 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
         auto iconSize = rect.size();
         const QPixmap pixmap = icon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
         painter->save();
-        m_style->drawItemPixmap(painter, rect.toRect(), Qt::AlignCenter, pixmap);
+        m_style->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
         painter->restore();
     }
 }

@@ -89,7 +89,7 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
 
     painter->save();
     auto rect = centerRect(m_styleOption->rect, size.width(), size.height());
-    m_style->drawItemPixmap(painter, rect.toRect(), Qt::AlignCenter, pixmap);
+    m_style->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
     painter->restore();
 }
 
