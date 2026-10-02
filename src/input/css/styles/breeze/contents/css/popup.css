@@ -73,7 +73,8 @@ menuitem
         border: 1px solid var(--highlight-color);
     }
 
-    &:pressed
+    &:pressed,
+    &.with-submenu:pressed
     {
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
