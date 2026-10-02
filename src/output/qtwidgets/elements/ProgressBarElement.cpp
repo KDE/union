@@ -133,7 +133,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
                                  m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
         auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());
         rect.setLeft(rect.right() - textWidth + 1);
-        rect = m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect.toRect());
+        rect = m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
         return rect;
     } else if (element == QStyle::SE_ProgressBarContents) {
         // Copied from Breeze
