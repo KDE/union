@@ -331,11 +331,31 @@ QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap)
 QStringList frameHints(const QStyleOptionFrame *frameOption)
 {
     QStringList hints;
+    if (!frameOption) {
+        return hints;
+    }
     if (frameOption->features.testFlag(QStyleOptionFrame::Flat)) {
         hints.append(u"flat"_s);
     }
     if (frameOption->features.testFlag(QStyleOptionFrame::Rounded)) {
         hints.append(u"rounded"_s);
+    }
+    // Some applications use the "_breeze_borders_sides" as a way to drive the Breeze application style,
+    // keep it for backwards compatibility.
+    if (frameOption->styleObject && frameOption->styleObject->property("_breeze_borders_sides").isValid()) {
+        const auto edges = frameOption->styleObject->property("_breeze_borders_sides").value<Qt::Edges>();
+        if (edges & Qt::LeftEdge) {
+            hints.append(u"left-edge"_s);
+        }
+        if (edges & Qt::RightEdge) {
+            hints.append(u"right-edge"_s);
+        }
+        if (edges & Qt::TopEdge) {
+            hints.append(u"top-edge"_s);
+        }
+        if (edges & Qt::BottomEdge) {
+            hints.append(u"bottom-edge"_s);
+        }
     }
     return hints;
 }
