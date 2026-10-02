@@ -198,7 +198,9 @@ listview,
 treeview,
 tableview,
 columnview,
-scrollview {
+scrollview,
+textfield,
+textarea {
     &:visual-focus {
         border: 1px solid var(--highlight-color);
     }
@@ -254,7 +256,6 @@ scrollview {
     &.bottom-edge {
         border-bottom: 1px solid var(--window-border-color);
     }
-
 }
 
 groupbox {
