@@ -701,9 +701,6 @@ void UnionStyle::polish(QWidget *widget)
             if (widget->parent()->inherits("QComboBoxListView")) {
                 widget->setAttribute(Qt::WA_TranslucentBackground);
                 widget->setAutoFillBackground(false);
-            } // Skip autofill for textEdit or plainTextEdit as they already have a frame
-            else if (widget->parent()->inherits("QTextEdit") || widget->parent()->inherits("QPlainTextEdit")) {
-                widget->setAutoFillBackground(false);
             }
         }
     }
