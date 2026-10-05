@@ -528,7 +528,7 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
             auto font = text->font().value_or(QFont{});
 
             switchString(property
-                ,Case{"font-familty", [&](auto &&value) {
+                ,Case{"font-family", [&](auto &&value) {
                     font.setFamily(QString::fromStdString(value));
                 }}
                 ,Case{"font-size", [&](CssValue &&value) {
