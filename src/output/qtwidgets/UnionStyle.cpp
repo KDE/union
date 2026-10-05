@@ -567,7 +567,13 @@ QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
     const auto hash = qHashMulti(QHashSeed::globalSeed(), hint, option, widget);
-    auto cached = ElementCache::element<QStyle::StyleHint, QStyle::SH_TabBar_Alignment, QStyle::SH_TabBar_ElideMode>(hint, hash, this, option, widget);
+    auto cached = ElementCache::element<QStyle::StyleHint,
+                                        QStyle::SH_TabBar_Alignment,
+                                        QStyle::SH_TabBar_ElideMode,
+                                        QStyle::SH_FormLayoutFormAlignment,
+                                        QStyle::SH_FormLayoutLabelAlignment,
+                                        QStyle::SH_FormLayoutFieldGrowthPolicy,
+                                        QStyle::SH_FormLayoutWrapPolicy>(hint, hash, this, option, widget);
     if (cached) {
         return cached->styleHint(hint);
     }
@@ -628,14 +634,6 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
         return true;
     case SH_ScrollView_FrameOnlyAroundContents:
         return false;
-    case SH_FormLayoutFormAlignment:
-        return Qt::AlignLeft | Qt::AlignTop;
-    case SH_FormLayoutLabelAlignment:
-        return Qt::AlignRight;
-    case SH_FormLayoutFieldGrowthPolicy:
-        return QFormLayout::ExpandingFieldsGrow;
-    case SH_FormLayoutWrapPolicy:
-        return QFormLayout::DontWrapRows;
     case SH_MessageBox_TextInteractionFlags:
         return Qt::TextSelectableByMouse | Qt::LinksAccessibleByMouse;
     case SH_ProgressDialog_CenterCancelButton:

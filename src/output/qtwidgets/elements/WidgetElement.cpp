@@ -5,6 +5,7 @@
 #include "UnionStyle.h"
 #include <QApplication>
 #include <QDebug>
+#include <QFormLayout>
 #include <QLineEdit>
 #include <QPainter>
 #include <QStyle>
@@ -44,6 +45,24 @@ void WidgetElement::draw(QPainter *painter, DrawEnums enums) const
 
         break;
     }
+}
+
+int WidgetElement::styleHint(QStyle::StyleHint styleHint) const
+{
+    // TODO: We need to figure a way to expose these in CSS in a nice manner
+    switch (styleHint) {
+    case QStyle::SH_FormLayoutFieldGrowthPolicy:
+        return QFormLayout::ExpandingFieldsGrow;
+    case QStyle::SH_FormLayoutWrapPolicy:
+        return QFormLayout::DontWrapRows;
+    case QStyle::SH_FormLayoutFormAlignment:
+        return Qt::AlignLeft | Qt::AlignTop;
+    case QStyle::SH_FormLayoutLabelAlignment:
+        return Qt::AlignRight;
+    default:
+        break;
+    }
+    return 0;
 }
 
 void WidgetElement::drawKMultiTabBar(QPainter *painter) const
