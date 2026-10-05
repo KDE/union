@@ -288,10 +288,6 @@ QStringList TabElement::elementHints() const
 qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
-    case QStyle::PM_TabCloseIndicatorWidth:
-        return indicatorSize().width();
-    case QStyle::PM_TabCloseIndicatorHeight:
-        return indicatorSize().height();
     case QStyle::PM_TabBarTabHSpace:
         return hSpace();
     case QStyle::PM_TabBarTabVSpace:
