@@ -282,27 +282,33 @@ void AbstractElement::drawText(QPainter *painter) const
 void AbstractElement::drawIcon(QPainter *painter) const
 {
     if (hasIcon() && m_isValid) {
-        drawIconAtRect(painter, m_icon, m_layoutMap[ElementString::Icon].rect);
+        drawIconAtRect(painter, m_icon, m_layoutMap[ElementString::Icon].rect, m_backgroundProperties);
     }
 }
 
 void AbstractElement::drawIndicator(QPainter *painter) const
 {
     if (hasIndicator() && m_isValid) {
-        drawIconAtRect(painter, m_indicator, m_layoutMap[ElementString::Indicator].rect);
+        drawIconAtRect(painter, m_indicator, m_layoutMap[ElementString::Indicator].rect, m_backgroundProperties);
     }
 }
 
-void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect) const
+void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const
 {
     if (m_isValid) {
+        auto unionIcon = m_style->unionIcon(properties, icon.name());
+        // Fallback if union icon cant be loaded
+        if (unionIcon.isNull()) {
+            unionIcon = icon;
+        }
+
         bool enabled = true;
         if (m_styleOption) {
             enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
         }
         const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
         auto iconSize = rect.size();
-        const QPixmap pixmap = icon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+        const QPixmap pixmap = unionIcon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
         painter->save();
         m_style->drawItemPixmap(painter, rect.toRect(), Qt::AlignCenter, pixmap);
         painter->restore();

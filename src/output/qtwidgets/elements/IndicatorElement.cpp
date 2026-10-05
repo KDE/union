@@ -52,7 +52,7 @@ void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIcon
 {
     auto properties = queryProperties(prepareElements(m_indicatorOption, m_widget, targetHierarchy));
     auto icon = m_style->unionIcon(properties, defaultIconName);
-    drawIconAtRect(painter, icon, m_indicatorOption->rect);
+    drawIconAtRect(painter, icon, m_indicatorOption->rect, properties);
 }
 
 qreal IndicatorElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
