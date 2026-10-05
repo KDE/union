@@ -18,6 +18,10 @@ namespace detail
 {
 /* clang-format off */
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_Widget> : public TypeHelper<WidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_FormLayoutWrapPolicy> : public TypeHelper<WidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_FormLayoutFieldGrowthPolicy> : public TypeHelper<WidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_FormLayoutFormAlignment> : public TypeHelper<WidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_FormLayoutLabelAlignment> : public TypeHelper<WidgetElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -32,6 +36,8 @@ public:
 
     void update() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+
+    int styleHint(QStyle::StyleHint styleHint) const override;
 
 private:
     const QStyleOption *m_widgetOption = nullptr;
