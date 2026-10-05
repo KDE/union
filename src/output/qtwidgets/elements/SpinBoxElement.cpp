@@ -17,6 +17,7 @@ SpinBoxElement::SpinBoxElement(const QStyleOptionSpinBox *option, const UnionSty
     : AbstractElement(option, style, widget)
     , m_spinBoxOption(option)
     , m_hasButtons(true)
+    , m_hasFrame(true)
 {
     update();
 }
@@ -30,6 +31,7 @@ void SpinBoxElement::update()
     if (!m_spinBoxOption) {
         return;
     }
+    m_hasFrame = m_spinBoxOption->frame;
     m_indicatorElementList = prepareElements(m_spinBoxOption, m_widget, {ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
@@ -47,7 +49,11 @@ void SpinBoxElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ComplexControl) {
     case QStyle::CC_SpinBox:
-        drawBackground(painter);
+        if (m_hasFrame) {
+            drawBackground(painter);
+        } else {
+            drawPanel(painter);
+        }
         // For spinbox we need to manually create the indicator buttons
         if (m_spinBoxOption->buttonSymbols != QAbstractSpinBox::NoButtons) {
             bool arrows = (m_spinBoxOption->buttonSymbols == QAbstractSpinBox::UpDownArrows);

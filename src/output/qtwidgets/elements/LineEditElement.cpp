@@ -19,6 +19,7 @@ using namespace Union::Properties;
 LineEditElement::LineEditElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_frameOption(option)
+    , m_hasFrame(true)
 {
     update();
 }
@@ -29,6 +30,10 @@ LineEditElement::~LineEditElement()
 
 void LineEditElement::update()
 {
+    if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
+        m_hasFrame = lineEdit->hasFrame();
+    }
+
     updateSubElementList();
     layout();
 }
@@ -45,7 +50,11 @@ void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
     }
     switch (enums.PrimitiveElement) {
     case QStyle::PE_PanelLineEdit:
-        drawBackground(painter);
+        if (m_hasFrame) {
+            drawBackground(painter);
+        } else {
+            drawPanel(painter);
+        }
         break;
     case QStyle::PE_FrameLineEdit:
         drawFrame(painter);

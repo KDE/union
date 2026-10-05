@@ -48,4 +48,5 @@ private:
     void drawText(QPainter *painter) const override;
     const QStyleOptionComboBox *m_comboBoxOption = nullptr;
     bool m_editable;
+    bool m_hasFrame;
 };

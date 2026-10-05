@@ -50,4 +50,5 @@ private:
     void drawSpinIndicator(QPainter *painter, const QStyle::PrimitiveElement &primitive) const;
     const QStyleOptionSpinBox *m_spinBoxOption = nullptr;
     bool m_hasButtons;
+    bool m_hasFrame;
 };
