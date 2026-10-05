@@ -18,6 +18,8 @@ namespace detail
 {
 /* clang-format off */
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorTabClose> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorWidth> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorHeight> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -33,6 +35,8 @@ public:
     void update() override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+
+    qreal pixelMetric(QStyle::PixelMetric metric) const override;
 
 private:
     const QStyleOption *m_widgetOption = nullptr;

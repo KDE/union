@@ -23,9 +23,6 @@ namespace detail
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabLabel> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabShape> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabBarTab> : public TypeHelper<TabElement, QStyleOptionTab>{};
-
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorWidth> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorHeight> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabHSpace> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabVSpace> : public TypeHelper<TabElement, QStyleOptionTab>{};
 

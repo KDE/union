@@ -25,22 +25,27 @@ TabCloseButtonElement::~TabCloseButtonElement()
 
 void TabCloseButtonElement::update()
 {
-    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
-    if (!m_backgroundElementList.isEmpty()) {
-        m_backgroundProperties = queryProperties(m_backgroundElementList);
-    }
-
     layout();
 }
 
 void TabCloseButtonElement::layout()
 {
-    m_contentElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
-    if (!m_contentElementList.isEmpty() && m_widgetOption) {
-        m_contentProperties = queryProperties(m_contentElementList);
-        m_layoutMap[ElementString::Icon].rect = m_widgetOption->rect;
-        setIcon(m_style->unionIcon(m_contentProperties, (u"window-close-symbolic"_s)));
+    m_backgroundElementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
+    if (!m_backgroundElementList.isEmpty()) {
+        m_backgroundProperties = queryProperties(m_backgroundElementList);
+        if (!m_widgetOption) {
+            QStyleOption opt;
+            if (m_widget) {
+                opt.initFrom(m_widget);
+            }
+            m_layoutMap[ElementString::Icon].rect = opt.rect;
+        } else {
+            m_layoutMap[ElementString::Icon].rect = m_widgetOption->rect;
+        }
+        setIcon(m_style->unionIcon(m_backgroundProperties, (u"window-close-symbolic"_s)));
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
 
@@ -56,4 +61,17 @@ void TabCloseButtonElement::draw(QPainter *painter, DrawEnums enums) const
         drawIcon(painter);
         break;
     }
+}
+
+qreal TabCloseButtonElement::pixelMetric(QStyle::PixelMetric metric) const
+{
+    switch (metric) {
+    case QStyle::PM_TabCloseIndicatorWidth:
+        return width();
+    case QStyle::PM_TabCloseIndicatorHeight:
+        return height();
+    default:
+        break;
+    }
+    return 0;
 }
