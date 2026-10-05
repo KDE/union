@@ -210,7 +210,7 @@ protected:
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect) const;
+    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const;
 
     /*!
      * \brief Draw text at the given rectangle. Handles coloring, elision and

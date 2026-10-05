@@ -240,7 +240,7 @@ void MenuItemElement::drawText(QPainter *painter) const
 void MenuItemElement::drawSubMenuArrow(QPainter *painter) const
 {
     if (m_hasSubMenu && m_isValid) {
-        drawIconAtRect(painter, m_subMenuArrow, m_layoutMap[ElementString::Arrow].rect);
+        drawIconAtRect(painter, m_subMenuArrow, m_layoutMap[ElementString::Arrow].rect, m_backgroundProperties);
     }
 }
 

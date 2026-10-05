@@ -158,7 +158,7 @@ void SpinBoxElement::drawSpinIndicator(QPainter *painter, const QStyle::Primitiv
     default:
         return;
     }
-    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect);
+    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect, m_backgroundProperties);
 }
 
 QStringList SpinBoxElement::elementHints() const

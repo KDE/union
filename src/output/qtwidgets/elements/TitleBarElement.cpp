@@ -47,31 +47,31 @@ void TitleBarElement::draw(QPainter *painter, DrawEnums enums) const
         drawText(painter);
     }
     if (!m_titleBarOption->icon.isNull()) {
-        drawIconAtRect(painter, m_titleBarOption->icon, m_layoutMap[ElementString::Icon].rect);
+        drawIconAtRect(painter, m_titleBarOption->icon, m_layoutMap[ElementString::Icon].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowContextHelpButtonHint)) {
         const auto icon = queryIcon(u"help-contextual-symbolic"_s, {ElementString::TitleBar, ElementString::HelpButton});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::HelpButton].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::HelpButton].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowMinimizeButtonHint)) {
         const auto icon = queryIcon(u"window-minimize-symbolic"_s, {ElementString::TitleBar, ElementString::MinimizeButton});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::MinimizeButton].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::MinimizeButton].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowMaximizeButtonHint)) {
         const auto icon = queryIcon(u"window-maximize-symbolic"_s, {ElementString::TitleBar, ElementString::MaximizeButton});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::MaximizeButton].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::MaximizeButton].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowCloseButtonHint)) {
         const auto icon = queryIcon(u"window-close-symbolic"_s, {ElementString::TitleBar, ElementString::CloseButton});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::CloseButton].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::CloseButton].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowSystemMenuHint)) {
         const auto icon = queryIcon(u"application-menu-symbolic"_s, {ElementString::TitleBar, ElementString::SystemMenu});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::SystemMenu].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::SystemMenu].rect, m_backgroundProperties);
     }
     if (m_titleBarOption->titleBarFlags.testFlag(Qt::WindowShadeButtonHint)) {
         const auto icon = queryIcon(u"window-shade-symbolic"_s, {ElementString::TitleBar, ElementString::ShadeButton});
-        drawIconAtRect(painter, icon, m_layoutMap[ElementString::ShadeButton].rect);
+        drawIconAtRect(painter, icon, m_layoutMap[ElementString::ShadeButton].rect, m_backgroundProperties);
     }
 }
 

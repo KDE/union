@@ -188,7 +188,7 @@ void ItemViewElement::drawIcon(QPainter *painter) const
 {
     if (hasIcon() && m_isValid) {
         QRect iconRect = m_style->subElementRect(QStyle::SE_ItemViewItemDecoration, m_viewItemOption, m_widget);
-        drawIconAtRect(painter, m_icon, iconRect);
+        drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
     }
 }
 QVariantMap ItemViewElement::elementAttributes() const

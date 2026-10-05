@@ -166,7 +166,7 @@ void ToolButtonElement::drawIcon(QPainter *painter) const
         }
         return;
     } else if (hasIcon()) {
-        drawIconAtRect(painter, m_icon, iconRect);
+        drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
     }
 }
 
@@ -179,7 +179,7 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
     auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
     indicatorRect.moveCenter(rect.center());
     drawBackgroundRectangle(painter, rect, m_indicatorProperties);
-    drawIconAtRect(painter, m_indicator, indicatorRect);
+    drawIconAtRect(painter, m_indicator, indicatorRect, m_indicatorProperties);
 }
 
 QVariantMap ToolButtonElement::elementAttributes() const
