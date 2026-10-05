@@ -48,4 +48,5 @@ private:
     QSizeF iconSize() const override;
     QMarginsF iconPadding() const;
     const QStyleOptionFrame *m_frameOption = nullptr;
+    bool m_hasFrame;
 };

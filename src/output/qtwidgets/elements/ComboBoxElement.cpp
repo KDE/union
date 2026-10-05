@@ -16,6 +16,7 @@ ComboBoxElement::ComboBoxElement(const QStyleOptionComboBox *option, const Union
     : AbstractElement(option, style, widget)
     , m_comboBoxOption(option)
     , m_editable(false)
+    , m_hasFrame(true)
 {
     update();
 }
@@ -26,6 +27,7 @@ void ComboBoxElement::update()
         return;
     }
     m_editable = m_comboBoxOption->editable;
+    m_hasFrame = m_comboBoxOption->frame;
 
     setIndicator(QIcon());
     m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
@@ -63,7 +65,11 @@ void ComboBoxElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ComplexControl) {
     case QStyle::CC_ComboBox:
-        drawBackground(painter);
+        if (m_hasFrame) {
+            drawBackground(painter);
+        } else {
+            drawPanel(painter);
+        }
         drawIcon(painter);
         drawIndicator(painter);
         break;
