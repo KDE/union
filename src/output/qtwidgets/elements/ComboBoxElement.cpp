@@ -78,13 +78,13 @@ bool ComboBoxElement::isEditable() const
 void ComboBoxElement::updateSubElementList()
 {
     m_subElementList.clear();
-    m_subElementList.append(ElementString::Indicator);
     if (hasText() || m_editable) {
         m_subElementList.append(ElementString::Text);
     }
     if (hasIcon()) {
         m_subElementList.append(ElementString::Icon);
     }
+    m_subElementList.append(ElementString::Indicator);
 }
 
 QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
