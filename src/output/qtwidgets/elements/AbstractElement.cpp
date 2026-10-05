@@ -796,5 +796,4 @@ void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutI
 
         map[item.elementName] = item;
     }
-    bucket.rect = bucketRect;
 }
