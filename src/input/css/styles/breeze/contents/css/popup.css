@@ -154,6 +154,9 @@ menuseparator {
 menubar
 {
     background-color: var(--header-background-color);
+    .inactive & {
+        background-color: var(--header-background-inactive-color);
+    }
 }
 
 menubaritem
