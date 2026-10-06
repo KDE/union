@@ -99,7 +99,7 @@ void ToolBoxTabElement::layout()
 QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid || !m_toolBoxOption) {
-        return QRect();
+        return {};
     }
 
     if (element == QStyle::SE_ToolBoxTabContents) {

@@ -127,14 +127,14 @@ QSizeF ProgressBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_progressBarOption) {
-        return QRectF();
+        return {};
     }
     if (element == QStyle::SE_ProgressBarLabel) {
         // Copied and repurposed from Breeze
         const bool textVisible(m_progressBarOption->textVisible);
         const bool busy(m_progressBarOption->minimum == 0 && m_progressBarOption->maximum == 0);
         if (!textVisible || busy) {
-            return QRect();
+            return {};
         }
         auto textFlags = textFlagsFromProperties(m_backgroundProperties);
         int textWidth = std::max(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
@@ -157,12 +157,12 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         const int progress(m_progressBarOption->progress - m_progressBarOption->minimum);
         const int steps(std::max(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
         const qreal position = qreal(progress) / qreal(steps);
-        const int indicatorSize(position * (m_isHorizontal ? rect.width() : rect.height()));
+        const qreal indicatorSize(position * (m_isHorizontal ? rect.width() : rect.height()));
         QRectF indicatorRect;
         if (m_isHorizontal) {
-            indicatorRect = QRect(rect.left() + (reverse ? rect.width() - indicatorSize : 0), rect.y(), indicatorSize, rect.height());
+            indicatorRect = {rect.left() + (reverse ? rect.width() - indicatorSize : 0), rect.y(), indicatorSize, rect.height()};
         } else {
-            indicatorRect = QRect(rect.x(), reverse ? (rect.bottom() - indicatorSize + 1) : rect.top(), rect.width(), indicatorSize);
+            indicatorRect = {rect.x(), reverse ? (rect.bottom() - indicatorSize + 1) : rect.top(), rect.width(), indicatorSize};
         }
         return indicatorRect;
     } else if (element == QStyle::SE_ProgressBarGroove) {
@@ -180,7 +180,7 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         }
         return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
     };
-    return QRectF();
+    return {};
 }
 
 void ProgressBarElement::drawChunk(QPainter *painter) const

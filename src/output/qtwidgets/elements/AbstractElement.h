@@ -70,12 +70,12 @@ public:
     virtual QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const;
 
     /*!
-     * \brief Return a subelement rectangle. If not found, empty QRect() is returned instead.
+     * \brief Return a subelement rectangle. If not found, empty QRectF() is returned instead.
      */
     virtual QRectF subElementRect(QStyle::SubElement element) const;
 
     /*!
-     * \brief Return a subcontrol rectangle. If not found, empty QRect() is returned instead.
+     * \brief Return a subcontrol rectangle. If not found, empty QRectF() is returned instead.
      */
     virtual QRectF subControlRect(QStyle::SubControl subControl) const;
 

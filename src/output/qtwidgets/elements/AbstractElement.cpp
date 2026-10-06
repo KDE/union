@@ -119,13 +119,13 @@ QSizeF AbstractElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 QRectF AbstractElement::subElementRect(QStyle::SubElement element) const
 {
     Q_UNUSED(element);
-    return QRect();
+    return {};
 }
 
 QRectF AbstractElement::subControlRect(QStyle::SubControl subControl) const
 {
     Q_UNUSED(subControl);
-    return QRect();
+    return {};
 }
 
 qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

@@ -75,7 +75,7 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return QRect();
+        return {};
     }
 
     if (element == QStyle::SE_CheckBoxIndicator) {

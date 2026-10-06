@@ -124,7 +124,7 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid || !m_scrollBarOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return {};
     }
 
     // Copied from Breeze
@@ -183,7 +183,7 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
     } else if (subControl == QStyle::SC_ScrollBarGroove) {
         return m_style->visualRect(m_scrollBarOption->direction, m_scrollBarOption->rect, rect);
     } else {
-        return QRect();
+        return {};
     }
 }
 
