@@ -78,6 +78,14 @@ void ProgressBarElement::drawIndicator(QPainter *painter) const
     drawBackgroundRectangle(painter, progress, m_contentProperties);
 }
 
+void ProgressBarElement::drawText(QPainter *painter) const
+{
+    if (m_progressBarOption && !m_progressBarOption->textVisible) {
+        return;
+    }
+    AbstractElement::drawText(painter);
+}
+
 void ProgressBarElement::updateSubElementList()
 {
     m_subElementList.clear();
