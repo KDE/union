@@ -114,28 +114,36 @@ headerviewdelegate
     color: var(--button-active-text-color);
 
     layout-alignment: content fill center 0;
-    text-alignment: content center center 0;
-    icon-alignment: content end center 1;
+    icon-alignment: content center center 0;
+    text-alignment: content center center 1;
     text-wrap-mode: no-wrap;
     text-elide: right;
 
     icon-size: var(--icon-size-small);
+
+    & > indicator {
+        color: var(--button-active-text-color);
+        width: 16px;
+        height: 16px;
+        layout-alignment: content end center 0;
+
+    }
+
+    &.sort-ascending > indicator
+    {
+        icon-name: "arrow-up-symbolic";
+    }
+
+    &.sort-descending > indicator
+    {
+        icon-name: "arrow-down-symbolic";
+    }
 
     &:disabled
     {
         border: 1px solid var(--button-disabled-border-color);
         color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
-    }
-
-    &.sort-ascending
-    {
-        icon-name: "arrow-up-symbolic";
-    }
-
-    &.sort-descending
-    {
-        icon-name: "arrow-down-symbolic";
     }
 }
 
