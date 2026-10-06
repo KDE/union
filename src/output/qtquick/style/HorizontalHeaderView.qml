@@ -40,7 +40,7 @@ T.HorizontalHeaderView {
         implicitWidth: Math.max(Union.Style.properties.layout.width, Union.Positioner.implicitWidth)
         implicitHeight: Math.max(Union.Style.properties.layout.height, Union.Positioner.implicitHeight)
 
-        Union.Positioner.positionItems: [text, icon]
+        Union.Positioner.positionItems: [text, indicator]
 
         Text {
             id: text
@@ -54,9 +54,8 @@ T.HorizontalHeaderView {
         }
 
         Union.Icon {
-            id: icon
-
-            Union.PositionedItem.source: Union.PositionerSource.Icon
+            id: indicator
+            Union.Element.type: "Indicator"
 
             color: Union.Style.properties.icon.color
             implicitWidth: Union.Style.properties.icon.width

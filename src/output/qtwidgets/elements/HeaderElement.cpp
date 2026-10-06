@@ -32,9 +32,10 @@ void HeaderElement::update()
     }
     m_isHorizontal = (m_headerOption->orientation == Qt::Horizontal);
     setText(m_headerOption->text);
+    setIcon(m_headerOption->icon);
     updateSubElementList();
     layout();
-    setIcon(sortIndicator());
+    setIndicator(sortIndicator());
 }
 
 QIcon HeaderElement::sortIndicator()
@@ -80,6 +81,7 @@ void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
         drawBackground(painter);
         drawIcon(painter);
         drawText(painter);
+        drawIndicator(painter);
         break;
     case QStyle::CE_HeaderSection:
         drawBackground(painter);
@@ -94,7 +96,7 @@ void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.PrimitiveElement) {
     case QStyle::PE_IndicatorHeaderArrow:
-        drawIcon(painter);
+        drawIndicator(painter);
         break;
     }
 }
@@ -109,9 +111,15 @@ void HeaderElement::drawText(QPainter *painter) const
 
 void HeaderElement::updateSubElementList()
 {
-    m_subElementList = {ElementString::Text};
-    if (m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+    m_subElementList.clear();
+    if (hasIcon()) {
         m_subElementList.append(ElementString::Icon);
+    }
+    if (hasText()) {
+        m_subElementList.append(ElementString::Text);
+    }
+    if (m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+        m_subElementList.append(ElementString::Indicator);
     }
 }
 
@@ -125,7 +133,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
     case QStyle::SE_HeaderLabel:
         return m_layoutMap[ElementString::Text].rect;
     case QStyle::SE_HeaderArrow:
-        return m_layoutMap[ElementString::Icon].rect;
+        return m_layoutMap[ElementString::Indicator].rect;
     default:
         break;
     }
