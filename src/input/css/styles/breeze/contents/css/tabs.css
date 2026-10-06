@@ -278,4 +278,16 @@ tabwidget {
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
     background-color: var(--view-background-color);
+    &[direction="top"] {
+        inset-top: 1px;
+    }
+    &[direction="bottom"] {
+        inset-bottom: 1px;
+    }
+    &[direction="left"] {
+        inset-left: 1px;
+    }
+    &[direction="right"] {
+        inset-right: 1px;
+    }
 }
