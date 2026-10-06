@@ -312,9 +312,9 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
     return textFlags;
 }
 
-QRectF centerRect(const QRectF &rect, int width, int height)
+QRectF centerRect(const QRectF &rect, qreal width, qreal height)
 {
-    return QRect(rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height);
+    return {rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height};
 }
 
 QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap)
