@@ -48,15 +48,22 @@ void TabBarElement::drawBackground(QPainter *painter) const
     if (!m_tabBarOption) {
         return;
     }
-    drawBackgroundRectangle(painter,
-                            m_tabBarOption->rect,
-                            m_backgroundProperties,
-                            m_tabBarOption->documentMode ? BackgroundParts::PanelOnly : BackgroundParts::All);
+
+    drawBackgroundRectangle(painter, m_tabBarOption->rect, m_backgroundProperties, BackgroundParts::FrameOnly);
 }
 
 qreal TabBarElement::scrollButtonWidth() const
 {
     return querySize({ElementString::TabScrollButton}).width();
+}
+
+QStringList TabBarElement::elementHints() const
+{
+    QStringList hints;
+    if (m_widget && m_widget->inherits("KMultiTabBar")) {
+        hints.append(u"KMultiTabBar"_s);
+    }
+    return hints;
 }
 
 QVariantMap TabBarElement::elementAttributes() const

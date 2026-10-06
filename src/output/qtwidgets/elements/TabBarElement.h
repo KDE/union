@@ -40,9 +40,10 @@ public:
 
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     int styleHint(QStyle::StyleHint styleHint) const override;
+    QVariantMap elementAttributes() const override;
+    QStringList elementHints() const override;
 
 private:
-    QVariantMap elementAttributes() const override;
     void drawBackground(QPainter *painter) const override;
     const QStyleOptionTabBarBase *m_tabBarOption = nullptr;
     qreal scrollButtonWidth() const;
