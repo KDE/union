@@ -167,8 +167,8 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         return indicatorRect;
     } else if (element == QStyle::SE_ProgressBarGroove) {
         // Copied and repurposed from Breeze. We ignore width, we only want the thickness of the bar.
-        const qreal styleHeight = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-        const qreal styleWidth = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        const qreal styleHeight = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        const qreal styleWidth = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
         const qreal height = m_progressBarOption->rect.height() <= 0 ? styleHeight : m_progressBarOption->rect.height();
         const qreal width = m_progressBarOption->rect.width() <= 0 ? styleWidth : m_progressBarOption->rect.width();
 

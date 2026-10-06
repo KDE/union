@@ -158,8 +158,8 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     // Handle separator separately (pun not intended)
     if (m_menuItemOption) {
         if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-            int width = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-            int height = m_backgroundProperties->safePropertyLookup(1.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+            auto width = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+            auto height = m_backgroundProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
             if (hasText()) {
                 if (preferredSize.width() > width) {
                     width = preferredSize.width();
