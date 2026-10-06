@@ -90,15 +90,12 @@ void Icon::setSource(const QUrl &newSource)
         return;
     }
 
-    if (!QQmlFile::isLocalFile(newSource)) {
-        if (newSource.isRelative()) {
-            // Some code might incorrectly set icon.source to an icon name, in that case
-            // treat the URL as a name.
-            qCWarning(UNION_QTQUICK) << "Relative URL" << newSource.toString() << "used as an Icon source. This is wrong, interpreting it as icon name instead";
-            setName(newSource.toString());
-        } else {
-            qCDebug(UNION_QTQUICK) << "Non-local source URL" << newSource << "used as Icon source is unsupported";
-        }
+    if (newSource.isRelative()) {
+        // Some code might incorrectly set icon.source to an icon name, in that case
+        // treat the URL as a name.
+        qCWarning(UNION_QTQUICK) << "Relative URL" << newSource.toString() << "used as an Icon source. This is wrong, interpreting it as icon name instead";
+        setName(newSource.toString());
+        return;
     }
 
     m_source = newSource;
