@@ -5,6 +5,7 @@
 
 #include <QIcon>
 #include <QQuickItem>
+#include <QQuickTextureFactory>
 
 class QSGImageNode;
 
@@ -90,7 +91,8 @@ private:
     QSize m_iconSize;
     qreal m_iconDpr = 1.0;
 
-    std::variant<std::nullopt_t, QIcon> m_iconData = std::nullopt;
+    std::variant<std::nullopt_t, QIcon, QImage, QQuickTextureFactory *> m_iconData = std::nullopt;
+
     QPointer<QQuickItem> m_control;
     QPointer<QuickStyle> m_style;
 };

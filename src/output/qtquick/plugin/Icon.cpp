@@ -5,6 +5,7 @@
 
 #include <QQmlFile>
 #include <QQmlProperty>
+#include <QQuickAsyncImageProvider>
 #include <QQuickRenderControl>
 #include <QSGImageNode>
 
@@ -258,6 +259,45 @@ void Icon::updatePolish()
     } else if (QQmlFile::isLocalFile(m_source)) {
         m_iconData = QIcon(QQmlFile::urlToLocalFileOrQrc(m_source));
         m_iconSize = iconSizeForSize(std::get<QIcon>(m_iconData), boundingSize);
+    } else if (m_source.scheme() == u"image") {
+        auto provider = static_cast<QQuickImageProvider *>(qmlEngine(this)->imageProvider(m_source.host()));
+        auto id = m_source.path();
+        QSize actualSize;
+        if (provider) {
+            switch (provider->imageType()) {
+            case QQuickImageProvider::Image:
+                m_iconData = provider->requestImage(id, &actualSize, boundingSize.toSize());
+                m_iconSize = actualSize;
+                break;
+            case QQuickImageProvider::Pixmap:
+                m_iconData = provider->requestPixmap(id, &actualSize, boundingSize.toSize()).toImage();
+                m_iconSize = actualSize;
+                break;
+            case QQuickImageProvider::Texture:
+                m_iconData = provider->requestTexture(id, &actualSize, boundingSize.toSize());
+                m_iconSize = actualSize;
+                break;
+            case QQuickImageProvider::ImageResponse: {
+                auto response = static_cast<QQuickAsyncImageProvider *>(provider)->requestImageResponse(id, boundingSize.toSize());
+                connect(response, &QQuickImageResponse::finished, this, [id, response, this]() {
+                    if (response->errorString().isEmpty()) {
+                        m_iconData = response->textureFactory();
+                        m_iconSize = response->textureFactory()->textureSize();
+                    } else {
+                        m_iconData = std::nullopt;
+                        m_iconSize = QSize{};
+                    }
+                    m_iconChanged = true;
+                    update();
+                    response->deleteLater();
+                });
+                break;
+            }
+            case QQuickImageProvider::Invalid:
+                m_iconData = std::nullopt;
+                break;
+            }
+        }
     } else if (m_source.isValid()) {
         qCWarning(UNION_QTQUICK) << "Remote images are not supported by Union::Icon";
         m_iconData = Union::StyleRegistry::instance()->platform()->platformIcon(u"unknown"_s, m_color);
@@ -328,6 +368,12 @@ void Icon::updateTexture(QSGImageNode *node)
                               auto image = icon.pixmap(m_iconSize, dpr, mode).toImage();
                               node->setTexture(
                                   window()->createTextureFromImage(icon.pixmap(m_iconSize, dpr, mode).toImage(), QQuickWindow::TextureCanUseAtlas));
+                          },
+                          [&](const QImage &image) {
+                              node->setTexture(window()->createTextureFromImage(image, QQuickWindow::TextureCanUseAtlas));
+                          },
+                          [&](QQuickTextureFactory *factory) {
+                              node->setTexture(factory->createTexture(window()));
                           }},
                m_iconData);
 }
