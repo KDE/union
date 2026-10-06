@@ -251,24 +251,36 @@ tabbar {
     height: var(--tab-default-height);
     width: var(--tab-default-width);
     spacing: 0px;
-    border-bottom: var(--button-border);
 
     &.immutable {
         background-color: var(--button-active-background-color);
     }
-
-    /* KMultiTabBar borders */
-    &[direction="top"],
-    &[direction="bottom"],
-    &[direction="left"],
-    &[direction="right"] {
-        border: none;
+    &[direction="top"] {
+        border-bottom: 1px solid var(--window-border-color);
+    }
+    &[direction="bottom"] {
+        border-top: 1px solid var(--window-border-color);
     }
     &[direction="left"] {
         border-right: 1px solid var(--window-border-color);
     }
     &[direction="right"] {
         border-left: 1px solid var(--window-border-color);
+    }
+    /* KMultiTabBar borders, used by Kate */
+    &.kmultitabbar {
+        &[direction="top"],
+        &[direction="bottom"],
+        &[direction="left"],
+        &[direction="right"] {
+            border: none;
+        }
+        &[direction="left"] {
+            border-right: 1px solid var(--window-border-color);
+        }
+        &[direction="right"] {
+            border-left: 1px solid var(--window-border-color);
+        }
     }
 
 }
