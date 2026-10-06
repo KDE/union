@@ -123,10 +123,9 @@ headerviewdelegate
 
     & > indicator {
         color: var(--button-active-text-color);
-        width: 16px;
-        height: 16px;
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
         layout-alignment: content end center 0;
-
     }
 
     &.sort-ascending > indicator

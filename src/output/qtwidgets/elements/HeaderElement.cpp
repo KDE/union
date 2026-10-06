@@ -33,9 +33,9 @@ void HeaderElement::update()
     m_isHorizontal = (m_headerOption->orientation == Qt::Horizontal);
     setText(m_headerOption->text);
     setIcon(m_headerOption->icon);
-    setIndicator(sortIndicator());
     updateSubElementList();
     layout();
+    setIndicator(sortIndicator());
 }
 
 QIcon HeaderElement::sortIndicator()
