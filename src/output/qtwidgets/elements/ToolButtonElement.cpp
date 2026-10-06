@@ -255,6 +255,7 @@ void ToolButtonElement::layoutButtons()
     // With inline arrow, the main element does not care about making room to it,
     // as this arrow lives within the padding area.
     bool arrowInline = (arrowStyle() == ArrowStyle::InlineArrow);
+    bool arrowMenu = (arrowStyle() == ArrowStyle::Menu);
     // Align the second button around the main button
     if (m_indicatorProperties) {
         auto alignH = m_indicatorProperties->safePropertyLookup(Alignment::Unspecified,
@@ -265,13 +266,20 @@ void ToolButtonElement::layoutButtons()
                                                                 &StylePropertyGroup::layout,
                                                                 &LayoutPropertyGroup::alignment,
                                                                 &AlignmentPropertyGroup::vertical);
-        QMarginsF padding =
+        QMarginsF menuPadding =
             m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-        m_menuButtonRect = m_menuButtonRect.marginsAdded(padding);
+        m_menuButtonRect = m_menuButtonRect.marginsAdded(menuPadding);
 
         switch (alignH) {
         case Union::Properties::Alignment::Start:
-            m_menuButtonRect.moveLeft(m_mainButtonRect.left());
+            // With regular Menu, ignore the paddings that would cause the button to grow too large
+            // as the menu is embedded within the button
+            if (arrowMenu) {
+                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.right() - padding().left());
+                m_menuButtonRect.moveLeft(m_mainButtonRect.left() + padding().left());
+            } else {
+                m_menuButtonRect.moveLeft(m_mainButtonRect.left());
+            }
             if (!arrowInline) {
                 m_mainButtonRect.setLeft(m_menuButtonRect.right());
             }
@@ -282,7 +290,12 @@ void ToolButtonElement::layoutButtons()
         case Union::Properties::Alignment::End:
         case Union::Properties::Alignment::Unspecified:
         case Union::Properties::Alignment::StackCenter:
-            m_menuButtonRect.moveRight(m_mainButtonRect.right());
+            if (arrowMenu) {
+                m_menuButtonRect.setWidth(m_menuButtonRect.width() - menuPadding.left() - padding().right());
+                m_menuButtonRect.moveRight(m_mainButtonRect.right() - padding().right());
+            } else {
+                m_menuButtonRect.moveRight(m_mainButtonRect.right());
+            }
             if (!arrowInline) {
                 m_mainButtonRect.setRight(m_menuButtonRect.left());
             }
