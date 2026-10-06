@@ -756,7 +756,7 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (qobject_cast<const QTreeView *>(currentWidget)) {
             members.prepend(ElementString::TreeView);
         } else if (qobject_cast<const QListView *>(currentWidget)) {
-            if (widget->inherits("QComboBoxListView")) {
+            if (currentWidget->inherits("QComboBoxListView")) {
                 members.prepend(ElementString::Popup);
             } else {
                 members.prepend(ElementString::ListView);
@@ -771,7 +771,7 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
             members.prepend(ElementString::ScrollArea);
         } else if (qobject_cast<const QLabel *>(currentWidget)) {
             members.prepend(ElementString::Label);
-        } else if (widget->inherits("KMultiTabBar")) {
+        } else if (currentWidget->inherits("KMultiTabBar")) {
             members.prepend(ElementString::TabBar);
         } else if (qobject_cast<const QFrame *>(currentWidget)) {
             members.prepend(ElementString::Frame);
