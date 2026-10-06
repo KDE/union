@@ -806,6 +806,8 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
             members.prepend(ElementString::MenuBar);
         } else if (qobject_cast<const QProgressBar *>(currentWidget)) {
             members.prepend(ElementString::ProgressBar);
+        } else if (currentWidget->inherits("KCapacityBar")) {
+            members.prepend(ElementString::ProgressBar);
         } else if (qobject_cast<const QRubberBand *>(currentWidget)) {
             members.prepend(ElementString::RubberBand);
         } else if (qobject_cast<const QSizeGrip *>(currentWidget)) {
