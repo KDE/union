@@ -99,6 +99,7 @@ void Icon::setSource(const QUrl &newSource)
     }
 
     m_source = newSource;
+    polish();
     Q_EMIT sourceChanged();
 }
 
