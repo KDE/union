@@ -94,7 +94,7 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid || !m_styleOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return {};
     }
 
     QRectF finalRect;

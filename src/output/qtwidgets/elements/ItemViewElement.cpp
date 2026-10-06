@@ -117,7 +117,7 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return QRect();
+        return {};
     }
 
     QRectF rect;
@@ -200,7 +200,7 @@ void ItemViewElement::drawText(QPainter *painter) const
 void ItemViewElement::drawIcon(QPainter *painter) const
 {
     if (hasIcon() && m_isValid) {
-        QRect iconRect = m_style->subElementRect(QStyle::SE_ItemViewItemDecoration, m_viewItemOption, m_widget);
+        auto iconRect = subElementRect(QStyle::SE_ItemViewItemDecoration);
         drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
     }
 }

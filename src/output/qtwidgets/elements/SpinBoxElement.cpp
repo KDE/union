@@ -106,7 +106,7 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid || !m_spinBoxOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return {};
     }
 
     QRectF rect;
@@ -125,14 +125,14 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
     const int x = m_spinBoxOption->rect.x() + m_spinBoxOption->rect.width() - buttonRect.width();
 
     if (subControl == QStyle::SC_SpinBoxUp) {
-        rect = noButtons ? QRect() : QRect(x, y, buttonRect.width(), buttonRect.height());
+        rect = noButtons ? QRectF() : QRectF(x, y, buttonRect.width(), buttonRect.height());
     }
     if (subControl == QStyle::SC_SpinBoxDown) {
-        rect = noButtons ? QRect() : QRect(x, y + buttonRect.height(), buttonRect.width(), buttonRect.height());
+        rect = noButtons ? QRectF() : QRectF(x, y + buttonRect.height(), buttonRect.width(), buttonRect.height());
     }
     if (subControl == QStyle::SC_SpinBoxEditField) {
         const auto width = noButtons ? bgRect.width() : x;
-        rect = QRect(0, 0, width + averageHPadding() + spacing(), bgRect.height());
+        rect = QRectF(0, 0, width + averageHPadding() + spacing(), bgRect.height());
     }
     if (subControl == QStyle::SC_SpinBoxFrame) {
         rect = bgRect;

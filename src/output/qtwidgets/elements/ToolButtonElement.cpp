@@ -93,7 +93,7 @@ QRectF ToolButtonElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return {};
     }
 
     if (subControl == QStyle::SC_ToolButton) {
@@ -102,7 +102,7 @@ QRectF ToolButtonElement::subControlRect(QStyle::SubControl subControl) const
     if (subControl == QStyle::SC_ToolButtonMenu) {
         return m_menuButtonRect;
     }
-    return QRect();
+    return {};
 }
 
 void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const

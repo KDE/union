@@ -127,7 +127,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return QRect();
+        return {};
     }
     switch (element) {
     case QStyle::SE_HeaderLabel:
@@ -137,7 +137,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
     default:
         break;
     }
-    return QRectF();
+    return {};
 }
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const

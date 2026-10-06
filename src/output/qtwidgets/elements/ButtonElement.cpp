@@ -109,11 +109,11 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return QRect();
+        return {};
     }
 
     if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-        return backgroundRectangle(m_buttonOption, m_backgroundProperties).toRect();
+        return backgroundRectangle(m_buttonOption, m_backgroundProperties);
     }
 
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);

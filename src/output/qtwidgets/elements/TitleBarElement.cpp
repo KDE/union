@@ -138,7 +138,7 @@ QRectF TitleBarElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRect();
+        return {};
     }
 
     switch (subControl) {
@@ -163,7 +163,7 @@ QRectF TitleBarElement::subControlRect(QStyle::SubControl subControl) const
     default:
         break;
     }
-    return QRect();
+    return {};
 }
 
 qreal TitleBarElement::buttonWidth() const

@@ -86,7 +86,7 @@ void DockWidgetElement::layout()
 QRectF DockWidgetElement::subElementRect(QStyle::SubElement subElement) const
 {
     if (!m_isValid) {
-        return QRect();
+        return {};
     }
 
     if (subElement == QStyle::SE_DockWidgetTitleBarText) {
@@ -102,7 +102,7 @@ QRectF DockWidgetElement::subElementRect(QStyle::SubElement subElement) const
     if (subElement == QStyle::SE_DockWidgetIcon) {
         return m_layoutMap[ElementString::Icon].rect;
     }
-    return QRect();
+    return {};
 }
 
 qreal DockWidgetElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

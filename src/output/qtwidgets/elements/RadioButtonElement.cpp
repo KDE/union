@@ -76,7 +76,7 @@ QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
 {
     if (!m_isValid || !m_buttonOption) {
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return QRect();
+        return {};
     }
 
     if (element == QStyle::SE_RadioButtonIndicator) {
