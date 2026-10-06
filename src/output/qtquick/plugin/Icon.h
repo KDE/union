@@ -6,6 +6,8 @@
 #include <QIcon>
 #include <QQuickItem>
 
+class QSGImageNode;
+
 namespace Union
 {
 namespace Quick
@@ -78,16 +80,17 @@ protected:
     QSGNode *updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *) override;
 
 private:
+    void updateTexture(QSGImageNode *node);
     Q_SLOT void onControlIconChanged();
 
     QString m_name;
     QUrl m_source;
     QColor m_color = Qt::transparent;
-    QIcon m_icon;
     bool m_iconChanged = true;
     QSize m_iconSize;
     qreal m_iconDpr = 1.0;
 
+    std::variant<std::nullopt_t, QIcon> m_iconData = std::nullopt;
     QPointer<QQuickItem> m_control;
     QPointer<QuickStyle> m_style;
 };
