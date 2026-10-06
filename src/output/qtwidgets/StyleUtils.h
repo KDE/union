@@ -66,7 +66,7 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties);
 /*!
  * \brief Centers a rectangle depending on width and height. Copied from Breeze.
  */
-QRectF centerRect(const QRectF &rect, int width, int height);
+QRectF centerRect(const QRectF &rect, qreal width, qreal height);
 
 /*!
  * \brief Tries to match styleOption type to a potential element.
