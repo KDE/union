@@ -6,35 +6,40 @@
 
 target_sources(Union PRIVATE
     StylePropertyGroup.cpp
-    StylePropertyGroup.h
     SizePropertyGroup.cpp
-    SizePropertyGroup.h
     AlignmentPropertyGroup.cpp
-    AlignmentPropertyGroup.h
     ImagePropertyGroup.cpp
-    ImagePropertyGroup.h
     LinePropertyGroup.cpp
-    LinePropertyGroup.h
     CornerPropertyGroup.cpp
-    CornerPropertyGroup.h
     DisplayPropertyGroup.cpp
-    DisplayPropertyGroup.h
     LayoutPropertyGroup.cpp
-    LayoutPropertyGroup.h
     TextPropertyGroup.cpp
-    TextPropertyGroup.h
     IconPropertyGroup.cpp
-    IconPropertyGroup.h
     BackgroundPropertyGroup.cpp
-    BackgroundPropertyGroup.h
     BorderPropertyGroup.cpp
-    BorderPropertyGroup.h
     OutlinePropertyGroup.cpp
-    OutlinePropertyGroup.h
     CornersPropertyGroup.cpp
-    CornersPropertyGroup.h
     ShadowPropertyGroup.cpp
-    ShadowPropertyGroup.h
     OffsetPropertyGroup.cpp
+)
+
+target_sources(Union PUBLIC
+    FILE_SET HEADERS
+    FILES
+    StylePropertyGroup.h
+    SizePropertyGroup.h
+    AlignmentPropertyGroup.h
+    ImagePropertyGroup.h
+    LinePropertyGroup.h
+    CornerPropertyGroup.h
+    DisplayPropertyGroup.h
+    LayoutPropertyGroup.h
+    TextPropertyGroup.h
+    IconPropertyGroup.h
+    BackgroundPropertyGroup.h
+    BorderPropertyGroup.h
+    OutlinePropertyGroup.h
+    CornersPropertyGroup.h
+    ShadowPropertyGroup.h
     OffsetPropertyGroup.h
 )

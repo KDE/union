@@ -93,7 +93,6 @@ public:
 
     /*!
      * The alignment of the text of an element.
-
      */
     AlignmentPropertyGroup *alignment() const;
 
