@@ -23,6 +23,14 @@
     --header-inactive-background-color: custom-color("kcolorscheme", "inactive", "header", "background", "normal");
     --header-inactive-text-color: custom-color("kcolorscheme", "inactive", "header", "foreground", "text");
     --header-inactive-border-color: custom-color("kcolorscheme", "inactive", "header", "decoration", "frame");
+
+    --complementary-active-background-color: custom-color("kcolorscheme", "active", "header", "background", "normal");
+    --complementary-active-text-color: custom-color("kcolorscheme", "active", "header", "foreground", "text");
+    --complementary-active-border-color: custom-color("kcolorscheme", "active", "header", "decoration", "frame");
+
+    --complementary-inactive-background-color: custom-color("kcolorscheme", "inactive", "header", "background", "normal");
+    --complementary-inactive-text-color: custom-color("kcolorscheme", "inactive", "header", "foreground", "text");
+    --complementary-inactive-border-color: custom-color("kcolorscheme", "inactive", "header", "decoration", "frame");
 }
 
 applicationwindow
@@ -54,16 +62,16 @@ toolbar
     padding-top: var(--medium-spacing);
     padding-bottom: var(--large-spacing);
     color: var(--window-active-text-color);
+    background-color: var(--window-active-background-color);
 
     &.footer {
         border-top: 1px solid var(--window-active-border-color);
     }
 
     &.header {
-        border-bottom: 1px solid var(--header-active-border-color);
+        border-bottom: 1px solid var(--window-active-border-color);
     }
 
-    background-color: var(--window-active-background-color);
     .inactive & {
         background-color: var(--window-inactive-background-color);
         border-color: var(--window-inactive-border-color);
@@ -71,12 +79,40 @@ toolbar
 
     &.header,
     &[colorset="header"],
-    [colorset="header"] & {
+    [colorset="header"] &
+    {
         background-color: var(--header-active-background-color);
+        border-color: var(--header-active-border-color);
 
         .inactive & {
             background-color: var(--header-inactive-background-color);
             border-color: var(--header-inactive-border-color);
+        }
+    }
+
+    &.header[colorset="window"]
+    {
+        background-color: var(--window-active-background-color);
+        border-color: var(--window-active-border-color);
+
+        .inactive & {
+            background-color: var(--window-inactive-background-color);
+            border-color: var(--window-inactive-border-color);
+        }
+    }
+
+    &[colorset="complementary"],
+    [colorset="complementary"] &,
+    &.header[colorset="complementary"]
+    {
+        background-color: var(--complementary-active-background-color);
+        color: var(--complementary-active-text-color);
+        border-color: var(--complementary-active-border-color);
+
+        .inactive & {
+            background-color: var(--complementary-inactive-background-color);
+            color: var(--complementary-inactive-text-color);
+            border-color: var(--complementary-active-border-color);
         }
     }
 
