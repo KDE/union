@@ -701,6 +701,34 @@ void UnionStyle::polish(QWidget *widget)
                 widget->setAutoFillBackground(false);
             }
         }
+
+        // Remove autofillBackground from scrollareas like in Breeze
+        if (auto scrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
+            // Disable autofill background for flat (== NoFrame) scrollareas.
+            // This fixes flat scrollareas placed in a tinted widget, such as groupboxes, tabwidgets or framed dock-widgets.
+            if (!(scrollArea->frameShape() == QFrame::NoFrame || scrollArea->backgroundRole() == QPalette::Window)) {
+                return;
+            }
+            if (scrollArea->viewport() && scrollArea->inherits("KItemListContainer") && scrollArea->frameShape() == QFrame::NoFrame) {
+                scrollArea->viewport()->setBackgroundRole(QPalette::Window);
+                scrollArea->viewport()->setForegroundRole(QPalette::WindowText);
+            }
+            // Get viewport and check background role
+            auto viewport(scrollArea->viewport());
+            if (!(viewport && viewport->backgroundRole() == QPalette::Window)) {
+                return;
+            }
+
+            // Change viewport autoFill background.
+            // Do the same for all children if the background role is QPalette::Window
+            viewport->setAutoFillBackground(false);
+            const QList<QWidget *> children(viewport->findChildren<QWidget *>());
+            for (QWidget *child : children) {
+                if (child->parent() == viewport && child->backgroundRole() == QPalette::Window) {
+                    child->setAutoFillBackground(false);
+                }
+            }
+        }
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars
