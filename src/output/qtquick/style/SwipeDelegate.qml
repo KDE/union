@@ -38,6 +38,11 @@ T.SwipeDelegate {
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
+    // Kirigami.SwipeListItem uses this value to override the left/right padding.
+    // To fix the broken calculation in Kirigami, explicitly set padding even
+    // though that does nothing since we override the individual padding properties.
+    padding: Math.max(Union.Style.properties.layout.padding.left, Union.Style.properties.layout.padding.right)
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
