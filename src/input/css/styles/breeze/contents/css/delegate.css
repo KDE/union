@@ -65,7 +65,14 @@ itemviewitem
     {
         inset: 0px;
         border-radius: 0px;
+    }
 
+    &.inside-table {
+        padding: var(--delegate-padding);
+        text-wrap-mode: no-wrap;
+    }
+
+    &.inside-list {
         &.hover-enabled {
             inset: var(--delegate-spacing);
             inset-bottom: 0px;
