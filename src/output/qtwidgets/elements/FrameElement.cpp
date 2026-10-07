@@ -80,10 +80,12 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
         case QFrame::VLine:
             drawBackground(painter);
             break;
-        // Skip drawing frames for items that have framewidth of 0
         case QFrame::Box:
         case QFrame::Panel:
         case QFrame::WinPanel:
+            drawBackground(painter);
+            break;
+        // Skip drawing frames for items that have framewidth of 0
         case QFrame::StyledPanel:
             if (pixelMetric(QStyle::PM_DefaultFrameWidth) != 0) {
                 drawBackground(painter);
