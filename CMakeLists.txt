@@ -55,7 +55,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Find required packages
 
-set(QT_MIN_VERSION 6.9.0)
+set(QT_MIN_VERSION 6.10.0)
 find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED Core Gui)
 
 if (BUILD_TESTING)

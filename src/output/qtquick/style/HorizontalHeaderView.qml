@@ -17,51 +17,9 @@ T.HorizontalHeaderView {
         enabled: control.enabled
     }
     Union.Element.hints: Union.ElementHint { name: "horizontal" }
-    
+
     implicitWidth: syncView ? syncView.width : 0
     implicitHeight: Math.max(1, contentHeight)
-    
-    delegate: Union.StyledRectangle {
-        id: delegate
 
-        required property var model
-
-        Union.Element.type: "HeaderViewDelegate"
-        Union.Element.states {
-            activeFocus: delegate.activeFocus
-            enabled: delegate.enabled
-        }
-        Union.Element.hints: [
-            Union.ElementHint { name: "horizontal" },
-            Union.ElementHint { name: "sort-ascending"; when: delegate.model.sort !== undefined && delegate.model.sort == Qt.AscendingOrder },
-            Union.ElementHint { name: "sort-descending"; when: delegate.model.sort !== undefined && delegate.model.sort != Qt.AscendingOrder },
-        ]
-
-        implicitWidth: Math.max(Union.Style.properties.layout.width, Union.Positioner.implicitWidth)
-        implicitHeight: Math.max(Union.Style.properties.layout.height, Union.Positioner.implicitHeight)
-
-        Union.Positioner.positionItems: [text, indicator]
-
-        Text {
-            id: text
-
-            text: delegate.model[control.textRole]
-            font: Union.Style.properties.text.font ?? Application.font
-            color: Union.Style.properties.text.color
-            wrapMode: Text.NoWrap
-            elide: Text.ElideRight
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        }
-
-        Union.Icon {
-            id: indicator
-            Union.Element.type: "Indicator"
-
-            color: Union.Style.properties.icon.color
-            implicitWidth: Union.Style.properties.icon.width
-            implicitHeight: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
-            visible: name
-        }
-    }
+    delegate: HorizontalHeaderViewDelegate {}
 }
