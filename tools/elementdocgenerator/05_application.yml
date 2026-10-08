@@ -62,7 +62,8 @@
 
 -   name: ListView
     group: Application Structure
-    description: Style of a QListView.
+    description: >
+        A view of items that are in a list. Used by QtWidgets applications, for example in Dolphin places panel.
 
     type: ListView
     states:
@@ -93,7 +94,8 @@
 
 -   name: TreeView
     group: Application Structure
-    description: Style of a QTreeView.
+    description: >
+        A view of items that are in a tree structure. Used by QtWidgets applications, for example in KMail email list.
 
     type: TreeView
     states:
@@ -124,7 +126,8 @@
 
 -   name: TableView
     group: Application Structure
-    description: Style of a QTableView.
+    description: >
+        A view of items that are in a table structure (spreadsheets). Used by QtWidgets applications, for example in Konsole colorscheme configuration.
 
     type: TableView
     states:
@@ -155,7 +158,7 @@
 
 -   name: ColumnView
     group: Application Structure
-    description: Style of a QColumnView.
+    description: A view of items that are listed in columns side-by-side.
 
     type: ColumnView
     states:
