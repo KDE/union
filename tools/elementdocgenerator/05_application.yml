@@ -481,6 +481,9 @@
     hints:
         with-icon: Set whenever the button has an icon set.
         itemview-highlight: Set when the tabbar requests highlighting the tab.
+        immutable: Set if the tab is not movable.
+        first: Set if the tab is the first tab in the list.
+        last: Set if the tab is the last tab in the list.
     attributes:
         display:
             description: A hint indicating what sub-controls should be visible.
