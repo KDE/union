@@ -584,3 +584,7 @@
 -   name: ScrollAreaCorner
     description: The corner between scrollbars within QtWidgets scrollareas.
     type: ScrollAreaCorner
+
+-   name: SizeGrip
+    description: Styling for any QSizeGrips.
+    type: SizeGrip
