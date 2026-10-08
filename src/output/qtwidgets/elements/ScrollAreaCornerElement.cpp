@@ -47,5 +47,8 @@ void ScrollAreaCornerElement::layout()
     m_backgroundElementList = prepareElements(m_cornerOption, m_widget, {ElementString::ScrollAreaCorner});
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
+        m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
