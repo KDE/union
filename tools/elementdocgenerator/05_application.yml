@@ -446,6 +446,7 @@
     -   Enabled
     hints:
         KMultiTabBar: Set if the widget is inside of a KMultiTabBar, for example Kate sidepanels.
+        immutable: Set if the tabs are not movable.
     attributes:
         tab-position:
             description: The position of tabs relative to the content.
