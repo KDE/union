@@ -48,6 +48,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    Union::Element::States elementStates() const override;
     QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
     void updateSubElementList() override;
