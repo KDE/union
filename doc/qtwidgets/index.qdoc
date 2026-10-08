@@ -8,6 +8,16 @@
 
 The Union QtWidgets Output plugin implements a QStyle for QtWidgets,
 which uses data from Union's intermediate layer to style QtWidgets.
-In cases where styling is not provided, QCommonStyle is used as a fallback.
+If there is no matching QStyleOption or QWidget declared for the element by the application,
+it will fall back to QCommonStyle.
+
+Do note that QtWidgets Output has some limitations:
+Applications tend to expect very specific behavior from QtWidgets styles, so
+these limitations are there to preserve backwards compatibility.
+
+Current limitations are:
+- layout-alignment, text-alignment and icon-alignment may not work properly in all elements.
+- ItemViewItem element follows the QCommonStyle size with padding applied.
+- ItemViewItem element does not support layouting, as QtWidgets applications declare the layouting on their own.
 
 */
