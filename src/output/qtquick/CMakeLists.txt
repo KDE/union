@@ -76,8 +76,8 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ToolTip.qml
     style/Tumbler.qml
     style/VerticalHeaderView.qml
-    style/WeekNumberColumn.qml
     style/VerticalHeaderViewDelegate.qml
+    style/WeekNumberColumn.qml
 )
 
 ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES
