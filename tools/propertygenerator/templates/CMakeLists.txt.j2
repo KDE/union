@@ -16,6 +16,19 @@ REUSE-IgnoreStart
 target_sources({{ target_name }} PRIVATE
 {% for type in types %}
     {{ type.type }}{{ file_suffix }}.cpp
+{% if not public_headers %}
+    {{ type.type }}{{ file_suffix }}.h
+{% endif %}
+{% endfor %}
+)
+
+{% if public_headers %}
+target_sources({{ target_name }} PUBLIC
+    FILE_SET HEADERS
+    FILES
+{% for type in types %}
     {{ type.type }}{{ file_suffix }}.h
 {% endfor %}
 )
+{% endif %}
+

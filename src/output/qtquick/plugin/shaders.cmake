@@ -35,7 +35,6 @@ macro(add_variants ARG_NAME)
 
     add_shaders("${ARG_NAME}" INPUT "${ARG_NAME}")
 
-    message(STATUS ${ARG_VARIANTS})
     foreach(_variant ${ARG_VARIANTS})
         string(REPLACE "-" ";" _parts "${_variant}")
 
