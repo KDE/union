@@ -580,3 +580,7 @@
 -   name: TabScrollButton
     description: The buttons used to scroll hidden buttons in TabBar in QtWidgets applications.
     type: TabScrollButton
+
+-   name: ScrollAreaCorner
+    description: The corner between scrollbars within QtWidgets scrollareas.
+    type: ScrollAreaCorner
