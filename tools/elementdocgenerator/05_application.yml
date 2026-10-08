@@ -583,6 +583,14 @@
 -   name: TabWidget
     description: The container for TabBar controlled items in QtWidgets applications.
     type: TabWidget
+    attributes:
+        direction:
+            description: The position of the tabs inside tabwidget.
+            values:
+                top: The tab is located at the top of content.
+                bottom: The tab is located at the bottom of content.
+                left: The tab is located at the left of content.
+                right: The tab is located at the right of content.
 
 -   name: TabScrollButton
     description: The buttons used to scroll hidden buttons in TabBar in QtWidgets applications.
