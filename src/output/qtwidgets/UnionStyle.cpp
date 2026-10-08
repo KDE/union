@@ -776,8 +776,6 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (qobject_cast<const QFrame *>(currentWidget)) {
             members.prepend(ElementString::Frame);
             // Toplevels
-        } else if (qobject_cast<const QSplitterHandle *>(currentWidget)) {
-            members.prepend(ElementString::SplitterHandle);
         } else if (qobject_cast<const QAbstractSpinBox *>(currentWidget)) {
             members.prepend(ElementString::SpinBox);
         } else if (qobject_cast<const QGroupBox *>(currentWidget)) {
@@ -812,8 +810,6 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
             members.prepend(ElementString::RubberBand);
         } else if (qobject_cast<const QSizeGrip *>(currentWidget)) {
             members.prepend(ElementString::SizeGrip);
-        } else if (qobject_cast<const QSplitterHandle *>(currentWidget)) {
-            members.prepend(ElementString::SplitterHandle);
         } else if (qobject_cast<const QStatusBar *>(currentWidget)) {
             members.prepend(ElementString::StatusBar);
         } else if (qobject_cast<const QTabBar *>(currentWidget)) {
