@@ -230,6 +230,14 @@ int TabElement::vSpace() const
     return 0;
 }
 
+Union::Element::States TabElement::elementStates() const
+{
+    auto states = AbstractElement::elementStates();
+    states.setFlag(Union::Element::State::Highlighted, false);
+    states.setFlag(Union::Element::State::Checked, m_styleOption->state.testFlag(QStyle::State_Selected));
+    return states;
+}
+
 QVariantMap TabElement::elementAttributes() const
 {
     QVariantMap map;
