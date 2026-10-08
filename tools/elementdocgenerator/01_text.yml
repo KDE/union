@@ -142,6 +142,7 @@
             Set when the spinbox does not have enough space to display the text
             and buttons with the main layout. This can be used to switch to a
             more compact layout.
+            \note The QtWidgets output's QSpinBox always uses the constrained mode.
         changed: Set whenever the element should visualize a changed state.
     subelements:
     -   name: Text
