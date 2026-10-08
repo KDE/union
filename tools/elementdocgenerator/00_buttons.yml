@@ -21,6 +21,7 @@
         flat: Set whenever the button should use a flat appearance.
         with-menu: Set whenever the button has a menu attached to it.
         changed: Set whenever the button should visualize a changed state.
+        command-link-button: Set if button is a QCommandLinkButton.
     attributes:
         display:
             description: A hint indicating what sub-controls should be visible.
