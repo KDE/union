@@ -2,10 +2,14 @@
 // SPDX-FileCopyrightText: 2025 The Qt Company Ltd.
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+
+import "private" as P
 
 T.HeaderViewDelegate {
     id: control
@@ -20,13 +24,20 @@ T.HeaderViewDelegate {
         highlighted: control.highlighted
     }
     Union.Element.hints: [
-        Union.ElementHint { name: "vertical" }
+        Union.ElementHint { name: "vertical" },
+        Union.ElementHint { name: "sort-ascending"; when: control.model.sort === Qt.AscendingOrder },
+        Union.ElementHint { name: "sort-descending"; when: control.model.sort === undefined || control.model.sort === Qt.DescendingOrder },
     ]
+    Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
+                            Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
+                             Union.Positioner.implicitHeight)
+
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -40,14 +51,31 @@ T.HeaderViewDelegate {
 
     spacing: Union.Style.properties.layout.spacing
 
+    font: Union.Style.properties.text.font
+
+    icon {
+        color: Union.Style.properties.icon.color
+        width: Union.Style.properties.icon.width
+        height: Union.Style.properties.icon.height
+        name: Union.Style.properties.icon.name
+        source: Union.Style.properties.icon.source
+    }
+
     highlighted: selected
+
+    text: control.model[control.headerView.textRole]
 
     background: Union.StyledRectangle { }
 
-    contentItem: Text {
-        horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
-        color: control.palette.windowText
-        text: control.model[control.headerView.textRole]
+    contentItem: P.DefaultContentItem { control: control }
+
+    indicator: Union.Icon {
+        Union.Element.type: "Indicator"
+        implicitWidth: Union.Style.properties.layout.width ?? 0
+        implicitHeight: Union.Style.properties.layout.height ?? 0
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.icon.color
+        visible: Union.Style.properties.display.visible ?? false
+        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 }
