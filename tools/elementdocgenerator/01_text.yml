@@ -47,6 +47,7 @@
     -   Enabled
     hints:
         changed: Set whenever the element should visualize a changed state.
+        inside-table: If the QWidget textfield is inside a table.
     subelements:
     -   name: Text
         description: |
