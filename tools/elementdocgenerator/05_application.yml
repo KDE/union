@@ -410,6 +410,8 @@
     hints:
         header: Set when the toolbar is located in the header of an application window or page.
         footer: Set when the toolbar is located in the footer of an application window or page.
+        left: Set when the toolbar is located in the left of an application window or page.
+        right: Set when the toolbar is located in the right of an application window or page.
     subelements:
     -   name: Separator
         description: Separators for QtWidgets toolbars.
