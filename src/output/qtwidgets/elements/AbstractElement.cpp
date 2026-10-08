@@ -642,13 +642,19 @@ Union::Element::Ptr AbstractElement::createElement(const QString &name) const
     unionElement->setAttributes(elementAttributes());
     auto hints = elementHints();
 
-    // Window is a bit special and needs to be handled during element hierarchy creation,
-    // as the QStyle does not directly draw the window element.
-    if (m_widget && name == u"ApplicationWindow"_s) {
-        if (auto window = m_widget->window()) {
-            if (!window->isActiveWindow()) {
-                hints.append(u"inactive"_s);
+    if (m_widget) {
+        // Window is a bit special and needs to be handled during element hierarchy creation,
+        // as the QStyle does not directly draw the window element.)
+        if (name == u"ApplicationWindow"_s) {
+            if (auto window = m_widget->window()) {
+                if (!window->isActiveWindow()) {
+                    hints.append(u"inactive"_s);
+                }
             }
+        }
+        // Add support for Widget KCMs showing the changed items.
+        if (m_widget->property("_kde_highlight_neutral").toBool()) {
+            hints.append(u"changed"_s);
         }
     }
 
