@@ -439,12 +439,16 @@
     -   ActiveFocus
     -   VisualFocus
     -   Enabled
+    hints:
+        KMultiTabBar: Set if the widget is inside of a KMultiTabBar, for example Kate sidepanels.
     attributes:
         tab-position:
             description: The position of tabs relative to the content.
             values:
                 top: The tabs are located at the top of content.
                 bottom: The tabs are located at the bottom of content.
+                left: The tabs are located at the left of content.
+                right: The tabs are located at the right of content.
     subelements:
     -   name: Highlight
         description: A highlight for the current active tab.
