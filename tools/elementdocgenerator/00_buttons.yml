@@ -65,6 +65,7 @@
         with-menu: Set whenever the button has a menu attached to it.
         changed: Set whenever the button should visualize a changed state.
         with-menu-button: Set whenever the menu has a separate button (subcontrol) for the menu popup. Used mostly by QWidgets.
+        with-inline-arrow: Set whenever the ToolButton has an inline-arrow, used with delayed menus.
         menu-open: Set whenever the subcontrol button is clicked. Used mostly by QWidgets.
     attributes:
         display:
@@ -73,7 +74,7 @@
                 icon-only: Only display the icon.
                 text-only: Only display the text.
                 text-beside-icon: Display both icon and text in a row.
-                text-below-icon: Display both icon and text with the text below the icon.
+                text-under-icon: Display both icon and text with the text below the icon.
     subelements:
     -   name: Icon
         description: |
