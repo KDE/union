@@ -8,6 +8,7 @@
 #include <QStyleOption>
 
 #include "ElementCache.h"
+#include "ShadowRenderer.h"
 
 class UnionStyle;
 class MenuElement;
@@ -45,4 +46,6 @@ private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOption *m_menuOption = nullptr;
+    std::shared_ptr<ShadowRenderer> m_shadowRenderer;
+    QWidget *m_shadowWidget;
 };

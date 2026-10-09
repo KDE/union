@@ -731,6 +731,11 @@ void UnionStyle::polish(QWidget *widget)
     QCommonStyle::polish(widget);
 }
 
+void UnionStyle::unpolish(QWidget *widget)
+{
+    QCommonStyle::unpolish(widget);
+}
+
 QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
 {
     if (!widget) {
@@ -792,7 +797,11 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (currentWidget->inherits("KMultiTabBar")) {
             members.prepend(ElementString::TabBar);
         } else if (qobject_cast<const QFrame *>(currentWidget)) {
-            members.prepend(ElementString::Frame);
+            if (currentWidget->inherits("QComboBoxPrivateContainer")) {
+                members.prepend(ElementString::Popup);
+            } else {
+                members.prepend(ElementString::Frame);
+            }
             // Toplevels
         } else if (qobject_cast<const QAbstractSpinBox *>(currentWidget)) {
             members.prepend(ElementString::SpinBox);
@@ -807,7 +816,7 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
         } else if (qobject_cast<const QDialogButtonBox *>(currentWidget)) {
             members.prepend(ElementString::DialogButtonBox);
         } else if (qobject_cast<const QDockWidget *>(currentWidget)) {
-            members.prepend(ElementString::Dock);
+            members.prepend(ElementString::DockWidget);
         } else if (qobject_cast<const QFocusFrame *>(currentWidget)) {
             members.prepend(ElementString::FocusFrame);
         } else if (qobject_cast<const QLineEdit *>(currentWidget)) {

@@ -8,7 +8,6 @@
 #include <QIcon>
 #include <QObject>
 #include <QStyleOption>
-#include <qstyleoption.h>
 
 #include <ElementCache.h>
 

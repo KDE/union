@@ -10,6 +10,7 @@ Dependencies:
     'frameworks/kcolorscheme': '@latest-kf6'
     'frameworks/kcoreaddons': '@latest-kf6'
     'libraries/cxx-rust-cssparser': '@latest-kf6'
+    'frameworks/kwindowsystem': '@latest-kf6'
 
 Options:
   test-before-installing: true

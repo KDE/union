@@ -316,6 +316,7 @@ dockwidget {
     height: var(--small-element-size);
     color: var(--header-text-color);
     background-color: var(--header-background-color);
+    box-shadow: 0px 2px var(--popup-shadow-size) 0px rgba(0, 0, 0, 0.2);
     icon-alignment: content center center 0;
     text-alignment: content center center 1;
     padding: var(--small-spacing);

@@ -9,6 +9,7 @@
 #include <QPainter>
 #include <QStyle>
 
+#include "ShadowRenderer.h"
 #include "SharedNames.h"
 
 using namespace Qt::StringLiterals;
@@ -18,6 +19,10 @@ MenuElement::MenuElement(const QStyleOption *option, const UnionStyle *style, co
     , m_menuOption(option)
 {
     update();
+    if (m_elementProperties && m_menuOption) {
+        m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
+        m_shadowWidget = qobject_cast<QWidget *>(m_menuOption->styleObject);
+    }
 }
 
 MenuElement::~MenuElement()
@@ -38,9 +43,15 @@ void MenuElement::draw(QPainter *painter, DrawEnums enums) const
     switch (enums.PrimitiveElement) {
     case QStyle::PE_PanelMenu:
         drawBackground(painter);
+        if (m_shadowRenderer && m_shadowWidget) {
+            m_shadowRenderer->drawShadow(m_shadowWidget);
+        }
         break;
     case QStyle::PE_FrameMenu:
         drawFrame(painter);
+        if (m_shadowRenderer && m_shadowWidget) {
+            m_shadowRenderer->drawShadow(m_shadowWidget);
+        }
         break;
     }
 }

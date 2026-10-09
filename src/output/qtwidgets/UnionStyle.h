@@ -42,6 +42,8 @@ public:
     void polish(QApplication *application) override;
     void polish(QWidget *) override;
 
+    void unpolish(QWidget *) override;
+
     bool eventFilter(QObject *object, QEvent *event) override;
 
     // QStyle::visualAlignment, but constexpr

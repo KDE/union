@@ -3,7 +3,10 @@
 
 #pragma once
 
+#include "ShadowTileMap.h"
 #include <KConfigWatcher>
+#include <KWindowShadow>
+#include <QWindow>
 
 #include <PlatformPlugin.h>
 
@@ -23,6 +26,10 @@ public:
 
     qreal animationSpeedMultiplier() override;
 
+    // QWidget Window shadows
+    void installWindowShadow(QWindow *window, const QImage &shadowImage, const QMargins &shadowMargins) override;
+    void uninstallWindowShadow(QObject *object) override;
+
 private:
     Q_SLOT void setSmoothScroll(bool enabled);
     void setAnimationSpeedMultiplier(qreal multiplier);
@@ -33,4 +40,14 @@ private:
     QString m_defaultStyle;
     KConfigWatcher::Ptr m_kdeGlobalsWatcher;
     KConfigWatcher::Ptr m_unionSettingsWatcher;
+
+    // Create shadow tiles for QWidget Window shadows
+    const QVector<KWindowShadowTile::Ptr> &createShadowTiles(const QVector<QPixmap> &pixmaps);
+    // Managed shadows
+    QMap<QWindow *, KWindowShadow *> m_shadows;
+    // Shared shadow tiles
+    Union::ShadowTileMap m_shadowTiles;
+    QVector<KWindowShadowTile::Ptr> m_tiles;
+    // There are 8 tiles in total
+    const int tileAmount = 8;
 };

@@ -102,6 +102,8 @@ endif()
 
 if (BUILD_PLATFORM_PLASMA)
     find_package(Qt6DBus ${QT_MIN_VERSION} CONFIG REQUIRED)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS WindowSystem)
+    set_package_properties(KF6WindowSystem PROPERTIES TYPE REQUIRED PURPOSE "KWindowSystem is used for drawing menu shadows")
 endif()
 
 if (BUILD_TOOLS)

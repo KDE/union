@@ -8,6 +8,7 @@
 #include <QStyleOption>
 
 #include "ElementCache.h"
+#include "ShadowRenderer.h"
 
 class UnionStyle;
 class FrameElement;
@@ -48,5 +49,8 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
+    void drawShadow() const;
     const QStyleOptionFrame *m_frameOption = nullptr;
+    std::shared_ptr<ShadowRenderer> m_shadowRenderer;
+    QWidget *m_shadowWidget;
 };
