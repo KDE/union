@@ -688,7 +688,6 @@ void UnionStyle::polish(QWidget *widget)
 {
     // enable mouse over effects for all necessary widgets
     if (widget) {
-        _shadowHelper->registerWidget(widget);
         widget->setAttribute(Qt::WA_Hover);
         widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
         if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
@@ -703,6 +702,7 @@ void UnionStyle::polish(QWidget *widget)
                 widget->setAutoFillBackground(false);
             }
         }
+        _shadowHelper->registerWidget(widget);
     }
     if (qobject_cast<QScrollBar *>(widget)) {
         // remove opaque painting for scrollbars

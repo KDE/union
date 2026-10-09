@@ -11,6 +11,8 @@
 
 #include <KWindowSystem>
 
+#include "StyleRegistry.h"
+#include <ElementQuery.h>
 #include <QApplication>
 #include <QDockWidget>
 #include <QEvent>
@@ -20,6 +22,9 @@
 #include <QPlatformSurfaceEvent>
 #include <QTextStream>
 #include <QToolBar>
+
+using namespace Union::Properties;
+using namespace Qt::StringLiterals;
 
 const CompositeShadowParams s_shadowParams[] = {
     // None
@@ -34,14 +39,39 @@ const CompositeShadowParams s_shadowParams[] = {
     CompositeShadowParams(QPoint(0, 6), ShadowParams(QPoint(0, 0), 24, 0.2), ShadowParams(QPoint(0, -3), 12, 0.1))};
 
 //_____________________________________________________
-CompositeShadowParams ShadowHelper::lookupShadowParams(int shadowSizeEnum)
+CompositeShadowParams ShadowHelper::lookupShadowParams(QWidget *widget)
 {
-    switch (shadowSizeEnum) {
-        return s_shadowParams[2];
-    default:
-        // Fallback to the Large size.
-        return s_shadowParams[3];
+    Union::ElementList elements;
+    QStringList elementTypes = widget->property("_union_member_list").toStringList();
+    for (const auto &elementType : elementTypes) {
+        auto unionElement = Union::Element::create();
+        unionElement->setType(elementType);
+        elements.append(unionElement);
     }
+
+    Q_ASSERT(!elements.isEmpty());
+    const auto style = Union::StyleRegistry::instance()->defaultStyle();
+    const auto query = std::make_unique<Union::ElementQuery>(style);
+    query->setElements(elements);
+    query->execute();
+    auto properties = query->properties();
+
+    auto shadowColor = safePropertyLookup(properties, Union::Color(), &StylePropertyGroup::shadow, &ShadowPropertyGroup::color);
+    auto shadowBlur = safePropertyLookup(properties, 0.0, &StylePropertyGroup::shadow, &ShadowPropertyGroup::blur);
+    // TODO: We only do blurring for now, need to add just size
+    // auto shadowSize = safePropertyLookup(properties, 0.0, &StylePropertyGroup::shadow, &ShadowPropertyGroup::size);
+    auto shadowRadius = safePropertyLookup(properties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
+    auto shadowOffset =
+        safePropertyLookup(properties, QVector2D(), &StylePropertyGroup::shadow, &ShadowPropertyGroup::offset, &OffsetPropertyGroup::toVector2D);
+
+    // We need to portrude shadow around the edges for the blurAmount (or shadowSize??)
+    auto params = CompositeShadowParams(QPoint(shadowOffset.x(), shadowOffset.y()),
+                                        ShadowParams(QPoint(0, 0), shadowBlur, 1.0),
+                                        ShadowParams(QPoint(-shadowOffset.x(), -shadowOffset.y()), shadowBlur, 1.0));
+    params.color = shadowColor.toQColor();
+    // TODO: Need to get all radiuses
+    params.radius = shadowRadius.topLeft;
+    return params;
 }
 
 //_____________________________________________________
@@ -142,7 +172,7 @@ bool ShadowHelper::eventFilter(QObject *object, QEvent *event)
 //_______________________________________________________
 TileSet ShadowHelper::shadowTiles(QWidget *widget)
 {
-    CompositeShadowParams params = lookupShadowParams(1);
+    CompositeShadowParams params = lookupShadowParams(widget);
 
     if (params.isNone()) {
         return TileSet();
@@ -159,8 +189,7 @@ TileSet ShadowHelper::shadowTiles(QWidget *widget)
         return c;
     };
 
-    const QColor color = Qt::blue;
-    const qreal strength = static_cast<qreal>(255) / 255.0;
+    const QColor color = params.color;
 
     const QSize boxSize =
         BoxShadowRenderer::calculateMinimumBoxSize(params.shadow1.radius).expandedTo(BoxShadowRenderer::calculateMinimumBoxSize(params.shadow2.radius));
@@ -170,6 +199,8 @@ TileSet ShadowHelper::shadowTiles(QWidget *widget)
     BoxShadowRenderer shadowRenderer;
     shadowRenderer.setBorderRadius(frameRadius);
     shadowRenderer.setBoxSize(boxSize);
+
+    const qreal strength = static_cast<qreal>(params.color.alpha()) / 255.0;
 
     shadowRenderer.addShadow(params.shadow1.offset, params.shadow1.radius, withOpacity(color, params.shadow1.opacity * strength));
     shadowRenderer.addShadow(params.shadow2.offset, params.shadow2.radius, withOpacity(color, params.shadow2.opacity * strength));
@@ -367,7 +398,7 @@ void ShadowHelper::installShadows(QWidget *widget)
 //_______________________________________________________
 QMargins ShadowHelper::shadowMargins(QWidget *widget) const
 {
-    CompositeShadowParams params = lookupShadowParams(1);
+    CompositeShadowParams params = lookupShadowParams(widget);
     if (params.isNone()) {
         return QMargins();
     }
