@@ -4,6 +4,7 @@
 #pragma once
 
 #include "LruCache.h"
+#include "ShadowHelper.h"
 #include <Element.h>
 #include <Style.h>
 
@@ -41,6 +42,8 @@ public:
 
     void polish(QApplication *application) override;
     void polish(QWidget *) override;
+
+    void unpolish(QWidget *) override;
 
     bool eventFilter(QObject *object, QEvent *event) override;
 
@@ -132,5 +135,6 @@ public:
 
 private:
     bool m_showMnemonics;
+    std::unique_ptr<ShadowHelper> _shadowHelper;
     void setMnemonics(bool enabled);
 };

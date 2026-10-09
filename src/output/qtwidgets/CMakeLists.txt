@@ -14,6 +14,12 @@ ecm_qt_declare_logging_category(UnionWidgetsStyle
 target_sources(UnionWidgetsStyle PRIVATE
         BackgroundDrawing.cpp
         BackgroundDrawing.h
+        BoxShadowRenderer.cpp
+        BoxShadowRenderer.h
+        ShadowHelper.cpp
+        ShadowHelper.h
+        TileSet.cpp
+        TileSet.h
         SharedNames.h
         StyleUtils.cpp
         StyleUtils.h
@@ -100,6 +106,7 @@ target_link_libraries(UnionWidgetsStyle
         PUBLIC
         Qt::Widgets
         Union::Union
+        KF6::WindowSystem
 )
 
 set_target_properties(UnionWidgetsStyle PROPERTIES

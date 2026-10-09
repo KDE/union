@@ -114,6 +114,7 @@ using namespace Union::Properties;
 UnionStyle::UnionStyle()
     : QCommonStyle()
     , m_showMnemonics(false)
+    , _shadowHelper(std::make_unique<ShadowHelper>())
 {
     qApp->installEventFilter(this);
     Union::StyleRegistry::instance()->load();
@@ -687,6 +688,7 @@ void UnionStyle::polish(QWidget *widget)
 {
     // enable mouse over effects for all necessary widgets
     if (widget) {
+        _shadowHelper->registerWidget(widget);
         widget->setAttribute(Qt::WA_Hover);
         widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
         if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
@@ -711,6 +713,12 @@ void UnionStyle::polish(QWidget *widget)
     }
 
     QCommonStyle::polish(widget);
+}
+
+void UnionStyle::unpolish(QWidget *widget)
+{
+    _shadowHelper->unregisterWidget(widget);
+    QCommonStyle::unpolish(widget);
 }
 
 QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
