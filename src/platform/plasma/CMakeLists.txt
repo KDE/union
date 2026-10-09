@@ -5,9 +5,11 @@ add_library(union-platform-plasma MODULE)
 target_sources(union-platform-plasma PRIVATE
     PlasmaPlatformPlugin.cpp
     PlasmaPlatformPlugin.h
+    ShadowTileMap.cpp
+    ShadowTileMap.h
 )
 
-target_link_libraries(union-platform-plasma PRIVATE Union KF6::CoreAddons KF6::ConfigGui KF6::IconThemes Qt6::DBus)
+target_link_libraries(union-platform-plasma PRIVATE Union KF6::CoreAddons KF6::ConfigGui KF6::IconThemes Qt6::DBus KF6::WindowSystem Qt6::Widgets)
 
 set_target_properties(union-platform-plasma PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/union

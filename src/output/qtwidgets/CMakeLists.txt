@@ -14,6 +14,12 @@ ecm_qt_declare_logging_category(UnionWidgetsStyle
 target_sources(UnionWidgetsStyle PRIVATE
         BackgroundDrawing.cpp
         BackgroundDrawing.h
+        BoxShadowRenderer.cpp
+        BoxShadowRenderer.h
+        ShadowHelper.cpp
+        ShadowHelper.h
+        MenuShadowHelper.cpp
+        MenuShadowHelper.h
         SharedNames.h
         StyleUtils.cpp
         StyleUtils.h

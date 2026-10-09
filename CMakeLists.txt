@@ -82,6 +82,8 @@ endif()
 
 if (BUILD_OUTPUT_QTWIDGETS)
     find_package(Qt6Widgets ${QT_MIN_VERSION} CONFIG REQUIRED)
+    find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS WindowSystem)
+    set_package_properties(KF6WindowSystem PROPERTIES TYPE REQUIRED PURPOSE "KWindowSystem is used for drawing menu shadows")
 endif()
 
 if (BUILD_OUTPUT_KIRIGAMI)
