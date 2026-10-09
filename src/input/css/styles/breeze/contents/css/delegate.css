@@ -12,6 +12,7 @@
     --delegate-spacing: var(--medium-spacing);
     --delegate-padding: var(--small-spacing);
     --delegate-total-padding: 10px; /* spacing + padding */
+    --focus-highlight-color: mix(var(--highlight-color), var(--view-background-color), 0.45);
 }
 
 itemdelegate,
@@ -203,6 +204,24 @@ itemviewitem {
         {
             text-wrap-mode: wrap;
         }
+    }
+}
+
+/* Dolphin fileitem */
+graphicsview itemviewitem {
+    &:highlighted {
+        background-color: modify-color(var(--highlight-color) set-alpha 0.75);
+        border: none;
+    }
+}
+
+focusframe {
+    background-color: transparent;
+    border: 1.25px solid var(--highlight-color);
+    border-radius: var(--corner-radius);
+    inset: 2px;
+    &:highlighted {
+        border: 1.75px solid var(--highlight-color);
     }
 }
 
