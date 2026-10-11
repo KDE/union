@@ -6,23 +6,53 @@
 \page css-styling-applications.html
 \title Styling Applications with CSS
 
-\section1 Creating a New Style
+\section1 Creating and Managing Styles
 
-To create a new style for Union's CSS input, you need to create a directory in a
-location where Union can find it. On Linux-based systems, this will usually be
-\c{~/.local/share/union/css/styles}. The name of the directory is used as an
-identifier for the style.
+To create a new style for Union's CSS input, you can use \c{union-styletool}.
 
-That directory then needs to contain at least a single CSS file called
-\c{style.css}, which is the file Union will load to use the style. It is
-recommended to not place any style rules in \c{style.css}, but instead to split
-your rules up into multiple files and import them in \c{style.css} using
-\c{@import "file.css"}.
+\c{union-styletool create} will interactively create an empty style, with
+provided metadata. The style will be placed into your home folder by default,
+but this can be customised with the \c{--output-path <output-path>} argument.
 
-To use your new style, you will need to run your application with the
-environment variable \c{UNION_STYLE_NAME} set to the directory name of your
-style. This will be made easier in the future once there are more styles for
-Union to choose from.
+The created style will have the following structure:
+
+\list
+    \li contents/
+    \list
+        \li css/
+        \li images/
+    \endlist
+    \li metadata.json
+\endlist
+
+\c{metadata.json} contains the metadata provided when creating the style.
+
+In the \c{css/} folder, you should place the style's CSS, and in \c{images/},
+any image assets for the style.
+
+To find out more about how to create CSS for a Union style, please refer to
+the
+\l{built-in Breeze style}{https://invent.kde.org/plasma/union/-/tree/master/src/input/css/styles/breeze}
+as an example, and to \l{css-support.html}{Supported CSS}, the
+\l{css-properties.html}{CSS Property Reference}, and the
+\l{css-functions.html}{CSS Function Reference}.
+
+After installing your style with \c{union-styletool install <path>}, you can now
+select it in the \i{Application Style} settings page.
+
+\c{union-styletool} has other commands important for managing Union styles:
+
+/*!
+    \list
+        \li \c{create} - Create a new style
+        \li \c{inspect} - Inspect details of an installed style
+        \li \c{install} - Install a new style
+        \li \c{list} - List installed styles
+        \li \c{update} - Update an installed style
+        \li \c{uninstall} - Uninstall an installed style
+        \li \c{package} - Package a style to a single shareable file
+    \endlist
+*/
 
 \section1 What You Can and Cannot Style
 
