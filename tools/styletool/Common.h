@@ -8,10 +8,13 @@
 #include <QCoreApplication>
 #include <QFile>
 #include <QStandardPaths>
+#include <QTemporaryDir>
 #include <QTextStream>
 
 #include <PackageHandler.h>
 #include <StylePackage.h>
+
+#include "TarArchive.h"
 
 using namespace Qt::StringLiterals;
 
@@ -125,4 +128,34 @@ int printErrorCode(const Union::StylePackage &package, const std::error_code &er
 {
     std::cerr << "Operation on package " << package.path() << " failed: " << errorCode.message() << "\n";
     return errorCode.value();
+}
+
+std::pair<QTemporaryDir, fs::path> extractStyleArchive(const fs::path &path, std::error_code &errorCode)
+{
+    auto tempDir = QTemporaryDir{};
+    auto tempPath = fs::path(tempDir.path().toStdString());
+
+    Tar::TarArchive archive(path);
+    if (!archive.read(errorCode)) {
+        std::cerr << "Operation on package " << path << " failed: " << errorCode.message() << "\n";
+        return std::make_pair(std::move(tempDir), fs::path{});
+    }
+
+    if (!archive.extractAll(tempPath, errorCode)) {
+        std::cerr << "Operation on package " << path << " failed: " << errorCode.message() << "\n";
+        return std::make_pair(std::move(tempDir), fs::path{});
+    } else {
+        QList<fs::path> paths;
+        for (auto entry : fs::directory_iterator(tempPath)) {
+            paths.append(tempPath / entry.path());
+        }
+
+        if (paths.size() == 1) {
+            return std::make_pair(std::move(tempDir), paths.first());
+        }
+    }
+
+    std::cerr << "Operation on package " << path << " failed: The package is an invalid Union style package.\n";
+    errorCode = std::make_error_code(std::errc::io_error);
+    return std::make_pair(std::move(tempDir), fs::path{});
 }

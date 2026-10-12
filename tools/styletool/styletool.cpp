@@ -25,12 +25,26 @@ int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
     auto packageName = parser->positionalArguments().first();
     auto packagePath = fs::absolute(fs::path(packageName.toStdString()));
 
-    auto package = Union::StylePackage{packagePath};
+    Union::StylePackage package;
+
+    std::error_code errorCode;
+    std::optional<QTemporaryDir> tempDir;
+    if (packagePath.extension() == ".unionstyle") {
+        auto [dir, path] = extractStyleArchive(packagePath, errorCode);
+        if (errorCode) {
+            return errorCode.value();
+        } else {
+            tempDir = std::move(dir);
+            package = Union::StylePackage(path);
+        }
+    } else {
+        package = Union::StylePackage{packagePath};
+    }
+
     if (!package.isValid()) {
         return printPackageError(package);
     }
 
-    std::error_code errorCode;
     auto handler = Union::StyleRegistry::instance()->packageHandler();
     if (!handler->install(package, errorCode)) {
         return printErrorCode(package, errorCode);
@@ -142,19 +156,33 @@ int handleInspectCommand([[maybe_unused]] const QStringList &arguments)
     }
 
     auto pathOrId = parser->positionalArguments().first();
+    auto packagePath = fs::absolute(fs::path(pathOrId.toStdString()));
 
-    auto handler = Union::StyleRegistry::instance()->packageHandler();
+    Union::StylePackage package;
+    std::error_code errorCode;
+    std::optional<QTemporaryDir> tempDir;
 
-    auto package = handler->package(pathOrId);
-    if (!package.isValid()) {
-        package = Union::StylePackage{fs::absolute(fs::path(pathOrId.toStdString()))};
+    if (!fs::exists(packagePath)) {
+        auto handler = Union::StyleRegistry::instance()->packageHandler();
+        package = handler->package(pathOrId);
+        packagePath = package.path();
+    } else if (packagePath.extension() == ".unionstyle") {
+        auto [dir, path] = extractStyleArchive(packagePath, errorCode);
+        if (errorCode) {
+            return errorCode.value();
+        } else {
+            tempDir = std::move(dir);
+            package = Union::StylePackage(path);
+        }
+    } else {
+        package = Union::StylePackage(packagePath);
     }
 
     if (!package.isValid()) {
         return printPackageError(package);
     }
 
-    std::cout << "Path:        " << package.path().string() << "\n";
+    std::cout << "Path:        " << packagePath.string() << "\n";
     std::cout << "Input Type:  " << qPrintable(package.inputType()) << "\n";
     std::cout << "Name:        " << qPrintable(package.name()) << "\n";
     std::cout << "Description: " << qPrintable(package.description()) << "\n";
@@ -221,7 +249,23 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
     }
 
     auto packageName = parser->positionalArguments().first();
-    auto package = Union::StylePackage{fs::absolute(fs::path(packageName.toStdString()))};
+    auto packagePath = fs::absolute(fs::path(packageName.toStdString()));
+
+    Union::StylePackage package;
+
+    std::error_code errorCode;
+    std::optional<QTemporaryDir> tempDir;
+    if (packagePath.extension() == ".unionstyle") {
+        auto [dir, path] = extractStyleArchive(packagePath, errorCode);
+        if (errorCode) {
+            return errorCode.value();
+        } else {
+            tempDir = std::move(dir);
+            package = Union::StylePackage(path);
+        }
+    } else {
+        package = Union::StylePackage{packagePath};
+    }
 
     if (!package.isValid()) {
         return printPackageError(package);
@@ -232,7 +276,6 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
         flags |= Union::PackageHandler::OperationFlag::SkipVersionCheck;
     }
 
-    std::error_code errorCode;
     auto handler = Union::StyleRegistry::instance()->packageHandler();
     if (!handler->update(package, errorCode, flags)) {
         return printErrorCode(package, errorCode);
