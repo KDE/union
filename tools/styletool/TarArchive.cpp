@@ -108,6 +108,76 @@ bool TarArchive::addEntry(const std::filesystem::path &path, const std::filesyst
     return true;
 }
 
+bool TarArchive::read(std::error_code &errorCode)
+{
+    m_entries.clear();
+
+    if (!fs::exists(m_path)) {
+        errorCode = std::make_error_code(std::errc::no_such_file_or_directory);
+        return false;
+    }
+
+    auto infile = gzopen(m_path.string().data(), "rb");
+    if (!infile) {
+        errorCode = std::error_code(errno, std::system_category());
+        return false;
+    }
+
+    constexpr int BufferSize = 1024;
+    QByteArray data;
+    std::array<char, BufferSize> buffer;
+    while (true) {
+        int read = gzread(infile, buffer.data(), buffer.size());
+        if (read == BufferSize) {
+            data.append(buffer);
+        } else if (read > 0) {
+            data.append(buffer);
+            break;
+        } else {
+            errorCode = std::make_error_code(std::errc::io_error);
+            return false;
+        }
+    }
+
+    if (data.size() == 0) {
+        errorCode = std::make_error_code(std::errc::io_error);
+        return false;
+    }
+
+    constexpr int ChunkSize = 512;
+    auto offset = 0;
+    auto remainingSize = data.size();
+    auto view = QByteArrayView(data);
+    TarEntry currentEntry;
+    bool first = true;
+    while (remainingSize > 0) {
+        auto chunk = view.sliced(offset, ChunkSize);
+        remainingSize -= ChunkSize;
+        offset += ChunkSize;
+
+        if (chunk.sliced(257, 5) == "ustar") {
+            if (!first) {
+                currentEntry.data = currentEntry.data.sliced(0, currentEntry.header.actualSize());
+                m_entries.append(currentEntry);
+                currentEntry = TarEntry{};
+            } else {
+                currentEntry = TarEntry{};
+                first = false;
+            }
+
+            memcpy(&currentEntry.header, chunk.data(), ChunkSize);
+        } else {
+            currentEntry.data.append(chunk);
+        }
+    }
+
+    currentEntry.data = currentEntry.data.sliced(0, currentEntry.header.actualSize());
+    m_entries.append(currentEntry);
+    currentEntry = TarEntry{};
+
+    return true;
+}
+
 bool TarArchive::write(std::error_code &errorCode)
 {
     if (fs::exists(m_path)) {
