@@ -34,6 +34,12 @@ struct USTarHeader {
     uint8_t deviceMinor[8] = {0};
     uint8_t namePrefix[155] = {0};
     uint8_t padding[12] = {0};
+
+    inline int actualSize() const
+    {
+        QByteArrayView sizeData(size, 11);
+        return sizeData.toInt(nullptr, 8);
+    }
 };
 
 /* A single entry in a tar file.
@@ -58,6 +64,7 @@ public:
     bool addEntry(const std::filesystem::path &path, std::error_code &errorCode);
     bool addEntry(const std::filesystem::path &path, const std::filesystem::path &baseDirectory, std::error_code &errorCode);
 
+    bool read(std::error_code &errorCode);
     bool write(std::error_code &errorCode);
 
 private:
