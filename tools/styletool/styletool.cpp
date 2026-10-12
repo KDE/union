@@ -9,7 +9,7 @@
 #include <StyleRegistry.h>
 
 #include "Common.h"
-#include "Tar.h"
+#include "TarArchive.h"
 
 int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
 {
@@ -299,8 +299,13 @@ int handlePackageCommand([[maybe_unused]] const QStringList arguments)
     auto packagedPath = fs::current_path() / QString{package.id() + u".unionstyle"}.toStdString();
 
     std::error_code errorCode;
-    tarDirectory(package.path(), packagedPath, errorCode);
-    if (errorCode) {
+
+    Tar::TarArchive archive(packagedPath);
+    if (!archive.addEntry(package.path(), errorCode)) {
+        return printErrorCode(package, errorCode);
+    }
+
+    if (!archive.write(errorCode)) {
         return printErrorCode(package, errorCode);
     }
 
