@@ -67,7 +67,12 @@ public:
     bool read(std::error_code &errorCode);
     bool write(std::error_code &errorCode);
 
+    bool extract(const std::string &name, const std::filesystem::path &destination, std::error_code &errorCode);
+    bool extractAll(const std::filesystem::path &destination, std::error_code &errorCode);
+
 private:
+    bool extractEntry(const std::filesystem::path &destination, const TarEntry &entry, std::error_code &errorCode);
+
     std::filesystem::path m_path;
     QList<TarEntry> m_entries;
 };

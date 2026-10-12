@@ -205,3 +205,76 @@ bool TarArchive::write(std::error_code &errorCode)
 
     return true;
 }
+
+bool Tar::TarArchive::extract(const std::string &name, const std::filesystem::path &destination, std::error_code &errorCode)
+{
+    if (!fs::is_directory(destination)) {
+        errorCode = std::make_error_code(std::errc::not_a_directory);
+        return false;
+    }
+
+    auto itr = std::ranges::find_if(m_entries, [&name](const TarEntry &entry) {
+        return entry.header.name == name;
+    });
+    if (itr == m_entries.end()) {
+        errorCode = std::make_error_code(std::errc::no_such_file_or_directory);
+        return false;
+    }
+
+    return extractEntry(destination, *itr, errorCode);
+}
+
+bool Tar::TarArchive::extractAll(const std::filesystem::path &destination, std::error_code &errorCode)
+{
+    if (!fs::is_directory(destination)) {
+        errorCode = std::make_error_code(std::errc::not_a_directory);
+        return false;
+    }
+
+    for (const auto &entry : std::as_const(m_entries)) {
+        if (!extractEntry(destination, entry, errorCode)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TarArchive::extractEntry(const std::filesystem::path &destination, const TarEntry &entry, std::error_code &errorCode)
+{
+    Q_ASSERT(fs::is_directory(destination));
+
+    auto destinationPath = destination / entry.header.name;
+    if (fs::exists(destinationPath)) {
+        errorCode = std::make_error_code(std::errc::file_exists);
+        return false;
+    }
+
+    if (entry.header.type == RegularFileType) {
+        if (!fs::exists(destinationPath.parent_path())) {
+            errorCode = std::make_error_code(std::errc::not_a_directory);
+            return false;
+        }
+
+        std::ofstream stream(destinationPath, std::ios::binary);
+        stream.write(entry.data.data(), entry.data.size());
+        stream.close();
+
+        if (stream.fail()) {
+            errorCode = std::make_error_code(std::errc::io_error);
+            return false;
+        } else {
+            return true;
+        }
+    } else if (entry.header.type == DirectoryType) {
+        fs::create_directories(destinationPath, errorCode);
+        if (errorCode) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    errorCode = std::make_error_code(std::errc::operation_not_supported);
+    return false;
+}
