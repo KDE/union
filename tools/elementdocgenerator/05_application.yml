@@ -40,25 +40,25 @@
     -   VisualFocus
     -   Enabled
     hints:
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
     attributes:
         shape:
             description: Widget shape of the Frame.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn.
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn. (QtWidgets only)
 
 -   name: ListView
     group: Application Structure
@@ -72,25 +72,25 @@
     -   VisualFocus
     -   Enabled
     hints:
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
     attributes:
         shape:
             description: Widget shape of the ListView.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn.
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn. (QtWidgets only)
 
 -   name: TreeView
     group: Application Structure
@@ -104,25 +104,25 @@
     -   VisualFocus
     -   Enabled
     hints:
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
     attributes:
         shape:
             description: Widget shape of the TreeView.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn (QtWidgets only)
 
 -   name: TableView
     group: Application Structure
@@ -136,25 +136,25 @@
     -   VisualFocus
     -   Enabled
     hints:
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
     attributes:
         shape:
             description: Widget shape of the QTableView.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn (QtWidgets only)
 
 -   name: ColumnView
     group: Application Structure
@@ -167,25 +167,25 @@
     -   VisualFocus
     -   Enabled
     hints:
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
     attributes:
         shape:
             description: Widget shape of the ColumnView.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn (QtWidgets only)
 
 
 -   name: GroupBox
@@ -242,26 +242,26 @@
         horizontal-scroll: Set when the scrollview can scroll horizontally.
         vertical-scroll: Set when the scrollview can scroll vertically.
         framed-background: Set when the scrollview should display a frame around itself.
-        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel.
-        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel.
-        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea.
-        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea.
-        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea.
-        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea.
-        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border.
-        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border.
-        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border.
-        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border.
+        panel-right: Widget is KPageListView or KPageTreeView and placed in right panel. (QtWidgets only)
+        panel-left: Widget is KPageListView or KPageTreeView and placed in left panel. (QtWidgets only)
+        dock-left: If item is in a DockWidget that is located in LeftDockWidgetArea. (QtWidgets only)
+        dock-right: If item is in a DockWidget that is located in RightDockWidgetArea. (QtWidgets only)
+        dock-top: If item is in a DockWidget that is located in TopDockWidgetArea. (QtWidgets only)
+        dock-bottom: If item is in a DockWidget that is located in BottomDockWidgetArea. (QtWidgets only)
+        left-edge: Widget uses "_breeze_borders_sides" hint to draw left border. (QtWidgets only)
+        right-edge: Widget uses "_breeze_borders_sides" hint to draw right border. (QtWidgets only)
+        top-edge: Widget uses "_breeze_borders_sides" hint to draw top border. (QtWidgets only)
+        bottom-edge: Widget uses "_breeze_borders_sides" hint to draw bottom border. (QtWidgets only)
 
     attributes:
         shape:
             description: Widget shape of the ScrollView.
             values:
-                panel: Regular frame around the widget.
-                no-frame: Widget is flat, has no frame around it.
-                box: Widget is expected to draw a simple box frame.
-                horizontal-line: Only a horizontal line is being drawn.
-                vertical-line: Only a vertical line is being drawn
+                panel: Regular frame around the widget. (QtWidgets only)
+                no-frame: Widget is flat, has no frame around it. (QtWidgets only)
+                box: Widget is expected to draw a simple box frame. (QtWidgets only)
+                horizontal-line: Only a horizontal line is being drawn. (QtWidgets only)
+                vertical-line: Only a vertical line is being drawn (QtWidgets only)
 
     subelements:
     -   name: Horizontal Scrollbar
