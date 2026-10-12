@@ -30,6 +30,7 @@ create new styles.
 
 \section1 Reference
 \list
+    \li \l{working-with-styles.html}{Working with Styles and Style Packages}
     \li \l{elements.html}{Element Reference}
     \li \l{Union Core C++ Classes}
 \endlist

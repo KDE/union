@@ -1,0 +1,96 @@
+// SPDX-License-Identifier: BSD-2-Clause
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+
+/*!
+
+\page working-with-styles.html
+\title Working with Styles and Style Packages
+
+\section1 Styles and Style Packages
+
+Union Styles are directories with specific contents. The directory name is used
+as a style ID and each directory is expected to contain a \c{contents} directory
+and a single \c{metadata.json} file. The metadata file contains things like the
+name, authors and other information about the style. The contents directory
+contains input-specific files. For CSS based styles, it is expected to contain
+another directory \c{css}, which is expected to contain at least a single file,
+\c{style.css} which is the main file read by the CSS input.
+
+To make it easier to distribute these styles, a style can be packages into a
+\i{style package}. Style packages are .tar.gz archives using the \c{.unionstyle}
+as extension.
+
+To work with styles and style packages, Union comes with a command-line tool
+called \c{union-styletool}. It is recommended to use this tool to work with
+styles rather than trying to manipulate them manually.
+
+\section1 Creating a New Style
+
+\c{union-styletool create} will interactively create an empty style, with
+provided metadata. The style will be created in the current directory by default,
+but this can be customised with the \c{--output-path <output-path>} argument.
+
+A created style will always use the CSS input and have the following structure:
+
+\code
+<style id>/
+  contents/
+    css/
+      style.css
+    images/
+      README.md
+  metadata.json
+\endcode
+
+\c{metadata.json} contains the metadata provided when creating the style.
+
+The \c{contents/css/} directory contains a single \c{style.css} file which is
+read by the CSS input as entry point. It is recommended to not place any CSS
+rules in this file. Instead, you should create additional CSS files for the
+rules and place them next to \c{style.css}, then use the CSS \c{@import}
+directive to import them. This prevents the main \c{style.css} file from
+becoming too large and hard to work with.
+
+The \c{contents/images/} directory is used for any images your style uses. You
+can reference them from your CSS file as relative URLs like
+\c{url(../images/image.svg)}.
+
+To find out more about how to write CSS for a Union style, please refer to
+the \l{css-styling-applications.html}{Styling Applications with CSS} page.
+
+\section1 Installing, Uninstalling and Updating Styles
+
+After creating a style, you will need to install it for Union to be able to use
+it. You can install a style using the \c{union-styletool install} command, with
+the path to the style you want to install provided. This will install the style
+for the local user. This command supports both unpackaged and packaged styles.
+You can then select the style from your system's style selection page or, if you
+want to test a single application, you can use the
+\c{UNION_STYLE_NAME=<style id>} environment variable to override the system's
+style.
+
+Should you wish to uninstall the style again, you can use the
+\c{union-styletool uninstall} command. This will uninstall the style if it can
+be uninstalled. Note that system-provided styles cannot be uninstall by
+union-styletool and you will need to use your system's tools for that.
+
+Finally, if you have a new version of a style, use the
+\c{union-styletool update} command to update the style. This command will check
+if the style is installed, and if it is and a newer version has been provided,
+it will update it.
+
+\section1 Packaging a Style for Redistribution
+
+If you are happy with your style, you can use the \c{union-styletool package}
+command to package an existing style into a redistributable package that others
+can install. You can pass this command an ID of an installed style or the path
+to a style that is not installed. Once finished, the working directory will
+contain a file called \c{<style id>.unionstyle} that you can then redistribute.
+
+\section1 Other Commands
+
+\c{union-styletool} also has a \c{list} command which will list all installed
+styles and a \c{inspect} command to inspect whether a given style is a correct
+style.
+
+*/
