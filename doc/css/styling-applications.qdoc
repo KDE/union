@@ -6,23 +6,37 @@
 \page css-styling-applications.html
 \title Styling Applications with CSS
 
-\section1 Creating a New Style
+\section1 Getting Started Writing CSS
 
-To create a new style for Union's CSS input, you need to create a directory in a
-location where Union can find it. On Linux-based systems, this will usually be
-\c{~/.local/share/union/css/styles}. The name of the directory is used as an
-identifier for the style.
+Once you have \l{working-with-styles.html}{created a new style} you will have a
+directory containing, among others, a \c{style.css} file. This file is what
+Union will load. However, per the recommendations you should not add your style
+rules directly to that file. Instead, you should create separate files for
+different (groups of) elements and add your style rules there.
 
-That directory then needs to contain at least a single CSS file called
-\c{style.css}, which is the file Union will load to use the style. It is
-recommended to not place any style rules in \c{style.css}, but instead to split
-your rules up into multiple files and import them in \c{style.css} using
-\c{@import "file.css"}.
+For example, to add style rules for the Button element, you can create a file
+called \c{button.css}, in your style's \c{content/css/} directory, then add
+\c{@import "button.css"} to \c{style.css} and it will include the rules in
+\c{button.css} when loading the style.
 
-To use your new style, you will need to run your application with the
-environment variable \c{UNION_STYLE_NAME} set to the directory name of your
-style. This will be made easier in the future once there are more styles for
-Union to choose from.
+Then in your \c{button.css} file, you can add CSS rules like this:
+
+\code
+button
+{
+    width: 100px;
+    height: 32px;
+
+    background-color: white;
+    color: black;
+    border: 1px solid black;
+}
+\endcode
+
+This will result in all your buttons having a default size of 100px wide and
+32px tall, with a white background, black text and a black border around it. For
+details on which exact properties you can use within style rules, see the
+\l{css-properties.html}{Property reference}.
 
 \section1 What You Can and Cannot Style
 
@@ -41,9 +55,12 @@ that decides the layout of things. This means that, unless otherwise noted, you
 will not be able to control the position of elements. For sizes, the application
 is also in final control, but you \i{can} provide an initial size for most elements.
 
-The exception to this is that there are certain elements that consists of several
+The exception to this is that there are certain elements that consist of several
 sub-elements. Union is generally in control of the placement of these
 sub-elements, which allows you as style creator to influence them.
 
+In addition to these limitations, please also read the
+\l{css-support.html}{Supported CSS} to see what kind of properties are and are
+not supported.
 
 */

@@ -24,9 +24,10 @@ use.
 \section1 Creating Styles
 
 To create a new style for Union, please read
-\l{css-styling-applications.html}{Styling Applications with CSS}. Currently, the
-CSS input format is the main input format and it is recommended to use CSS to
-create new styles.
+\l{working-with-styles.html}{Working with Styles and Style Packages} regarding
+how to create a new style. Once you have a style, you can read
+\l{css-styling-applications.html}{Styling Applications with CSS} to get started
+writing CSS to style applications.
 
 \section1 Reference
 \list
