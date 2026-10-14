@@ -50,6 +50,7 @@ private:
     void updateSubElementList() override;
     void drawIndicator(QPainter *painter) const override;
     QStringList elementHints() const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionButton *m_buttonOption = nullptr;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;

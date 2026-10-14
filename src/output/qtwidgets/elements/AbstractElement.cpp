@@ -456,7 +456,7 @@ Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, con
             elementTypes = m_style->widgetToElementHierarchy(widget);
         }
     } else {
-        elementTypes = {styleOptionToElementName(opt)};
+        elementTypes = {fallbackElementName(opt)};
     }
 
     // Meld duplicate elements that appear next to each other
@@ -474,6 +474,11 @@ Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, con
         elements.append(createElement(elementType));
     }
     return elements;
+}
+
+QString AbstractElement::fallbackElementName(const QStyleOption *opt) const
+{
+    return styleOptionToElementName(opt);
 }
 
 Union::Properties::StylePropertyGroup *AbstractElement::queryProperties(const Union::ElementList &elements) const

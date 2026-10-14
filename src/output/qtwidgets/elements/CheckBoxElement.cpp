@@ -140,3 +140,10 @@ qreal CheckBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString CheckBoxElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    // QStyleOptionButton is also used by push buttons, so the option type would make this a Button
+    return ElementString::CheckBox;
+}

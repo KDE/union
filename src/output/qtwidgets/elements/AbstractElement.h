@@ -169,6 +169,12 @@ protected:
     virtual Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget, QStringList targetHierarchy = {}) const;
 
     /*!
+     * \brief The element name used by prepareElements() when there is no widget, such as when
+     * drawing for QtQuick. By default it is guessed from the style option type.
+     */
+    virtual QString fallbackElementName(const QStyleOption *opt) const;
+
+    /*!
      * \brief Queries the properties from list of elements. The properties match to the last element in the list,
      * inheriting anything it needs from its parents.
      */
