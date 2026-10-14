@@ -160,6 +160,8 @@ void TabElement::layout()
         subopt.rect = tabRect;
         m_layoutMap = layoutMap(m_backgroundElementList, &subopt, m_subElementList);
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
 

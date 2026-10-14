@@ -144,6 +144,8 @@ void MenuItemElement::layout()
         }
 
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 
     if (!m_shortcutText.isEmpty()) {

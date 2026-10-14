@@ -50,6 +50,9 @@ void TreeViewElement::layout()
     m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::TreeViewDelegate, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
+        m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
 

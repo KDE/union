@@ -53,6 +53,8 @@ void SplitterElement::layout()
     if (!m_backgroundElementList.isEmpty()) {
         m_backgroundProperties = queryProperties(m_backgroundElementList);
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
 
