@@ -215,7 +215,7 @@ QSGNode *Icon::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *)
 
 bool Icon::eventFilter(QObject *watched, QEvent *event)
 {
-    if (event->type() == QuickStyleUpdatedEvent::s_type) {
+    if (event->type() == QuickStyleUpdatedEvent::s_type || event->type() == QuickStyleColorsChangedEvent::s_type) {
         onControlIconChanged();
         return false;
     }
@@ -333,19 +333,36 @@ void Icon::onControlIconChanged()
 
     auto width = widthProperty.readOnGadget(data).toReal();
     auto height = heightProperty.readOnGadget(data).toReal();
+    auto name = nameProperty.readOnGadget(data).toString();
+    auto source = sourceProperty.readOnGadget(data).toUrl();
+    auto color = colorProperty.readOnGadget(data).value<QColor>();
 
-    if ((width <= 0 || height <= 0) && m_style->query()) {
+    if (m_style->query()) {
         auto properties = m_style->query()->properties();
         if (properties && properties->icon()) {
-            width = properties->icon()->width().value_or(0.0);
-            height = properties->icon()->height().value_or(0.0);
+            if (width <= 0 || height <= 0) {
+                width = properties->icon()->width().value_or(0.0);
+                height = properties->icon()->height().value_or(0.0);
+            }
+            if (name.isEmpty()) {
+                name = properties->icon()->name().value_or(QString{});
+            }
+            if (source.isEmpty()) {
+                source = properties->icon()->source().value_or(QUrl{});
+            }
+            if (color.alpha() == 0) {
+                color = properties->icon()->color().value_or(Union::Color{}).toQColor();
+            }
         }
     }
 
+    // Keep width and height bound on the control for custom contentItems that use
+    // control.icon to size their icons. Color also stays bound there as a workaround
+    // for QTBUG-151707 even though it can fall back here.
     setImplicitSize(width, height);
-    setName(nameProperty.readOnGadget(data).toString());
-    setSource(sourceProperty.readOnGadget(data).toUrl());
-    setColor(colorProperty.readOnGadget(data).value<QColor>());
+    setName(name);
+    setSource(source);
+    setColor(color);
 }
 
 // Helper for std::visit

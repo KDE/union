@@ -71,11 +71,9 @@ T.MenuItem {
     font: Union.Style.properties.text.font.qFont
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
     }
 
     implicitTextPadding: (checkable ? indicator.implicitWidth : 0) + (icon.name ? icon.width : 0) + (icon.name && checkable ? control.spacing * 2 : control.spacing)

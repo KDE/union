@@ -55,11 +55,9 @@ T.SwitchDelegate {
     spacing: Union.Style.properties.layout.spacing
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
     }
 
     Union.Positioner.positionItems: [indicator, contentItem]

@@ -73,11 +73,10 @@ T.TreeViewDelegate {
     text: model.display ?? ""
 
     icon {
-        color: Union.Style.properties.icon.color
+        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
         width: Union.Style.properties.icon.width
         height: Union.Style.properties.icon.height
         name: model.decoration ?? ""
-        source: Union.Style.properties.icon.source
     }
 
     Item {
