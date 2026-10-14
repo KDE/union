@@ -69,6 +69,8 @@ void MenuBarItemElement::layout()
         m_elementProperties = queryProperties(m_elementList);
         m_layoutMap = layoutMap(m_elementList, m_menuItemOption, m_subElementList);
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
 

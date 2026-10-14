@@ -47,5 +47,7 @@ void RubberBandElement::layout()
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
+    } else {
+        m_isValid = false;
     }
 }
