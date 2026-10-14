@@ -16,10 +16,10 @@ target_sources(UnionWidgetsStyle PRIVATE
         BackgroundDrawing.h
         BoxShadowRenderer.cpp
         BoxShadowRenderer.h
-        ShadowHelper.cpp
-        ShadowHelper.h
         MenuShadowHelper.cpp
         MenuShadowHelper.h
+        MDIShadowHelper.cpp
+        MDIShadowHelper.h
         SharedNames.h
         StyleUtils.cpp
         StyleUtils.h
