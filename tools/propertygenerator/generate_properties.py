@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 from typing import Optional, Type
 import re
+import hashlib
 
 import ruamel.yaml as yaml
 import jinja2
@@ -285,8 +286,14 @@ if __name__ == "__main__":
     parser = yaml.YAML()
     parser.Composer = PreserveAliasesComposer
 
+    properties_hash = ""
+
+    data = b""
     with open(base_directory / "properties.yml") as f:
-        structure = parser.compose(f)
+        data = f.read()
+
+    structure = parser.compose(data)
+    structure_hash = hashlib.sha256(data.encode())
 
     types = process_node(structure, "style", None, {}, "style")
 
@@ -320,6 +327,7 @@ if __name__ == "__main__":
 
     for name, type_definition in types.items():
         data = {field.name: getattr(type_definition, field.name) for field in dataclasses.fields(type_definition)}
+        data["properties_hash"] = structure_hash.hexdigest()
 
         type_name = type_definition.type
 

@@ -22,8 +22,10 @@ namespace fs = std::filesystem;
 // Matches this ascii:                   #  U  N  I  O  N  C  F
 static constexpr quint64 CacheMagic = 0x23'55'4E'49'4F'55'43'46;
 // Version of the cache file. Increase this whenever there are changes to the
-// underlying data structures.
-static constexpr uint32_t CacheVersion = 6;
+// way the cache is structured. We include a hash of the properties.yml file
+// that is used to generate the data model so changes to that file do not need
+// to bump the cache version.
+static constexpr uint32_t CacheVersion = 7;
 
 class StyleCache::Private
 {
@@ -97,6 +99,14 @@ std::unique_ptr<StylePrivate> StyleCache::load(const fs::path &path) const
 
     if (version != CacheVersion) {
         qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "version mismatch";
+        return nullptr;
+    }
+
+    QString propertiesHash;
+    reader >> propertiesHash;
+
+    if (propertiesHash != Properties::StylePropertyGroup::dataModelHash()) {
+        qCDebug(UNION_GENERAL) << "Ignoring cache for style" << path.string() << "data model mismatch";
         return nullptr;
     }
 
@@ -178,6 +188,7 @@ bool Union::StyleCache::save(const StylePrivate *style) const
 
     writer << CacheMagic;
     writer << CacheVersion;
+    writer << Properties::StylePropertyGroup::dataModelHash();
 
     writer << style->path;
 

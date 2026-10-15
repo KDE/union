@@ -254,6 +254,11 @@ public:
      */
     static std::unique_ptr<StylePropertyGroup> empty();
 
+    /*!
+     * SHA256 of the data model file that this was generated from.
+     */
+    static QString dataModelHash();
+
 private:
     std::unique_ptr<StylePropertyGroupPrivate> d;
 };

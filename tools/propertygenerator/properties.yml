@@ -774,3 +774,17 @@ children:
                 doc: |
                     The amount of blur to use for the shadow. Increasing this will increase how smooth the shadow
                     goes from fully transparent to the full shadow color.
+
+extra_code:
+    "property.h.j2":
+        public: |4
+                /*!
+                 * SHA256 of the data model file that this was generated from.
+                 */
+                static QString dataModelHash();
+    "property.cpp.j2":
+        global: |4
+            QString {{ type }}::dataModelHash()
+            {
+                return u"{{ properties_hash }}"_s;
+            }

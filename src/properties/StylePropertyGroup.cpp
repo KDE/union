@@ -415,6 +415,11 @@ std::unique_ptr<StylePropertyGroup> StylePropertyGroup::empty()
     return result;
 }
 
+QString StylePropertyGroup::dataModelHash()
+{
+    return u"23772a82841b2a331a41075be7b331569949c508cb40ddd7f1bb0fbfbaa45b64"_s;
+}
+
 bool Union::Properties::operator==(const StylePropertyGroup &left, const StylePropertyGroup &right)
 {
     if (left.display() && right.display()) {
