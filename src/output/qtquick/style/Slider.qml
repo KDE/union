@@ -8,6 +8,7 @@ import QtQuick
 import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
+import org.kde.kirigami as Kirigami
 import org.kde.union.impl as Union
 
 T.Slider {
@@ -29,7 +30,7 @@ T.Slider {
 
     hoverEnabled: Application.styleHints.useHoverEffects
     snapMode: T.Slider.SnapOnRelease
-    wheelEnabled: true
+    wheelEnabled: Kirigami.StyleHints.scrollingModifiesControls
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitHandleWidth + leftPadding + rightPadding)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitHandleHeight + topPadding + bottomPadding)

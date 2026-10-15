@@ -6,6 +6,7 @@ pragma ComponentBehavior: Bound
 import QtQuick
 import QtQuick.Templates as T
 
+import org.kde.kirigami as Kirigami
 import org.kde.union.impl as Union
 
 T.ComboBox {
@@ -29,7 +30,7 @@ T.ComboBox {
     Union.Positioner.positionItems: [contentItem, icon, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
-    wheelEnabled: true
+    wheelEnabled: Kirigami.StyleHints.scrollingModifiesControls
 
     implicitWidth: {
         let contentWidth = implicitContentWidth + leftPadding + rightPadding

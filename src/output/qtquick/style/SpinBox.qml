@@ -6,6 +6,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
 
+import org.kde.kirigami as Kirigami
 import org.kde.union.impl as Union
 
 T.SpinBox {
@@ -42,7 +43,7 @@ T.SpinBox {
     font: Union.Style.properties.text.font.qFont
 
     editable: true
-    wheelEnabled: true
+    wheelEnabled: Kirigami.StyleHints.scrollingModifiesControls
 
     Union.Positioner.positionItems: [
         contentItem,

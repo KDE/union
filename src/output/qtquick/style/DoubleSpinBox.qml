@@ -7,6 +7,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
 
+import org.kde.kirigami
 import org.kde.union.impl as Union
 
 T.DoubleSpinBox {
@@ -43,7 +44,7 @@ T.DoubleSpinBox {
     font: Union.Style.properties.text.font.qFont
 
     editable: true
-    wheelEnabled: true
+    wheelEnabled: Kirigami.StyleHints.scrollingModifiesControls
 
     Union.Positioner.positionItems: [
         contentItem,

@@ -25,6 +25,7 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
     m_smoothScroll = generalCfg.readEntry(u"SmoothScroll"_s, true);
     m_animationSpeedMultiplier = std::max<double>(0.0, generalCfg.readEntry(u"AnimationDurationFactor"_s, 1.0));
     m_defaultStyle = generalCfg.readEntry(u"unionStyle"_s, DefaultStyleId);
+    m_scrollingModifiesControls = generalCfg.readEntry(u"ScrollingModifiesControls"_s, false);
 
     connect(m_kdeGlobalsWatcher.data(), &KConfigWatcher::configChanged, this, [this](const KConfigGroup &group, const QByteArrayList &names) {
         if (group.name() == "KDE"_L1) {
@@ -38,6 +39,10 @@ PlasmaPlatformPlugin::PlasmaPlatformPlugin(QObject *parent)
 
             if (names.contains("unionStyle"_ba)) {
                 setDefaultStyle(group.readEntry(u"unionStyle"_s, DefaultStyleId));
+            }
+
+            if (names.contains("ScrollingModifiesControls"_ba)) {
+                setScrollingModifiesControls(group.readEntry(u"ScrollingModifiesControls"_s, false));
             }
         }
     });
@@ -98,6 +103,21 @@ void PlasmaPlatformPlugin::setSmoothScroll(bool enabled)
 
     m_smoothScroll = enabled;
     Q_EMIT smoothScrollChanged();
+}
+
+bool PlasmaPlatformPlugin::scrollingModifiesControls()
+{
+    return m_scrollingModifiesControls;
+}
+
+void PlasmaPlatformPlugin::setScrollingModifiesControls(bool modifies)
+{
+    if (modifies == m_scrollingModifiesControls) {
+        return;
+    }
+
+    m_scrollingModifiesControls = modifies;
+    Q_EMIT scrollingModifiesControlsChanged();
 }
 
 qreal PlasmaPlatformPlugin::animationSpeedMultiplier()

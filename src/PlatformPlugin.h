@@ -66,6 +66,17 @@ public:
      */
     Q_SIGNAL void smoothScrollChanged();
     /*!
+     * Returns whether scrolling while hovering a (non-view) control changes that
+     * control's value on this platform.
+     *
+     * Defaults to false
+     */
+    virtual bool scrollingModifiesControls();
+    /*!
+     * Emitted whenever smoothScroll changes.
+     */
+    Q_SIGNAL void scrollingModifiesControlsChanged();
+    /*!
      * Returns a multiplier to globally change the animation speed.
      *
      * This value should be used with animation speeds to ensure a platform's

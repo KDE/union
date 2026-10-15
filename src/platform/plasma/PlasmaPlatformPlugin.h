@@ -21,14 +21,18 @@ public:
 
     bool smoothScroll() override;
 
+    bool scrollingModifiesControls() override;
+
     qreal animationSpeedMultiplier() override;
 
 private:
     Q_SLOT void setSmoothScroll(bool enabled);
+    void setScrollingModifiesControls(bool modifies);
     void setAnimationSpeedMultiplier(qreal multiplier);
     void setDefaultStyle(const QString &style);
 
     bool m_smoothScroll = true;
+    bool m_scrollingModifiesControls = false;
     qreal m_animationSpeedMultiplier = 1.0;
     QString m_defaultStyle;
     KConfigWatcher::Ptr m_kdeGlobalsWatcher;
