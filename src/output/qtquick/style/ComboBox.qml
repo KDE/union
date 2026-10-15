@@ -32,7 +32,7 @@ T.ComboBox {
     Union.Positioner.positionItems: [contentItem, icon, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
-    wheelEnabled: true
+    wheelEnabled: Union.StyleHints.scrollingModifiesControls
 
     implicitWidth: {
         let contentWidth = implicitContentWidth + leftPadding + rightPadding

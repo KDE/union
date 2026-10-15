@@ -118,6 +118,20 @@ void StyleHints::setSpellCheckEnabled(const bool &enabled)
     }
 }
 
+bool StyleHints::scrollingModifiesControls() const
+{
+    return m_scrollingModifiesControls;
+}
+
+void StyleHints::setScrollingModifiesControls(const bool &enabled)
+{
+    if (m_scrollingModifiesControls != enabled) {
+        m_scrollingModifiesControls = enabled;
+        update();
+        Q_EMIT scrollingModifiesControlsChanged();
+    }
+}
+
 qreal StyleHints::animationSpeedMultiplier()
 {
     return StyleRegistry::instance()->platform()->animationSpeedMultiplier();

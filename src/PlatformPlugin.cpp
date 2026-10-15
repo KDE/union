@@ -45,6 +45,11 @@ bool PlatformPlugin::smoothScroll()
     return true;
 }
 
+bool PlatformPlugin::scrollingModifiesControls()
+{
+    return false;
+}
+
 qreal PlatformPlugin::animationSpeedMultiplier()
 {
     return 1.0;

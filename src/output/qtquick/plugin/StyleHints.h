@@ -116,6 +116,16 @@ public:
     Q_SIGNAL void animationSpeedMultiplierChanged();
 
     /*!
+     * \qmlattachedproperty bool StyleHints::SpellCheckEnabled
+     *
+     * Corresponds to `Kirigami.scrollingModifiesControls`. If set to
+     */
+    Q_PROPERTY(bool scrollingModifiesControls READ scrollingModifiesControls NOTIFY scrollingModifiesControlsChanged)
+    bool scrollingModifiesControls() const;
+    void setScrollingModifiesControls(const bool &enabled);
+    Q_SIGNAL void scrollingModifiesControlsChanged();
+
+    /*!
      * \qmlattachedsignal StyleHints::updated
      *
      * Emitted whenever something in StyleHints changes.
@@ -133,6 +143,7 @@ private:
     bool m_useAlternatingColors = false;
     bool m_showFramedBackground = false;
     bool m_spellCheckEnabled = false;
+    bool m_scrollingModifiesControls = false;
 
     int m_tickMarkStepSize = 0;
     QString m_iconName;

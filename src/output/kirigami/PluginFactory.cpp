@@ -9,6 +9,7 @@
 
 #include "PlatformTheme.h"
 #include "Units.h"
+#include <StyleRegistry.h>
 
 class KirigamiStyleHints : public Kirigami::Platform::StyleHints
 {
@@ -17,6 +18,8 @@ public:
         : Kirigami::Platform::StyleHints(parent)
     {
         m_unionStyleHints = static_cast<Union::Quick::StyleHints *>(qmlAttachedPropertiesObject<Union::Quick::StyleHints>(parent));
+        auto platform = Union::StyleRegistry::instance()->platform();
+        setScrollingModifiesControls(Union::StyleRegistry::instance()->platform()->scrollingModifiesControls());
     }
 
     void propertyChanged(ChangedProperty change) override
@@ -40,6 +43,9 @@ public:
             break;
         case ChangedProperty::IconSource:
             m_unionStyleHints->setIconSource(iconSource());
+            break;
+        case ChangedProperty::ScrollingModifiesControls:
+            m_unionStyleHints->setScrollingModifiesControls(scrollingModifiesControls());
             break;
         }
     }

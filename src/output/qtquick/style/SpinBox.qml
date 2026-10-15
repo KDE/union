@@ -45,7 +45,7 @@ T.SpinBox {
     font: Union.Style.properties.text.font.qFont
 
     editable: true
-    wheelEnabled: true
+    wheelEnabled: Union.StyleHints.scrollingModifiesControls
 
     Union.Positioner.positionItems: [
         contentItem,
