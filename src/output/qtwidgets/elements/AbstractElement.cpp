@@ -5,7 +5,6 @@
 #include "SharedNames.h"
 #include "UnionStyle.h"
 #include "qtwidgets_logging.h"
-#include <ElementQuery.h>
 #include <QApplication>
 #include <QDebug>
 #include <QPainter>
@@ -20,6 +19,7 @@ AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *s
     , m_styleOption(option)
     , m_style(style)
     , m_widget(widget)
+    , m_elementQuery(std::make_unique<Union::ElementQuery>(Union::StyleRegistry::instance()->defaultStyle()))
 {
 }
 
@@ -485,11 +485,10 @@ QString AbstractElement::fallbackElementName(const QStyleOption *opt) const
 Union::Properties::StylePropertyGroup *AbstractElement::queryProperties(const Union::ElementList &elements) const
 {
     Q_ASSERT(!elements.isEmpty());
-    const auto style = Union::StyleRegistry::instance()->defaultStyle();
-    const auto query = std::make_unique<Union::ElementQuery>(style);
-    query->setElements(elements);
-    query->execute();
-    return query->properties();
+
+    m_elementQuery->setElements(elements);
+    m_elementQuery->execute();
+    return m_elementQuery->properties();
 }
 
 QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElementList) const

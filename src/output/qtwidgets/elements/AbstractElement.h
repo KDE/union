@@ -6,6 +6,7 @@
 #include "BackgroundDrawing.h"
 #include "StyleUtils.h"
 #include "qtwidgets_logging.h"
+#include <ElementQuery.h>
 #include <QIcon>
 #include <QObject>
 #include <QStyleOption>
@@ -262,6 +263,7 @@ private:
     LayoutBucket createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const;
     QRectF resizeBucket(const LayoutBucket &bucket) const;
     void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
+    std::unique_ptr<Union::ElementQuery> m_elementQuery;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractElement::AbstractElementFlags);
