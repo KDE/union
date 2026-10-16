@@ -100,7 +100,7 @@ void ProgressBarElement::layout()
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_progressBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_progressBarOption, m_subElementList);
     }
 
     m_contentElementList = prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Track});

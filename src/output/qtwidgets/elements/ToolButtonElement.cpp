@@ -55,12 +55,12 @@ void ToolButtonElement::layout()
     m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_indicatorMap = layoutMap(m_elementList, m_styleOption, {ElementString::Indicator});
+        m_indicatorMap = layoutMap(m_styleOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
         auto subopt = *m_toolButtonOption;
         subopt.rect = m_mainButtonRect.toRect();
-        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(&subopt, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

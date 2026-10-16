@@ -38,7 +38,7 @@ void ScrollBarElement::layout()
     m_elementList = prepareElements(m_scrollBarOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_scrollBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_scrollBarOption, m_subElementList);
     }
 
     m_indicatorElementList = prepareElements(m_scrollBarOption, m_widget, {ElementString::Handle});

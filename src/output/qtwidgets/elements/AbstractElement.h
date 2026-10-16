@@ -188,7 +188,7 @@ protected:
      * Text, Icon and Indicator are the items to be layouted within the button container.
      * Currently only one container is used, which is the rectangle of the parent of the subElements.
      */
-    virtual QMap<QString, LayoutItem> layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElements) const;
+    virtual QMap<QString, LayoutItem> layoutMap(const QStyleOption *opt, const QStringList &subElements) const;
 
     virtual QMarginsF padding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
