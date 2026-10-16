@@ -49,4 +49,10 @@ private:
     const QStyleOption *m_indicatorOption = nullptr;
 
     void drawElement(QPainter *painter, const QString &defaultIconName, QStringList targetHierarchy) const;
+    int m_listViewIconSize = 0;
+    int m_smallIconSize = 0;
+    int m_iconViewIconSize = 0;
+    int m_largeIconSize = 0;
+    int m_messageBoxIconSize = 0;
+    int m_textCursorWidth = 0;
 };
