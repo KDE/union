@@ -55,6 +55,8 @@ private:
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;
     bool m_isStatic;
+    int m_hSpace;
+    int m_vSpace;
     int hSpace() const;
     int vSpace() const;
 };
