@@ -6,6 +6,7 @@
 #include "BackgroundDrawing.h"
 #include "StyleUtils.h"
 #include "qtwidgets_logging.h"
+#include <ElementQuery.h>
 #include <QIcon>
 #include <QObject>
 #include <QStyleOption>
@@ -250,6 +251,8 @@ private:
 
     // If given property is null, return m_elementProperties
     Union::Properties::StylePropertyGroup *defaultPropertyGroup(Union::Properties::StylePropertyGroup *properties) const;
+
+    std::unique_ptr<Union::ElementQuery> m_elementQuery;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractElement::AbstractElementFlags);
