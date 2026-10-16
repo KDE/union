@@ -42,7 +42,7 @@ void FrameElement::layout()
     m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
     }
     if (m_elementProperties) {
         m_isValid = true;

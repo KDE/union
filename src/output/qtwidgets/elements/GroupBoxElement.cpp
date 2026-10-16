@@ -81,7 +81,7 @@ void GroupBoxElement::layout()
     m_elementList = prepareElements(m_groupBoxOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_groupBoxOption, m_subElementList);
+        m_layoutMap = layoutMap(m_groupBoxOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

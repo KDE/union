@@ -114,7 +114,7 @@ void TitleBarElement::layout()
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_titleBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_titleBarOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

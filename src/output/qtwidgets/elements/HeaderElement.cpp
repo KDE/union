@@ -61,7 +61,7 @@ void HeaderElement::layout()
     m_elementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_headerOption, m_subElementList);
+        m_layoutMap = layoutMap(m_headerOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

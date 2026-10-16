@@ -80,7 +80,7 @@ void ToolBoxTabElement::layout()
     m_elementList = prepareElements(m_toolBoxOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_toolBoxOption, m_subElementList);
+        m_layoutMap = layoutMap(m_toolBoxOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

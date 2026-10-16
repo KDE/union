@@ -134,7 +134,7 @@ void MenuItemElement::layout()
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_menuItemOption, m_subElementList);
+        m_layoutMap = layoutMap(m_menuItemOption, m_subElementList);
 
         // IconRect in MenuItemElements are the maximum size by default.
         // Instead center the icon rectangle within the maximum size rect.

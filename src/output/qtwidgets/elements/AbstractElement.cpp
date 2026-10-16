@@ -97,7 +97,7 @@ void AbstractElement::layout()
     m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -485,30 +485,35 @@ Union::Properties::StylePropertyGroup *AbstractElement::queryProperties(const Un
 {
     Q_ASSERT(!elements.isEmpty());
 
-    m_elementQuery->setElements(elements);
+    if (m_elementQuery->elements() != elements) {
+        m_elementQuery->setElements(elements);
+    }
     m_elementQuery->execute();
     return m_elementQuery->properties();
 }
 
-QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &elements, const QStyleOption *opt, const QStringList &subElementList) const
+QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, const QStringList &subElementList) const
 {
     QMap<QString, LayoutItem> map;
     QList<LayoutItem> items;
     QStringList subElements = subElementList;
 
+    if (!m_elementProperties || m_elementList.isEmpty()) {
+        return map;
+    }
     // If subelement list is empty, just use default widget item.
     // This ensures any custom components get layouted too.
     if (subElements.empty()) {
-        qCDebug(UNION_QTWIDGETS) << "No sublements given, using Widget placeholder for" << elements << opt->type << opt->styleObject;
+        qCDebug(UNION_QTWIDGETS) << "No sublements given, using Widget placeholder for" << opt->type << opt->styleObject;
         subElements = {ElementString::Widget};
     }
 
     // Setup the container rectangle
-    auto properties = queryProperties(elements);
+    auto properties = m_elementProperties;
+    auto currentHierarchy = m_elementList;
     QRectF availableSpace = backgroundRectangle(opt, properties);
     QMarginsF padding = safePropertyLookup(properties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
     availableSpace = availableSpace.marginsRemoved(padding);
-    auto currentHierarchy = elements;
 
     // Prepare all subelements
     for (const auto &subElement : subElements) {

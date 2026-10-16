@@ -162,7 +162,7 @@ void TabElement::layout()
 
         auto subopt = *m_tabOption;
         subopt.rect = tabRect;
-        m_layoutMap = layoutMap(m_elementList, &subopt, m_subElementList);
+        m_layoutMap = layoutMap(&subopt, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

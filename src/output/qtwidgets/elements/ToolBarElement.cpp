@@ -64,7 +64,7 @@ void ToolBarElement::layout()
     m_elementList = prepareElements(m_toolBarOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_toolBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_toolBarOption, m_subElementList);
     }
 
     m_handleElementList = prepareElements(m_styleOption, m_widget, {ElementString::Handle});

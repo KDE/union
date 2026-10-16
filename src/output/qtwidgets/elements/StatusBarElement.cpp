@@ -55,7 +55,7 @@ void StatusBarElement::layout()
     m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_elementList, m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
     }
 
     m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);
