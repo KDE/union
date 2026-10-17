@@ -87,8 +87,12 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
 
     const QPalette activePalette = m_styleOption->palette;
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
-    auto iconSize = m_styleOption->rect.size();
-    const QPixmap pixmap = icon.pixmap(iconSize, dpr, enabled ? QIcon::Normal : QIcon::Disabled);
+    QSize iconSize = size.toSize().boundedTo(m_styleOption->rect.size());
+    if (iconSize.isEmpty()) {
+        iconSize = m_styleOption->rect.size();
+    }
+    const int side = std::min(iconSize.width(), iconSize.height());
+    const QPixmap pixmap = icon.pixmap(QSize(side, side), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
 
     painter->save();
     auto rect = centerRect(m_styleOption->rect, size.width(), size.height());
