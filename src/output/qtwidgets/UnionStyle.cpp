@@ -652,8 +652,10 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
         return false;
     case SH_ScrollBar_LeftClickAbsolutePosition:
         return true;
+    // Accelerator underlines follow the Alt key in text that is not drawn through drawItemText() as well, such as
+    // selectable labels.
     case SH_UnderlineShortcut:
-        return true;
+        return m_showMnemonics;
     default:
         return QCommonStyle::styleHint(hint, option, widget, returnData);
     }
