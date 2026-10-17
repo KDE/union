@@ -653,7 +653,7 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
     case SH_ScrollBar_LeftClickAbsolutePosition:
         return true;
     case SH_UnderlineShortcut:
-        return true;
+        return m_showMnemonics;
     default:
         return QCommonStyle::styleHint(hint, option, widget, returnData);
     }
