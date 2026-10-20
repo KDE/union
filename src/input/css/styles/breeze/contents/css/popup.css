@@ -163,8 +163,7 @@ menubaritem
 {
     width: var(--medium-element-size);
     height: var(--medium-element-size);
-    padding: var(--small-spacing);
-    spacing: var(--small-spacing);
+    padding: var(--large-spacing) var(--medium-spacing);
 
     border-radius: var(--corner-radius);
 
