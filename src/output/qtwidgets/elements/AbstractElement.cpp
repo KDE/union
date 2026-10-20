@@ -501,7 +501,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
     // If subelement list is empty, just use default widget item.
     // This ensures any custom components get layouted too.
     if (subElements.empty()) {
-        qCDebug(UNION_QTWIDGETS) << "No sublements given, using Widget placeholder for" << elements << opt->type << opt->styleObject;
+        qCDebug(UNION_QTWIDGETS) << "No subelements given, using Widget placeholder for" << elements;
         subElements = {ElementString::Widget};
     }
 
