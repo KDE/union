@@ -53,7 +53,7 @@ KT.Chip {
 
     spacing: Union.Style.properties.layout.spacing
 
-    opacity: Union.Style.properties.display.opacity
+    opacity: Union.Style.properties.display.opacity ?? 1.0
 
     icon {
         color: palette.buttonText
