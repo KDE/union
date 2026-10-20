@@ -73,13 +73,18 @@ itemviewitem
         text-wrap-mode: no-wrap;
     }
 
-    &.inside-list {
-        &.hover-enabled {
+    &.inside-list.hover-enabled {
+        &:hovered,
+        &:active-focus,
+        &:pressed,
+        &:highlighted
+        {
             inset: var(--delegate-spacing);
             inset-bottom: 0px;
             border-radius: var(--corner-radius);
 
             &.last-in-list {
+                padding-bottom: var(--delegate-total-padding);
                 inset-bottom: var(--delegate-spacing);
             }
         }
