@@ -72,7 +72,13 @@ T.TextArea {
         renderType: control.renderType
     }
 
-    background: Union.StyledRectangle {}
+    background: Union.StyledRectangle {
+        // Controls TextArea will reparent the background to the parent if the
+        // parent is a flickable. This then results in the background losing the
+        // relation to the main TextArea. Ensure we read the right properties
+        // for the background regardless of the parent.
+        style: control.Union.Style
+    }
 
     T.ContextMenu.menu: P.TextFieldContextMenu {
         target: control
