@@ -162,6 +162,7 @@ scrollview {
 
     &.framed-background
     {
+        padding: 1px;
         background-color: var(--view-background-color);
         border: 1px solid var(--view-border-color);
         border-radius: var(--corner-radius);
@@ -309,7 +310,6 @@ groupbox {
     spacing: var(--small-spacing);
     width: 200px;
 }
-
 
 dockwidget {
     width: var(--small-element-size);
