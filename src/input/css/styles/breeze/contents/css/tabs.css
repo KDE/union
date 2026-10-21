@@ -201,6 +201,11 @@ tabbutton.immutable
         border-radius: 0px;
     }
 
+    &:hovered
+    {
+        background-color: var(--button-active-highlight-color);
+    }
+
     &:checked
     {
         background-color: var(--highlight-hover-color);
