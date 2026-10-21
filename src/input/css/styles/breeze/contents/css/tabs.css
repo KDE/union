@@ -32,6 +32,7 @@ tabbutton {
 
     text-wrap-mode: no-wrap;
 
+    layout-alignment: content fill fill 0;
     icon-alignment: content start center 0;
     text-alignment: content center center 0;
 
