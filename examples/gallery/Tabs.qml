@@ -20,9 +20,7 @@ Kirigami.Page {
     header: Controls.TabBar {
         id: tabBarHeader
 
-        property bool immutable: true
-
-        Union.Element.hints: Union.ElementHint { name: "immutable"; when: tabBarHeader.immutable }
+        Union.Element.hints: Union.ElementHint { name: "immutable"; when: immutableCheck.checked }
 
         Controls.TabButton {
             text: "First"
@@ -37,8 +35,9 @@ Kirigami.Page {
 
     ColumnLayout {
         Controls.CheckBox {
+            id: immutableCheck
             text: "Immutable"
-            onToggled: tabBarHeader.immutable = checked
+            checked: true
         }
 
         RowLayout {
