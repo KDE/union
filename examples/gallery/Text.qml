@@ -82,6 +82,16 @@ Kirigami.Page {
             placeholderText: "Disabled Text Area"
         }
 
+        Controls.ScrollView {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 200
+
+            Controls.TextArea {
+                placeholderText: "Tell us more about the crash…"
+                wrapMode: Text.Wrap
+            }
+        }
+
         Controls.SpinBox {
             from: 0
             to: 1000
