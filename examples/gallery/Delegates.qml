@@ -138,6 +138,32 @@ Kirigami.Page {
             }
         }
 
+        Controls.ScrollView {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 100
+
+            Kirigami.StyleHints.showFramedBackground: true
+
+            ListView {
+                model: 10
+                clip: true
+
+                delegate: Controls.ItemDelegate {
+                    required property int index
+                    required property var modelData
+
+                    width: ListView.view.width
+
+                    Kirigami.StyleHints.useAlternateBackgroundColor: true
+                    text: "Item " + modelData
+
+                    highlighted: ListView.isCurrentItem
+
+                    onClicked: ListView.view.currentIndex = index
+                }
+            }
+        }
+
         Item {
             Layout.fillHeight: true
         }
