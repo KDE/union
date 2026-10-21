@@ -33,7 +33,7 @@ T.ComboBox {
 
     implicitWidth: {
         let contentWidth = implicitContentWidth + leftPadding + rightPadding
-        if (indicator.visible) {
+        if (indicator && indicator.visible) {
             contentWidth += spacing + implicitIndicatorWidth
         }
         if (icon.visible) {
