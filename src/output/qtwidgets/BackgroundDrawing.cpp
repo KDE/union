@@ -26,6 +26,8 @@ void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Un
         return;
     }
 
+    painter->save();
+
     QRectF rect = mainRect;
     // Remove any insets we may have, we do not want to draw them
     if (style->layout() && style->layout()->inset()) {
@@ -190,6 +192,8 @@ void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Un
             }
         }
     }
+
+    painter->restore();
 }
 
 QPainterPath unevenRadiiRectPath(const QRectF &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii)
@@ -300,9 +304,11 @@ void drawLineProperty(QPainter *painter,
     }
 
     if (auto color = line->color()) {
+        painter->save();
         painter->setPen(Qt::transparent);
         painter->setBrush(color.value().toQColor());
         painter->drawRect(lineRect);
+        painter->restore();
     }
 }
 
@@ -326,8 +332,8 @@ void drawCornerProperty(QPainter *painter,
     QColor startColor = Qt::transparent;
     QColor endColor = Qt::transparent;
 
-    painter->setPen(Qt::transparent);
     painter->save();
+    painter->setPen(Qt::transparent);
 
     switch (subNodeIndex) {
     case SubNodeIndex::TopLeft: {
