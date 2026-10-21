@@ -623,7 +623,8 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
     case SH_Menu_SupportsSections:
         return true;
     case SH_Widget_Animation_Duration:
-        return 150;
+        // 0 when the animation speed is set to instantaneous, which turns the animations off.
+        return qRound(150 * Union::StyleRegistry::instance()->platform()->animationSpeedMultiplier());
     case SH_DialogButtonBox_ButtonsHaveIcons:
         return true;
     case SH_GroupBox_TextLabelVerticalAlignment:
