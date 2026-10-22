@@ -35,5 +35,6 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionRubberBand *m_rubberBandOption = nullptr;
 };

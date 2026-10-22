@@ -305,3 +305,8 @@ qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString TabElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::Tab;
+}

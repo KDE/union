@@ -123,3 +123,8 @@ int TabBarElement::styleHint(QStyle::StyleHint styleHint) const
     }
     return 0;
 }
+
+QString TabBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::TabBar;
+}

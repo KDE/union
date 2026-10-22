@@ -48,6 +48,7 @@ private:
     void drawSubMenuArrow(QPainter *painter) const;
     void updateSubElementList() override;
     Union::Element::States elementStates() const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionMenuItem *m_menuItemOption = nullptr;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties;

@@ -39,6 +39,6 @@ public:
 
     void update() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
-
+    QString fallbackElementName(const QStyleOption *opt) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 };

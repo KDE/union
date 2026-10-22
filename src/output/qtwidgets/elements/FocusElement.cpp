@@ -73,3 +73,8 @@ qreal FocusElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString FocusElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::FocusFrame;
+}

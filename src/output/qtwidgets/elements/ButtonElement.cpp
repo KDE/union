@@ -162,3 +162,8 @@ qreal ButtonElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString ButtonElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::Button;
+}

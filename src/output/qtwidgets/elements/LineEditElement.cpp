@@ -124,3 +124,8 @@ qreal LineEditElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString LineEditElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::TextField;
+}

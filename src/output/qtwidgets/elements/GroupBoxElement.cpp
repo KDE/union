@@ -160,3 +160,8 @@ QStringList GroupBoxElement::elementHints() const
     }
     return hints;
 }
+
+QString GroupBoxElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::GroupBox;
+}

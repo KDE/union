@@ -342,3 +342,8 @@ QRectF FrameElement::subElementRect(QStyle::SubElement element) const
     }
     return rect;
 }
+
+QString FrameElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::Frame;
+}

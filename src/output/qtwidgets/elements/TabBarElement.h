@@ -44,6 +44,7 @@ public:
     QStringList elementHints() const override;
 
 private:
+    QString fallbackElementName(const QStyleOption *opt) const override;
     void drawBackground(QPainter *painter) const override;
     const QStyleOptionTabBarBase *m_tabBarOption = nullptr;
     qreal scrollButtonWidth() const;

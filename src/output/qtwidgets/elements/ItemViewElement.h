@@ -53,6 +53,7 @@ private:
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;
     const QStyleOptionViewItem *m_viewItemOption = nullptr;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
     qreal m_totalSpacing = 0;
