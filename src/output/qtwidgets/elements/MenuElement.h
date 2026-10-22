@@ -36,7 +36,7 @@ public:
     MenuElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
@@ -44,5 +44,4 @@ public:
 private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOption *m_menuOption = nullptr;
 };

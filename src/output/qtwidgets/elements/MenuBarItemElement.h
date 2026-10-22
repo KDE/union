@@ -33,7 +33,7 @@ public:
     MenuBarItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuBarItemElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void layout() override;
 
@@ -41,5 +41,5 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionMenuItem *m_menuItemOption = nullptr;
+    QStyleOptionMenuItem m_menuItemOption;
 };

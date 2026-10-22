@@ -14,17 +14,17 @@ using namespace Qt::StringLiterals;
 
 StatusBarElement::StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_statusBarOption(option)
 {
-    update();
+    update(option);
 }
 
 StatusBarElement::~StatusBarElement()
 {
 }
 
-void StatusBarElement::update()
+void StatusBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     updateSubElementList();
     layout();
 }
@@ -52,13 +52,13 @@ void StatusBarElement::updateSubElementList()
 void StatusBarElement::layout()
 {
     // Background and content (items inside statusbar) is separate
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_styleOption, m_subElementList);
     }
 
-    m_contentElementList = prepareElements(m_styleOption, m_widget, m_subElementList);
+    m_contentElementList = prepareElements(&m_styleOption, m_widget, m_subElementList);
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
@@ -70,7 +70,7 @@ void StatusBarElement::layout()
 
 void StatusBarElement::drawItem(QPainter *painter) const
 {
-    drawBackgroundRectangle(painter, m_statusBarOption->rect, m_contentProperties);
+    drawBackgroundRectangle(painter, m_styleOption.rect, m_contentProperties);
 }
 
 QString StatusBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

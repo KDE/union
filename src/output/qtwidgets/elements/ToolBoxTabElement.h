@@ -34,7 +34,7 @@ public:
     ToolBoxTabElement(const QStyleOptionToolBox *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolBoxTabElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
@@ -43,5 +43,5 @@ public:
 private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionToolBox *m_toolBoxOption = nullptr;
+    QStyleOptionToolBox m_toolBoxOption;
 };

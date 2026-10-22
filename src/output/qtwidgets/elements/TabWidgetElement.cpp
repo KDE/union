@@ -13,17 +13,18 @@ using namespace Qt::StringLiterals;
 
 TabWidgetElement::TabWidgetElement(const QStyleOptionTabWidgetFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_tabFrameOption(option)
 {
-    update();
+    update(option);
 }
 
 TabWidgetElement::~TabWidgetElement()
 {
 }
 
-void TabWidgetElement::update()
+void TabWidgetElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_tabFrameOption = updateStyleOption<QStyleOptionTabWidgetFrame>(option);
     layout();
 }
 
@@ -42,13 +43,10 @@ void TabWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 QVariantMap TabWidgetElement::elementAttributes() const
 {
     QVariantMap map;
-    if (!m_tabFrameOption) {
-        return map;
-    }
-    const bool top = m_tabFrameOption->shape == QTabBar::RoundedNorth || m_tabFrameOption->shape == QTabBar::TriangularNorth;
-    const bool bottom = m_tabFrameOption->shape == QTabBar::RoundedSouth || m_tabFrameOption->shape == QTabBar::TriangularSouth;
-    const bool left = m_tabFrameOption->shape == QTabBar::RoundedWest || m_tabFrameOption->shape == QTabBar::TriangularWest;
-    const bool right = m_tabFrameOption->shape == QTabBar::RoundedEast || m_tabFrameOption->shape == QTabBar::TriangularEast;
+    const bool top = m_tabFrameOption.shape == QTabBar::RoundedNorth || m_tabFrameOption.shape == QTabBar::TriangularNorth;
+    const bool bottom = m_tabFrameOption.shape == QTabBar::RoundedSouth || m_tabFrameOption.shape == QTabBar::TriangularSouth;
+    const bool left = m_tabFrameOption.shape == QTabBar::RoundedWest || m_tabFrameOption.shape == QTabBar::TriangularWest;
+    const bool right = m_tabFrameOption.shape == QTabBar::RoundedEast || m_tabFrameOption.shape == QTabBar::TriangularEast;
 
     if (top) {
         map[u"direction"_s] = QVariant(u"top"_s);

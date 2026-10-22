@@ -38,7 +38,7 @@ public:
     ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ItemViewElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
@@ -52,7 +52,7 @@ private:
     void drawIndicator(QPainter *painter) const override;
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;
-    const QStyleOptionViewItem *m_viewItemOption = nullptr;
+    QStyleOptionViewItem m_viewItemOption;
     QString fallbackElementName(const QStyleOption *opt) const override;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;

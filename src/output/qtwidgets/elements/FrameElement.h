@@ -36,7 +36,7 @@ public:
     FrameElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~FrameElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawFrame(QPainter *painter) const override;
@@ -48,5 +48,5 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    QStyleOptionFrame m_frameOption;
 };

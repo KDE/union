@@ -15,17 +15,17 @@ using namespace Qt::StringLiterals;
 
 SplitterElement::SplitterElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_splitterOption(option)
 {
-    update();
+    update(option);
 }
 
 SplitterElement::~SplitterElement()
 {
 }
 
-void SplitterElement::update()
+void SplitterElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 
@@ -49,7 +49,7 @@ void SplitterElement::draw(QPainter *painter, DrawEnums enums) const
 
 void SplitterElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Splitter});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::Splitter});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

@@ -42,7 +42,7 @@ public:
     ScrollBarElement(const QStyleOptionSlider *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ScrollBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
@@ -56,7 +56,7 @@ private:
     void drawIndicator(QPainter *painter) const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionSlider *m_scrollBarOption = nullptr;
+    QStyleOptionSlider m_scrollBarOption;
     bool m_horizontal;
     qreal extent() const;
     qreal controlThickness() const;

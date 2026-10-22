@@ -32,14 +32,13 @@ public:
     StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~StatusBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
     void drawItem(QPainter *painter) const;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOption *m_statusBarOption = nullptr;
     void updateSubElementList() override;
     Union::ElementList m_contentElementList;
     Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;

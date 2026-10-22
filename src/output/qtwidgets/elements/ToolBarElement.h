@@ -41,7 +41,7 @@ public:
     ToolBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
@@ -53,7 +53,7 @@ private:
     void drawHandle(QPainter *painter) const;
     void drawSeparator(QPainter *painter) const;
     QRectF handleSeparatorRect(qreal extent) const;
-    const QStyleOptionToolBar *m_toolBarOption = nullptr;
+    QStyleOptionToolBar m_toolBarOption;
 
     Union::ElementList m_handleElementList;
     Union::Properties::StylePropertyGroup *m_handleProperties;

@@ -15,17 +15,17 @@ using namespace Qt::StringLiterals;
 
 ScrollAreaCornerElement::ScrollAreaCornerElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_cornerOption(option)
 {
-    update();
+    update(option);
 }
 
 ScrollAreaCornerElement::~ScrollAreaCornerElement()
 {
 }
 
-void ScrollAreaCornerElement::update()
+void ScrollAreaCornerElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 
@@ -43,7 +43,7 @@ void ScrollAreaCornerElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ScrollAreaCornerElement::layout()
 {
-    m_elementList = prepareElements(m_cornerOption, m_widget, {ElementString::ScrollAreaCorner});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::ScrollAreaCorner});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

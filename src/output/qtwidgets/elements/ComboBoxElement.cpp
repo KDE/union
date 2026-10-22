@@ -14,23 +14,22 @@ using namespace Qt::StringLiterals;
 
 ComboBoxElement::ComboBoxElement(const QStyleOptionComboBox *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_comboBoxOption(option)
     , m_editable(false)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
-void ComboBoxElement::update()
+void ComboBoxElement::update(const QStyleOption *option)
 {
-    if (!m_styleOption) {
-        return;
-    }
-    m_editable = m_comboBoxOption->editable;
-    m_hasFrame = m_comboBoxOption->frame;
+    AbstractElement::update(option);
+    m_comboBoxOption = updateStyleOption<QStyleOptionComboBox>(option);
+
+    m_editable = m_comboBoxOption.editable;
+    m_hasFrame = m_comboBoxOption.frame;
 
     setIndicator(QIcon());
-    m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
+    m_indicatorElementList = prepareElements(&m_comboBoxOption, m_widget, {ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         if (m_indicatorProperties->icon()) {
@@ -38,8 +37,8 @@ void ComboBoxElement::update()
         }
     }
 
-    setIcon(m_comboBoxOption->currentIcon);
-    setText(m_comboBoxOption->currentText);
+    setIcon(m_comboBoxOption.currentIcon);
+    setText(m_comboBoxOption.currentText);
     updateSubElementList();
     layout();
 }
@@ -104,29 +103,29 @@ QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return {};
     }
 
     switch (subControl) {
     case QStyle::SC_ComboBoxFrame:
-        return backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect();
+        return backgroundRectangle(&m_comboBoxOption, m_elementProperties).toRect();
     case QStyle::SC_ComboBoxListBoxPopup:
-        return m_comboBoxOption->rect;
+        return m_comboBoxOption.rect;
     case QStyle::SC_ComboBoxArrow: {
         auto rect = m_layoutMap[ElementString::Indicator].rect;
         rect = rect.adjusted(-spacing(), 0, spacing(), 0);
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
+        return m_style->visualRect(m_comboBoxOption.direction, m_comboBoxOption.rect, rect);
     }
     case QStyle::SC_ComboBoxEditField: {
-        QRectF rect = m_comboBoxOption->rect.marginsRemoved(borderSize().toMargins());
+        QRectF rect = m_comboBoxOption.rect.marginsRemoved(borderSize().toMargins());
         rect.setWidth(rect.width() - subControlRect(QStyle::SC_ComboBoxArrow).width());
         // When drawing the text editor, it has padding of its own.
         // Remove our own padding and rely on the text editor padding.
         auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
         rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
+        return m_style->visualRect(m_comboBoxOption.direction, m_comboBoxOption.rect, rect);
     }
     default:
         break;
@@ -137,10 +136,10 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 QStringList ComboBoxElement::elementHints() const
 {
     QStringList hints;
-    if (!m_comboBoxOption->frame) {
+    if (!m_comboBoxOption.frame) {
         hints.append(u"flat"_s);
     }
-    if (m_comboBoxOption->editable) {
+    if (m_comboBoxOption.editable) {
         hints.append(u"editable"_s);
     }
     return hints;

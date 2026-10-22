@@ -34,7 +34,7 @@ public:
     MenuItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuItemElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
@@ -49,7 +49,7 @@ private:
     void updateSubElementList() override;
     Union::Element::States elementStates() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionMenuItem *m_menuItemOption = nullptr;
+    QStyleOptionMenuItem m_menuItemOption;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties;
     Union::ElementList m_checkElementList;

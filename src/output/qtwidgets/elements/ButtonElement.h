@@ -45,7 +45,7 @@ public:
     ButtonElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ButtonElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     QRectF subElementRect(QStyle::SubElement element) const override;
@@ -58,7 +58,7 @@ private:
     Union::Element::States elementStates() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
 
-    const QStyleOptionButton *m_buttonOption = nullptr;
+    QStyleOptionButton m_buttonOption;
     Union::ElementList m_indicatorElementList;
     Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
 };

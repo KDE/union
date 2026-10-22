@@ -15,51 +15,49 @@ using namespace Union::Properties;
 
 TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_tabOption(option)
     , m_isVertical(false)
     , m_isStatic(false)
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
-    update();
+    update(option);
 }
 
 TabElement::~TabElement()
 {
 }
 
-void TabElement::update()
+void TabElement::update(const QStyleOption *option)
 {
-    if (!m_tabOption) {
-        return;
-    }
-    m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
-        || m_tabOption->shape == QTabBar::TriangularWest;
+    AbstractElement::update(option);
+    m_tabOption = updateStyleOption<QStyleOptionTab>(option);
+    m_isVertical = m_tabOption.shape == QTabBar::RoundedEast || m_tabOption.shape == QTabBar::RoundedWest || m_tabOption.shape == QTabBar::TriangularEast
+        || m_tabOption.shape == QTabBar::TriangularWest;
 
     if (const auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
-        m_isStatic = m_tabOption->documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
+        m_isStatic = m_tabOption.documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
     } else {
         m_isStatic = false;
     }
 
-    setIcon(m_tabOption->icon);
-    setText(m_tabOption->text);
+    setIcon(m_tabOption.icon);
+    setText(m_tabOption.text);
     updateSubElementList();
     layout();
 }
 
 void TabElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid || !m_tabOption) {
+    if (!m_isValid) {
         return;
     }
 
     // Rotate the painter if needed, remember to restore after
     auto saveAndRotatePainter = [this](QPainter *painter) {
         painter->save();
-        QRect tabRect = m_tabOption->rect;
+        QRect tabRect = m_tabOption.rect;
         if (m_isVertical) {
             int newX, newY, newRot;
-            if (m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::TriangularEast) {
+            if (m_tabOption.shape == QTabBar::RoundedEast || m_tabOption.shape == QTabBar::TriangularEast) {
                 newX = tabRect.width() + tabRect.x();
                 newY = tabRect.y();
                 newRot = 90;
@@ -98,7 +96,7 @@ void TabElement::draw(QPainter *painter, DrawEnums enums) const
 void TabElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        auto textContainer = m_style->subElementRect(QStyle::SE_TabBarTabText, m_styleOption, m_widget);
+        auto textContainer = m_style->subElementRect(QStyle::SE_TabBarTabText, &m_tabOption, m_widget);
         auto alignment = m_layoutMap[ElementString::Text].horizontalAlignment;
         auto textRect = m_layoutMap[ElementString::Text].rect;
 
@@ -124,39 +122,39 @@ void TabElement::drawText(QPainter *painter) const
 void TabElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_tabOption->icon.isNull()) {
+    if (!m_tabOption.icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
-    if (!m_tabOption->text.isEmpty()) {
+    if (!m_tabOption.text.isEmpty()) {
         m_subElementList.append(ElementString::Text);
     }
 }
 
 void TabElement::layout()
 {
-    if (m_subElementList.isEmpty() || !m_tabOption) {
+    if (m_subElementList.isEmpty()) {
         m_isValid = false;
         return;
     }
 
-    m_elementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
+    m_elementList = prepareElements(&m_tabOption, m_widget, {ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        QRect tabRect = m_tabOption->rect;
+        QRect tabRect = m_tabOption.rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
             tabRect.setRect(0, 0, tabRect.height(), tabRect.width());
         }
 
         // Leave space for the left and right button
-        if (!m_tabOption->leftButtonSize.isEmpty()) {
-            tabRect.setLeft(tabRect.left() + spacing() + (m_isVertical ? m_tabOption->leftButtonSize.height() : m_tabOption->leftButtonSize.width()));
+        if (!m_tabOption.leftButtonSize.isEmpty()) {
+            tabRect.setLeft(tabRect.left() + spacing() + (m_isVertical ? m_tabOption.leftButtonSize.height() : m_tabOption.leftButtonSize.width()));
         }
-        if (!m_tabOption->rightButtonSize.isEmpty()) {
-            tabRect.setRight(tabRect.right() - spacing() - (m_isVertical ? m_tabOption->rightButtonSize.height() : m_tabOption->rightButtonSize.width()));
+        if (!m_tabOption.rightButtonSize.isEmpty()) {
+            tabRect.setRight(tabRect.right() - spacing() - (m_isVertical ? m_tabOption.rightButtonSize.height() : m_tabOption.rightButtonSize.width()));
         }
 
-        auto subopt = *m_tabOption;
+        auto subopt = m_tabOption;
         subopt.rect = tabRect;
         m_layoutMap = layoutMap(&subopt, m_subElementList);
         m_isValid = true;
@@ -168,12 +166,12 @@ void TabElement::layout()
 QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
-    if (!m_isValid || !m_tabOption) {
+    if (!m_isValid) {
         return contentsSizeFromStyle;
     }
 
-    const bool leftButton = !m_tabOption->leftButtonSize.isEmpty();
-    const bool rightButton = !m_tabOption->rightButtonSize.isEmpty();
+    const bool leftButton = !m_tabOption.leftButtonSize.isEmpty();
+    const bool rightButton = !m_tabOption.rightButtonSize.isEmpty();
     const bool text = hasText();
     const bool icon = hasIcon();
     const qreal offset = spacing();
@@ -208,7 +206,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF TabElement::subElementRect(QStyle::SubElement element) const
 {
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_tabOption, m_widget);
 }
 
 // Padding of the tab content and the edge, only one value is taken so take the average
@@ -234,20 +232,17 @@ Union::Element::States TabElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
     states.setFlag(Union::Element::State::Highlighted, false);
-    states.setFlag(Union::Element::State::Checked, m_styleOption->state.testFlag(QStyle::State_Selected));
+    states.setFlag(Union::Element::State::Checked, m_tabOption.state.testFlag(QStyle::State_Selected));
     return states;
 }
 
 QVariantMap TabElement::elementAttributes() const
 {
     QVariantMap map;
-    if (!m_tabOption) {
-        return map;
-    }
-    const bool top = m_tabOption->shape == QTabBar::RoundedNorth || m_tabOption->shape == QTabBar::TriangularNorth;
-    const bool bottom = m_tabOption->shape == QTabBar::RoundedSouth || m_tabOption->shape == QTabBar::TriangularSouth;
-    const bool left = m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularWest;
-    const bool right = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::TriangularEast;
+    const bool top = m_tabOption.shape == QTabBar::RoundedNorth || m_tabOption.shape == QTabBar::TriangularNorth;
+    const bool bottom = m_tabOption.shape == QTabBar::RoundedSouth || m_tabOption.shape == QTabBar::TriangularSouth;
+    const bool left = m_tabOption.shape == QTabBar::RoundedWest || m_tabOption.shape == QTabBar::TriangularWest;
+    const bool right = m_tabOption.shape == QTabBar::RoundedEast || m_tabOption.shape == QTabBar::TriangularEast;
 
     if (top) {
         map[u"direction"_s] = QVariant(u"top"_s);
@@ -280,12 +275,10 @@ QStringList TabElement::elementHints() const
         hints.append(u"immutable"_s);
     }
 
-    auto tabStyleOption = qstyleoption_cast<const QStyleOptionTab *>(m_styleOption);
-    auto tabBar = qobject_cast<const QTabBar *>(m_widget);
-    if (tabStyleOption && tabBar) {
-        if (tabStyleOption->tabIndex == 0) {
+    if (auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
+        if (m_tabOption.tabIndex == 0) {
             hints.append(u"first"_s);
-        } else if (tabStyleOption->tabIndex == tabBar->count() - 1) {
+        } else if (m_tabOption.tabIndex == tabBar->count() - 1) {
             hints.append(u"last"_s);
         }
     }

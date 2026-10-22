@@ -15,24 +15,23 @@ using namespace Union::Properties;
 
 ProgressBarElement::ProgressBarElement(const QStyleOptionProgressBar *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_progressBarOption(option)
     , m_isHorizontal(true)
 {
-    update();
+    update(option);
 }
 
 ProgressBarElement::~ProgressBarElement()
 {
 }
 
-void ProgressBarElement::update()
+void ProgressBarElement::update(const QStyleOption *option)
 {
-    if (!m_progressBarOption) {
-        return;
-    }
-    m_isHorizontal = m_progressBarOption->state.testFlag(QStyle::State_Horizontal);
+    AbstractElement::update(option);
+    m_progressBarOption = updateStyleOption<QStyleOptionProgressBar>(option);
 
-    setText(m_progressBarOption->text);
+    m_isHorizontal = m_progressBarOption.state.testFlag(QStyle::State_Horizontal);
+
+    setText(m_progressBarOption.text);
     updateSubElementList();
     layout();
 }
@@ -80,7 +79,7 @@ void ProgressBarElement::drawIndicator(QPainter *painter) const
 
 void ProgressBarElement::drawText(QPainter *painter) const
 {
-    if (m_progressBarOption && !m_progressBarOption->textVisible) {
+    if (!m_progressBarOption.textVisible) {
         return;
     }
     AbstractElement::drawText(painter);
@@ -96,14 +95,14 @@ void ProgressBarElement::updateSubElementList()
 
 void ProgressBarElement::layout()
 {
-    m_elementList = prepareElements(m_progressBarOption, m_widget);
+    m_elementList = prepareElements(&m_progressBarOption, m_widget);
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_progressBarOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_progressBarOption, m_subElementList);
     }
 
-    m_contentElementList = prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Track});
+    m_contentElementList = prepareElements(&m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Track});
 
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
@@ -126,36 +125,33 @@ QSizeF ProgressBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 
 QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_progressBarOption) {
-        return {};
-    }
     if (element == QStyle::SE_ProgressBarLabel) {
         // Copied and repurposed from Breeze
-        const bool textVisible(m_progressBarOption->textVisible);
-        const bool busy(m_progressBarOption->minimum == 0 && m_progressBarOption->maximum == 0);
+        const bool textVisible(m_progressBarOption.textVisible);
+        const bool busy(m_progressBarOption.minimum == 0 && m_progressBarOption.maximum == 0);
         if (!textVisible || busy) {
             return {};
         }
         auto textFlags = textFlagsFromProperties(m_elementProperties);
-        int textWidth = std::max(m_progressBarOption->fontMetrics.size(textFlags, m_progressBarOption->text).width(),
-                                 m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
-        auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());
+        int textWidth = std::max(m_progressBarOption.fontMetrics.size(textFlags, m_progressBarOption.text).width(),
+                                 m_progressBarOption.fontMetrics.size(textFlags, u"100%"_s).width());
+        auto rect = centerRect(m_progressBarOption.rect, textWidth, m_progressBarOption.rect.height());
         rect.setLeft(rect.right() - textWidth + 1);
-        rect = m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
+        rect = m_style->visualRect(m_progressBarOption.direction, m_progressBarOption.rect, rect);
         return rect;
     } else if (element == QStyle::SE_ProgressBarContents) {
         // Copied from Breeze
         const auto rect(subElementRect(QStyle::SE_ProgressBarGroove));
-        const bool busy(m_progressBarOption->minimum == 0 && m_progressBarOption->maximum == 0);
+        const bool busy(m_progressBarOption.minimum == 0 && m_progressBarOption.maximum == 0);
         if (busy) {
             return rect;
         }
-        bool reverse = (m_isHorizontal && (m_progressBarOption->direction == Qt::RightToLeft)) || !m_isHorizontal;
-        if (m_progressBarOption->invertedAppearance) {
+        bool reverse = (m_isHorizontal && (m_progressBarOption.direction == Qt::RightToLeft)) || !m_isHorizontal;
+        if (m_progressBarOption.invertedAppearance) {
             reverse = !reverse;
         }
-        const int progress(m_progressBarOption->progress - m_progressBarOption->minimum);
-        const int steps(std::max(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
+        const int progress(m_progressBarOption.progress - m_progressBarOption.minimum);
+        const int steps(std::max(m_progressBarOption.maximum - m_progressBarOption.minimum, 1));
         const qreal position = qreal(progress) / qreal(steps);
         const qreal indicatorSize(position * (m_isHorizontal ? rect.width() : rect.height()));
         QRectF indicatorRect;
@@ -169,29 +165,29 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
         // Copied and repurposed from Breeze. We ignore width, we only want the thickness of the bar.
         const qreal styleHeight = height();
         const qreal styleWidth = width();
-        const qreal height = m_progressBarOption->rect.height() <= 0 ? styleHeight : m_progressBarOption->rect.height();
-        const qreal width = m_progressBarOption->rect.width() <= 0 ? styleWidth : m_progressBarOption->rect.width();
+        const qreal height = m_progressBarOption.rect.height() <= 0 ? styleHeight : m_progressBarOption.rect.height();
+        const qreal width = m_progressBarOption.rect.width() <= 0 ? styleWidth : m_progressBarOption.rect.width();
 
-        auto rect = m_progressBarOption->rect;
+        auto rect = m_progressBarOption.rect;
         if (m_isHorizontal) {
-            rect = centerRect(m_progressBarOption->rect, width, styleHeight).toRect();
+            rect = centerRect(m_progressBarOption.rect, width, styleHeight).toRect();
         } else {
-            rect = centerRect(m_progressBarOption->rect, styleWidth, height).toRect();
+            rect = centerRect(m_progressBarOption.rect, styleWidth, height).toRect();
         }
-        return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
+        return m_style->visualRect(m_progressBarOption.direction, m_progressBarOption.rect, rect);
     };
     return {};
 }
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
 {
-    auto props = queryProperties(prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
-    drawBackgroundRectangle(painter, m_progressBarOption->rect, props);
+    auto props = queryProperties(prepareElements(&m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
+    drawBackgroundRectangle(painter, m_progressBarOption.rect, props);
 }
 
 int ProgressBarElement::chunkWidth() const
 {
-    auto props = queryProperties(prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
+    auto props = queryProperties(prepareElements(&m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
     return props->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
 }
 

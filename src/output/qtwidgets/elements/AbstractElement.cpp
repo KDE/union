@@ -16,7 +16,6 @@ using namespace Union::Properties;
 
 AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : QObject(nullptr)
-    , m_styleOption(option)
     , m_style(style)
     , m_widget(widget)
     , m_elementQuery(std::make_unique<Union::ElementQuery>(Union::StyleRegistry::instance()->defaultStyle()))
@@ -94,10 +93,10 @@ void AbstractElement::setFlag(AbstractElementFlag flag, bool apply)
 
 void AbstractElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -144,8 +143,16 @@ void AbstractElement::updateSubElementList()
 {
 }
 
-void AbstractElement::update()
+void AbstractElement::update(const QStyleOption *option)
 {
+    if (option) {
+        m_styleOption = *option;
+    } else {
+        m_styleOption = QStyleOption();
+        if (m_widget) {
+            m_styleOption.initFrom(m_widget);
+        }
+    }
 }
 
 void AbstractElement::draw(QPainter *painter, DrawEnums enums) const
@@ -167,31 +174,28 @@ QStringList AbstractElement::elementHints() const
 Union::Element::States AbstractElement::elementStates() const
 {
     Union::Element::States states;
-    if (!m_styleOption) {
-        return states;
-    }
-    if (m_styleOption->state.testFlag(QStyle::State_None)) {
+    if (m_styleOption.state.testFlag(QStyle::State_None)) {
         return states;
     }
 
-    states.setFlag(Union::Element::State::Hovered, m_styleOption->state.testFlag(QStyle::State_MouseOver));
-    states.setFlag(Union::Element::State::ActiveFocus, m_styleOption->state.testFlag(QStyle::State_HasFocus));
+    states.setFlag(Union::Element::State::Hovered, m_styleOption.state.testFlag(QStyle::State_MouseOver));
+    states.setFlag(Union::Element::State::ActiveFocus, m_styleOption.state.testFlag(QStyle::State_HasFocus));
     states.setFlag(Union::Element::State::VisualFocus,
-                   m_styleOption->state.testFlag(QStyle::State_KeyboardFocusChange) && m_styleOption->state.testFlag(QStyle::State_HasFocus));
-    states.setFlag(Union::Element::State::Disabled, !m_styleOption->state.testFlag(QStyle::State_Enabled));
-    states.setFlag(Union::Element::State::Highlighted, m_styleOption->state.testFlag(QStyle::State_Selected));
+                   m_styleOption.state.testFlag(QStyle::State_KeyboardFocusChange) && m_styleOption.state.testFlag(QStyle::State_HasFocus));
+    states.setFlag(Union::Element::State::Disabled, !m_styleOption.state.testFlag(QStyle::State_Enabled));
+    states.setFlag(Union::Element::State::Highlighted, m_styleOption.state.testFlag(QStyle::State_Selected));
 
-    if (m_styleOption->state.testFlag(QStyle::State_On)) {
+    if (m_styleOption.state.testFlag(QStyle::State_On)) {
         states.setFlag(Union::Element::State::Checked);
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Off)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Off)) {
         states.setFlag(Union::Element::State::Checked, false);
     }
 
-    if (m_styleOption->state.testFlag(QStyle::State_Sunken)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Sunken)) {
         states.setFlag(Union::Element::State::Pressed);
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Raised)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Raised)) {
         states.setFlag(Union::Element::State::Pressed, false);
     }
 
@@ -242,22 +246,22 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
 
 void AbstractElement::drawBackground(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties);
+    if (m_isValid) {
+        drawBackgroundRectangle(painter, m_styleOption.rect, m_elementProperties);
     }
 }
 
 void AbstractElement::drawFrame(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::FrameOnly);
+    if (m_isValid) {
+        drawBackgroundRectangle(painter, m_styleOption.rect, m_elementProperties, BackgroundParts::FrameOnly);
     }
 }
 
 void AbstractElement::drawPanel(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::PanelOnly);
+    if (m_isValid) {
+        drawBackgroundRectangle(painter, m_styleOption.rect, m_elementProperties, BackgroundParts::PanelOnly);
     }
 }
 
@@ -292,10 +296,8 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
             unionIcon = icon;
         }
 
-        bool enabled = true;
-        if (m_styleOption) {
-            enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        }
+        bool enabled = m_styleOption.state.testFlag(QStyle::State_Enabled);
+
         const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
         auto iconSize = rect.size();
         const QPixmap pixmap = unionIcon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
@@ -307,11 +309,11 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
 
 void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const
 {
-    if (m_isValid && m_styleOption) {
+    if (m_isValid) {
         const auto property = defaultPropertyGroup(properties);
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
-        const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        auto textColor = m_styleOption->palette.text().color();
+        const bool enabled = m_styleOption.state.testFlag(QStyle::State_Enabled);
+        auto textColor = m_styleOption.palette.text().color();
         auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
         auto font = safePropertyLookup(property, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
         if (unionColor.isValid()) {
@@ -321,7 +323,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         painter->save();
         painter->setPen(textColor);
         painter->setFont(font);
-        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, property));
+        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption.palette, enabled, elidedText(text, rect, property));
         painter->restore();
     }
 }
@@ -343,8 +345,8 @@ qreal AbstractElement::height(Union::Properties::StylePropertyGroup *properties)
     constexpr qreal defaultValue = 0.0;
     if (const auto property = defaultPropertyGroup(properties)) {
         return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-    } else if (m_styleOption) {
-        return m_styleOption->rect.height();
+    } else if (m_styleOption.rect.isValid()) {
+        return m_styleOption.rect.height();
     } else {
         return defaultValue;
     }
@@ -355,8 +357,8 @@ qreal AbstractElement::width(Union::Properties::StylePropertyGroup *properties) 
     constexpr qreal defaultValue = 0.0;
     if (const auto property = defaultPropertyGroup(properties)) {
         return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    } else if (m_styleOption) {
-        return m_styleOption->rect.width();
+    } else if (m_styleOption.rect.isValid()) {
+        return m_styleOption.rect.width();
     } else {
         return defaultValue;
     }
@@ -424,18 +426,18 @@ qreal AbstractElement::averageBorderSize(Union::Properties::StylePropertyGroup *
 
 QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const
 {
-    if (!text.isEmpty() && m_styleOption) {
+    if (!text.isEmpty()) {
         const auto property = defaultPropertyGroup(properties);
         auto elide = safePropertyLookup(property, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
-        const qreal elideWidth = textRect.width() < m_styleOption->rect.width() ? textRect.width() : m_styleOption->rect.width();
-        return m_styleOption->fontMetrics.elidedText(text, toQtElideMode(elide), elideWidth);
+        const qreal elideWidth = textRect.width() < m_styleOption.rect.width() ? textRect.width() : m_styleOption.rect.width();
+        return m_styleOption.fontMetrics.elidedText(text, toQtElideMode(elide), elideWidth);
     }
     return text;
 }
 
 QSizeF AbstractElement::querySize(QStringList targetHierarchy) const
 {
-    auto elements = prepareElements(m_styleOption, m_widget, targetHierarchy);
+    auto elements = prepareElements(&m_styleOption, m_widget, targetHierarchy);
     if (elements.isEmpty()) {
         return QSize(0, 0);
     }
@@ -557,7 +559,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, co
                                                                &StylePropertyGroup::text,
                                                                &TextPropertyGroup::alignment,
                                                                &AlignmentPropertyGroup::vertical);
-            auto optionText = textFromOption(opt);
+            auto optionText = m_text;
             // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
             const int tabPosition(optionText.indexOf(QLatin1Char('\t')));
             if (tabPosition >= 0) {
@@ -571,7 +573,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, co
             // When layouting, ensure we take mnemonics into account
             auto textFlags = textFlagsFromProperties(properties);
             textFlags |= Qt::TextShowMnemonic;
-            auto fontMetrics = opt->fontMetrics;
+            auto fontMetrics = m_styleOption.fontMetrics;
             if (properties->text() && properties->text()->font()) {
                 fontMetrics = QFontMetrics(properties->text()->font()->toQFont());
             }

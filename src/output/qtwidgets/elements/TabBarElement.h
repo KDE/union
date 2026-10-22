@@ -35,7 +35,7 @@ public:
     TabBarElement(const QStyleOptionTabBarBase *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
@@ -46,6 +46,6 @@ public:
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     void drawBackground(QPainter *painter) const override;
-    const QStyleOptionTabBarBase *m_tabBarOption = nullptr;
+    QStyleOptionTabBarBase m_tabBarOption;
     qreal scrollButtonWidth() const;
 };

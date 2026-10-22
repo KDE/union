@@ -37,7 +37,7 @@ public:
     MenuBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;

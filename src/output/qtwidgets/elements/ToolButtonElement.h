@@ -43,7 +43,7 @@ public:
     ToolButtonElement(const QStyleOptionToolButton *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolButtonElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void layout() override;
 
@@ -60,7 +60,7 @@ private:
     void layoutButtons();
     ArrowStyle arrowStyle() const;
 
-    const QStyleOptionToolButton *m_toolButtonOption = nullptr;
+    QStyleOptionToolButton m_toolButtonOption;
     bool m_hasIndicator;
     bool m_hasArrows;
     bool m_hasIcon;

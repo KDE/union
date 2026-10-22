@@ -37,7 +37,7 @@ public:
     TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawText(QPainter *painter) const override;
@@ -52,7 +52,7 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionTab *m_tabOption = nullptr;
+    QStyleOptionTab m_tabOption;
     bool m_isVertical;
     bool m_isStatic;
     int hSpace() const;

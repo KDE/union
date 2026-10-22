@@ -15,17 +15,18 @@ using namespace Qt::StringLiterals;
 
 ToolTipElement::ToolTipElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
 {
-    update();
+    update(option);
 }
 
 ToolTipElement::~ToolTipElement()
 {
 }
 
-void ToolTipElement::update()
+void ToolTipElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_frameOption = updateStyleOption<QStyleOptionFrame>(option);
     layout();
 }
 
@@ -43,7 +44,7 @@ void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolTipElement::layout()
 {
-    m_elementList = prepareElements(m_frameOption, m_widget, {ElementString::ToolTip});
+    m_elementList = prepareElements(&m_frameOption, m_widget, {ElementString::ToolTip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
@@ -54,7 +55,7 @@ void ToolTipElement::layout()
 
 QStringList ToolTipElement::elementHints() const
 {
-    return frameHints(m_frameOption);
+    return frameHints(&m_frameOption);
 }
 
 qreal ToolTipElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

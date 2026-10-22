@@ -45,7 +45,7 @@ public:
     HeaderElement(const QStyleOptionHeader *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~HeaderElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawText(QPainter *painter) const override;
@@ -58,7 +58,7 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionHeader *m_headerOption = nullptr;
+    QStyleOptionHeader m_headerOption;
     QIcon sortIndicator();
     bool m_isHorizontal;
 };

@@ -15,30 +15,28 @@ using namespace Union::Properties;
 
 TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_treeViewOption(option)
     , m_itemIsOpen(false)
 {
-    update();
+    update(option);
 }
 
 TreeViewElement::~TreeViewElement()
 {
 }
 
-void TreeViewElement::update()
+void TreeViewElement::update(const QStyleOption *option)
 {
-    if (!m_styleOption) {
-        return;
-    }
-    if (!m_styleOption->state.testFlag(QStyle::State_Children)) {
+    AbstractElement::update(option);
+
+    if (!m_styleOption.state.testFlag(QStyle::State_Children)) {
         m_isValid = false;
         return;
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Item)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Item)) {
         m_itemIsOpen = false;
         m_isValid = true;
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Open)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Open)) {
         m_itemIsOpen = true;
         m_isValid = true;
     }
@@ -47,7 +45,7 @@ void TreeViewElement::update()
 
 void TreeViewElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::TreeViewDelegate, ElementString::Indicator});
+    m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::TreeViewDelegate, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         m_isValid = true;
@@ -71,10 +69,10 @@ void TreeViewElement::draw(QPainter *painter, DrawEnums enums) const
 void TreeViewElement::drawIndicator(QPainter *painter) const
 {
     // For some reason treeview related items can have null styleoption :(
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid) {
         return;
     }
-    if (!m_styleOption->state.testFlag(QStyle::State_Children)) {
+    if (!m_styleOption.state.testFlag(QStyle::State_Children)) {
         return;
     }
     const qreal width = m_indicatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
@@ -83,19 +81,19 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
 
     auto defaultIconName = m_itemIsOpen ? u"arrow-down-symbolic"_s : u"arrow-right-symbolic"_s;
     auto icon = m_style->unionIcon(m_indicatorProperties, defaultIconName);
-    const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
+    const bool enabled = m_styleOption.state.testFlag(QStyle::State_Enabled);
 
-    const QPalette activePalette = m_styleOption->palette;
+    const QPalette activePalette = m_styleOption.palette;
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
-    QSize iconSize = size.toSize().boundedTo(m_styleOption->rect.size());
+    QSize iconSize = size.toSize().boundedTo(m_styleOption.rect.size());
     if (iconSize.isEmpty()) {
-        iconSize = m_styleOption->rect.size();
+        iconSize = m_styleOption.rect.size();
     }
     const int side = std::min(iconSize.width(), iconSize.height());
     const QPixmap pixmap = icon.pixmap(QSize(side, side), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
 
     painter->save();
-    auto rect = centerRect(m_styleOption->rect, size.width(), size.height());
+    auto rect = centerRect(m_styleOption.rect, size.width(), size.height());
     m_style->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
     painter->restore();
 }
@@ -103,7 +101,7 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
 QStringList TreeViewElement::elementHints() const
 {
     QStringList elementHints;
-    if (m_styleOption && m_styleOption->state.testFlag(QStyle::State_Open)) {
+    if (m_styleOption.state.testFlag(QStyle::State_Open)) {
         elementHints.append(u"expanded"_s);
     }
     return elementHints;

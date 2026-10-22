@@ -42,7 +42,7 @@ public:
     ProgressBarElement(const QStyleOptionProgressBar *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ProgressBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawText(QPainter *painter) const override;
@@ -59,7 +59,7 @@ private:
     void drawIndicator(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     void drawChunk(QPainter *painter) const;
-    const QStyleOptionProgressBar *m_progressBarOption = nullptr;
+    QStyleOptionProgressBar m_progressBarOption;
     int chunkWidth() const;
     bool m_isHorizontal;
     Union::ElementList m_contentElementList;

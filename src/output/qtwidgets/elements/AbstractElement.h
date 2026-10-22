@@ -98,7 +98,7 @@ public:
     /*!
      * \brief Updates the properties of the element, such as text and layouting
      */
-    virtual void update();
+    virtual void update(const QStyleOption *option);
 
 protected:
     /*!
@@ -225,7 +225,7 @@ protected:
      */
     void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    const QStyleOption *m_styleOption = nullptr;
+    QStyleOption m_styleOption;
     const UnionStyle *m_style = nullptr;
     const QWidget *m_widget = nullptr;
     QIcon m_icon = QIcon();
@@ -241,6 +241,29 @@ protected:
     bool m_isValid = false;
 
     AbstractElementFlags m_flags;
+
+    template<typename StyleOption>
+    StyleOption updateStyleOption(const QStyleOption *option)
+    {
+        StyleOption opt;
+        if (const auto newOpt = qstyleoption_cast<const StyleOption *>(option)) {
+            opt = *newOpt;
+        } else {
+            opt = StyleOption();
+            // Ensure we have the same data as the regular styleoption
+            opt.state = m_styleOption.state;
+            opt.direction = m_styleOption.direction;
+            opt.rect = m_styleOption.rect;
+            opt.fontMetrics = m_styleOption.fontMetrics;
+            opt.palette = m_styleOption.palette;
+            opt.styleObject = m_styleOption.styleObject;
+
+            if (m_widget) {
+                opt.initFrom(m_widget);
+            }
+        }
+        return opt;
+    }
 
 private:
     Union::Element::Ptr createElement(const QString &name) const;

@@ -17,29 +17,30 @@ using namespace Union::Properties;
 
 ButtonElement::ButtonElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_buttonOption(option)
 {
-    update();
+    update(option);
 }
 
 ButtonElement::~ButtonElement()
 {
 }
 
-void ButtonElement::update()
+void ButtonElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     setIndicator(QIcon());
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-            m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
-            if (!m_indicatorElementList.isEmpty()) {
-                m_indicatorProperties = queryProperties(m_indicatorElementList);
-                setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
-            }
+
+    m_buttonOption = updateStyleOption<QStyleOptionButton>(option);
+
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::HasMenu)) {
+        m_indicatorElementList = prepareElements(&m_buttonOption, m_widget, {ElementString::Indicator});
+        if (!m_indicatorElementList.isEmpty()) {
+            m_indicatorProperties = queryProperties(m_indicatorElementList);
+            setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
         }
-        setIcon(m_buttonOption->icon);
-        setText(m_buttonOption->text);
     }
+    setIcon(m_buttonOption.icon);
+    setText(m_buttonOption.text);
 
     updateSubElementList();
     layout();
@@ -80,16 +81,15 @@ void ButtonElement::draw(QPainter *painter, DrawEnums enums) const
 void ButtonElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-            m_subElementList.append(ElementString::Indicator);
-        }
-        if (!m_buttonOption->icon.isNull()) {
-            m_subElementList.append(ElementString::Icon);
-        }
-        if (!m_buttonOption->text.isEmpty()) {
-            m_subElementList.append(ElementString::Text);
-        }
+
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::HasMenu)) {
+        m_subElementList.append(ElementString::Indicator);
+    }
+    if (!m_buttonOption.icon.isNull()) {
+        m_subElementList.append(ElementString::Icon);
+    }
+    if (!m_buttonOption.text.isEmpty()) {
+        m_subElementList.append(ElementString::Text);
     }
 }
 
@@ -112,37 +112,34 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
     }
 
     if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-        return backgroundRectangle(m_buttonOption, m_elementProperties);
+        return backgroundRectangle(&m_buttonOption, m_elementProperties);
     }
 
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_buttonOption, m_widget);
 }
 
 Union::Element::States ButtonElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
-            || m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
-            states.setFlag(Union::Element::State::Highlighted, true);
-        }
+
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
+        || m_buttonOption.features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
+        states.setFlag(Union::Element::State::Highlighted, true);
     }
+
     return states;
 }
 
 QStringList ButtonElement::elementHints() const
 {
     QStringList hints;
-    if (!m_buttonOption) {
-        return hints;
-    }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
         hints.append(u"flat"_s);
     }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::HasMenu)) {
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::ButtonFeature::HasMenu)) {
         hints.append(u"with-menu"_s);
     }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::CommandLinkButton)) {
+    if (m_buttonOption.features.testFlag(QStyleOptionButton::ButtonFeature::CommandLinkButton)) {
         hints.append(u"command-link-button"_s);
     }
     return hints;

@@ -41,7 +41,7 @@ public:
     DockWidgetElement(const QStyleOptionDockWidget *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~DockWidgetElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
@@ -52,5 +52,5 @@ public:
 private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionDockWidget *m_dockWidgetOption = nullptr;
+    QStyleOptionDockWidget m_dockWidgetOption;
 };

@@ -35,7 +35,7 @@ public:
     LineEditElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~LineEditElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
@@ -47,6 +47,6 @@ private:
     QStringList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     QMarginsF iconPadding() const;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    QStyleOptionFrame m_frameOption;
     bool m_hasFrame;
 };

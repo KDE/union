@@ -30,11 +30,10 @@ public:
     ScrollAreaCornerElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ScrollAreaCornerElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOption *m_cornerOption = nullptr;
 };

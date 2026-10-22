@@ -30,11 +30,11 @@ public:
     RubberBandElement(const QStyleOptionRubberBand *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~RubberBandElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionRubberBand *m_rubberBandOption = nullptr;
+    QStyleOptionRubberBand m_rubberBandOption;
 };

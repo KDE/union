@@ -15,22 +15,21 @@ using namespace Qt::StringLiterals;
 
 ToolBoxTabElement::ToolBoxTabElement(const QStyleOptionToolBox *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_toolBoxOption(option)
 {
-    update();
+    update(option);
 }
 
 ToolBoxTabElement::~ToolBoxTabElement()
 {
 }
 
-void ToolBoxTabElement::update()
+void ToolBoxTabElement::update(const QStyleOption *option)
 {
-    if (!m_toolBoxOption) {
-        return;
-    }
-    setIcon(m_toolBoxOption->icon);
-    setText(m_toolBoxOption->text);
+    AbstractElement::update(option);
+    m_toolBoxOption = updateStyleOption<QStyleOptionToolBox>(option);
+
+    setIcon(m_toolBoxOption.icon);
+    setText(m_toolBoxOption.text);
     updateSubElementList();
     layout();
 }
@@ -59,28 +58,25 @@ void ToolBoxTabElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolBoxTabElement::updateSubElementList()
 {
-    if (!m_toolBoxOption) {
-        return;
-    }
     m_subElementList.clear();
-    if (!m_toolBoxOption->icon.isNull()) {
+    if (!m_toolBoxOption.icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
-    if (!m_toolBoxOption->text.isEmpty()) {
+    if (!m_toolBoxOption.text.isEmpty()) {
         m_subElementList.append(ElementString::Text);
     }
 }
 
 void ToolBoxTabElement::layout()
 {
-    if (m_subElementList.isEmpty() || !m_toolBoxOption) {
+    if (m_subElementList.isEmpty()) {
         m_isValid = false;
         return;
     }
-    m_elementList = prepareElements(m_toolBoxOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
+    m_elementList = prepareElements(&m_toolBoxOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_toolBoxOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_toolBoxOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -89,7 +85,7 @@ void ToolBoxTabElement::layout()
 
 QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid || !m_toolBoxOption) {
+    if (!m_isValid) {
         return {};
     }
 
@@ -100,7 +96,7 @@ QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
         }
         unifiedRect.setSize(applyPaddingToSize(unifiedRect.size()));
     }
-    return m_toolBoxOption->rect;
+    return m_toolBoxOption.rect;
 }
 
 QString ToolBoxTabElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

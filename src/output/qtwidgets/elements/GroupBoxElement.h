@@ -33,7 +33,7 @@ public:
     GroupBoxElement(const QStyleOptionGroupBox *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~GroupBoxElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     QRectF subControlRect(QStyle::SubControl subControl) const override;
 
@@ -44,6 +44,6 @@ private:
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionGroupBox *m_groupBoxOption = nullptr;
+    QStyleOptionGroupBox m_groupBoxOption;
     bool m_isCheckable;
 };

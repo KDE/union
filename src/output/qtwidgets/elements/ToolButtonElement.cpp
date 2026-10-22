@@ -14,51 +14,50 @@ using namespace Union::Properties;
 
 ToolButtonElement::ToolButtonElement(const QStyleOptionToolButton *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_toolButtonOption(option)
     , m_hasIndicator(false)
     , m_hasArrows(false)
     , m_hasIcon(false)
     , m_hasText(false)
 {
-    update();
+    update(option);
 }
 
 ToolButtonElement::~ToolButtonElement()
 {
 }
 
-void ToolButtonElement::update()
+void ToolButtonElement::update(const QStyleOption *option)
 {
-    if (!m_toolButtonOption) {
-        return;
-    }
+    AbstractElement::update(option);
+    m_toolButtonOption = updateStyleOption<QStyleOptionToolButton>(option);
+
     m_hasIndicator =
-        m_toolButtonOption->features.testFlag(QStyleOptionToolButton::HasMenu) || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Menu);
-    m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
-    m_hasIcon = !m_toolButtonOption->icon.isNull() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
-    m_hasText = !m_toolButtonOption->text.isEmpty() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly;
-    setIcon(m_toolButtonOption->icon);
-    setText(m_toolButtonOption->text);
+        m_toolButtonOption.features.testFlag(QStyleOptionToolButton::HasMenu) || m_toolButtonOption.features.testFlag(QStyleOptionToolButton::Menu);
+    m_hasArrows = m_toolButtonOption.features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption.toolButtonStyle != Qt::ToolButtonTextOnly;
+    m_hasIcon = !m_toolButtonOption.icon.isNull() && m_toolButtonOption.toolButtonStyle != Qt::ToolButtonTextOnly;
+    m_hasText = !m_toolButtonOption.text.isEmpty() && m_toolButtonOption.toolButtonStyle != Qt::ToolButtonIconOnly;
+    setIcon(m_toolButtonOption.icon);
+    setText(m_toolButtonOption.text);
     updateSubElementList();
     layout();
 }
 
 void ToolButtonElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_toolButtonOption, m_widget, {ElementString::Indicator});
+    m_indicatorElementList = prepareElements(&m_toolButtonOption, m_widget, {ElementString::Indicator});
     setIndicator(QIcon());
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
     }
 
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_toolButtonOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_indicatorMap = layoutMap(m_styleOption, {ElementString::Indicator});
+        m_indicatorMap = layoutMap(&m_toolButtonOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
-        auto subopt = *m_toolButtonOption;
+        auto subopt = m_toolButtonOption;
         subopt.rect = m_mainButtonRect.toRect();
         m_layoutMap = layoutMap(&subopt, m_subElementList);
         m_isValid = true;
@@ -138,18 +137,15 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolButtonElement::drawIcon(QPainter *painter) const
 {
-    if (!m_toolButtonOption) {
-        return;
-    }
-    if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
+    if (m_toolButtonOption.toolButtonStyle == Qt::ToolButtonTextOnly) {
         return;
     }
 
     QRectF iconRect = m_layoutMap[ElementString::Icon].rect;
-    if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
-        auto subopt = *m_toolButtonOption;
+    if (m_hasArrows) {
+        auto subopt = m_toolButtonOption;
         subopt.rect = iconRect.toRect();
-        switch (m_toolButtonOption->arrowType) {
+        switch (m_toolButtonOption.arrowType) {
         case Qt::LeftArrow:
             m_style->drawPrimitive(QStyle::PE_IndicatorArrowLeft, &subopt, painter);
             break;
@@ -186,10 +182,7 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
 QVariantMap ToolButtonElement::elementAttributes() const
 {
     QVariantMap map;
-    if (!m_toolButtonOption) {
-        return map;
-    }
-    switch (m_toolButtonOption->toolButtonStyle) {
+    switch (m_toolButtonOption.toolButtonStyle) {
     case Qt::ToolButtonIconOnly:
         map[u"display"_s] = QVariant(u"icon-only"_s);
         break;
@@ -211,7 +204,7 @@ QVariantMap ToolButtonElement::elementAttributes() const
 QStringList ToolButtonElement::elementHints() const
 {
     QStringList hints;
-    if (!m_toolButtonOption || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
+    if (m_toolButtonOption.features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
         return hints;
     }
 
@@ -229,11 +222,11 @@ QStringList ToolButtonElement::elementHints() const
         hints.append(u"with-menu-button"_s);
         break;
     }
-    if (!m_toolButtonOption->state.testFlag(QStyle::State_AutoRaise)) {
+    if (!m_toolButtonOption.state.testFlag(QStyle::State_AutoRaise)) {
         hints.append(u"raised"_s);
     }
     // If menuButton is pressed, both sunken and raised are active
-    if (m_toolButtonOption->state.testFlags({QStyle::State_Sunken, QStyle::State_Raised})) {
+    if (m_toolButtonOption.state.testFlags({QStyle::State_Sunken, QStyle::State_Raised})) {
         hints.append(u"menu-open"_s);
     }
 
@@ -242,10 +235,7 @@ QStringList ToolButtonElement::elementHints() const
 
 void ToolButtonElement::layoutButtons()
 {
-    if (!m_toolButtonOption) {
-        return;
-    }
-    m_mainButtonRect = m_toolButtonOption->rect;
+    m_mainButtonRect = m_toolButtonOption.rect;
     if (!m_hasIndicator) {
         m_menuButtonRect = QRectF();
         return;
@@ -338,14 +328,11 @@ void ToolButtonElement::layoutButtons()
 ArrowStyle ToolButtonElement::arrowStyle() const
 {
     // Behavior taken from breeze
-    if (!m_toolButtonOption) {
-        return ArrowStyle::None;
-    }
-    const bool hasPopupMenu = (m_hasIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::MenuButtonPopup));
+    const bool hasPopupMenu = (m_hasIndicator && m_toolButtonOption.features.testFlag(QStyleOptionToolButton::MenuButtonPopup));
     const bool hasInlineIndicator = (m_hasIndicator && !hasPopupMenu);
-    const bool hasDelayedMenu = (hasInlineIndicator && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::PopupDelay));
-    const bool hasIcon = !m_toolButtonOption->icon.isNull() || (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow));
-    const bool iconOnly = m_toolButtonOption->toolButtonStyle == Qt::ToolButtonIconOnly || (m_toolButtonOption->text.isEmpty() && hasIcon);
+    const bool hasDelayedMenu = (hasInlineIndicator && m_toolButtonOption.features.testFlag(QStyleOptionToolButton::PopupDelay));
+    const bool hasIcon = !m_toolButtonOption.icon.isNull() || (m_toolButtonOption.features.testFlag(QStyleOptionToolButton::Arrow));
+    const bool iconOnly = m_toolButtonOption.toolButtonStyle == Qt::ToolButtonIconOnly || (m_toolButtonOption.text.isEmpty() && hasIcon);
 
     if (hasPopupMenu) {
         return ArrowStyle::MenuButton;

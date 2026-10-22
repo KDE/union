@@ -15,17 +15,17 @@ using namespace Qt::StringLiterals;
 
 MenuElement::MenuElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuOption(option)
 {
-    update();
+    update(option);
 }
 
 MenuElement::~MenuElement()
 {
 }
 
-void MenuElement::update()
+void MenuElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     updateSubElementList();
     layout();
 }
