@@ -128,7 +128,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), controlElement, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.ControlElement = controlElement;
     auto cached = ElementCache::element<QStyle::ControlElement,
@@ -196,7 +196,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), control, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.ComplexControl = control;
 
@@ -254,7 +254,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), element, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.PrimitiveElement = element;
     auto cached = ElementCache::element<QStyle::PrimitiveElement,
@@ -337,7 +337,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
 
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QStyleOption *option, const QSize &contentsSize, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), contentsType, option, contentsSize, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto cached = ElementCache::element<QStyle::ContentsType,
                                         QStyle::CT_PushButton,
                                         QStyle::CT_CheckBox,
@@ -373,7 +373,7 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QSty
 
 QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), element, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
 
     auto cached = ElementCache::element<QStyle::SubElement,
                                         QStyle::SE_ItemViewItemText,
@@ -409,7 +409,7 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
 
 QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOptionComplex *option, SubControl subControl, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), complexControl, option, subControl, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
 
     auto cached = ElementCache::element<QStyle::ComplexControl,
                                         QStyle::CC_ToolButton,
@@ -428,7 +428,7 @@ QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOpti
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), metric, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto cached = ElementCache::element<QStyle::PixelMetric,
                                         QStyle::PM_ButtonMargin,
                                         QStyle::PM_ButtonDefaultIndicator,
@@ -547,7 +547,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
 
 QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), pixmap, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto cached =
         ElementCache::element<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton, QStyle::SP_TitleBarCloseButton, QStyle::SP_TitleBarNormalButton>(
             pixmap,
@@ -566,7 +566,7 @@ QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption
 // TODO: Make these adjustable!
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), hint, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), option, widget);
     auto cached = ElementCache::element<QStyle::StyleHint,
                                         QStyle::SH_TabBar_Alignment,
                                         QStyle::SH_TabBar_ElideMode,
