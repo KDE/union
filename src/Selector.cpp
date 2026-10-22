@@ -310,7 +310,7 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::ma
 template<>
 UNION_EXPORT QString SelectorPrivateModel<SelectorType::ChildCombinator, Empty>::toString() const
 {
-    return u"Child"_s;
+    return u"ChildCombinator"_s;
 }
 
 /***** SelectorType::DescendantCombinator *****/
@@ -329,7 +329,26 @@ UNION_EXPORT bool SelectorPrivateModel<SelectorType::DescendantCombinator, Empty
 template<>
 UNION_EXPORT QString SelectorPrivateModel<SelectorType::DescendantCombinator, Empty>::toString() const
 {
-    return u"Descendant"_s;
+    return u"DescendantCombinator"_s;
+}
+
+/***** SelectorType::SubElementCombinator *****/
+template<>
+UNION_EXPORT int SelectorPrivateModel<SelectorType::SubElementCombinator, Empty>::weight() const
+{
+    return 0;
+}
+
+template<>
+UNION_EXPORT bool SelectorPrivateModel<SelectorType::SubElementCombinator, Empty>::matches([[maybe_unused]] Element *element) const
+{
+    return false;
+}
+
+template<>
+UNION_EXPORT QString SelectorPrivateModel<SelectorType::SubElementCombinator, Empty>::toString() const
+{
+    return u"SubElementCombinator"_s;
 }
 }
 
@@ -423,6 +442,16 @@ bool SelectorList::matches(const QList<Element::Ptr> &elements) const
                     eitr++;
                 }
                 break;
+            case SelectorType::SubElementCombinator:
+                sitr++;
+                eitr++;
+                while (eitr != elements.rend()) {
+                    if ((*eitr)->subElement().isEmpty()) {
+                        break;
+                    }
+                    eitr++;
+                }
+                break;
             default:
                 return false;
             }
@@ -511,7 +540,8 @@ QDataStream &operator>>(QDataStream &stream, Union::SelectorList &selectors)
                        SelectorType::AnyElement,
                        SelectorType::SubElement,
                        SelectorType::ChildCombinator,
-                       SelectorType::DescendantCombinator>(selectorType, stream, selectors);
+                       SelectorType::DescendantCombinator,
+                       SelectorType::SubElementCombinator>(selectorType, stream, selectors);
     }
 
     return stream;

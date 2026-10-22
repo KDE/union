@@ -65,6 +65,9 @@ class SelectorList;
  * \value DescendantCombinator
  *      A combinator that will match if the element is a descendant at any level
  *      of the parent.
+ * \value SubElementCombinator
+ *      A combinator that will match if the element is a descendatn and a
+ *      sub-element of the parent.
  */
 enum class SelectorType {
     Empty,
@@ -79,6 +82,7 @@ enum class SelectorType {
     AnyElement,
     ChildCombinator,
     DescendantCombinator,
+    SubElementCombinator,
 };
 
 namespace detail
@@ -98,6 +102,7 @@ template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = fal
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::AnyElement, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::ChildCombinator, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCombinator, Empty> = true;
+template <> inline constexpr bool ArgumentTypesMatch<SelectorType::SubElementCombinator, Empty> = true;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, Identifier>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, Identifier>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, Identifier>;
@@ -143,7 +148,9 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
 
     inline bool isCombinator() const override
     {
-        return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator || _type == SelectorType::SubElement;
+        return _type == SelectorType::ChildCombinator //
+            || _type == SelectorType::DescendantCombinator //
+            || _type == SelectorType::SubElementCombinator;
     }
 
     inline void writeToDataStream(QDataStream &stream) const override
