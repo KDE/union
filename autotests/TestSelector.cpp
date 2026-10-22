@@ -150,26 +150,26 @@ private Q_SLOTS:
         Selector emptySelector = Selector::create();
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::Type>(QString{});
+        emptySelector = Selector::create<SelectorType::Type>(Identifier{});
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty Type selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::Id>(QString{});
+        emptySelector = Selector::create<SelectorType::Id>(Identifier{});
         QVERIFY(!emptySelector.matches(emptyElement.get()));
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty ID selector should not match an empty element");
 
         emptySelector = Selector::create<SelectorType::State>(Element::State::None);
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty State selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::Hint>(QString{});
+        emptySelector = Selector::create<SelectorType::Hint>(Identifier{});
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty Hint selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::AttributeExists>(QString{});
+        emptySelector = Selector::create<SelectorType::AttributeExists>(Identifier{});
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty Attribute Exists selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::AttributeEquals>(std::make_pair(QString{}, QVariant{}));
+        emptySelector = Selector::create<SelectorType::AttributeEquals>(std::make_pair(Identifier{}, QVariant{}));
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty Attribute Equals selector should not match an empty element");
 
-        emptySelector = Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(QString{}, QString{}));
+        emptySelector = Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(Identifier{}, QString{}));
         QVERIFY2(!emptySelector.matches(emptyElement.get()), "Empty Attribute Substring Match selector should not match an empty element");
     }
 
@@ -207,15 +207,15 @@ private Q_SLOTS:
     void testDataStream()
     {
         const auto list = SelectorList{
-            Selector::create<SelectorType::Type>(u"type"_s),
-            Selector::create<SelectorType::Id>(u"id"_s),
+            Selector::create<SelectorType::Type>(Identifier{u"type"}),
+            Selector::create<SelectorType::Id>(Identifier{u"id"}),
             Selector::create<SelectorType::ChildCombinator>(),
             Selector::create<SelectorType::State>(Element::State::Highlighted),
-            Selector::create<SelectorType::Hint>(u"hint"_s),
+            Selector::create<SelectorType::Hint>(Identifier{u"hint"}),
             Selector::create<SelectorType::DescendantCombinator>(),
-            Selector::create<SelectorType::AttributeExists>(u"attribute"_s),
-            Selector::create<SelectorType::AttributeEquals>(std::pair(u"attribute"_s, QVariant::fromValue(1.234))),
-            Selector::create<SelectorType::AttributeSubstringMatch>(std::pair(u"other-attribute"_s, u"val"_s)),
+            Selector::create<SelectorType::AttributeExists>(Identifier{u"attribute"}),
+            Selector::create<SelectorType::AttributeEquals>(std::pair(Identifier{u"attribute"}, QVariant::fromValue(1.234))),
+            Selector::create<SelectorType::AttributeSubstringMatch>(std::pair(Identifier{u"other-attribute"}, u"val"_s)),
             Selector::create<SelectorType::ChildCombinator>(),
             Selector::create<SelectorType::AnyElement>(),
         };
@@ -244,18 +244,20 @@ private Q_SLOTS:
         QTest::addColumn<QJsonArray>("structure");
         QTest::addColumn<SelectorList>("selectors");
 
-        QTest::addRow("type") << QJsonArray{QJsonObject{{u"type"_s, u"type"_s}}} << SelectorList{Selector::create<SelectorType::Type>(u"type"_s)};
-        QTest::addRow("id") << QJsonArray{QJsonObject{{u"id"_s, u"id"_s}}} << SelectorList{Selector::create<SelectorType::Id>(u"id"_s)};
+        QTest::addRow("type") << QJsonArray{QJsonObject{{u"type"_s, u"type"_s}}} << SelectorList{Selector::create<SelectorType::Type>(Identifier{u"type"})};
+        QTest::addRow("id") << QJsonArray{QJsonObject{{u"id"_s, u"id"_s}}} << SelectorList{Selector::create<SelectorType::Id>(Identifier{u"id"})};
         QTest::addRow("state") << QJsonArray{QJsonObject{{u"states"_s, u"hovered"_s}}}
                                << SelectorList{Selector::create<SelectorType::State>(Element::State::Hovered)};
-        QTest::addRow("hint") << QJsonArray{QJsonObject{{u"hints"_s, QJsonArray{u"hint"_s}}}} << SelectorList{Selector::create<SelectorType::Hint>(u"hint"_s)};
+        QTest::addRow("hint") << QJsonArray{QJsonObject{{u"hints"_s, QJsonArray{u"hint"_s}}}}
+                              << SelectorList{Selector::create<SelectorType::Hint>(Identifier{u"hint"})};
         auto attribute = QJsonArray{QJsonObject{{u"attributes"_s, QJsonObject{{u"test"_s, u"value"_s}}}}};
-        QTest::addRow("attribute_exists") << attribute << SelectorList{Selector::create<SelectorType::AttributeExists>(u"test"_s)};
+        QTest::addRow("attribute_exists") << attribute << SelectorList{Selector::create<SelectorType::AttributeExists>(Identifier{u"test"})};
         QTest::addRow("attribute_equals") << attribute
-                                          << SelectorList{
-                                                 Selector::create<SelectorType::AttributeEquals>(std::make_pair(u"test"_s, QVariant::fromValue(u"value"_s)))};
+                                          << SelectorList{Selector::create<SelectorType::AttributeEquals>(
+                                                 std::make_pair(Identifier{u"test"}, QVariant::fromValue(u"value"_s)))};
         QTest::addRow("attribute_substring") << attribute
-                                             << SelectorList{Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(u"test"_s, (u"lu"_s)))};
+                                             << SelectorList{
+                                                    Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(Identifier{u"test"}, (u"lu"_s)))};
 
         auto structure = QJsonArray{
             QJsonObject{{u"type"_s, u"test"_s}},
@@ -264,13 +266,13 @@ private Q_SLOTS:
         };
         QTest::addRow("child") << structure
                                << SelectorList{
-                                      Selector::create<SelectorType::Id>(u"id"_s),
+                                      Selector::create<SelectorType::Id>(Identifier{u"id"}),
                                       Selector::create<SelectorType::ChildCombinator>(),
                                       Selector::create<SelectorType::State>(Element::State::Hovered),
                                   };
         QTest::addRow("descendant") << structure
                                     << SelectorList{
-                                           Selector::create<SelectorType::Type>(u"test"_s),
+                                           Selector::create<SelectorType::Type>(Identifier{u"test"}),
                                            Selector::create<SelectorType::DescendantCombinator>(),
                                            Selector::create<SelectorType::State>(Element::State::Hovered),
                                        };
