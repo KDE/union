@@ -134,12 +134,12 @@ protected:
     /*!
      * \brief Translate styleoption values into attributes for this element.
      */
-    virtual QVariantMap elementAttributes() const;
+    virtual QHash<Union::Identifier, QVariant> elementAttributes() const;
 
     /*!
      * \brief Translate styleoption values into attributes for this element.
      */
-    virtual QStringList elementHints() const;
+    virtual QList<Union::Identifier> elementHints() const;
 
     /*!
      * \brief Translate states of styleoption into Union states.

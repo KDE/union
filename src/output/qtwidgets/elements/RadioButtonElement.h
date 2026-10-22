@@ -49,6 +49,6 @@ public:
 private:
     void updateSubElementList() override;
     void drawIndicator(QPainter *painter) const override;
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     const QStyleOptionButton *m_buttonOption = nullptr;
 };

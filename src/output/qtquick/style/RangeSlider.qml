@@ -39,28 +39,26 @@ T.RangeSlider {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     first.handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "FirstHandle"
         Union.Element.states {
             hovered: control.first.hovered
             activeFocus: control.first.handle.activeFocus
             enabled: control.enabled
             pressed: control.first.pressed
         }
-        Union.Element.hints: Union.ElementHint { name: "first" }
 
         x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
     }
 
     second.handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "SecondHandle"
         Union.Element.states {
             hovered: control.second.hovered
             activeFocus: control.second.handle.activeFocus
             enabled: control.enabled
             pressed: control.second.pressed
         }
-        Union.Element.hints: Union.ElementHint { name: "second" }
 
         x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
@@ -72,7 +70,7 @@ T.RangeSlider {
         scale: control.horizontal && control.mirrored ? -1 : 1
 
         Union.StyledRectangle {
-            Union.Element.type: "Fill"
+            Union.Element.subElement: "Filled"
             readonly property int smallerValue: Math.min(parent.width, parent.height)
             x: control.horizontal ? control.first.position * parent.width + (smallerValue / 2) : 0
             y: control.horizontal ? 0 : control.second.visualPosition * parent.height + (smallerValue / 2)

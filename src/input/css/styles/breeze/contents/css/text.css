@@ -43,7 +43,7 @@ searchfield
         outline: 2px solid var(--focus-color);
     }
 
-    & > .placeholder
+    &::part(placeholder)
     {
         color: mix(var(--view-text-color), var(--view-background-color), 0.3);
     }
@@ -53,7 +53,7 @@ searchfield
         background-color: var(--view-disabled-background-color);
         border: 1px solid var(--view-disabled-border-color);
 
-        & > .placeholder
+        &::part(placeholder)
         {
             color: mix(var(--view-text-color), var(--view-background-color), 0.7);
         }
@@ -62,8 +62,8 @@ searchfield
 
 textfield,
 searchfield {
-    text-alignment: content start center 0;
     width: var(--text-field-width);
+
     &.inside-table {
         border: none;
         border-radius: 0px;
@@ -73,7 +73,6 @@ searchfield {
 
 textarea
 {
-    text-alignment: content start start 0;
     width: var(--text-field-width);
 }
 
@@ -81,16 +80,17 @@ spinbox
 {
     width: var(--medium-element-size);
     height: var(--large-element-size);
-    layout-alignment: content fill fill 0;
-    text-alignment: content center fill 0;
-    padding-left: var(--large-spacing);
-    padding-right: var(--large-spacing);
-    padding-top: var(--small-spacing);
-    padding-bottom: var(--small-spacing);
+    padding: var(--large-spacing) var(--small-spacing);
 
-    color: var(--button-active-text-color);
+    &::part(text)
+    {
+        layout-alignment: content center fill 0;
+        color: var(--button-active-text-color);
+        text-align: end;
+    }
 
-    & > indicator
+    &::part(increase),
+    &::part(decrease)
     {
         width: var(--large-element-size);
         height: var(--small-element-size);
@@ -100,13 +100,12 @@ spinbox
         margin-top: var(--corner-radius);
         margin-bottom: var(--corner-radius);
 
-        layout-alignment-container: item;
-        layout-alignment-vertical: fill;
+        layout-alignment: item center fill 0;
 
         &:hovered,
         &:pressed
         {
-            height: var(--medium-element-size);
+/*             height: var(--medium-element-size); */
             margin-top: 0px;
             margin-bottom: 0px;
         }
@@ -126,49 +125,50 @@ spinbox
         {
             color: var(--button-disabled-text-color);
         }
+    }
 
-        &.decrease
+    &::part(decrease)
+    {
+        layout-alignment-horizontal: start;
+        icon-name: "spinbox-decrease";
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+        border-right: 1px solid var(--button-active-border-color);
+
+        &:hovered,
+        &:pressed
         {
-            layout-alignment-horizontal: start;
-            icon-name: "spinbox-decrease";
-            border-top-right-radius: 0px;
-            border-bottom-right-radius: 0px;
-            border-right: 1px solid var(--button-active-border-color);
-
-            &:hovered,
-            &:pressed
-            {
-                border-right: 1px solid var(--highlight-color);
-                border-top-right-radius: var(--corner-radius);
-                border-bottom-right-radius: var(--corner-radius);
-            }
+            border-right: 1px solid var(--highlight-color);
+            border-top-right-radius: var(--corner-radius);
+            border-bottom-right-radius: var(--corner-radius);
         }
+    }
 
-        &.increase
+    &::part(increase)
+    {
+        layout-alignment-horizontal: end;
+        icon-name: "spinbox-increase";
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-left: 1px solid var(--button-active-border-color);
+
+        &:hovered,
+        &:pressed
         {
-            layout-alignment-horizontal: end;
-            icon-name: "spinbox-increase";
-            border-top-left-radius: 0px;
-            border-bottom-left-radius: 0px;
-            border-left: 1px solid var(--button-active-border-color);
-
-            &:hovered,
-            &:pressed
-            {
-                border-left: 1px solid var(--highlight-color);
-                border-top-left-radius: var(--corner-radius);
-                border-bottom-left-radius: var(--corner-radius);
-            }
+            border-left: 1px solid var(--highlight-color);
+            border-top-left-radius: var(--corner-radius);
+            border-bottom-left-radius: var(--corner-radius);
         }
     }
 
     &.constrained {
         layout-alignment: item start fill 0;
-        text-alignment: item start fill 0;
         margin-left: var(--small-spacing);
     }
 
-    &.constrained > indicator {
+    &.constrained::part(increase),
+    &.constrained::part(decrease)
+    {
         layout-alignment: item end stack-fill 0;
 
         width: var(--medium-element-size);
@@ -183,41 +183,44 @@ spinbox
         {
             border: none;
             background: none;
-            icon-color: var(--highlight-color);
+            color: var(--highlight-color);
         }
+    }
 
-        &.decrease {
-            layout-alignment-order: 1;
-            icon-name: "arrow-down";
-        }
+    &.constrained::part(decrease) {
+        layout-alignment-order: 1;
+        icon-name: "arrow-down";
+    }
 
-        &.increase {
-            icon-name: "arrow-up";
-        }
+    &.constrained::part(increase) {
+        icon-name: "arrow-up";
     }
 }
 
 searchfield {
     height: var(--large-element-size);
-    layout-alignment: content fill fill 1;
-    text-alignment: content fill center 0;
-    & > searchindicator, & > clearindicator {
-        width: var(--icon-size-smallmedium);
-        height: var(--icon-size-smallmedium);
+    layout-alignment: content fill fill 0;
+
+    &::part(search),
+    &::part(clear)
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
     }
 
-    & > searchindicator {
+    &::part(search)
+    {
         layout-alignment: content start fill 0;
         icon-name: "search";
         margin-right: var(--small-spacing);
     }
 
-    & > clearindicator {
-        layout-alignment: content end fill 2;
+    &::part(clear)
+    {
+        layout-alignment: content end fill 0;
         icon-name: "edit-clear";
         margin-left: var(--small-spacing);
     }
-    
 }
 
 textfield.changed,

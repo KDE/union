@@ -65,7 +65,7 @@ T.Slider {
         height: control.horizontal ? Union.Style.properties.layout.height : control.height
 
         Union.StyledRectangle {
-            Union.Element.type: "Fill"
+            Union.Element.subElement: "Filled"
             x: control.horizontal && LayoutMirroring.enabled ? control.visualPosition * parent.width : 0.0
             y: control.horizontal ? 0 : control.visualPosition * parent.height
             width: control.horizontal ? control.position * parent.width : control.implicitBackgroundWidth
@@ -98,7 +98,7 @@ T.Slider {
 
                     readonly property real value: control.from + control.Union.StyleHints.tickMarkStepSize * index
 
-                    Union.Element.type: "TickMark"
+                    Union.Element.subElement: "TickMark"
                     Union.Element.hints: Union.ElementHint { name: "active"; when: control.value >= tick.value }
 
                     x: {

@@ -49,8 +49,8 @@ public:
 
 private:
     Union::Element::States elementStates() const override;
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    QHash<Union::Identifier, QVariant> elementAttributes() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;

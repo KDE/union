@@ -51,11 +51,11 @@ T.RoundButton {
     spacing: Union.Style.properties.layout.spacing
 
     icon {
-        color: Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "black"
+        name: (contentItem as P.DefaultContentItem)?.iconName ?? ""
+        source: (contentItem as P.DefaultContentItem)?.iconSource ?? Qt.url()
     }
 
     Union.Positioner.positionItems: [contentItem]

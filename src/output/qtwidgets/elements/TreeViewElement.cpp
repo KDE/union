@@ -93,9 +93,9 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
     painter->restore();
 }
 
-QStringList TreeViewElement::elementHints() const
+Union::IdentifierList TreeViewElement::elementHints() const
 {
-    QStringList elementHints;
+    Union::IdentifierList elementHints;
     if (m_styleOption && m_styleOption->state.testFlag(QStyle::State_Open)) {
         elementHints.append(u"expanded"_s);
     }

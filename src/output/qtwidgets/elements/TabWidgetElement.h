@@ -35,7 +35,7 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    QHash<Union::Identifier, QVariant> elementAttributes() const override;
+    QList<Union::Identifier> elementHints() const override;
     const QStyleOptionTabWidgetFrame *m_tabFrameOption = nullptr;
 };

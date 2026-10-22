@@ -43,7 +43,7 @@ public:
 
 private:
     bool isEditable() const;
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     void drawText(QPainter *painter) const override;
     const QStyleOptionComboBox *m_comboBoxOption = nullptr;

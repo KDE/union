@@ -150,9 +150,9 @@ void FrameElement::updateSubElementList()
     m_subElementList.append(ElementString::Frame);
 }
 
-QVariantMap FrameElement::elementAttributes() const
+QHash<Union::Identifier, QVariant> FrameElement::elementAttributes() const
 {
-    QVariantMap map;
+    QHash<Union::Identifier, QVariant> map;
 
     // For some reason both frame widget and styleoption can have frameshape,
     // and they can also differ. If we do not have a styleoption, rely on widget
@@ -193,7 +193,7 @@ QVariantMap FrameElement::elementAttributes() const
     return map;
 }
 
-QStringList FrameElement::elementHints() const
+QList<Union::Identifier> FrameElement::elementHints() const
 {
     auto hints = frameHints(m_frameOption);
 

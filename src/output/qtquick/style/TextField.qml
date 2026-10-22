@@ -48,13 +48,13 @@ T.TextField {
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
 
-    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+    horizontalAlignment: Union.Style.properties.text.alignment
+    // verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
 
     Text {
         id: placeholder
 
-        Union.Element.hints: Union.ElementHint { name: "placeholder" }
+        Union.Element.subElement: "Placeholder"
 
         x: control.leftPadding
         y: control.topPadding

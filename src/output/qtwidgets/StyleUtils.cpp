@@ -303,6 +303,14 @@ int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
     const auto textAlign = toQtHorizontalAlignment(horizontalAlignment) | toQtVerticalAlignment(verticalAlignment);
     auto textWrap =
         toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
+    // TODO SubElements
+    // Handle alignment case-by-case basis. Sometimes we want to just use default
+    // alignleft and center, especially if we have an icon to work with.
+    // auto textAlign = QFlags(Qt::AlignAbsolute);
+    // if (!skipAlign && properties->text()) {
+    //     textAlign = Qt::AlignmentFlag(properties->text()->alignment().value_or(Union::Properties::TextAlignment::Center));
+    // }
+    // TODO
     textFlags |= textAlign;
     // Do not add wrap flags if we get DontClip
     // This could be done better
@@ -328,9 +336,9 @@ QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap)
     return rect;
 }
 
-QStringList frameHints(const QStyleOptionFrame *frameOption)
+QList<Union::Identifier> frameHints(const QStyleOptionFrame *frameOption)
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!frameOption) {
         return hints;
     }

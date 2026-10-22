@@ -72,7 +72,7 @@ KT.Chip {
         Union.Mnemonics.label: control.text
 
         Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
+            Union.Element.subElement: "Icon"
             Union.PositionedItem.minimumWidth: control.icon?.width ?? 0.0
             Union.PositionedItem.minimumHeight: control.icon?.height ?? 0.0
             control: control
@@ -80,7 +80,7 @@ KT.Chip {
         }
 
         Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
+            Union.Element.subElement: "Text"
 
             text: control.text
             font: control.font
@@ -91,13 +91,9 @@ KT.Chip {
     }
 
     indicator: Controls.ToolButton {
-        id: indicator
+        Union.Element.subElement: "Indicator"
 
-        Union.Element.hints: [
-            Union.ElementHint { name: "indicator" }
-        ]
-
-        visible: control.closable
+        visible: control.closable && (Union.Style.properties.display.visible ?? true)
     }
 
     background: Union.StyledRectangle { }

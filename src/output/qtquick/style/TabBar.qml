@@ -62,15 +62,10 @@ T.TabBar {
         // Some styles use list view highlights, some don't
         highlight: Union.StyledRectangle {
             id: highlight
-            Union.Element.type: "TabBarHighlight"
+            Union.Element.subElement: "Highlight"
             Union.Element.states {
                 highlighted: control.currentItem !== null
                 enabled: highlight.enabled
-            }
-            Union.Element.hints: Union.ElementHint { name: "itemview-highlight" }
-            Union.Element.attributes: Union.ElementAttribute {
-                name: "tab-position"
-                value: control.position === T.TabBar.Footer ? "bottom" : "top"
             }
         }
     }

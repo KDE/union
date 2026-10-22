@@ -8,8 +8,8 @@ monthgrid, dayofweekrow, weeknumbercolumn  {
 	border: 1px solid var(--view-border-color);
 	& > label {
 		outline: 1px solid var(--view-border-color);
-		text-alignment-horizontal: center;
-		text-alignment-vertical: center;
+/* 		text-alignment-horizontal: center; */
+/* 		text-alignment-vertical: center; */
 		color: var(--view-text-color);
 		background-color: var(--view-disabled-background-color);
 	}

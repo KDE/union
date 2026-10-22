@@ -131,9 +131,9 @@ Union::Element::States ButtonElement::elementStates() const
     return states;
 }
 
-QStringList ButtonElement::elementHints() const
+QList<Union::Identifier> ButtonElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_buttonOption) {
         return hints;
     }

@@ -45,7 +45,7 @@ public:
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
 
 private:
-    QStringList elementHints() const override;
+    QList<Union::Identifier> elementHints() const override;
     void updateSubElementList() override;
     void drawSpinIndicator(QPainter *painter, const QStyle::PrimitiveElement &primitive) const;
     const QStyleOptionSpinBox *m_spinBoxOption = nullptr;

@@ -37,11 +37,9 @@ T.ProgressBar {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     contentItem: Item {
-        id: trackContainer
-
         Union.StyledRectangle {
             id: track
-            Union.Element.type: "Track"
+            Union.Element.subElement: "Filled"
 
             property real indeterminatePosition: 0
 
@@ -54,8 +52,8 @@ T.ProgressBar {
                 }
                 return 0.0;
             }
-            // TODO: Find a way to style the indeterminate width here
-            width: control.indeterminate ? 0.25 * parent.width : control.position * parent.width
+
+            width: control.indeterminate ? Union.Style.properties.layout.width : control.position * parent.width
             height: parent.height
 
             // TODO: Some way of controlling what kind of animation to use from

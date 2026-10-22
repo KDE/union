@@ -83,7 +83,7 @@ T.TreeViewDelegate {
     Item {
         id: indentItem
 
-        Union.Element.type: "Indentation"
+        Union.Element.subElement: "Indentation"
 
         implicitWidth: control.depth * control.indentation
         implicitHeight: 1
@@ -91,7 +91,7 @@ T.TreeViewDelegate {
     }
 
     indicator: Union.Icon {
-        Union.Element.type: "Indicator"
+        Union.Element.subElement: "Indicator"
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
         color: Union.Style.properties.icon.color
@@ -121,8 +121,7 @@ T.TreeViewDelegate {
 
         TextField {
             id: textField
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            horizontalAlignment: Union.Style.properties.text.alignmentz
             // Remove the TextField background, we want to use the Control background.
             background: Item {}
             width: control.contentItem.width

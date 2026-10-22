@@ -160,14 +160,14 @@ void AbstractElement::draw(QPainter *painter, DrawEnums enums) const
     qCWarning(UNION_QTWIDGETS) << "Drawing not implemented for " << enums.ComplexControl << enums.ControlElement << enums.PrimitiveElement;
 }
 
-QVariantMap AbstractElement::elementAttributes() const
+QHash<Union::Identifier, QVariant> AbstractElement::elementAttributes() const
 {
-    return QVariantMap();
+    return {};
 }
 
-QStringList AbstractElement::elementHints() const
+QList<Union::Identifier> AbstractElement::elementHints() const
 {
-    return QStringList();
+    return {};
 }
 
 Union::Element::States AbstractElement::elementStates() const
@@ -321,7 +321,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
         const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
         auto textColor = m_styleOption->palette.text().color();
-        auto unionColor = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
+        auto unionColor = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::display, &DisplayPropertyGroup::color);
         auto font = safePropertyLookup(properties, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
         if (unionColor.isValid()) {
             textColor = unionColor.toQColor();
@@ -383,9 +383,11 @@ QSizeF AbstractElement::indicatorSize() const
 
 QSizeF AbstractElement::iconSize() const
 {
-    auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
-    auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
-    return QSizeF(width, height);
+    // TODO SubElements
+    // auto width = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
+    // auto height = safePropertyLookup(m_backgroundProperties, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
+    // return QSizeF(width, height);
+    return QSizeF();
 }
 
 qreal AbstractElement::averagePadding() const
@@ -523,32 +525,34 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
         // in future this should be unnecessary.
         if (subElement == ElementString::Icon) {
             // Some styleoptions provide us an icon size, use it if its not null
+
+            // TODO SubElements
             auto iconSize = iconSizeFromOption(opt);
             if (!iconSize.isValid()) {
-                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
-                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
+                // elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
+                // elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
             } else {
                 elementRect.setWidth(iconSize.width());
                 elementRect.setHeight(iconSize.height());
             }
-            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::icon,
-                                                                 &IconPropertyGroup::alignment,
-                                                                 &AlignmentPropertyGroup::horizontal);
-            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::icon,
-                                                               &IconPropertyGroup::alignment,
-                                                               &AlignmentPropertyGroup::vertical);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
+            // horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+            //                                                      &StylePropertyGroup::icon,
+            //                                                      &IconPropertyGroup::alignment,
+            //                                                      &AlignmentPropertyGroup::horizontal);
+            // verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+            //                                                    &StylePropertyGroup::icon,
+            //                                                    &IconPropertyGroup::alignment,
+            //                                                    &AlignmentPropertyGroup::vertical);
+            // order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else if (subElement == ElementString::Text || subElement == ElementString::ShortcutText) {
-            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::text,
-                                                                 &TextPropertyGroup::alignment,
-                                                                 &AlignmentPropertyGroup::horizontal);
-            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::text,
-                                                               &TextPropertyGroup::alignment,
-                                                               &AlignmentPropertyGroup::vertical);
+            // horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+            //                                                      &StylePropertyGroup::text,
+            //                                                      &TextPropertyGroup::alignment,
+            //                                                      &AlignmentPropertyGroup::horizontal);
+            // verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+            //                                                    &StylePropertyGroup::text,
+            //                                                    &TextPropertyGroup::alignment,
+            //                                                    &AlignmentPropertyGroup::vertical);
             auto optionText = textFromOption(opt);
             // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
             const int tabPosition(optionText.indexOf(QLatin1Char('\t')));
@@ -568,7 +572,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const Union::ElementList &e
                 fontMetrics = QFontMetrics(properties->text()->font()->toQFont());
             }
             elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optionText);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::text, &TextPropertyGroup::alignment, &AlignmentPropertyGroup::order);
+            // order = properties->safePropertyLookup(0, &StylePropertyGroup::text, &TextPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else {
             elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
             elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));

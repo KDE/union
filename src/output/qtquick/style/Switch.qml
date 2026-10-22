@@ -12,11 +12,6 @@ import "private" as P
 T.Switch {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
     Union.Element.type: "Switch"
     Union.Element.states {
         hovered: control.hovered
@@ -29,6 +24,11 @@ T.Switch {
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
@@ -40,39 +40,20 @@ T.Switch {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     spacing: Union.Style.properties.layout.spacing
+
     icon {
-        color: Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "black"
+        name: (contentItem as P.DefaultContentItem)?.iconName ?? ""
+        source: (contentItem as P.DefaultContentItem)?.iconSource ?? Qt.url()
     }
 
     Union.Positioner.positionItems: [indicator, contentItem]
 
-    indicator: Item {
-        Union.Element.type: "Indicator"
+    contentItem: P.DefaultContentItem { control: control }
 
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-
-        Union.StyledRectangle { anchors.fill: parent }
-
-        Union.StyledRectangle {
-            Union.Element.type: "Handle"
-
-            anchors.verticalCenter: parent.verticalCenter
-
-            property real minimumX: Union.Style.properties.layout.margins.left ?? 0
-            property real maximumX: parent.width - width - (Union.Style.properties.layout.margins.right ?? 0)
-            x: Math.max(minimumX, Math.min(maximumX, minimumX + control.visualPosition * (maximumX - minimumX)))
-        }
-    }
-
-    contentItem: P.DefaultContentItem {
-        control: control
-        wrapMode: Text.Wrap
-    }
+    indicator: P.SwitchIndicator { control: control }
 
     background: Union.StyledRectangle { }
 }

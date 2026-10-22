@@ -270,18 +270,18 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
     case cssparser::SelectorPart::Kind::AnyElement:
         return Union::Selector::create<Union::SelectorType::AnyElement>();
     case cssparser::SelectorPart::Kind::Type:
-        return Union::Selector::create<Union::SelectorType::Type>(QString::fromStdString(part.value().get<std::string>()));
+        return Union::Selector::create<Union::SelectorType::Type>(Identifier{part.value().get<std::string>()});
     case cssparser::SelectorPart::Kind::Id:
-        return Union::Selector::create<Union::SelectorType::Id>(QString::fromStdString(part.value().get<std::string>()));
+        return Union::Selector::create<Union::SelectorType::Id>(Identifier{part.value().get<std::string>()});
     case cssparser::SelectorPart::Kind::PseudoClass: {
         auto value = toEnumIntValue<Union::Element::States>(part.value().get<std::string>());
         return Union::Selector::create<Union::SelectorType::State>(Union::Element::State{value});
     }
     case cssparser::SelectorPart::Kind::Class:
-        return Union::Selector::create<Union::SelectorType::Hint>(QString::fromStdString(part.value().get<std::string>()));
+        return Union::Selector::create<Union::SelectorType::Hint>(Identifier{part.value().get<std::string>()});
     case cssparser::SelectorPart::Kind::Attribute: {
         auto attributeMatch = part.attributeMatch().value();
-        auto name = QString::fromStdString(attributeMatch.name());
+        auto name = Identifier{attributeMatch.name()};
         switch (attributeMatch.op()) {
         case cssparser::AttributeMatch::Operator::Exists:
             return Union::Selector::create<Union::SelectorType::AttributeExists>(name);
@@ -307,12 +307,13 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
         // TODO
         break;
     case cssparser::SelectorPart::Kind::Part:
-        return Union::Selector::create<Union::SelectorType::SubElement>(QString::fromStdString(part.value().get<std::string>()));
+        return Union::Selector::create<Union::SelectorType::SubElement>(Identifier{part.value().get<std::string>()});
     case cssparser::SelectorPart::Kind::DescendantCombinator:
         return Union::Selector::create<Union::SelectorType::DescendantCombinator>();
     case cssparser::SelectorPart::Kind::ChildCombinator:
-    case cssparser::SelectorPart::Kind::PartCombinator:
         return Union::Selector::create<Union::SelectorType::ChildCombinator>();
+    case cssparser::SelectorPart::Kind::PartCombinator:
+        return Union::Selector::create<Union::SelectorType::SubElementCombinator>();
     }
 
     return Union::Selector::create();

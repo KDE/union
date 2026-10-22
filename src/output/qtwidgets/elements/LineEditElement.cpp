@@ -98,7 +98,7 @@ QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
-QStringList LineEditElement::elementHints() const
+QList<Union::Identifier> LineEditElement::elementHints() const
 {
     auto hints = frameHints(m_frameOption);
     // Due to how Line Edits work, we have to first check the parent, then it's parent

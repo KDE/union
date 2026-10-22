@@ -28,7 +28,7 @@ target_sources({{ target_name }} PUBLIC
     FILES
 {% for type in types %}
     {{ type.type }}{{ file_suffix }}.h
+{% endif %}
 {% endfor %}
 )
 {% endif %}
-

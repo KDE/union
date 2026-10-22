@@ -55,11 +55,11 @@ Union::SelectorList jsonToSelectorList(const QJsonArray &json)
         }
 
         if (auto type = entry[u"type"].toString(); !type.isEmpty()) {
-            result.append(Selector::create<SelectorType::Type>(type));
+            result.append(Selector::create<SelectorType::Type>(Identifier{type}));
         }
 
         if (auto id = entry[u"id"].toString(); !id.isEmpty()) {
-            result.append(Selector::create<SelectorType::Id>(id));
+            result.append(Selector::create<SelectorType::Id>(Identifier{id}));
         }
 
         if (auto states = entry[u"states"]; !states.isUndefined()) {
@@ -76,19 +76,19 @@ Union::SelectorList jsonToSelectorList(const QJsonArray &json)
         }
 
         for (const auto &hint : entry[u"hints"].toArray()) {
-            result.append(Selector::create<SelectorType::Hint>(hint.toString()));
+            result.append(Selector::create<SelectorType::Hint>(Identifier{hint.toString()}));
         }
 
         for (const auto &exists : entry[u"attributes_exists"].toArray()) {
-            result.append(Selector::create<SelectorType::AttributeExists>(exists.toString()));
+            result.append(Selector::create<SelectorType::AttributeExists>(Identifier{exists.toString()}));
         }
 
         for (const auto &[key, value] : entry[u"attributes_equals"].toObject().asKeyValueRange()) {
-            result.append(Selector::create<SelectorType::AttributeEquals>(std::make_pair(key.toString(), value.toVariant())));
+            result.append(Selector::create<SelectorType::AttributeEquals>(std::make_pair(Identifier{key}, value.toVariant())));
         }
 
         for (const auto &[key, value] : entry[u"attributes_substring"].toObject().asKeyValueRange()) {
-            result.append(Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(key.toString(), value.toString())));
+            result.append(Selector::create<SelectorType::AttributeSubstringMatch>(std::make_pair(Identifier{key}, value.toString())));
         }
     }
 

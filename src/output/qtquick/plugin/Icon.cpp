@@ -334,13 +334,16 @@ void Icon::onControlIconChanged()
     auto width = widthProperty.readOnGadget(data).toReal();
     auto height = heightProperty.readOnGadget(data).toReal();
 
-    if ((width <= 0 || height <= 0) && m_style->query()) {
-        auto properties = m_style->query()->properties();
-        if (properties && properties->icon()) {
-            width = properties->icon()->width().value_or(0.0);
-            height = properties->icon()->height().value_or(0.0);
-        }
-    }
+    // if ((width <= 0 || height <= 0) && m_style->query()) {
+    //     width = m_style->query()->properties()->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    //     height = m_style->query()->properties()->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+    //
+    //     auto properties = m_style->query()->properties();
+    //     if (properties && properties->icon()) {
+    //         width = properties->icon()->width().value_or(0.0);
+    //         height = properties->icon()->height().value_or(0.0);
+    //     }
+    // }
 
     setImplicitSize(width, height);
     setName(nameProperty.readOnGadget(data).toString());

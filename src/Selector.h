@@ -10,6 +10,7 @@
 #include <QVariant>
 
 #include "Element.h"
+#include "Identifier.h"
 
 #include "union_export.h"
 
@@ -29,17 +30,20 @@ class SelectorList;
  *      An empty selector, which does nothing.
  * \value Type
  *      A selector matching on the \l{Union::Element::type}{type} property.
- *      Checks if the specified string is equal to that of the property.
+ *      Checks if the specified string compares equal to the property.
+ * \value SubElement
+ *      A selector matching on the \l{Union::Element::subElement} property.
+ *      Checks if the specified string compares equal to the property.
  * \value Id
  *      A selector matching on the \l{Union::Element::id}{id} property.
- *      Checks if the specified string is equal to that of the property.
+ *      Checks if the specified string compares equal to the property.
  * \value State
  *      A selector matching on the \l{Union::Element::state}{state} property.
  *      Checks if the specified state is set in the property.
  * \value Hint
  *      A selector matching on the \l{Union::Element::hints}{hints} property.
- *      Checks if the specified string matches any of the hints set in the
- *      property.
+ *      Checks if the specified string compares equal to any of the hints set
+ *      in the property.
  * \value AttributeExists
  *      A selector matching on an attribute in the
  *      \l{Union::Element::attributes}{attributes} property. Checks if the
@@ -61,10 +65,14 @@ class SelectorList;
  * \value DescendantCombinator
  *      A combinator that will match if the element is a descendant at any level
  *      of the parent.
+ * \value SubElementCombinator
+ *      A combinator that will match if the element is a descendatn and a
+ *      sub-element of the parent.
  */
 enum class SelectorType {
     Empty,
     Type,
+    SubElement,
     Id,
     State,
     Hint,
@@ -72,9 +80,9 @@ enum class SelectorType {
     AttributeEquals,
     AttributeSubstringMatch,
     AnyElement,
-    SubElement,
     ChildCombinator,
     DescendantCombinator,
+    SubElementCombinator,
 };
 
 namespace detail
@@ -94,14 +102,15 @@ template <SelectorType type, typename T> constexpr bool ArgumentTypesMatch = fal
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::AnyElement, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::ChildCombinator, Empty> = true;
 template <> inline constexpr bool ArgumentTypesMatch<SelectorType::DescendantCombinator, Empty> = true;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, QString>;
+template <> inline constexpr bool ArgumentTypesMatch<SelectorType::SubElementCombinator, Empty> = true;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Type, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::SubElement, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Id, T> = std::is_same_v<T, Identifier>;
 template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::State, T> = std::is_same_v<T, Element::State>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, QString>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<QString, QVariant>>;
-template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeSubstringMatch, T> = std::is_same_v<T, std::pair<QString, QString>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::Hint, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeExists, T> = std::is_same_v<T, Identifier>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeEquals, T> = std::is_same_v<T, std::pair<Identifier, QVariant>>;
+template <typename T> constexpr bool ArgumentTypesMatch<SelectorType::AttributeSubstringMatch, T> = std::is_same_v<T, std::pair<Identifier, QString>>;
 /* clang-format on */
 
 // Partial type-erasure implementation for Selector.
@@ -139,7 +148,9 @@ struct SelectorPrivateModel : public SelectorPrivateConcept {
 
     inline bool isCombinator() const override
     {
-        return _type == SelectorType::ChildCombinator || _type == SelectorType::DescendantCombinator || _type == SelectorType::SubElement;
+        return _type == SelectorType::ChildCombinator //
+            || _type == SelectorType::DescendantCombinator //
+            || _type == SelectorType::SubElementCombinator;
     }
 
     inline void writeToDataStream(QDataStream &stream) const override

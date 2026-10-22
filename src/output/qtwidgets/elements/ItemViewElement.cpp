@@ -204,9 +204,9 @@ void ItemViewElement::drawIcon(QPainter *painter) const
         drawIconAtRect(painter, m_icon, iconRect, m_backgroundProperties);
     }
 }
-QVariantMap ItemViewElement::elementAttributes() const
+QHash<Union::Identifier, QVariant> ItemViewElement::elementAttributes() const
 {
-    QVariantMap map;
+    QHash<Union::Identifier, QVariant> map;
     if (!m_viewItemOption) {
         return map;
     }
@@ -251,9 +251,9 @@ QVariantMap ItemViewElement::elementAttributes() const
     return map;
 }
 
-QStringList ItemViewElement::elementHints() const
+QList<Union::Identifier> ItemViewElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     const auto table = qobject_cast<const QTableView *>(m_viewItemOption->widget);
     const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
     const auto list = qobject_cast<const QListView *>(m_viewItemOption->widget);

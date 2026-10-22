@@ -51,7 +51,7 @@ public:
     QRectF subElementRect(QStyle::SubElement element) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
 
 private:
     void updateSubElementList() override;

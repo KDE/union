@@ -110,9 +110,9 @@ void CheckBoxElement::drawIndicator(QPainter *painter) const
     drawBackgroundRectangle(painter, subElementRect(QStyle::SE_CheckBoxIndicator), m_indicatorProperties);
 }
 
-QStringList CheckBoxElement::elementHints() const
+QList<Union::Identifier> CheckBoxElement::elementHints() const
 {
-    QStringList hints;
+    QList<Union::Identifier> hints;
     if (!m_buttonOption) {
         return hints;
     }
