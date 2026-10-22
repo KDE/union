@@ -206,9 +206,9 @@ qreal ProgressBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     return 0;
 }
 
-QStringList ProgressBarElement::elementHints() const
+Union::IdentifierList ProgressBarElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (m_isHorizontal) {
         hints.append(u"horizontal"_s);
     } else {

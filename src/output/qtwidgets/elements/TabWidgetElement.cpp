@@ -39,12 +39,13 @@ void TabWidgetElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-QVariantMap TabWidgetElement::elementAttributes() const
+Union::IdentifierVariantHash TabWidgetElement::elementAttributes() const
 {
-    QVariantMap map;
+    Union::IdentifierVariantHash map;
     if (!m_tabFrameOption) {
         return map;
     }
+
     const bool top = m_tabFrameOption->shape == QTabBar::RoundedNorth || m_tabFrameOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabFrameOption->shape == QTabBar::RoundedSouth || m_tabFrameOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabFrameOption->shape == QTabBar::RoundedWest || m_tabFrameOption->shape == QTabBar::TriangularWest;
@@ -65,9 +66,9 @@ QVariantMap TabWidgetElement::elementAttributes() const
     return map;
 }
 
-QStringList TabWidgetElement::elementHints() const
+Union::IdentifierList TabWidgetElement::elementHints() const
 {
-    return QStringList();
+    return Union::IdentifierList();
 }
 
 QString TabWidgetElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

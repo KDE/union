@@ -52,7 +52,7 @@ void ToolTipElement::layout()
     }
 }
 
-QStringList ToolTipElement::elementHints() const
+Union::IdentifierList ToolTipElement::elementHints() const
 {
     return frameHints(m_frameOption);
 }

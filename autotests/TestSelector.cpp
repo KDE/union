@@ -17,8 +17,8 @@ struct ElementProperties {
     QString type;
     QString id;
     Element::States states;
-    QStringList hints;
-    QVariantMap attributes;
+    QList<Identifier> hints;
+    QHash<Identifier, QVariant> attributes;
 };
 
 ElementProperties jsonToElementProperties(const QJsonObject &json)
@@ -49,7 +49,7 @@ ElementProperties jsonToElementProperties(const QJsonObject &json)
 
     if (json.contains(u"hints")) {
         const auto hintsArray = json.value(u"hints").toArray();
-        QStringList hints;
+        QList<Identifier> hints;
         std::ranges::transform(hintsArray, std::back_inserter(hints), [](const auto &entry) {
             return entry.toString();
         });
@@ -57,7 +57,11 @@ ElementProperties jsonToElementProperties(const QJsonObject &json)
     }
 
     if (json.contains(u"attributes")) {
-        result.attributes = json.value(u"attributes").toObject().toVariantMap();
+        QHash<Identifier, QVariant> attributes;
+        for (const auto &[key, value] : json.value(u"attributes").toObject().asKeyValueRange()) {
+            attributes.insert(key, value.toVariant());
+        }
+        result.attributes = attributes;
     }
 
     return result;
@@ -74,7 +78,7 @@ ElementList structureFromJson(const QJsonArray &json)
         element->setType(properties.type);
         element->setId(properties.id);
         element->setStates(properties.states);
-        element->setHints(QStringList(properties.hints.begin(), properties.hints.end()));
+        element->setHints(properties.hints);
         element->setAttributes(properties.attributes);
 
         result.append(element);

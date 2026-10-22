@@ -56,21 +56,22 @@ qreal TabBarElement::scrollButtonWidth() const
     return querySize({ElementString::TabScrollButton}).width();
 }
 
-QStringList TabBarElement::elementHints() const
+Union::IdentifierList TabBarElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (m_widget && m_widget->inherits("KMultiTabBar")) {
         hints.append(u"KMultiTabBar"_s);
     }
     return hints;
 }
 
-QVariantMap TabBarElement::elementAttributes() const
+Union::IdentifierVariantHash TabBarElement::elementAttributes() const
 {
-    QVariantMap map;
+    Union::IdentifierVariantHash map;
     if (!m_tabBarOption) {
         return map;
     }
+
     const bool top = m_tabBarOption->shape == QTabBar::RoundedNorth || m_tabBarOption->shape == QTabBar::TriangularNorth;
     const bool bottom = m_tabBarOption->shape == QTabBar::RoundedSouth || m_tabBarOption->shape == QTabBar::TriangularSouth;
     const bool left = m_tabBarOption->shape == QTabBar::RoundedWest || m_tabBarOption->shape == QTabBar::TriangularWest;

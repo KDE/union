@@ -76,8 +76,8 @@ int main(int argc, char **argv)
     Union::ElementList elements;
     Union::Element::Ptr currentElement = Union::Element::create();
     Union::Element::States currentStates;
-    QStringList currentHints;
-    QVariantMap currentAttributes;
+    QList<Union::Identifier> currentHints;
+    QHash<Union::Identifier, QVariant> currentAttributes;
 
     auto appendElement = [&]() {
         currentElement->setStates(currentStates);
@@ -87,8 +87,8 @@ int main(int argc, char **argv)
 
         currentElement = Union::Element::create();
         currentStates = Union::Element::States{};
-        currentHints = QStringList{};
-        currentAttributes = QVariantMap{};
+        currentHints = {};
+        currentAttributes = {};
     };
 
     ArgumentsData data{

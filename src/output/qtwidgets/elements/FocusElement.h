@@ -38,7 +38,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionFocusRect *m_focusOption = nullptr;
 };

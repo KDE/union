@@ -183,9 +183,9 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
     drawIconAtRect(painter, m_indicator, indicatorRect, m_indicatorProperties);
 }
 
-QVariantMap ToolButtonElement::elementAttributes() const
+Union::IdentifierVariantHash ToolButtonElement::elementAttributes() const
 {
-    QVariantMap map;
+    Union::IdentifierVariantHash map;
     if (!m_toolButtonOption) {
         return map;
     }
@@ -208,9 +208,9 @@ QVariantMap ToolButtonElement::elementAttributes() const
     return map;
 }
 
-QStringList ToolButtonElement::elementHints() const
+Union::IdentifierList ToolButtonElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (!m_toolButtonOption || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::ToolButtonFeature::None)) {
         return hints;
     }

@@ -51,8 +51,8 @@ public:
     QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
 
 private:
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    Union::IdentifierVariantHash elementAttributes() const override;
+    Union::IdentifierList elementHints() const override;
     void updateSubElementList() override;
     void drawIcon(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;

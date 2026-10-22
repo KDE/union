@@ -74,9 +74,9 @@ void MenuBarItemElement::layout()
     }
 }
 
-QStringList MenuBarItemElement::elementHints() const
+Union::IdentifierList MenuBarItemElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (!m_menuItemOption) {
         return hints;
     }

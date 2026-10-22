@@ -154,14 +154,14 @@ void AbstractElement::draw(QPainter *painter, DrawEnums enums) const
     qCWarning(UNION_QTWIDGETS) << "Drawing not implemented for " << enums.ComplexControl << enums.ControlElement << enums.PrimitiveElement;
 }
 
-QVariantMap AbstractElement::elementAttributes() const
+Union::IdentifierVariantHash AbstractElement::elementAttributes() const
 {
-    return QVariantMap();
+    return {};
 }
 
-QStringList AbstractElement::elementHints() const
+Union::IdentifierList AbstractElement::elementHints() const
 {
-    return QStringList();
+    return {};
 }
 
 Union::Element::States AbstractElement::elementStates() const

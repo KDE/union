@@ -39,7 +39,7 @@ public:
 
 private:
     void updateSubElementList() override;
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
     void layout() override;
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;

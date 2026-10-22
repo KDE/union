@@ -375,7 +375,8 @@ QObject *QuickElement::hint(const QString &name) const
 
 QStringList QuickElement::activeHints() const
 {
-    return m_element->hints();
+    auto view = m_element->hints() | std::views::transform(&Identifier::operator QString);
+    return QStringList{view.begin(), view.end()};
 }
 
 QQmlListProperty<ElementAttribute> QuickElement::attributes()
@@ -543,7 +544,7 @@ void QuickElement::updateHints()
         return;
     }
 
-    QStringList activeHints;
+    QList<Identifier> activeHints;
     for (auto hint : m_hints) {
         // Important: We may have duplicate hint declarations in the list. When
         // that happens, we need to override the previous declaration, either by
@@ -551,7 +552,7 @@ void QuickElement::updateHints()
         if (hint->when()) {
             activeHints.append(hint->name());
         } else {
-            activeHints.removeAll(hint->name());
+            activeHints.removeAll(Identifier{hint->name()});
         }
     }
     m_element->setHints(activeHints);
@@ -563,7 +564,7 @@ void QuickElement::updateAttributes()
         return;
     }
 
-    QVariantMap activeAttributes;
+    QHash<Identifier, QVariant> activeAttributes;
     for (auto attribute : m_attributes) {
         if (attribute->when() && attribute->value().isValid()) {
             activeAttributes.insert(attribute->name(), attribute->value());

@@ -54,7 +54,7 @@ public:
 
 private:
     void updateSubElementList() override;
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
     Union::Element::States elementStates() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
 

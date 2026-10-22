@@ -39,7 +39,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
     void drawIndicator(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOption *m_treeViewOption = nullptr;

@@ -21,11 +21,11 @@ static EventTypeRegistration<ElementChangedEvent> elementRegistration;
 class Union::ElementPrivate
 {
 public:
-    QString type;
-    QString id;
+    Identifier type;
+    Identifier id;
     Element::States states;
-    QStringList hints;
-    QVariantMap attributes;
+    IdentifierList hints;
+    IdentifierVariantHash attributes;
 };
 
 Element::Element(std::unique_ptr<ElementPrivate> &&dd)
@@ -36,12 +36,12 @@ Element::Element(std::unique_ptr<ElementPrivate> &&dd)
 
 Element::~Element() = default;
 
-QString Element::type() const
+Identifier Element::type() const
 {
     return d->type;
 }
 
-void Element::setType(const QString &type)
+void Element::setType(const Identifier &type)
 {
     if (d->type == type) {
         return;
@@ -55,12 +55,12 @@ void Element::setType(const QString &type)
     Q_EMIT updated();
 }
 
-QString Element::id() const
+Identifier Element::id() const
 {
     return d->id;
 }
 
-void Element::setId(const QString &newId)
+void Element::setId(const Identifier &newId)
 {
     if (d->id == newId) {
         return;
@@ -93,12 +93,12 @@ void Element::setStates(States newStates)
     Q_EMIT updated();
 }
 
-QStringList Element::hints() const
+IdentifierList Element::hints() const
 {
     return d->hints;
 }
 
-void Element::setHints(const QStringList &newHints)
+void Element::setHints(const IdentifierList &newHints)
 {
     if (d->hints == newHints) {
         return;
@@ -112,7 +112,7 @@ void Element::setHints(const QStringList &newHints)
     Q_EMIT updated();
 }
 
-void Element::setHint(const QString &name, bool present)
+void Element::setHint(const Identifier &name, bool present)
 {
     if (present) {
         d->hints.append(name);
@@ -126,20 +126,20 @@ void Element::setHint(const QString &name, bool present)
     Q_EMIT updated();
 }
 
-bool Union::Element::hasHint(const QString &name)
+bool Union::Element::hasHint(const Identifier &name)
 {
     // Case insensitive matching
-    return std::any_of(d->hints.constBegin(), d->hints.constEnd(), [name](const QString &hint) {
-        return name.compare(hint, Qt::CaseInsensitive) == 0;
+    return std::any_of(d->hints.constBegin(), d->hints.constEnd(), [name](const Identifier &hint) {
+        return name == hint;
     });
 }
 
-QVariantMap Element::attributes() const
+IdentifierVariantHash Element::attributes() const
 {
     return d->attributes;
 }
 
-void Element::setAttributes(const QVariantMap &attributes)
+void Element::setAttributes(const IdentifierVariantHash &attributes)
 {
     if (d->attributes == attributes) {
         return;
@@ -153,25 +153,17 @@ void Element::setAttributes(const QVariantMap &attributes)
     Q_EMIT updated();
 }
 
-bool Element::hasAttribute(const QString &name) const
+bool Element::hasAttribute(const Identifier &name) const
 {
     return d->attributes.contains(name);
 }
 
-QVariant Element::attribute(const QString &name) const
+QVariant Element::attribute(const Identifier &name) const
 {
-    const auto keyValueRange = d->attributes.asKeyValueRange();
-    auto itr = std::ranges::find_if(keyValueRange, [name](const std::pair<QString, QVariant> &entry) {
-        return entry.first.compare(name, Qt::CaseInsensitive) == 0;
-    });
-    if (itr != keyValueRange.end()) {
-        return itr->second;
-    } else {
-        return QVariant{};
-    }
+    return d->attributes.value(name, QVariant{});
 }
 
-void Element::setAttribute(const QString &name, const QVariant &value)
+void Element::setAttribute(const Identifier &name, const QVariant &value)
 {
     d->attributes[name] = value;
 
@@ -186,11 +178,11 @@ QString Element::toString() const
     QStringList properties;
 
     if (!d->type.isEmpty()) {
-        properties << u"type: "_s + d->type;
+        properties << u"type: "_s + QString{d->type};
     }
 
     if (!d->id.isEmpty()) {
-        properties << u"id: "_s + d->id;
+        properties << u"id: "_s + QString{d->id};
     }
 
     if (d->states != 0) {

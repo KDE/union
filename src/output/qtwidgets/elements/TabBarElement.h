@@ -40,8 +40,8 @@ public:
 
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     int styleHint(QStyle::StyleHint styleHint) const override;
-    QVariantMap elementAttributes() const override;
-    QStringList elementHints() const override;
+    Union::IdentifierVariantHash elementAttributes() const override;
+    Union::IdentifierList elementHints() const override;
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;

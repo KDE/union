@@ -328,9 +328,9 @@ QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap)
     return rect;
 }
 
-QStringList frameHints(const QStyleOptionFrame *frameOption)
+Union::IdentifierList frameHints(const QStyleOptionFrame *frameOption)
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (!frameOption) {
         return hints;
     }

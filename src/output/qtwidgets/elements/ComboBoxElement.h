@@ -43,7 +43,7 @@ public:
 
 private:
     bool isEditable() const;
-    QStringList elementHints() const override;
+    Union::IdentifierList elementHints() const override;
     void updateSubElementList() override;
     void drawText(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;

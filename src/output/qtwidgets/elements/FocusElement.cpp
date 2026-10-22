@@ -52,9 +52,9 @@ void FocusElement::layout()
     }
 }
 
-QStringList FocusElement::elementHints() const
+Union::IdentifierList FocusElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (m_styleOption && m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
         hints.append(u"focus-at-border"_s);
     }

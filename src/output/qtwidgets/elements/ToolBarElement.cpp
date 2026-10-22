@@ -137,9 +137,9 @@ void ToolBarElement::updateSubElementList()
     m_subElementList.append(ElementString::Frame);
 }
 
-QStringList ToolBarElement::elementHints() const
+Union::IdentifierList ToolBarElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (!m_toolBarOption) {
         return hints;
     }

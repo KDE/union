@@ -146,9 +146,9 @@ void GroupBoxElement::drawIcon(QPainter *painter) const
     }
 }
 
-QStringList GroupBoxElement::elementHints() const
+Union::IdentifierList GroupBoxElement::elementHints() const
 {
-    QStringList hints;
+    Union::IdentifierList hints;
     if (!m_groupBoxOption) {
         return hints;
     }
