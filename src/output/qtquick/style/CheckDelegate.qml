@@ -65,12 +65,7 @@ T.CheckDelegate {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    indicator: Union.StyledRectangle {
-        Union.Element.type: "Indicator"
-
-        Union.PositionedItem.minimumWidth: Union.Style.properties.layout.width
-        Union.PositionedItem.minimumHeight: Union.Style.properties.layout.height
-    }
+    indicator: P.DefaultIndicator { }
 
     contentItem: P.DefaultContentItem { control: control }
 

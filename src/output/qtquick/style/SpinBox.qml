@@ -8,6 +8,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.SpinBox {
     id: control
 
@@ -74,43 +76,21 @@ T.SpinBox {
         hoverEnabled: false
     }
 
-    up.indicator: Union.StyledRectangle {
-        id: upIndicator
-
-        Union.Element.type: "Indicator"
+    up.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "IncreaseIndicator"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
-            enabled: upIndicator.enabled
-        }
-        Union.Element.hints: Union.ElementHint { name: "increase" }
-
-        Union.Icon {
-            anchors.centerIn: parent
-            width: Union.Style.properties.icon.width
-            height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
+            enabled: enabled
         }
     }
 
-    down.indicator: Union.StyledRectangle {
-        id: downIndicator
-
-        Union.Element.type: "Indicator"
+    down.indicator: P.DefaultIndicator {
+        Union.Element.subElement: "DecreaseIndicator"
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
-            enabled: downIndicator.enabled
-        }
-        Union.Element.hints: Union.ElementHint { name: "decrease" }
-
-        Union.Icon {
-            anchors.centerIn: parent
-            width: Union.Style.properties.icon.width
-            height: Union.Style.properties.icon.height
-            name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
+            enabled: enabled
         }
     }
 

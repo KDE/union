@@ -56,9 +56,7 @@ T.RadioButton {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    indicator: Union.StyledRectangle {
-        Union.Element.type: "Indicator"
-    }
+    indicator: P.DefaultIndicator { }
 
     contentItem: P.DefaultContentItem {
         control: control

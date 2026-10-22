@@ -8,6 +8,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.ComboBox {
     id: control
 
@@ -26,7 +28,7 @@ T.ComboBox {
         Union.ElementHint { name: "changed"; when: false },
     ]
 
-    Union.Positioner.positionItems: [contentItem, icon, indicator]
+    Union.Positioner.positionItems: [contentItem, iconIndicator, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
     wheelEnabled: true
@@ -36,8 +38,8 @@ T.ComboBox {
         if (indicator && indicator.visible) {
             contentWidth += spacing + implicitIndicatorWidth
         }
-        if (icon.visible) {
-            contentWidth += spacing + icon.implicitWidth
+        if (iconIndicator.visible) {
+            contentWidth += spacing + iconIndicator.implicitWidth
         }
 
         return Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth, contentWidth)
@@ -71,17 +73,7 @@ T.ComboBox {
         LayoutMirroring.enabled: control.mirrored
     }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
-
-        visible: Union.Style.properties.display.visible ?? false
-        opacity: Union.Style.properties.display.opacity ?? 1.0
-    }
+    indicator: P.DefaultIndicator { }
 
     contentItem: T.TextField {
         Union.PositionedItem.source: Union.PositionerSource.Text
@@ -116,19 +108,15 @@ T.ComboBox {
         }
     }
 
-    Union.Icon {
-        id: icon
+    P.DefaultIndicator {
+        id: iconIndicator
 
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        Union.Element.subElement: "Icon"
 
-        implicitWidth: Union.Style.properties.icon.width ?? 0
-        implicitHeight: Union.Style.properties.icon.height ?? 0
-        name: control.Union.StyleHints.iconName
-        source: control.Union.StyleHints.iconSource
-        color: Union.Style.properties.icon.color
+        icon.name: control.Union.StyleHints.iconName
+        icon.source: control.Union.StyleHints.iconSource
 
-        visible: (name || source.toString()) && (Union.Style.properties.display.visible ?? true)
-        opacity: Union.Style.properties.display.opacity ?? 1.0
+        visible: (icon.name || icon.source.toString()) && (Union.Style.properties.display.visible ?? true)
     }
 
     background: Union.StyledRectangle { }
