@@ -18,12 +18,14 @@ using namespace Qt::StringLiterals;
 
 struct ArgumentsData {
     const QStringList types;
+    const QStringList subelements;
     const QStringList ids;
     const QStringList states;
     const QStringList hints;
     const QStringList attributes;
 
     QStringList::const_iterator currentType = types.begin();
+    QStringList::const_iterator currentSubElement = subelements.begin();
     QStringList::const_iterator currentId = ids.begin();
     QStringList::const_iterator currentState = states.begin();
     QStringList::const_iterator currentHint = hints.begin();
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
         {u"style"_s, u"The style to use. This needs to be specified before any other arguments."_s, u"style"_s},
         {u"verbose"_s, u"Verbose logging, including full query matching logs."_s, u"verbose"_s},
         {u"type"_s, u"The type to match"_s, u"type"_s},
+        {u"subelement"_s, u"The subelement to match"_s, u"subelement"_s},
         {u"id"_s, u"The ID to match"_s, u"id"_s},
         {u"state"_s, u"The state to match. Can be specified multiple times per element."_s, u"state"_s},
         {u"hint"_s, u"The hint to match. Can be specified multiple times per element."_s, u"hint"_s},
@@ -93,6 +96,7 @@ int main(int argc, char **argv)
 
     ArgumentsData data{
         .types = parser.values(u"type"_s),
+        .subelements = parser.values(u"subelement"_s),
         .ids = parser.values(u"id"_s),
         .states = parser.values(u"state"_s),
         .hints = parser.values(u"hint"_s),
@@ -102,6 +106,9 @@ int main(int argc, char **argv)
     for (auto argument : parser.optionNames()) {
         if (argument == u"type") {
             currentElement->setType(*data.currentType++);
+        } else if (argument == u"subelement") {
+            appendElement();
+            currentElement->setSubElement(*data.currentSubElement++);
         } else if (argument == u"id") {
             currentElement->setId(*data.currentId++);
         } else if (argument == u"state") {
