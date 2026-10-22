@@ -69,3 +69,9 @@ QStringList TabWidgetElement::elementHints() const
 {
     return QStringList();
 }
+
+QString TabWidgetElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::TabWidget;
+}

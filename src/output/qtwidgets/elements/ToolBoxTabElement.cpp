@@ -102,3 +102,9 @@ QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
     }
     return m_toolBoxOption->rect;
 }
+
+QString ToolBoxTabElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::ToolBox;
+}

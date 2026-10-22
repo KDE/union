@@ -361,3 +361,9 @@ ArrowStyle ToolButtonElement::arrowStyle() const
 
     return ArrowStyle::None;
 }
+
+QString ToolButtonElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::ToolButton;
+}

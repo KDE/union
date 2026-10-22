@@ -40,5 +40,6 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOption *m_splitterOption = nullptr;
 };

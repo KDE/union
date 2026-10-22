@@ -350,3 +350,9 @@ QSizeF SliderElement::tickMarkSize() const
                           safePropertyLookup(m_tickProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height)};
     return tickSize;
 }
+
+QString SliderElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::Slider;
+}

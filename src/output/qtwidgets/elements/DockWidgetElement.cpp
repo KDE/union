@@ -125,3 +125,9 @@ QIcon DockWidgetElement::standardPixmap(QStyle::StandardPixmap pixmap) const
     }
     return QIcon();
 }
+
+QString DockWidgetElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::DockWidget;
+}

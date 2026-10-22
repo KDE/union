@@ -88,3 +88,9 @@ QStringList MenuBarItemElement::elementHints() const
     }
     return hints;
 }
+
+QString MenuBarItemElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::MenuBarItem;
+}

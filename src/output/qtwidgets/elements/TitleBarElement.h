@@ -48,6 +48,7 @@ public:
 private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionTitleBar *m_titleBarOption = nullptr;
     QIcon queryIcon(const QString &defaultIconName, const QStringList &targetHierarchy) const;
     qreal buttonWidth() const;

@@ -282,3 +282,9 @@ Union::Element::States MenuItemElement::elementStates() const
     states.setFlag(Union::Element::State::Hovered, m_menuItemOption && m_menuItemOption->state.testFlag(QStyle::State_Selected));
     return states;
 }
+
+QString MenuItemElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::MenuItem;
+}

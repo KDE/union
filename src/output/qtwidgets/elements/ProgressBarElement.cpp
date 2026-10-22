@@ -216,3 +216,9 @@ QStringList ProgressBarElement::elementHints() const
     }
     return hints;
 }
+
+QString ProgressBarElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::ProgressBar;
+}
