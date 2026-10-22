@@ -20,33 +20,6 @@ namespace Quick
 class QuickElement;
 class QuickStyle;
 
-namespace PositionerSource
-{
-Q_NAMESPACE
-QML_ELEMENT
-
-/*!
- * \enum PositionerSource::Source
- * \relates Positioner
- *
- * Indicates what property to use for alignment information.
- *
- * \value Layout
- *  Read from the Layout property.
- * \value Text
- *  Read from the Text property.
- * \value Icon
- *  Read from the Icon property.
- */
-enum class Source {
-    Layout,
-    Text,
-    Icon
-};
-Q_ENUM_NS(Source)
-
-}
-
 class PositionerLayout;
 
 /*!
@@ -174,20 +147,6 @@ public:
     void setPositionChildren(bool position);
 
     /*!
-     * \qmlattachedproperty PositionerSource::Source source
-     *
-     * Which property to use as source for this item's alignment.
-     *
-     * This can be used to indicate the item is meant to represent an icon or
-     * text element of the control and those alignment properties should be used
-     * for aligning this item.
-     */
-    Q_PROPERTY(Union::Quick::PositionerSource::Source source READ source WRITE setSource NOTIFY sourceChanged)
-    PositionerSource::Source source() const;
-    void setSource(PositionerSource::Source newSource);
-    Q_SIGNAL void sourceChanged();
-
-    /*!
      * \qmlattachedproperty Union::Properties::Alignment horizontalAlignment
      *
      * An override of the style-provided horizontal alignment value.
@@ -237,7 +196,6 @@ private:
     void sendChangedEvent();
 
     bool m_positionChildren = false;
-    PositionerSource::Source m_source = PositionerSource::Source::Layout;
     Union::Properties::Alignment m_horizontalAlignment = Union::Properties::Alignment::Unspecified;
     Union::Properties::Alignment m_verticalAlignment = Union::Properties::Alignment::Unspecified;
     qreal m_minimumWidth = -1.0;
