@@ -307,7 +307,7 @@ Union::Selector CssLoader::createSelector(const cssparser::SelectorPart &part)
         // TODO
         break;
     case cssparser::SelectorPart::Kind::Part:
-        return Union::Selector::create<Union::SelectorType::SubElement>(QString::fromStdString(part.value().get<std::string>()));
+        return Union::Selector::create<Union::SelectorType::SubElement>(Identifier{part.value().get<std::string>()});
     case cssparser::SelectorPart::Kind::DescendantCombinator:
         return Union::Selector::create<Union::SelectorType::DescendantCombinator>();
     case cssparser::SelectorPart::Kind::ChildCombinator:

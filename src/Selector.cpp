@@ -67,11 +67,7 @@ UNION_EXPORT int SelectorPrivateModel<SelectorType::SubElement, Identifier>::wei
 template<>
 UNION_EXPORT bool SelectorPrivateModel<SelectorType::SubElement, Identifier>::matches(Element *element) const
 {
-    if (data.isEmpty()) {
-        return false;
-    }
-
-    return QString::compare(element->subElement(), data, Qt::CaseSensitivity::CaseInsensitive) == 0;
+    return element->subElement() == data;
 }
 
 template<>
