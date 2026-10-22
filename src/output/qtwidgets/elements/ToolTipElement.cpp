@@ -67,3 +67,8 @@ qreal ToolTipElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString ToolTipElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::ToolTip;
+}

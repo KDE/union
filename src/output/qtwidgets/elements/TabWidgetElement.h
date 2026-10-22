@@ -37,5 +37,6 @@ public:
 private:
     QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionTabWidgetFrame *m_tabFrameOption = nullptr;
 };

@@ -72,3 +72,8 @@ void StatusBarElement::drawItem(QPainter *painter) const
 {
     drawBackgroundRectangle(painter, m_statusBarOption->rect, m_contentProperties);
 }
+
+QString StatusBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::StatusBar;
+}

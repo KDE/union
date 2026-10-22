@@ -164,3 +164,8 @@ qreal ComboBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString ComboBoxElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::ComboBox;
+}

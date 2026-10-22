@@ -72,3 +72,8 @@ qreal MenuElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString MenuElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::Menu;
+}

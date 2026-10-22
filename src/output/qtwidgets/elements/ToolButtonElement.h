@@ -56,6 +56,7 @@ private:
     void updateSubElementList() override;
     void drawIcon(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     void layoutButtons();
     ArrowStyle arrowStyle() const;
 

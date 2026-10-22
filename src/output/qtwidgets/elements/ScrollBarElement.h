@@ -55,6 +55,7 @@ private:
     void drawBackground(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;
     void updateSubElementList() override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionSlider *m_scrollBarOption = nullptr;
     bool m_horizontal;
     qreal extent() const;

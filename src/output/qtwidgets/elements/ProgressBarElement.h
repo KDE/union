@@ -57,6 +57,7 @@ private:
     void updateSubElementList() override;
     void drawBackground(QPainter *painter) const override;
     void drawIndicator(QPainter *painter) const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     void drawChunk(QPainter *painter) const;
     const QStyleOptionProgressBar *m_progressBarOption = nullptr;
     int chunkWidth() const;

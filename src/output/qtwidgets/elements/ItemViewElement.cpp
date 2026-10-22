@@ -287,3 +287,8 @@ QStringList ItemViewElement::elementHints() const
 
     return hints;
 }
+
+QString ItemViewElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::ItemViewItem;
+}

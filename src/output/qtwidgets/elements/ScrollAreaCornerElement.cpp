@@ -52,3 +52,8 @@ void ScrollAreaCornerElement::layout()
         m_isValid = false;
     }
 }
+
+QString ScrollAreaCornerElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::ScrollAreaCorner;
+}

@@ -47,6 +47,7 @@ public:
 private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     void drawSpinIndicator(QPainter *painter, const QStyle::PrimitiveElement &primitive) const;
     const QStyleOptionSpinBox *m_spinBoxOption = nullptr;
     bool m_hasButtons;

@@ -49,6 +49,7 @@ public:
 private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     void drawHandle(QPainter *painter) const;
     void drawSeparator(QPainter *painter) const;
     QRectF handleSeparatorRect(qreal extent) const;

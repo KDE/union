@@ -47,5 +47,6 @@ private:
     QVariantMap elementAttributes() const override;
     QStringList elementHints() const override;
     void updateSubElementList() override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionFrame *m_frameOption = nullptr;
 };

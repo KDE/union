@@ -124,3 +124,8 @@ qreal TreeViewElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString TreeViewElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+{
+    return ElementString::TreeView;
+}
