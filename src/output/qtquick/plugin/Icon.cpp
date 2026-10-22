@@ -16,6 +16,7 @@
 
 #include "qtquick_logging.h"
 
+using namespace Union::Properties;
 using namespace Union::Quick;
 using namespace Qt::StringLiterals;
 
@@ -337,22 +338,24 @@ void Icon::onControlIconChanged()
     auto source = sourceProperty.readOnGadget(data).toUrl();
     auto color = colorProperty.readOnGadget(data).value<QColor>();
 
-    if (m_style->query()) {
+    if (m_style->query() && m_style->query()->properties()) {
         auto properties = m_style->query()->properties();
-        if (properties && properties->icon()) {
-            if (width <= 0 || height <= 0) {
-                width = properties->icon()->width().value_or(0.0);
-                height = properties->icon()->height().value_or(0.0);
-            }
-            if (name.isEmpty()) {
-                name = properties->icon()->name().value_or(QString{});
-            }
-            if (source.isEmpty()) {
-                source = properties->icon()->source().value_or(QUrl{});
-            }
-            if (color.alpha() == 0) {
-                color = properties->icon()->color().value_or(Union::Color{}).toQColor();
-            }
+
+        if (width <= 0 || height <= 0) {
+            width = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+            height = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        }
+
+        if (name.isEmpty()) {
+            name = properties->safePropertyLookup(QString{}, &StylePropertyGroup::icon, &IconPropertyGroup::name);
+        }
+
+        if (source.isEmpty()) {
+            source = properties->safePropertyLookup(QUrl{}, &StylePropertyGroup::icon, &IconPropertyGroup::source);
+        }
+
+        if (color.alpha() == 0) {
+            color = properties->safePropertyLookup(Union::Color{}, &StylePropertyGroup::display, &DisplayPropertyGroup::color).toQColor();
         }
     }
 
