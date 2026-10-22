@@ -243,3 +243,9 @@ qreal ScrollBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString ScrollBarElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::ScrollBar;
+}

@@ -60,3 +60,8 @@ qreal MenuBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+QString MenuBarElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::MenuBar;
+}

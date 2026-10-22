@@ -41,6 +41,7 @@ public:
 private:
     QStringList elementHints() const override;
     void drawIndicator(QPainter *painter) const override;
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOption *m_treeViewOption = nullptr;
     qreal indentation() const;
     bool m_itemIsOpen;

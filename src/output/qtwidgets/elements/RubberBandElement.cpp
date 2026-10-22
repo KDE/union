@@ -51,3 +51,9 @@ void RubberBandElement::layout()
         m_isValid = false;
     }
 }
+
+QString RubberBandElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::RubberBand;
+}

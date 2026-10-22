@@ -178,3 +178,9 @@ qreal SpinBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     }
     return 0;
 }
+
+QString SpinBoxElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::SpinBox;
+}

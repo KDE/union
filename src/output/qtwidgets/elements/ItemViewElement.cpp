@@ -287,3 +287,9 @@ QStringList ItemViewElement::elementHints() const
 
     return hints;
 }
+
+QString ItemViewElement::fallbackElementName(const QStyleOption *opt) const
+{
+    Q_UNUSED(opt);
+    return ElementString::ItemViewItem;
+}

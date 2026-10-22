@@ -35,5 +35,6 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
+    QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOption *m_cornerOption = nullptr;
 };
