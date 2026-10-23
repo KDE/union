@@ -9,6 +9,7 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+import org.kde.khaptics as KHaptics
 
 T.Slider {
     id: control
@@ -55,6 +56,31 @@ T.Slider {
         }
         x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
+    }
+
+    KHaptics.HapticsManager{
+        id: hapticsManager
+    }
+
+    onMoved: {
+        if (stepSize <= 0 || tickMarks.tickMarkCount <= 0) {
+            return
+        }
+
+        // Only play haptics when the value is exactly-ish on a tick mark.
+        // There appears to be no api to know when we are on a mark though :|
+        const offset = control.value - control.from
+        const nearestTick = Math.round(offset / stepSize)
+        const distance = Math.abs(offset - nearestTick * stepSize)
+        if (distance > stepSize * 1e-6) {
+            return
+        }
+
+        // Intensity is the percentage of tick marks that have been reached,
+        // e.g. 0.25 when the handle covers a quarter of the tick marks.
+        const usedTicks = Math.min(tickMarks.tickMarkCount, nearestTick + 1)
+        const intensity = Math.max(0, Math.min(1, usedTicks / tickMarks.tickMarkCount))
+        hapticsManager.playHaptics(KHaptics.Types.Waveform.Step, intensity)
     }
 
     background: Union.StyledRectangle {
