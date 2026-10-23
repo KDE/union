@@ -17,16 +17,16 @@ CheckBoxElement::CheckBoxElement(const QStyleOptionButton *option, const UnionSt
     : AbstractElement(option, style, widget)
     , m_buttonOption(option)
 {
-    update();
+    update(option);
 }
 
 CheckBoxElement::~CheckBoxElement()
 {
 }
 
-void CheckBoxElement::update()
+void CheckBoxElement::update(const QStyleOption *option)
 {
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
+    m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
@@ -84,7 +84,7 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
             return m_layoutMap[ElementString::Indicator].rect;
         }
         // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
-        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+        return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
     }
 
     return unifiedRect(m_layoutMap);

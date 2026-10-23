@@ -36,7 +36,7 @@ public:
     TitleBarElement(const QStyleOptionTitleBar *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TitleBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 

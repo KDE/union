@@ -38,7 +38,7 @@ public:
     ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ItemViewElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 

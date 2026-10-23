@@ -16,14 +16,14 @@ TitleBarElement::TitleBarElement(const QStyleOptionTitleBar *option, const Union
     : AbstractElement(option, style, widget)
     , m_titleBarOption(option)
 {
-    update();
+    update(option);
 }
 
 TitleBarElement::~TitleBarElement()
 {
 }
 
-void TitleBarElement::update()
+void TitleBarElement::update(const QStyleOption *option)
 {
     if (!m_titleBarOption) {
         return;

@@ -98,7 +98,7 @@ public:
     /*!
      * \brief Updates the properties of the element, such as text and layouting
      */
-    virtual void update();
+    virtual void update(const QStyleOption *option);
 
 protected:
     /*!
@@ -225,7 +225,7 @@ protected:
      */
     void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
 
-    const QStyleOption *m_styleOption = nullptr;
+    QStyleOption m_styleOption;
     const UnionStyle *m_style = nullptr;
     const QWidget *m_widget = nullptr;
     QIcon m_icon = QIcon();

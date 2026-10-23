@@ -16,14 +16,14 @@ WidgetElement::WidgetElement(const QStyleOption *option, const UnionStyle *style
     : AbstractElement(option, style, widget)
     , m_widgetOption(option)
 {
-    update();
+    update(option);
 }
 
 WidgetElement::~WidgetElement()
 {
 }
 
-void WidgetElement::update()
+void WidgetElement::update(const QStyleOption *option)
 {
     layout();
 }

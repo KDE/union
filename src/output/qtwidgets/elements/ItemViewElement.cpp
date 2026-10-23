@@ -23,20 +23,20 @@ ItemViewElement::ItemViewElement(const QStyleOptionViewItem *option, const Union
     : AbstractElement(option, style, widget)
     , m_viewItemOption(option)
 {
-    update();
+    update(option);
 }
 
 ItemViewElement::~ItemViewElement()
 {
 }
 
-void ItemViewElement::update()
+void ItemViewElement::update(const QStyleOption *option)
 {
     if (!m_viewItemOption) {
         return;
     }
     if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
+        m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
         if (!m_indicatorElementList.isEmpty()) {
             m_indicatorProperties = queryProperties(m_indicatorElementList);
         }
@@ -109,7 +109,7 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
 
 QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
+    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, &m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
     return applyPaddingToSize(commonSize);
 }
 
@@ -162,17 +162,17 @@ void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ItemViewElement::drawBackground(QPainter *painter) const
 {
-    if (!m_styleOption) {
+    if (!m_viewItemOption) {
         return;
     }
     painter->save();
     // Apply clip region in case the user has set one for painter.
-    const QRect rect = m_styleOption->rect;
+    const QRect rect = m_styleOption.rect;
     const QRegion clipRegion = painter->hasClipping() ? (painter->clipRegion() & rect) : rect;
     painter->setClipRegion(clipRegion);
 
     // Draw custom background color with simple rectangle if set and not selected
-    const bool hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption->state.testFlag(QStyle::State_Selected);
+    const bool hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption.state.testFlag(QStyle::State_Selected);
     if (hasCustomBackground) {
         const auto radius =
             safePropertyLookup(m_elementProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
@@ -191,7 +191,7 @@ void ItemViewElement::drawText(QPainter *painter) const
     if (hasText()) {
         QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, m_widget);
         if (textRect.isEmpty()) {
-            textRect = m_styleOption->rect;
+            textRect = m_styleOption.rect;
         }
         drawTextAtRect(painter, m_text, textRect);
     }

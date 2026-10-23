@@ -18,17 +18,17 @@ GroupBoxElement::GroupBoxElement(const QStyleOptionGroupBox *option, const Union
     , m_groupBoxOption(option)
     , m_isCheckable(false)
 {
-    update();
+    update(option);
 }
 
 GroupBoxElement::~GroupBoxElement()
 {
 }
 
-void GroupBoxElement::update()
+void GroupBoxElement::update(const QStyleOption *option)
 {
     // This info is only in the widget itself
-    if (!m_styleOption) {
+    if (!option) {
         return;
     }
     m_isCheckable = false;
@@ -90,7 +90,7 @@ void GroupBoxElement::layout()
 
 QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid || !m_groupBoxOption) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return {};
     }

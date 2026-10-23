@@ -18,12 +18,12 @@ ComboBoxElement::ComboBoxElement(const QStyleOptionComboBox *option, const Union
     , m_editable(false)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
-void ComboBoxElement::update()
+void ComboBoxElement::update(const QStyleOption *option)
 {
-    if (!m_styleOption) {
+    if (!option) {
         return;
     }
     m_editable = m_comboBoxOption->editable;
@@ -104,7 +104,7 @@ QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return {};
     }

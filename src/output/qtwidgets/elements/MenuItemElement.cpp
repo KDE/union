@@ -26,14 +26,14 @@ MenuItemElement::MenuItemElement(const QStyleOptionMenuItem *option, const Union
     , m_shortcutText(QString())
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
-    update();
+    update(option);
 }
 
 MenuItemElement::~MenuItemElement()
 {
 }
 
-void MenuItemElement::update()
+void MenuItemElement::update(const QStyleOption *option)
 {
     if (!m_menuItemOption) {
         return;

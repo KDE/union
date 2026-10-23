@@ -19,14 +19,14 @@ TabBarElement::TabBarElement(const QStyleOptionTabBarBase *option, const UnionSt
     , m_tabBarOption(option)
 {
     setIcon(QIcon());
-    update();
+    update(option);
 }
 
 TabBarElement::~TabBarElement()
 {
 }
 
-void TabBarElement::update()
+void TabBarElement::update(const QStyleOption *option)
 {
     layout();
 }

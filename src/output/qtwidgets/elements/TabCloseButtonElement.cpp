@@ -16,21 +16,21 @@ TabCloseButtonElement::TabCloseButtonElement(const QStyleOption *option, const U
     : AbstractElement(option, style, widget)
     , m_widgetOption(option)
 {
-    update();
+    update(option);
 }
 
 TabCloseButtonElement::~TabCloseButtonElement()
 {
 }
 
-void TabCloseButtonElement::update()
+void TabCloseButtonElement::update(const QStyleOption *option)
 {
     layout();
 }
 
 void TabCloseButtonElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::Tab, ElementString::CloseButton});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         if (!m_widgetOption) {

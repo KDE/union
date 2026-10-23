@@ -17,14 +17,14 @@ DockWidgetElement::DockWidgetElement(const QStyleOptionDockWidget *option, const
     : AbstractElement(option, style, widget)
     , m_dockWidgetOption(option)
 {
-    update();
+    update(option);
 }
 
 DockWidgetElement::~DockWidgetElement()
 {
 }
 
-void DockWidgetElement::update()
+void DockWidgetElement::update(const QStyleOption *option)
 {
     setIcon(QIcon());
     setText(m_dockWidgetOption->title);
@@ -49,7 +49,7 @@ void DockWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 void DockWidgetElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_styleOption) {
+    if (!m_dockWidgetOption) {
         return;
     }
     if (m_dockWidgetOption->closable) {

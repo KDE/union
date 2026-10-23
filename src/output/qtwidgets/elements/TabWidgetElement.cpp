@@ -15,14 +15,14 @@ TabWidgetElement::TabWidgetElement(const QStyleOptionTabWidgetFrame *option, con
     : AbstractElement(option, style, widget)
     , m_tabFrameOption(option)
 {
-    update();
+    update(option);
 }
 
 TabWidgetElement::~TabWidgetElement()
 {
 }
 
-void TabWidgetElement::update()
+void TabWidgetElement::update(const QStyleOption *option)
 {
     layout();
 }

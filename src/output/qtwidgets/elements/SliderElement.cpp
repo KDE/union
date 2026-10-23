@@ -20,14 +20,14 @@ SliderElement::SliderElement(const QStyleOptionSlider *option, const UnionStyle 
     , m_isInverted(false)
     , m_isReverse(false)
 {
-    update();
+    update(option);
 }
 
 SliderElement::~SliderElement()
 {
 }
 
-void SliderElement::update()
+void SliderElement::update(const QStyleOption *option)
 {
     if (!m_sliderOption) {
         return;
@@ -113,7 +113,7 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
     // Tickmark drawing is copied from breeze
     if (m_sliderOption && m_tickProperties && m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
         const auto &rect(m_sliderOption->rect);
-        const int available(m_style->pixelMetric(QStyle::PM_SliderSpaceAvailable, m_styleOption, m_widget));
+        const int available(m_style->pixelMetric(QStyle::PM_SliderSpaceAvailable, &m_styleOption, m_widget));
         int interval = m_sliderOption->tickInterval;
         if (interval < 1) {
             interval = m_sliderOption->pageStep;

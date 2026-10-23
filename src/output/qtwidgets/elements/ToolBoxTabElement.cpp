@@ -17,14 +17,14 @@ ToolBoxTabElement::ToolBoxTabElement(const QStyleOptionToolBox *option, const Un
     : AbstractElement(option, style, widget)
     , m_toolBoxOption(option)
 {
-    update();
+    update(option);
 }
 
 ToolBoxTabElement::~ToolBoxTabElement()
 {
 }
 
-void ToolBoxTabElement::update()
+void ToolBoxTabElement::update(const QStyleOption *option)
 {
     if (!m_toolBoxOption) {
         return;

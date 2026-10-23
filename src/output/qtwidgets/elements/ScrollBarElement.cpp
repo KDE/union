@@ -18,14 +18,14 @@ ScrollBarElement::ScrollBarElement(const QStyleOptionSlider *option, const Union
     , m_scrollBarOption(option)
     , m_horizontal(false)
 {
-    update();
+    update(option);
 }
 
 ScrollBarElement::~ScrollBarElement()
 {
 }
 
-void ScrollBarElement::update()
+void ScrollBarElement::update(const QStyleOption *option)
 {
     m_horizontal = (m_scrollBarOption && m_scrollBarOption->state.testFlag(QStyle::State_Horizontal));
     updateSubElementList();

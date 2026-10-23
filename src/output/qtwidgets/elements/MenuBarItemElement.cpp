@@ -15,14 +15,14 @@ MenuBarItemElement::MenuBarItemElement(const QStyleOptionMenuItem *option, const
     : AbstractElement(option, style, widget)
     , m_menuItemOption(option)
 {
-    update();
+    update(option);
 }
 
 MenuBarItemElement::~MenuBarItemElement()
 {
 }
 
-void MenuBarItemElement::update()
+void MenuBarItemElement::update(const QStyleOption *option)
 {
     if (!m_menuItemOption) {
         return;
@@ -42,7 +42,7 @@ void MenuBarItemElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ControlElement) {
     case QStyle::CE_MenuBarItem:
-        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, m_styleOption, painter, m_widget);
+        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, &m_styleOption, painter, m_widget);
         drawBackground(painter);
         drawIcon(painter);
         drawText(painter);

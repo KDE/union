@@ -38,7 +38,7 @@ public:
     TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawText(QPainter *painter) const override;

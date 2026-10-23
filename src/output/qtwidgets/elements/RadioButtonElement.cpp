@@ -17,19 +17,19 @@ RadioButtonElement::RadioButtonElement(const QStyleOptionButton *option, const U
     : AbstractElement(option, style, widget)
     , m_buttonOption(option)
 {
-    update();
+    update(option);
 }
 
 RadioButtonElement::~RadioButtonElement()
 {
 }
 
-void RadioButtonElement::update()
+void RadioButtonElement::update(const QStyleOption *option)
 {
     if (!m_buttonOption) {
         return;
     }
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::RadioButton, ElementString::Indicator});
+    m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::RadioButton, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
@@ -85,7 +85,7 @@ QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
             return m_layoutMap[ElementString::Indicator].rect;
         }
         // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
-        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+        return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
     }
 
     return unifiedRect(m_layoutMap);

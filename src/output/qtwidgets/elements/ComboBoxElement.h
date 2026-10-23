@@ -34,7 +34,7 @@ public:
     ComboBoxElement(const QStyleOptionComboBox *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ComboBoxElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     QRectF subControlRect(QStyle::SubControl subControl) const override;

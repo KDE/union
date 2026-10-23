@@ -19,14 +19,14 @@ SpinBoxElement::SpinBoxElement(const QStyleOptionSpinBox *option, const UnionSty
     , m_hasButtons(true)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
 SpinBoxElement::~SpinBoxElement()
 {
 }
 
-void SpinBoxElement::update()
+void SpinBoxElement::update(const QStyleOption *option)
 {
     if (!m_spinBoxOption) {
         return;
@@ -157,7 +157,7 @@ void SpinBoxElement::drawSpinIndicator(QPainter *painter, const QStyle::Primitiv
     default:
         return;
     }
-    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect);
+    drawIconAtRect(painter, indicatorIcon, m_styleOption.rect);
 }
 
 QStringList SpinBoxElement::elementHints() const

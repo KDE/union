@@ -17,14 +17,14 @@ MenuElement::MenuElement(const QStyleOption *option, const UnionStyle *style, co
     : AbstractElement(option, style, widget)
     , m_menuOption(option)
 {
-    update();
+    update(option);
 }
 
 MenuElement::~MenuElement()
 {
 }
 
-void MenuElement::update()
+void MenuElement::update(const QStyleOption *option)
 {
     updateSubElementList();
     layout();

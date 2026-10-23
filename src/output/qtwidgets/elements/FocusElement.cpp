@@ -17,14 +17,14 @@ FocusElement::FocusElement(const QStyleOptionFocusRect *option, const UnionStyle
     : AbstractElement(option, style, widget)
     , m_focusOption(option)
 {
-    update();
+    update(option);
 }
 
 FocusElement::~FocusElement()
 {
 }
 
-void FocusElement::update()
+void FocusElement::update(const QStyleOption *option)
 {
     layout();
 }
@@ -43,7 +43,7 @@ void FocusElement::draw(QPainter *painter, DrawEnums enums) const
 
 void FocusElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::FocusFrame});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::FocusFrame});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
@@ -55,7 +55,7 @@ void FocusElement::layout()
 QStringList FocusElement::elementHints() const
 {
     QStringList hints;
-    if (m_styleOption && m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
+    if (m_focusOption && m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
         hints.append(u"focus-at-border"_s);
     }
     return hints;

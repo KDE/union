@@ -22,7 +22,7 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     , m_vSpace(0)
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
-    update();
+    update(option);
     m_hSpace = hSpace();
     m_vSpace = vSpace();
 }
@@ -31,7 +31,7 @@ TabElement::~TabElement()
 {
 }
 
-void TabElement::update()
+void TabElement::update(const QStyleOption *option)
 {
     if (!m_tabOption) {
         return;
@@ -212,7 +212,7 @@ QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF TabElement::subElementRect(QStyle::SubElement element) const
 {
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
 }
 
 // Padding of the tab content and the edge, only one value is taken so take the average
@@ -238,7 +238,7 @@ Union::Element::States TabElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
     states.setFlag(Union::Element::State::Highlighted, false);
-    states.setFlag(Union::Element::State::Checked, m_styleOption->state.testFlag(QStyle::State_Selected));
+    states.setFlag(Union::Element::State::Checked, m_styleOption.state.testFlag(QStyle::State_Selected));
     return states;
 }
 
@@ -284,12 +284,11 @@ QStringList TabElement::elementHints() const
         hints.append(u"immutable"_s);
     }
 
-    auto tabStyleOption = qstyleoption_cast<const QStyleOptionTab *>(m_styleOption);
     auto tabBar = qobject_cast<const QTabBar *>(m_widget);
-    if (tabStyleOption && tabBar) {
-        if (tabStyleOption->tabIndex == 0) {
+    if (m_tabOption && tabBar) {
+        if (m_tabOption->tabIndex == 0) {
             hints.append(u"first"_s);
-        } else if (tabStyleOption->tabIndex == tabBar->count() - 1) {
+        } else if (m_tabOption->tabIndex == tabBar->count() - 1) {
             hints.append(u"last"_s);
         }
     }

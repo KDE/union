@@ -24,14 +24,14 @@ FrameElement::FrameElement(const QStyleOptionFrame *option, const UnionStyle *st
     : AbstractElement(option, style, widget)
     , m_frameOption(option)
 {
-    update();
+    update(option);
 }
 
 FrameElement::~FrameElement()
 {
 }
 
-void FrameElement::update()
+void FrameElement::update(const QStyleOption *option)
 {
     updateSubElementList();
     layout();
@@ -39,10 +39,10 @@ void FrameElement::update()
 
 void FrameElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_styleOption, m_subElementList);
     }
     if (m_elementProperties) {
         m_isValid = true;
@@ -197,7 +197,7 @@ QStringList FrameElement::elementHints() const
     // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
     if (m_widget) {
         if (m_widget->inherits("KDEPrivate::KPageListView") || m_widget->inherits("KDEPrivate::KPageTreeView")) {
-            const bool reverseLayout(m_styleOption && m_styleOption->direction == Qt::RightToLeft);
+            const bool reverseLayout(m_styleOption.direction == Qt::RightToLeft);
             if (reverseLayout) {
                 hints.append(u"panel-right"_s);
             } else {
@@ -336,7 +336,7 @@ qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 
 QRectF FrameElement::subElementRect(QStyle::SubElement element) const
 {
-    const auto rect = m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    const auto rect = m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
     if (element == QStyle::SE_FrameContents) {
         return rect.marginsRemoved(borderSize().toMargins());
     }

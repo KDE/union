@@ -20,14 +20,14 @@ ToolButtonElement::ToolButtonElement(const QStyleOptionToolButton *option, const
     , m_hasIcon(false)
     , m_hasText(false)
 {
-    update();
+    update(option);
 }
 
 ToolButtonElement::~ToolButtonElement()
 {
 }
 
-void ToolButtonElement::update()
+void ToolButtonElement::update(const QStyleOption *option)
 {
     if (!m_toolButtonOption) {
         return;
@@ -52,10 +52,10 @@ void ToolButtonElement::layout()
         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
     }
 
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_indicatorMap = layoutMap(m_styleOption, {ElementString::Indicator});
+        m_indicatorMap = layoutMap(&m_styleOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
         auto subopt = *m_toolButtonOption;

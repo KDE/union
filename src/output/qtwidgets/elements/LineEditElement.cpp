@@ -21,14 +21,14 @@ LineEditElement::LineEditElement(const QStyleOptionFrame *option, const UnionSty
     , m_frameOption(option)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
 LineEditElement::~LineEditElement()
 {
 }
 
-void LineEditElement::update()
+void LineEditElement::update(const QStyleOption *option)
 {
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
         m_hasFrame = lineEdit->hasFrame();
@@ -92,7 +92,7 @@ QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
         auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
         return rect.marginsRemoved(padding().toMargins());
     }
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
 }
 
 QStringList LineEditElement::elementHints() const

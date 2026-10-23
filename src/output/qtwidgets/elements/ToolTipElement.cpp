@@ -17,14 +17,14 @@ ToolTipElement::ToolTipElement(const QStyleOptionFrame *option, const UnionStyle
     : AbstractElement(option, style, widget)
     , m_frameOption(option)
 {
-    update();
+    update(option);
 }
 
 ToolTipElement::~ToolTipElement()
 {
 }
 
-void ToolTipElement::update()
+void ToolTipElement::update(const QStyleOption *option)
 {
     layout();
 }

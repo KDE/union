@@ -17,14 +17,14 @@ ScrollAreaCornerElement::ScrollAreaCornerElement(const QStyleOption *option, con
     : AbstractElement(option, style, widget)
     , m_cornerOption(option)
 {
-    update();
+    update(option);
 }
 
 ScrollAreaCornerElement::~ScrollAreaCornerElement()
 {
 }
 
-void ScrollAreaCornerElement::update()
+void ScrollAreaCornerElement::update(const QStyleOption *option)
 {
     layout();
 }

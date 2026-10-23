@@ -17,14 +17,14 @@ HeaderElement::HeaderElement(const QStyleOptionHeader *option, const UnionStyle 
     , m_headerOption(option)
     , m_isHorizontal(false)
 {
-    update();
+    update(option);
 }
 
 HeaderElement::~HeaderElement()
 {
 }
 
-void HeaderElement::update()
+void HeaderElement::update(const QStyleOption *option)
 {
     if (!m_headerOption) {
         m_isValid = false;

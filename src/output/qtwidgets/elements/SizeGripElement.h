@@ -32,7 +32,7 @@ public:
     SizeGripElement(const QStyleOptionSizeGrip *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~SizeGripElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     void draw(QPainter *painter, DrawEnums enums) const override;

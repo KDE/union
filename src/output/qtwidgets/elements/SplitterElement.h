@@ -34,7 +34,7 @@ public:
     SplitterElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~SplitterElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;

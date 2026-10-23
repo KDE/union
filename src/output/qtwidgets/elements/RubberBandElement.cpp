@@ -16,14 +16,14 @@ RubberBandElement::RubberBandElement(const QStyleOptionRubberBand *option, const
     : AbstractElement(option, style, widget)
     , m_rubberBandOption(option)
 {
-    update();
+    update(option);
 }
 
 RubberBandElement::~RubberBandElement()
 {
 }
 
-void RubberBandElement::update()
+void RubberBandElement::update(const QStyleOption *option)
 {
     layout();
 }
@@ -43,7 +43,7 @@ void RubberBandElement::draw(QPainter *painter, DrawEnums enums) const
 
 void RubberBandElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::RubberBand});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::RubberBand});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

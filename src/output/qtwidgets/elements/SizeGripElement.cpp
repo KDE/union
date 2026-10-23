@@ -18,7 +18,7 @@ SizeGripElement::SizeGripElement(const QStyleOptionSizeGrip *option, const Union
     : AbstractElement(option, style, widget)
     , m_sizeGripOption(option)
 {
-    update();
+    update(option);
 }
 
 SizeGripElement::~SizeGripElement()
@@ -38,14 +38,14 @@ void SizeGripElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-void SizeGripElement::update()
+void SizeGripElement::update(const QStyleOption *option)
 {
     layout();
 }
 
 void SizeGripElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::SizeGrip});
+    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::SizeGrip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

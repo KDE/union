@@ -34,7 +34,7 @@ public:
     WidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~WidgetElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     int styleHint(QStyle::StyleHint styleHint) const override;
