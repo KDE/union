@@ -13,7 +13,6 @@ using namespace Qt::StringLiterals;
 
 MenuBarItemElement::MenuBarItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuItemOption(option)
 {
     update(option);
 }
@@ -24,12 +23,12 @@ MenuBarItemElement::~MenuBarItemElement()
 
 void MenuBarItemElement::update(const QStyleOption *option)
 {
-    if (!m_menuItemOption) {
-        return;
-    }
+    AbstractElement::update(option);
+    m_menuItemOption = updateStyleOption<QStyleOptionMenuItem>(option);
+
     setIndicator(QIcon());
-    setIcon(m_menuItemOption->icon);
-    setText(m_menuItemOption->text);
+    setIcon(m_menuItemOption.icon);
+    setText(m_menuItemOption.text);
     updateSubElementList();
     layout();
 }
@@ -42,7 +41,7 @@ void MenuBarItemElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ControlElement) {
     case QStyle::CE_MenuBarItem:
-        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, &m_styleOption, painter, m_widget);
+        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, &m_menuItemOption, painter, m_widget);
         drawBackground(painter);
         drawIcon(painter);
         drawText(painter);
@@ -57,17 +56,17 @@ void MenuBarItemElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::Text);
-    if (m_menuItemOption && !m_menuItemOption->icon.isNull()) {
+    if (!m_menuItemOption.icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
 }
 
 void MenuBarItemElement::layout()
 {
-    m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuBarItem});
+    m_elementList = prepareElements(&m_menuItemOption, m_widget, {ElementString::MenuBarItem});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_menuItemOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_menuItemOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -77,13 +76,10 @@ void MenuBarItemElement::layout()
 QStringList MenuBarItemElement::elementHints() const
 {
     QStringList hints;
-    if (!m_menuItemOption) {
-        return hints;
-    }
-    if (m_menuItemOption->checked) {
+    if (m_menuItemOption.checked) {
         hints.append(u"with-submenu"_s);
     }
-    if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
+    if (m_menuItemOption.menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption.text.isEmpty()) {
         hints.append(u"with-title"_s);
     }
     return hints;

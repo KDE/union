@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 
 WidgetElement::WidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_widgetOption(option)
 {
     update(option);
 }
@@ -25,6 +24,7 @@ WidgetElement::~WidgetElement()
 
 void WidgetElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 

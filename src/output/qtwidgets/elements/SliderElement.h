@@ -48,7 +48,7 @@ private:
     void updateSubElementList() override;
     void drawBackground(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionSlider *m_sliderOption = nullptr;
+    QStyleOptionSlider m_sliderOption;
     bool m_isHorizontal;
     bool m_isInverted;
     bool m_isReverse;

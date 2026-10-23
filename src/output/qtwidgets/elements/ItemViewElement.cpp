@@ -21,7 +21,6 @@ using namespace Union::Properties;
 
 ItemViewElement::ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_viewItemOption(option)
 {
     update(option);
 }
@@ -32,36 +31,35 @@ ItemViewElement::~ItemViewElement()
 
 void ItemViewElement::update(const QStyleOption *option)
 {
-    if (!m_viewItemOption) {
-        return;
-    }
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
+    AbstractElement::update(option);
+    m_viewItemOption = updateStyleOption<QStyleOptionViewItem>(option);
+    if (m_viewItemOption.features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+        m_indicatorElementList = prepareElements(&m_viewItemOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
         if (!m_indicatorElementList.isEmpty()) {
             m_indicatorProperties = queryProperties(m_indicatorElementList);
         }
     }
-    setIcon(m_viewItemOption->icon);
-    setText(m_viewItemOption->text);
+    setIcon(m_viewItemOption.icon);
+    setText(m_viewItemOption.text);
     layout();
 }
 
 void ItemViewElement::layout()
 {
-    m_elementList = prepareElements(m_viewItemOption, m_widget, {ElementString::ItemViewItem});
+    m_elementList = prepareElements(&m_viewItemOption, m_widget, {ElementString::ItemViewItem});
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
 
-        auto opt = *m_viewItemOption;
-        opt.rect = backgroundRectangle(m_viewItemOption, m_elementProperties).toRect();
+        auto opt = m_viewItemOption;
+        opt.rect = backgroundRectangle(&m_viewItemOption, m_elementProperties).toRect();
 
         m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
         m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
         m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget);
 
         // Apply our spacing
-        switch (m_viewItemOption->decorationPosition) {
+        switch (m_viewItemOption.decorationPosition) {
         case QStyleOptionViewItem::Left:
             m_layoutMap[ElementString::Text].rect.moveLeft(m_layoutMap[ElementString::Icon].rect.right() + spacing());
             break;
@@ -86,9 +84,9 @@ void ItemViewElement::layout()
 void ItemViewElement::drawIndicator(QPainter *painter) const
 {
     // Draw indicator
-    if (m_viewItemOption && m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+    if (m_viewItemOption.features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
         QStyleOptionButton checkbox;
-        switch (m_viewItemOption->checkState) {
+        switch (m_viewItemOption.checkState) {
         case Qt::Unchecked:
             checkbox.state.setFlag(QStyle::State_Off);
             break;
@@ -99,7 +97,7 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
             checkbox.state.setFlag(QStyle::State_On);
             break;
         }
-        checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption->state.testFlag(QStyle::State_Enabled));
+        checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption.state.testFlag(QStyle::State_Enabled));
         checkbox.rect = subElementRect(QStyle::SE_ItemViewItemCheckIndicator).toRect();
         painter->save();
         m_style->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
@@ -109,7 +107,7 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
 
 QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, &m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
+    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, &m_viewItemOption, contentsSizeFromStyle.toSize(), m_widget);
     return applyPaddingToSize(commonSize);
 }
 
@@ -162,23 +160,20 @@ void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ItemViewElement::drawBackground(QPainter *painter) const
 {
-    if (!m_viewItemOption) {
-        return;
-    }
     painter->save();
     // Apply clip region in case the user has set one for painter.
-    const QRect rect = m_styleOption.rect;
+    const QRect rect = m_viewItemOption.rect;
     const QRegion clipRegion = painter->hasClipping() ? (painter->clipRegion() & rect) : rect;
     painter->setClipRegion(clipRegion);
 
     // Draw custom background color with simple rectangle if set and not selected
-    const bool hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption.state.testFlag(QStyle::State_Selected);
+    const bool hasCustomBackground = m_viewItemOption.backgroundBrush.style() != Qt::NoBrush && !m_viewItemOption.state.testFlag(QStyle::State_Selected);
     if (hasCustomBackground) {
         const auto radius =
             safePropertyLookup(m_elementProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
         const auto path = unevenRadiiRectPath(rect, radius);
         painter->setPen(Qt::NoPen);
-        painter->setBrush(m_viewItemOption->backgroundBrush);
+        painter->setBrush(m_viewItemOption.backgroundBrush);
         painter->drawPath(path);
     } else {
         AbstractElement::drawBackground(painter);
@@ -189,9 +184,9 @@ void ItemViewElement::drawBackground(QPainter *painter) const
 void ItemViewElement::drawText(QPainter *painter) const
 {
     if (hasText()) {
-        QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, m_widget);
+        QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, &m_viewItemOption, m_widget);
         if (textRect.isEmpty()) {
-            textRect = m_styleOption.rect;
+            textRect = m_viewItemOption.rect;
         }
         drawTextAtRect(painter, m_text, textRect);
     }
@@ -207,26 +202,23 @@ void ItemViewElement::drawIcon(QPainter *painter) const
 QVariantMap ItemViewElement::elementAttributes() const
 {
     QVariantMap map;
-    if (!m_viewItemOption) {
-        return map;
-    }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Top) {
+    if (m_viewItemOption.decorationPosition == QStyleOptionViewItem::Top) {
         map[u"display"_s] = QVariant(u"text-below-icon"_s);
     }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Bottom) {
+    if (m_viewItemOption.decorationPosition == QStyleOptionViewItem::Bottom) {
         map[u"display"_s] = QVariant(u"text-above-icon"_s);
     }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Left) {
+    if (m_viewItemOption.decorationPosition == QStyleOptionViewItem::Left) {
         map[u"display"_s] = QVariant(u"text-after-icon"_s);
     }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Right) {
+    if (m_viewItemOption.decorationPosition == QStyleOptionViewItem::Right) {
         map[u"display"_s] = QVariant(u"text-before-icon"_s);
     }
 
-    auto viewItemPosition = m_viewItemOption->viewItemPosition;
+    auto viewItemPosition = m_viewItemOption.viewItemPosition;
 
     // Override situations where we have treeview but only select one item
-    const auto treeItemView = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
+    const auto treeItemView = qobject_cast<const QTreeView *>(m_viewItemOption.widget);
     if (treeItemView && treeItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
         viewItemPosition = QStyleOptionViewItem::OnlyOne;
     }
@@ -254,9 +246,9 @@ QVariantMap ItemViewElement::elementAttributes() const
 QStringList ItemViewElement::elementHints() const
 {
     QStringList hints;
-    const auto table = qobject_cast<const QTableView *>(m_viewItemOption->widget);
-    const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
-    const auto list = qobject_cast<const QListView *>(m_viewItemOption->widget);
+    const auto table = qobject_cast<const QTableView *>(m_viewItemOption.widget);
+    const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption.widget);
+    const auto list = qobject_cast<const QListView *>(m_viewItemOption.widget);
     // For tables and such, we just want to select one item.
     if (table) {
         hints.append(u"inside-table"_s);
@@ -271,11 +263,11 @@ QStringList ItemViewElement::elementHints() const
     // These always have hover effect, i think
     hints.append(u"hover-enabled"_s);
 
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::Alternate)) {
+    if (m_viewItemOption.features.testFlag(QStyleOptionViewItem::Alternate)) {
         hints.append(u"alternating-colors"_s);
     }
 
-    if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
+    if (m_viewItemOption.state.testFlag(QStyle::State_Open)) {
         hints.append(u"expanded"_s);
     }
 

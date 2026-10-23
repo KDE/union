@@ -15,7 +15,6 @@ using namespace Union::Properties;
 
 TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_treeViewOption(option)
     , m_itemIsOpen(false)
 {
     update(option);
@@ -27,6 +26,8 @@ TreeViewElement::~TreeViewElement()
 
 void TreeViewElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+
     if (!m_styleOption.state.testFlag(QStyle::State_Children)) {
         m_isValid = false;
         return;

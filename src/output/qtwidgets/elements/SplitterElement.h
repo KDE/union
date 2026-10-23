@@ -41,5 +41,4 @@ public:
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOption *m_splitterOption = nullptr;
 };

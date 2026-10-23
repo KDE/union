@@ -36,5 +36,5 @@ public:
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionRubberBand *m_rubberBandOption = nullptr;
+    QStyleOptionRubberBand m_rubberBandOption;
 };

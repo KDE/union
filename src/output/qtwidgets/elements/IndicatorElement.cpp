@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 
 IndicatorElement::IndicatorElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_indicatorOption(option)
 {
     m_listViewIconSize = querySize({ElementString::ListViewIconSize}).width();
     m_smallIconSize = querySize({ElementString::SmallIconSize}).width();
@@ -57,9 +56,9 @@ void IndicatorElement::draw(QPainter *painter, DrawEnums enums) const
 
 void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIconName, QStringList targetHierarchy) const
 {
-    auto properties = queryProperties(prepareElements(m_indicatorOption, m_widget, targetHierarchy));
+    auto properties = queryProperties(prepareElements(&m_styleOption, m_widget, targetHierarchy));
     auto icon = m_style->unionIcon(properties, defaultIconName);
-    drawIconAtRect(painter, icon, m_indicatorOption->rect, properties);
+    drawIconAtRect(painter, icon, m_styleOption.rect, properties);
 }
 
 qreal IndicatorElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

@@ -16,7 +16,6 @@ using namespace Qt::StringLiterals;
 
 SizeGripElement::SizeGripElement(const QStyleOptionSizeGrip *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_sizeGripOption(option)
 {
     update(option);
 }
@@ -40,12 +39,15 @@ void SizeGripElement::draw(QPainter *painter, DrawEnums enums) const
 
 void SizeGripElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_sizeGripOption = updateStyleOption<QStyleOptionSizeGrip>(option);
+
     layout();
 }
 
 void SizeGripElement::layout()
 {
-    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::SizeGrip});
+    m_elementList = prepareElements(&m_sizeGripOption, m_widget, {ElementString::SizeGrip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

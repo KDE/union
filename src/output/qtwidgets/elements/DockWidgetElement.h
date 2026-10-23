@@ -52,5 +52,5 @@ public:
 private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionDockWidget *m_dockWidgetOption = nullptr;
+    QStyleOptionDockWidget m_dockWidgetOption;
 };

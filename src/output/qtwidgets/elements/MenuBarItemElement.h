@@ -41,5 +41,5 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionMenuItem *m_menuItemOption = nullptr;
+    QStyleOptionMenuItem m_menuItemOption;
 };

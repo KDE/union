@@ -48,5 +48,5 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    QStyleOptionFrame m_frameOption;
 };

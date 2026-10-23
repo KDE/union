@@ -39,5 +39,5 @@ public:
 
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionSizeGrip *m_sizeGripOption = nullptr;
+    QStyleOptionSizeGrip m_sizeGripOption;
 };

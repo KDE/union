@@ -22,6 +22,7 @@ MenuBarElement::~MenuBarElement()
 
 void MenuBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 

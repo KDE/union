@@ -58,7 +58,7 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionHeader *m_headerOption = nullptr;
+    QStyleOptionHeader m_headerOption;
     QIcon sortIndicator();
     bool m_isHorizontal;
 };

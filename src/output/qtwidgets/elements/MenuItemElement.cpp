@@ -17,7 +17,6 @@ using namespace Union::Properties;
 
 MenuItemElement::MenuItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuItemOption(option)
     , m_isSeparator(false)
     , m_hasSubMenu(false)
     , m_hasCheckBox(false)
@@ -35,17 +34,17 @@ MenuItemElement::~MenuItemElement()
 
 void MenuItemElement::update(const QStyleOption *option)
 {
-    if (!m_menuItemOption) {
-        return;
-    }
-    m_isSeparator = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator);
-    m_hasSubMenu = (m_menuItemOption->menuItemType == QStyleOptionMenuItem::SubMenu);
-    m_hasCheckBox = (m_menuItemOption->checkType == QStyleOptionMenuItem::NonExclusive);
-    m_hasRadioButton = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
-    m_hasCheckableItems = m_menuItemOption->menuHasCheckableItems;
+    AbstractElement::update(option);
+    m_menuItemOption = updateStyleOption<QStyleOptionMenuItem>(option);
+
+    m_isSeparator = (m_menuItemOption.menuItemType == QStyleOptionMenuItem::Separator);
+    m_hasSubMenu = (m_menuItemOption.menuItemType == QStyleOptionMenuItem::SubMenu);
+    m_hasCheckBox = (m_menuItemOption.checkType == QStyleOptionMenuItem::NonExclusive);
+    m_hasRadioButton = (m_menuItemOption.checkType == QStyleOptionMenuItem::Exclusive);
+    m_hasCheckableItems = m_menuItemOption.menuHasCheckableItems;
 
     if (m_hasSubMenu) {
-        m_arrowElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
+        m_arrowElementList = prepareElements(&m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
         m_arrowProperties = queryProperties(m_arrowElementList);
         m_subMenuArrow = m_style->unionIcon(m_arrowProperties, u"arrow-right-symbolic"_s);
     }
@@ -58,9 +57,9 @@ void MenuItemElement::update(const QStyleOption *option)
     }
 
     if (!QApplication::testAttribute(Qt::AA_DontShowIconsInMenus)) {
-        setIcon(m_menuItemOption->icon);
+        setIcon(m_menuItemOption.icon);
     }
-    setText(m_menuItemOption->text);
+    setText(m_menuItemOption.text);
 
     updateSubElementList();
     layout();
@@ -127,14 +126,14 @@ void MenuItemElement::updateSubElementList()
 void MenuItemElement::layout()
 {
     if (m_isSeparator) {
-        m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuSeparator});
+        m_elementList = prepareElements(&m_menuItemOption, m_widget, {ElementString::MenuSeparator});
     } else {
-        m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem});
+        m_elementList = prepareElements(&m_menuItemOption, m_widget, {ElementString::MenuItem});
     }
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_menuItemOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_menuItemOption, m_subElementList);
 
         // IconRect in MenuItemElements are the maximum size by default.
         // Instead center the icon rectangle within the maximum size rect.
@@ -150,7 +149,7 @@ void MenuItemElement::layout()
     }
 
     if (!m_shortcutText.isEmpty()) {
-        m_shortcutElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
+        m_shortcutElementList = prepareElements(&m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
         m_shortcutProperties = queryProperties(m_shortcutElementList);
     }
 }
@@ -159,47 +158,44 @@ QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     QSizeF preferredSize = contentsSizeFromStyle;
     // Handle separator separately (pun not intended)
-    if (m_menuItemOption) {
-        if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator) {
-            auto width = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-            auto height = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-            if (hasText()) {
-                if (preferredSize.width() > width) {
-                    width = preferredSize.width();
-                }
-                if (preferredSize.height() > height) {
-                    height = preferredSize.height();
-                }
+    if (m_menuItemOption.menuItemType == QStyleOptionMenuItem::Separator) {
+        auto width = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        auto height = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        if (hasText()) {
+            if (preferredSize.width() > width) {
+                width = preferredSize.width();
             }
-            QSizeF separatorSize(width, height);
-            preferredSize = applyPaddingToSize(separatorSize);
-        } else {
-            QSizeF itemSize(contentsSizeFromStyle);
-            const qreal spacing = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
-            if (hasText()) {
-                itemSize.rwidth() += spacing;
+            if (preferredSize.height() > height) {
+                height = preferredSize.height();
             }
-            if (hasIcon()) {
-                itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
-            }
-            if (m_hasSubMenu) {
-                itemSize.rwidth() += m_layoutMap[ElementString::Arrow].rect.width() + spacing;
-            }
-            if (m_menuItemOption->menuHasCheckableItems) {
-                const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
-                const qreal labelSpacing =
-                    m_style->pixelMetric(exclusive ? QStyle::PM_RadioButtonLabelSpacing : QStyle::PM_CheckBoxLabelSpacing, m_menuItemOption, m_widget)
-                    + spacing;
-                itemSize.rwidth() +=
-                    m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget) + spacing
-                    + labelSpacing;
-            }
-            if (!m_shortcutText.isEmpty()) {
-                itemSize.rwidth() += m_layoutMap[ElementString::ShortcutText].rect.width() + spacing;
-            }
-            preferredSize = applyPaddingToSize(itemSize);
         }
+        QSizeF separatorSize(width, height);
+        preferredSize = applyPaddingToSize(separatorSize);
+    } else {
+        QSizeF itemSize(contentsSizeFromStyle);
+        const qreal spacing = m_elementProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
+        if (hasText()) {
+            itemSize.rwidth() += spacing;
+        }
+        if (hasIcon()) {
+            itemSize.rwidth() += m_layoutMap[ElementString::Icon].rect.width() + spacing;
+        }
+        if (m_hasSubMenu) {
+            itemSize.rwidth() += m_layoutMap[ElementString::Arrow].rect.width() + spacing;
+        }
+        if (m_menuItemOption.menuHasCheckableItems) {
+            const bool exclusive = (m_menuItemOption.checkType == QStyleOptionMenuItem::Exclusive);
+            const qreal labelSpacing =
+                m_style->pixelMetric(exclusive ? QStyle::PM_RadioButtonLabelSpacing : QStyle::PM_CheckBoxLabelSpacing, &m_menuItemOption, m_widget) + spacing;
+            itemSize.rwidth() += m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, &m_menuItemOption, m_widget)
+                + spacing + labelSpacing;
+        }
+        if (!m_shortcutText.isEmpty()) {
+            itemSize.rwidth() += m_layoutMap[ElementString::ShortcutText].rect.width() + spacing;
+        }
+        preferredSize = applyPaddingToSize(itemSize);
     }
+
     return preferredSize;
 }
 
@@ -207,7 +203,7 @@ void MenuItemElement::drawBackground(QPainter *painter) const
 {
     // Draw the  separator rectangle full width if its set to fill
     if (m_isSeparator) {
-        QRectF rect = backgroundRectangle(m_menuItemOption, m_elementProperties);
+        QRectF rect = backgroundRectangle(&m_menuItemOption, m_elementProperties);
         if (m_elementProperties) {
             auto alignment = m_elementProperties->safePropertyLookup(Union::Properties::Alignment::Fill,
                                                                      &StylePropertyGroup::layout,
@@ -215,14 +211,14 @@ void MenuItemElement::drawBackground(QPainter *painter) const
                                                                      &AlignmentPropertyGroup::horizontal);
             if (alignment == Union::Properties::Alignment::Fill) {
                 rect = centerRect(rect,
-                                  m_elementProperties->layout()->width().value_or(m_menuItemOption->rect.width()),
+                                  m_elementProperties->layout()->width().value_or(m_menuItemOption.rect.width()),
                                   m_elementProperties->layout()->height().value_or(1));
             }
         }
         // Ensure the rectangle is resized according to the menu margins
         drawBackgroundRectangle(painter, rect, m_elementProperties);
     } else {
-        drawBackgroundRectangle(painter, m_menuItemOption->rect, m_elementProperties);
+        drawBackgroundRectangle(painter, m_menuItemOption.rect, m_elementProperties);
     }
 }
 
@@ -249,13 +245,10 @@ void MenuItemElement::drawSubMenuArrow(QPainter *painter) const
 QStringList MenuItemElement::elementHints() const
 {
     QStringList hints;
-    if (!m_menuItemOption) {
-        return hints;
-    }
     if (m_hasSubMenu) {
         hints.append(u"with-submenu"_s);
     }
-    if (m_isSeparator && !m_menuItemOption->text.isEmpty()) {
+    if (m_isSeparator && !m_menuItemOption.text.isEmpty()) {
         hints.append(u"with-title"_s);
     }
     return hints;
@@ -277,9 +270,9 @@ qreal MenuItemElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 Union::Element::States MenuItemElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
-    states.setFlag(Union::Element::State::Checked, m_menuItemOption && m_menuItemOption->checked);
+    states.setFlag(Union::Element::State::Checked, m_menuItemOption.checked);
     // Menuitems for some reason do not get mouseover, but they get selected instead
-    states.setFlag(Union::Element::State::Hovered, m_menuItemOption && m_menuItemOption->state.testFlag(QStyle::State_Selected));
+    states.setFlag(Union::Element::State::Hovered, m_menuItemOption.state.testFlag(QStyle::State_Selected));
     return states;
 }
 

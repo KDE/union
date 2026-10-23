@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 
 StatusBarElement::StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_statusBarOption(option)
 {
     update(option);
 }
@@ -25,6 +24,7 @@ StatusBarElement::~StatusBarElement()
 
 void StatusBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     updateSubElementList();
     layout();
 }
@@ -70,7 +70,7 @@ void StatusBarElement::layout()
 
 void StatusBarElement::drawItem(QPainter *painter) const
 {
-    drawBackgroundRectangle(painter, m_statusBarOption->rect, m_contentProperties);
+    drawBackgroundRectangle(painter, m_styleOption.rect, m_contentProperties);
 }
 
 QString StatusBarElement::fallbackElementName(const QStyleOption *opt) const

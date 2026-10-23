@@ -53,7 +53,7 @@ private:
     void drawHandle(QPainter *painter) const;
     void drawSeparator(QPainter *painter) const;
     QRectF handleSeparatorRect(qreal extent) const;
-    const QStyleOptionToolBar *m_toolBarOption = nullptr;
+    QStyleOptionToolBar m_toolBarOption;
 
     Union::ElementList m_handleElementList;
     Union::Properties::StylePropertyGroup *m_handleProperties;

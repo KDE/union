@@ -60,7 +60,7 @@ private:
     void layoutButtons();
     ArrowStyle arrowStyle() const;
 
-    const QStyleOptionToolButton *m_toolButtonOption = nullptr;
+    QStyleOptionToolButton m_toolButtonOption;
     bool m_hasIndicator;
     bool m_hasArrows;
     bool m_hasIcon;

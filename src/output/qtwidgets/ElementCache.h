@@ -35,6 +35,7 @@ void element(std::shared_ptr<AbstractElement> &output, size_t hash, const UnionS
 
     if (detail::s_elementCache.contains(hash)) {
         output = detail::s_elementCache.value(hash).value();
+        output->update(option);
         return;
     }
 

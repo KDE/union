@@ -46,6 +46,6 @@ public:
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     void drawBackground(QPainter *painter) const override;
-    const QStyleOptionTabBarBase *m_tabBarOption = nullptr;
+    QStyleOptionTabBarBase m_tabBarOption;
     qreal scrollButtonWidth() const;
 };

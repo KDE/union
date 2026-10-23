@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 
 RubberBandElement::RubberBandElement(const QStyleOptionRubberBand *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_rubberBandOption(option)
 {
     update(option);
 }
@@ -25,6 +24,8 @@ RubberBandElement::~RubberBandElement()
 
 void RubberBandElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_rubberBandOption = updateStyleOption<QStyleOptionRubberBand>(option);
     layout();
 }
 
@@ -43,7 +44,7 @@ void RubberBandElement::draw(QPainter *painter, DrawEnums enums) const
 
 void RubberBandElement::layout()
 {
-    m_elementList = prepareElements(&m_styleOption, m_widget, {ElementString::RubberBand});
+    m_elementList = prepareElements(&m_rubberBandOption, m_widget, {ElementString::RubberBand});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

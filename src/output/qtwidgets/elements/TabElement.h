@@ -53,7 +53,7 @@ private:
     QStringList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionTab *m_tabOption = nullptr;
+    QStyleOptionTab m_tabOption;
     bool m_isVertical;
     bool m_isStatic;
     int m_hSpace;

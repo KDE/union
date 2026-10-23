@@ -47,6 +47,6 @@ private:
     QStringList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     QMarginsF iconPadding() const;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    QStyleOptionFrame m_frameOption;
     bool m_hasFrame;
 };

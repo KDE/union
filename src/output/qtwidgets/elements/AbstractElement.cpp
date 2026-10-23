@@ -146,13 +146,7 @@ void AbstractElement::updateSubElementList()
 void AbstractElement::update(const QStyleOption *option)
 {
     if (option) {
-        m_styleOption.type = option->type;
-        m_styleOption.state = option->state;
-        m_styleOption.direction = option->direction;
-        m_styleOption.rect = option->rect;
-        m_styleOption.fontMetrics = option->fontMetrics;
-        m_styleOption.palette = option->palette;
-        m_styleOption.styleObject = option->styleObject;
+        m_styleOption = *option;
     } else {
         m_styleOption = QStyleOption();
         if (m_widget) {

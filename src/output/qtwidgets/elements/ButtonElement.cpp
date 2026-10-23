@@ -30,28 +30,10 @@ void ButtonElement::update(const QStyleOption *option)
     AbstractElement::update(option);
     setIndicator(QIcon());
 
-    if (const auto newOption = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-        m_buttonOption.type = newOption->type;
-        m_buttonOption.state = newOption->state;
-        m_buttonOption.direction = newOption->direction;
-        m_buttonOption.rect = newOption->rect;
-        m_buttonOption.fontMetrics = newOption->fontMetrics;
-        m_buttonOption.palette = newOption->palette;
-        m_buttonOption.styleObject = newOption->styleObject;
-
-        m_buttonOption.features = newOption->features;
-        m_buttonOption.text = newOption->text;
-        m_buttonOption.icon = newOption->icon;
-        m_buttonOption.iconSize = newOption->iconSize;
-    } else {
-        m_buttonOption = QStyleOptionButton();
-        if (m_widget) {
-            m_buttonOption.initFrom(m_widget);
-        }
-    }
+    m_buttonOption = updateStyleOption<QStyleOptionButton>(option);
 
     if (m_buttonOption.features.testFlag(QStyleOptionButton::HasMenu)) {
-        m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::Indicator});
+        m_indicatorElementList = prepareElements(&m_buttonOption, m_widget, {ElementString::Indicator});
         if (!m_indicatorElementList.isEmpty()) {
             m_indicatorProperties = queryProperties(m_indicatorElementList);
             setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
@@ -133,7 +115,7 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
         return backgroundRectangle(&m_buttonOption, m_elementProperties);
     }
 
-    return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_buttonOption, m_widget);
 }
 
 Union::Element::States ButtonElement::elementStates() const

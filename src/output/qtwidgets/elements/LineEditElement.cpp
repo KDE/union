@@ -18,7 +18,6 @@ using namespace Union::Properties;
 
 LineEditElement::LineEditElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
     , m_hasFrame(true)
 {
     update(option);
@@ -30,9 +29,12 @@ LineEditElement::~LineEditElement()
 
 void LineEditElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_frameOption = updateStyleOption<QStyleOptionFrame>(option);
+
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
         m_hasFrame = lineEdit->hasFrame();
-    } else if (m_frameOption && m_frameOption->frameShape == QFrame::Shape::NoFrame) {
+    } else if (m_frameOption.frameShape == QFrame::Shape::NoFrame) {
         m_hasFrame = false;
     }
 
@@ -89,15 +91,15 @@ QMarginsF LineEditElement::iconPadding() const
 QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 {
     if (m_isValid && element == QStyle::SE_LineEditContents) {
-        auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
+        auto rect = backgroundRectangle(&m_frameOption, m_elementProperties).toRect();
         return rect.marginsRemoved(padding().toMargins());
     }
-    return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
+    return m_style->QCommonStyle::subElementRect(element, &m_frameOption, m_widget);
 }
 
 QStringList LineEditElement::elementHints() const
 {
-    auto hints = frameHints(m_frameOption);
+    auto hints = frameHints(&m_frameOption);
     // Due to how Line Edits work, we have to first check the parent, then it's parent
     // to figure out if we're inside a table. The first parent is just the scrollview.
     if (m_widget && m_widget->parentWidget()) {

@@ -59,7 +59,7 @@ private:
     void drawIndicator(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     void drawChunk(QPainter *painter) const;
-    const QStyleOptionProgressBar *m_progressBarOption = nullptr;
+    QStyleOptionProgressBar m_progressBarOption;
     int chunkWidth() const;
     bool m_isHorizontal;
     Union::ElementList m_contentElementList;

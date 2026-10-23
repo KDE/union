@@ -44,5 +44,4 @@ public:
 private:
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOption *m_menuOption = nullptr;
 };

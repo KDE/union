@@ -15,7 +15,6 @@ using namespace Union::Properties;
 
 GroupBoxElement::GroupBoxElement(const QStyleOptionGroupBox *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_groupBoxOption(option)
     , m_isCheckable(false)
 {
     update(option);
@@ -28,9 +27,9 @@ GroupBoxElement::~GroupBoxElement()
 void GroupBoxElement::update(const QStyleOption *option)
 {
     // This info is only in the widget itself
-    if (!option) {
-        return;
-    }
+    AbstractElement::update(option);
+    m_groupBoxOption = updateStyleOption<QStyleOptionGroupBox>(option);
+
     m_isCheckable = false;
     if (auto groupBox = qobject_cast<const QGroupBox *>(m_widget)) {
         if (groupBox->isCheckable()) {
@@ -38,7 +37,7 @@ void GroupBoxElement::update(const QStyleOption *option)
         }
     }
 
-    setText(m_groupBoxOption->text);
+    setText(m_groupBoxOption.text);
     updateSubElementList();
     layout();
 }
@@ -78,10 +77,10 @@ void GroupBoxElement::updateSubElementList()
 
 void GroupBoxElement::layout()
 {
-    m_elementList = prepareElements(m_groupBoxOption, m_widget);
+    m_elementList = prepareElements(&m_groupBoxOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_groupBoxOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_groupBoxOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -90,7 +89,7 @@ void GroupBoxElement::layout()
 
 QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_groupBoxOption) {
+    if (!m_isValid) {
         qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
         return {};
     }
@@ -104,13 +103,13 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
     case QStyle::SC_GroupBoxContents: {
         auto textRect = m_layoutMap[ElementString::Text].rect;
         QMarginsF pad = padding();
-        QRectF frameRect = m_groupBoxOption->rect;
+        QRectF frameRect = m_groupBoxOption.rect;
         frameRect = frameRect.adjusted(0, textRect.height(), 0, 0);
         frameRect.adjust(0, 0, 0, -pad.bottom());
-        const int fontMetricsHeight = hasText() ? 0 : m_groupBoxOption->fontMetrics.height();
+        const int fontMetricsHeight = hasText() ? 0 : m_groupBoxOption.fontMetrics.height();
         int indicatorHeight = 0;
         if (m_isCheckable) {
-            indicatorHeight = m_style->pixelMetric(QStyle::PM_IndicatorHeight, m_groupBoxOption, m_widget);
+            indicatorHeight = m_style->pixelMetric(QStyle::PM_IndicatorHeight, &m_groupBoxOption, m_widget);
         }
         const int topMargin = std::max(indicatorHeight, fontMetricsHeight);
         return frameRect.adjusted(pad.left(), pad.top() + topMargin, -pad.bottom(), -pad.right());
@@ -119,18 +118,18 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
         finalRect = m_layoutMap[ElementString::Icon].rect;
     } break;
     case QStyle::SC_GroupBoxFrame: {
-        return m_groupBoxOption->rect;
+        return m_groupBoxOption.rect;
     }
     default:
         break;
     }
 
-    return m_style->visualRect(m_groupBoxOption->direction, m_groupBoxOption->rect, finalRect);
+    return m_style->visualRect(m_groupBoxOption.direction, m_groupBoxOption.rect, finalRect);
 }
 
 void GroupBoxElement::drawText(QPainter *painter) const
 {
-    if (m_groupBoxOption && (m_groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && hasText()) {
+    if ((m_groupBoxOption.subControls & QStyle::SC_GroupBoxLabel) && hasText()) {
         QRectF textRect = subControlRect(QStyle::SC_GroupBoxLabel);
         drawTextAtRect(painter, m_text, textRect);
     }
@@ -138,10 +137,10 @@ void GroupBoxElement::drawText(QPainter *painter) const
 
 void GroupBoxElement::drawIcon(QPainter *painter) const
 {
-    if (m_isCheckable && m_groupBoxOption) {
+    if (m_isCheckable) {
         QStyleOptionButton checkbox;
         checkbox.rect = subControlRect(QStyle::SC_GroupBoxCheckBox).toRect();
-        checkbox.state = m_groupBoxOption->state;
+        checkbox.state = m_groupBoxOption.state;
         m_style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &checkbox, painter);
     }
 }
@@ -149,13 +148,10 @@ void GroupBoxElement::drawIcon(QPainter *painter) const
 QStringList GroupBoxElement::elementHints() const
 {
     QStringList hints;
-    if (!m_groupBoxOption) {
-        return hints;
-    }
-    if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Flat)) {
+    if (m_groupBoxOption.features.testFlag(QStyleOptionFrame::Flat)) {
         hints.append(u"flat"_s);
     }
-    if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Rounded)) {
+    if (m_groupBoxOption.features.testFlag(QStyleOptionFrame::Rounded)) {
         hints.append(u"rounded"_s);
     }
     return hints;

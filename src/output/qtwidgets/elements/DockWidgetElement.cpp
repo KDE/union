@@ -15,7 +15,6 @@ using namespace Union::Properties;
 
 DockWidgetElement::DockWidgetElement(const QStyleOptionDockWidget *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_dockWidgetOption(option)
 {
     update(option);
 }
@@ -26,8 +25,10 @@ DockWidgetElement::~DockWidgetElement()
 
 void DockWidgetElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_dockWidgetOption = updateStyleOption<QStyleOptionDockWidget>(option);
     setIcon(QIcon());
-    setText(m_dockWidgetOption->title);
+    setText(m_dockWidgetOption.title);
     updateSubElementList();
     layout();
 }
@@ -49,27 +50,24 @@ void DockWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 void DockWidgetElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_dockWidgetOption) {
-        return;
-    }
-    if (m_dockWidgetOption->closable) {
+    if (m_dockWidgetOption.closable) {
         m_subElementList.append(ElementString::CloseButton);
     }
-    if (m_dockWidgetOption->floatable) {
+    if (m_dockWidgetOption.floatable) {
         m_subElementList.append(ElementString::FloatButton);
     }
-    if (!m_dockWidgetOption->title.isEmpty()) {
+    if (!m_dockWidgetOption.title.isEmpty()) {
         m_subElementList.append(ElementString::Text);
     }
 }
 
 void DockWidgetElement::layout()
 {
-    m_elementList = prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget});
+    m_elementList = prepareElements(&m_dockWidgetOption, m_widget, {ElementString::DockWidget});
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_dockWidgetOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_dockWidgetOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -114,11 +112,11 @@ QIcon DockWidgetElement::standardPixmap(QStyle::StandardPixmap pixmap) const
 {
     switch (pixmap) {
     case QStyle::SP_TitleBarNormalButton:
-        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::FloatButton})),
+        return m_style->unionIcon(queryProperties(prepareElements(&m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::FloatButton})),
                                   u"window-restore"_s);
     case QStyle::SP_TitleBarCloseButton:
     case QStyle::SP_DockWidgetCloseButton:
-        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::CloseButton})),
+        return m_style->unionIcon(queryProperties(prepareElements(&m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::CloseButton})),
                                   u"window-close-symbolic"_s);
     default:
         break;

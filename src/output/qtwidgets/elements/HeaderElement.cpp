@@ -14,7 +14,6 @@ using namespace Union::Properties;
 
 HeaderElement::HeaderElement(const QStyleOptionHeader *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_headerOption(option)
     , m_isHorizontal(false)
 {
     update(option);
@@ -26,13 +25,11 @@ HeaderElement::~HeaderElement()
 
 void HeaderElement::update(const QStyleOption *option)
 {
-    if (!m_headerOption) {
-        m_isValid = false;
-        return;
-    }
-    m_isHorizontal = (m_headerOption->orientation == Qt::Horizontal);
-    setText(m_headerOption->text);
-    setIcon(m_headerOption->icon);
+    AbstractElement::update(option);
+    m_headerOption = updateStyleOption<QStyleOptionHeader>(option);
+    m_isHorizontal = (m_headerOption.orientation == Qt::Horizontal);
+    setText(m_headerOption.text);
+    setIcon(m_headerOption.icon);
     updateSubElementList();
     layout();
     setIndicator(sortIndicator());
@@ -41,8 +38,8 @@ void HeaderElement::update(const QStyleOption *option)
 QIcon HeaderElement::sortIndicator()
 {
     QIcon sortIndicator;
-    if (m_elementProperties && m_isValid && m_headerOption) {
-        switch (m_headerOption->sortIndicator) {
+    if (m_elementProperties && m_isValid) {
+        switch (m_headerOption.sortIndicator) {
         case QStyleOptionHeader::None:
             break;
         case QStyleOptionHeader::SortUp:
@@ -58,10 +55,10 @@ QIcon HeaderElement::sortIndicator()
 
 void HeaderElement::layout()
 {
-    m_elementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
+    m_elementList = prepareElements(&m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_headerOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_headerOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -117,7 +114,7 @@ void HeaderElement::updateSubElementList()
     if (hasText()) {
         m_subElementList.append(ElementString::Text);
     }
-    if (m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+    if (m_headerOption.sortIndicator != QStyleOptionHeader::None) {
         m_subElementList.append(ElementString::Indicator);
     }
 }
@@ -141,14 +138,14 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    if (!m_isValid || !m_headerOption) {
+    if (!m_isValid) {
         return QSizeF();
     }
     // Copied from Breeze
     const qreal arrowWidth = subElementRect(QStyle::SE_HeaderArrow).width();
     const qreal space = spacing();
 
-    const QSizeF textSize(hasText() ? m_headerOption->fontMetrics.size(0, m_headerOption->text) : QSize());
+    const QSizeF textSize(hasText() ? m_headerOption.fontMetrics.size(0, m_headerOption.text) : QSize());
 
     // contents width
     qreal contentsWidth(0);
@@ -163,12 +160,12 @@ QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     }
 
     // contents height
-    qreal contentsHeight(hasText() ? textSize.height() : m_headerOption->fontMetrics.height());
+    qreal contentsHeight(hasText() ? textSize.height() : m_headerOption.fontMetrics.height());
     if (hasIcon()) {
         contentsHeight = std::max(contentsHeight, iconSize().height());
     }
 
-    if (m_isHorizontal && m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+    if (m_isHorizontal && m_headerOption.sortIndicator != QStyleOptionHeader::None) {
         // also add space for sort indicator
         contentsWidth += arrowWidth + space;
         contentsHeight = std::max(contentsHeight, arrowWidth);
@@ -182,7 +179,7 @@ QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 QStringList HeaderElement::elementHints() const
 {
     QStringList hints;
-    switch (m_headerOption->sortIndicator) {
+    switch (m_headerOption.sortIndicator) {
     case QStyleOptionHeader::None:
         return hints;
     // Due to how Breeze style does this, these need to be inverted

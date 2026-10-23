@@ -44,6 +44,6 @@ private:
     void drawText(QPainter *painter) const override;
     void drawIcon(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionGroupBox *m_groupBoxOption = nullptr;
+    QStyleOptionGroupBox m_groupBoxOption;
     bool m_isCheckable;
 };

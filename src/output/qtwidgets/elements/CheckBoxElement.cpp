@@ -15,7 +15,6 @@ using namespace Qt::StringLiterals;
 
 CheckBoxElement::CheckBoxElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_buttonOption(option)
 {
     update(option);
 }
@@ -26,15 +25,16 @@ CheckBoxElement::~CheckBoxElement()
 
 void CheckBoxElement::update(const QStyleOption *option)
 {
-    m_indicatorElementList = prepareElements(&m_styleOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
+    AbstractElement::update(option);
+    m_buttonOption = updateStyleOption<QStyleOptionButton>(option);
+
+    m_indicatorElementList = prepareElements(&m_buttonOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
 
-    if (m_buttonOption) {
-        setIcon(m_buttonOption->icon);
-        setText(m_buttonOption->text);
-    }
+    setIcon(m_buttonOption.icon);
+    setText(m_buttonOption.text);
     updateSubElementList();
     layout();
 }
@@ -79,12 +79,12 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
     }
 
     if (element == QStyle::SE_CheckBoxIndicator) {
-        if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
+        if (m_buttonOption.styleObject || m_widget) {
             // The indicator is drawn as part of something
             return m_layoutMap[ElementString::Indicator].rect;
         }
         // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
-        return m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
+        return m_style->QCommonStyle::subElementRect(element, &m_buttonOption, m_widget);
     }
 
     return unifiedRect(m_layoutMap);
@@ -94,13 +94,10 @@ void CheckBoxElement::updateSubElementList()
 {
     m_subElementList.clear();
     m_subElementList.append(ElementString::Indicator);
-    if (!m_buttonOption) {
-        return;
-    }
-    if (!m_buttonOption->icon.isNull()) {
+    if (!m_buttonOption.icon.isNull()) {
         m_subElementList.append(ElementString::Icon);
     }
-    if (!m_buttonOption->text.isEmpty()) {
+    if (!m_buttonOption.text.isEmpty()) {
         m_subElementList.append(ElementString::Text);
     }
 }
@@ -113,14 +110,11 @@ void CheckBoxElement::drawIndicator(QPainter *painter) const
 QStringList CheckBoxElement::elementHints() const
 {
     QStringList hints;
-    if (!m_buttonOption) {
-        return hints;
-    }
-    if (!m_buttonOption->icon.isNull()) {
+    if (!m_buttonOption.icon.isNull()) {
         hints.append(u"with-icon"_s);
     }
     // Used for "partial" checkbox
-    if (m_buttonOption->state.testFlag(QStyle::State_NoChange)) {
+    if (m_buttonOption.state.testFlag(QStyle::State_NoChange)) {
         hints.append(u"indeterminate"_s);
     }
     return hints;

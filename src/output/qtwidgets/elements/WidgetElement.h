@@ -40,7 +40,5 @@ public:
     int styleHint(QStyle::StyleHint styleHint) const override;
 
 private:
-    const QStyleOption *m_widgetOption = nullptr;
-
     void drawKMultiTabBar(QPainter *painter) const;
 };

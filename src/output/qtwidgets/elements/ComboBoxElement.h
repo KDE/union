@@ -47,7 +47,7 @@ private:
     void updateSubElementList() override;
     void drawText(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionComboBox *m_comboBoxOption = nullptr;
+    QStyleOptionComboBox m_comboBoxOption;
     bool m_editable;
     bool m_hasFrame;
 

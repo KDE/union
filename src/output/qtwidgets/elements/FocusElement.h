@@ -40,5 +40,5 @@ public:
 private:
     QStringList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionFocusRect *m_focusOption = nullptr;
+    QStyleOptionFocusRect m_focusOption;
 };

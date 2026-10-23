@@ -22,7 +22,6 @@ using namespace Union::Properties;
 
 FrameElement::FrameElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
 {
     update(option);
 }
@@ -33,16 +32,18 @@ FrameElement::~FrameElement()
 
 void FrameElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    m_frameOption = updateStyleOption<QStyleOptionFrame>(option);
     updateSubElementList();
     layout();
 }
 
 void FrameElement::layout()
 {
-    m_elementList = prepareElements(&m_styleOption, m_widget);
+    m_elementList = prepareElements(&m_frameOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(&m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(&m_frameOption, m_subElementList);
     }
     if (m_elementProperties) {
         m_isValid = true;
@@ -67,7 +68,7 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
     switch (enums.ControlElement) {
     case QStyle::CE_FocusFrame:
     case QStyle::CE_ShapedFrame:
-        switch (m_frameOption->frameShape) {
+        switch (m_frameOption.frameShape) {
         // Do nothing
         case QFrame::NoFrame:
             break;
@@ -116,11 +117,8 @@ void FrameElement::drawFrame(QPainter *painter) const
     // Follow the expectations: If frame has panel shape,
     // we need to draw the background too. In HLine/VLine cases
     // we can just skip it
-    if (!m_frameOption) {
-        return;
-    }
 
-    switch (m_frameOption->frameShape) {
+    switch (m_frameOption.frameShape) {
     case QFrame::NoFrame:
         // Only draw panel if we have autoFillBackground set
         if (m_widget && m_widget->autoFillBackground()) {
@@ -150,21 +148,7 @@ QVariantMap FrameElement::elementAttributes() const
 {
     QVariantMap map;
 
-    // For some reason both frame widget and styleoption can have frameshape,
-    // and they can also differ. If we do not have a styleoption, rely on widget
-    // information.
-    QFrame::Shape shape;
-    if (!m_frameOption) {
-        if (const auto frame = qobject_cast<const QFrame *>(m_widget)) {
-            shape = frame->frameShape();
-        } else {
-            return map;
-        }
-    } else {
-        shape = m_frameOption->frameShape;
-    }
-
-    switch (shape) {
+    switch (m_frameOption.frameShape) {
     case QFrame::NoFrame:
         map[u"shape"_s] = u"no-frame"_s;
         break;
@@ -191,13 +175,13 @@ QVariantMap FrameElement::elementAttributes() const
 
 QStringList FrameElement::elementHints() const
 {
-    auto hints = frameHints(m_frameOption);
+    auto hints = frameHints(&m_frameOption);
 
     // Backwards compatibility:
     // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
     if (m_widget) {
         if (m_widget->inherits("KDEPrivate::KPageListView") || m_widget->inherits("KDEPrivate::KPageTreeView")) {
-            const bool reverseLayout(m_styleOption.direction == Qt::RightToLeft);
+            const bool reverseLayout(m_frameOption.direction == Qt::RightToLeft);
             if (reverseLayout) {
                 hints.append(u"panel-right"_s);
             } else {
@@ -336,7 +320,7 @@ qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 
 QRectF FrameElement::subElementRect(QStyle::SubElement element) const
 {
-    const auto rect = m_style->QCommonStyle::subElementRect(element, &m_styleOption, m_widget);
+    const auto rect = m_style->QCommonStyle::subElementRect(element, &m_frameOption, m_widget);
     if (element == QStyle::SE_FrameContents) {
         return rect.marginsRemoved(borderSize().toMargins());
     }
