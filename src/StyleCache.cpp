@@ -25,7 +25,7 @@ static constexpr quint64 CacheMagic = 0x23'55'4E'49'4F'55'43'46;
 // way the cache is structured. We include a hash of the properties.yml file
 // that is used to generate the data model so changes to that file do not need
 // to bump the cache version.
-static constexpr uint32_t CacheVersion = 7;
+static constexpr uint32_t CacheVersion = 8;
 
 class StyleCache::Private
 {
