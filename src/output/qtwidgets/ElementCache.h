@@ -25,7 +25,7 @@ template<typename EnumType, int enumValue>
 struct EnumToType {
 };
 
-static Union::LruCache<size_t, std::shared_ptr<AbstractElement>> s_elementCache;
+static Union::LruCache<size_t, std::shared_ptr<AbstractElement>, 500> s_elementCache;
 
 template<typename EnumType, int enumValue>
 void element(std::shared_ptr<AbstractElement> &output, size_t hash, const UnionStyle *style, const QStyleOption *option, const QWidget *widget)
@@ -35,7 +35,6 @@ void element(std::shared_ptr<AbstractElement> &output, size_t hash, const UnionS
 
     if (detail::s_elementCache.contains(hash)) {
         output = detail::s_elementCache.value(hash).value();
-        output->update();
         return;
     }
 
