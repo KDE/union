@@ -20,6 +20,7 @@ AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *s
     , m_widget(widget)
     , m_elementQuery(std::make_unique<Union::ElementQuery>(Union::StyleRegistry::instance()->defaultStyle()))
 {
+    update(option);
 }
 
 AbstractElement::~AbstractElement()
@@ -207,6 +208,7 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, Union::Properties::St
     if (!m_isValid) {
         return oldSize;
     }
+
     auto paddingProperties = defaultPropertyGroup(properties);
     QMarginsF padding =
         safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
@@ -344,7 +346,7 @@ qreal AbstractElement::height(Union::Properties::StylePropertyGroup *properties)
 {
     constexpr qreal defaultValue = 0.0;
     if (const auto property = defaultPropertyGroup(properties)) {
-        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+        return safePropertyLookup(property, defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     } else if (m_styleOption.rect.isValid()) {
         return m_styleOption.rect.height();
     } else {
@@ -356,7 +358,7 @@ qreal AbstractElement::width(Union::Properties::StylePropertyGroup *properties) 
 {
     constexpr qreal defaultValue = 0.0;
     if (const auto property = defaultPropertyGroup(properties)) {
-        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+        return safePropertyLookup(property, defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     } else if (m_styleOption.rect.isValid()) {
         return m_styleOption.rect.width();
     } else {

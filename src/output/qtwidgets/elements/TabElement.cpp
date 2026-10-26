@@ -17,13 +17,9 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     : AbstractElement(option, style, widget)
     , m_isVertical(false)
     , m_isStatic(false)
-    , m_hSpace(0)
-    , m_vSpace(0)
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
     update(option);
-    m_hSpace = hSpace();
-    m_vSpace = vSpace();
 }
 
 TabElement::~TabElement()
@@ -46,6 +42,12 @@ void TabElement::update(const QStyleOption *option)
     setIcon(m_tabOption.icon);
     setText(m_tabOption.text);
     updateSubElementList();
+
+    m_elementList = prepareElements(&m_tabOption, m_widget, {ElementString::Tab});
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+    }
+
     layout();
 }
 
@@ -100,7 +102,7 @@ void TabElement::draw(QPainter *painter, DrawEnums enums) const
 void TabElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        auto textContainer = subElementRect(QStyle::SE_TabBarTabText);
+        auto textContainer = m_style->subElementRect(QStyle::SE_TabBarTabText, &m_tabOption, m_widget);
         auto alignment = m_layoutMap[ElementString::Text].horizontalAlignment;
         auto textRect = m_layoutMap[ElementString::Text].rect;
 
@@ -141,9 +143,7 @@ void TabElement::layout()
         return;
     }
 
-    m_elementList = prepareElements(&m_tabOption, m_widget, {ElementString::Tab});
     if (!m_elementList.isEmpty()) {
-        m_elementProperties = queryProperties(m_elementList);
         QRect tabRect = m_tabOption.rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
@@ -294,9 +294,9 @@ qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TabBarTabHSpace:
-        return m_hSpace;
+        return hSpace();
     case QStyle::PM_TabBarTabVSpace:
-        return m_vSpace;
+        return vSpace();
     default:
         break;
     }

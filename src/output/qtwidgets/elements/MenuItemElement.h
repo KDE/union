@@ -58,6 +58,8 @@ private:
     Union::Properties::StylePropertyGroup *m_arrowProperties;
     Union::ElementList m_shortcutElementList;
     Union::Properties::StylePropertyGroup *m_shortcutProperties;
+    Union::ElementList m_separatorElementList;
+    Union::Properties::StylePropertyGroup *m_separatorProperties;
     bool m_isSeparator;
     bool m_hasSubMenu;
     bool m_hasCheckBox;

@@ -12,6 +12,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union;
 
 ScrollBarElement::ScrollBarElement(const QStyleOptionSlider *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
@@ -185,11 +186,11 @@ QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
 
 qreal ScrollBarElement::extent() const
 {
-    if (m_isValid && m_elementProperties && m_elementProperties->layout()) {
+    if (m_isValid) {
         if (m_scrollBarOption.orientation == Qt::Horizontal) {
-            return m_elementProperties->layout()->height().value_or(0);
+            return height();
         } else {
-            return m_elementProperties->layout()->width().value_or(0);
+            return width();
         }
     }
     return 0;
@@ -197,11 +198,9 @@ qreal ScrollBarElement::extent() const
 
 qreal ScrollBarElement::controlThickness() const
 {
-    if (m_isValid && m_indicatorProperties && m_indicatorProperties->layout()) {
-        QSizeF size(m_indicatorProperties->layout()->width().value_or(1), m_indicatorProperties->layout()->height().value_or(1));
-        if (m_indicatorProperties->layout()->padding()) {
-            size = size.shrunkBy(m_indicatorProperties->layout()->padding()->toMargins().toMargins());
-        }
+    if (m_isValid) {
+        QSizeF size(width(m_indicatorProperties), height(m_indicatorProperties));
+        size = size.shrunkBy(padding(m_indicatorProperties));
         if (m_scrollBarOption.orientation == Qt::Horizontal) {
             return size.height();
         } else {
