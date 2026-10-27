@@ -341,7 +341,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
 
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QStyleOption *option, const QSize &contentsSize, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), contentsType, option, widget);
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), contentsSize, option, widget);
     auto cached = ElementCache::element<QStyle::ContentsType,
                                         QStyle::CT_PushButton,
                                         QStyle::CT_CheckBox,
@@ -365,7 +365,6 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QSty
                                         QStyle::CT_GroupBox,
                                         QStyle::CT_ItemViewItem>(contentsType, hash, this, option, widget);
     if (cached) {
-        cached->update();
         return cached->contentsSize(contentsSize).toSize();
     } else {
         // Unhandled
