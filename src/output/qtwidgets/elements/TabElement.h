@@ -18,7 +18,6 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_TabBarTabText> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTab> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabLabel> : public TypeHelper<TabElement, QStyleOptionTab>{};
         template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabShape> : public TypeHelper<TabElement, QStyleOptionTab>{};
@@ -55,8 +54,6 @@ private:
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;
     bool m_isStatic;
-    int m_hSpace;
-    int m_vSpace;
     int hSpace() const;
     int vSpace() const;
 };
