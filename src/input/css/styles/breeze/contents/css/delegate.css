@@ -220,7 +220,8 @@ graphicsview itemviewitem {
     }
 }
 
-focusframe {
+/* Dolphin file highlights */
+graphicsview focusframe {
     background-color: transparent;
     border: 1.25px solid var(--highlight-color);
     border-radius: var(--corner-radius);
