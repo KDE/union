@@ -220,7 +220,8 @@ graphicsview itemviewitem {
     }
 }
 
-focusframe {
+/* Dolphin file highlights */
+graphicsview focusframe {
     background-color: transparent;
     border: 1.25px solid var(--highlight-color);
     border-radius: var(--corner-radius);
@@ -229,6 +230,7 @@ focusframe {
         border: 1.75px solid var(--highlight-color);
     }
 }
+
 
 /* For delegates with known indicators, place the indicator at the top left and
  * reduce the effective indicator size to 0. This ensures the indicator will be
