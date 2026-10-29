@@ -84,10 +84,8 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
             return m_layoutMap[ElementString::Indicator].rect;
         }
         // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
-        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
     }
-
-    return unifiedRect(m_layoutMap);
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 void CheckBoxElement::updateSubElementList()
