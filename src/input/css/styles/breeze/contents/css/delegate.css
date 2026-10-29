@@ -22,20 +22,8 @@ switchdelegate,
 swipedelegate,
 itemviewitem
 {
-    /*
-     We want to have some separation between delegates in a list, but we cannot
-     control list spacing, nor do we want to use that since the list spacing is
-     not considered to be part of any delegate so ends up as "dead space". So we
-     use insets to "fake" the spacing. Ideally, the inset would be
-     `--delegate-spacing / 2` but doing that leads to only half the wanted space
-     at the list's top and bottom items. Since we lack first/last child support,
-     we fake it by having the spacing all at the top, except for the last item
-     in the list.
-     */
     padding: var(--delegate-total-padding);
     inset: var(--delegate-spacing);
-    padding-bottom: var(--delegate-padding);
-    inset-bottom: 0px;
 
     spacing: var(--medium-spacing);
     width: var(--icon-size-small);
@@ -79,21 +67,8 @@ itemviewitem
         &:pressed,
         &:highlighted
         {
-            inset: var(--delegate-spacing);
-            inset-bottom: 0px;
             border-radius: var(--corner-radius);
-
-            &.last-in-list {
-                padding-bottom: var(--delegate-total-padding);
-                inset-bottom: var(--delegate-spacing);
-            }
         }
-    }
-
-    &.last-in-list
-    {
-        padding-bottom: var(--delegate-total-padding);
-        inset-bottom: var(--delegate-spacing);
     }
 
     &:hovered
@@ -139,6 +114,49 @@ itemviewitem
     }
 }
 
+itemdelegate,
+checkdelegate,
+radiodelegate,
+switchdelegate,
+swipedelegate
+{
+    /*
+     We want to have some separation between delegates in a list, but we cannot
+     control list spacing, nor do we want to use that since the list spacing is
+     not considered to be part of any delegate so ends up as "dead space". So we
+     use insets to "fake" the spacing. Ideally, the inset would be
+     `--delegate-spacing / 2` but doing that leads to only half the wanted space
+     at the list's top and bottom items. Since we lack first/last child support,
+     we fake it by having the spacing all at the top, except for the last item
+     in the list.
+     This is skipped for ItemViewItem as QtWidgets do not support this behavior.
+     */
+    inset-bottom: 0px;
+    padding-bottom: var(--delegate-padding);
+
+    &.inside-list.hover-enabled {
+        &:hovered,
+        &:active-focus,
+        &:pressed,
+        &:highlighted
+        {
+            inset: var(--delegate-spacing);
+            inset-bottom: 0px;
+
+            &.last-in-list {
+                padding-bottom: var(--delegate-total-padding);
+                inset-bottom: var(--delegate-spacing);
+            }
+        }
+    }
+
+    &.last-in-list
+    {
+        padding-bottom: var(--delegate-total-padding);
+        inset-bottom: var(--delegate-spacing);
+    }
+}
+
 /* ItemViewItem delegate is often misused by QtWidgets applications, so
  * we do not allow layouting inside it. */
 itemviewitem {
@@ -181,14 +199,6 @@ itemviewitem {
         border-bottom-left-radius: 0px;
     }
 
-    /* Widgets do not have last-in-list support, so reverse any changes to hover insets */
-    &.inside-list {
-        inset: 0px;
-        &.hover-enabled {
-            inset: 2px;
-        }
-    }
-
     &.inside-table {
         inset: 0px;
         &[position="invalid"],
@@ -208,6 +218,9 @@ itemviewitem {
         &[display="text-above-icon"]
         {
             text-wrap-mode: wrap;
+        }
+        &.hover-enabled {
+            inset: 2px;
         }
     }
 }
