@@ -456,8 +456,11 @@ Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, con
         if (elementTypes.isEmpty()) {
             elementTypes = m_style->widgetToElementHierarchy(widget);
         }
-    } else {
-        elementTypes = {fallbackElementName(opt)};
+    }
+    // Skip fallback if we already have it
+    const auto fallback = fallbackElementName(opt);
+    if (!elementTypes.endsWith(fallback)) {
+        elementTypes.append(fallback);
     }
 
     // Meld duplicate elements that appear next to each other
