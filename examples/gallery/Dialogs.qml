@@ -6,6 +6,8 @@ import QtQuick.Layouts
 import QtQuick.Controls as Controls
 import org.kde.kirigami as Kirigami
 
+import org.kde.union as Union
+
 Kirigami.Page {
     title: "Dialogs QtQuick.Controls"
 
@@ -17,9 +19,13 @@ Kirigami.Page {
     ColumnLayout {
         anchors.fill: parent
 
-        Controls.Button {
-            text: "Show Dialog"
-            onClicked: dialog.visible = true
+        Controls.GroupBox {
+            title: "Dialogs"
+
+            Controls.Button {
+                text: "Show Dialog"
+                onClicked: dialog.visible = true
+            }
         }
 
         Controls.Dialog {
