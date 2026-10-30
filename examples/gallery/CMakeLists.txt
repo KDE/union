@@ -10,6 +10,7 @@ ecm_target_qml_sources(union-gallery SOURCES
     Main.qml
 
     SearchField.qml
+    TryControl.qml
 )
 
 set(_configured_files
