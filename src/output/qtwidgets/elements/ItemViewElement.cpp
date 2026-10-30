@@ -109,8 +109,15 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
 
 QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
-    return applyPaddingToSize(commonSize);
+    QSizeF size = applyPaddingToSize(m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget));
+    // Ensure our items fit the viewPort height in case the viewPort is very small
+    if (const auto scrollarea = qobject_cast<const QAbstractScrollArea *>(m_widget)) {
+        const auto maxSize = scrollarea->maximumViewportSize();
+        if (maxSize.height() < size.height()) {
+            size.setHeight(maxSize.height());
+        }
+    }
+    return size;
 }
 
 QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
