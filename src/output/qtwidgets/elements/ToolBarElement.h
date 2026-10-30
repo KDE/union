@@ -56,11 +56,11 @@ private:
     const QStyleOptionToolBar *m_toolBarOption = nullptr;
 
     Union::ElementList m_handleElementList;
-    Union::Properties::StylePropertyGroup *m_handleProperties;
+    Union::StylePropertyGroupPtr m_handleProperties;
     Union::ElementList m_separatorElementList;
-    Union::Properties::StylePropertyGroup *m_separatorProperties;
+    Union::StylePropertyGroupPtr m_separatorProperties;
     Union::ElementList m_extensionElementList;
-    Union::Properties::StylePropertyGroup *m_extensionProperties;
+    Union::StylePropertyGroupPtr m_extensionProperties;
 
     qreal separatorExtent() const;
     qreal handleExtent() const;

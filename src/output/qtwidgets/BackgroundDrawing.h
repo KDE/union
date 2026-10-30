@@ -38,10 +38,9 @@ enum class BackgroundParts {
  */
 void drawBackgroundRectangle(QPainter *painter,
                              const QRectF &mainRect,
-                             const Union::Properties::StylePropertyGroup *style,
+                             const Union::StylePropertyGroupPtr &style,
                              BackgroundParts parts = BackgroundParts::All,
                              const QColor &backgroundOverride = QColor());
-
 /*!
  * \brief Generates a QPainterPath to use with outlines and rounded corners.
  */

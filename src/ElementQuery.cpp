@@ -82,7 +82,7 @@ bool ElementQuery::hasMatches() const
     return bool(d->properties);
 }
 
-Properties::StylePropertyGroup *ElementQuery::properties() const
+StylePropertyGroupPtr ElementQuery::properties() const
 {
-    return d->properties.get();
+    return d->properties;
 }

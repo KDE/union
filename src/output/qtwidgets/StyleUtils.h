@@ -46,7 +46,7 @@ Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
 /*!
  * \brief Returns the background rectangle of an option, but removes its insets according to the properties first.
  */
-QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties);
+QRectF backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties);
 
 /*!
  * \brief Helper function to get text from any QStyleOption that has a field with QString (text/title)
@@ -61,7 +61,7 @@ QSizeF iconSizeFromOption(const QStyleOption *opt);
 /*!
  * \brief Returns flags for text drawing purposes. Applies the text alignment based on the layouting.
  */
-int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties);
+int textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties);
 
 /*!
  * \brief Centers a rectangle depending on width and height. Copied from Breeze.

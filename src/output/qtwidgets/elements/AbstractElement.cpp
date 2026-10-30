@@ -204,7 +204,7 @@ Union::Element::States AbstractElement::elementStates() const
     return states;
 }
 
-QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection direction, Union::Properties::StylePropertyGroup *properties) const
+QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, PaddingDirection direction, const Union::StylePropertyGroupPtr &properties) const
 {
     if (!m_isValid) {
         return oldSize;
@@ -293,7 +293,7 @@ void AbstractElement::drawIndicator(QPainter *painter) const
     }
 }
 
-void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const
+void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, const Union::StylePropertyGroupPtr &properties) const
 {
     if (m_isValid) {
         auto unionIcon = m_style->unionIcon(properties, icon.name());
@@ -316,7 +316,7 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
     }
 }
 
-void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const
+void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, const Union::StylePropertyGroupPtr &properties) const
 {
     if (m_isValid && m_styleOption) {
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
@@ -430,7 +430,7 @@ qreal AbstractElement::averageBorderSize() const
     return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
 }
 
-QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const
+QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, const Union::StylePropertyGroupPtr &properties) const
 {
     if (!text.isEmpty() && m_styleOption) {
         auto elide = safePropertyLookup(properties, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
@@ -491,7 +491,7 @@ QString AbstractElement::fallbackElementName(const QStyleOption *opt) const
     return styleOptionToElementName(opt);
 }
 
-Union::Properties::StylePropertyGroup *AbstractElement::queryProperties(const Union::ElementList &elements) const
+Union::StylePropertyGroupPtr AbstractElement::queryProperties(const Union::ElementList &elements) const
 {
     Q_ASSERT(!elements.isEmpty());
 

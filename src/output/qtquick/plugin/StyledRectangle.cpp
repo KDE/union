@@ -122,7 +122,7 @@ void StyledRectangle::updateImplicitSize()
     update();
 }
 
-QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGroup *style)
+QSGNode *StyledRectangle::updateShaderNode(QSGNode *node, const StylePropertyGroupPtr style)
 {
     if (!node) {
         node = new QSGNode{};

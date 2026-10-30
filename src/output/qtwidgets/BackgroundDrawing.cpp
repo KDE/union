@@ -22,7 +22,7 @@ static Union::LruImageCache imageCache;
 
 void drawBackgroundRectangle(QPainter *painter,
                              const QRectF &mainRect,
-                             const Union::Properties::StylePropertyGroup *style,
+                             const Union::StylePropertyGroupPtr &style,
                              BackgroundParts parts,
                              const QColor &backgroundOverride)
 {

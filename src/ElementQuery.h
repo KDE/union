@@ -80,7 +80,7 @@ public:
      *
      * This will contain all the resolved properties of the matched style rules.
      */
-    Properties::StylePropertyGroup *properties() const;
+    StylePropertyGroupPtr properties() const;
 
 private:
     const std::unique_ptr<ElementQueryPrivate> d;

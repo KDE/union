@@ -55,6 +55,6 @@ private:
     const QStyleOptionViewItem *m_viewItemOption = nullptr;
     QString fallbackElementName(const QStyleOption *opt) const override;
     Union::ElementList m_indicatorElementList;
-    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
     qreal m_totalSpacing = 0;
 };

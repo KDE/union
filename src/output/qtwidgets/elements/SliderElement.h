@@ -57,5 +57,5 @@ private:
     QSizeF tickMarkSize() const;
 
     Union::ElementList m_tickElementList;
-    Union::Properties::StylePropertyGroup *m_tickProperties = nullptr;
+    Union::StylePropertyGroupPtr m_tickProperties = nullptr;
 };

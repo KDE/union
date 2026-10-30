@@ -162,9 +162,8 @@ protected:
     /*!
      * \brief Utilizes the background property to apply a padding to the given size.
      */
-    QSizeF applyPaddingToSize(QSizeF oldSize,
-                              PaddingDirection direction = PaddingDirection::Outward,
-                              Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    QSizeF
+    applyPaddingToSize(QSizeF oldSize, PaddingDirection direction = PaddingDirection::Outward, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     /*!
      * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.
@@ -187,7 +186,7 @@ protected:
      * \brief Queries the properties from list of elements. The properties match to the last element in the list,
      * inheriting anything it needs from its parents.
      */
-    virtual Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList &elements) const;
+    virtual Union::StylePropertyGroupPtr queryProperties(const Union::ElementList &elements) const;
 
     /*!
      * \brief Layouts list of elements, then returns a map of LayoutItems that contain information such as rectangles.
@@ -220,18 +219,18 @@ protected:
 
     qreal averageHPadding() const;
 
-    QString elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties) const;
+    QString elidedText(const QString &text, const QRectF &textRect, const Union::StylePropertyGroupPtr &properties) const;
 
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties) const;
+    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, const Union::StylePropertyGroupPtr &properties) const;
 
     /*!
      * \brief Draw text at the given rectangle. Handles coloring, elision and
      * enabled status.
      */
-    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties) const;
+    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, const Union::StylePropertyGroupPtr &properties) const;
 
     const QStyleOption *m_styleOption = nullptr;
     const UnionStyle *m_style = nullptr;
@@ -244,13 +243,13 @@ protected:
     Union::ElementList m_indicatorElementList;
     // Holds the properties for the background:
     // This is the top-level properties of the item by default.
-    Union::Properties::StylePropertyGroup *m_backgroundProperties = nullptr;
+    Union::StylePropertyGroupPtr m_backgroundProperties = nullptr;
     // Holds the properties for any contents, such as text and icon.
     // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
+    Union::StylePropertyGroupPtr m_contentProperties = nullptr;
     // Holds the properties for any indicators, such as dropdown arrows.
     // This can vary a lot depending on the element.
-    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
     QMap<QString, LayoutItem> m_layoutMap;
     QStringList m_subElementList;
     // Used to check if we have all elements properly prepared
