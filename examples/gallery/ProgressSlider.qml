@@ -90,6 +90,8 @@ Kirigami.Page {
             stepSize: 1
             first.value: 25
             second.value: 75
+
+            Union.StyleHints.tickMarkStepSize: 20
         }
 
         Controls.RangeSlider {
@@ -147,6 +149,8 @@ Kirigami.Page {
                 first.value: 25
                 second.value: 75
                 orientation: Qt.Vertical
+
+                Union.StyleHints.tickMarkStepSize: 20
             }
         }
 
