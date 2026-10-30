@@ -29,9 +29,11 @@ Kirigami.Page {
                 Kirigami.Action {
                     icon.name: "document-save"
                     text: qsTr("&Save")
+                    shortcut: "Ctrl+S"
                 }
                 Kirigami.Action {
                     text: qsTr("&Save As...")
+                    shortcut: "Ctrl+Shift+S"
                 }
             }
             Controls.Menu {
