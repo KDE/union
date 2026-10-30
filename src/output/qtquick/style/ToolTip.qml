@@ -26,7 +26,6 @@ T.ToolTip {
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              implicitContentHeight + topPadding + bottomPadding)
 
-
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
@@ -55,6 +54,8 @@ T.ToolTip {
     popupType: T.Popup.Item
 
     contentItem: Text {
+        Union.Element.subElement: "Text"
+
         // A maximum width for the contents of the tooltip. This is calculated to
         // fit 70 characters which is usually considered a good line length.
         //
@@ -64,9 +65,8 @@ T.ToolTip {
         text: control.text
         font: control.font
         wrapMode: Text.Wrap
-        color: Union.Style.properties.text.color ?? control.palette.text
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        color: Union.Style.properties.display.color ?? control.palette.text
+        horizontalAlignment: Union.Style.properties.text.alignment
 
         FontMetrics {
             id: metrics

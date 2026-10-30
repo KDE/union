@@ -62,14 +62,7 @@ T.ScrollBar {
     }
 
     contentItem: Union.StyledRectangle {
-        Union.Element.type: "Handle"
-        Union.Element.states {
-            hovered: control.hovered
-            activeFocus: control.activeFocus
-            visualFocus: control.visualFocus
-            pressed: control.pressed
-            enabled: control.enabled
-        }
+        Union.Element.subElement: "Handle"
     }
 
     background: Union.StyledRectangle { }

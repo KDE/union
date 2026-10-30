@@ -11,6 +11,7 @@ import org.kde.union.impl as Union
 
 T.HorizontalHeaderView {
     id: control
+
     Union.Element.type: "HeaderView"
     Union.Element.states {
         activeFocus: control.activeFocus

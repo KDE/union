@@ -13,24 +13,6 @@ import org.kde.union.impl as Union
 T.SelectionRectangle {
     id: control
     
-    Union.Element.type: "SelectionRectangle"
-    Union.Element.states {
-        hovered: control.hovered
-        activeFocus: control.activeFocus
-        visualFocus: control.visualFocus
-        enabled: control.enabled
-    }
-    
-    leftPadding: Union.Style.properties.layout.padding.left
-    rightPadding: Union.Style.properties.layout.padding.right
-    topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: Union.Style.properties.layout.padding.bottom
-    
-    leftInset: Union.Style.properties.layout.inset.left
-    rightInset: Union.Style.properties.layout.inset.right
-    topInset: Union.Style.properties.layout.inset.top
-    bottomInset: Union.Style.properties.layout.inset.bottom
-    
     topLeftHandle: Handle {}
     bottomRightHandle: Handle {}
     
@@ -39,9 +21,8 @@ T.SelectionRectangle {
         Union.Element.type: "SelectionRectangleHandle"
         Union.Element.states {
             enabled: SelectionRectangle.control.enabled
-            visualFocus: SelectionRectangle.dragging
+            pressed: SelectionRectangle.dragging
         }
         visible: SelectionRectangle.control.active
     }
-    
 }

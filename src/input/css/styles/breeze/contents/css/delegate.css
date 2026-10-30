@@ -19,29 +19,36 @@ itemdelegate,
 checkdelegate,
 radiodelegate,
 switchdelegate,
-swipedelegate,
-itemviewitem
+swipedelegate
 {
     padding: var(--delegate-total-padding);
     inset: var(--delegate-spacing);
 
-    spacing: var(--medium-spacing);
     width: var(--icon-size-small);
     height: var(--icon-size-small);
+    layout-alignment: content fill fill 0;
+    spacing: var(--medium-spacing);
 
     border-radius: var(--corner-radius);
 
-    icon-size: var(--icon-size-smallmedium);
-
-    layout-alignment: content fill fill 0;
-    icon-alignment: content start center 0;
-    text-alignment: content fill center 0;
-    text-wrap-mode: wrap;
-
-    color: var(--window-text-color);
 
     & > * {
         layout-alignment: content fill fill 0;
+    }
+
+    &::part(icon)
+    {
+        width: var(--icon-size-smallmedium);
+        height: var(--icon-size-smallmedium);
+        layout-alignment: content start center 0;
+        color: var(--window-text-color);
+    }
+
+    &::part(text)
+    {
+        layout-alignment: content fill center 0;
+        color: var(--window-text-color);
+        text-wrap-mode: wrap;
     }
 
     &.alternating-colors
@@ -89,26 +96,41 @@ itemviewitem
     {
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--highlight-text-color);
+        }
     }
 
     &:disabled {
-        color: var(--window-disabled-text-color);
         background-color: transparent;
         border: none;
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--window-disabled-text-color);
+        }
     }
 
-    &[display="text-under-icon"]
-    {
-        icon-alignment: content center stack-center 0;
-        text-alignment: content center stack-center 1;
-
-        icon-size: var(--icon-size-medium);
+    &[display="text-under-icon"] {
         width: var(--icon-size-large);
         height: var(--icon-size-large);
+
+        &::part(icon)
+        {
+            width: var(--icon-size-medium);
+            height: var(--icon-size-medium);
+            layout-alignment: content center stack-center 0;
+        }
+
+        &::part(text)
+        {
+            layout-alignment: content center stack-center 1;
+        }
     }
 
-    & > indicator
+    &::part(indicator)
     {
         layout-alignment: content start center -1;
     }
@@ -161,13 +183,17 @@ swipedelegate
  * we do not allow layouting inside it. */
 itemviewitem {
     inset: 2px;
-    icon-size: var(--small-element-size);
     text-wrap-mode: no-wrap;
     text-elide: right;
     padding: var(--small-spacing);
     height: 36px; /* 32px + inset(2px + 2px) */
 
-    & > checkbox {
+    &::part(icon) {
+        width: var(--small-element-size);
+        height: var(--small-element-size);
+    }
+
+    &::part(checkbox) {
         width: var(--small-element-size);
         height: var(--small-element-size);
     }
@@ -250,14 +276,14 @@ graphicsview focusframe {
 checkdelegate,
 radiodelegate
 {
-    &[display="text-under-icon"] > indicator {
+    &[display="text-under-icon"]::part(indicator) {
         layout-alignment: content start start -1;
         /* -(var(--icon-size-small)) */
         margin-right: -16px;
     }
 }
 
-switchdelegate[display="text-under-icon"] > indicator {
+switchdelegate[display="text-under-icon"]::part(track) {
     layout-alignment: content start start -1;
     margin-right: -36px;
     margin-top: var(--small-spacing);

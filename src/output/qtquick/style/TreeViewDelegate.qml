@@ -73,29 +73,24 @@ T.TreeViewDelegate {
     text: model.display ?? ""
 
     icon {
-        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
         name: model.decoration ?? ""
     }
 
     Item {
         id: indentItem
 
-        Union.Element.type: "Indentation"
+        Union.Element.subElement: "Indentation"
 
         implicitWidth: control.depth * control.indentation
         implicitHeight: 1
         visible: control.isTreeNode && implicitWidth > 0
     }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        color: Union.Style.properties.icon.color
-        name: Union.Style.properties.icon.name
-        visible: control.isTreeNode && control.hasChildren
+    indicator: P.DefaultIndicator {
+        visible: control.isTreeNode && control.hasChildren && (Union.Style.properties.display.visible ?? true)
     }
 
     contentItem: P.DefaultContentItem {
@@ -106,7 +101,7 @@ T.TreeViewDelegate {
     background: Union.StyledRectangle { }
 
     TableView.editDelegate: FocusScope {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+        Union.Element.subElement: "Text"
 
         width: parent.width
         height: parent.height
@@ -120,8 +115,7 @@ T.TreeViewDelegate {
 
         TextField {
             id: textField
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            horizontalAlignment: Union.Style.properties.text.alignmentz
             // Remove the TextField background, we want to use the Control background.
             background: Item {}
             width: control.contentItem.width

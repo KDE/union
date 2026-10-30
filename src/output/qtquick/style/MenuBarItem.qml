@@ -23,29 +23,29 @@ T.MenuBarItem {
     Union.Mnemonics.controlType: Union.Mnemonics.MenuItem
     Union.Mnemonics.label: control.text
 
-    font: Union.Style.properties.text.font.qFont
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding, implicitIndicatorHeight + topPadding + bottomPadding)
+
+    leftPadding: Union.Style.properties.layout.padding.left
+    rightPadding: Union.Style.properties.layout.padding.right
+    topPadding: Union.Style.properties.layout.padding.top
+    bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, implicitContentHeight + topPadding + bottomPadding, implicitIndicatorHeight + topPadding + bottomPadding)
-
     spacing: Union.Style.properties.layout.spacing
-    topPadding: Union.Style.properties.layout.padding.top
-    bottomPadding: Union.Style.properties.layout.padding.bottom
-    leftPadding: Union.Style.properties.layout.padding.left
-    rightPadding: Union.Style.properties.layout.padding.right
 
-    contentItem: T.Label {
+    contentItem: Text {
+        Union.Element.subElement: "Text"
+
         text: control.Union.Mnemonics.richTextLabel ?? control.text
-        font: control.font
-        color: Union.Style.properties.text.color
-        visible: control.display != T.AbstractButton.IconOnly
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        font: Union.Style.properties.text.font.qFont ?? control.font
+        color: Union.Style.properties.display.color ?? control.palette.text
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignHCenter
+        // verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
 
     background: Union.StyledRectangle {}

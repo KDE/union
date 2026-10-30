@@ -39,7 +39,7 @@ T.ScrollIndicator {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     contentItem: Union.StyledRectangle {
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "Handle"
         Union.Element.states {
             hovered: control.hovered
             activeFocus: control.activeFocus

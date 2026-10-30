@@ -13,6 +13,11 @@ import "private" as P
 
 T.HeaderViewDelegate {
     id: control
+
+    required property int column
+    required property int row
+    required model
+
     Union.Element.type: "HeaderViewDelegate"
 
     Union.Element.states {
@@ -25,10 +30,13 @@ T.HeaderViewDelegate {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "horizontal" },
-        Union.ElementHint { name: "sort-ascending"; when: control.model.sort === Qt.AscendingOrder },
-        Union.ElementHint { name: "sort-descending"; when: control.model.sort === undefined || control.model.sort === Qt.DescendingOrder },
+        Union.ElementHint { name: "sort-ascending"; when: control.model.sort !== undefined && control.model.sort === Qt.AscendingOrder },
+        Union.ElementHint { name: "sort-descending"; when: control.model.sort !== undefined && control.model.sort !== Qt.AscendingOrder },
+        Union.ElementHint { name: "last"; when: control.column >= control.headerView.columns - 1 }
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -36,8 +44,6 @@ T.HeaderViewDelegate {
                             Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              Union.Positioner.implicitHeight)
-
-    Union.Positioner.positionItems: [contentItem, indicator]
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -53,27 +59,19 @@ T.HeaderViewDelegate {
 
     font: Union.Style.properties.text.font.qFont
 
-    icon {
-        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
-    }
-
     highlighted: selected
 
     text: control.model[control.headerView.textRole]
 
-    background: Union.StyledRectangle { }
+    icon {
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
+    }
 
     contentItem: P.DefaultContentItem { control: control }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
-        visible: Union.Style.properties.display.visible ?? false
-        opacity: Union.Style.properties.display.opacity ?? 1.0
-    }
+    indicator: P.DefaultIndicator { }
+
+    background: Union.StyledRectangle { }
 }

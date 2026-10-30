@@ -88,13 +88,13 @@ KT.NavigationTabButton {
         Union.Mnemonics.label: control.text
 
         Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
+            Union.Element.subElement: "Icon"
             control: control
             visible: (name || source.toString()) && control.display != T.AbstractButton.TextOnly
         }
 
         Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
+            Union.Element.subElement: "Text"
             text: parent.Union.Mnemonics.richTextLabel ?? control.text
             font: control.font
             color: Union.Style.properties.text.color ?? "black"
@@ -107,7 +107,7 @@ KT.NavigationTabButton {
     }
 
     indicator: Union.Icon {
-        Union.Element.type: "Indicator"
+        Union.Element.subElement: "Indicator"
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
         name: Union.Style.properties.icon.name

@@ -18,7 +18,7 @@
     --popup-shadow-size: 20px;
 }
 
-menu, popup
+popup
 {
     border-radius: var(--corner-radius);
 
@@ -39,79 +39,6 @@ overlay.modal
     background-color: rgba(0, 0, 0, 0.3);
 }
 
-menu
-{
-    padding: var(--small-spacing);
-    margin: var(--popup-shadow-size);
-}
-
-menuitem
-{
-    height: var(--large-element-size);
-    width: var(--menu-item-width);
-    padding: var(--medium-spacing);
-    spacing: var(--small-spacing);
-
-    border-radius: var(--corner-radius);
-
-    color: var(--window-text-color);
-
-    icon-alignment: content start center 0;
-    text-alignment: content start center 1;
-
-    /*
-    highlight is "sticky", that is, when hovering outside of the menu or
-    over a disabled item, the last hovered item will be considered highlighted.
-    We generally only want to show hover, *except* when a menu item shows a
-    submenu, as we want to keep highlighting the menu item the submenu comes
-    from.
-    */
-    &:hovered,
-    &.with-submenu:highlighted
-    {
-        background-color: var(--focus-color);
-        border: 1px solid var(--highlight-color);
-    }
-
-    &:pressed,
-    &.with-submenu:pressed
-    {
-        border: 1px solid var(--highlight-color);
-        background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
-    }
-
-    &:disabled {
-        border: none;
-        background: none;
-        color: var(--window-disabled-text-color);
-    }
-
-    arrow {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        layout-alignment: content end center 1;
-        icon-name: "arrow-right-symbolic";
-    }
-
-    indicator
-    {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        layout-alignment: content start center -1;
-    }
-
-    shortcuttext {
-        spacing: 40px;
-        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
-        text-alignment: content end center 0;
-        &:disabled {
-            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
-        }
-    }
-
-}
-
 overlay {
     background-color: rgba(0.0, 0.0, 0.0, 0.2);
 }
@@ -124,82 +51,21 @@ popup.combobox menuitem {
     inset: var(--small-spacing);
 }
 
-menuseparator {
-    layout-alignment-horizontal: fill;
-    height: 1px;
-    background-color: var(--window-border-color);
-    inset: var(--small-spacing);
-
-    &.with-title {
-        height: var(--large-element-size);
-        text-alignment: content start center 0;
-        layout-alignment-horizontal: end;
-        background-color: transparent;
-        padding: var(--small-spacing);
-        /* Make the separator bit wider than rest of the content */
-        inset-left: -2px;
-        inset-right: -2px;
-        /* TODO: italic, underline, or separator next to the text */
-        font-weight: bold;
-
-        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
-        border-bottom: 1px solid var(--window-border-color);
-
-        &:disabled {
-            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
-        }
-    }
-}
-
-menubar
-{
-    background-color: var(--header-background-color);
-    .inactive & {
-        background-color: var(--header-background-inactive-color);
-    }
-}
-
-menubaritem
-{
-    width: var(--medium-element-size);
-    height: var(--medium-element-size);
-    padding: var(--large-spacing) var(--medium-spacing);
-
-    border-radius: var(--corner-radius);
-
-    color: var(--window-text-color);
-
-    text-alignment-horizontal: center;
-    text-alignment-vertical: center;
-
-    &:hovered,
-    &:highlighted
-    {
-        background-color: var(--focus-color);
-        border: 1px solid var(--highlight-color);
-    }
-    &:pressed
-    {
-        background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
-    }
-}
-
 dialog
 {
     spacing: var(--small-spacing);
     padding: var(--large-spacing);
     border-radius: var(--corner-radius);
 
-    text-alignment-horizontal: center;
-    icon-alignment-horizontal: center;
+/*     text-alignment-horizontal: center; */
+/*     icon-alignment-horizontal: center; */
 
     color: var(--view-text-color);
     border: 1px solid var(--view-border-color);
     background-color: var(--view-background-color);
     box-shadow: var(--dialog-shadow);
 
-    .header {
+    &::part(header) {
         font-size: 20px;
         padding: var(--large-spacing);
     }

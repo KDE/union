@@ -220,6 +220,7 @@ framewindow
     padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
+
     .inactive & {
         border-color: var(--window-inactive-border-color);
     }
@@ -241,9 +242,11 @@ textarea {
     &:visual-focus {
         border: 1px solid var(--highlight-color);
     }
+
     &[shape="no-frame"] {
         border: none;
     }
+
     &[shape="panel"],
     &[shape="box"] {
         border-radius: var(--corner-radius);
@@ -255,6 +258,7 @@ textarea {
             border-color: var(--window-inactive-border-color);
         }
     }
+
     &[shape="vertical-line"],
     &[shape="horizontal-line"] {
         border-radius: 0px;
@@ -263,13 +267,17 @@ textarea {
         padding: 0px;
         inset: 1px;
     }
+
     &[shape="vertical-line"] {
         width: 1px;
     }
+
     &[shape="horizontal-line"] {
         height: 1px;
     }
+
     /* Legacy hints that applications use to drive Breeze style */
+
     &.dock-left,
     &.dock-right,
     &.dock-top,
@@ -281,47 +289,71 @@ textarea {
         border: none;
         border-radius: 0px;
     }
+
     &.left-edge {
         border-left: 1px solid var(--window-border-color);
     }
+
     &.right-edge {
         border-right: 1px solid var(--window-border-color);
     }
+
     &.top-edge {
         border-top: 1px solid var(--window-border-color);
     }
+
     &.bottom-edge {
         border-bottom: 1px solid var(--window-border-color);
     }
 }
 
 groupbox {
-    padding: var(--small-spacing);
-    border: 1px solid var(--window-border-color);
+    width: 200px;
+    padding: var(--large-spacing);
+    spacing: var(--small-spacing);
+
     border-radius: var(--corner-radius);
     color: var(--window-text-color);
-    background-color: var(--window-background-color);
+    background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
+    border: 1px solid var(--window-border-color);
 
-    & > header {
+    &::part(header) {
+        padding: var(--large-spacing);
         color: var(--window-text-color);
+        text-align: center;
     }
-    icon-alignment: content start start 0;
-    text-alignment: content center start 0;
-    spacing: var(--small-spacing);
-    width: 200px;
+
+    &.flat {
+        background: none;
+        border: none;
+
+        &::part(header) {
+            font-weight: bold;
+            font-size: 110%;
+        }
+    }
 }
 
 dockwidget {
     width: var(--small-element-size);
     height: var(--small-element-size);
+    padding: var(--small-spacing);
+
     color: var(--header-text-color);
     background-color: var(--header-background-color);
     box-shadow: 0px 2px var(--popup-shadow-size) 0px rgba(0, 0, 0, 0.2);
-    icon-alignment: content center center 0;
-    text-alignment: content center center 1;
-    padding: var(--small-spacing);
+
+    &::part(icon) {
+        layout-alignment: content center center 0;
+    }
+
+    &::part(text) {
+        layout-alignment: content center center 1;
+    }
+
     &:visual-focus,
-    &:active-focus {
+    &:active-focus
+    {
         border: 1px solid var(--highlight-color);
     }
 
@@ -366,9 +398,9 @@ titlebar {
     height: var(--small-element-size);
     color: var(--header-text-color);
     background-color: var(--header-background-color);
-    icon-alignment: content center fill 0;
-    text-alignment: content center fill 1;
-    icon-size: var(--icon-size-small);
+/*     icon-alignment: content center fill 0; */
+/*     text-alignment: content center fill 1; */
+/*     icon-size: var(--icon-size-small); */
 
     systemmenu,
     minimizebutton,
@@ -385,22 +417,27 @@ titlebar {
         layout-alignment: content start fill 0;
         icon-name: "application-menu-symbolic";
     }
+
     minimizebutton {
         layout-alignment: content end fill 0;
         icon-name: "window-minimize-symbolic";
     }
+
     maximizebutton {
         layout-alignment: content end fill 1;
         icon-name: "window-maximize-symbolic";
     }
+
     closebutton {
         layout-alignment: content end fill 2;
         icon-name: "window-close-symbolic";
     }
+
     shadebutton {
         layout-alignment: content start fill 2;
         icon-name: "window-shade-symbolic";
     }
+
     helpbutton {
         layout-alignment: content start fill -1;
         icon-name: "help-contextual-symbolic";

@@ -26,7 +26,7 @@ T.GroupBox {
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
-    topPadding: Union.Style.properties.layout.padding.top
+    topPadding: Union.Style.properties.layout.padding.top + implicitLabelHeight
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
@@ -36,19 +36,40 @@ T.GroupBox {
 
     spacing: Union.Style.properties.layout.spacing
 
-    label: Union.StyledRectangle {
-        Union.Element.type: "Header"
+    label: Item {
+        Union.Element.subElement: "Header"
+
+        x: Union.Style.properties.layout.margins.left
+        y: Union.Style.properties.layout.margins.top
+        width: control.width - (Union.Style.properties.layout.margins.left ?? 0) - (Union.Style.properties.layout.margins.right ?? 0)
+
+        implicitWidth: Math.max(Union.Style.properties.layout.width ?? 0, title.implicitWidth)
+                       + (Union.Style.properties.layout.padding.left ?? 0) + (Union.Style.properties.layout.padding.right ?? 0)
+        implicitHeight: Math.max(Union.Style.properties.layout.height ?? 0, title.implicitHeight)
+                        + (Union.Style.properties.layout.padding.top ?? 0) + (Union.Style.properties.layout.padding.bottom ?? 0)
+
+        Union.StyledRectangle {
+            anchors.fill: parent
+        }
 
         Text {
-            anchors.fill: parent
+            id: title
+
+            anchors {
+                fill: parent
+                leftMargin: Union.Style.properties.layout.padding.left
+                rightMargin: Union.Style.properties.layout.padding.right
+                topMargin: Union.Style.properties.layout.padding.top
+                bottomMargin: Union.Style.properties.layout.padding.bottom
+            }
 
             text: control.title
             font: Union.Style.properties.text.font.qFont ?? Application.font
-            color: Union.Style.properties.text.color ?? control.palette.text
-            elide: Text.ElideRight
+            color: Union.Style.properties.display.color ?? control.palette.text
+            wrapMode: Union.Style.properties.text.wrapMode ?? Text.NoWrap
+            elide: wrapMode == Text.NoWrap ? (Union.Style.properties.text.elide ?? Text.ElideRight) : Text.ElideNone
 
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
         }
     }
 

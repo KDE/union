@@ -924,7 +924,7 @@ QIcon UnionStyle::unionIcon(const Union::StylePropertyGroupPtr &properties, cons
 {
     auto name = safePropertyLookup(properties, defaultName, &StylePropertyGroup::icon, &IconPropertyGroup::name);
     if (!name.isEmpty()) {
-        QColor color = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::icon, &IconPropertyGroup::color).toQColor();
+        QColor color = safePropertyLookup(properties, Union::Color{}, &StylePropertyGroup::display, &DisplayPropertyGroup::color).toQColor();
         if (!color.isValid()) {
             color = standardPalette().text().color();
         }

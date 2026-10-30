@@ -4,7 +4,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -22,9 +21,10 @@ T.DoubleSpinBox {
         enabled: control.enabled
     }
     Union.Element.hints: [
+        Union.ElementHint { name: "doublespinbox" },
         Union.ElementHint { name: "editable"; when: control.editable },
         Union.ElementHint { name: "constrained"; when: helper.constrained },
-        Union.ElementHint { name: "doublespinbox" }
+        Union.ElementHint { name: "changed"; when: false },
     ]
 
     hoverEnabled: Application.styleHints.useHoverEffects
@@ -61,15 +61,17 @@ T.DoubleSpinBox {
     }
 
     contentItem: T.TextField {
-        implicitWidth: Math.ceil(helper.metrics.width)
-        implicitHeight: helper.metrics.height
+        Union.Element.subElement: "Text"
+
+        implicitWidth: Math.ceil(Math.max(helper.fromRect.width, helper.toRect.width))
+        implicitHeight: Math.ceil(Math.max(helper.fromRect.height, helper.toRect.height))
         clip: true
         text: control.displayText
-        font: control.font
-        color: Union.Style.properties.text.color
+        font: Union.Style.properties.text.font.qFont
+        color: Union.Style.properties.display.color ?? control.palette.text
 
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
+        verticalAlignment: Qt.AlignVCenter
 
         readOnly: !control.editable
         validator: control.validator
@@ -79,7 +81,7 @@ T.DoubleSpinBox {
     }
 
     up.indicator: P.DefaultIndicator {
-        Union.Element.subElement: "IncreaseIndicator"
+        Union.Element.subElement: "Increase"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
@@ -88,10 +90,10 @@ T.DoubleSpinBox {
     }
 
     down.indicator: P.DefaultIndicator {
-        Union.Element.subElement: "DecreaseIndicator"
+        Union.Element.subElement: "Decrease"
         Union.Element.states {
-            hovered: control.up.hovered
-            pressed: control.up.pressed
+            hovered: control.down.hovered
+            pressed: control.down.pressed
             enabled: enabled
         }
     }

@@ -61,11 +61,9 @@ T.Button {
     spacing: Union.Style.properties.layout.spacing
 
     icon {
-        // QTBUG-151707: updating icon.width/height can freeze the inherited color.
-        // Read the Action color directly until we require a Qt version with the fix.
-        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
     }
 
     Union.Positioner.positionItems: [contentItem, indicator]

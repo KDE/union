@@ -7,6 +7,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.ProgressBar {
     id: control
 
@@ -36,48 +38,35 @@ T.ProgressBar {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    contentItem: Item {
-        id: trackContainer
+    contentItem: null
 
-        Union.StyledRectangle {
-            id: track
-            Union.Element.type: "Track"
+    background: P.BarBackground {
+        id: background
+        control: control
+        horizontal: true
+        from: control.from
+        to: control.to
+        startPosition: control.indeterminate ? indeterminatePosition : 0
+        endPosition: control.indeterminate ? -1 : control.position
+        tickMarkStepSize: control.Union.StyleHints.tickMarkStepSize
 
-            property real indeterminatePosition: 0
+        // TODO: Some way of controlling what kind of animation to use from
+        // the style.
+        property real indeterminatePosition: 0
+        SequentialAnimation on indeterminatePosition {
+            loops: Animation.Infinite
+            running: control.indeterminate && control.visible
 
-            x: {
-                if (control.indeterminate) {
-                    return indeterminatePosition * (parent.width - width)
-                }
-                if (control.mirrored) {
-                    return control.visualPosition * parent.width;
-                }
-                return 0.0;
+            NumberAnimation {
+                duration: 1000
+                easing.type: Easing.InOutSine
+                to: 1.0
             }
-            // TODO: Find a way to style the indeterminate width here
-            width: control.indeterminate ? 0.25 * parent.width : control.position * parent.width
-            height: parent.height
-
-            // TODO: Some way of controlling what kind of animation to use from
-            // the style.
-            SequentialAnimation on indeterminatePosition {
-                loops: Animation.Infinite
-                running: control.indeterminate && control.contentItem.visible
-
-                NumberAnimation {
-                    duration: 1000
-                    easing.type: Easing.InOutSine
-                    to: 1
-                }
-                NumberAnimation {
-                    duration: 1000
-                    easing.type: Easing.InOutSine
-                    to: 0
-                }
-
+            NumberAnimation {
+                duration: 1000
+                easing.type: Easing.InOutSine
+                to: 0
             }
         }
     }
-
-    background: Union.StyledRectangle { }
 }

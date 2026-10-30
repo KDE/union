@@ -10,6 +10,7 @@ import org.kde.union.impl as Union
 
 T.TableViewDelegate {
     id: control
+
     required property int column
     required property int row
     required property var model
@@ -55,8 +56,8 @@ T.TableViewDelegate {
         elide: Text.ElideRight
         visible: !control.editing
         color: Union.Style.properties.text.color ?? control.palette.text
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.alignment
+        // verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
     }
     
     TableView.editDelegate: FocusScope {
@@ -85,11 +86,12 @@ T.TableViewDelegate {
         
         TextField {
             id: textField
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+            // horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
+            // verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             anchors.fill: parent
             text: control.model.edit ?? control.model.display ?? ""
             focus: true
+            horizontalAlignment: Union.Style.properties.text.alignment
             // Remove the TextField background, we want to use the Control background.
             background: Item {}
         }

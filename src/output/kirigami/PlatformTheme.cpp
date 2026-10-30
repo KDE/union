@@ -74,9 +74,9 @@ void PlatformTheme::syncColors()
         setBackgroundColor(query->properties()->background()->color().value().toQColor());
     }
 
-    if (query->properties()->text()->color().has_value()) {
-        setTextColor(query->properties()->text()->color().value().toQColor());
-    }
+    // if (query->properties()->text()->color().has_value()) {
+    //     setTextColor(query->properties()->text()->color().value().toQColor());
+    // }
 }
 
 bool PlatformTheme::event(QEvent *event)
@@ -155,26 +155,26 @@ void PlatformTheme::syncColorSchemeColors()
     // For backward compatibility, add a "colorSet" attribute to each element
     // that also is a Kirigami element and which doesn't inherit. This allows us
     // to change appearance based on colorSet.
-    if (!inherit()) {
-        if (!m_colorSetAttribute) {
-            auto element = static_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(parent(), true));
-            if (element) {
-                auto attributes = QQmlListReference(element, "attributes");
-                m_colorSetAttribute = new Union::Quick::ElementAttribute{this};
-                m_colorSetAttribute->setName(u"colorSet"_s);
-                attributes.append(m_colorSetAttribute);
-                element->componentComplete();
-            }
-        }
-
-        if (m_colorSetAttribute) {
-            m_colorSetAttribute->setValue(set);
-        }
-    } else {
-        if (m_colorSetAttribute) {
-            m_colorSetAttribute->setValue(QVariant{});
-        }
-    }
+    // if (!inherit()) {
+    //     if (!m_colorSetAttribute) {
+    //         auto element = static_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(parent(), true));
+    //         if (element) {
+    //             auto attributes = QQmlListReference(element, "attributes");
+    //             m_colorSetAttribute = new Union::Quick::ElementAttribute{this};
+    //             m_colorSetAttribute->setName(u"colorSet"_s);
+    //             attributes.append(m_colorSetAttribute);
+    //             element->componentComplete();
+    //         }
+    //     }
+    //
+    //     if (m_colorSetAttribute) {
+    //         m_colorSetAttribute->setValue(set);
+    //     }
+    // } else {
+    //     if (m_colorSetAttribute) {
+    //         m_colorSetAttribute->setValue(QVariant{});
+    //     }
+    // }
 
     // foreground
     setTextColor(Color::custom(u"kcolorscheme"_s, {group, set, u"foreground"_s, u"text"_s}).toQColor());

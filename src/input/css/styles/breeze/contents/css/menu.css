@@ -1,0 +1,208 @@
+/*
+ * SPDX-License-Identifier: BSD-2-Clause
+ * SPDX-FileCopyrightText: 2025 Arjen Hiemstra <ahiemstra@heimr.nl>
+ * SPDX-FileCopyrightText: 2025 Niccolò Venerandi <niccolo@venerandi.com>
+ * SPDX-FileCopyrightText: 2025 Akseli Lahtinen <akselmo@akselmo.dev>
+ */
+
+/*
+ * Menu, MenuBar etc
+ */
+
+menu
+{
+    padding: var(--small-spacing);
+    margin: var(--popup-shadow-size);
+
+    border-radius: var(--corner-radius);
+
+    background-color: var(--window-background-color);
+    border: 1px solid var(--window-border-color);
+    color: var(--window-text-color);
+    box-shadow: 0px 2px var(--popup-shadow-size) 0px rgba(0, 0, 0, 0.2);;
+
+    &:disabled {
+        color: var(--window-disabled-text-color);
+        background-color: var(--window-disabled-background-color);
+        border: 1px solid var(--window-disabled-border-color);
+    }
+}
+
+menuitem
+{
+    height: var(--large-element-size);
+    width: var(--menu-item-width);
+    padding: var(--medium-spacing);
+    spacing: var(--medium-spacing);
+
+    border-radius: var(--corner-radius);
+
+    &::part(icon)
+    {
+        layout-alignment: content start center 0;
+    }
+
+    &::part(text)
+    {
+        layout-alignment: content start center 1;
+        color: var(--window-text-color);
+    }
+
+    &::part(indicator) {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        margin-left: var(--medium-spacing);
+        margin-right: var(--medium-spacing);
+        layout-alignment: item start center -1;
+        visibility: hidden;
+    }
+
+    &::part(arrow)
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content end center 1;
+        icon-name: "arrow-right-symbolic";
+        visibility: hidden;
+    }
+
+    &::part(shortcut) {
+        layout-alignment: content end center 0;
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        visibility: hidden;
+    }
+
+    &.with-indicator
+    {
+        padding-left: 0px;
+
+        &::part(indicator)
+        {
+            visibility: visible;
+        }
+    }
+
+    &.with-submenu::part(arrow)
+    {
+        visibility: visible;
+    }
+
+    &.with-shortcut::part(shortcut)
+    {
+        visibility: visible;
+    }
+
+    /*
+     *   highlight is "sticky", that is, when hovering outside of the menu or
+     *   over a disabled item, the last hovered item will be considered highlighted.
+     *   We generally only want to show hover, *except* when a menu item shows a
+     *   submenu, as we want to keep highlighting the menu item the submenu comes
+     *   from.
+     */
+    &:hovered,
+    &.with-submenu:highlighted
+    {
+        background-color: var(--focus-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:pressed,
+    &.with-submenu:pressed
+    {
+        border: 1px solid var(--highlight-color);
+        background-color: var(--highlight-color);
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--highlight-text-color);
+        }
+    }
+
+    &:disabled {
+        border: none;
+        background: none;
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--window-disabled-text-color);
+        }
+
+        &::part(shortcut) {
+            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
+        }
+    }
+}
+
+menuseparator {
+    layout-alignment-horizontal: fill;
+    height: 1px;
+    background-color: var(--window-border-color);
+    inset: var(--small-spacing);
+
+    &.with-title {
+        height: var(--large-element-size);
+        /*         text-alignment: content start center 0; */
+        layout-alignment-horizontal: end;
+        background-color: transparent;
+        padding: var(--small-spacing);
+        /* Make the separator bit wider than rest of the content */
+        inset-left: -2px;
+        inset-right: -2px;
+        /* TODO: italic, underline, or separator next to the text */
+        font-weight: bold;
+
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        border-bottom: 1px solid var(--window-border-color);
+
+        &:disabled {
+            color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
+        }
+    }
+}
+
+menubar
+{
+    background-color: var(--header-background-color);
+    .inactive & {
+        background-color: var(--header-background-inactive-color);
+    }
+}
+
+menubaritem
+{
+    width: var(--medium-element-size);
+    height: var(--medium-element-size);
+    padding: var(--large-spacing) var(--medium-spacing);
+
+    border-radius: var(--corner-radius);
+
+    &::part(text) {
+        layout-alignment: content center center 1;
+        color: var(--window-text-color);
+    }
+
+    &:hovered,
+    &:highlighted
+    {
+        background-color: var(--focus-color);
+        border: 1px solid var(--highlight-color);
+    }
+
+    &:pressed
+    {
+        background-color: var(--highlight-color);
+
+        &::part(text) {
+            color: var(--highlight-text-color);
+        }
+    }
+
+    &:disabled {
+        border: none;
+        background: none;
+
+        &::part(text) {
+            color: var(--window-disabled-text-color);
+        }
+    }
+}

@@ -49,28 +49,32 @@ T.TextArea {
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
 
-    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+    horizontalAlignment: Union.Style.properties.text.alignment
+    // verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
 
-    Text {
-        id: placeholder
-
-        Union.Element.hints: Union.ElementHint { name: "placeholder" }
-
-        x: control.leftPadding
-        y: control.topPadding
-        width: control.width - (control.leftPadding + control.rightPadding)
-        height: control.height - (control.topPadding + control.bottomPadding)
-
-        text: control.placeholderText
-        font: Union.Style.properties.text.font.qFont ?? Application.font
-        color: Union.Style.properties.text.color ?? control.palette.placeholderText
-        horizontalAlignment: control.horizontalAlignment
-        verticalAlignment: control.verticalAlignment
-        visible: !control.length && !control.preeditText
-        elide: Text.ElideRight
-        renderType: control.renderType
+    P.PlaceholderText {
+        id: placeholder;
+        control: control
     }
+    // Text {
+    //     id: placeholder
+    //
+    //     Union.Element.subElement: "Placeholder"
+    //
+    //     x: control.leftPadding
+    //     y: control.topPadding
+    //     width: control.width - (control.leftPadding + control.rightPadding)
+    //     height: control.height - (control.topPadding + control.bottomPadding)
+    //
+    //     text: control.placeholderText
+    //     font: Union.Style.properties.text.font.qFont ?? Application.font
+    //     color: Union.Style.properties.text.color ?? control.palette.placeholderText
+    //     horizontalAlignment: control.horizontalAlignment
+    //     verticalAlignment: control.verticalAlignment
+    //     visible: !control.length && !control.preeditText
+    //     elide: Text.ElideRight
+    //     renderType: control.renderType
+    // }
 
     background: Union.StyledRectangle {
         // Controls TextArea will reparent the background to the parent if the

@@ -12,5 +12,7 @@ T.ApplicationWindow {
 
     Union.Element.type: "ApplicationWindow"
 
-    color: Union.Style.properties.background.color ?? "white"
+    // color: Union.Style.properties.background.color ?? "white"
+
+    background: Union.StyledRectangle { }
 }

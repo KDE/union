@@ -33,7 +33,16 @@ void StyledRectangle::setStyle(QuickStyle *newStyle)
         return;
     }
 
+    if (m_style) {
+        m_style->removeEventFilter(this);
+    }
+
     m_style = newStyle;
+    if (m_style) {
+        m_style->installEventFilter(this);
+    }
+
+    updateImplicitSize();
     Q_EMIT styleChanged();
 }
 
@@ -42,12 +51,11 @@ void StyledRectangle::componentComplete()
     QQuickItem::componentComplete();
 
     if (!m_style) {
-        m_style = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true));
-        updateImplicitSize();
+        setStyle(qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(this, true)));
     }
 }
 
-bool StyledRectangle::event(QEvent *event)
+bool StyledRectangle::eventFilter(QObject *target, QEvent *event)
 {
     if (event->type() == QuickStyleUpdatedEvent::s_type) {
         updateImplicitSize();
@@ -59,7 +67,7 @@ bool StyledRectangle::event(QEvent *event)
         return false;
     }
 
-    return QQuickItem::event(event);
+    return QQuickItem::eventFilter(target, event);
 }
 
 void StyledRectangle::itemChange(QQuickItem::ItemChange change, [[maybe_unused]] const QQuickItem::ItemChangeData &value)

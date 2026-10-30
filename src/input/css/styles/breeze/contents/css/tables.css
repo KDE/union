@@ -13,11 +13,11 @@ tableviewdelegate {
     border-radius: 0px;
 
     layout-alignment: content fill center 0;
-    icon-alignment: content start center 1;
-    text-alignment: content fill center 2;
+/*     icon-alignment: content start center 1; */
+/*     text-alignment: content fill center 2; */
 
-    icon-width: var(--icon-size-small);
-    icon-height: var(--icon-size-small);
+/*     icon-width: var(--icon-size-small); */
+/*     icon-height: var(--icon-size-small); */
 
     color: var(--view-text-color);
     background-color: var(--view-background-color);
@@ -66,12 +66,12 @@ treeviewdelegate {
         layout-alignment: content fill fill 0;
     }
 
-    & > indentation {
+    &::part(indentation) {
         width: var(--medium-element-size);
         layout-alignment: item start center 0;
     }
 
-    & > indicator {
+    &::part(indicator) {
         width: var(--medium-element-size);
         height: var(--icon-size-small);
         color: var(--view-text-color);
@@ -79,15 +79,15 @@ treeviewdelegate {
         layout-alignment: item start center 1;
     }
 
-    & > radiobutton,
+    /*& > radiobutton,
     & > checkbox {
         text-wrap-mode: no-wrap;
         layout-alignment: content fill center 0;
         icon-alignment: content start center 1;
         text-alignment: content fill center 2;
-    }
+    }*/
 
-    &.expanded > indicator {
+    &.expanded::part(indicator) {
         icon-name: "arrow-down-symbolic"
     }
 
@@ -95,7 +95,7 @@ treeviewdelegate {
         color: var(--view-disabled-text-color);
         background-color: var(--view-disabled-background-color);
 
-        & > indicator {
+        &::part(indicator) {
             color: var(--view-disabled-text-color);
         }
     }
@@ -106,74 +106,100 @@ headerviewdelegate
     width: var(--large-element-size);
     height: var(--large-element-size);
     padding: var(--small-spacing);
-
-    border-bottom: 1px solid var(--button-active-border-color);
-    border-right: 1px solid var(--button-active-border-color);
+    layout-alignment: content fill center 0;
 
     background-color: var(--button-active-background-color);
-    color: var(--button-active-text-color);
 
-    layout-alignment: content fill center 0;
-    icon-alignment: content center center 0;
-    text-alignment: content center center 1;
-    text-wrap-mode: no-wrap;
-    text-elide: right;
+    border: 1px solid var(--button-active-border-color);
 
-    icon-size: var(--icon-size-small);
-
-    & > indicator {
+    &::part(icon) {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content center center 0;
         color: var(--button-active-text-color);
+    }
+
+    &::part(text) {
+        layout-alignment: content center center 1;
+        color: var(--button-active-text-color);
+        text-align: center;
+        text-wrap-mode: no-wrap;
+        text-elide: right;
+    }
+
+    &::part(indicator) {
         width: var(--icon-size-small);
         height: var(--icon-size-small);
         layout-alignment: content end center 0;
+        color: var(--button-active-text-color);
     }
 
-    &.sort-ascending > indicator
+    &.sort-ascending::part(indicator)
     {
         icon-name: "arrow-up-symbolic";
     }
 
-    &.sort-descending > indicator
+    &.sort-descending::part(indicator)
     {
         icon-name: "arrow-down-symbolic";
+    }
+
+    &.horizontal {
+        border-right: none;
+
+        &.last {
+            border-right: 1px solid var(--button-active-border-color);
+        }
+    }
+
+    &.vertical {
+        border-bottom: none;
+
+        &.last {
+            border-bottom: 1px solid var(--button-active-border-color);
+        }
     }
 
     &:disabled
     {
         border: 1px solid var(--button-disabled-border-color);
-        color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
+
+        &::part(icon),
+        &::part(text),
+        &::part(indicator) {
+            color: var(--button-disabled-text-color);
+        }
     }
 }
 
-selectionrectangle {
+/*selectionrectangle {
     color: var(--highlight-color);
     border: 1px solid var(--highlight-color);
     border-radius: var(--corner-radius);
-    background-color: var(--highlight-color);
+    background-color: var(--highlight-hover-color);
 
     &:disabled {
         border: 1px solid var(--highlight-disabled-color);
         color: var(--highlight-disabled-color);
         background-color: var(--highlight-disabled-color);
     }
-}
+}*/
 
 selectionrectanglehandle {
-    width: var(--small-element-size);
-    height: var(--small-element-size);
+    width: var(--bar-handle-size);
+    height: var(--bar-handle-size);
     background-color: var(--bar-handle-active-background-color);
-    border: 1px solid var(--bar-active-border-color);
-    border-radius: var(--small-element-size);
+    border: 1px solid var(--bar-handle-active-border-color);
+    border-radius: var(--bar-handle-size);
 
-    &:visual-focus {
+    &:pressed {
         border-color: var(--highlight-color);
-        outline: var(--focus-outline);
+        background-color: var(--button-active-highlight-color);
     }
 
     &:disabled {
-        color: var(--highlight-disabled-color);
         background-color: var(--bar-handle-disabled-background-color);
-        border: 1px solid var(--bar-disabled-border-color);
+        border: 1px solid var(--bar-handle-disabled-border-color);
     }
 }

@@ -58,39 +58,39 @@ T.SearchField {
 
     searchIndicator.indicator: P.DefaultIndicator {
         Union.Element.subElement: "Search"
+        Union.Element.states {
+            hovered: control.searchIndicator.hovered
+            pressed: control.searchIndicator.pressed
+            enabled: control.searchIndicator.indicator.enabled
+        }
     }
 
     clearIndicator.indicator: P.DefaultIndicator {
         Union.Element.subElement: "Clear"
+        Union.Element.states {
+            hovered: control.clearIndicator.hovered
+            pressed: control.clearIndicator.pressed
+            enabled: control.clearIndicator.indicator.enabled
+        }
+
+        visible: control.text && (Union.Style.properties.display.visible ?? true)
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         text: control.text
         placeholderText: control.placeholderText
         selectByMouse: control.selectTextByMouse
-        color: control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
-        horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
+        // verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
 
-        Text {
+        P.PlaceholderText {
             id: placeholder
-
-            Union.Element.hints: Union.ElementHint { name: "placeholder" }
-
-            x: parent.leftPadding
-            y: parent.topPadding
-            width: parent.width - parent.leftPadding - parent.rightPadding
-            height: parent.height - parent.topPadding - parent.bottomPadding
-
-            text: control.placeholderText
-            font: parent.font
-            color: control.palette.placeholderText
-            visible: !parent.length && !parent.preeditText && (!parent.activeFocus || parent.horizontalAlignment !== Qt.AlignHCenter)
-            verticalAlignment: parent.verticalAlignment
-            renderType: parent.renderType
-            elide: parent.wrapMode == Text.NoWrap ? Text.ElideRight : Text.ElideNone
+            control: parent
         }
     }
 
@@ -115,7 +115,6 @@ T.SearchField {
             boundsBehavior: ListView.StopAtBounds
 
             T.ScrollIndicator.vertical: ScrollIndicator {}
-
         }
     }
 

@@ -27,12 +27,10 @@ T.Label {
 
     font: Union.Style.properties.text.font.qFont ?? Application.font
 
-    color: Union.Style.properties.text.color ?? "black"
+    color: Union.Style.properties.display.color ?? "black"
     linkColor: control.palette.link
 
-    // Explicitly set horizontalAlignment, so that Qt will automatically switch
-    // it when in right-to-left mode.
-    horizontalAlignment: Qt.AlignLeft
+    horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
 
     background: Union.StyledRectangle { }
 }

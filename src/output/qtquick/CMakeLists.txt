@@ -85,6 +85,10 @@ ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES
     style/private/DefaultIndicator.qml
     style/private/TextFieldContextMenu.qml
     style/private/DisplayAttribute.qml
+    style/private/SwitchIndicator.qml
+    style/private/SpinBoxHelper.qml
+    style/private/BarBackground.qml
+    style/private/PlaceholderText.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)

@@ -76,22 +76,23 @@ T.ComboBox {
     indicator: P.DefaultIndicator { }
 
     contentItem: T.TextField {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+        Union.Element.subElement: "Text"
 
         implicitWidth: Math.max(contentWidth, 1)
         implicitHeight: Math.max(contentHeight, metrics.height)
         clip: true
 
-        color: Union.Style.properties.text.color ?? control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
         autoScroll: control.editable
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
-        font: control.font
+        font: Union.Style.properties.text.font.qFont
 
-        horizontalAlignment: Qt.AlignLeft
+        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
+        verticalAlignment: Qt.AlignVCenter // TODO
 
         selectByMouse: control.selectTextByMouse
         selectionColor: control.palette.highlight

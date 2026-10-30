@@ -41,7 +41,7 @@ T.SplitView {
     handle: Union.StyledRectangle {
         id: handle
 
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "Handle"
 
         // Extend the interactive area of the handle with the handle's margins,
         // to ensure we can set a useful interaction area even if the handle

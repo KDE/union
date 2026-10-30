@@ -7,5 +7,5 @@ pragma Singleton
 import QtQuick.Templates as T
 
 T.Calendar {
-	id: control
+    id: control
 }

@@ -7,6 +7,8 @@
  * Global defaults that should apply to all elements.
  */
 
-* {
-    icon-size: var(--icon-size-small);
+*::part(icon) {
+    width: var(--icon-size-small);
+    height: var(--icon-size-small);
+/*     icon-size: var(--icon-size-small); */
 }

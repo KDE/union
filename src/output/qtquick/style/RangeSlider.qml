@@ -8,6 +8,8 @@ import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
 
+import "private" as P
+
 T.RangeSlider {
     id: control
 
@@ -39,45 +41,61 @@ T.RangeSlider {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     first.handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "FirstHandle"
         Union.Element.states {
             hovered: control.first.hovered
             activeFocus: control.first.handle.activeFocus
             enabled: control.enabled
             pressed: control.first.pressed
         }
-        Union.Element.hints: Union.ElementHint { name: "first" }
 
         x: control.leftPadding + (control.horizontal ? control.first.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.first.visualPosition * (control.availableHeight - height))
     }
 
     second.handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "SecondHandle"
         Union.Element.states {
             hovered: control.second.hovered
             activeFocus: control.second.handle.activeFocus
             enabled: control.enabled
             pressed: control.second.pressed
         }
-        Union.Element.hints: Union.ElementHint { name: "second" }
 
         x: control.leftPadding + (control.horizontal ? control.second.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
     }
 
-    background: Union.StyledRectangle {
-        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
-        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-        scale: control.horizontal && control.mirrored ? -1 : 1
-
-        Union.StyledRectangle {
-            Union.Element.type: "Fill"
-            readonly property int smallerValue: Math.min(parent.width, parent.height)
-            x: control.horizontal ? control.first.position * parent.width + (smallerValue / 2) : 0
-            y: control.horizontal ? 0 : control.second.visualPosition * parent.height + (smallerValue / 2)
-            width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - smallerValue : smallerValue
-            height: control.horizontal ? smallerValue : control.second.position * parent.height - control.first.position * parent.height - smallerValue
-        }
+    background: P.BarBackground {
+        id: background
+        control: control
+        horizontal: control.horizontal
+        from: control.from
+        to: control.to
+        startPosition: control.first.position
+        endPosition: control.second.position
+        tickMarkStepSize: control.Union.StyleHints.tickMarkStepSize
+        handleWidth: control.first.handle.width
+        handleHeight: control.first.handle.height
     }
+
+    // background: Union.StyledRectangle {
+    //     id: background
+    //
+    //     x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
+    //     y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
+    //     scale: control.horizontal && control.mirrored ? -1 : 1
+    //
+    //     width: control.horizontal ? control.width : Union.Style.properties.layout.width
+    //     height: control.horizontal ? Union.Style.properties.layout.height : control.height
+    //
+    //     Union.StyledRectangle {
+    //         Union.Element.subElement: "Filled"
+    //         readonly property real smallerValue: Math.min(parent.width, parent.height)
+    //         x: control.horizontal ? control.first.position * parent.width + (smallerValue / 2) : 0
+    //         y: control.horizontal ? 0 : control.second.visualPosition * parent.height + (smallerValue / 2)
+    //         width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - smallerValue : smallerValue
+    //         height: control.horizontal ? smallerValue : control.second.position * parent.height - control.first.position * parent.height - smallerValue
+    //     }
+    // }
 }
