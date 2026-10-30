@@ -47,5 +47,5 @@ private:
     bool m_itemIsOpen;
 
     Union::ElementList m_indicatorElementList;
-    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
 };

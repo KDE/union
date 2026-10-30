@@ -7,6 +7,7 @@
 #include "StyleRegistry.h"
 
 #include "properties/StylePropertyGroup.h"
+
 #include <QColor>
 #include <QMap>
 #include <QMargins>
@@ -19,7 +20,7 @@ class ShadowRenderer : public QObject
 {
     Q_OBJECT
 public:
-    explicit ShadowRenderer(const Union::Properties::StylePropertyGroup *properties);
+    explicit ShadowRenderer(const Union::StylePropertyGroupPtr &properties);
 
     BoxShadowRenderer::Shadow shadowProperties() const;
 
@@ -39,5 +40,5 @@ protected:
 private:
     std::shared_ptr<Union::PlatformPlugin> m_platform;
 
-    const Union::Properties::StylePropertyGroup *m_properties;
+    Union::StylePropertyGroupPtr m_properties;
 };

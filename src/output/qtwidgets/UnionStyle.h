@@ -123,7 +123,7 @@ public:
                       const QString &text,
                       QPalette::ColorRole textRole = QPalette::NoRole) const override;
 
-    QIcon unionIcon(Union::Properties::StylePropertyGroup *properties, const QString &defaultName) const;
+    QIcon unionIcon(const Union::StylePropertyGroupPtr &properties, const QString &defaultName) const;
 
     /*!
      * \brief Matches the widget name/class to a matching CSS element name, and sets up

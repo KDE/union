@@ -20,7 +20,7 @@ static Union::LruImageCache imageCache;
 
 // This file handles all the background drawing related functions
 
-void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Union::Properties::StylePropertyGroup *style, BackgroundParts parts)
+void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Union::StylePropertyGroupPtr &style, BackgroundParts parts)
 {
     if (!style) {
         return;

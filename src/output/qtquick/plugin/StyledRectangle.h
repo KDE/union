@@ -45,7 +45,7 @@ protected:
 
 private:
     void updateImplicitSize();
-    QSGNode *updateShaderNode(QSGNode *node, const Union::Properties::StylePropertyGroup *style);
+    QSGNode *updateShaderNode(QSGNode *node, const StylePropertyGroupPtr style);
 
     QuickStyle *m_style = nullptr;
     int m_shadowCount = 0;

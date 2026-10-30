@@ -920,7 +920,7 @@ bool UnionStyle::eventFilter(QObject *object, QEvent *event)
     return QCommonStyle::eventFilter(object, event);
 }
 
-QIcon UnionStyle::unionIcon(Union::Properties::StylePropertyGroup *properties, const QString &defaultName) const
+QIcon UnionStyle::unionIcon(const Union::StylePropertyGroupPtr &properties, const QString &defaultName) const
 {
     auto name = safePropertyLookup(properties, defaultName, &StylePropertyGroup::icon, &IconPropertyGroup::name);
     if (!name.isEmpty()) {

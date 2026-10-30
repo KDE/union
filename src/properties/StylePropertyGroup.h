@@ -269,6 +269,8 @@ private:
  */
 UNION_EXPORT bool operator==(const StylePropertyGroup &left, const StylePropertyGroup &right);
 }
+
+using StylePropertyGroupPtr = std::shared_ptr<Properties::StylePropertyGroup>;
 }
 
 /*!

@@ -52,5 +52,5 @@ private:
     bool m_hasFrame;
 
     Union::ElementList m_indicatorElementList;
-    Union::Properties::StylePropertyGroup *m_indicatorProperties = nullptr;
+    Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
 };

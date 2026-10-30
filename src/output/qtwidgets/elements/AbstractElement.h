@@ -156,7 +156,7 @@ protected:
     /*!
      * \brief Utilizes the background property to apply a padding to the given size.
      */
-    QSizeF applyPaddingToSize(QSizeF oldSize, Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    QSizeF applyPaddingToSize(QSizeF oldSize, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     /*!
      * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.
@@ -179,7 +179,7 @@ protected:
      * \brief Queries the properties from list of elements. The properties match to the last element in the list,
      * inheriting anything it needs from its parents.
      */
-    virtual Union::Properties::StylePropertyGroup *queryProperties(const Union::ElementList &elements) const;
+    virtual Union::StylePropertyGroupPtr queryProperties(const Union::ElementList &elements) const;
 
     /*!
      * \brief Layouts list of elements, then returns a map of LayoutItems that contain information such as rectangles.
@@ -190,40 +190,40 @@ protected:
      */
     virtual QMap<QString, LayoutItem> layoutMap(const QStyleOption *opt, const QStringList &subElements) const;
 
-    virtual QMarginsF padding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual QMarginsF padding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual QMarginsF borderSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual QMarginsF borderSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual qreal height(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual qreal height(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual qreal width(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual qreal width(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual qreal spacing(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual qreal spacing(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual QSizeF propertySize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual QSizeF propertySize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    virtual QSizeF iconSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    virtual QSizeF iconSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    qreal averagePadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    qreal averagePadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    qreal averageBorderSize(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    qreal averageBorderSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    qreal averageVPadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    qreal averageVPadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    qreal averageHPadding(Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    qreal averageHPadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
-    QString elidedText(const QString &text, const QRectF &textRect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    QString elidedText(const QString &text, const QRectF &textRect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     /*!
      * \brief Draw text at the given rectangle. Handles coloring, elision and
      * enabled status.
      */
-    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, Union::Properties::StylePropertyGroup *properties = nullptr) const;
+    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     const QStyleOption *m_styleOption = nullptr;
     const UnionStyle *m_style = nullptr;
@@ -234,7 +234,7 @@ protected:
     Union::ElementList m_elementList;
     // Holds the properties for the background:
     // This is the top-level properties of the item by default.
-    Union::Properties::StylePropertyGroup *m_elementProperties = nullptr;
+    Union::StylePropertyGroupPtr m_elementProperties = nullptr;
     QMap<QString, LayoutItem> m_layoutMap;
     QStringList m_subElementList;
     // Used to check if we have all elements properly prepared
@@ -250,7 +250,7 @@ private:
     void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
 
     // If given property is null, return m_elementProperties
-    Union::Properties::StylePropertyGroup *defaultPropertyGroup(Union::Properties::StylePropertyGroup *properties) const;
+    Union::StylePropertyGroupPtr defaultPropertyGroup(const Union::StylePropertyGroupPtr properties) const;
 
     std::unique_ptr<Union::ElementQuery> m_elementQuery;
 };

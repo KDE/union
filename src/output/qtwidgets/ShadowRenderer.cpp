@@ -21,7 +21,7 @@
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-ShadowRenderer::ShadowRenderer(const Union::Properties::StylePropertyGroup *properties)
+ShadowRenderer::ShadowRenderer(const Union::StylePropertyGroupPtr &properties)
     : QObject()
     , m_platform(Union::StyleRegistry::instance()->platform())
     , m_properties(properties)

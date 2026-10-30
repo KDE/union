@@ -233,6 +233,13 @@ static inline T safePropertyLookup(const PropertyGroup *group, const T &defaultV
         return defaultValue;
     }
 }
+
+template<typename T, typename PropertyGroup, MemberFunctionPointer LookupFunction, MemberFunctionPointer... LookupFunctions>
+    requires std::is_invocable_v<LookupFunction, PropertyGroup>
+static inline T safePropertyLookup(const std::shared_ptr<PropertyGroup> &group, const T &defaultValue, LookupFunction function, LookupFunctions... functions)
+{
+    return safePropertyLookup(group.get(), defaultValue, function, functions...);
+}
 }
 }
 

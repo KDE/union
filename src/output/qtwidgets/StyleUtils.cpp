@@ -95,7 +95,7 @@ Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode)
     return wrap;
 }
 
-QRectF backgroundRectangle(const QStyleOption *option, const Union::Properties::StylePropertyGroup *properties)
+QRectF backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties)
 {
     // Shrink the widget rect by the insets
     if (!option) {
@@ -293,7 +293,7 @@ QSizeF iconSizeFromOption(const QStyleOption *opt)
     return QSizeF(-1, -1);
 }
 
-int textFlagsFromProperties(Union::Properties::StylePropertyGroup *properties)
+int textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties)
 {
     int textFlags = Qt::AlignVCenter;
     const auto horizontalAlignment =

@@ -211,6 +211,10 @@ private:
  */
 UNION_EXPORT bool operator==(const {{ type }} &left, const {{ type}} &right);
 }
+{% if type == "StylePropertyGroup" %}
+
+using StylePropertyGroupPtr = std::shared_ptr<Properties::StylePropertyGroup>;
+{% endif %}
 }
 
 /*!

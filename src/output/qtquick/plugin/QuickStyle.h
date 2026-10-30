@@ -94,6 +94,7 @@ private:
     void update();
 
     std::unique_ptr<StylePropertyGroupQuick> m_properties;
+    StylePropertyGroupPtr m_stylePropertyGroup;
     QPointer<QuickElement> m_element = nullptr;
     QQmlEngine *m_engine = nullptr;
 };

@@ -63,5 +63,5 @@ private:
     int chunkWidth() const;
     bool m_isHorizontal;
     Union::ElementList m_contentElementList;
-    Union::Properties::StylePropertyGroup *m_contentProperties = nullptr;
+    Union::StylePropertyGroupPtr m_contentProperties = nullptr;
 };
