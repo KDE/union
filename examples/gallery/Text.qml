@@ -15,6 +15,8 @@ Kirigami.Page {
     Kirigami.ColumnView.maximumWidth: Kirigami.Units.gridUnit * 50
 
     ColumnLayout {
+        anchors.fill: parent
+
         Controls.Label {
             text: "Label"
         }
@@ -112,9 +114,20 @@ Kirigami.Page {
             stepSize: 10
         }
 
-        Loader {
+        TryControl {
+            name: "DoubleSpinBox"
+            module: "QtQuick.Controls"
+
+            properties: {
+                "from": 0.0,
+                "to": 1.0,
+                "stepSize": 0.01
+            }
+        }
+
+        SearchField {
             Layout.fillWidth: true
-            source: "SearchField.qml"
+            module: "QtQuick.Controls"
         }
 
         Item {

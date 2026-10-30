@@ -2,10 +2,15 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Layouts
-import QtQuick.Controls as Controls
 
 Item {
+    id: root
+
+    property string module
+
+    implicitWidth: searchField.implicitWidth
+    implicitHeight: searchField.implicitHeight
+
     ListModel {
         id : fruitModel
         ListElement { name: "Apple"; color: "green" }
@@ -24,21 +29,30 @@ Item {
             }
         ]
         filters: [
-            FunctionFilter {
-                component CustomData: QtObject { property string name }
-                property var regExp: new RegExp(fruitSearch.text, "i")
-                onRegExpChanged: invalidate()
-                function filter(data: CustomData): bool {
-                    return regExp.test(data.name);
+            RegExpFilter {
+                roleName: "name"
+                regExp: {
+                    if (searchField.item && searchField.item.text) {
+                        return new RegExp(searchField.item.text, "i")
+                    } else {
+                        return new RegExp()
+                    }
                 }
             }
         ]
     }
 
-    Controls.SearchField {
-        id: fruitSearch
-        implicitWidth: 200
-        suggestionModel: fruitFilter
-        textRole: "name"
+    TryControl {
+        id: searchField
+
+        anchors.fill: parent
+
+        name: "SearchField"
+        module: root.module
+        properties: {
+            "suggestionModel": fruitModel,
+            "textRole": "name",
+            "placeholderText": "Search…"
+        }
     }
 }

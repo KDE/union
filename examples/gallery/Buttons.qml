@@ -171,9 +171,13 @@ Kirigami.Page {
             selectTextByMouse: true
         }
 
-        Controls.DelayButton {
-            text: "Delay button"
-            icon.name: "document-save"
+        TryControl {
+            name: "DelayButton"
+            module: "QtQuick.Controls"
+            properties: {
+                "text": "Delay Button",
+                "icon.name": "document-save"
+            }
         }
 
         Item {
