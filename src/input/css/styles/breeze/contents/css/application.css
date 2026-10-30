@@ -235,9 +235,7 @@ listview,
 treeview,
 tableview,
 columnview,
-scrollview,
-textfield,
-textarea {
+scrollview {
     &:visual-focus {
         border: 1px solid var(--highlight-color);
     }

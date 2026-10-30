@@ -36,6 +36,7 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
+    Union::IdentifierVariantHash elementAttributes() const override;
     Union::IdentifierList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     void layout() override;

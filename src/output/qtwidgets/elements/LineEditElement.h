@@ -44,6 +44,7 @@ public:
 
 private:
     void updateSubElementList() override;
+    Union::IdentifierVariantHash elementAttributes() const override;
     Union::IdentifierList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     QMarginsF iconPadding() const;

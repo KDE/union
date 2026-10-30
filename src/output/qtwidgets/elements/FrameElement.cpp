@@ -98,19 +98,9 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
         }
         break;
     }
-    // We should be prepared to draw any potential frame element
-    // even if not explicitly casted to do so.
+
     switch (enums.PrimitiveElement) {
     case QStyle::PE_Frame:
-    case QStyle::PE_FrameDefaultButton:
-    case QStyle::PE_FrameFocusRect:
-    case QStyle::PE_FrameGroupBox:
-    case QStyle::PE_FrameLineEdit:
-    case QStyle::PE_FrameStatusBarItem:
-    case QStyle::PE_FrameTabWidget:
-    case QStyle::PE_FrameButtonBevel:
-    case QStyle::PE_FrameButtonTool:
-    case QStyle::PE_FrameTabBarBase:
         drawFrame(painter);
         break;
     case QStyle::PE_FrameWindow:
@@ -168,50 +158,12 @@ void FrameElement::updateSubElementList()
 
 Union::IdentifierVariantHash FrameElement::elementAttributes() const
 {
-    Union::IdentifierVariantHash map;
-
-    // For some reason both frame widget and styleoption can have frameshape,
-    // and they can also differ. If we do not have a styleoption, rely on widget
-    // information.
-    QFrame::Shape shape;
-    if (!m_frameOption) {
-        if (const auto frame = qobject_cast<const QFrame *>(m_widget)) {
-            shape = frame->frameShape();
-        } else {
-            return map;
-        }
-    } else {
-        shape = m_frameOption->frameShape;
-    }
-
-    switch (shape) {
-    case QFrame::NoFrame:
-        map[u"shape"_s] = u"no-frame"_s;
-        break;
-    case QFrame::Box:
-        map[u"shape"_s] = u"box"_s;
-        break;
-    case QFrame::Panel:
-    case QFrame::WinPanel:
-    case QFrame::StyledPanel:
-        map[u"shape"_s] = u"panel"_s;
-        break;
-    case QFrame::HLine:
-        map[u"shape"_s] = u"horizontal-line"_s;
-        break;
-    case QFrame::VLine:
-        map[u"shape"_s] = u"vertical-line"_s;
-        break;
-    default:
-        break;
-    }
-
-    return map;
+    return frameAttributesFor(m_frameOption, m_widget);
 }
 
 Union::IdentifierList FrameElement::elementHints() const
 {
-    auto hints = frameHints(m_frameOption);
+    Union::IdentifierList hints = frameHintsFor(m_frameOption);
 
     // Backwards compatibility:
     // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
@@ -376,4 +328,79 @@ QString FrameElement::fallbackElementName([[maybe_unused]] const QStyleOption *o
     }
 
     return ElementString::Frame;
+}
+
+Union::IdentifierVariantHash FrameElement::frameAttributesFor(const QStyleOptionFrame *frameOption, const QWidget *widget)
+{
+    Union::IdentifierVariantHash map;
+
+    // For some reason both frame widget and styleoption can have frameshape,
+    // and they can also differ. If we do not have a styleoption, rely on widget
+    // information.
+    QFrame::Shape shape;
+    if (!frameOption) {
+        if (const auto frame = qobject_cast<const QFrame *>(widget)) {
+            shape = frame->frameShape();
+        } else {
+            return map;
+        }
+    } else {
+        shape = frameOption->frameShape;
+    }
+
+    switch (shape) {
+    case QFrame::NoFrame:
+        map[u"shape"_s] = u"no-frame"_s;
+        break;
+    case QFrame::Box:
+        map[u"shape"_s] = u"box"_s;
+        break;
+    case QFrame::Panel:
+    case QFrame::WinPanel:
+    case QFrame::StyledPanel:
+        map[u"shape"_s] = u"panel"_s;
+        break;
+    case QFrame::HLine:
+        map[u"shape"_s] = u"horizontal-line"_s;
+        break;
+    case QFrame::VLine:
+        map[u"shape"_s] = u"vertical-line"_s;
+        break;
+    default:
+        break;
+    }
+
+    return map;
+}
+
+Union::IdentifierList FrameElement::frameHintsFor(const QStyleOptionFrame *frameOption)
+{
+    Union::IdentifierList hints;
+    if (!frameOption) {
+        return hints;
+    }
+    if (frameOption->features.testFlag(QStyleOptionFrame::Flat)) {
+        hints.append(u"flat"_s);
+    }
+    if (frameOption->features.testFlag(QStyleOptionFrame::Rounded)) {
+        hints.append(u"rounded"_s);
+    }
+    // Some applications use the "_breeze_borders_sides" as a way to drive the Breeze application style,
+    // keep it for backwards compatibility.
+    if (frameOption->styleObject && frameOption->styleObject->property("_breeze_borders_sides").isValid()) {
+        const auto edges = frameOption->styleObject->property("_breeze_borders_sides").value<Qt::Edges>();
+        if (edges & Qt::LeftEdge) {
+            hints.append(u"left-edge"_s);
+        }
+        if (edges & Qt::RightEdge) {
+            hints.append(u"right-edge"_s);
+        }
+        if (edges & Qt::TopEdge) {
+            hints.append(u"top-edge"_s);
+        }
+        if (edges & Qt::BottomEdge) {
+            hints.append(u"bottom-edge"_s);
+        }
+    }
+    return hints;
 }

@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "LineEditElement.h"
+#include "FrameElement.h"
 #include "StyleUtils.h"
 #include "UnionStyle.h"
 #include <QApplication>
@@ -95,9 +96,14 @@ QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
+Union::IdentifierVariantHash LineEditElement::elementAttributes() const
+{
+    return FrameElement::frameAttributesFor(m_frameOption, m_widget);
+}
+
 Union::IdentifierList LineEditElement::elementHints() const
 {
-    auto hints = frameHints(m_frameOption);
+    auto hints = FrameElement::frameHintsFor(m_frameOption);
     // Due to how Line Edits work, we have to first check the parent, then it's parent
     // to figure out if we're inside a table. The first parent is just the scrollview.
     if (m_widget && m_widget->parentWidget()) {

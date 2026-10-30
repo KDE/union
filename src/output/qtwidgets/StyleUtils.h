@@ -76,6 +76,3 @@ QString styleOptionToElementName(const QStyleOption *option);
 
 // Calculates the bounding box rectangle from items inside layoutMap
 QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap);
-
-// Shared hints for frameOptions
-Union::IdentifierList frameHints(const QStyleOptionFrame *frameOption);

@@ -44,6 +44,10 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     QRectF subElementRect(QStyle::SubElement element) const override;
 
+    // These are shared between any element that uses QStyleOptionFrame
+    static Union::IdentifierVariantHash frameAttributesFor(const QStyleOptionFrame *frameOption, const QWidget *widget);
+    static Union::IdentifierList frameHintsFor(const QStyleOptionFrame *frameOption);
+
 private:
     Union::IdentifierVariantHash elementAttributes() const override;
     Union::IdentifierList elementHints() const override;
