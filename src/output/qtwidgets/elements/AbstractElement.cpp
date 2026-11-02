@@ -311,11 +311,13 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         const auto property = defaultPropertyGroup(properties);
         int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
         const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        auto textColor = m_styleOption->palette.text().color();
-        auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
         auto font = safePropertyLookup(property, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
-        if (unionColor.isValid()) {
-            textColor = unionColor.toQColor();
+        auto textColor = m_styleOption->palette.text().color();
+        if (m_styleOption->palette.resolveMask() <= 0) {
+            auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
+            if (unionColor.isValid()) {
+                textColor = unionColor.toQColor();
+            }
         }
         textFlags = textFlagsFromProperties(property);
         painter->save();
