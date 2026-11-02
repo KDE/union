@@ -22,6 +22,8 @@
     -   VisualFocus
     -   Enabled
     hints:
+        positive: Show positive feedback about the input, such as a successful search.
+        negative: Show negative feedback about the input, such as a search with no matches.
         changed: Set whenever the element should visualize a changed state.
         inside-table: If the QWidget textfield is inside a table.
     subelements:
@@ -47,6 +49,8 @@
     -   VisualFocus
     -   Enabled
     hints:
+        positive: Show positive feedback about the input, such as a successful search.
+        negative: Show negative feedback about the input, such as a search with no matches.
         changed: Set whenever the element should visualize a changed state.
     subelements:
     -   name: Text
@@ -70,6 +74,9 @@
     -   ActiveFocus
     -   VisualFocus
     -   Enabled
+    hints:
+        positive: Show positive feedback about the input, such as a successful search.
+        negative: Show negative feedback about the input, such as a search with no matches.
     subelements:
     -   name: Text
         description: |
@@ -113,6 +120,8 @@
     -   VisualFocus
     -   Enabled
     hints:
+        positive: Show positive feedback about the input.
+        negative: Show negative feedback about the input.
         editable: Set when the spinbox allows direct input by the user.
         constrained: |
             Set when the spinbox does not have enough space to display the text

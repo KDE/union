@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
+// SPDX-FileCopyrightText: 2026 Eike Hein <hein@kde.org>
 
 #include <QtTest>
 
@@ -7,9 +8,13 @@
 #include <QQmlEngine>
 #include <QStandardItemModel>
 
+#include <memory>
+
 #include <Style.h>
 #include <StyleLoader.h>
 #include <StyleRegistry.h>
+
+#include "QuickElement.h"
 
 using namespace Qt::StringLiterals;
 
@@ -38,6 +43,49 @@ private Q_SLOTS:
 
         auto testStyle = Union::Style::create(std::filesystem::path("test"), std::make_unique<TestStyleLoader>());
         Union::StyleRegistry::instance()->addStyle(testStyle);
+    }
+
+    void testFeedbackHints_data()
+    {
+        QTest::addColumn<QString>("control");
+
+        QTest::addRow("TextField") << u"TextField"_s;
+        QTest::addRow("TextArea") << u"TextArea"_s;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 10, 0)
+        QTest::addRow("SearchField") << u"SearchField"_s;
+#endif
+        QTest::addRow("SpinBox") << u"SpinBox"_s;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 11, 0)
+        QTest::addRow("DoubleSpinBox") << u"DoubleSpinBox"_s;
+#endif
+        QTest::addRow("ComboBox") << u"ComboBox"_s;
+    }
+
+    void testFeedbackHints()
+    {
+        QFETCH(QString, control);
+
+        QQmlComponent component(&m_engine);
+        component.setData((u"import org.kde.union\n" + control + u" {}\n").toUtf8(), QUrl{});
+
+        std::unique_ptr<QObject> instance{component.create()};
+        QVERIFY2(instance, qPrintable(component.errorString()));
+
+        auto element = qobject_cast<Union::Quick::QuickElement *>(qmlAttachedPropertiesObject<Union::Quick::QuickElement>(instance.get()));
+        QVERIFY(element);
+
+        for (const auto &name : {u"positive"_s, u"negative"_s}) {
+            auto hint = element->hint(name);
+            QVERIFY(hint);
+            QVERIFY(!hint->property("when").toBool());
+            QVERIFY(!element->activeHints().contains(name));
+
+            QVERIFY(hint->setProperty("when", true));
+            QTRY_VERIFY(element->activeHints().contains(name));
+
+            QVERIFY(hint->setProperty("when", false));
+            QTRY_VERIFY(!element->activeHints().contains(name));
+        }
     }
 
     void testControls_data()

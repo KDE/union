@@ -281,12 +281,18 @@ A button with a dropdown that allows selecting one of several options.
     \li{2, 1} Highlighted
 
 \row
-    \li{1, 3} \b{Hints}
+    \li{1, 5} \b{Hints}
     \li \b flat
     \li Set whenever the combobox should use a flat appearance.
 \row
     \li \b editable
     \li Set whenever the combobox is user-editable and should display that.
+\row
+    \li \b positive
+    \li Show positive feedback about the input when editable.
+\row
+    \li \b negative
+    \li Show negative feedback about the input when editable.
 \row
     \li \b changed
     \li Set whenever the combobox should visualize a changed state.
@@ -576,7 +582,13 @@ A single-line input field for text.
     \li{2, 1} Enabled
 
 \row
-    \li{1, 1} \b{Hints}
+    \li{1, 3} \b{Hints}
+    \li \b positive
+    \li Show positive feedback about the input, such as a successful search.
+\row
+    \li \b negative
+    \li Show negative feedback about the input, such as a search with no matches.
+\row
     \li \b changed
     \li Set whenever the element should visualize a changed state.
 
@@ -633,7 +645,13 @@ A single-line input field for text.
     \li{2, 1} Enabled
 
 \row
-    \li{1, 1} \b{Hints}
+    \li{1, 3} \b{Hints}
+    \li \b positive
+    \li Show positive feedback about the input, such as a successful search.
+\row
+    \li \b negative
+    \li Show negative feedback about the input, such as a search with no matches.
+\row
     \li \b changed
     \li Set whenever the element should visualize a changed state.
 
@@ -690,7 +708,13 @@ A multi-line input field for text.
     \li{2, 1} Enabled
 
 \row
-    \li{1, 1} \b{Hints}
+    \li{1, 3} \b{Hints}
+    \li \b positive
+    \li Show positive feedback about the input, such as a successful search.
+\row
+    \li \b negative
+    \li Show negative feedback about the input, such as a search with no matches.
+\row
     \li \b changed
     \li Set whenever the element should visualize a changed state.
 
@@ -746,6 +770,13 @@ A single-line input field with a dropdown for searching things.
 \row
     \li{2, 1} Enabled
 
+\row
+    \li{1, 2} \b{Hints}
+    \li \b positive
+    \li Show positive feedback about the input, such as a successful search.
+\row
+    \li \b negative
+    \li Show negative feedback about the input, such as a search with no matches.
 
 
 \endtable
@@ -858,7 +889,13 @@ decrease buttons.
     \li{2, 1} Enabled
 
 \row
-    \li{1, 3} \b{Hints}
+    \li{1, 5} \b{Hints}
+    \li \b positive
+    \li Show positive feedback about the input.
+\row
+    \li \b negative
+    \li Show negative feedback about the input.
+\row
     \li \b editable
     \li Set when the spinbox allows direct input by the user.
 \row

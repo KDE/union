@@ -24,6 +24,10 @@ T.SearchField {
                      control.focusReason === Qt.ShortcutFocusReason)
         enabled: control.enabled
     }
+    Union.Element.hints: [
+        Union.ElementHint { name: "positive"; when: false },
+        Union.ElementHint { name: "negative"; when: false }
+    ]
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset, Union.Positioner.implicitHeight)

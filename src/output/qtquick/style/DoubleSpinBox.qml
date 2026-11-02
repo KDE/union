@@ -22,7 +22,9 @@ T.DoubleSpinBox {
     Union.Element.hints: [
         Union.ElementHint { name: "editable"; when: control.editable },
         Union.ElementHint { name: "constrained"; when: priv.constrained },
-        Union.ElementHint { name: "doublespinbox" }
+        Union.ElementHint { name: "doublespinbox" },
+        Union.ElementHint { name: "positive"; when: false },
+        Union.ElementHint { name: "negative"; when: false }
     ]
 
     hoverEnabled: Application.styleHints.useHoverEffects

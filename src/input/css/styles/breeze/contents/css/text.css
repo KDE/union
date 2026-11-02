@@ -226,3 +226,23 @@ spinbox.changed {
     background-color: var(--changed-background);
     border: 1px solid var(--changed-foreground);
 }
+
+textfield,
+textarea,
+searchfield,
+spinbox,
+combobox.editable
+{
+    &.positive {
+        background-color: var(--positive-background);
+    }
+
+    &.negative {
+        background-color: var(--negative-background);
+    }
+
+    &.positive:disabled,
+    &.negative:disabled {
+        background-color: var(--view-disabled-background-color);
+    }
+}
