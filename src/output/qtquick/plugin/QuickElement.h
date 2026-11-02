@@ -388,7 +388,7 @@ public:
      *
      * \sa ElementHint
      */
-    Q_PROPERTY(QQmlListProperty<ElementHint> hints READ hints NOTIFY hintsChanged)
+    Q_PROPERTY(QQmlListProperty<Union::Quick::ElementHint> hints READ hints NOTIFY hintsChanged)
     QQmlListProperty<ElementHint> hints();
     Q_SIGNAL void hintsChanged();
 
@@ -426,7 +426,7 @@ public:
      * how an element is styled. An example is Button's \c display property,
      * which adjusts what elements of a button should be visible.
      */
-    Q_PROPERTY(QQmlListProperty<ElementAttribute> attributes READ attributes NOTIFY attributesChanged)
+    Q_PROPERTY(QQmlListProperty<Union::Quick::ElementAttribute> attributes READ attributes NOTIFY attributesChanged)
     QQmlListProperty<ElementAttribute> attributes();
     Q_SIGNAL void attributesChanged();
 
