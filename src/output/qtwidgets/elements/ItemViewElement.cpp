@@ -188,7 +188,17 @@ void ItemViewElement::drawBackground(QPainter *painter) const
         painter->setBrush(m_viewItemOption->backgroundBrush);
         painter->drawPath(path);
     } else {
-        AbstractElement::drawBackground(painter);
+        QColor overrideColor;
+        BackgroundParts parts = BackgroundParts::All;
+        // Ignore borders in these cases, as they will use different color from style, and we have no border color in qpalette
+        if (m_styleOption && m_styleOption->palette.resolveMask() > 0) {
+            overrideColor = m_styleOption->palette.highlight().color();
+            parts = BackgroundParts::PanelOnly;
+        } else if (m_viewItemOption && m_viewItemOption->backgroundBrush.style() != Qt::NoBrush) {
+            overrideColor = m_viewItemOption->backgroundBrush.color();
+            parts = BackgroundParts::PanelOnly;
+        }
+        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, parts, overrideColor);
     }
     painter->restore();
 }
