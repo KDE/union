@@ -127,6 +127,7 @@ enum class EnumContext {
 UnionStyle::UnionStyle()
     : QCommonStyle()
     , m_showMnemonics(false)
+    , m_dragFilter(std::make_unique<DragEventFilter>(this))
 {
     qApp->installEventFilter(this);
     Union::StyleRegistry::instance()->load();
@@ -704,6 +705,7 @@ void UnionStyle::polish(QApplication *application)
 
 void UnionStyle::polish(QWidget *widget)
 {
+    m_dragFilter->installWidget(widget);
     // enable mouse over effects for all necessary widgets
     if (widget) {
         widget->setAttribute(Qt::WA_Hover);
@@ -734,6 +736,7 @@ void UnionStyle::polish(QWidget *widget)
 
 void UnionStyle::unpolish(QWidget *widget)
 {
+    m_dragFilter->uninstallWidget(widget);
     QCommonStyle::unpolish(widget);
 }
 

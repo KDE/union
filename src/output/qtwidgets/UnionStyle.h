@@ -8,6 +8,7 @@
 #include <Element.h>
 #include <Style.h>
 
+#include "DragEventFilter.h"
 #include "elements/AbstractElement.h"
 #include "elements/CheckBoxElement.h"
 #include <QCommonStyle>
@@ -135,5 +136,7 @@ public:
 
 private:
     bool m_showMnemonics;
+    std::unique_ptr<DragEventFilter> m_dragFilter;
+
     void setMnemonics(bool enabled);
 };

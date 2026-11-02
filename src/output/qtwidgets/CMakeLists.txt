@@ -16,6 +16,8 @@ target_sources(UnionWidgetsStyle PRIVATE
         BackgroundDrawing.h
         BoxShadowRenderer.cpp
         BoxShadowRenderer.h
+        DragEventFilter.cpp
+        DragEventFilter.h
         ShadowRenderer.cpp
         ShadowRenderer.h
         SharedNames.h
