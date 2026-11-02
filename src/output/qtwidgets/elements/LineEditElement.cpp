@@ -33,8 +33,9 @@ void LineEditElement::update()
 {
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
         m_hasFrame = lineEdit->hasFrame();
-    } else if (m_frameOption && m_frameOption->frameShape == QFrame::Shape::NoFrame) {
-        m_hasFrame = false;
+    } else {
+        // Widget-less callers indicate the frame through lineWidth, not frameShape.
+        m_hasFrame = m_frameOption && m_frameOption->lineWidth > 0;
     }
 
     updateSubElementList();
@@ -48,21 +49,40 @@ void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
     }
     // For spinboxes and comboboxes, we do not want to draw this element
     // TODO: maybe this should be handleable by the CSS
-    if (!m_widget || m_widget->parentWidget()->inherits("QComboBox") || m_widget->parentWidget()->inherits("QAbstractSpinBox")) {
-        return;
+    if (m_widget && m_widget->parentWidget()) {
+        const auto parent = m_widget->parentWidget();
+        if (parent->inherits("QComboBox") || parent->inherits("QAbstractSpinBox")) {
+            return;
+        }
     }
+
     switch (enums.PrimitiveElement) {
     case QStyle::PE_PanelLineEdit:
-        if (m_hasFrame) {
-            drawBackground(painter);
-        } else {
-            drawPanel(painter);
-        }
+        drawBackground(painter);
         break;
     case QStyle::PE_FrameLineEdit:
         drawFrame(painter);
         break;
     }
+}
+
+void LineEditElement::drawBackground(QPainter *painter) const
+{
+    if (!m_isValid || !m_styleOption) {
+        return;
+    }
+
+    QColor backgroundOverride;
+    const auto &palette = m_styleOption->palette;
+    if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
+        backgroundOverride = palette.base().color();
+    }
+
+    drawBackgroundRectangle(painter,
+                            m_styleOption->rect,
+                            m_elementProperties,
+                            m_hasFrame ? BackgroundParts::All : BackgroundParts::PanelOnly,
+                            backgroundOverride);
 }
 
 void LineEditElement::updateSubElementList()
