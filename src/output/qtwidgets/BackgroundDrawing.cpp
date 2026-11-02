@@ -20,7 +20,11 @@ static Union::LruImageCache imageCache;
 
 // This file handles all the background drawing related functions
 
-void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Union::Properties::StylePropertyGroup *style, BackgroundParts parts)
+void drawBackgroundRectangle(QPainter *painter,
+                             const QRectF &mainRect,
+                             const Union::Properties::StylePropertyGroup *style,
+                             BackgroundParts parts,
+                             const QColor &backgroundOverride)
 {
     if (!style) {
         return;
@@ -95,7 +99,11 @@ void drawBackgroundRectangle(QPainter *painter, const QRectF &mainRect, const Un
                 path = unevenRadiiRectPath(innerRect, innerCornerRadii);
             }
 
-            if (const auto color = background->color()) {
+            if (backgroundOverride.isValid()) {
+                painter->setPen(Qt::transparent);
+                painter->setBrush(backgroundOverride);
+                painter->drawPath(path);
+            } else if (const auto color = background->color()) {
                 painter->setPen(Qt::transparent);
                 painter->setBrush(color.value().toQColor());
                 painter->drawPath(path);
