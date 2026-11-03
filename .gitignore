@@ -12,3 +12,5 @@
 .cache
 .qmlls.ini
 /tools/propertygenerator/.python-version
+*.pyc
+.kateproject*
