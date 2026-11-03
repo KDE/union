@@ -13,6 +13,7 @@ ecm_target_qml_sources(UnionQuickPrivate SOURCES
     DisplayAttribute.qml
     PlaceholderText.qml
     SpinBoxHelper.qml
+    SwitchIndicator.qml
     TextFieldContextMenu.qml
 )
 
