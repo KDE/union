@@ -11,6 +11,7 @@ ecm_target_qml_sources(UnionQuickPrivate SOURCES
     DefaultContentItem.qml
     DefaultIndicator.qml
     DisplayAttribute.qml
+    PlaceholderText.qml
     TextFieldContextMenu.qml
 )
 
