@@ -9,7 +9,7 @@ import org.kde.union.impl as Union
 Item {
     id: root
 
-    required property T.AbstractButton control
+    required property T.Control control
 
     property int wrapMode: control.Union.Style.properties.text.wrapMode ?? Text.NoWrap
     property int elide: control.Union.Style.properties.text.elide ?? Text.ElideRight

@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2024 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 add_subdirectory(plugin)
+add_subdirectory(private)
 
 add_library(UnionQuickStyle)
 ecm_add_qml_module(UnionQuickStyle
@@ -78,12 +79,6 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/VerticalHeaderView.qml
     style/VerticalHeaderViewDelegate.qml
     style/WeekNumberColumn.qml
-)
-
-ecm_target_qml_sources(UnionQuickStyle PATH private SOURCES
-    style/private/DefaultContentItem.qml
-    style/private/TextFieldContextMenu.qml
-    style/private/DisplayAttribute.qml
 )
 
 target_link_libraries(UnionQuickStyle PRIVATE UnionQuickImpl)
