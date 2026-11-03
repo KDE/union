@@ -70,7 +70,8 @@ void StatusBarElement::layout()
 
 void StatusBarElement::drawItem(QPainter *painter) const
 {
-    drawBackgroundRectangle(painter, m_statusBarOption->rect, m_contentProperties);
+    UnionPainter h(painter, m_contentProperties, m_statusBarOption, m_widget);
+    h.draw();
 }
 
 QString StatusBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

@@ -77,7 +77,9 @@ void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
     case QStyle::CE_MenuItem:
         drawBackground(painter);
         if (m_hasCheckBox || m_hasRadioButton) {
-            drawBackgroundRectangle(painter, m_layoutMap[ElementString::Indicator].rect, m_checkProperties);
+            UnionPainter b(painter, m_checkProperties, m_styleOption, m_widget);
+            b.setRect(m_layoutMap[ElementString::Indicator].rect);
+            b.draw();
         }
         drawIcon(painter);
         drawText(painter);
@@ -225,9 +227,12 @@ void MenuItemElement::drawBackground(QPainter *painter) const
             }
         }
         // Ensure the rectangle is resized according to the menu margins
-        drawBackgroundRectangle(painter, rect, m_separatorProperties);
+        UnionPainter b(painter, m_separatorProperties, m_styleOption, m_widget);
+        b.setRect(rect);
+        b.draw();
     } else {
-        drawBackgroundRectangle(painter, m_menuItemOption->rect, m_elementProperties);
+        UnionPainter b(painter, m_elementProperties, m_menuItemOption, m_widget);
+        b.draw();
     }
 }
 

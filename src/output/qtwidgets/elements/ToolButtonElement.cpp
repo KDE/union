@@ -180,7 +180,9 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
     auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
     auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
     indicatorRect.moveCenter(rect.center());
-    drawBackgroundRectangle(painter, rect, m_indicatorProperties);
+    UnionPainter h(painter, m_indicatorProperties, m_styleOption, m_widget);
+    h.setRect(rect);
+    h.draw();
     drawIconAtRect(painter, m_indicator, indicatorRect, m_indicatorProperties);
 }
 

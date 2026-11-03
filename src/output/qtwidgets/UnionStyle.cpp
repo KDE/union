@@ -3,9 +3,9 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "UnionStyle.h"
-#include "BackgroundDrawing.h"
 #include "SharedNames.h"
 #include "StyleUtils.h"
+#include "UnionPainter.h"
 #include "elements/AbstractElement.h"
 #include "elements/ButtonElement.h"
 #include "elements/CheckBoxElement.h"

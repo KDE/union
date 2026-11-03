@@ -243,21 +243,26 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, const Union::StylePro
 void AbstractElement::drawBackground(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties);
+        UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+        b.draw();
     }
 }
 
 void AbstractElement::drawFrame(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::FrameOnly);
+        UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+        b.setParts(UnionPainter::Parts::FrameOnly);
+        b.draw();
     }
 }
 
 void AbstractElement::drawPanel(QPainter *painter) const
 {
     if (m_isValid && m_styleOption) {
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, BackgroundParts::PanelOnly);
+        UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+        b.setParts(UnionPainter::Parts::PanelOnly);
+        b.draw();
     }
 }
 

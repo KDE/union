@@ -4,7 +4,7 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "BackgroundDrawing.h"
+#include "UnionPainter.h"
 #include <QObject>
 #include <QStyleOption>
 

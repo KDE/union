@@ -18,8 +18,8 @@
 // This implementation has been copied over from Breeze.
 
 #include "BoxShadowRenderer.h"
-#include "BackgroundDrawing.h"
 #include "ShadowRenderer.h"
+#include "UnionPainter.h"
 
 #include <QPainter>
 #include <QtMath>
@@ -263,7 +263,7 @@ static void renderShadow(QPainter *painter, const QRectF &rect, const BoxShadowR
     shadowPainter.setPen(Qt::NoPen);
     shadowPainter.setBrush(Qt::black);
 
-    auto path = unevenRadiiRectPath(boxRect, shadow.cornerRadius);
+    auto path = UnionPainter::unevenRadiiRectPath(boxRect, shadow.cornerRadius);
     shadowPainter.drawPath(path);
 
     shadowPainter.end();

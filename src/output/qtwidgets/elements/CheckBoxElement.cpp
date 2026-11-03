@@ -106,7 +106,9 @@ void CheckBoxElement::updateSubElementList()
 
 void CheckBoxElement::drawIndicator(QPainter *painter) const
 {
-    drawBackgroundRectangle(painter, subElementRect(QStyle::SE_CheckBoxIndicator), m_indicatorProperties);
+    UnionPainter b(painter, m_indicatorProperties, m_styleOption, m_widget);
+    b.setRect(subElementRect(QStyle::SE_CheckBoxIndicator));
+    b.draw();
 }
 
 Union::IdentifierList CheckBoxElement::elementHints() const

@@ -176,22 +176,26 @@ void ItemViewElement::drawBackground(QPainter *painter) const
     if (hasCustomBackground) {
         const auto radius =
             safePropertyLookup(m_elementProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
-        const auto path = unevenRadiiRectPath(rect, radius);
+
+        const auto path = UnionPainter::unevenRadiiRectPath(rect, radius);
         painter->setPen(Qt::NoPen);
         painter->setBrush(m_viewItemOption->backgroundBrush);
         painter->drawPath(path);
     } else {
         QColor overrideColor;
-        BackgroundParts parts = BackgroundParts::All;
+        UnionPainter::Parts parts = UnionPainter::Parts::All;
         // Ignore borders in these cases, as they will use different color from style, and we have no border color in qpalette
         if (m_styleOption && m_styleOption->palette.resolveMask() > 0) {
             overrideColor = m_styleOption->palette.highlight().color();
-            parts = BackgroundParts::PanelOnly;
+            parts = UnionPainter::Parts::PanelOnly;
         } else if (m_viewItemOption && m_viewItemOption->backgroundBrush.style() != Qt::NoBrush) {
             overrideColor = m_viewItemOption->backgroundBrush.color();
-            parts = BackgroundParts::PanelOnly;
+            parts = UnionPainter::Parts::PanelOnly;
         }
-        drawBackgroundRectangle(painter, m_styleOption->rect, m_elementProperties, parts, overrideColor);
+        UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+        b.setOverrideBackgroundColor(overrideColor);
+        b.setParts(parts);
+        b.draw();
     }
     painter->restore();
 }

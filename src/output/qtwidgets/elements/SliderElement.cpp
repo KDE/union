@@ -113,7 +113,9 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
             progress.setHeight(progressHeight);
         }
     }
-    drawBackgroundRectangle(painter, progress, m_contentProperties);
+    UnionPainter b(painter, m_contentProperties, m_styleOption, m_widget);
+    b.setRect(progress);
+    b.draw();
 
     // Tickmark drawing is copied from breeze
     if (m_sliderOption && m_tickProperties && m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
@@ -143,11 +145,15 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
                 const int position(m_style->sliderPositionFromValue(m_sliderOption->minimum, m_sliderOption->maximum, current, available, m_isInverted)
                                    + handleOffset);
                 for (const auto &tickLine : std::as_const(ticks)) {
+                    QRectF translatedRect;
                     if (m_isHorizontal) {
-                        drawBackgroundRectangle(painter, tickLine.translated(reverse ? (rect.width() - position) : position, 0), props);
+                        translatedRect = tickLine.translated(reverse ? (rect.width() - position) : position, 0);
                     } else {
-                        drawBackgroundRectangle(painter, tickLine.translated(0, position), props);
+                        translatedRect = tickLine.translated(0, position);
                     }
+                    UnionPainter b(painter, props, m_styleOption, m_widget);
+                    b.setRect(translatedRect);
+                    b.draw();
                 }
 
                 // go to next position
@@ -157,14 +163,16 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
     }
 
     // Handle
-    auto handle = subControlRect(QStyle::SC_SliderHandle);
-    drawBackgroundRectangle(painter, handle, m_indicatorProperties);
+    UnionPainter h(painter, m_indicatorProperties, m_styleOption, m_widget);
+    h.setRect(subControlRect(QStyle::SC_SliderHandle));
+    h.draw();
 }
 
 void SliderElement::drawBackground(QPainter *painter) const
 {
-    auto grooveRect = subControlRect(QStyle::SC_SliderGroove);
-    drawBackgroundRectangle(painter, grooveRect, m_elementProperties);
+    UnionPainter h(painter, m_elementProperties, m_styleOption, m_widget);
+    h.setRect(subControlRect(QStyle::SC_SliderGroove));
+    h.draw();
 }
 
 QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const

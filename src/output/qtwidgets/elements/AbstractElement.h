@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include "BackgroundDrawing.h"
 #include "StyleUtils.h"
+#include "UnionPainter.h"
 #include "qtwidgets_logging.h"
 #include <ElementQuery.h>
 #include <QIcon>

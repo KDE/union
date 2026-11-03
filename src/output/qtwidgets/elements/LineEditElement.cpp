@@ -78,11 +78,10 @@ void LineEditElement::drawBackground(QPainter *painter) const
         backgroundOverride = palette.base().color();
     }
 
-    drawBackgroundRectangle(painter,
-                            m_styleOption->rect,
-                            m_elementProperties,
-                            m_hasFrame ? BackgroundParts::All : BackgroundParts::PanelOnly,
-                            backgroundOverride);
+    UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+    b.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
+    b.setOverrideBackgroundColor(backgroundOverride);
+    b.draw();
 }
 
 void LineEditElement::updateSubElementList()

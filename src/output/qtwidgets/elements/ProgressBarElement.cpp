@@ -70,13 +70,15 @@ void ProgressBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ProgressBarElement::drawBackground(QPainter *painter) const
 {
-    auto groove = subElementRect(QStyle::SE_ProgressBarGroove);
-    drawBackgroundRectangle(painter, groove, m_elementProperties);
+    UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+    b.setRect(subElementRect(QStyle::SE_ProgressBarGroove));
+    b.draw();
 }
 void ProgressBarElement::drawIndicator(QPainter *painter) const
 {
-    auto progress = subElementRect(QStyle::SE_ProgressBarContents);
-    drawBackgroundRectangle(painter, progress, m_contentProperties);
+    UnionPainter b(painter, m_contentProperties, m_styleOption, m_widget);
+    b.setRect(subElementRect(QStyle::SE_ProgressBarContents));
+    b.draw();
 }
 
 void ProgressBarElement::drawText(QPainter *painter) const
@@ -186,7 +188,8 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
 {
-    drawBackgroundRectangle(painter, m_progressBarOption->rect, m_contentProperties);
+    UnionPainter h(painter, m_contentProperties, m_progressBarOption, m_widget);
+    h.draw();
 }
 
 int ProgressBarElement::chunkWidth() const

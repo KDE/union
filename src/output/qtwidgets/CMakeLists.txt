@@ -12,8 +12,6 @@ ecm_qt_declare_logging_category(UnionWidgetsStyle
 )
 
 target_sources(UnionWidgetsStyle PRIVATE
-        BackgroundDrawing.cpp
-        BackgroundDrawing.h
         BoxShadowRenderer.cpp
         BoxShadowRenderer.h
         DragEventFilter.cpp
@@ -27,6 +25,10 @@ target_sources(UnionWidgetsStyle PRIVATE
         UnionStyle.h
         UnionStylePlugin.cpp
         UnionStylePlugin.h
+        UnionGraphicsEffect.cpp
+        UnionGraphicsEffect.h
+        UnionPainter.cpp
+        UnionPainter.h
         elements/AbstractElement.cpp
         elements/AbstractElement.h
         elements/ButtonElement.cpp

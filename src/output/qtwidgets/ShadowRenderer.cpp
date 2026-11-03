@@ -3,7 +3,7 @@
 
 #include "ShadowRenderer.h"
 
-#include "BackgroundDrawing.h"
+#include "UnionPainter.h"
 
 #include <ElementQuery.h>
 #include <QApplication>
@@ -73,7 +73,7 @@ QImage ShadowRenderer::shadowTexture()
     painter.setPen(Qt::NoPen);
     painter.setBrush(Qt::black);
     painter.setCompositionMode(QPainter::CompositionMode_DestinationOut);
-    auto path = unevenRadiiRectPath(outerRect - margins, params.cornerRadius);
+    auto path = UnionPainter::unevenRadiiRectPath(outerRect - margins, params.cornerRadius);
     painter.drawPath(path);
 
     painter.end();

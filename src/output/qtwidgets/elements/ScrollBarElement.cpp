@@ -80,8 +80,9 @@ void ScrollBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ScrollBarElement::drawBackground(QPainter *painter) const
 {
-    const auto rect = subControlRect(QStyle::SC_ScrollBarGroove);
-    drawBackgroundRectangle(painter, rect, m_elementProperties);
+    UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
+    b.setRect(subControlRect(QStyle::SC_ScrollBarGroove));
+    b.draw();
 }
 
 void ScrollBarElement::drawIndicator(QPainter *painter) const
@@ -95,8 +96,8 @@ void ScrollBarElement::drawIndicator(QPainter *painter) const
             if (!(m_scrollBarOption->activeSubControls & QStyle::SC_ScrollBarSlider)) {
                 subopt.state &= ~(QStyle::State_Sunken | QStyle::State_MouseOver);
             }
-            drawBackgroundRectangle(painter, subopt.rect, m_indicatorProperties);
-
+            UnionPainter b(painter, m_indicatorProperties, &subopt, m_widget);
+            b.draw();
             if (m_scrollBarOption->state & QStyle::State_HasFocus) {
                 m_style->drawPrimitive(QStyle::PE_FrameFocusRect, &subopt, painter);
             }
