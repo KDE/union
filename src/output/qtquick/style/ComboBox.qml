@@ -7,6 +7,7 @@ import QtQuick
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+import org.kde.union.private as P
 
 T.ComboBox {
     id: control
@@ -73,17 +74,7 @@ T.ComboBox {
         LayoutMirroring.enabled: control.mirrored
     }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
-
-        visible: Union.Style.properties.display.visible ?? false
-        opacity: Union.Style.properties.display.opacity ?? 1.0
-    }
+    indicator: P.DefaultIndicator { }
 
     contentItem: T.TextField {
         Union.PositionedItem.source: Union.PositionerSource.Text

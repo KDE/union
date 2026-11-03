@@ -88,13 +88,8 @@ T.TreeViewDelegate {
         visible: control.isTreeNode && implicitWidth > 0
     }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        color: Union.Style.properties.icon.color
-        name: Union.Style.properties.icon.name
-        visible: control.isTreeNode && control.hasChildren
+    indicator: P.DefaultIndicator {
+        visible: control.isTreeNode && control.hasChildren && (Union.Style.properties.display.visible ?? true)
     }
 
     contentItem: P.DefaultContentItem {

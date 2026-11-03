@@ -71,14 +71,8 @@ T.Button {
 
     contentItem: P.DefaultContentItem { control: control }
 
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
+    indicator: P.DefaultIndicator {
         visible: Union.Style.properties.display.visible ?? false
-        opacity: Union.Style.properties.display.opacity ?? 1.0
     }
 
     background: Union.StyledRectangle { }

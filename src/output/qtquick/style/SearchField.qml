@@ -59,23 +59,13 @@ T.SearchField {
         required property int index
     }
 
-    searchIndicator.indicator: Union.Icon {
+    searchIndicator.indicator: P.DefaultIndicator {
         Union.Element.type: "SearchIndicator"
-        color: Union.Style.properties.icon.color
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
     }
 
-    clearIndicator.indicator: Union.Icon {
+    clearIndicator.indicator: P.DefaultIndicator {
         Union.Element.type: "ClearIndicator"
-        color: Union.Style.properties.icon.color
-        implicitWidth: Union.Style.properties.icon.width
-        implicitHeight: Union.Style.properties.icon.height
-        name: Union.Style.properties.icon.name
-        source: Union.Style.properties.icon.source
-        visible: control.text.length > 0
+        visible: control.text.length > 0 && (Union.Style.properties.display.visible ?? true)
     }
 
     contentItem: T.TextField {
