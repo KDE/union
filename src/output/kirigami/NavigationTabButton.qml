@@ -6,9 +6,11 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Templates as T
+
 import org.kde.kirigami.templates as KT
 
 import org.kde.union.impl as Union
+import org.kde.union.private as P
 
 KT.NavigationTabButton {
     id: control
@@ -81,39 +83,9 @@ KT.NavigationTabButton {
 
     display: T.AbstractButton.TextUnderIcon
 
-    contentItem: Item {
-        Union.PositionedItem.positionChildren: true
-        Union.Mnemonics.enabled: control.enabled && control.visible
-        Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
-        Union.Mnemonics.label: control.text
+    contentItem: P.DefaultContentItem { control: control }
 
-        Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
-            control: control
-            visible: (name || source.toString()) && control.display != T.AbstractButton.TextOnly
-        }
-
-        Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
-            text: parent.Union.Mnemonics.richTextLabel ?? control.text
-            font: control.font
-            color: Union.Style.properties.text.color ?? "black"
-            elide: Text.ElideMiddle
-            wrapMode: Text.Wrap
-            visible: control.display != T.AbstractButton.IconOnly && text.length > 0
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
-        }
-    }
-
-    indicator: Union.Icon {
-        Union.Element.type: "Indicator"
-        implicitWidth: Union.Style.properties.layout.width ?? 0
-        implicitHeight: Union.Style.properties.layout.height ?? 0
-        name: Union.Style.properties.icon.name
-        color: Union.Style.properties.icon.color
-        visible: name !== ""
-    }
+    indicator: P.DefaultIndicator { }
 
     background: Union.StyledRectangle {}
 }

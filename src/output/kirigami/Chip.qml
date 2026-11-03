@@ -7,6 +7,7 @@ import org.kde.kirigami.templates as KT
 
 import org.kde.union as Controls
 import org.kde.union.impl as Union
+import org.kde.union.private as P
 
 KT.Chip {
     id: control
@@ -24,15 +25,7 @@ KT.Chip {
         Union.ElementHint { name: "closable"; when: control.closable },
         Union.ElementHint { name: "interactive"; when: control.interactive },
     ]
-    Union.Element.attributes: Union.ElementAttribute {
-        name: "display"
-        value: switch (control.display) {
-            case KT.Chip.IconOnly: return "icon-only"
-            case KT.Chip.TextOnly: return "text-only"
-            case KT.Chip.TextBesideIcon: return "text-beside-icon"
-            case KT.Chip.TextUnderIcon: return "text-under-icon"
-        }
-    }
+    Union.Element.attributes: P.DisplayAttribute { control: control }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             Union.Positioner.implicitWidth)
@@ -65,30 +58,7 @@ KT.Chip {
 
     Union.Positioner.positionItems: [contentItem, indicator]
 
-    contentItem: Item {
-        Union.PositionedItem.positionChildren: true
-        Union.Mnemonics.enabled: control.enabled && control.visible
-        Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
-        Union.Mnemonics.label: control.text
-
-        Union.Icon {
-            Union.PositionedItem.source: Union.PositionerSource.Icon
-            Union.PositionedItem.minimumWidth: control.icon?.width ?? 0.0
-            Union.PositionedItem.minimumHeight: control.icon?.height ?? 0.0
-            control: control
-            visible: name.length > 0 && control.display != KT.Chip.TextOnly
-        }
-
-        Text {
-            Union.PositionedItem.source: Union.PositionerSource.Text
-
-            text: control.text
-            font: control.font
-            color: control.palette.buttonText
-
-            visible: control.display != KT.Chip.IconOnly
-        }
-    }
+    contentItem: P.DefaultContentItem { control: control }
 
     indicator: Controls.ToolButton {
         id: indicator
