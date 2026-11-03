@@ -78,23 +78,8 @@ T.SearchField {
         horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
         verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
 
-        Text {
-            id: placeholder
-
-            Union.Element.hints: Union.ElementHint { name: "placeholder" }
-
-            x: parent.leftPadding
-            y: parent.topPadding
-            width: parent.width - parent.leftPadding - parent.rightPadding
-            height: parent.height - parent.topPadding - parent.bottomPadding
-
-            text: control.placeholderText
-            font: parent.font
-            color: control.palette.placeholderText
-            visible: !parent.length && !parent.preeditText && (!parent.activeFocus || parent.horizontalAlignment !== Qt.AlignHCenter)
-            verticalAlignment: parent.verticalAlignment
-            renderType: parent.renderType
-            elide: parent.wrapMode == Text.NoWrap ? Text.ElideRight : Text.ElideNone
+        P.PlaceholderText {
+            control: parent
         }
     }
 
