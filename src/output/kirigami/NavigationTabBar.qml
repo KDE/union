@@ -46,7 +46,7 @@ KT.NavigationTabBar {
 
     font: Union.Style.properties.text.font.qFont
 
-    opacity: Union.Style.properties.display.opacity
+    opacity: Union.Style.properties.display.opacity ?? 1.0
 
     background: Union.StyledRectangle { }
 }
