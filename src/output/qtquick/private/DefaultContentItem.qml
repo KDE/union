@@ -14,7 +14,7 @@ Item {
     Union.PositionedItem.positionChildren: true
     Union.Mnemonics.enabled: root.control.enabled && root.control.visible
     Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
-    Union.Mnemonics.label: root.control.text
+    Union.Mnemonics.label: root.control.text ?? ""
 
     readonly property real iconWidth: iconItem.Union.Style.properties.layout.width ?? 0
     readonly property real iconHeight: iconItem.Union.Style.properties.layout.width ?? 0
@@ -38,7 +38,7 @@ Item {
     Text {
         Union.Element.subElement: "Text"
 
-        text: root.Union.Mnemonics.richTextLabel ?? root.control.text
+        text: root.Union.Mnemonics.richTextLabel ?? (root.control.text ?? "")
         font: root.control.font
         color: Union.Style.properties.display.color ?? "black"
         elide: wrapMode == Text.NoWrap && Union.Style.properties.text.elide ? Union.Style.properties.text.elide : Text.ElideNone
@@ -47,6 +47,7 @@ Item {
         visible: text.length > 0 && (Union.Style.properties.display.visible ?? true)
         opacity: Union.Style.properties.display.opacity ?? 1.0
 
-        horizontalAlignment: Union.Style.properties.text.alignment ?? Qt.AlignLeft
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Text.AlignLeft
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter
     }
 }
