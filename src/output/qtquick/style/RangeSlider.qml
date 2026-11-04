@@ -7,6 +7,7 @@ import QtQuick.Controls.impl
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
+import org.kde.union.private as P
 
 T.RangeSlider {
     id: control
@@ -66,18 +67,16 @@ T.RangeSlider {
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.second.visualPosition * (control.availableHeight - height))
     }
 
-    background: Union.StyledRectangle {
-        x: control.leftPadding + (control.horizontal ? 0 : (control.availableWidth - width) / 2)
-        y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : 0)
-        scale: control.horizontal && control.mirrored ? -1 : 1
-
-        Union.StyledRectangle {
-            Union.Element.type: "Fill"
-            readonly property int smallerValue: Math.min(parent.width, parent.height)
-            x: control.horizontal ? control.first.position * parent.width + (smallerValue / 2) : 0
-            y: control.horizontal ? 0 : control.second.visualPosition * parent.height + (smallerValue / 2)
-            width: control.horizontal ? control.second.position * parent.width - control.first.position * parent.width - smallerValue : smallerValue
-            height: control.horizontal ? smallerValue : control.second.position * parent.height - control.first.position * parent.height - smallerValue
-        }
+    background: P.BarBackground {
+        id: background
+        control: control
+        horizontal: control.horizontal
+        from: control.from
+        to: control.to
+        startPosition: control.first.position
+        endPosition: control.second.position
+        tickMarkStepSize: control.Union.StyleHints.tickMarkStepSize
+        handleWidth: control.first.handle.width
+        handleHeight: control.first.handle.height
     }
 }

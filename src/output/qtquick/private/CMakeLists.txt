@@ -8,6 +8,7 @@ ecm_add_qml_module(UnionQuickPrivate URI "org.kde.union.private"
 )
 
 ecm_target_qml_sources(UnionQuickPrivate SOURCES
+    BarBackground.qml
     DefaultContentItem.qml
     DefaultIndicator.qml
     DisplayAttribute.qml

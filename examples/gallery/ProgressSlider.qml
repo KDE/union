@@ -90,6 +90,9 @@ Kirigami.Page {
             stepSize: 1
             first.value: 25
             second.value: 75
+
+            Union.StyleHints.tickMarkStepSize: 20
+            Kirigami.StyleHints.tickMarkStepSize: 20
         }
 
         Controls.RangeSlider {

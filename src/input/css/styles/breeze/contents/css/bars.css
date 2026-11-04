@@ -136,7 +136,7 @@ dial
     {
         background-color: var(--bar-active-border-color);
 
-        &.active {
+        &:highlighted {
             background-color: var(--bar-track-active-border-color);
         }
     }
@@ -149,7 +149,7 @@ dial
         & > tickmark {
             width: var(--bar-tickmark-thickness);
             height: var(--bar-tickmark-length);
-            margin-top: var(--bar-tickmark-margin);
+            margin-top: 8px;
         }
     }
 
@@ -161,7 +161,7 @@ dial
         & > tickmark {
             width: var(--bar-tickmark-length);
             height: var(--bar-tickmark-thickness);
-            margin-left: var(--bar-tickmark-margin);
+            margin-left: 8px;
         }
     }
 
