@@ -382,7 +382,7 @@ toolseparator {
 }
 
 delaybutton {
-    & > fill {
+    & > filled {
         border-radius: var(--corner-radius);
         border: var(--button-border-highlight);
         background-color: var(--highlight-color);

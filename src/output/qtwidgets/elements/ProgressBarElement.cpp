@@ -103,7 +103,7 @@ void ProgressBarElement::layout()
         m_layoutMap = layoutMap(m_progressBarOption, m_subElementList);
     }
 
-    m_contentElementList = prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Track});
+    m_contentElementList = prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Filled});
 
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
@@ -185,14 +185,12 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
 {
-    auto props = queryProperties(prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
-    drawBackgroundRectangle(painter, m_progressBarOption->rect, props);
+    drawBackgroundRectangle(painter, m_progressBarOption->rect, m_contentProperties);
 }
 
 int ProgressBarElement::chunkWidth() const
 {
-    auto props = queryProperties(prepareElements(m_progressBarOption, m_widget, {ElementString::ProgressBar, ElementString::Chunk}));
-    return props->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    return safePropertyLookup(m_contentProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
 }
 
 qreal ProgressBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

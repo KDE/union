@@ -9,27 +9,26 @@
  */
 
 :root {
-    --bar-active-background-color: mix(var(--window-background-color), var(--window-text-color), 0.075);
-    --bar-active-border-color: var(--window-border-color);
-    --bar-track-active-background-color: mix(var(--window-background-color), var(--highlight-color), 0.333);
-    --bar-track-active-border-color: var(--highlight-color);
+    --bar-track-active-background-color: mix(var(--window-background-color), var(--window-text-color), 0.075);
+    --bar-track-active-border-color: var(--window-border-color);
+    --bar-filled-active-background-color: mix(var(--window-background-color), var(--highlight-color), 0.333);
+    --bar-filled-active-border-color: var(--highlight-color);
     --bar-handle-active-background-color: var(--button-active-background-color);
     --bar-handle-active-border-color: var(--button-active-border-color);
 
     --bar-handle-active-highlight-color: var(--button-active-highlight-color);
     --bar-handle-active-highlight-border-color: var(--button-active-border-highlight-color);
 
-    --bar-disabled-background-color: var(--window-disabled-background-color);
-    --bar-disabled-border-color: var(--window-disabled-border-color);
-    --bar-track-disabled-background-color: mix(var(--window-disabled-background-color), var(--window-background-color), 0.75);
+    --bar-track-disabled-background-color: var(--window-disabled-background-color);
     --bar-track-disabled-border-color: var(--window-disabled-border-color);
+    --bar-filled-disabled-background-color: mix(var(--window-disabled-background-color), var(--window-background-color), 0.75);
+    --bar-filled-disabled-border-color: var(--window-disabled-border-color);
     --bar-handle-disabled-background-color: var(--button-disabled-background-color);
     --bar-handle-disabled-border-color: var(--button-disabled-border-color);
 
     --bar-handle-size: 20px;
     --bar-tickmark-thickness: 2px;
     --bar-tickmark-length: 8px;
-    --bar-tickmark-margin: 1px;
 
     --dial-inactive-background-color: mix(var(--button-inactive-background-color), var(--window-background-color), 0.5);
     --dial-inactive-border-color: var(--button-inactive-border-color);
@@ -59,8 +58,8 @@ progressbar
     inset: 0px var(--large-spacing);
     text-alignment: content center center 0;
 
-    background-color: var(--bar-active-background-color);
-    border: 1px solid var(--bar-active-border-color);
+    background-color: var(--bar-track-active-background-color);
+    border: 1px solid var(--bar-track-active-border-color);
     border-radius: var(--corner-radius);
 
     &.horizontal
@@ -76,25 +75,20 @@ progressbar
     }
 
 
-    & > track,
-    & > chunk {
-        background-color: var(--bar-track-active-background-color);
-        border: 1px solid var(--bar-track-active-border-color);
+    & > filled {
+        width: 50px;
+        background-color: var(--bar-filled-active-background-color);
+        border: 1px solid var(--bar-filled-active-border-color);
         border-radius: var(--corner-radius);
     }
 
-    & > chunk {
-        width: 32px;
-    }
-
     &:disabled {
-        background-color: var(--bar-disabled-background-color);
-        border-color: var(--bar-disabled-border-color);
+        background-color: var(--bar-track-disabled-background-color);
+        border-color: var(--bar-track-disabled-border-color);
 
-        & > track,
-        & > chunk {
-            background-color: var(--bar-track-disabled-background-color);
-            border-color: var(--bar-track-disabled-border-color);
+        & > filled {
+            background-color: var(--bar-filled-disabled-background-color);
+            border-color: var(--bar-filled-disabled-border-color);
         }
     }
 }
@@ -103,13 +97,13 @@ slider,
 rangeslider,
 dial
 {
-    background-color: var(--bar-active-background-color);
-    border: 1px solid var(--bar-active-border-color);
+    background-color: var(--bar-track-active-background-color);
+    border: 1px solid var(--bar-track-active-border-color);
     border-radius: var(--corner-radius);
 
-    & > fill {
-        background-color: var(--bar-track-active-background-color);
-        border: 1px solid var(--bar-track-active-border-color);
+    & > filled {
+        background-color: var(--bar-filled-active-background-color);
+        border: 1px solid var(--bar-filled-active-border-color);
         border-radius: var(--corner-radius);
     }
 
@@ -134,22 +128,32 @@ dial
 
     & > tickmark
     {
-        background-color: var(--bar-active-border-color);
+        background-color: var(--bar-track-active-border-color);
 
         &:highlighted {
-            background-color: var(--bar-track-active-border-color);
+            background-color: var(--bar-filled-active-border-color);
         }
+    }
+
+    & > tickarea {
+        background-color: rgba(255, 0, 255, 0.25);
     }
 
     &.horizontal
     {
         width: 200px;
         height: 6px;
+        border-radius: 20px;
+
+        & > filled {
+            border-radius: 20px;
+        }
 
         & > tickmark {
             width: var(--bar-tickmark-thickness);
             height: var(--bar-tickmark-length);
             margin-top: 8px;
+            margin-bottom: 8px;
         }
     }
 
@@ -162,16 +166,17 @@ dial
             width: var(--bar-tickmark-length);
             height: var(--bar-tickmark-thickness);
             margin-left: 8px;
+            margin-right: 8px;
         }
     }
 
     &:disabled {
-        background-color: var(--bar-disabled-background-color);
-        border: 1px solid var(--bar-disabled-border-color);
+        background-color: var(--bar-track-disabled-background-color);
+        border: 1px solid var(--bar-track-disabled-border-color);
 
-        & > fill {
-            background-color: var(--bar-track-disabled-background-color);
-            border-color: var(--bar-track-disabled-border-color);
+        & > filled {
+            background-color: var(--bar-filled-disabled-background-color);
+            border-color: var(--bar-filled-disabled-border-color);
         }
 
         & > handle {
@@ -181,8 +186,8 @@ dial
         }
 
         & > tickmark,
-        & > tickmark.active {
-            background-color: var(--bar-disabled-border-color);
+        & > tickmark:highlighted {
+            background-color: var(--bar-track-disabled-border-color);
         }
     }
 }
@@ -210,29 +215,33 @@ scrollbar
 
     &.horizontal
     {
-        border-top: 1px solid var(--bar-active-border-color);
+        border-top: 1px solid var(--bar-track-active-border-color);
     }
 
     &.vertical
     {
-        border-left: 1px solid var(--bar-active-border-color);
+        border-left: 1px solid var(--bar-track-active-border-color);
     }
 
     & > handle {
-        background-color: var(--bar-active-background-color);
-        border: 1px solid var(--bar-active-border-color);
+        background-color: var(--bar-track-active-background-color);
+        border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--small-element-size);
 
-        &:hovered,
+        &:hovered
+        {
+            border-color: var(--bar-handle-active-highlight-border-color);
+        }
+
         &:pressed
         {
-            background-color: var(--bar-track-active-background-color);
-            border-color: var(--bar-track-active-border-color);
+            background-color: var(--bar-handle-active-highlight-color);
+            border-color: var(--bar-handle-active-highlight-border-color);
         }
 
         &:disabled {
-            background-color: var(--bar-disabled-background-color);
-            border: 1px solid var(--bar-disabled-border-color);
+            background-color: var(--bar-track-disabled-background-color);
+            border: 1px solid var(--bar-track-disabled-border-color);
         }
     }
 
@@ -289,12 +298,13 @@ dial {
     }
 }
 
-slider.changed {
-    & > fill {
+slider.changed,
+rangeslider.changed {
+    & > filled {
         background-color: var(--changed-background);
         border: 1px solid var(--changed-foreground);
     }
-    & > tickmark.active {
+    & > tickmark:highlighted {
         background-color: var(--changed-foreground);
     }
 }

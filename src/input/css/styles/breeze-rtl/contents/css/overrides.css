@@ -17,5 +17,5 @@ scrollview.vertical-scroll
 scrollbar.vertical
 {
     border-left: none;
-    border-right: 1px solid var(--bar-active-border-color);
+    border-right: 1px solid var(--bar-track-active-border-color);
 }

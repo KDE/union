@@ -11,7 +11,7 @@ Union.StyledRectangle {
 
     required property T.Control control
 
-    Union.Element.type: "Indicator"
+    Union.Element.type: "Track"
 
     Union.PositionedItem.minimumWidth: implicitWidth
     Union.PositionedItem.minimumHeight: implicitHeight

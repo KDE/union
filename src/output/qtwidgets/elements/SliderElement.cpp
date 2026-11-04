@@ -38,7 +38,6 @@ void SliderElement::update()
     if (m_isInverted) {
         m_isReverse = !m_isReverse;
     }
-    updateSubElementList();
     layout();
 }
 
@@ -63,8 +62,14 @@ void SliderElement::layout()
         m_tickProperties = queryProperties(m_tickElementList);
     }
 
+    auto highlightedTickElements = prepareElements(m_sliderOption, m_widget, {ElementString::TickMark});
+    if (!highlightedTickElements.isEmpty()) {
+        highlightedTickElements.last()->setStates(Union::Element::State::Highlighted);
+        m_highlightedTickProperties = queryProperties(highlightedTickElements);
+    }
+
     // Contents is the fill
-    m_contentElementList = prepareElements(m_sliderOption, m_widget, m_subElementList);
+    m_contentElementList = prepareElements(m_sliderOption, m_widget, {ElementString::Filled});
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
@@ -129,9 +134,10 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
             // colors
             const auto reverse(m_sliderOption->direction == Qt::RightToLeft);
             while (current <= m_sliderOption->maximum) {
-                // If tickmark is active, fetch the properties again with the active hint
-                tickmarkElements.last()->setHint(u"active"_s, current <= m_sliderOption->sliderPosition);
-                const auto props = queryProperties(tickmarkElements);
+                auto props = m_tickProperties;
+                if (current <= m_sliderOption->sliderPosition) {
+                    props = m_highlightedTickProperties;
+                }
 
                 // calculate positions and draw lines
                 const int position(m_style->sliderPositionFromValue(m_sliderOption->minimum, m_sliderOption->maximum, current, available, m_isInverted)
@@ -159,12 +165,6 @@ void SliderElement::drawBackground(QPainter *painter) const
 {
     auto grooveRect = subControlRect(QStyle::SC_SliderGroove);
     drawBackgroundRectangle(painter, grooveRect, m_elementProperties);
-}
-
-void SliderElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(u"Fill"_s);
 }
 
 QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
@@ -276,22 +276,23 @@ QList<QRectF> SliderElement::tickLines() const
         const auto tickSize = tickMarkSize();
         const QMarginsF tickMargins =
             safePropertyLookup(m_tickProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
-        const auto tickMarginsWidth = tickMargins.left() + tickMargins.right();
-        const auto tickMarginsHeight = tickMargins.top() + tickMargins.bottom();
+
+        const auto tickLeft = grooveRect.center().x() - tickSize.width() / 2;
+        const auto tickTop = grooveRect.center().y() - tickSize.height() / 2;
 
         if (m_isHorizontal) {
             if (tickPosition & QSlider::TicksAbove) {
-                tickLines.append(QRectF(rect.left() - 1, grooveRect.top() - tickMarginsHeight - tickSize.height(), tickSize.width(), tickSize.height()));
+                tickLines.append(QRectF(rect.left(), tickTop - tickMargins.bottom(), tickSize.width(), tickSize.height()));
             }
             if (tickPosition & QSlider::TicksBelow) {
-                tickLines.append(QRectF(rect.left() - 1, grooveRect.bottom() + tickMarginsHeight, tickSize.width(), tickSize.height()));
+                tickLines.append(QRectF(rect.left(), tickTop + tickMargins.top(), tickSize.width(), tickSize.height()));
             }
         } else {
             if (tickPosition & QSlider::TicksAbove) {
-                tickLines.append(QRectF(grooveRect.left() - tickMarginsWidth - tickSize.width(), rect.top() - 1, tickSize.width(), tickSize.height()));
+                tickLines.append(QRectF(tickLeft - tickMargins.right(), rect.top(), tickSize.width(), tickSize.height()));
             }
             if (tickPosition & QSlider::TicksBelow) {
-                tickLines.append(QRectF(grooveRect.right() + tickMarginsWidth, rect.top() - 1, tickSize.width(), tickSize.height()));
+                tickLines.append(QRectF(tickLeft + tickMargins.left(), rect.top(), tickSize.width(), tickSize.height()));
             }
         }
     }

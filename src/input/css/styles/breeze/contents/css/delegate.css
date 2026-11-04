@@ -108,7 +108,8 @@ itemviewitem
         height: var(--icon-size-large);
     }
 
-    & > indicator
+    & > indicator,
+    & > track
     {
         layout-alignment: content start center -1;
     }
@@ -257,7 +258,7 @@ radiodelegate
     }
 }
 
-switchdelegate[display="text-under-icon"] > indicator {
+switchdelegate[display="text-under-icon"] > track {
     layout-alignment: content start start -1;
     margin-right: -36px;
     margin-top: var(--small-spacing);

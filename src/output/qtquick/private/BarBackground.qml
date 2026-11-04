@@ -43,7 +43,7 @@ Item {
     }
 
     Union.StyledRectangle {
-        Union.Element.type: "Fill"
+        Union.Element.type: "Filled"
 
         x: root.horizontal ? root.visualStartPosition * (parent.width - root.handleWidth - (root.endPosition < 0 ? width : 0)) : track.x
         y: root.horizontal ? track.y : root.visualStartPosition * (parent.height - root.handleHeight)

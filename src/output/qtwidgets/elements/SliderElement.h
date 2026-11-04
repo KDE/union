@@ -45,7 +45,6 @@ public:
 
 private:
     Union::IdentifierList elementHints() const override;
-    void updateSubElementList() override;
     void drawBackground(QPainter *painter) const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionSlider *m_sliderOption = nullptr;
@@ -58,6 +57,7 @@ private:
 
     Union::ElementList m_tickElementList;
     Union::StylePropertyGroupPtr m_tickProperties = nullptr;
+    Union::StylePropertyGroupPtr m_highlightedTickProperties = nullptr;
     Union::ElementList m_indicatorElementList;
     Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
     Union::ElementList m_contentElementList;

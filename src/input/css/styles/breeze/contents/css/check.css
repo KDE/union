@@ -141,7 +141,7 @@ menuitem.exclusive
 switch,
 switchdelegate
 {
-    & > indicator
+    & > track
     {
         layout-alignment-container: content;
         layout-alignment-horizontal: start;
@@ -166,7 +166,7 @@ switchdelegate
 
     &:hovered
     {
-        & > indicator
+        & > track
         {
             border-color: var(--switch-indicator-active-highlight-border-color);
 
@@ -177,13 +177,13 @@ switchdelegate
         }
     }
 
-    &:checked > indicator
+    &:checked > track
     {
         background-color: var(--switch-indicator-active-highlight-color);
         border-color: var(--switch-indicator-active-highlight-border-color);
     }
 
-    &:visual-focus > indicator > handle
+    &:visual-focus > track > handle
     {
         outline: var(--focus-outline);
     }
@@ -192,7 +192,7 @@ switchdelegate
     {
         color: var(--switch-disabled-text-color);
 
-        & > indicator {
+        & > track {
             border-color: var(--switch-indicator-disabled-border-color);
             background-color: var(--switch-indicator-disabled-background-color);
 
@@ -209,7 +209,7 @@ radiodelegate.changed,
 checkbox.changed,
 checkdelegate.changed,
 switch.changed {
-    indicator {
+    track {
         background-color: var(--changed-background);
         border: 1px solid var(--changed-foreground);
     }
