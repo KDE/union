@@ -19,6 +19,7 @@ ButtonElement::ButtonElement(const QStyleOptionButton *option, const UnionStyle 
     : AbstractElement(option, style, widget)
     , m_buttonOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

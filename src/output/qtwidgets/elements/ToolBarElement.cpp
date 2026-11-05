@@ -20,6 +20,7 @@ ToolBarElement::ToolBarElement(const QStyleOption *option, const UnionStyle *sty
     : AbstractElement(option, style, widget)
     , m_toolBarOption(qstyleoption_cast<const QStyleOptionToolBar *>(option))
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

@@ -15,6 +15,7 @@ MenuBarItemElement::MenuBarItemElement(const QStyleOptionMenuItem *option, const
     : AbstractElement(option, style, widget)
     , m_menuItemOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

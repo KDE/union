@@ -17,6 +17,7 @@ DockWidgetElement::DockWidgetElement(const QStyleOptionDockWidget *option, const
     : AbstractElement(option, style, widget)
     , m_dockWidgetOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

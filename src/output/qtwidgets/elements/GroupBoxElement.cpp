@@ -18,6 +18,7 @@ GroupBoxElement::GroupBoxElement(const QStyleOptionGroupBox *option, const Union
     , m_groupBoxOption(option)
     , m_isCheckable(false)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 
