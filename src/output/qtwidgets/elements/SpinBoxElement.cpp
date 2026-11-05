@@ -90,6 +90,7 @@ QSizeF SpinBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
     const int frameWidth = m_style->pixelMetric(QStyle::PM_SpinBoxFrameWidth, m_spinBoxOption, m_widget);
     auto size = contentsSizeFromStyle;
     size += QSize(2 * frameWidth, 2 * frameWidth);
+    size.rwidth() += padding().left() + padding().right();
     if (m_hasButtons) {
         auto topButton = subControlRect(QStyle::SC_SpinBoxUp).size();
         auto bottomButton = subControlRect(QStyle::SC_SpinBoxDown).size();
@@ -109,7 +110,7 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
         return {};
     }
 
-    QRectF rect;
+    QRectF rect = m_styleOption->rect;
     // Based on QCommonStyle. We only draw the "constrained" look for now.
     const QRectF buttonRect = m_layoutMap[ElementString::Indicator].rect;
     QRectF bgRect = m_spinBoxOption->rect;
@@ -131,8 +132,7 @@ QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
         rect = noButtons ? QRectF() : QRectF(x, y + buttonRect.height(), buttonRect.width(), buttonRect.height());
     }
     if (subControl == QStyle::SC_SpinBoxEditField) {
-        const auto width = noButtons ? bgRect.width() : x;
-        rect = QRectF(0, 0, width + averageHPadding() + spacing(), bgRect.height());
+        rect = noButtons ? rect : rect.adjusted(0, 0, -buttonRect.width(), 0);
     }
     if (subControl == QStyle::SC_SpinBoxFrame) {
         rect = bgRect;
