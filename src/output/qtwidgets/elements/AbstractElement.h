@@ -31,6 +31,7 @@ class AbstractElement : public QObject
 public:
     enum class AbstractElementFlag {
         ContentsSizeIncludesAveragePadding = 1 << 0,
+        DrawMnemonics = 2 << 0,
     };
     Q_DECLARE_FLAGS(AbstractElementFlags, AbstractElementFlag)
 

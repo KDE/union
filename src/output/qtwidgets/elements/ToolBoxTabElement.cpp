@@ -17,6 +17,7 @@ ToolBoxTabElement::ToolBoxTabElement(const QStyleOptionToolBox *option, const Un
     : AbstractElement(option, style, widget)
     , m_toolBoxOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

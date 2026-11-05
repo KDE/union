@@ -17,6 +17,7 @@ RadioButtonElement::RadioButtonElement(const QStyleOptionButton *option, const U
     : AbstractElement(option, style, widget)
     , m_buttonOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

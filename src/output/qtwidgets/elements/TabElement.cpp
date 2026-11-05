@@ -20,6 +20,7 @@ TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, c
     , m_isStatic(false)
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

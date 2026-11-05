@@ -858,8 +858,20 @@ void UnionStyle::drawItemText(QPainter *painter,
                               const QString &text,
                               QPalette::ColorRole textRole) const
 {
-    flags |= m_showMnemonics ? Qt::TextShowMnemonic : Qt::TextHideMnemonic;
-    QCommonStyle::drawItemText(painter, rect, flags, pal, enabled, text, textRole);
+    // Only toggle mnemonics for items that have it explicitly flagged
+    auto flagControl = QFlags<Qt::TextFlag>(flags);
+    if (flagControl.testFlag(Qt::TextHideMnemonic)) {
+        if (m_showMnemonics) {
+            flagControl.setFlag(Qt::TextHideMnemonic, false);
+            flagControl.setFlag(Qt::TextShowMnemonic);
+        }
+    } else if (flagControl.testFlag(Qt::TextShowMnemonic)) {
+        if (!m_showMnemonics) {
+            flagControl.setFlag(Qt::TextShowMnemonic, false);
+            flagControl.setFlag(Qt::TextHideMnemonic);
+        }
+    }
+    QCommonStyle::drawItemText(painter, rect, flagControl, pal, enabled, text, textRole);
 }
 
 void UnionStyle::setMnemonics(bool enabled)

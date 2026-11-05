@@ -329,6 +329,9 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
             }
         }
         textFlags = textFlagsFromProperties(properties);
+        if (m_flags.testFlag(AbstractElementFlag::DrawMnemonics)) {
+            textFlags |= Qt::TextHideMnemonic;
+        }
         painter->save();
         painter->setPen(textColor);
         painter->setFont(font);

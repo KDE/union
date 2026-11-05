@@ -17,6 +17,7 @@ CheckBoxElement::CheckBoxElement(const QStyleOptionButton *option, const UnionSt
     : AbstractElement(option, style, widget)
     , m_buttonOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

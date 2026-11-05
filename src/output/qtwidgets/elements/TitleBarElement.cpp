@@ -16,6 +16,7 @@ TitleBarElement::TitleBarElement(const QStyleOptionTitleBar *option, const Union
     : AbstractElement(option, style, widget)
     , m_titleBarOption(option)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

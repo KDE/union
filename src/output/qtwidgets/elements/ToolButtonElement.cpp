@@ -20,6 +20,7 @@ ToolButtonElement::ToolButtonElement(const QStyleOptionToolButton *option, const
     , m_hasIcon(false)
     , m_hasText(false)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 

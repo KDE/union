@@ -18,6 +18,7 @@ ProgressBarElement::ProgressBarElement(const QStyleOptionProgressBar *option, co
     , m_progressBarOption(option)
     , m_isHorizontal(true)
 {
+    setFlag(AbstractElementFlag::DrawMnemonics);
     update();
 }
 
