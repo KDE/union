@@ -124,7 +124,7 @@ private:
         for (const auto &dir : pluginDirs) {
             const auto path = std::filesystem::path(dir.toStdString()) / "union";
 
-            if (!std::filesystem::exists(path)) {
+            if (!std::filesystem::is_directory(path)) {
                 continue;
             }
 
