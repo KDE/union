@@ -84,9 +84,7 @@ bool ComboBoxElement::isEditable() const
 void ComboBoxElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (hasText() || m_editable) {
-        m_subElementList.append(ElementString::Text);
-    }
+    m_subElementList.append(ElementString::Text);
     if (hasIcon()) {
         m_subElementList.append(ElementString::Icon);
     }
