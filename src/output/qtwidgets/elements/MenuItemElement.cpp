@@ -98,7 +98,9 @@ void MenuItemElement::updateSubElementList()
         if (m_hasCheckableItems) {
             m_subElementList.append(ElementString::Indicator);
         }
-        if (hasIcon()) {
+        // We only have maxIconWidth if there are any icons in the menu
+        // Checking for this allows us to reserve for the icon space
+        if ((m_menuItemOption && m_menuItemOption->maxIconWidth > 0) || hasIcon()) {
             m_subElementList.append(ElementString::Icon);
         }
         if (hasText()) {
