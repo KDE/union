@@ -11,11 +11,16 @@ Item {
 
     required property T.Control control
 
-
     Union.PositionedItem.positionChildren: true
     Union.Mnemonics.enabled: root.control.enabled && root.control.visible
     Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
     Union.Mnemonics.label: root.control.text ?? ""
+
+    readonly property real iconWidth: iconItem.Union.Style.properties.layout.width ?? 0
+    readonly property real iconHeight: iconItem.Union.Style.properties.layout.width ?? 0
+    // QTBUG-151707: updating icon.width/height can freeze the inherited color.
+    // Read the Action color directly until we require a Qt version with the fix
+    readonly property color iconColor: control.action?.icon.color.a > 0 ? control.action.icon.color : iconItem.Union.Style.properties.display.color ?? "transparent"
 
     Union.Icon {
         id: iconItem

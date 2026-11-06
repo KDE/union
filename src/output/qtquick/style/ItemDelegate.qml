@@ -38,6 +38,8 @@ T.ItemDelegate {
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
+    Union.Positioner.positionItems: [contentItem]
+
     hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitContentWidth + leftPadding + rightPadding, Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth))
@@ -58,12 +60,10 @@ T.ItemDelegate {
     font: Union.Style.properties.text.font.qFont
 
     icon {
-        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
     }
-
-    Union.Positioner.positionItems: [contentItem]
 
     contentItem: P.DefaultContentItem { control: control }
 

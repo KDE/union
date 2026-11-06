@@ -77,9 +77,9 @@ T.MenuItem {
     font: Union.Style.properties.text.font.qFont
 
     icon {
-        color: control.action?.icon.color.a > 0 ? control.action.icon.color : Union.Style.properties.icon.color
-        width: Union.Style.properties.icon.width
-        height: Union.Style.properties.icon.height
+        width: (contentItem as P.DefaultContentItem)?.iconWidth ?? 0.0
+        height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
+        color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
     }
 
     implicitTextPadding: {
