@@ -15,7 +15,6 @@
 
 #include <properties/TextPropertyGroup.h>
 
-#include "AlignmentPropertyGroupQuick.h"
 #include "FontPropertyGroupQuick.h"
 // clang-format on
 
@@ -46,29 +45,12 @@ public:
     void refreshColors();
 
     /*!
-     * \qmlproperty AlignmentPropertyGroupQuick TextPropertyGroupQuick::alignment
-     *
-     * Exposes TextPropertyGroup::AlignmentPropertyGroup to QML.
-     */
-    Q_PROPERTY(Union::Quick::AlignmentPropertyGroupQuick *alignment READ alignment CONSTANT)
-    AlignmentPropertyGroupQuick *alignment() const;
-
-    /*!
      * \qmlproperty FontPropertyGroupQuick TextPropertyGroupQuick::font
      *
      * Exposes TextPropertyGroup::FontPropertyGroup to QML.
      */
     Q_PROPERTY(Union::Quick::FontPropertyGroupQuick *font READ font CONSTANT)
     FontPropertyGroupQuick *font() const;
-
-    /*!
-     * \qmlproperty Union::Color TextPropertyGroupQuick::color
-     *
-     * Exposes TextPropertyGroup::color to QML.
-     */
-    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
-    QJSValue color() const;
-    Q_SIGNAL void colorChanged();
 
     /*!
      * \qmlproperty Union::Properties::HorizontalTextAlignment TextPropertyGroupQuick::horizontalAlignment
@@ -108,7 +90,6 @@ public:
 
 private:
     QuickStyle *m_style = nullptr;
-    std::unique_ptr<AlignmentPropertyGroupQuick> m_alignment;
     std::unique_ptr<FontPropertyGroupQuick> m_font;
 
     Union::Properties::TextPropertyGroup *m_state = nullptr;

@@ -15,12 +15,8 @@ using namespace Qt::StringLiterals;
 class Union::Properties::IconPropertyGroupPrivate
 {
 public:
-    std::unique_ptr<AlignmentPropertyGroup> alignment;
-    std::optional<qreal> width;
-    std::optional<qreal> height;
     std::optional<QString> name;
     std::optional<QUrl> source;
-    std::optional<Union::Color> color;
 };
 
 IconPropertyGroup::IconPropertyGroup()
@@ -31,13 +27,8 @@ IconPropertyGroup::IconPropertyGroup()
 IconPropertyGroup::IconPropertyGroup(const IconPropertyGroup &other)
     : d(std::make_unique<IconPropertyGroupPrivate>())
 {
-    d->alignment = std::make_unique<AlignmentPropertyGroup>();
-    *(d->alignment) = *(other.d->alignment);
-    d->width = other.d->width;
-    d->height = other.d->height;
     d->name = other.d->name;
     d->source = other.d->source;
-    d->color = other.d->color;
 }
 
 IconPropertyGroup::IconPropertyGroup(IconPropertyGroup &&other)
@@ -50,12 +41,8 @@ IconPropertyGroup::~IconPropertyGroup() = default;
 IconPropertyGroup &IconPropertyGroup::operator=(const IconPropertyGroup &other)
 {
     if (this != &other) {
-        *(d->alignment) = *(other.d->alignment);
-        d->width = other.d->width;
-        d->height = other.d->height;
         d->name = other.d->name;
         d->source = other.d->source;
-        d->color = other.d->color;
     }
     return *this;
 }
@@ -64,44 +51,6 @@ IconPropertyGroup &IconPropertyGroup::operator=(IconPropertyGroup &&other)
 {
     std::swap(d, other.d);
     return *this;
-}
-
-AlignmentPropertyGroup *IconPropertyGroup::alignment() const
-{
-    return d->alignment.get();
-}
-
-void IconPropertyGroup::setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue)
-{
-    d->alignment = std::move(newValue);
-}
-
-std::optional<qreal> IconPropertyGroup::width() const
-{
-    return d->width;
-}
-
-void IconPropertyGroup::setWidth(const std::optional<qreal> &newValue)
-{
-    if (newValue == d->width) {
-        return;
-    }
-
-    d->width = newValue;
-}
-
-std::optional<qreal> IconPropertyGroup::height() const
-{
-    return d->height;
-}
-
-void IconPropertyGroup::setHeight(const std::optional<qreal> &newValue)
-{
-    if (newValue == d->height) {
-        return;
-    }
-
-    d->height = newValue;
 }
 
 std::optional<QString> IconPropertyGroup::name() const
@@ -132,38 +81,12 @@ void IconPropertyGroup::setSource(const std::optional<QUrl> &newValue)
     d->source = newValue;
 }
 
-std::optional<Union::Color> IconPropertyGroup::color() const
-{
-    return d->color;
-}
-
-void IconPropertyGroup::setColor(const std::optional<Union::Color> &newValue)
-{
-    if (newValue == d->color) {
-        return;
-    }
-
-    d->color = newValue;
-}
-
 bool IconPropertyGroup::hasAnyValue() const
 {
-    if (d->alignment && d->alignment->hasAnyValue()) {
-        return true;
-    }
-    if (d->width.has_value()) {
-        return true;
-    }
-    if (d->height.has_value()) {
-        return true;
-    }
     if (d->name.has_value()) {
         return true;
     }
     if (d->source.has_value()) {
-        return true;
-    }
-    if (d->color.has_value()) {
         return true;
     }
     return false;
@@ -175,22 +98,10 @@ bool IconPropertyGroup::isEmpty() const
         return true;
     }
 
-    if (d->alignment && !d->alignment->isEmpty()) {
-        return false;
-    }
-    if (d->width.has_value() && d->width.value() != emptyValue<qreal>()) {
-        return false;
-    }
-    if (d->height.has_value() && d->height.value() != emptyValue<qreal>()) {
-        return false;
-    }
     if (d->name.has_value() && d->name.value() != emptyValue<QString>()) {
         return false;
     }
     if (d->source.has_value() && d->source.value() != emptyValue<QUrl>()) {
-        return false;
-    }
-    if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
         return false;
     }
 
@@ -228,25 +139,7 @@ QString IconPropertyGroup::toString(int indentation, ToStringFlags flags) const
         out << maybeNewLine;
     }
 
-    out << indent(indentation, multiline, true) << "alignment: ";
-    if (d->alignment) {
-        out << d->alignment->toString(indentation + 2, flags);
-    } else {
-        out << empty << maybeNewLine;
-    }
-    out << indent(indentation, multiline, false) << "width: ";
-    if (d->width) {
-        out << d->width.value() << maybeNewLine;
-    } else {
-        out << empty << maybeNewLine;
-    }
-    out << indent(indentation, multiline, false) << "height: ";
-    if (d->height) {
-        out << d->height.value() << maybeNewLine;
-    } else {
-        out << empty << maybeNewLine;
-    }
-    out << indent(indentation, multiline, false) << "name: ";
+    out << indent(indentation, multiline, true) << "name: ";
     if (d->name) {
         out << d->name.value() << maybeNewLine;
     } else {
@@ -255,12 +148,6 @@ QString IconPropertyGroup::toString(int indentation, ToStringFlags flags) const
     out << indent(indentation, multiline, false) << "source: ";
     if (d->source) {
         out << d->source->toString() << maybeNewLine;
-    } else {
-        out << empty << maybeNewLine;
-    }
-    out << indent(indentation, multiline, false) << "color: ";
-    if (d->color) {
-        out << d->color->toString() << maybeNewLine;
     } else {
         out << empty << maybeNewLine;
     }
@@ -281,63 +168,28 @@ void IconPropertyGroup::resolveProperties(const IconPropertyGroup *source, IconP
         return;
     }
 
-    if (source->d->alignment) {
-        if (!destination->d->alignment) {
-            destination->d->alignment = std::make_unique<AlignmentPropertyGroup>();
-        }
-        AlignmentPropertyGroup::resolveProperties(source->d->alignment.get(), destination->d->alignment.get());
-    }
-    if (!destination->d->width.has_value()) {
-        destination->d->width = source->d->width;
-    }
-    if (!destination->d->height.has_value()) {
-        destination->d->height = source->d->height;
-    }
     if (!destination->d->name.has_value()) {
         destination->d->name = source->d->name;
     }
     if (!destination->d->source.has_value()) {
         destination->d->source = source->d->source;
     }
-    if (!destination->d->color.has_value()) {
-        destination->d->color = source->d->color;
-    }
 }
 
 std::unique_ptr<IconPropertyGroup> IconPropertyGroup::empty()
 {
     auto result = std::make_unique<IconPropertyGroup>();
-    result->d->alignment = AlignmentPropertyGroup::empty();
-    result->d->width = emptyValue<qreal>();
-    result->d->height = emptyValue<qreal>();
     result->d->name = emptyValue<QString>();
     result->d->source = emptyValue<QUrl>();
-    result->d->color = emptyValue<Union::Color>();
     return result;
 }
 
 bool Union::Properties::operator==(const IconPropertyGroup &left, const IconPropertyGroup &right)
 {
-    if (left.alignment() && right.alignment()) {
-        if (*(left.alignment()) != *(right.alignment())) {
-            return false;
-        }
-    } else if (left.alignment() != right.alignment()) {
-        return false;
-    }
-    if (left.width() != right.width()) {
-        return false;
-    }
-    if (left.height() != right.height()) {
-        return false;
-    }
     if (left.name() != right.name()) {
         return false;
     }
     if (left.source() != right.source()) {
-        return false;
-    }
-    if (left.color() != right.color()) {
         return false;
     }
     return true;
@@ -356,43 +208,13 @@ QDebug operator<<(QDebug debug, Union::Properties::IconPropertyGroup *type)
 
 QDataStream &operator<<(QDataStream &stream, const Union::Properties::IconPropertyGroup *type)
 {
-    {
-        auto data = type->alignment();
-        stream << bool(data);
-        if (data) {
-            stream << data;
-        }
-    }
-    stream << type->width();
-    stream << type->height();
     stream << type->name();
     stream << type->source();
-    stream << type->color();
     return stream;
 }
 
 QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::IconPropertyGroup> &type)
 {
-    {
-        bool hasData;
-        stream >> hasData;
-
-        if (hasData) {
-            auto data = std::make_unique<AlignmentPropertyGroup>();
-            stream >> data;
-            type->setAlignment(std::move(data));
-        }
-    }
-    {
-        std::optional<qreal> data;
-        stream >> data;
-        type->setWidth(data);
-    }
-    {
-        std::optional<qreal> data;
-        stream >> data;
-        type->setHeight(data);
-    }
     {
         std::optional<QString> data;
         stream >> data;
@@ -402,11 +224,6 @@ QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::
         std::optional<QUrl> data;
         stream >> data;
         type->setSource(data);
-    }
-    {
-        std::optional<Union::Color> data;
-        stream >> data;
-        type->setColor(data);
     }
 
     return stream;
