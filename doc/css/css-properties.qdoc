@@ -35,6 +35,11 @@ to hidden also removes the element's box from any layout. Effectively
 The opacity of the element.
 
 
+\section3 color (<color>)
+
+The color of the element.
+
+
 
 \section2 layout
 
@@ -287,7 +292,7 @@ The amount the font used for an element is stretched.
 The capitalization style of the font used for an element.
 
 
-\section3 text-decoration (none | (underline | overline | line-through)+))
+\section3 text-decoration (none | ((underline | overline | line-through) (underline | overline | line-through) (underline | overline | line-through)) | ((underline | overline | line-through) (underline | overline | line-through)) | (underline | overline | line-through))
 
 The decorations enabled for the font used for an element.
 
@@ -306,6 +311,24 @@ The spacing between words of the font used for an element.
 \section3 text-color (<color>)
 
 The color of the text of an element.
+
+
+\section3 text-align (start | center | end | justify)
+
+The horizontal alignment of the text of an element. This is distinct from
+layout alignment in that layout alignment determines the alignment of an
+element's box within an item, but the text alignment determines how the
+text aligns within that box.
+
+
+
+\section3 vertical-align (top | middle | bottom)
+
+The vertical alignment of the text of an element. This is distinct from
+layout alignment in that layout alignment determines the alignment of an
+element's box within an item, but the text alignment determines how the
+text aligns within that box.
+
 
 
 \section3 text-wrap-mode (no-wrap | word-wrap | manual-wrap | wrap-anywhere | wrap-at-word-boundary-or-anywhere | wrap)

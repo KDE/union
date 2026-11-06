@@ -15,6 +15,10 @@
     syntax: "<number>";
 }
 
+@property color {
+    syntax: "<color>";
+}
+
 @property layout-alignment {
     syntax: "(item | content | background) (start | center | end | fill) (start | center | end | fill | stack-center | stack-fill) <integer>";
 }
@@ -169,6 +173,14 @@
 
 @property text-color {
     syntax: "<color>";
+}
+
+@property text-align {
+    syntax: "start | center | end | justify";
+}
+
+@property vertical-align {
+    syntax: "top | middle | bottom";
 }
 
 @property text-wrap-mode {

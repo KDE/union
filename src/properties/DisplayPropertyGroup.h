@@ -11,6 +11,7 @@
 #include <QDebug>
 
 
+#include "../Color.h"
 
 #include "PropertiesTypes.h"
 
@@ -111,6 +112,18 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setOpacity(const std::optional<qreal> &newValue);
+
+    /*!
+        The color of the element.
+     */
+    std::optional<Union::Color> color() const;
+
+    /*!
+     * Set the value of color.
+     *
+     * \a newValue The new value or \c{std::nullopt} to unset the value.
+     */
+    void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
      * Returns if this property group has any value set.

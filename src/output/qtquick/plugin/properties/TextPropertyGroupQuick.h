@@ -71,6 +71,24 @@ public:
     Q_SIGNAL void colorChanged();
 
     /*!
+     * \qmlproperty Union::Properties::HorizontalTextAlignment TextPropertyGroupQuick::horizontalAlignment
+     *
+     * Exposes TextPropertyGroup::horizontalAlignment to QML.
+     */
+    Q_PROPERTY(QJSValue horizontalAlignment READ horizontalAlignment NOTIFY horizontalAlignmentChanged)
+    QJSValue horizontalAlignment() const;
+    Q_SIGNAL void horizontalAlignmentChanged();
+
+    /*!
+     * \qmlproperty Union::Properties::VerticalTextAlignment TextPropertyGroupQuick::verticalAlignment
+     *
+     * Exposes TextPropertyGroup::verticalAlignment to QML.
+     */
+    Q_PROPERTY(QJSValue verticalAlignment READ verticalAlignment NOTIFY verticalAlignmentChanged)
+    QJSValue verticalAlignment() const;
+    Q_SIGNAL void verticalAlignmentChanged();
+
+    /*!
      * \qmlproperty Union::Properties::TextWrapMode TextPropertyGroupQuick::wrapMode
      *
      * Exposes TextPropertyGroup::wrapMode to QML.
