@@ -114,8 +114,6 @@ T.TreeViewDelegate {
 
         TextField {
             id: textField
-            horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-            verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
             // Remove the TextField background, we want to use the Control background.
             background: Item {}
             width: control.contentItem.width

@@ -90,9 +90,10 @@ T.ComboBox {
         readOnly: control.down
         inputMethodHints: control.inputMethodHints
         validator: control.validator
-        font: control.font
+        font: Union.Style.properties.text.font.qFont
 
-        horizontalAlignment: Qt.AlignLeft
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Text.AlignLeft
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter
 
         selectByMouse: control.selectTextByMouse
         selectionColor: control.palette.highlight

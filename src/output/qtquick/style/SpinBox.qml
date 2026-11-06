@@ -67,8 +67,8 @@ T.SpinBox {
         font: control.font
         color: Union.Style.properties.text.color ?? control.palette.text
 
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
+        verticalAlignment: Unoin.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
 
         readOnly: !control.editable
         validator: control.validator

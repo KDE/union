@@ -52,8 +52,8 @@ T.TextArea {
     selectionColor: control.palette.highlight
     selectedTextColor: control.palette.highlightedText
 
-    horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-    verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+    horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
+    verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignTop
 
     P.PlaceholderText {
         id: placeholder

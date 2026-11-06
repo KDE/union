@@ -75,8 +75,8 @@ T.SearchField {
         color: control.palette.text
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
-        horizontalAlignment: Union.Alignment.toQtHorizontal(control.Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(control.Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
 
         P.PlaceholderText {
             control: parent

@@ -38,18 +38,7 @@ Item {
 
         visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0
 
-        horizontalAlignment: {
-            // TODO: Temporary fix for horizontal text alignment, until we have a proper text alignment
-            // property in the data model.
-            if (root.control.Union.Style.properties.text.alignment.vertical == Union.Alignment.StackCenter) {
-                return Qt.AlignCenter
-            }
-
-            if (root.control.Union.Style.properties.text.alignment.vertical == Union.Alignment.StackFill) {
-                return Qt.AlignJustify
-            }
-
-            return Qt.AlignLeft
-        }
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Text.AlignLeft
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter
     }
 }
