@@ -4,7 +4,6 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "UnionPainter.h"
 #include <ElementCache.h>
 #include <QIcon>
 #include <QObject>

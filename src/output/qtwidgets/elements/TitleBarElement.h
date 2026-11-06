@@ -4,13 +4,11 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "UnionPainter.h"
+#include "ElementCache.h"
 #include <QIcon>
 #include <QObject>
 #include <QStyleOption>
 #include <qstyleoption.h>
-
-#include "ElementCache.h"
 
 class UnionStyle;
 class TitleBarElement;

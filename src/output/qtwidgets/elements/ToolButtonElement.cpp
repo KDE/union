@@ -3,6 +3,7 @@
 
 #include "ToolButtonElement.h"
 #include "SharedNames.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include <QApplication>
 #include <QDebug>
@@ -42,6 +43,7 @@ void ToolButtonElement::update()
     setText(m_toolButtonOption->text);
     updateSubElementList();
     layout();
+    updateGraphicsEffect(m_toolButtonOption->rect);
 }
 
 void ToolButtonElement::layout()
@@ -180,9 +182,9 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
     auto rect = subControlRect(QStyle::SC_ToolButtonMenu);
     auto indicatorRect = m_indicatorMap[ElementString::Indicator].rect;
     indicatorRect.moveCenter(rect.center());
-    UnionPainter h(painter, m_indicatorProperties, m_styleOption, m_widget);
-    h.setRect(rect);
-    h.draw();
+    UnionPainter unionPainter(painter, m_indicatorProperties);
+    unionPainter.setRect(rect);
+    unionPainter.draw();
     drawIconAtRect(painter, m_indicator, indicatorRect, m_indicatorProperties);
 }
 

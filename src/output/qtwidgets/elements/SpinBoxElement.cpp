@@ -8,7 +8,6 @@
 #include <QDebug>
 #include <QPainter>
 #include <QStyle>
-#include <qstyle.h>
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

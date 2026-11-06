@@ -3,6 +3,7 @@
 
 #include "SliderElement.h"
 #include "SharedNames.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include "elements/AbstractElement.h"
 #include <QApplication>
@@ -39,6 +40,7 @@ void SliderElement::update()
         m_isReverse = !m_isReverse;
     }
     layout();
+    updateGraphicsEffect(subControlRect(QStyle::SC_SliderHandle));
 }
 
 void SliderElement::layout()
@@ -113,9 +115,9 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
             progress.setHeight(progressHeight);
         }
     }
-    UnionPainter b(painter, m_contentProperties, m_styleOption, m_widget);
-    b.setRect(progress);
-    b.draw();
+    UnionPainter unionPainter(painter, m_contentProperties);
+    unionPainter.setRect(progress);
+    unionPainter.draw();
 
     // Tickmark drawing is copied from breeze
     if (m_sliderOption && m_tickProperties && m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
@@ -151,9 +153,9 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
                     } else {
                         translatedRect = tickLine.translated(0, position);
                     }
-                    UnionPainter b(painter, props, m_styleOption, m_widget);
-                    b.setRect(translatedRect);
-                    b.draw();
+                    UnionPainter unionPainter(painter, props);
+                    unionPainter.setRect(translatedRect);
+                    unionPainter.draw();
                 }
 
                 // go to next position
@@ -163,16 +165,16 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
     }
 
     // Handle
-    UnionPainter h(painter, m_indicatorProperties, m_styleOption, m_widget);
-    h.setRect(subControlRect(QStyle::SC_SliderHandle));
-    h.draw();
+    UnionPainter handlePainter(painter, m_indicatorProperties);
+    handlePainter.setRect(subControlRect(QStyle::SC_SliderHandle));
+    handlePainter.draw();
 }
 
 void SliderElement::drawBackground(QPainter *painter) const
 {
-    UnionPainter h(painter, m_elementProperties, m_styleOption, m_widget);
-    h.setRect(subControlRect(QStyle::SC_SliderGroove));
-    h.draw();
+    UnionPainter unionPainter(painter, m_elementProperties);
+    unionPainter.setRect(subControlRect(QStyle::SC_SliderGroove));
+    unionPainter.draw();
 }
 
 QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const

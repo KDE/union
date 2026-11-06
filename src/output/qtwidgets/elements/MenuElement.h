@@ -4,11 +4,10 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include <QObject>
-#include <QStyleOption>
-
 #include "ElementCache.h"
 #include "ShadowRenderer.h"
+#include <QObject>
+#include <QStyleOption>
 
 class UnionStyle;
 class MenuElement;

@@ -4,10 +4,9 @@
 #pragma once
 
 #include "AbstractElement.h"
+#include "ElementCache.h"
 #include <QObject>
 #include <QStyleOption>
-
-#include "ElementCache.h"
 
 class UnionStyle;
 class FocusElement;

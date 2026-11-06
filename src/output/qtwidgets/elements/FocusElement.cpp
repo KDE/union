@@ -27,6 +27,7 @@ FocusElement::~FocusElement()
 void FocusElement::update()
 {
     layout();
+    updateGraphicsEffect(m_styleOption->rect);
 }
 
 void FocusElement::draw(QPainter *painter, DrawEnums enums) const

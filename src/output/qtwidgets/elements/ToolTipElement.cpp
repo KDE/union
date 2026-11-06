@@ -28,6 +28,7 @@ ToolTipElement::~ToolTipElement()
 void ToolTipElement::update()
 {
     layout();
+    updateGraphicsEffect(m_frameOption->rect);
 }
 
 void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const

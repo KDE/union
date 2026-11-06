@@ -19,19 +19,31 @@
 using namespace Union::Properties;
 static Union::LruImageCache imageCache;
 
-UnionPainter::UnionPainter(QPainter *painter, const Union::StylePropertyGroupPtr &properties, const QStyleOption *option, const QWidget *widget)
+template<typename F>
+Borders borderFromProperties(Union::StylePropertyGroupPtr properties, F getter)
+{
+    using BorderType = std::remove_pointer_t<std::invoke_result_t<F, Union::Properties::StylePropertyGroup *>>;
+    Borders borders;
+    borders.top.size = safePropertyLookup(properties, 0.0, getter, &BorderType::top, &Union::Properties::LinePropertyGroup::size);
+    borders.left.size = safePropertyLookup(properties, 0.0, getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
+    borders.bottom.size = safePropertyLookup(properties, 0.0, getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
+    borders.right.size = safePropertyLookup(properties, 0.0, getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
+    borders.top.color =
+        safePropertyLookup(properties, Union::Color(), getter, &BorderType::top, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.left.color =
+        safePropertyLookup(properties, Union::Color(), getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.bottom.color =
+        safePropertyLookup(properties, Union::Color(), getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.right.color =
+        safePropertyLookup(properties, Union::Color(), getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    return borders;
+}
+
+UnionPainter::UnionPainter(QPainter *painter, const Union::StylePropertyGroupPtr &properties)
     : QObject(nullptr)
     , m_painter(painter)
     , m_properties(properties)
-    , m_option(option)
-    , m_widget(widget)
-    , m_drawParts(Parts::All)
-    , m_drawRect()
-    , m_overrideColor(QColor())
 {
-    if (option) {
-        m_drawRect = option->rect;
-    }
 }
 
 UnionPainter::~UnionPainter()
@@ -64,9 +76,9 @@ void UnionPainter::draw()
     bool allBorderColorsEqual = false;
     Borders borders;
     if (m_drawParts == Parts::Outline) {
-        borders = borderFromProperties(&StylePropertyGroup::outline);
+        borders = borderFromProperties(m_properties, &StylePropertyGroup::outline);
     } else {
-        borders = borderFromProperties(&StylePropertyGroup::border);
+        borders = borderFromProperties(m_properties, &StylePropertyGroup::border);
     }
 
     borders.cornerRadii = safePropertyLookup(m_properties, CornersPropertyGroup::CornerRadii{}, &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
@@ -251,6 +263,7 @@ void UnionPainter::setOverrideBackgroundColor(const QColor &color)
 {
     m_overrideColor = color;
 }
+
 void UnionPainter::setRect(const QRectF &rect)
 {
     m_drawRect = rect;

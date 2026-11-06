@@ -3,6 +3,7 @@
 
 #include "ItemViewElement.h"
 #include "SharedNames.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include <QApplication>
 #include <QDebug>
@@ -192,10 +193,11 @@ void ItemViewElement::drawBackground(QPainter *painter) const
             overrideColor = m_viewItemOption->backgroundBrush.color();
             parts = UnionPainter::Parts::PanelOnly;
         }
-        UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
-        b.setOverrideBackgroundColor(overrideColor);
-        b.setParts(parts);
-        b.draw();
+        UnionPainter unionPainter(painter, m_elementProperties);
+        unionPainter.setOverrideBackgroundColor(overrideColor);
+        unionPainter.setParts(parts);
+        unionPainter.setRect(m_viewItemOption->rect);
+        unionPainter.draw();
     }
     painter->restore();
 }

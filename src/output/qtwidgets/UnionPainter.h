@@ -9,6 +9,18 @@
 
 class QPainter;
 
+struct Line {
+    qreal size = 0.0;
+    QColor color;
+};
+struct Borders {
+    Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii;
+    Line top;
+    Line left;
+    Line bottom;
+    Line right;
+};
+
 class UnionPainter : public QObject
 {
     Q_OBJECT
@@ -21,7 +33,7 @@ public:
     };
     Q_ENUM(Parts)
 
-    UnionPainter(QPainter *painter, const Union::StylePropertyGroupPtr &properties, const QStyleOption *option = nullptr, const QWidget *widget = nullptr);
+    UnionPainter(QPainter *painter, const Union::StylePropertyGroupPtr &properties);
     ~UnionPainter() override;
 
     /*!
@@ -50,18 +62,6 @@ private:
         BottomRight,
     };
 
-    struct Line {
-        qreal size = 0.0;
-        QColor color;
-    };
-    struct Borders {
-        Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii;
-        Line top;
-        Line left;
-        Line bottom;
-        Line right;
-    };
-
     /*!
      * \brief Constrains the corner radii to not go over the rectangle's size or under zero.
      */
@@ -80,35 +80,8 @@ private:
 
     QPainter *m_painter;
     Union::StylePropertyGroupPtr m_properties;
-    const QStyleOption *m_option;
-    const QWidget *m_widget;
 
-    Parts m_drawParts;
+    Parts m_drawParts = Parts::All;
     QRectF m_drawRect;
     QColor m_overrideColor;
-
-    template<typename F>
-    Borders borderFromProperties(F getter)
-    {
-        using BorderType = std::remove_pointer_t<std::invoke_result_t<F, Union::Properties::StylePropertyGroup *>>;
-        Borders borders;
-        borders.top.size = safePropertyLookup(m_properties, 0.0, getter, &BorderType::top, &Union::Properties::LinePropertyGroup::size);
-        borders.left.size = safePropertyLookup(m_properties, 0.0, getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-        borders.bottom.size =
-            safePropertyLookup(m_properties, 0.0, getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-        borders.right.size = safePropertyLookup(m_properties, 0.0, getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-        borders.top.color =
-            safePropertyLookup(m_properties, Union::Color(), getter, &BorderType::top, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color)
-                .toQColor();
-        borders.left.color =
-            safePropertyLookup(m_properties, Union::Color(), getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color)
-                .toQColor();
-        borders.bottom.color =
-            safePropertyLookup(m_properties, Union::Color(), getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color)
-                .toQColor();
-        borders.right.color =
-            safePropertyLookup(m_properties, Union::Color(), getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color)
-                .toQColor();
-        return borders;
-    }
 };

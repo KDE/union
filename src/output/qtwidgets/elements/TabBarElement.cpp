@@ -48,9 +48,10 @@ void TabBarElement::drawBackground(QPainter *painter) const
     if (!m_tabBarOption) {
         return;
     }
-    UnionPainter h(painter, m_elementProperties, m_tabBarOption, m_widget);
-    h.setParts(UnionPainter::Parts::FrameOnly);
-    h.draw();
+    UnionPainter unionPainter(painter, m_elementProperties);
+    unionPainter.setParts(UnionPainter::Parts::FrameOnly);
+    unionPainter.setRect(m_styleOption->rect);
+    unionPainter.draw();
 }
 
 qreal TabBarElement::scrollButtonWidth() const

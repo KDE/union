@@ -4,6 +4,7 @@
 #include "ScrollBarElement.h"
 #include "SharedNames.h"
 #include "StyleUtils.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include "elements/AbstractElement.h"
 #include <QApplication>
@@ -80,9 +81,9 @@ void ScrollBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ScrollBarElement::drawBackground(QPainter *painter) const
 {
-    UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
-    b.setRect(subControlRect(QStyle::SC_ScrollBarGroove));
-    b.draw();
+    UnionPainter unionPainter(painter, m_elementProperties);
+    unionPainter.setRect(subControlRect(QStyle::SC_ScrollBarGroove));
+    unionPainter.draw();
 }
 
 void ScrollBarElement::drawIndicator(QPainter *painter) const
@@ -96,8 +97,9 @@ void ScrollBarElement::drawIndicator(QPainter *painter) const
             if (!(m_scrollBarOption->activeSubControls & QStyle::SC_ScrollBarSlider)) {
                 subopt.state &= ~(QStyle::State_Sunken | QStyle::State_MouseOver);
             }
-            UnionPainter b(painter, m_indicatorProperties, &subopt, m_widget);
-            b.draw();
+            UnionPainter unionPainter(painter, m_indicatorProperties);
+            unionPainter.setRect(subopt.rect);
+            unionPainter.draw();
             if (m_scrollBarOption->state & QStyle::State_HasFocus) {
                 m_style->drawPrimitive(QStyle::PE_FrameFocusRect, &subopt, painter);
             }

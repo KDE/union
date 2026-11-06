@@ -44,6 +44,7 @@ void ButtonElement::update()
 
     updateSubElementList();
     layout();
+    updateGraphicsEffect(m_styleOption->rect);
 }
 
 void ButtonElement::draw(QPainter *painter, DrawEnums enums) const

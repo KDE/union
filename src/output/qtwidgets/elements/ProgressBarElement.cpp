@@ -3,6 +3,7 @@
 
 #include "ProgressBarElement.h"
 #include "SharedNames.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include "elements/AbstractElement.h"
 #include <QApplication>
@@ -70,15 +71,15 @@ void ProgressBarElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ProgressBarElement::drawBackground(QPainter *painter) const
 {
-    UnionPainter b(painter, m_elementProperties, m_styleOption, m_widget);
-    b.setRect(subElementRect(QStyle::SE_ProgressBarGroove));
-    b.draw();
+    UnionPainter unionPainter(painter, m_elementProperties);
+    unionPainter.setRect(subElementRect(QStyle::SE_ProgressBarGroove));
+    unionPainter.draw();
 }
 void ProgressBarElement::drawIndicator(QPainter *painter) const
 {
-    UnionPainter b(painter, m_contentProperties, m_styleOption, m_widget);
-    b.setRect(subElementRect(QStyle::SE_ProgressBarContents));
-    b.draw();
+    UnionPainter unionPainter(painter, m_contentProperties);
+    unionPainter.setRect(subElementRect(QStyle::SE_ProgressBarContents));
+    unionPainter.draw();
 }
 
 void ProgressBarElement::drawText(QPainter *painter) const
@@ -188,8 +189,9 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
 {
-    UnionPainter h(painter, m_contentProperties, m_progressBarOption, m_widget);
-    h.draw();
+    UnionPainter unionPainter(painter, m_contentProperties);
+    unionPainter.setRect(m_progressBarOption->rect);
+    unionPainter.draw();
 }
 
 int ProgressBarElement::chunkWidth() const

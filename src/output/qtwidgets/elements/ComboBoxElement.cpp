@@ -42,6 +42,10 @@ void ComboBoxElement::update()
     setText(m_comboBoxOption->currentText);
     updateSubElementList();
     layout();
+    // Adding shadows to editable widgets seems to cause issues with the painter
+    if (!m_editable) {
+        updateGraphicsEffect(m_styleOption->rect);
+    }
 }
 
 ComboBoxElement::~ComboBoxElement()

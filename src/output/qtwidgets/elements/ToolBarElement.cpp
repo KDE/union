@@ -121,18 +121,18 @@ QRectF ToolBarElement::handleSeparatorRect(qreal extent) const
 void ToolBarElement::drawHandle(QPainter *painter) const
 {
     if (m_isValid && m_styleOption && m_handleProperties) {
-        UnionPainter h(painter, m_handleProperties, m_styleOption, m_widget);
-        h.setRect(handleSeparatorRect(handleExtent()));
-        h.draw();
+        UnionPainter unionPainter(painter, m_handleProperties);
+        unionPainter.setRect(handleSeparatorRect(handleExtent()));
+        unionPainter.draw();
     }
 }
 
 void ToolBarElement::drawSeparator(QPainter *painter) const
 {
     if (m_isValid && m_styleOption && m_separatorProperties) {
-        UnionPainter h(painter, m_separatorProperties, m_styleOption, m_widget);
-        h.setRect(handleSeparatorRect(separatorExtent()));
-        h.draw();
+        UnionPainter unionPainter(painter, m_separatorProperties);
+        unionPainter.setRect(handleSeparatorRect(separatorExtent()));
+        unionPainter.draw();
     }
 }
 
