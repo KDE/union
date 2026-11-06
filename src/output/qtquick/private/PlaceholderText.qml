@@ -21,7 +21,7 @@ Text {
     verticalAlignment: Union.Style.properties.text.verticalAlignment ?? control.verticalAlignment
 
     font: Union.Style.properties.text.font.qFont ?? control.font
-    color: Union.Style.properties.text.color ?? control.palette.placeholderText
+    color: Union.Style.properties.display.color ?? control.palette.placeholderText
     elide: wrapMode == Text.NoWrap ? (Union.Style.properties.text.elide ?? Text.ElideRight) : Text.ElideNone
     wrapMode: Union.Style.properties.text.wrapMode ?? Text.NoWrap
 
