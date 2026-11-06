@@ -415,7 +415,7 @@ Union::ElementQuery *QuickElement::query() const
 
 QuickElement *QuickElement::parentElement() const
 {
-    return static_cast<QuickElement *>(attachedParent());
+    return qobject_cast<QuickElement *>(attachedParent());
 }
 
 QuickElement *QuickElement::qmlAttachedProperties(QObject *parent)
@@ -625,8 +625,8 @@ void QuickElement::update()
 
 void Quick::QuickElement::updateStyleFromParent()
 {
-    if (m_styleId.isEmpty() && attachedParent()) {
-        setStyle(qobject_cast<QuickElement *>(attachedParent())->style());
+    if (m_styleId.isEmpty() && parentElement()) {
+        setStyle(parentElement()->style());
     }
 }
 

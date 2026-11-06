@@ -37,6 +37,8 @@ T.AbstractWeekNumberColumn {
     spacing: Union.Style.properties.layout.spacing
 
     delegate: Label {
+        Union.Element.subElement: "Text"
+
         text: weekNumber
         font: control.font
 

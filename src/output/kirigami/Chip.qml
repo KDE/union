@@ -61,13 +61,9 @@ KT.Chip {
     contentItem: P.DefaultContentItem { control: control }
 
     indicator: Controls.ToolButton {
-        id: indicator
+        Union.Element.subElement: "Indicator"
 
-        Union.Element.hints: [
-            Union.ElementHint { name: "indicator" }
-        ]
-
-        visible: control.closable
+        visible: control.closable && (Union.Style.properties.display.visible ?? true)
     }
 
     background: Union.StyledRectangle { }

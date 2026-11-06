@@ -59,8 +59,8 @@ chip
     padding: var(--medium-spacing);
 
     layout-alignment: content fill fill 0;
-    text-alignment: content fill center 0;
-    icon-alignment: content start center 0;
+/*     text-alignment: content fill center 0; */
+/*     icon-alignment: content start center 0; */
 
     background-color: var(--chip-background-color);
     border-radius: var(--corner-radius);
@@ -75,8 +75,8 @@ chip
         height: var(--small-element-size);
 
         icon-name: "edit-delete-remove";
-        icon-width: var(--icon-size-small);
-        icon-height: var(--icon-size-small);
+/*         icon-width: var(--icon-size-small); */
+/*         icon-height: var(--icon-size-small); */
 
         layout-alignment: item end center 0;
     }
@@ -185,12 +185,12 @@ navigationtabbutton {
     inset: var(--small-spacing);
     spacing: var(--small-spacing);
 
-    icon-size: var(--icon-size-smallmedium);
+/*     icon-size: var(--icon-size-smallmedium); */
     border-radius: var(--corner-radius);
 
     layout-alignment: content fill fill 0;
-    text-alignment-horizontal: start;
-    icon-alignment-horizontal: start;
+/*     text-alignment-horizontal: start; */
+/*     icon-alignment-horizontal: start; */
 
     color: var(--window-text-color);
 
@@ -221,12 +221,12 @@ navigationtabbutton {
         height: 0px;
         padding: 12px var(--small-spacing) 12px var(--grid-unit); /* small-spacing + large-spacing */
         spacing: var(--grid-unit);
-        icon-size: var(--icon-size-small);
+/*         icon-size: var(--icon-size-small); */
     }
 
     &[display="text-under-icon"] {
-        icon-alignment: content center stack-center 0;
-        text-alignment: content center stack-center 1;
+/*         icon-alignment: content center stack-center 0; */
+/*         text-alignment: content center stack-center 1; */
     }
 }
 

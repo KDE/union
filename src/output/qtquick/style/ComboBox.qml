@@ -113,8 +113,6 @@ T.ComboBox {
     Union.Icon {
         id: icon
 
-        Union.PositionedItem.source: Union.PositionerSource.Icon
-
         implicitWidth: Union.Style.properties.icon.width ?? 0
         implicitHeight: Union.Style.properties.icon.height ?? 0
         name: control.Union.StyleHints.iconName

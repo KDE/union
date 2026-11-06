@@ -60,6 +60,8 @@ T.SpinBox {
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         implicitWidth: Math.ceil(helper.maximumSize.width)
         implicitHeight: helper.maximumSize.height
         clip: true
@@ -78,8 +80,7 @@ T.SpinBox {
     }
 
     up.indicator: P.DefaultIndicator {
-        id: upIndicator
-
+        Union.Element.subElement: "Increase"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
@@ -89,8 +90,7 @@ T.SpinBox {
     }
 
     down.indicator: P.DefaultIndicator {
-        id: downIndicator
-
+        Union.Element.subElement: "Decrease"
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed

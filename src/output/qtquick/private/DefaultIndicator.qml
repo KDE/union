@@ -13,7 +13,7 @@ Union.StyledRectangle {
 
     property alias icon: iconItem
 
-    Union.Element.type: "Indicator"
+    Union.Element.subElement: "Indicator"
 
     Union.PositionedItem.minimumWidth: Union.Style.properties.layout.width
     Union.PositionedItem.minimumHeight: Union.Style.properties.layout.height

@@ -11,14 +11,14 @@ Union.StyledRectangle {
 
     required property T.Control control
 
-    Union.Element.type: "Track"
+    Union.Element.subElement: "Track"
 
     Union.PositionedItem.minimumWidth: implicitWidth
     Union.PositionedItem.minimumHeight: implicitHeight
 
     Union.StyledRectangle {
         id: handle
-        Union.Element.type: "Handle"
+        Union.Element.subElement: "Handle"
 
         anchors.verticalCenter: parent.verticalCenter
 

@@ -26,7 +26,7 @@ T.GroupBox {
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
-    topPadding: Union.Style.properties.layout.padding.top
+    topPadding: Union.Style.properties.layout.padding.top + implicitLabelHeight
     bottomPadding: Union.Style.properties.layout.padding.bottom
 
     leftInset: Union.Style.properties.layout.inset.left
@@ -36,11 +36,32 @@ T.GroupBox {
 
     spacing: Union.Style.properties.layout.spacing
 
-    label: Union.StyledRectangle {
-        Union.Element.type: "Header"
+    label: Item {
+        Union.Element.subElement: "Header"
+
+        x: Union.Style.properties.layout.margins.left ?? 0
+        y: Union.Style.properties.layout.margins.top ?? 0
+        width: control.width - (Union.Style.properties.layout.margins.left ?? 0) - (Union.Style.properties.layout.margins.right ?? 0)
+
+        implicitWidth: Math.max(Union.Style.properties.layout.width ?? 0, title.implicitWidth)
+                       + (Union.Style.properties.layout.padding.left ?? 0) + (Union.Style.properties.layout.padding.right ?? 0)
+        implicitHeight: Math.max(Union.Style.properties.layout.height ?? 0, title.implicitHeight)
+                        + (Union.Style.properties.layout.padding.top ?? 0) + (Union.Style.properties.layout.padding.bottom ?? 0)
+
+        Union.StyledRectangle {
+            anchors.fill: parent
+        }
 
         Text {
-            anchors.fill: parent
+            id: title
+
+            anchors {
+                fill: parent
+                leftMargin: Union.Style.properties.layout.padding.left
+                rightMargin: Union.Style.properties.layout.padding.right
+                topMargin: Union.Style.properties.layout.padding.top
+                bottomMargin: Union.Style.properties.layout.padding.bottom
+            }
 
             text: control.title
             font: Union.Style.properties.text.font.qFont ?? Application.font

@@ -8,7 +8,7 @@ import QtQuick.Templates as T
 import org.kde.union.impl as Union
 
 T.BusyIndicator {
-    id: control
+    id: controlRoot
 
     Union.Element.type: "BusyIndicator"
 
@@ -27,29 +27,28 @@ T.BusyIndicator {
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
 
-    contentItem: Item {
+    contentItem: Union.Icon {
+        Union.Element.subElement: "Icon"
+
         implicitWidth: Union.Style.properties.layout.width ?? 0
         implicitHeight: Union.Style.properties.layout.height ?? 0
 
-        Union.Icon {
-            anchors.centerIn: parent
-            width: Math.min(parent.width, parent.height)
-            height: width
-            name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
-            opacity: control.running ? 1 : 0
-            smooth: true
+        name: Union.Style.properties.icon.name
+        color: Union.Style.properties.display.color
+        opacity: controlRoot.running ? (Union.Style.properties.display.opacity ?? 1.0) : 0
+        smooth: true
 
-            RotationAnimator on rotation {
-                running: control.running
-                loops: Animation.Infinite
+        RotationAnimator on rotation {
+            running: controlRoot.running
+            loops: Animation.Infinite
 
-                property int rotationStart: ((new Date().valueOf() % duration) / duration) * 360;
+            property int rotationStart: ((new Date().valueOf() % duration) / duration) * 360;
 
-                from: rotationStart
-                to: rotationStart + 360
-                duration: 2000
-            }
+            from: rotationStart
+            to: rotationStart + 360
+            duration: 2000
         }
     }
+
+    background: Union.StyledRectangle { }
 }

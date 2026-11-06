@@ -71,8 +71,7 @@ T.DialogButtonBox {
         // Icon names are copied from KStyle::standardIcon()
         function setStandardIcon(buttonType, iconName) {
             let button = standardButton(buttonType)
-            // For some reason, `== ""` works, but `=== ""` and `!name && !source` doesn't.
-            if (button && button.icon.name == "" && button.icon.source == "") {
+            if (button && button.icon.name === "" && button.icon.source.toString() === "") {
                 button.icon.name = iconName
             }
         }

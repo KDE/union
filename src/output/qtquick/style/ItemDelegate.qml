@@ -38,6 +38,8 @@ T.ItemDelegate {
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
 
+    Union.Positioner.positionItems: [contentItem]
+
     hoverEnabled: Application.styleHints.useHoverEffects
 
     implicitWidth: Math.max(implicitContentWidth + leftPadding + rightPadding, Math.max(implicitBackgroundWidth + leftInset + rightInset, Union.Positioner.implicitWidth))
@@ -62,8 +64,6 @@ T.ItemDelegate {
         height: (contentItem as P.DefaultContentItem)?.iconHeight ?? 0.0
         color: (contentItem as P.DefaultContentItem)?.iconColor ?? "transparent"
     }
-
-    Union.Positioner.positionItems: [contentItem]
 
     contentItem: P.DefaultContentItem { control: control }
 

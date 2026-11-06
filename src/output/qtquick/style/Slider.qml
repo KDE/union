@@ -45,14 +45,7 @@ T.Slider {
     bottomInset: Union.Style.properties.layout.inset.bottom
 
     handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
-        Union.Element.states {
-            hovered: control.hovered
-            activeFocus: control.handle.activeFocus
-            visualFocus: control.visualFocus
-            pressed: control.pressed
-            enabled: control.handle.enabled
-        }
+        Union.Element.subElement: "Handle"
         x: control.leftPadding + (control.horizontal ? control.visualPosition * (control.availableWidth - width) : (control.availableWidth - width) / 2)
         y: control.topPadding + (control.horizontal ? (control.availableHeight - height) / 2 : control.visualPosition * (control.availableHeight - height))
     }

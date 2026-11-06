@@ -120,7 +120,11 @@ void StyleHints::setSpellCheckEnabled(const bool &enabled)
 
 qreal StyleHints::animationSpeedMultiplier()
 {
-    return StyleRegistry::instance()->platform()->animationSpeedMultiplier();
+    if (StyleRegistry::instance()->platform()) {
+        return StyleRegistry::instance()->platform()->animationSpeedMultiplier();
+    }
+
+    return 1.0;
 }
 
 StyleHints *StyleHints::qmlAttachedProperties(QObject *parent)

@@ -28,7 +28,7 @@ QtObject {
             constrained = root.control.Layout.maximumWidth
         }
 
-        return (maximumSize.width + unconstrainedIndicator.width * 2 + root.control.spacing * 2) > constrained
+        return (maximumSize.width + unconstrainedIncreaseIndicator.width + unconstrainedDecreaseIndicator.width + root.control.spacing * 2) > constrained
     }
 
     function valueRect(value)
@@ -59,8 +59,14 @@ QtObject {
         Union.Element.type: "SpinBox"
 
         Item {
-            id: unconstrainedIndicator
-            Union.Element.type: "Indicator"
+            id: unconstrainedIncreaseIndicator
+            Union.Element.subElement: "Increase"
+            width: Union.Style.properties.layout.width
+        }
+
+        Item {
+            id: unconstrainedDecreaseIndicator
+            Union.Element.subElement: "Decrease"
             width: Union.Style.properties.layout.width
         }
     }

@@ -13,9 +13,9 @@
     --bar-track-active-border-color: var(--window-border-color);
     --bar-filled-active-background-color: mix(var(--window-background-color), var(--highlight-color), 0.333);
     --bar-filled-active-border-color: var(--highlight-color);
+
     --bar-handle-active-background-color: var(--button-active-background-color);
     --bar-handle-active-border-color: var(--button-active-border-color);
-
     --bar-handle-active-highlight-color: var(--button-active-highlight-color);
     --bar-handle-active-highlight-border-color: var(--button-active-border-highlight-color);
 
@@ -30,33 +30,27 @@
     --bar-tickmark-thickness: 2px;
     --bar-tickmark-length: 8px;
 
-    --dial-inactive-background-color: mix(var(--button-inactive-background-color), var(--window-background-color), 0.5);
-    --dial-inactive-border-color: var(--button-inactive-border-color);
     --dial-active-background-color: mix(var(--button-active-background-color), var(--window-background-color), 0.5);
     --dial-active-border-color: var(--button-active-border-color);
+    --dial-active-highlight-border-color: var(--button-active-border-highlight-color);
     --dial-disabled-background-color: mix(var(--button-disabled-background-color), var(--window-background-color), 0.5);
     --dial-disabled-border-color: var(--button-disabled-border-color);
-
-    --dial-handle-inactive-background-color: var(--button-inactive-background-color);
-    --dial-handle-inactive-border-color: var(--button-inactive-border-color);
-    --dial-handle-active-background-color:  mix(var(--button-active-background-color), var(--highlight-color), 0.5);
-    --dial-handle-active-border-color: mix(var(--button-active-border-color), var(--highlight-color), 0.5);
-    --dial-handle-disabled-background-color: var(--button-disabled-background-color);
-    --dial-handle-disabled-border-color: var(--button-disabled-border-color);
 }
 
 busyindicator
 {
     width: 36px;
     height: 36px;
-    icon-name: "process-working-symbolic";
+
+    &::part(icon) {
+        icon-name: "process-working-symbolic";
+    }
 }
 
 progressbar
 {
     padding: 0px var(--large-spacing);
     inset: 0px var(--large-spacing);
-    text-alignment: content center center 0;
 
     background-color: var(--bar-track-active-background-color);
     border: 1px solid var(--bar-track-active-border-color);
@@ -74,8 +68,7 @@ progressbar
         height: 200px;
     }
 
-
-    & > filled {
+    &::part(filled) {
         width: 50px;
         background-color: var(--bar-filled-active-background-color);
         border: 1px solid var(--bar-filled-active-border-color);
@@ -86,7 +79,7 @@ progressbar
         background-color: var(--bar-track-disabled-background-color);
         border-color: var(--bar-track-disabled-border-color);
 
-        & > filled {
+        &::part(filled) {
             background-color: var(--bar-filled-disabled-background-color);
             border-color: var(--bar-filled-disabled-border-color);
         }
@@ -101,13 +94,17 @@ dial
     border: 1px solid var(--bar-track-active-border-color);
     border-radius: var(--corner-radius);
 
-    & > filled {
+    &::part(filled) {
+        width: var(--medium-spacing);
+        height: var(--medium-spacing);
         background-color: var(--bar-filled-active-background-color);
         border: 1px solid var(--bar-filled-active-border-color);
         border-radius: var(--corner-radius);
     }
 
-    & > handle {
+    &::part(handle),
+    &::part(first-handle),
+    &::part(second-handle) {
         width: var(--bar-handle-size);
         height: var(--bar-handle-size);
         background-color: var(--bar-handle-active-background-color);
@@ -126,7 +123,7 @@ dial
         }
     }
 
-    & > tickmark
+    &::part(tick-mark)
     {
         background-color: var(--bar-track-active-border-color);
 
@@ -149,7 +146,7 @@ dial
             border-radius: 20px;
         }
 
-        & > tickmark {
+        &::part(tick-mark) {
             width: var(--bar-tickmark-thickness);
             height: var(--bar-tickmark-length);
             margin-top: 8px;
@@ -162,7 +159,7 @@ dial
         width: 6px;
         height: 200px;
 
-        & > tickmark {
+        &::part(tick-mark) {
             width: var(--bar-tickmark-length);
             height: var(--bar-tickmark-thickness);
             margin-left: 8px;
@@ -174,33 +171,51 @@ dial
         background-color: var(--bar-track-disabled-background-color);
         border: 1px solid var(--bar-track-disabled-border-color);
 
-        & > filled {
+        &::part(filled) {
             background-color: var(--bar-filled-disabled-background-color);
             border-color: var(--bar-filled-disabled-border-color);
         }
 
-        & > handle {
+        &::part(handle) {
             background-color: var(--bar-handle-disabled-background-color);
             border-color: var(--bar-handle-disabled-border-color);
             box-shadow: none;
         }
 
-        & > tickmark,
-        & > tickmark:highlighted {
+        &::part(tick-mark),
+        &::part(tick-mark):highlighted {
             background-color: var(--bar-track-disabled-border-color);
         }
     }
 }
 
-slider:visual-focus > handle,
-rangeslider > handle:active-focus
+/*slider.horizontal {
+    height: var(--bar-handle-size);
+    border-radius: var(--bar-handle-size);
+
+    &::part(tick-mark) {
+        width: 4px;
+        height: 4px;
+        border-radius: 2px;
+        margin-top: 0px;
+    }
+
+    &::part(filled) {
+        border-radius: var(--bar-handle-size);
+    }
+}*/
+
+slider:visual-focus::part(handle),
+rangeslider::part(first-handle):active-focus,
+rangeslider::part(second-handle):active-focus
 {
     border-color: var(--bar-handle-active-highlight-border-color);
     outline: var(--focus-outline);
 }
 
-slider:pressed > handle,
-rangeslider > handle:pressed
+slider:pressed::part(handle),
+rangeslider::part(first-handle):pressed,
+rangeslider::part(second-handle):pressed
 {
     background-color: var(--bar-handle-active-highlight-color);
     border-color: var(--bar-handle-active-highlight-border-color);
@@ -223,33 +238,34 @@ scrollbar
         border-left: 1px solid var(--bar-track-active-border-color);
     }
 
-    & > handle {
+    &::part(handle) {
         background-color: var(--bar-track-active-background-color);
         border: 1px solid var(--bar-track-active-border-color);
         border-radius: var(--small-element-size);
+    }
 
-        &:hovered
-        {
-            border-color: var(--bar-handle-active-highlight-border-color);
-        }
+    &:hovered::part(handle)
+    {
+        border-color: var(--bar-handle-active-highlight-border-color);
+    }
 
-        &:pressed
-        {
-            background-color: var(--bar-handle-active-highlight-color);
-            border-color: var(--bar-handle-active-highlight-border-color);
-        }
+    &:pressed::part(handle)
+    {
+        background-color: var(--bar-handle-active-highlight-color);
+        border-color: var(--bar-handle-active-highlight-border-color);
+    }
 
-        &:disabled {
-            background-color: var(--bar-track-disabled-background-color);
-            border: 1px solid var(--bar-track-disabled-border-color);
-        }
+    &:disabled {
+        background-color: var(--bar-handle-disabled-background-color);
+        border: 1px solid var(--bar-handle-disabled-border-color);
     }
 
     &.noninteractive {
         width: var(--non-interactive-scrollbar-size);
         border-left: none;
         padding: var(--small-spacing);
-        & > handle {
+
+        &::part(handle) {
             background-color: var(--bar-handle-disabled-background-color);
             border: 1px solid var(--bar-handle-disabled-border-color);
         }
@@ -260,51 +276,55 @@ dial {
     width: 128px;
     height: 128px;
     border-radius: 64px; /* use half of width */
-    background-color: var(--dial-inactive-background-color);
-    border-color: var(--dial-inactive-border-color);
+    background-color: var(--dial-active-background-color);
+    border-color: var(--dial-active-border-color);
+
+    &::part(handle) {
+        background-color: var(--bar-handle-active-background-color);
+        border-color: var(--bar-handle-active-border-color);
+    }
 
     &:hovered {
-        background-color: var(--dial-active-background-color);
-        border-color: var(--dial-active-border-color);
+        border-color: var(--dial-active-highlight-border-color);
+
+        &::part(handle) {
+            border-color: var(--bar-handle-active-highlight-border-color);
+        }
     }
 
     &:pressed {
-        border-color: var(--highlight-color);
+        border-color: var(--dial-active-highlight-border-color);
+
+        &::part(handle) {
+            background-color: var(--bar-handle-active-highlight-color);
+            border-color: var(--bar-handle-active-highlight-border-color);
+        }
+    }
+
+    &:visual-focus {
+        &::part(handle) {
+            outline: var(--focus-outline);
+        }
     }
 
     &:disabled {
         background-color: var(--dial-disabled-background-color);
         border-color: var(--dial-disabled-border-color);
-    }
 
-    & > handle {
-        background-color: var(--dial-handle-inactive-background-color);
-        border-color: var(--dial-handle-inactive-border-color);
-
-        &:hovered {
-            background-color: var(--dial-handle-active-background-color);
-            border-color: var(--dial-handle-active-border-color);
-        }
-
-        &:pressed {
-            background-color: var(--highlight-color);
-            border-color: var(--highlight-color);
-        }
-
-        &:disabled {
-            background-color: var(--dial-handle-disabled-background-color);
-            border-color: var(--dial-handle-disabled-border-color);
+        &::part(handle) {
+            background-color: var(--bar-handle-disabled-background-color);
+            border-color: var(--bar-handle-disabled-border-color);
         }
     }
 }
 
 slider.changed,
 rangeslider.changed {
-    & > filled {
+    &::part(filled) {
         background-color: var(--changed-background);
         border: 1px solid var(--changed-foreground);
     }
-    & > tickmark:highlighted {
+    &::part(tick-mark):highlighted {
         background-color: var(--changed-foreground);
     }
 }

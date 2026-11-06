@@ -60,15 +60,28 @@ T.SearchField {
     }
 
     searchIndicator.indicator: P.DefaultIndicator {
-        Union.Element.type: "SearchIndicator"
+        Union.Element.subElement: "Search"
+        Union.Element.states {
+            hovered: control.searchIndicator.hovered
+            pressed: control.searchIndicator.pressed
+            enabled: control.searchIndicator.indicator.enabled
+        }
     }
 
     clearIndicator.indicator: P.DefaultIndicator {
-        Union.Element.type: "ClearIndicator"
-        visible: control.text.length > 0 && (Union.Style.properties.display.visible ?? true)
+        Union.Element.subElement: "Clear"
+        Union.Element.states {
+            hovered: control.clearIndicator.hovered
+            pressed: control.clearIndicator.pressed
+            enabled: control.clearIndicator.indicator.enabled
+        }
+
+        visible: control.text && (Union.Style.properties.display.visible ?? true)
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         text: control.text
         placeholderText: control.placeholderText
         selectByMouse: control.selectTextByMouse
@@ -104,7 +117,6 @@ T.SearchField {
             boundsBehavior: ListView.StopAtBounds
 
             T.ScrollIndicator.vertical: ScrollIndicator {}
-
         }
     }
 
