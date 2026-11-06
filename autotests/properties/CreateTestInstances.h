@@ -148,6 +148,7 @@ std::unique_ptr<DisplayPropertyGroup> testDisplayPropertyGroupInstance()
 
     instance->setVisible(bool{});
     instance->setOpacity(testQrealInstance());
+    instance->setColor(Union::Color{});
 
     return instance;
 }
@@ -174,6 +175,8 @@ std::unique_ptr<TextPropertyGroup> testTextPropertyGroupInstance()
     instance->setAlignment(testAlignmentPropertyGroupInstance());
     instance->setFont(testFontPropertyGroupInstance());
     instance->setColor(Union::Color{});
+    instance->setHorizontalAlignment(Union::Properties::HorizontalTextAlignment{});
+    instance->setVerticalAlignment(Union::Properties::VerticalTextAlignment{});
     instance->setWrapMode(Union::Properties::TextWrapMode{});
     instance->setElide(Union::Properties::TextElide{});
 

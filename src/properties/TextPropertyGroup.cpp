@@ -18,6 +18,8 @@ public:
     std::unique_ptr<AlignmentPropertyGroup> alignment;
     std::unique_ptr<FontPropertyGroup> font;
     std::optional<Union::Color> color;
+    std::optional<Union::Properties::HorizontalTextAlignment> horizontalAlignment;
+    std::optional<Union::Properties::VerticalTextAlignment> verticalAlignment;
     std::optional<Union::Properties::TextWrapMode> wrapMode;
     std::optional<Union::Properties::TextElide> elide;
 };
@@ -35,6 +37,8 @@ TextPropertyGroup::TextPropertyGroup(const TextPropertyGroup &other)
     d->font = std::make_unique<FontPropertyGroup>();
     *(d->font) = *(other.d->font);
     d->color = other.d->color;
+    d->horizontalAlignment = other.d->horizontalAlignment;
+    d->verticalAlignment = other.d->verticalAlignment;
     d->wrapMode = other.d->wrapMode;
     d->elide = other.d->elide;
 }
@@ -52,6 +56,8 @@ TextPropertyGroup &TextPropertyGroup::operator=(const TextPropertyGroup &other)
         *(d->alignment) = *(other.d->alignment);
         *(d->font) = *(other.d->font);
         d->color = other.d->color;
+        d->horizontalAlignment = other.d->horizontalAlignment;
+        d->verticalAlignment = other.d->verticalAlignment;
         d->wrapMode = other.d->wrapMode;
         d->elide = other.d->elide;
     }
@@ -98,6 +104,34 @@ void TextPropertyGroup::setColor(const std::optional<Union::Color> &newValue)
     d->color = newValue;
 }
 
+std::optional<Union::Properties::HorizontalTextAlignment> TextPropertyGroup::horizontalAlignment() const
+{
+    return d->horizontalAlignment;
+}
+
+void TextPropertyGroup::setHorizontalAlignment(const std::optional<Union::Properties::HorizontalTextAlignment> &newValue)
+{
+    if (newValue == d->horizontalAlignment) {
+        return;
+    }
+
+    d->horizontalAlignment = newValue;
+}
+
+std::optional<Union::Properties::VerticalTextAlignment> TextPropertyGroup::verticalAlignment() const
+{
+    return d->verticalAlignment;
+}
+
+void TextPropertyGroup::setVerticalAlignment(const std::optional<Union::Properties::VerticalTextAlignment> &newValue)
+{
+    if (newValue == d->verticalAlignment) {
+        return;
+    }
+
+    d->verticalAlignment = newValue;
+}
+
 std::optional<Union::Properties::TextWrapMode> TextPropertyGroup::wrapMode() const
 {
     return d->wrapMode;
@@ -137,6 +171,12 @@ bool TextPropertyGroup::hasAnyValue() const
     if (d->color.has_value()) {
         return true;
     }
+    if (d->horizontalAlignment.has_value()) {
+        return true;
+    }
+    if (d->verticalAlignment.has_value()) {
+        return true;
+    }
     if (d->wrapMode.has_value()) {
         return true;
     }
@@ -159,6 +199,12 @@ bool TextPropertyGroup::isEmpty() const
         return false;
     }
     if (d->color.has_value() && d->color.value() != emptyValue<Union::Color>()) {
+        return false;
+    }
+    if (d->horizontalAlignment.has_value() && d->horizontalAlignment.value() != emptyValue<Union::Properties::HorizontalTextAlignment>()) {
+        return false;
+    }
+    if (d->verticalAlignment.has_value() && d->verticalAlignment.value() != emptyValue<Union::Properties::VerticalTextAlignment>()) {
         return false;
     }
     if (d->wrapMode.has_value() && d->wrapMode.value() != emptyValue<Union::Properties::TextWrapMode>()) {
@@ -220,6 +266,18 @@ QString TextPropertyGroup::toString(int indentation, ToStringFlags flags) const
     } else {
         out << empty << maybeNewLine;
     }
+    out << indent(indentation, multiline, false) << "horizontalAlignment: ";
+    if (d->horizontalAlignment) {
+        out << d->horizontalAlignment.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
+    out << indent(indentation, multiline, false) << "verticalAlignment: ";
+    if (d->verticalAlignment) {
+        out << d->verticalAlignment.value() << maybeNewLine;
+    } else {
+        out << empty << maybeNewLine;
+    }
     out << indent(indentation, multiline, false) << "wrapMode: ";
     if (d->wrapMode) {
         out << d->wrapMode.value() << maybeNewLine;
@@ -264,6 +322,12 @@ void TextPropertyGroup::resolveProperties(const TextPropertyGroup *source, TextP
     if (!destination->d->color.has_value()) {
         destination->d->color = source->d->color;
     }
+    if (!destination->d->horizontalAlignment.has_value()) {
+        destination->d->horizontalAlignment = source->d->horizontalAlignment;
+    }
+    if (!destination->d->verticalAlignment.has_value()) {
+        destination->d->verticalAlignment = source->d->verticalAlignment;
+    }
     if (!destination->d->wrapMode.has_value()) {
         destination->d->wrapMode = source->d->wrapMode;
     }
@@ -278,6 +342,8 @@ std::unique_ptr<TextPropertyGroup> TextPropertyGroup::empty()
     result->d->alignment = AlignmentPropertyGroup::empty();
     result->d->font = FontPropertyGroup::empty();
     result->d->color = emptyValue<Union::Color>();
+    result->d->horizontalAlignment = emptyValue<Union::Properties::HorizontalTextAlignment>();
+    result->d->verticalAlignment = emptyValue<Union::Properties::VerticalTextAlignment>();
     result->d->wrapMode = emptyValue<Union::Properties::TextWrapMode>();
     result->d->elide = emptyValue<Union::Properties::TextElide>();
     return result;
@@ -300,6 +366,12 @@ bool Union::Properties::operator==(const TextPropertyGroup &left, const TextProp
         return false;
     }
     if (left.color() != right.color()) {
+        return false;
+    }
+    if (left.horizontalAlignment() != right.horizontalAlignment()) {
+        return false;
+    }
+    if (left.verticalAlignment() != right.verticalAlignment()) {
         return false;
     }
     if (left.wrapMode() != right.wrapMode()) {
@@ -339,6 +411,8 @@ QDataStream &operator<<(QDataStream &stream, const Union::Properties::TextProper
         }
     }
     stream << type->color();
+    stream << type->horizontalAlignment();
+    stream << type->verticalAlignment();
     stream << type->wrapMode();
     stream << type->elide();
     return stream;
@@ -370,6 +444,16 @@ QDataStream &operator>>(QDataStream &stream, std::unique_ptr<Union::Properties::
         std::optional<Union::Color> data;
         stream >> data;
         type->setColor(data);
+    }
+    {
+        std::optional<Union::Properties::HorizontalTextAlignment> data;
+        stream >> data;
+        type->setHorizontalAlignment(data);
+    }
+    {
+        std::optional<Union::Properties::VerticalTextAlignment> data;
+        stream >> data;
+        type->setVerticalAlignment(data);
     }
     {
         std::optional<Union::Properties::TextWrapMode> data;

@@ -40,3 +40,4 @@ target_sources(UnionQuickImpl PRIVATE
     OffsetPropertyGroupQuick.cpp
     OffsetPropertyGroupQuick.h
 )
+

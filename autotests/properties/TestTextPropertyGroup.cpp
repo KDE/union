@@ -25,6 +25,8 @@ private Q_SLOTS:
         QVERIFY(!property->alignment());
         QVERIFY(!property->font());
         QVERIFY(!property->color().has_value());
+        QVERIFY(!property->horizontalAlignment().has_value());
+        QVERIFY(!property->verticalAlignment().has_value());
         QVERIFY(!property->wrapMode().has_value());
         QVERIFY(!property->elide().has_value());
     }
@@ -37,6 +39,8 @@ private Q_SLOTS:
         QCOMPARE(*property->alignment(), *AlignmentPropertyGroup::empty());
         QCOMPARE(*property->font(), *FontPropertyGroup::empty());
         QCOMPARE(property->color().value(), emptyValue<Union::Color>());
+        QCOMPARE(property->horizontalAlignment().value(), emptyValue<Union::Properties::HorizontalTextAlignment>());
+        QCOMPARE(property->verticalAlignment().value(), emptyValue<Union::Properties::VerticalTextAlignment>());
         QCOMPARE(property->wrapMode().value(), emptyValue<Union::Properties::TextWrapMode>());
         QCOMPARE(property->elide().value(), emptyValue<Union::Properties::TextElide>());
     }
@@ -78,6 +82,20 @@ private Q_SLOTS:
             QVERIFY(!property->hasAnyValue());
         }
         {
+            Union::Properties::HorizontalTextAlignment value;
+            property->setHorizontalAlignment(value);
+            QVERIFY(property->hasAnyValue());
+            property->setHorizontalAlignment(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
+        {
+            Union::Properties::VerticalTextAlignment value;
+            property->setVerticalAlignment(value);
+            QVERIFY(property->hasAnyValue());
+            property->setVerticalAlignment(std::nullopt);
+            QVERIFY(!property->hasAnyValue());
+        }
+        {
             Union::Properties::TextWrapMode value;
             property->setWrapMode(value);
             QVERIFY(property->hasAnyValue());
@@ -109,6 +127,8 @@ private Q_SLOTS:
         source->setAlignment(testAlignmentPropertyGroupInstance());
         source->setFont(testFontPropertyGroupInstance());
         source->setColor(Union::Color{});
+        source->setHorizontalAlignment(Union::Properties::HorizontalTextAlignment{});
+        source->setVerticalAlignment(Union::Properties::VerticalTextAlignment{});
         source->setWrapMode(Union::Properties::TextWrapMode{});
         source->setElide(Union::Properties::TextElide{});
 
@@ -122,6 +142,8 @@ private Q_SLOTS:
         QCOMPARE(*destination->alignment(), *source->alignment());
         QCOMPARE(*destination->font(), *source->font());
         QCOMPARE(destination->color(), source->color());
+        QCOMPARE(destination->horizontalAlignment(), source->horizontalAlignment());
+        QCOMPARE(destination->verticalAlignment(), source->verticalAlignment());
         QCOMPARE(destination->wrapMode(), source->wrapMode());
         QCOMPARE(destination->elide(), source->elide());
     }

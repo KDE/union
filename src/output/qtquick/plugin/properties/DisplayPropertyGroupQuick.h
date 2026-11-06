@@ -61,6 +61,15 @@ public:
     QJSValue opacity() const;
     Q_SIGNAL void opacityChanged();
 
+    /*!
+     * \qmlproperty Union::Color DisplayPropertyGroupQuick::color
+     *
+     * Exposes DisplayPropertyGroup::color to QML.
+     */
+    Q_PROPERTY(QJSValue color READ color NOTIFY colorChanged)
+    QJSValue color() const;
+    Q_SIGNAL void colorChanged();
+
 private:
     QuickStyle *m_style = nullptr;
 
