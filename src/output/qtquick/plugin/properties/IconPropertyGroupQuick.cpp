@@ -18,7 +18,6 @@ IconPropertyGroupQuick::IconPropertyGroupQuick(QuickStyle *style)
     : QObject()
     , m_style(style)
 {
-    m_alignment = std::make_unique<AlignmentPropertyGroupQuick>(m_style);
 }
 
 void IconPropertyGroupQuick::update(IconPropertyGroup *newState)
@@ -30,56 +29,16 @@ void IconPropertyGroupQuick::update(IconPropertyGroup *newState)
     m_state = newState;
 
     if (!newState) {
-        m_alignment->update(nullptr);
     } else {
-        m_alignment->update(newState->alignment());
     }
 
-    Q_EMIT widthChanged();
-    Q_EMIT heightChanged();
     Q_EMIT nameChanged();
     Q_EMIT sourceChanged();
-    Q_EMIT colorChanged();
     Q_EMIT updated();
 }
 
 void IconPropertyGroupQuick::refreshColors()
 {
-    m_alignment->refreshColors();
-    Q_EMIT colorChanged();
-}
-
-AlignmentPropertyGroupQuick *IconPropertyGroupQuick::alignment() const
-{
-    return m_alignment.get();
-}
-
-QJSValue IconPropertyGroupQuick::width() const
-{
-    if (!m_state) {
-        return QJSValue(QJSValue::UndefinedValue);
-    }
-
-    auto value = m_state->width();
-    if (value) {
-        return m_style->engine()->toScriptValue(value.value());
-    }
-
-    return QJSValue(QJSValue::UndefinedValue);
-}
-
-QJSValue IconPropertyGroupQuick::height() const
-{
-    if (!m_state) {
-        return QJSValue(QJSValue::UndefinedValue);
-    }
-
-    auto value = m_state->height();
-    if (value) {
-        return m_style->engine()->toScriptValue(value.value());
-    }
-
-    return QJSValue(QJSValue::UndefinedValue);
 }
 
 QJSValue IconPropertyGroupQuick::name() const
@@ -105,20 +64,6 @@ QJSValue IconPropertyGroupQuick::source() const
     auto value = m_state->source();
     if (value) {
         return m_style->engine()->toScriptValue(value.value());
-    }
-
-    return QJSValue(QJSValue::UndefinedValue);
-}
-
-QJSValue IconPropertyGroupQuick::color() const
-{
-    if (!m_state) {
-        return QJSValue(QJSValue::UndefinedValue);
-    }
-
-    auto value = m_state->color();
-    if (value) {
-        return m_style->engine()->toScriptValue(value.value().toQColor());
     }
 
     return QJSValue(QJSValue::UndefinedValue);

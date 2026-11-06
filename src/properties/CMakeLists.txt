@@ -7,12 +7,12 @@
 target_sources(Union PRIVATE
     StylePropertyGroup.cpp
     SizePropertyGroup.cpp
-    AlignmentPropertyGroup.cpp
     ImagePropertyGroup.cpp
     LinePropertyGroup.cpp
     CornerPropertyGroup.cpp
     DisplayPropertyGroup.cpp
     LayoutPropertyGroup.cpp
+    AlignmentPropertyGroup.cpp
     TextPropertyGroup.cpp
     FontPropertyGroup.cpp
     IconPropertyGroup.cpp
@@ -29,12 +29,12 @@ target_sources(Union PUBLIC
     FILES
     StylePropertyGroup.h
     SizePropertyGroup.h
-    AlignmentPropertyGroup.h
     ImagePropertyGroup.h
     LinePropertyGroup.h
     CornerPropertyGroup.h
     DisplayPropertyGroup.h
     LayoutPropertyGroup.h
+    AlignmentPropertyGroup.h
     TextPropertyGroup.h
     FontPropertyGroup.h
     IconPropertyGroup.h

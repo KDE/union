@@ -22,12 +22,8 @@ private Q_SLOTS:
         auto property = std::make_unique<IconPropertyGroup>();
 
         // A null instance should not have any values for its properties.
-        QVERIFY(!property->alignment());
-        QVERIFY(!property->width().has_value());
-        QVERIFY(!property->height().has_value());
         QVERIFY(!property->name().has_value());
         QVERIFY(!property->source().has_value());
-        QVERIFY(!property->color().has_value());
     }
 
     void testEmpty()
@@ -35,12 +31,8 @@ private Q_SLOTS:
         auto property = IconPropertyGroup::empty();
 
         // An empty instance should only have values that are considered "empty".
-        QCOMPARE(*property->alignment(), *AlignmentPropertyGroup::empty());
-        QCOMPARE(property->width().value(), emptyValue<qreal>());
-        QCOMPARE(property->height().value(), emptyValue<qreal>());
         QCOMPARE(property->name().value(), emptyValue<QString>());
         QCOMPARE(property->source().value(), emptyValue<QUrl>());
-        QCOMPARE(property->color().value(), emptyValue<Union::Color>());
     }
 
     void testHasAnyValue()
@@ -50,31 +42,6 @@ private Q_SLOTS:
         // An empty instance should not have any values for its properties.
         QVERIFY(!property->hasAnyValue());
 
-        {
-            // Assigning an empty value to a property should have no effect.
-            property->setAlignment(std::make_unique<AlignmentPropertyGroup>());
-            QVERIFY(!property->hasAnyValue());
-
-            property->setAlignment(testAlignmentPropertyGroupInstance());
-            QVERIFY(property->hasAnyValue());
-
-            property->setAlignment(nullptr);
-            QVERIFY(!property->hasAnyValue());
-        }
-        {
-            qreal value;
-            property->setWidth(value);
-            QVERIFY(property->hasAnyValue());
-            property->setWidth(std::nullopt);
-            QVERIFY(!property->hasAnyValue());
-        }
-        {
-            qreal value;
-            property->setHeight(value);
-            QVERIFY(property->hasAnyValue());
-            property->setHeight(std::nullopt);
-            QVERIFY(!property->hasAnyValue());
-        }
         {
             QString value;
             property->setName(value);
@@ -87,13 +54,6 @@ private Q_SLOTS:
             property->setSource(value);
             QVERIFY(property->hasAnyValue());
             property->setSource(std::nullopt);
-            QVERIFY(!property->hasAnyValue());
-        }
-        {
-            Union::Color value;
-            property->setColor(value);
-            QVERIFY(property->hasAnyValue());
-            property->setColor(std::nullopt);
             QVERIFY(!property->hasAnyValue());
         }
     }
@@ -111,12 +71,8 @@ private Q_SLOTS:
 
         QVERIFY(!destination->hasAnyValue());
 
-        source->setAlignment(testAlignmentPropertyGroupInstance());
-        source->setWidth(qreal{});
-        source->setHeight(qreal{});
         source->setName(QString{});
         source->setSource(QUrl{});
-        source->setColor(Union::Color{});
 
         QVERIFY(source->hasAnyValue());
         QVERIFY(!destination->hasAnyValue());
@@ -125,12 +81,8 @@ private Q_SLOTS:
 
         QVERIFY(destination->hasAnyValue());
 
-        QCOMPARE(*destination->alignment(), *source->alignment());
-        QCOMPARE(destination->width(), source->width());
-        QCOMPARE(destination->height(), source->height());
         QCOMPARE(destination->name(), source->name());
         QCOMPARE(destination->source(), source->source());
-        QCOMPARE(destination->color(), source->color());
     }
 
     void testDataStream()

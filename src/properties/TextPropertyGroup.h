@@ -11,8 +11,6 @@
 #include <QDebug>
 
 
-#include "../Color.h"
-#include "AlignmentPropertyGroup.h"
 #include "FontPropertyGroup.h"
 
 #include "PropertiesTypes.h"
@@ -92,18 +90,6 @@ public:
     }
 
     /*!
-     * The alignment of the text of an element.
-     */
-    AlignmentPropertyGroup *alignment() const;
-
-    /*!
-     * Set the value of alignment.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setAlignment(std::unique_ptr<AlignmentPropertyGroup> &&newValue);
-
-    /*!
      * \brief A group containing properties relating to the font used for an element.
      */
     FontPropertyGroup *font() const;
@@ -114,18 +100,6 @@ public:
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
     void setFont(std::unique_ptr<FontPropertyGroup> &&newValue);
-
-    /*!
-        The color of the text of an element.
-     */
-    std::optional<Union::Color> color() const;
-
-    /*!
-     * Set the value of color.
-     *
-     * \a newValue The new value or \c{std::nullopt} to unset the value.
-     */
-    void setColor(const std::optional<Union::Color> &newValue);
 
     /*!
         The horizontal alignment of the text of an element. This is distinct from

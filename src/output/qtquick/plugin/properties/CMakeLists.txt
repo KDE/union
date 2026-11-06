@@ -9,8 +9,6 @@ target_sources(UnionQuickImpl PRIVATE
     StylePropertyGroupQuick.h
     SizePropertyGroupQuick.cpp
     SizePropertyGroupQuick.h
-    AlignmentPropertyGroupQuick.cpp
-    AlignmentPropertyGroupQuick.h
     ImagePropertyGroupQuick.cpp
     ImagePropertyGroupQuick.h
     LinePropertyGroupQuick.cpp
@@ -21,6 +19,8 @@ target_sources(UnionQuickImpl PRIVATE
     DisplayPropertyGroupQuick.h
     LayoutPropertyGroupQuick.cpp
     LayoutPropertyGroupQuick.h
+    AlignmentPropertyGroupQuick.cpp
+    AlignmentPropertyGroupQuick.h
     TextPropertyGroupQuick.cpp
     TextPropertyGroupQuick.h
     FontPropertyGroupQuick.cpp
