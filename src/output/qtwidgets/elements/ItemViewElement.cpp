@@ -186,10 +186,20 @@ void ItemViewElement::drawBackground(QPainter *painter) const
         QColor overrideColor;
         UnionPainter::Parts parts = UnionPainter::Parts::All;
         // Ignore borders in these cases, as they will use different color from style, and we have no border color in qpalette
-        if (m_styleOption && m_styleOption->palette.resolveMask() > 0) {
-            overrideColor = m_styleOption->palette.highlight().color();
-            parts = UnionPainter::Parts::PanelOnly;
-        } else if (m_viewItemOption && m_viewItemOption->backgroundBrush.style() != Qt::NoBrush) {
+        if (m_styleOption) {
+            // Either set different highlight or alternateBase color if they're set
+            const bool selected = m_styleOption->state.testFlag(QStyle::State_Selected);
+            const auto palette = m_styleOption->palette;
+            if (selected && palette.isBrushSet(palette.currentColorGroup(), QPalette::Highlight)) {
+                overrideColor = m_styleOption->palette.highlight().color();
+                parts = UnionPainter::Parts::PanelOnly;
+            }
+            if (!selected && palette.isBrushSet(palette.currentColorGroup(), QPalette::AlternateBase)) {
+                overrideColor = m_styleOption->palette.alternateBase().color();
+                parts = UnionPainter::Parts::PanelOnly;
+            }
+        }
+        if (m_viewItemOption && m_viewItemOption->backgroundBrush.style() != Qt::NoBrush) {
             overrideColor = m_viewItemOption->backgroundBrush.color();
             parts = UnionPainter::Parts::PanelOnly;
         }
