@@ -166,16 +166,6 @@ void PositionedItem::setPositionChildren(bool position)
     m_positionChildren = position;
 }
 
-PositionerSource::Source PositionedItem::source() const
-{
-    return m_source;
-}
-
-void PositionedItem::setSource(PositionerSource::Source newSource)
-{
-    m_source = newSource;
-}
-
 Union::Properties::Alignment PositionedItem::horizontalAlignment() const
 {
     return m_horizontalAlignment;

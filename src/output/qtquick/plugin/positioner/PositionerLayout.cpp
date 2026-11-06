@@ -49,8 +49,6 @@ public:
     QQmlProperty rightInsetProperty;
     QQmlProperty topInsetProperty;
     QQmlProperty bottomInsetProperty;
-
-    inline static const Union::Properties::LayoutPropertyGroup EmptyLayoutGroup;
 };
 
 PositionerLayout::PositionerLayout(QQuickItem *parentItem)
@@ -196,16 +194,9 @@ void PositionerLayout::updatePolish()
     debug("Performing layout for positioner of", parentItem());
 
     for (const auto &item : std::as_const(d->items)) {
-        auto source = PositionerSource::Source::Layout;
-
         if (!item->isVisible()) {
             debug("  Ignoring invisible item", item);
             continue;
-        }
-
-        auto positionedItemAttached = qobject_cast<PositionedItem *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
-        if (positionedItemAttached) {
-            source = positionedItemAttached->source();
         }
 
         auto query = qobject_cast<QuickStyle *>(qmlAttachedPropertiesObject<QuickStyle>(item, true))->query();
@@ -217,29 +208,14 @@ void PositionerLayout::updatePolish()
         }
 
         auto properties = query->properties();
-        auto layoutProperties = properties->layout();
+        auto layoutGroup = properties->layout();
 
-        Union::Properties::AlignmentPropertyGroup *alignment;
-        switch (source) {
-        case PositionerSource::Source::Layout:
-            alignment = layoutProperties ? layoutProperties->alignment() : nullptr;
-            break;
-        case PositionerSource::Source::Icon:
-            alignment = properties->icon() ? properties->icon()->alignment() : nullptr;
-            break;
-        case PositionerSource::Source::Text:
-            alignment = properties->text() ? properties->text()->alignment() : nullptr;
-            break;
-        }
+        auto horizontalAlignment =
+            safePropertyLookup(layoutGroup, Properties::Alignment::Unspecified, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::horizontal);
+        auto verticalAlignment =
+            safePropertyLookup(layoutGroup, Properties::Alignment::Unspecified, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::vertical);
 
-        if (!alignment) {
-            debug("  No alignment found for item", item);
-            continue;
-        }
-
-        auto horizontalAlignment = alignment->horizontal().value_or(Union::Properties::Alignment::Unspecified);
-        auto verticalAlignment = alignment->vertical().value_or(Union::Properties::Alignment::Unspecified);
-
+        auto positionedItemAttached = qobject_cast<PositionedItem *>(qmlAttachedPropertiesObject<PositionedItem>(item, false));
         if (positionedItemAttached) {
             if (positionedItemAttached->horizontalAlignment() != Union::Properties::Alignment::Unspecified) {
                 horizontalAlignment = positionedItemAttached->horizontalAlignment();
@@ -253,8 +229,8 @@ void PositionerLayout::updatePolish()
         LayoutItem layoutItem{
             .implicitSize = QSizeF{item->implicitWidth(), item->implicitHeight()},
             .verticalAlignment = verticalAlignment,
-            .order = alignment->order().value_or(0),
-            .margins = QMarginsF{},
+            .order = safePropertyLookup(layoutGroup, 0, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::order),
+            .margins = safePropertyLookup(layoutGroup, QMarginsF{}, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins),
             .item = item,
         };
 
@@ -263,12 +239,10 @@ void PositionerLayout::updatePolish()
                                             positionedItemAttached->minimumHeight() > 0.0 ? positionedItemAttached->minimumHeight() : 0.0};
         }
 
-        if (source == PositionerSource::Source::Layout && layoutProperties) {
-            layoutItem.margins = layoutProperties->safePropertyLookup(QMarginsF{}, &LayoutPropertyGroup::margins, &SizePropertyGroup::toMargins);
-        }
-
         LayoutContainer *container = &(layout.itemContainer);
-        switch (alignment->container().value_or(AlignmentContainer::Item)) {
+        auto alignmentContainer =
+            safePropertyLookup(layoutGroup, AlignmentContainer::Item, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::container);
+        switch (alignmentContainer) {
         case AlignmentContainer::Content:
             container = &(layout.contentContainer);
             break;
@@ -313,7 +287,7 @@ void PositionerLayout::updatePolish()
 
         debug("  Layout item", item);
         debug("    Implicit Size:", layoutItem.implicitSize);
-        debug("    Container:", alignment->container());
+        debug("    Container:", alignmentContainer);
         debug("    Alignment: (h)", horizontalAlignment, "(v)", verticalAlignment);
         debug("    Order:", layoutItem.order);
     }
