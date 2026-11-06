@@ -332,8 +332,6 @@ void CssLoader::createProperties(StylePropertyGroup *output, std::span<const css
             }}
             ,Case{"color", [&]{
                 setDisplayProperty(output, property);
-                setTextProperty(output, property);
-                setIconProperty(output, property);
             }}
             ,Case{{"width", "height", "spacing"}, [&]{
                 setLayoutProperty(output, property);
@@ -536,9 +534,6 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
 
     /* clang-format off */
     switchString(property
-        ,Case{StartsWith{"text-alignment"}, [&] {
-            setAlignment(text.instance, property);
-        }}
         ,Case{"text-align", [&](auto &&value) {
             text->setHorizontalAlignment(toEnumValue<HorizontalTextAlignment>(value));
         }}
@@ -550,9 +545,6 @@ void CssLoader::setTextProperty(StylePropertyGroup *output, const cssparser::Pro
         }}
         ,Case{{"text-transform", "text-decoration", "letter-spacing", "word-spacing"}, [&]{
             setFontProperty(text.instance, property);
-        }}
-        ,Case{{"color", "text-color"}, [&](auto &&value) {
-            text->setColor(to_color(value));
         }}
         ,Case{"text-wrap-mode", [&](auto &&value) {
             // Wrap is shorthand for WrapAtWordBoundaryOrAnywhere
@@ -674,27 +666,11 @@ void CssLoader::setIconProperty(StylePropertyGroup *output, const cssparser::Pro
 
     /* clang-format off */
     switchString(property
-        ,Case{StartsWith{"icon-alignment"}, [&]{
-            setAlignment(icon.instance, property);
-        }}
-        ,Case{"icon-width", [&](auto &&value) {
-            icon->setWidth(to_px(value));
-        }}
-        ,Case{"icon-height", [&](auto &&value) {
-            icon->setHeight(to_px(value));
-        }}
-        ,Case{"icon-size", [&](auto &&value) {
-            icon->setWidth(to_px(value));
-            icon->setHeight(to_px(value));
-        }}
         ,Case{"icon-name", [&](auto &&value) {
             icon->setName(to_string(value));
         }}
         ,Case{"icon-source", [&](auto &&value) {
             icon->setSource(QUrl{to_string(value)});
-        }}
-        ,Case{{"color", "icon-color"}, [&](auto &&value) {
-            icon->setColor(to_color(value));
         }}
     );
     /* clang-format on */
