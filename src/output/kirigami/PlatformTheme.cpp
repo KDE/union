@@ -74,8 +74,8 @@ void PlatformTheme::syncColors()
         setBackgroundColor(query->properties()->background()->color().value().toQColor());
     }
 
-    if (query->properties()->text()->color().has_value()) {
-        setTextColor(query->properties()->text()->color().value().toQColor());
+    if (query->properties()->display()->color().has_value()) {
+        setTextColor(query->properties()->display()->color().value().toQColor());
     }
 }
 

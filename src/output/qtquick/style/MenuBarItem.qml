@@ -39,11 +39,10 @@ T.MenuBarItem {
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
 
-    contentItem: T.Label {
+    contentItem: Text {
         text: control.Union.Mnemonics.richTextLabel ?? control.text
-        font: control.font
-        color: Union.Style.properties.text.color
-        visible: control.display != T.AbstractButton.IconOnly
+        font: Union.Style.properties.text.font.qFont ?? control.font
+        color: Union.Style.properties.display.color ?? control.palette.text
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignHCenter
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
     }

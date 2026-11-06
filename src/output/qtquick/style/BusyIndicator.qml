@@ -35,9 +35,10 @@ T.BusyIndicator {
             anchors.centerIn: parent
             width: Math.min(parent.width, parent.height)
             height: width
+
             name: Union.Style.properties.icon.name
-            color: Union.Style.properties.icon.color
-            opacity: control.running ? 1 : 0
+            color: Union.Style.properties.display.color
+            opacity: control.running ? (Union.Style.properties.display.opacity ?? 1.0) : 0
             smooth: true
 
             RotationAnimator on rotation {

@@ -44,7 +44,7 @@ T.Tumbler {
             highlighted: PathView.isCurrentItem
         }
         font: control.font
-        color: Union.Style.properties.text.color ?? "black"
+        color: Union.Style.properties.display.color ?? "black"
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignHCenter
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
         // We use required property here to satisfy qmllint, but that means

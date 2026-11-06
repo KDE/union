@@ -54,8 +54,10 @@ T.Dial {
             pressed: control.pressed
             enabled: control.handle.enabled
         }
+
         x: control.background.x + control.background.width / 2 - width / 2
         y: control.background.y + control.background.height / 2 - height / 2
+
         transform: [
             Translate {
                 y: -Math.min(control.background.width, control.background.height) * 0.45

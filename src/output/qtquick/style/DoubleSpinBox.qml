@@ -66,8 +66,8 @@ T.DoubleSpinBox {
         implicitHeight: helper.maximumSize.height
         clip: true
         text: control.displayText
-        font: control.font
-        color: Union.Style.properties.text.color
+        font: Union.Style.properties.text.font.qFont
+        color: Union.Style.properties.display.color ?? control.palette.text
 
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter

@@ -64,8 +64,8 @@ T.SpinBox {
         implicitHeight: helper.maximumSize.height
         clip: true
         text: control.displayText
-        font: control.font
-        color: Union.Style.properties.text.color ?? control.palette.text
+        font: Union.Style.properties.text.font.qFont ?? control.font
+        color: Union.Style.properties.display.color ?? control.palette.text
 
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
         verticalAlignment: Unoin.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter

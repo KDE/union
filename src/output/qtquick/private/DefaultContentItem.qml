@@ -11,13 +11,11 @@ Item {
 
     required property T.Control control
 
-    property int wrapMode: control.Union.Style.properties.text.wrapMode ?? Text.NoWrap
-    property int elide: control.Union.Style.properties.text.elide ?? Text.ElideRight
 
     Union.PositionedItem.positionChildren: true
     Union.Mnemonics.enabled: root.control.enabled && root.control.visible
     Union.Mnemonics.controlType: Union.Mnemonics.ActionElement
-    Union.Mnemonics.label: root.control.text
+    Union.Mnemonics.label: root.control.text ?? ""
 
     Union.Icon {
         Union.PositionedItem.source: Union.PositionerSource.Icon
@@ -30,13 +28,14 @@ Item {
     Text {
         Union.PositionedItem.source: Union.PositionerSource.Text
 
-        text: root.Union.Mnemonics.richTextLabel ?? root.control.text
+        text: root.Union.Mnemonics.richTextLabel ?? (root.control.text ?? "")
         font: root.control.font
-        color: Union.Style.properties.text.color ?? "black"
-        elide: root.wrapMode == Text.NoWrap ? root.elide : Text.ElideNone
-        wrapMode: root.wrapMode
+        color: Union.Style.properties.display.color ?? "black"
+        elide: wrapMode == Text.NoWrap && Union.Style.properties.text.elide ? Union.Style.properties.text.elide : Text.ElideNone
+        wrapMode: Union.Style.properties.text.wrapMode ?? Text.NoWrap
 
-        visible: root.control.display != T.AbstractButton.IconOnly && text.length > 0
+        visible: text.length > 0 && (Union.Style.properties.display.visible ?? true)
+        opacity: Union.Style.properties.display.opacity ?? 1.0
 
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Text.AlignLeft
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter

@@ -83,7 +83,7 @@ T.ComboBox {
         implicitHeight: Math.max(contentHeight, metrics.height)
         clip: true
 
-        color: Union.Style.properties.text.color ?? control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
         text: control.editable ? control.editText : control.displayText
         enabled: control.editable
         autoScroll: control.editable

@@ -64,7 +64,7 @@ T.ToolTip {
         text: control.text
         font: control.font
         wrapMode: Text.Wrap
-        color: Union.Style.properties.text.color ?? control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
 
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter

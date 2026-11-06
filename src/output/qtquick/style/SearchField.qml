@@ -72,7 +72,7 @@ T.SearchField {
         text: control.text
         placeholderText: control.placeholderText
         selectByMouse: control.selectTextByMouse
-        color: control.palette.text
+        color: Union.Style.properties.display.color ?? control.palette.text
         selectionColor: control.palette.highlight
         selectedTextColor: control.palette.highlightedText
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
