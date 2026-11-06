@@ -51,13 +51,18 @@ T.TableViewDelegate {
     background: Union.StyledRectangle {}
 
     contentItem: Text {
-        clip: false
+        Union.Element.subElement: "Text"
+
         text: control.model.display ?? ""
-        elide: Text.ElideRight
-        visible: !control.editing
-        color: Union.Style.properties.text.color ?? control.palette.text
+
+        color: Union.Style.properties.display.color ?? control.palette.text
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Text.AlignLeft
         verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Text.AlignVCenter
+
+        elide: wrapMode == Text.NoWrap && Union.Style.properties.text.elide ? Union.Style.properties.text.elide : Text.ElideNone
+        wrapMode: Union.Style.properties.text.wrapMode ?? Text.NoWrap
+
+        visible: !control.editing
     }
     
     TableView.editDelegate: FocusScope {

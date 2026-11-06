@@ -60,6 +60,8 @@ T.SpinBox {
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         implicitWidth: Math.ceil(helper.maximumSize.width)
         implicitHeight: helper.maximumSize.height
         clip: true
@@ -68,7 +70,7 @@ T.SpinBox {
         color: Union.Style.properties.display.color ?? control.palette.text
 
         horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignLeft
-        verticalAlignment: Unoin.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
 
         readOnly: !control.editable
         validator: control.validator
@@ -78,23 +80,21 @@ T.SpinBox {
     }
 
     up.indicator: P.DefaultIndicator {
-        id: upIndicator
-
+        Union.Element.subElement: "Increase"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
-            enabled: upIndicator.enabled
+            enabled: enabled
         }
         Union.Element.hints: Union.ElementHint { name: "increase" }
     }
 
     down.indicator: P.DefaultIndicator {
-        id: downIndicator
-
+        Union.Element.subElement: "Decrease"
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
-            enabled: downIndicator.enabled
+            enabled: enabled
         }
         Union.Element.hints: Union.ElementHint { name: "decrease" }
     }

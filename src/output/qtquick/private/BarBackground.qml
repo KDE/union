@@ -43,7 +43,7 @@ Item {
     }
 
     Union.StyledRectangle {
-        Union.Element.type: "Filled"
+        Union.Element.subElement: "Filled"
 
         x: root.horizontal ? root.visualStartPosition * (parent.width - root.handleWidth - (root.endPosition < 0 ? width : 0)) : track.x
         y: root.horizontal ? track.y : root.visualStartPosition * (parent.height - root.handleHeight)
@@ -56,7 +56,7 @@ Item {
     Item {
         id: tickMarkArea
 
-        Union.Element.type: "TickMark"
+        Union.Element.subElement: "TickMark"
 
         x: root.horizontal ? root.handleWidth / 2 : track.x + (track.width / 2 - width / 2) + (root.control.mirrored ? -1.0 : 1.0) * (Union.Style.properties.layout.margins.left ?? 0)
         y: root.horizontal ? track.y + (track.height / 2 - height / 2) + (Union.Style.properties.layout.margins.top ?? 0) : root.handleHeight / 2
@@ -90,7 +90,7 @@ Item {
         // Helper to query the highlighted style for tickmarks so we don't have
         // to do this for each individual tick mark.
         id: tickMarkHighlight
-        Union.Element.type: "TickMark"
+        Union.Element.subElement: "TickMark"
         Union.Element.states.highlighted: true
     }
 }

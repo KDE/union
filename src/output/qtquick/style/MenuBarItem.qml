@@ -40,6 +40,8 @@ T.MenuBarItem {
     rightPadding: Union.Style.properties.layout.padding.right
 
     contentItem: Text {
+        Union.Element.subElement: "Text"
+
         text: control.Union.Mnemonics.richTextLabel ?? control.text
         font: Union.Style.properties.text.font.qFont ?? control.font
         color: Union.Style.properties.display.color ?? control.palette.text

@@ -3,6 +3,7 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Templates as T
 
@@ -10,6 +11,7 @@ import org.kde.union.impl as Union
 
 T.Tumbler {
     id: control
+
     Union.Element.type: "Tumbler"
     Union.Element.states {
         hovered: control.hovered
@@ -37,9 +39,8 @@ T.Tumbler {
 
     spacing: Union.Style.properties.layout.spacing
 
-
     delegate: Text {
-        Union.Element.type: "Text"
+        Union.Element.subElement: "Text"
         Union.Element.states {
             highlighted: PathView.isCurrentItem
         }
@@ -81,7 +82,6 @@ T.Tumbler {
             }
         }
     }
-
 
     background: Union.StyledRectangle { }
 }

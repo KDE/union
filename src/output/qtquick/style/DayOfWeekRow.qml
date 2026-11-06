@@ -9,6 +9,7 @@ import org.kde.union.impl as Union
 
 T.AbstractDayOfWeekRow {
     id: control
+
     Union.Element.type: "DayOfWeekRow"
     Union.Element.states {
         hovered: control.hovered
@@ -38,11 +39,10 @@ T.AbstractDayOfWeekRow {
     delegate: Label {
         required property string shortName
 
+        Union.Element.subElement: "Delegate"
+
         text: shortName
-        font: Union.Style.properties.text.font.qFont ?? control.font
-        color: Union.Style.properties.text.color ?? "black"
-        horizontalAlignment: Union.Style.properties.text.horizontalAlignment
-        verticalAlignment: Union.Style.properties.text.verticalAlignment
+        font: control.font
     }
 
     contentItem: Row {

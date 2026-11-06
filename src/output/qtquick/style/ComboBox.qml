@@ -77,7 +77,7 @@ T.ComboBox {
     indicator: P.DefaultIndicator { }
 
     contentItem: T.TextField {
-        Union.PositionedItem.source: Union.PositionerSource.Text
+        Union.Element.subElement: "Text"
 
         implicitWidth: Math.max(contentWidth, 1)
         implicitHeight: Math.max(contentHeight, metrics.height)
@@ -113,7 +113,7 @@ T.ComboBox {
     Union.Icon {
         id: icon
 
-        Union.PositionedItem.source: Union.PositionerSource.Icon
+        Union.Element.subElement: "Icon"
 
         implicitWidth: Union.Style.properties.icon.width ?? 0
         implicitHeight: Union.Style.properties.icon.height ?? 0

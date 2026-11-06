@@ -9,7 +9,7 @@ import org.kde.union.impl as Union
 Text {
     required property var control
 
-    Union.Element.hints: Union.ElementHint { name: "placeholder" }
+    Union.Element.subElement: "Placeholder"
 
     x: control.leftPadding
     y: control.topPadding

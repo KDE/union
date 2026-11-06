@@ -46,14 +46,7 @@ T.Dial {
     }
 
     handle: Union.StyledRectangle {
-        Union.Element.type: "Handle"
-        Union.Element.states {
-            hovered: control.hovered
-            activeFocus: control.handle.activeFocus
-            visualFocus: control.visualFocus
-            pressed: control.pressed
-            enabled: control.handle.enabled
-        }
+        Union.Element.subElement: "Handle"
 
         x: control.background.x + control.background.width / 2 - width / 2
         y: control.background.y + control.background.height / 2 - height / 2

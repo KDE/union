@@ -55,6 +55,8 @@ T.ToolTip {
     popupType: T.Popup.Item
 
     contentItem: Text {
+        Union.Element.subElement: "Text"
+
         // A maximum width for the contents of the tooltip. This is calculated to
         // fit 70 characters which is usually considered a good line length.
         //

@@ -106,11 +106,11 @@ T.MenuItem {
 
     indicator: P.DefaultIndicator { }
 
-    arrow: P.DefaultIndicator { Union.Element.type: "Arrow"; }
+    arrow: P.DefaultIndicator { Union.Element.subElement: "Arrow"; }
 
     Text {
         id: shortcutText
-        Union.Element.type: "Shortcut"
+        Union.Element.subElement: "Shortcut"
 
         Shortcut {
             id: itemShortcut

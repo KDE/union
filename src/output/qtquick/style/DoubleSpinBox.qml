@@ -4,7 +4,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 import QtQuick
-import QtQuick.Layouts
 import QtQuick.Templates as T
 
 import org.kde.union.impl as Union
@@ -24,6 +23,7 @@ T.DoubleSpinBox {
         Union.ElementHint { name: "doublespinbox" },
         Union.ElementHint { name: "editable"; when: control.editable },
         Union.ElementHint { name: "constrained"; when: helper.constrained },
+        Union.ElementHint { name: "changed"; when: false },
         Union.ElementHint { name: "positive"; when: false },
         Union.ElementHint { name: "negative"; when: false }
     ]
@@ -62,6 +62,8 @@ T.DoubleSpinBox {
     }
 
     contentItem: T.TextField {
+        Union.Element.subElement: "Text"
+
         implicitWidth: Math.ceil(helper.maximumSize.width)
         implicitHeight: helper.maximumSize.height
         clip: true
@@ -80,8 +82,7 @@ T.DoubleSpinBox {
     }
 
     up.indicator: P.DefaultIndicator {
-        id: upIndicator
-
+        Union.Element.subElement: "Increase"
         Union.Element.states {
             hovered: control.up.hovered
             pressed: control.up.pressed
@@ -91,12 +92,11 @@ T.DoubleSpinBox {
     }
 
     down.indicator: P.DefaultIndicator {
-        id: downIndicator
-
+        Union.Element.subElement: "Decrease"
         Union.Element.states {
             hovered: control.down.hovered
             pressed: control.down.pressed
-            enabled: downIndicator.enabled
+            enabled: enabled
         }
         Union.Element.hints: Union.ElementHint { name: "decrease" }
     }

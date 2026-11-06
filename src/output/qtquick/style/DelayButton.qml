@@ -69,7 +69,7 @@ T.DelayButton {
         id: background
 
         Union.StyledRectangle {
-            Union.Element.type: "Filled"
+            Union.Element.subElement: "Filled"
             x: control.mirrored ? parent.width * (1.0 - control.progress) : 0.0
             width: control.progress * parent.width
             height: parent.height

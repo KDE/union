@@ -17,10 +17,11 @@ T.AbstractMonthGrid {
         visualFocus: control.visualFocus
         enabled: control.enabled
     }
-    implicitWidth: Math.max(background ? background.implicitWidth : 0,
-                            contentItem.implicitWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(background ? background.implicitHeight : 0,
-                            contentItem.implicitHeight + topPadding + bottomPadding)
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
@@ -37,18 +38,23 @@ T.AbstractMonthGrid {
     spacing: Union.Style.properties.layout.spacing
 
     delegate: Label {
-        Union.Element.states {
-            activeFocus: activeFocus
-            enabled: enabled
+        required property var model
+
+        Union.Element.subElement: {
+            // TODO: This is not great, but we cannot use hints in combination
+            // with subElement on the CSS side, as part() and .class selectors
+            // are not allowed to be combined and states do not really cover
+            // this. We should find a different solution for this though.
+            if (model.today) {
+                return "DelegateToday"
+            } else if (model.month == control.month) {
+                return "DelegateCurrentMonth"
+            } else {
+                return "Delegate"
+            }
         }
-        Union.Element.hints: [
-            Union.ElementHint { name: "current-month"; when: model.month === control.month },
-            Union.ElementHint { name: "today"; when: model.today },
-        ]
 
         text: model.day
-
-        required property var model
     }
 
     contentItem: Grid {

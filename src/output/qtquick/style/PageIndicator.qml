@@ -38,8 +38,10 @@ T.PageIndicator {
     delegate: Union.StyledRectangle {
         id: delegate
         required property int index
-        Union.Element.type: "PageIndicatorDelegate"
-        Union.Element.hints: Union.ElementHint { name: "current"; when: delegate.index === control.currentIndex }
+        Union.Element.subElement: "Delegate"
+        Union.Element.states {
+            highlighted: delegate.index === control.currentIndex
+        }
     }
 
     contentItem: Row {

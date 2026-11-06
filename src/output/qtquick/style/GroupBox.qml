@@ -37,7 +37,7 @@ T.GroupBox {
     spacing: Union.Style.properties.layout.spacing
 
     label: Item {
-        Union.Element.type: "Header"
+        Union.Element.subElement: title.text.length > 0 ? "TextHeader" : "Header"
 
         x: Union.Style.properties.layout.margins.left ?? 0
         y: Union.Style.properties.layout.margins.top ?? 0
@@ -45,8 +45,11 @@ T.GroupBox {
 
         implicitWidth: Math.max(Union.Style.properties.layout.width ?? 0, title.implicitWidth)
                        + (Union.Style.properties.layout.padding.left ?? 0) + (Union.Style.properties.layout.padding.right ?? 0)
-        implicitHeight: Math.max(Union.Style.properties.layout.height ?? 0, title.implicitHeight)
+        implicitHeight: Math.max(Union.Style.properties.layout.height ?? 0, title.text.length > 0 ? title.implicitHeight : 0)
                         + (Union.Style.properties.layout.padding.top ?? 0) + (Union.Style.properties.layout.padding.bottom ?? 0)
+
+        visible: Union.Style.properties.display.visible ?? true
+        opacity: Union.Style.properties.display.opacity ?? 1.0
 
         Union.StyledRectangle {
             anchors.fill: parent

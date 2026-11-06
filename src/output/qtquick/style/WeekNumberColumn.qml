@@ -37,10 +37,12 @@ T.AbstractWeekNumberColumn {
     spacing: Union.Style.properties.layout.spacing
 
     delegate: Label {
+        required property int weekNumber
+
+        Union.Element.subElement: "Delegate"
+
         text: weekNumber
         font: control.font
-
-        required property int weekNumber
     }
 
     contentItem: Column {

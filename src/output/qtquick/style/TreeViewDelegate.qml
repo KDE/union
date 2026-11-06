@@ -81,7 +81,7 @@ T.TreeViewDelegate {
     Item {
         id: indentItem
 
-        Union.Element.type: "Indentation"
+        Union.Element.subElement: "Indentation"
 
         implicitWidth: control.depth * control.indentation
         implicitHeight: 1
@@ -100,8 +100,6 @@ T.TreeViewDelegate {
     background: Union.StyledRectangle { }
 
     TableView.editDelegate: FocusScope {
-        Union.PositionedItem.source: Union.PositionerSource.Text
-
         width: parent.width
         height: parent.height
 
