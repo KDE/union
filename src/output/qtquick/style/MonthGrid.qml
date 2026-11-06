@@ -45,11 +45,8 @@ T.AbstractMonthGrid {
             Union.ElementHint { name: "current-month"; when: model.month === control.month },
             Union.ElementHint { name: "today"; when: model.today },
         ]
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+
         text: model.day
-        font: control.font
-        color: Union.Style.properties.text.color ?? "black"
 
         required property var model
     }

@@ -45,8 +45,8 @@ T.Tumbler {
         }
         font: control.font
         color: Union.Style.properties.text.color ?? "black"
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignHCenter
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
         // We use required property here to satisfy qmllint, but that means
         // we also need to declare the index for the attached properties
         // (see QQuickTumblerAttachedPrivate::init).

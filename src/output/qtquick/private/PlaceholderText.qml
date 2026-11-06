@@ -17,8 +17,8 @@ Text {
     height: control.height - control.topPadding - control.bottomPadding
 
     text: control.placeholderText
-    horizontalAlignment: control.horizontalAlignment ?? Text.AlignLeft
-    verticalAlignment: control.verticalAlignment ?? Text.AlignVCenter
+    horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? control.horizontalAlignment
+    verticalAlignment: Union.Style.properties.text.verticalAlignment ?? control.verticalAlignment
 
     font: Union.Style.properties.text.font.qFont ?? control.font
     color: Union.Style.properties.text.color ?? control.palette.placeholderText

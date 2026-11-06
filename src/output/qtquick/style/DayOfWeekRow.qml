@@ -36,13 +36,13 @@ T.AbstractDayOfWeekRow {
     spacing: Union.Style.properties.layout.spacing
 
     delegate: Label {
-        text: shortName
-        font: control.font
-        color: Union.Style.properties.text.color ?? "black"
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
-
         required property string shortName
+
+        text: shortName
+        font: Union.Style.properties.text.font.qFont ?? control.font
+        color: Union.Style.properties.text.color ?? "black"
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment
+        verticalAlignment: Union.Style.properties.text.verticalAlignment
     }
 
     contentItem: Row {
@@ -52,5 +52,6 @@ T.AbstractDayOfWeekRow {
             delegate: control.delegate
         }
     }
+
     background: Union.StyledRectangle {}
 }

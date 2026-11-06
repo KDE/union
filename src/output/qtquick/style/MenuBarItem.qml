@@ -44,8 +44,8 @@ T.MenuBarItem {
         font: control.font
         color: Union.Style.properties.text.color
         visible: control.display != T.AbstractButton.IconOnly
-        horizontalAlignment: Union.Alignment.toQtHorizontal(Union.Style.properties.text.alignment.horizontal)
-        verticalAlignment: Union.Alignment.toQtVertical(Union.Style.properties.text.alignment.vertical)
+        horizontalAlignment: Union.Style.properties.text.horizontalAlignment ?? Qt.AlignHCenter
+        verticalAlignment: Union.Style.properties.text.verticalAlignment ?? Qt.AlignVCenter
     }
 
     background: Union.StyledRectangle {}
