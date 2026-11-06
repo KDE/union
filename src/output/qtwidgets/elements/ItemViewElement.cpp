@@ -252,8 +252,8 @@ Union::IdentifierVariantHash ItemViewElement::elementAttributes() const
     auto viewItemPosition = m_viewItemOption->viewItemPosition;
 
     // Override situations where we have treeview but only select one item
-    const auto treeItemView = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
-    if (treeItemView && treeItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
+    const auto abstractItemView = qobject_cast<const QAbstractItemView *>(m_viewItemOption->widget);
+    if (abstractItemView && abstractItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
         viewItemPosition = QStyleOptionViewItem::OnlyOne;
     }
 
