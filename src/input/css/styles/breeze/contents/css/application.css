@@ -303,8 +303,8 @@ groupbox {
     & > header {
         color: var(--window-text-color);
     }
-    icon-alignment: content start start 0;
-    text-alignment: content center start 0;
+    icon-alignment: content center start 0;
+    text-alignment: content center start 1;
     spacing: var(--small-spacing);
     width: 200px;
 }
