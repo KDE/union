@@ -87,7 +87,9 @@ void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
         drawBackground(painter);
         break;
     case QStyle::CE_HeaderLabel:
-        drawText(painter);
+        // Headerlabel can be drawn anywhere in custom controls,
+        // so rely on default behavior for them.
+        m_style->QCommonStyle::drawControl(QStyle::CE_HeaderLabel, m_styleOption, painter, m_widget);
         break;
     case QStyle::CE_HeaderEmptyArea:
         drawBackground(painter);
@@ -129,15 +131,29 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
         qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
         return {};
     }
+    QRectF rect;
     switch (element) {
     case QStyle::SE_HeaderLabel:
-        return m_layoutMap[ElementString::Text].rect;
+        rect = m_layoutMap[ElementString::Text].rect;
+        break;
     case QStyle::SE_HeaderArrow:
-        return m_layoutMap[ElementString::Indicator].rect;
+        rect = m_layoutMap[ElementString::Indicator].rect;
+        break;
     default:
         break;
     }
-    return {};
+
+    // Ensure we do not draw outside of the rectangle
+    if (m_headerOption) {
+        if (rect.x() < m_headerOption->rect.x() + padding().left()) {
+            rect.setX(m_headerOption->rect.x() + padding().left());
+        }
+        if (rect.width() > m_headerOption->rect.width() - padding().right()) {
+            rect.setWidth(m_headerOption->rect.width() - padding().right());
+        }
+    }
+
+    return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect.toRect());
 }
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
