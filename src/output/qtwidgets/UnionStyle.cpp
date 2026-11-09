@@ -65,6 +65,7 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsView>
 #include <QGroupBox>
+#include <QHeaderView>
 #include <QItemDelegate>
 #include <QKeySequenceEdit>
 #include <QLabel>
@@ -775,7 +776,8 @@ QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
             // Frames
         } else if (qobject_cast<const QColumnView *>(currentWidget)) {
             members.prepend(ElementString::ColumnView);
-            // HeaderView is not castable with QObject_Cast
+        } else if (qobject_cast<const QHeaderView *>(currentWidget)) {
+            members.prepend(ElementString::HeaderView);
         } else if (qobject_cast<const QTableView *>(currentWidget)) {
             members.prepend(ElementString::TableView);
         } else if (qobject_cast<const QTreeView *>(currentWidget)) {
