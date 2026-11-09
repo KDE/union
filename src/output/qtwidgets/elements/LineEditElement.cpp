@@ -33,9 +33,11 @@ void LineEditElement::update()
 {
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
         m_hasFrame = lineEdit->hasFrame();
-    } else {
+    } else if (!m_widget) {
         // Widget-less callers indicate the frame through lineWidth, not frameShape.
         m_hasFrame = m_frameOption && m_frameOption->lineWidth > 0;
+    } else {
+        m_hasFrame = m_frameOption && m_frameOption->frameShape != QFrame::Shape::NoFrame;
     }
 
     updateSubElementList();
