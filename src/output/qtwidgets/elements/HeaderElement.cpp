@@ -12,6 +12,14 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
+HeaderElement::HeaderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(option, style, widget)
+    , m_headerOption(qstyleoption_cast<const QStyleOptionHeader *>(option))
+    , m_isHorizontal(false)
+{
+    update();
+}
+
 HeaderElement::HeaderElement(const QStyleOptionHeader *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_headerOption(option)
