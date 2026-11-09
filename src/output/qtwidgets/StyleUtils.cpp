@@ -130,7 +130,7 @@ QString styleOptionToElementName(const QStyleOption *option)
     case QStyleOption::SO_ToolBox:
         return ElementString::ToolBox;
     case QStyleOption::SO_Header:
-        return ElementString::Header;
+        return ElementString::HeaderViewDelegate;
     case QStyleOption::SO_DockWidget:
         return ElementString::DockWidget;
     case QStyleOption::SO_ViewItem:

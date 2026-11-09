@@ -234,5 +234,5 @@ qreal HeaderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 
 QString HeaderElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
 {
-    return ElementString::Header;
+    return ElementString::HeaderViewDelegate;
 }
