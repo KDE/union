@@ -120,7 +120,13 @@ QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
         return frameRect.adjusted(padding.left(), padding.top() + topMargin, -padding.bottom(), -padding.right());
     } break;
     case QStyle::SC_GroupBoxCheckBox: {
-        finalRect = m_layoutMap[ElementString::Icon].rect;
+        const auto checkItem = m_layoutMap[ElementString::Icon];
+        const auto textItem = m_layoutMap[ElementString::Text];
+        finalRect = checkItem.rect;
+        // Ensure we align on the same level as text
+        if (checkItem.verticalAlignment == textItem.verticalAlignment) {
+            finalRect.moveCenter(QPointF(finalRect.center().x(), textItem.rect.center().y()));
+        }
     } break;
     case QStyle::SC_GroupBoxFrame: {
         return m_groupBoxOption->rect;
