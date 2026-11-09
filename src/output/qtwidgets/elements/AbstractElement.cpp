@@ -324,7 +324,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         auto font = safePropertyLookup(property, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
         auto textColor = m_styleOption->palette.text().color();
         if (m_styleOption->palette.resolveMask() <= 0) {
-            auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
+            auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::display, &DisplayPropertyGroup::color);
             if (unionColor.isValid()) {
                 textColor = unionColor.toQColor();
             }
@@ -405,8 +405,8 @@ QSizeF AbstractElement::propertySize(const Union::StylePropertyGroupPtr &propert
 QSizeF AbstractElement::iconSize(const Union::StylePropertyGroupPtr &properties) const
 {
     const auto property = defaultPropertyGroup(properties);
-    auto width = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
-    auto height = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
+    auto width = safePropertyLookup(property, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    auto height = safePropertyLookup(property, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     return QSizeF(width, height);
 }
 
@@ -561,29 +561,29 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, co
             // Some styleoptions provide us an icon size, use it if its not null
             auto iconSize = iconSizeFromOption(opt);
             if (!iconSize.isValid()) {
-                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
-                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
+                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
+                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));
             } else {
                 elementRect.setWidth(iconSize.width());
                 elementRect.setHeight(iconSize.height());
             }
             horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::icon,
-                                                                 &IconPropertyGroup::alignment,
+                                                                 &StylePropertyGroup::layout,
+                                                                 &LayoutPropertyGroup::alignment,
                                                                  &AlignmentPropertyGroup::horizontal);
             verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::icon,
-                                                               &IconPropertyGroup::alignment,
+                                                               &StylePropertyGroup::layout,
+                                                               &LayoutPropertyGroup::alignment,
                                                                &AlignmentPropertyGroup::vertical);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else if (subElement == ElementString::Text || subElement == ElementString::ShortcutText) {
             horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::text,
-                                                                 &TextPropertyGroup::alignment,
+                                                                 &StylePropertyGroup::layout,
+                                                                 &LayoutPropertyGroup::alignment,
                                                                  &AlignmentPropertyGroup::horizontal);
             verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::text,
-                                                               &TextPropertyGroup::alignment,
+                                                               &StylePropertyGroup::layout,
+                                                               &LayoutPropertyGroup::alignment,
                                                                &AlignmentPropertyGroup::vertical);
             auto optionText = textFromOption(opt);
             // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
@@ -607,7 +607,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, co
                 fontMetrics = QFontMetrics(properties->text()->font()->toQFont());
             }
             elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optionText);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::text, &TextPropertyGroup::alignment, &AlignmentPropertyGroup::order);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::order);
         } else {
             elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
             elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));
