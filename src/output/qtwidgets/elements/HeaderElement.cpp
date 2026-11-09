@@ -159,7 +159,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     if (!m_isValid || !m_headerOption) {
-        return QSizeF();
+        return contentsSizeFromStyle;
     }
     // Copied from Breeze
     const qreal arrowWidth = subElementRect(QStyle::SE_HeaderArrow).width();
