@@ -213,7 +213,6 @@ pane
 }
 
 frame,
-groupbox,
 framemenu,
 framewindow
 {
@@ -306,19 +305,34 @@ scrollview {
 }
 
 groupbox {
-    padding: var(--small-spacing);
+    width: 200px;
+    padding: var(--large-spacing);
+    spacing: var(--small-spacing);
+
+    color: var(--window-text-color);
+    background-color: mix(var(--window-background-color), var(--view-background-color), 0.3);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
-    color: var(--window-text-color);
-    background-color: var(--window-background-color);
 
-    & > header {
+    &::part(text-header) {
+        padding: var(--large-spacing);
         color: var(--window-text-color);
+        text-align: center;
     }
-    icon-alignment: content start start 0;
-    text-alignment: content center start 0;
-    spacing: var(--small-spacing);
-    width: 200px;
+
+    &.flat {
+        background: none;
+        border: none;
+
+        &::part(text-header) {
+            font-weight: bold;
+            font-size: 110%;
+        }
+    }
+
+    .inactive & {
+        border-color: var(--window-inactive-border-color);
+    }
 }
 
 dockwidget {
