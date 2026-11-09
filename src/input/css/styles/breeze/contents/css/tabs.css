@@ -28,13 +28,18 @@ tabbutton {
     height: var(--tab-default-height);
     padding: var(--medium-spacing);
     background-color: var(--tab-background-color);
-    color: var(--tab-text-color);
-
-    text-wrap-mode: no-wrap;
-
     layout-alignment: content fill fill 0;
-    icon-alignment: content start center 0;
-    text-alignment: content center center 0;
+
+    &::part(icon) {
+        color: var(--tab-text-color);
+        layout-alignment: content start center 0;
+    }
+
+    &::part(text) {
+        color: var(--tab-text-color);
+        layout-alignment: content center center 0;
+        text-wrap-mode: no-wrap;
+    }
 
     &[direction="top"] {
         border-bottom: var(--button-border);
@@ -88,8 +93,8 @@ tabbutton {
         }
     }
 
-    &[display="icon-only"] {
-        icon-alignment: content center center 0;
+    &[display="icon-only"]::part(icon) {
+        layout-alignment: content center center 0;
     }
 
     &[direction="top"],
@@ -108,7 +113,11 @@ tabbutton {
 
     &:disabled {
         background-color: var(--tab-disabled-background-color);
-        color: var(--button-disabled-text-color);
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--button-disabled-text-color);
+        }
     }
 
     &:hovered
@@ -127,9 +136,12 @@ tabbutton {
     &:highlighted /* Widgets uses highlighted */
     {
         background-color: var(--tab-open-background-color);
-        color: var(--tab-open-text-color);
         border: var(--button-border);
-        /*         border-radius: var(--corner-radius); */
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--tab-open-text-color);
+        }
 
         &[direction="top"] {
             border-top-width: var(--tab-highlight-size);
@@ -164,7 +176,7 @@ tabbutton {
         }
     }
 
-    & > closebutton {
+    &::part(close) {
         layout-alignment: content end center 0;
         width: var(--icon-size-small);
         height: var(--icon-size-small);
@@ -172,14 +184,20 @@ tabbutton {
 
         &:hovered,
         &:pressed {
-            color: var(--highlight-text-color);
             background-color: var(--negative-text);
             border-radius: var(--icon-size-small);
+
+            &::part(icon),
+            &::part(text) {
+                color: var(--highlight-text-color);
+            }
         }
 
         &:disabled {
-            color: var(--button-disabled-text-color);
-            icon-color: var(--button-disabled-text-color);
+            &::part(icon),
+            &::part(text) {
+                color: var(--button-disabled-text-color);
+            }
         }
     }
 }
@@ -191,7 +209,6 @@ tabbutton.immutable
     border-radius: 0px;
     border-right: 1px solid var(--button-active-border-color);
     padding: var(--medium-spacing);
-    text-elide: none;
 
     &:checked,
     &:highlighted,
@@ -209,7 +226,11 @@ tabbutton.immutable
     &:checked
     {
         background-color: var(--highlight-hover-color);
-        color: var(--button-active-text-color);
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--button-active-text-color);
+        }
     }
 
     &[direction="top"]
@@ -296,6 +317,7 @@ tabwidget {
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
     background-color: var(--view-background-color);
+
     &[direction="top"] {
         inset-top: 1px;
     }

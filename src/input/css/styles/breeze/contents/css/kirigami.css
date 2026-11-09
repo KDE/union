@@ -57,28 +57,30 @@ chip
     width: var(--medium-element-size);
     height: var(--medium-element-size);
     padding: var(--medium-spacing);
-
     layout-alignment: content fill fill 0;
-    text-alignment: content fill center 0;
-    icon-alignment: content start center 0;
+    spacing: var(--small-spacing);
 
     background-color: var(--chip-background-color);
     border-radius: var(--corner-radius);
     border: 1px solid var(--button-active-border-color);
-    color: var(--button-active-text-color);
 
-    spacing: var(--small-spacing);
+    &::part(icon) {
+        layout-alignment: content start center 0;
+        color: var(--button-active-text-color);
+    }
 
-    & > .indicator
+    &::part(text) {
+        layout-alignment: content fill center 0;
+        color: var(--button-active-text-color);
+    }
+
+    &::part(indicator)
     {
-        width: var(--small-element-size);
-        height: var(--small-element-size);
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: item end center 0;
 
         icon-name: "edit-delete-remove";
-        icon-width: var(--icon-size-small);
-        icon-height: var(--icon-size-small);
-
-        layout-alignment: item end center 0;
     }
 
     &:hovered
@@ -185,14 +187,21 @@ navigationtabbutton {
     inset: var(--small-spacing);
     spacing: var(--small-spacing);
 
-    icon-size: var(--icon-size-smallmedium);
     border-radius: var(--corner-radius);
 
     layout-alignment: content fill fill 0;
-    text-alignment-horizontal: start;
-    icon-alignment-horizontal: start;
 
-    color: var(--window-text-color);
+    &::part(icon) {
+        width: var(--icon-size-smallmedium);
+        height: var(--icon-size-smallmedium);
+        layout-alignment: content start fill 0;
+        color: var(--window-text-color);
+    }
+
+    &::part(text) {
+        layout-alignment: content start fill 1;
+        color: var(--window-text-color);
+    }
 
     &:disabled {
         color: var(--window-disabled-text-color);
@@ -217,16 +226,33 @@ navigationtabbutton {
         border: 1px solid var(--highlight-color);
     }
 
+    &[display="icon-only"]::part(text) {
+        visibility: hidden;
+    }
+
+    &[display="text-only"]::part(icon) {
+        visibility: hidden;
+    }
+
     &[display="text-beside-icon"] {
         height: 0px;
         padding: 12px var(--small-spacing) 12px var(--grid-unit); /* small-spacing + large-spacing */
         spacing: var(--grid-unit);
-        icon-size: var(--icon-size-small);
+
+        &::part(icon) {
+            width: var(--icon-size-small);
+            height: var(--icon-size-small);
+        }
     }
 
     &[display="text-under-icon"] {
-        icon-alignment: content center stack-center 0;
-        text-alignment: content center stack-center 1;
+        &::part(icon) {
+            layout-alignment: content center stack-center 0;
+        }
+
+        &::part(text) {
+            layout-alignment: content center stack-center 1;
+        }
     }
 }
 

@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
  */
 
-menuitem > arrow
+menuitem::part(arrow)
 {
     icon-name: "arrow-left-symbolic"
 }

@@ -31,21 +31,72 @@ menuitem
     height: var(--large-element-size);
     width: var(--menu-item-width);
     padding: var(--medium-spacing);
-    spacing: var(--small-spacing);
+    spacing: var(--medium-spacing);
 
     border-radius: var(--corner-radius);
 
-    color: var(--window-text-color);
+    &::part(icon)
+    {
+        layout-alignment: content start center 0;
+        color: var(--window-text-color);
+    }
 
-    icon-alignment: content start center 0;
-    text-alignment: content start center 1;
+    &::part(text)
+    {
+        layout-alignment: content start center 1;
+        color: var(--window-text-color);
+    }
+
+    &::part(indicator) {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        margin-left: var(--medium-spacing);
+        margin-right: var(--medium-spacing);
+        layout-alignment: item start center -1;
+        visibility: hidden;
+    }
+
+    &::part(arrow)
+    {
+        width: var(--icon-size-small);
+        height: var(--icon-size-small);
+        layout-alignment: content end center 1;
+        icon-name: "arrow-right-symbolic";
+        visibility: hidden;
+    }
+
+    &::part(shortcut) {
+        layout-alignment: content end center 0;
+        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
+        visibility: hidden;
+    }
+
+    &.checkable
+    {
+        padding-left: 0px;
+
+        &::part(indicator)
+        {
+            visibility: visible;
+        }
+    }
+
+    &.with-submenu::part(arrow)
+    {
+        visibility: visible;
+    }
+
+    &.with-shortcut::part(shortcut)
+    {
+        visibility: visible;
+    }
 
     /*
-     * highlight is "sticky", that is, when hovering outside of the menu or
-     * over a disabled item, the last hovered item will be considered highlighted.
-     * We generally only want to show hover, *except* when a menu item shows a
-     * submenu, as we want to keep highlighting the menu item the submenu comes
-     * from.
+     *   highlight is "sticky", that is, when hovering outside of the menu or
+     *   over a disabled item, the last hovered item will be considered highlighted.
+     *   We generally only want to show hover, *except* when a menu item shows a
+     *   submenu, as we want to keep highlighting the menu item the submenu comes
+     *   from.
      */
     &:hovered,
     &.with-submenu:highlighted
@@ -59,34 +110,23 @@ menuitem
     {
         border: 1px solid var(--highlight-color);
         background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
+
+        &::part(icon),
+        &::part(text) {
+            color: var(--highlight-text-color);
+        }
     }
 
     &:disabled {
         border: none;
         background: none;
-        color: var(--window-disabled-text-color);
-    }
 
-    arrow {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        layout-alignment: content end center 1;
-        icon-name: "arrow-right-symbolic";
-    }
+        &::part(icon),
+        &::part(text) {
+            color: var(--window-disabled-text-color);
+        }
 
-    indicator
-    {
-        width: var(--icon-size-small);
-        height: var(--icon-size-small);
-        layout-alignment: content start center -1;
-    }
-
-    shortcuttext {
-        spacing: 40px;
-        color: mix(var(--window-background-color), var(--window-text-color), 0.5);
-        text-alignment: content end center 0;
-        &:disabled {
+        &::part(shortcut) {
             color: mix(var(--window-background-color), var(--window-disabled-text-color), 0.5);
         }
     }
@@ -136,10 +176,10 @@ menubaritem
 
     border-radius: var(--corner-radius);
 
-    color: var(--window-text-color);
-
-    text-alignment-horizontal: center;
-    text-alignment-vertical: center;
+    &::part(text) {
+        layout-alignment: content center center 1;
+        color: var(--window-text-color);
+    }
 
     &:hovered,
     &:highlighted
@@ -147,9 +187,22 @@ menubaritem
         background-color: var(--focus-color);
         border: 1px solid var(--highlight-color);
     }
+
     &:pressed
     {
         background-color: var(--highlight-color);
-        color: var(--highlight-text-color);
+
+        &::part(text) {
+            color: var(--highlight-text-color);
+        }
+    }
+
+    &:disabled {
+        border: none;
+        background: none;
+
+        &::part(text) {
+            color: var(--window-disabled-text-color);
+        }
     }
 }

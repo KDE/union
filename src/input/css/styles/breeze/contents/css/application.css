@@ -116,7 +116,7 @@ toolbar
         }
     }
 
-    & > separator {
+    &::part(separator) {
         width: 1px;
         height: 1px;
         border: none;
@@ -125,7 +125,7 @@ toolbar
         padding: 0px;
     }
 
-    & > handle {
+    &::part(handle) {
         width: 4px;
         height: 4px;
         border: none;
@@ -170,18 +170,18 @@ scrollview {
 }
 
 splitview {
-    & handle {
+    &::part(handle) {
         width: 1px;
         height: 1px;
         background-color: var(--window-border-color);
     }
 
-    &.horizontal handle {
+    &.horizontal::part(handle) {
         margin-left: 6px;
         margin-right: 6px;
     }
 
-    &.vertical handle {
+    &.vertical::part(handle) {
         margin-top: 6px;
         margin-bottom: 6px;
     }
@@ -189,20 +189,20 @@ splitview {
 
 pageindicator {
     spacing: var(--small-spacing);
-}
 
-pageindicatordelegate {
-    background-color: var(--indicator-color);
-    width: 8px;
-    height: 8px;
-    border-radius: 4px;
+    &::part(delegate) {
+        background-color: var(--indicator-color);
+        width: 8px;
+        height: 8px;
+        border-radius: 4px;
 
-    &:pressed {
-        background-color: var(--indicator-press-color);
-    }
+        &:pressed {
+            background-color: var(--indicator-press-color);
+        }
 
-    &.current {
-        background-color: var(--indicator-current-color);
+        &:highlighted {
+            background-color: var(--indicator-current-color);
+        }
     }
 }
 
@@ -220,6 +220,7 @@ framewindow
     padding: var(--large-spacing);
     border: 1px solid var(--window-border-color);
     border-radius: var(--corner-radius);
+
     .inactive & {
         border-color: var(--window-inactive-border-color);
     }
@@ -239,9 +240,11 @@ scrollview {
     &:visual-focus {
         border: 1px solid var(--highlight-color);
     }
+
     &[shape="no-frame"] {
         border: none;
     }
+
     &[shape="panel"],
     &[shape="box"] {
         border-radius: var(--corner-radius);
@@ -253,6 +256,7 @@ scrollview {
             border-color: var(--window-inactive-border-color);
         }
     }
+
     &[shape="vertical-line"],
     &[shape="horizontal-line"] {
         border-radius: 0px;
@@ -261,13 +265,17 @@ scrollview {
         padding: 0px;
         inset: 1px;
     }
+
     &[shape="vertical-line"] {
         width: 1px;
     }
+
     &[shape="horizontal-line"] {
         height: 1px;
     }
+
     /* Legacy hints that applications use to drive Breeze style */
+
     &.dock-left,
     &.dock-right,
     &.dock-top,
@@ -279,15 +287,19 @@ scrollview {
         border: none;
         border-radius: 0px;
     }
+
     &.left-edge {
         border-left: 1px solid var(--window-border-color);
     }
+
     &.right-edge {
         border-right: 1px solid var(--window-border-color);
     }
+
     &.top-edge {
         border-top: 1px solid var(--window-border-color);
     }
+
     &.bottom-edge {
         border-bottom: 1px solid var(--window-border-color);
     }
