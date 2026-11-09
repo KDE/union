@@ -11,11 +11,6 @@ import org.kde.union.private as P
 T.Switch {
     id: control
 
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            Union.Positioner.implicitWidth)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                             Union.Positioner.implicitHeight)
-
     Union.Element.type: "Switch"
     Union.Element.states {
         hovered: control.hovered
@@ -27,6 +22,11 @@ T.Switch {
     }
 
     hoverEnabled: Application.styleHints.useHoverEffects
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            Union.Positioner.implicitWidth)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             Union.Positioner.implicitHeight)
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right

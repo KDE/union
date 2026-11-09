@@ -30,24 +30,24 @@ T.TableViewDelegate {
         Union.ElementHint { name: "current"; when: control.current },
         Union.ElementHint { name: "selected"; when: control.selected },
     ]
-    
+
+    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
+                            implicitContentWidth + leftPadding + rightPadding)
+    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
+                             implicitContentHeight + topPadding + bottomPadding)
+
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
     topPadding: Union.Style.properties.layout.padding.top
     bottomPadding: Union.Style.properties.layout.padding.bottom
-    
+
     leftInset: Union.Style.properties.layout.inset.left
     rightInset: Union.Style.properties.layout.inset.right
     topInset: Union.Style.properties.layout.inset.top
     bottomInset: Union.Style.properties.layout.inset.bottom
-    
-    implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
-                            implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
-                            implicitContentHeight + topPadding + bottomPadding)
-    
+
     highlighted: control.selected
-    
+
     background: Union.StyledRectangle {}
 
     contentItem: Text {
@@ -64,11 +64,11 @@ T.TableViewDelegate {
 
         visible: !control.editing
     }
-    
+
     TableView.editDelegate: FocusScope {
         width: parent.width
         height: parent.height
-        
+
         TableView.onCommit: {
             let model = control.tableView.model
             if (!model) {
@@ -86,9 +86,9 @@ T.TableViewDelegate {
                 }
             }
         }
-        
+
         Component.onCompleted: textField.selectAll()
-        
+
         TextField {
             id: textField
             anchors.fill: parent

@@ -12,6 +12,11 @@ import org.kde.union.private as P
 
 T.HeaderViewDelegate {
     id: control
+
+    required property int column
+    required property int row
+    required model
+
     Union.Element.type: "HeaderViewDelegate"
 
     Union.Element.states {
@@ -24,10 +29,13 @@ T.HeaderViewDelegate {
     }
     Union.Element.hints: [
         Union.ElementHint { name: "horizontal" },
-        Union.ElementHint { name: "sort-ascending"; when: control.model.sort === Qt.AscendingOrder },
-        Union.ElementHint { name: "sort-descending"; when: control.model.sort === undefined || control.model.sort === Qt.DescendingOrder },
+        Union.ElementHint { name: "sort-ascending"; when: control.model.sort !== undefined && control.model.sort === Qt.AscendingOrder },
+        Union.ElementHint { name: "sort-descending"; when: control.model.sort !== undefined && control.model.sort !== Qt.AscendingOrder },
+        Union.ElementHint { name: "last"; when: control.column >= control.headerView.columns - 1 }
     ]
     Union.Element.attributes: P.DisplayAttribute { control: control }
+
+    Union.Positioner.positionItems: [contentItem, indicator]
 
     hoverEnabled: Application.styleHints.useHoverEffects
 
@@ -35,8 +43,6 @@ T.HeaderViewDelegate {
                             Union.Positioner.implicitWidth)
     implicitHeight: Math.max(implicitBackgroundHeight + topInset + bottomInset,
                              Union.Positioner.implicitHeight)
-
-    Union.Positioner.positionItems: [contentItem, indicator]
 
     leftPadding: Union.Style.properties.layout.padding.left
     rightPadding: Union.Style.properties.layout.padding.right
