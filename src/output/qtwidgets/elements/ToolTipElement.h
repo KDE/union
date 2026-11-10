@@ -16,8 +16,8 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelTipLabel> : public TypeHelper<ToolTipElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolTipLabelFrameWidth> : public TypeHelper<ToolTipElement, QStyleOptionFrame>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelTipLabel> : public TypeHelper<ToolTipElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolTipLabelFrameWidth> : public TypeHelper<ToolTipElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -27,10 +27,10 @@ class ToolTipElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolTipElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolTipElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolTipElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 

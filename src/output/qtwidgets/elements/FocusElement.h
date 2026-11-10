@@ -16,9 +16,9 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameFocusRect> : public TypeHelper<FocusElement, QStyleOptionFocusRect>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameVMargin> : public TypeHelper<FocusElement, QStyleOptionFocusRect>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameHMargin> : public TypeHelper<FocusElement, QStyleOptionFocusRect>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameFocusRect> : public TypeHelper<FocusElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameVMargin> : public TypeHelper<FocusElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameHMargin> : public TypeHelper<FocusElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -28,12 +28,13 @@ class FocusElement : public AbstractElement
     Q_OBJECT
 
 public:
-    FocusElement(const QStyleOptionFocusRect *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    FocusElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~FocusElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+    void drawBackground(QPainter *painter) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:

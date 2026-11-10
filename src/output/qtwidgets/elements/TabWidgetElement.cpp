@@ -11,19 +11,26 @@
 
 using namespace Qt::StringLiterals;
 
-TabWidgetElement::TabWidgetElement(const QStyleOptionTabWidgetFrame *option, const UnionStyle *style, const QWidget *widget)
+TabWidgetElement::TabWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_tabFrameOption(option)
+    , m_shape(QTabBar::Shape::RoundedNorth)
 {
-    update();
+    update(option);
 }
 
 TabWidgetElement::~TabWidgetElement()
 {
 }
 
-void TabWidgetElement::update()
+void TabWidgetElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionTabWidgetFrame *>(option)) {
+        m_tabFrameOption = newOpt;
+    }
+    if (m_tabFrameOption) {
+        m_shape = m_tabFrameOption->shape;
+    }
     layout();
 }
 
@@ -42,14 +49,10 @@ void TabWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 Union::IdentifierVariantHash TabWidgetElement::elementAttributes() const
 {
     Union::IdentifierVariantHash map;
-    if (!m_tabFrameOption) {
-        return map;
-    }
-
-    const bool top = m_tabFrameOption->shape == QTabBar::RoundedNorth || m_tabFrameOption->shape == QTabBar::TriangularNorth;
-    const bool bottom = m_tabFrameOption->shape == QTabBar::RoundedSouth || m_tabFrameOption->shape == QTabBar::TriangularSouth;
-    const bool left = m_tabFrameOption->shape == QTabBar::RoundedWest || m_tabFrameOption->shape == QTabBar::TriangularWest;
-    const bool right = m_tabFrameOption->shape == QTabBar::RoundedEast || m_tabFrameOption->shape == QTabBar::TriangularEast;
+    const bool top = m_shape == QTabBar::RoundedNorth || m_shape == QTabBar::TriangularNorth;
+    const bool bottom = m_shape == QTabBar::RoundedSouth || m_shape == QTabBar::TriangularSouth;
+    const bool left = m_shape == QTabBar::RoundedWest || m_shape == QTabBar::TriangularWest;
+    const bool right = m_shape == QTabBar::RoundedEast || m_shape == QTabBar::TriangularEast;
 
     if (top) {
         map[u"direction"_s] = QVariant(u"top"_s);
@@ -64,11 +67,6 @@ Union::IdentifierVariantHash TabWidgetElement::elementAttributes() const
         map[u"direction"_s] = QVariant(u"right"_s);
     }
     return map;
-}
-
-Union::IdentifierList TabWidgetElement::elementHints() const
-{
-    return Union::IdentifierList();
 }
 
 QString TabWidgetElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

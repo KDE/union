@@ -15,24 +15,26 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-ButtonElement::ButtonElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget)
+ButtonElement::ButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_buttonOption(option)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 ButtonElement::~ButtonElement()
 {
 }
 
-void ButtonElement::update()
+void ButtonElement::update(const QStyleOption *option)
 {
-    setIndicator(QIcon());
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionButton *>(option)) {
+        m_buttonOption = newOpt;
+    }
     if (m_buttonOption) {
         if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-            m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
+            m_indicatorElementList = prepareElements(m_buttonOption, m_widget, {ElementString::Indicator});
             if (!m_indicatorElementList.isEmpty()) {
                 m_indicatorProperties = queryProperties(m_indicatorElementList);
                 setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
@@ -40,16 +42,15 @@ void ButtonElement::update()
         }
         setIcon(m_buttonOption->icon);
         setText(m_buttonOption->text);
+        updateSubElementList();
+        updateGraphicsEffect(m_buttonOption->rect);
     }
-
-    updateSubElementList();
     layout();
-    updateGraphicsEffect(m_styleOption->rect);
 }
 
 void ButtonElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid) {
+    if (!m_isValid || !m_buttonOption) {
         return;
     }
     switch (enums.ControlElement) {
@@ -97,24 +98,24 @@ void ButtonElement::updateSubElementList()
 
 QSizeF ButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
-    auto size = applyPaddingToSize(contentsSizeFromStyle);
-    // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
-    // to get the proper contentSize
-    if (hasIndicator()) {
-        size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
+    if (m_buttonOption) {
+        auto size = applyPaddingToSize(contentsSizeFromStyle);
+        // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
+        // to get the proper contentSize
+        if (hasIndicator()) {
+            size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
+        }
+        return size;
     }
-    return size;
+    return contentsSizeFromStyle;
 }
 
 QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
-        qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return {};
-    }
-
-    if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-        return backgroundRectangle(m_buttonOption, m_elementProperties);
+    if (m_buttonOption && m_isValid) {
+        if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
+            return backgroundRectangle(m_buttonOption, m_elementProperties);
+        }
     }
 
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);

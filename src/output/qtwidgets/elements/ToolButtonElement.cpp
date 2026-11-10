@@ -13,42 +13,48 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-ToolButtonElement::ToolButtonElement(const QStyleOptionToolButton *option, const UnionStyle *style, const QWidget *widget)
+ToolButtonElement::ToolButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_toolButtonOption(option)
     , m_hasIndicator(false)
     , m_hasArrows(false)
     , m_hasIcon(false)
     , m_hasText(false)
+    , m_buttonStyle(Qt::ToolButtonStyle::ToolButtonFollowStyle)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 ToolButtonElement::~ToolButtonElement()
 {
 }
 
-void ToolButtonElement::update()
+void ToolButtonElement::update(const QStyleOption *option)
 {
-    if (!m_toolButtonOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionToolButton *>(option)) {
+        m_toolButtonOption = newOpt;
     }
-    m_hasIndicator =
-        m_toolButtonOption->features.testFlag(QStyleOptionToolButton::HasMenu) || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Menu);
-    m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
-    m_hasIcon = !m_toolButtonOption->icon.isNull() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
-    m_hasText = !m_toolButtonOption->text.isEmpty() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly;
-    setIcon(m_toolButtonOption->icon);
-    setText(m_toolButtonOption->text);
+    if (m_toolButtonOption) {
+        setIcon(m_toolButtonOption->icon);
+        setText(m_toolButtonOption->text);
+        m_hasIndicator =
+            m_toolButtonOption->features.testFlag(QStyleOptionToolButton::HasMenu) || m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Menu);
+        m_hasArrows = m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow) && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
+        m_hasIcon = hasIcon() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonTextOnly;
+        m_hasText = hasText() && m_toolButtonOption->toolButtonStyle != Qt::ToolButtonIconOnly;
+        m_buttonStyle = m_toolButtonOption->toolButtonStyle;
+    }
     updateSubElementList();
     layout();
-    updateGraphicsEffect(m_toolButtonOption->rect);
+    if (m_styleOption) {
+        updateGraphicsEffect(m_styleOption->rect);
+    }
 }
 
 void ToolButtonElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_toolButtonOption, m_widget, {ElementString::Indicator});
+    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
     setIndicator(QIcon());
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
@@ -61,9 +67,13 @@ void ToolButtonElement::layout()
         m_indicatorMap = layoutMap(m_styleOption, {ElementString::Indicator});
         layoutButtons();
         // Update layoutmap so that the text and icon are within the main button
-        auto subopt = *m_toolButtonOption;
-        subopt.rect = m_mainButtonRect.toRect();
-        m_layoutMap = layoutMap(&subopt, m_subElementList);
+        if (m_toolButtonOption) {
+            auto subopt = *m_toolButtonOption;
+            subopt.rect = m_mainButtonRect.toRect();
+            m_layoutMap = layoutMap(&subopt, m_subElementList);
+        } else {
+            m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        }
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -89,21 +99,21 @@ QSizeF ToolButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) cons
         auto diff = m_mainButtonRect.size() - size;
         size = (m_mainButtonRect | m_menuButtonRect).size() - diff;
     }
+    if (size.width() < m_toolButtonOption->iconSize.width()) {
+        size.setWidth(m_toolButtonOption->iconSize.width());
+    }
     return size;
 }
 
 QRectF ToolButtonElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return {};
-    }
-
-    if (subControl == QStyle::SC_ToolButton) {
-        return m_mainButtonRect;
-    }
-    if (subControl == QStyle::SC_ToolButtonMenu) {
-        return m_menuButtonRect;
+    if (m_isValid) {
+        if (subControl == QStyle::SC_ToolButton) {
+            return m_mainButtonRect;
+        }
+        if (subControl == QStyle::SC_ToolButtonMenu) {
+            return m_menuButtonRect;
+        }
     }
     return {};
 }
@@ -141,15 +151,12 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolButtonElement::drawIcon(QPainter *painter) const
 {
-    if (!m_toolButtonOption) {
-        return;
-    }
     if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
         return;
     }
 
     QRectF iconRect = m_layoutMap[ElementString::Icon].rect;
-    if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
+    if (m_toolButtonOption && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
         auto subopt = *m_toolButtonOption;
         subopt.rect = iconRect.toRect();
         switch (m_toolButtonOption->arrowType) {
@@ -191,16 +198,14 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
 Union::IdentifierVariantHash ToolButtonElement::elementAttributes() const
 {
     Union::IdentifierVariantHash map;
-    if (!m_toolButtonOption) {
-        return map;
-    }
-    switch (m_toolButtonOption->toolButtonStyle) {
+    switch (m_buttonStyle) {
     case Qt::ToolButtonIconOnly:
         map[u"display"_s] = QVariant(u"icon-only"_s);
         break;
     case Qt::ToolButtonTextOnly:
         map[u"display"_s] = QVariant(u"text-only"_s);
         break;
+    case Qt::ToolButtonFollowStyle:
     case Qt::ToolButtonTextBesideIcon:
         map[u"display"_s] = QVariant(u"text-beside-icon"_s);
         break;
@@ -208,7 +213,7 @@ Union::IdentifierVariantHash ToolButtonElement::elementAttributes() const
         map[u"display"_s] = QVariant(u"text-under-icon"_s);
         break;
     default:
-        return map;
+        break;
     }
     return map;
 }

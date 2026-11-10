@@ -97,7 +97,7 @@ public:
     /*!
      * \brief Updates the properties of the element, such as text and layouting
      */
-    virtual void update();
+    virtual void update(const QStyleOption *option);
 
 protected:
     /*!

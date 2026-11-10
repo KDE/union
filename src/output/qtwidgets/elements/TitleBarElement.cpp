@@ -12,25 +12,27 @@
 
 using namespace Qt::StringLiterals;
 
-TitleBarElement::TitleBarElement(const QStyleOptionTitleBar *option, const UnionStyle *style, const QWidget *widget)
+TitleBarElement::TitleBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_titleBarOption(option)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 TitleBarElement::~TitleBarElement()
 {
 }
 
-void TitleBarElement::update()
+void TitleBarElement::update(const QStyleOption *option)
 {
-    if (!m_titleBarOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionTitleBar *>(option)) {
+        m_titleBarOption = newOpt;
     }
-    setIcon(m_titleBarOption->icon);
-    setText(m_titleBarOption->text);
+    if (m_titleBarOption) {
+        setIcon(m_titleBarOption->icon);
+        setText(m_titleBarOption->text);
+    }
     updateSubElementList();
     layout();
 }
@@ -111,11 +113,11 @@ void TitleBarElement::updateSubElementList()
 
 void TitleBarElement::layout()
 {
-    m_elementList = prepareElements(m_titleBarOption, m_widget, {ElementString::TitleBar});
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::TitleBar});
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_titleBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -130,34 +132,32 @@ QSizeF TitleBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF TitleBarElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
+    if (m_isValid) {
+        switch (subControl) {
+        case QStyle::SC_TitleBarSysMenu:
+            return m_layoutMap[ElementString::SystemMenu].rect;
+        case QStyle::SC_TitleBarMinButton:
+            return m_layoutMap[ElementString::MinimizeButton].rect;
+        case QStyle::SC_TitleBarMaxButton:
+            return m_layoutMap[ElementString::MaximizeButton].rect;
+        case QStyle::SC_TitleBarCloseButton:
+            return m_layoutMap[ElementString::CloseButton].rect;
+        case QStyle::SC_TitleBarNormalButton:
+            return m_layoutMap[ElementString::NormalButton].rect;
+        case QStyle::SC_TitleBarShadeButton:
+        case QStyle::SC_TitleBarUnshadeButton:
+            return m_layoutMap[ElementString::ShadeButton].rect;
+        case QStyle::SC_TitleBarContextHelpButton:
+            return m_layoutMap[ElementString::HelpButton].rect;
+        case QStyle::SC_TitleBarLabel:
+            return m_layoutMap[ElementString::Text].rect;
+            break;
+        default:
+            break;
+        }
         return {};
     }
-
-    switch (subControl) {
-    case QStyle::SC_TitleBarSysMenu:
-        return m_layoutMap[ElementString::SystemMenu].rect;
-    case QStyle::SC_TitleBarMinButton:
-        return m_layoutMap[ElementString::MinimizeButton].rect;
-    case QStyle::SC_TitleBarMaxButton:
-        return m_layoutMap[ElementString::MaximizeButton].rect;
-    case QStyle::SC_TitleBarCloseButton:
-        return m_layoutMap[ElementString::CloseButton].rect;
-    case QStyle::SC_TitleBarNormalButton:
-        return m_layoutMap[ElementString::NormalButton].rect;
-    case QStyle::SC_TitleBarShadeButton:
-    case QStyle::SC_TitleBarUnshadeButton:
-        return m_layoutMap[ElementString::ShadeButton].rect;
-    case QStyle::SC_TitleBarContextHelpButton:
-        return m_layoutMap[ElementString::HelpButton].rect;
-    case QStyle::SC_TitleBarLabel:
-        return m_layoutMap[ElementString::Text].rect;
-        break;
-    default:
-        break;
-    }
-    return {};
+    return m_style->subControlRect(QStyle::CC_TitleBar, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
 }
 
 qreal TitleBarElement::buttonWidth() const
@@ -167,7 +167,7 @@ qreal TitleBarElement::buttonWidth() const
 
 QIcon TitleBarElement::queryIcon(const QString &defaultIconName, const QStringList &targetHierarchy) const
 {
-    auto props = queryProperties(prepareElements(m_titleBarOption, m_widget, targetHierarchy));
+    auto props = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));
     return m_style->unionIcon(props, defaultIconName);
 }
 

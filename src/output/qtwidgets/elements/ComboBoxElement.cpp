@@ -12,40 +12,42 @@
 
 using namespace Qt::StringLiterals;
 
-ComboBoxElement::ComboBoxElement(const QStyleOptionComboBox *option, const UnionStyle *style, const QWidget *widget)
+ComboBoxElement::ComboBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_comboBoxOption(option)
     , m_editable(false)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
-void ComboBoxElement::update()
+void ComboBoxElement::update(const QStyleOption *option)
 {
-    if (!m_styleOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
+        m_comboBoxOption = newOpt;
     }
-    m_editable = m_comboBoxOption->editable;
-    m_hasFrame = m_comboBoxOption->frame;
+    if (m_comboBoxOption) {
+        m_editable = m_comboBoxOption->editable;
+        m_hasFrame = m_comboBoxOption->frame;
 
-    setIndicator(QIcon());
-    m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
-    if (!m_indicatorElementList.isEmpty()) {
-        m_indicatorProperties = queryProperties(m_indicatorElementList);
-        if (m_indicatorProperties->icon()) {
-            setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
+        setIndicator(QIcon());
+        m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
+        if (!m_indicatorElementList.isEmpty()) {
+            m_indicatorProperties = queryProperties(m_indicatorElementList);
+            if (m_indicatorProperties->icon()) {
+                setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
+            }
+        }
+
+        setIcon(m_comboBoxOption->currentIcon);
+        setText(m_comboBoxOption->currentText);
+        updateSubElementList();
+        // Adding shadows to editable widgets seems to cause issues with the painter
+        if (!m_editable) {
+            updateGraphicsEffect(m_comboBoxOption->rect);
         }
     }
-
-    setIcon(m_comboBoxOption->currentIcon);
-    setText(m_comboBoxOption->currentText);
-    updateSubElementList();
     layout();
-    // Adding shadows to editable widgets seems to cause issues with the painter
-    if (!m_editable) {
-        updateGraphicsEffect(m_styleOption->rect);
-    }
 }
 
 ComboBoxElement::~ComboBoxElement()
@@ -106,34 +108,31 @@ QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_styleOption) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return {};
+    if (m_isValid && m_comboBoxOption) {
+        switch (subControl) {
+        case QStyle::SC_ComboBoxFrame:
+            return backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect();
+        case QStyle::SC_ComboBoxListBoxPopup:
+            return m_comboBoxOption->rect;
+        case QStyle::SC_ComboBoxArrow: {
+            auto rect = m_layoutMap[ElementString::Indicator].rect;
+            rect = rect.adjusted(-spacing(), 0, spacing(), 0);
+            return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
+        }
+        case QStyle::SC_ComboBoxEditField: {
+            QRectF rect = m_comboBoxOption->rect.marginsRemoved(borderSize().toMargins());
+            rect.setWidth(rect.width() - subControlRect(QStyle::SC_ComboBoxArrow).width());
+            // When drawing the text editor, it has padding of its own.
+            // Remove our own padding and rely on the text editor padding.
+            auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
+            rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
+            return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
+        }
+        default:
+            break;
+        }
     }
-
-    switch (subControl) {
-    case QStyle::SC_ComboBoxFrame:
-        return backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect();
-    case QStyle::SC_ComboBoxListBoxPopup:
-        return m_comboBoxOption->rect;
-    case QStyle::SC_ComboBoxArrow: {
-        auto rect = m_layoutMap[ElementString::Indicator].rect;
-        rect = rect.adjusted(-spacing(), 0, spacing(), 0);
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
-    }
-    case QStyle::SC_ComboBoxEditField: {
-        QRectF rect = m_comboBoxOption->rect.marginsRemoved(borderSize().toMargins());
-        rect.setWidth(rect.width() - subControlRect(QStyle::SC_ComboBoxArrow).width());
-        // When drawing the text editor, it has padding of its own.
-        // Remove our own padding and rely on the text editor padding.
-        auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
-        rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
-        return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
-    }
-    default:
-        break;
-    }
-    return {};
+    return m_style->QCommonStyle::subControlRect(QStyle::CC_ComboBox, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
 }
 
 Union::IdentifierList ComboBoxElement::elementHints() const

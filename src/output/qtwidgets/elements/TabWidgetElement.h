@@ -16,8 +16,8 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameTabWidget> : public TypeHelper<TabWidgetElement, QStyleOptionTabWidgetFrame>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabWidget> : public TypeHelper<TabWidgetElement, QStyleOptionTabWidgetFrame>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameTabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -27,16 +27,17 @@ class TabWidgetElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TabWidgetElement(const QStyleOptionTabWidgetFrame *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TabWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabWidgetElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
 private:
     Union::IdentifierVariantHash elementAttributes() const override;
-    Union::IdentifierList elementHints() const override;
     QString fallbackElementName(const QStyleOption *opt) const override;
 
     const QStyleOptionTabWidgetFrame *m_tabFrameOption = nullptr;
+
+    QTabBar::Shape m_shape;
 };

@@ -15,17 +15,17 @@ using namespace Qt::StringLiterals;
 
 SplitterElement::SplitterElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_splitterOption(option)
 {
-    update();
+    update(option);
 }
 
 SplitterElement::~SplitterElement()
 {
 }
 
-void SplitterElement::update()
+void SplitterElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 

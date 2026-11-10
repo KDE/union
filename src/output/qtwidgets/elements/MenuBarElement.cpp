@@ -13,15 +13,16 @@ using namespace Qt::StringLiterals;
 MenuBarElement::MenuBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
 {
-    update();
+    update(option);
 }
 
 MenuBarElement::~MenuBarElement()
 {
 }
 
-void MenuBarElement::update()
+void MenuBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 

@@ -14,7 +14,6 @@ using namespace Qt::StringLiterals;
 
 IndicatorElement::IndicatorElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_indicatorOption(option)
 {
     m_listViewIconSize = querySize({ElementString::ListViewIconSize}).width();
     m_smallIconSize = querySize({ElementString::SmallIconSize}).width();
@@ -32,34 +31,34 @@ IndicatorElement::~IndicatorElement()
 
 void IndicatorElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid) {
-        return;
-    }
-
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_IndicatorArrowLeft:
-        drawElement(painter, u"arrow-left-symbolic"_s, {ElementString::IndicatorArrowLeft});
-        return;
-    case QStyle::PE_IndicatorArrowUp:
-        drawElement(painter, u"arrow-up-symbolic"_s, {ElementString::IndicatorArrowUp});
-        return;
-    case QStyle::PE_IndicatorArrowRight:
-        drawElement(painter, u"arrow-right-symbolic"_s, {ElementString::IndicatorArrowRight});
-        return;
-    case QStyle::PE_IndicatorArrowDown:
-        drawElement(painter, u"arrow-down-symbolic"_s, {ElementString::IndicatorArrowDown});
-        return;
-    case QStyle::PE_IndicatorButtonDropDown:
-        drawElement(painter, u"arrow-down-symbolic"_s, {ElementString::IndicatorButtonDropDown});
-        return;
+    if (m_isValid) {
+        switch (enums.PrimitiveElement) {
+        case QStyle::PE_IndicatorArrowLeft:
+            drawElement(painter, u"arrow-left-symbolic"_s, {ElementString::IndicatorArrowLeft});
+            return;
+        case QStyle::PE_IndicatorArrowUp:
+            drawElement(painter, u"arrow-up-symbolic"_s, {ElementString::IndicatorArrowUp});
+            return;
+        case QStyle::PE_IndicatorArrowRight:
+            drawElement(painter, u"arrow-right-symbolic"_s, {ElementString::IndicatorArrowRight});
+            return;
+        case QStyle::PE_IndicatorArrowDown:
+            drawElement(painter, u"arrow-down-symbolic"_s, {ElementString::IndicatorArrowDown});
+            return;
+        case QStyle::PE_IndicatorButtonDropDown:
+            drawElement(painter, u"arrow-down-symbolic"_s, {ElementString::IndicatorButtonDropDown});
+            return;
+        }
     }
 }
 
 void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIconName, QStringList targetHierarchy) const
 {
-    auto properties = queryProperties(prepareElements(m_indicatorOption, m_widget, targetHierarchy));
-    auto icon = m_style->unionIcon(properties, defaultIconName);
-    drawIconAtRect(painter, icon, m_indicatorOption->rect, properties);
+    if (m_styleOption) {
+        auto properties = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));
+        auto icon = m_style->unionIcon(properties, defaultIconName);
+        drawIconAtRect(painter, icon, m_styleOption->rect, properties);
+    }
 }
 
 qreal IndicatorElement::pixelMetric(QStyle::PixelMetric pixelMetric) const

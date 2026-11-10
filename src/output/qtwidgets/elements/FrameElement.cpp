@@ -20,11 +20,10 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-FrameElement::FrameElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
+FrameElement::FrameElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
 {
-    update();
+    update(option);
     if (m_elementProperties && m_frameOption) {
         m_shadowWidget = qobject_cast<QWidget *>(m_frameOption->styleObject);
         if (m_shadowWidget) {
@@ -37,8 +36,12 @@ FrameElement::~FrameElement()
 {
 }
 
-void FrameElement::update()
+void FrameElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+        m_frameOption = newOpt;
+    }
     updateSubElementList();
     layout();
 }
@@ -70,33 +73,35 @@ void FrameElement::draw(QPainter *painter, DrawEnums enums) const
         }
     }
 
-    switch (enums.ControlElement) {
-    case QStyle::CE_FocusFrame:
-    case QStyle::CE_ShapedFrame:
-        switch (m_frameOption->frameShape) {
-        // Do nothing
-        case QFrame::NoFrame:
-            break;
-        // We always allow HLine/VLine
-        case QFrame::HLine:
-        case QFrame::VLine:
-            drawBackground(painter);
-            break;
-        case QFrame::Box:
-        case QFrame::Panel:
-        case QFrame::WinPanel:
-            drawBackground(painter);
-            drawShadow();
-            break;
-        // Skip drawing frames for items that have framewidth of 0
-        case QFrame::StyledPanel:
-            if (pixelMetric(QStyle::PM_DefaultFrameWidth) != 0) {
+    if (m_frameOption) {
+        switch (enums.ControlElement) {
+        case QStyle::CE_FocusFrame:
+        case QStyle::CE_ShapedFrame:
+            switch (m_frameOption->frameShape) {
+            // Do nothing
+            case QFrame::NoFrame:
+                break;
+            // We always allow HLine/VLine
+            case QFrame::HLine:
+            case QFrame::VLine:
                 drawBackground(painter);
+                break;
+            case QFrame::Box:
+            case QFrame::Panel:
+            case QFrame::WinPanel:
+                drawBackground(painter);
+                drawShadow();
+                break;
+            // Skip drawing frames for items that have framewidth of 0
+            case QFrame::StyledPanel:
+                if (pixelMetric(QStyle::PM_DefaultFrameWidth) != 0) {
+                    drawBackground(painter);
+                }
+                drawShadow();
+                break;
             }
-            drawShadow();
             break;
         }
-        break;
     }
 
     switch (enums.PrimitiveElement) {
@@ -126,27 +131,25 @@ void FrameElement::drawFrame(QPainter *painter) const
     // Follow the expectations: If frame has panel shape,
     // we need to draw the background too. In HLine/VLine cases
     // we can just skip it
-    if (!m_frameOption) {
-        return;
-    }
-
-    switch (m_frameOption->frameShape) {
-    case QFrame::NoFrame:
-        // Only draw panel if we have autoFillBackground set
-        if (m_widget && m_widget->autoFillBackground()) {
-            drawPanel(painter);
+    if (m_frameOption) {
+        switch (m_frameOption->frameShape) {
+        case QFrame::NoFrame:
+            // Only draw panel if we have autoFillBackground set
+            if (m_widget && m_widget->autoFillBackground()) {
+                drawPanel(painter);
+            }
+            return;
+        case QFrame::Box:
+        case QFrame::Panel:
+        case QFrame::WinPanel:
+        case QFrame::StyledPanel:
+            drawBackground(painter);
+            break;
+        case QFrame::HLine:
+        case QFrame::VLine:
+            AbstractElement::drawBackground(painter);
+            break;
         }
-        return;
-    case QFrame::Box:
-    case QFrame::Panel:
-    case QFrame::WinPanel:
-    case QFrame::StyledPanel:
-        drawBackground(painter);
-        break;
-    case QFrame::HLine:
-    case QFrame::VLine:
-        AbstractElement::drawBackground(painter);
-        break;
     }
 }
 
@@ -208,31 +211,33 @@ Union::IdentifierList FrameElement::elementHints() const
 
 QLayout *findParentLayout(const QWidget *widget)
 {
-    if (!widget->parentWidget()) {
-        return nullptr;
-    }
+    if (widget) {
+        if (!widget->parentWidget()) {
+            return nullptr;
+        }
 
-    auto layout = widget->parentWidget()->layout();
-    if (!layout) {
-        return nullptr;
-    }
-
-    if (layout->indexOf(const_cast<QWidget *>(widget)) > -1) {
-        return layout;
-    }
-
-    QList<QObject *> children = layout->children();
-
-    while (!children.isEmpty()) {
-        layout = qobject_cast<QLayout *>(children.takeFirst());
+        auto layout = widget->parentWidget()->layout();
         if (!layout) {
-            continue;
+            return nullptr;
         }
 
         if (layout->indexOf(const_cast<QWidget *>(widget)) > -1) {
             return layout;
         }
-        children += layout->children();
+
+        QList<QObject *> children = layout->children();
+
+        while (!children.isEmpty()) {
+            layout = qobject_cast<QLayout *>(children.takeFirst());
+            if (!layout) {
+                continue;
+            }
+
+            if (layout->indexOf(const_cast<QWidget *>(widget)) > -1) {
+                return layout;
+            }
+            children += layout->children();
+        }
     }
 
     return nullptr;
@@ -376,30 +381,29 @@ Union::IdentifierVariantHash FrameElement::frameAttributesFor(const QStyleOption
 Union::IdentifierList FrameElement::frameHintsFor(const QStyleOptionFrame *frameOption)
 {
     Union::IdentifierList hints;
-    if (!frameOption) {
-        return hints;
-    }
-    if (frameOption->features.testFlag(QStyleOptionFrame::Flat)) {
-        hints.append(u"flat"_s);
-    }
-    if (frameOption->features.testFlag(QStyleOptionFrame::Rounded)) {
-        hints.append(u"rounded"_s);
-    }
-    // Some applications use the "_breeze_borders_sides" as a way to drive the Breeze application style,
-    // keep it for backwards compatibility.
-    if (frameOption->styleObject && frameOption->styleObject->property("_breeze_borders_sides").isValid()) {
-        const auto edges = frameOption->styleObject->property("_breeze_borders_sides").value<Qt::Edges>();
-        if (edges & Qt::LeftEdge) {
-            hints.append(u"left-edge"_s);
+    if (frameOption) {
+        if (frameOption->features.testFlag(QStyleOptionFrame::Flat)) {
+            hints.append(u"flat"_s);
         }
-        if (edges & Qt::RightEdge) {
-            hints.append(u"right-edge"_s);
+        if (frameOption->features.testFlag(QStyleOptionFrame::Rounded)) {
+            hints.append(u"rounded"_s);
         }
-        if (edges & Qt::TopEdge) {
-            hints.append(u"top-edge"_s);
-        }
-        if (edges & Qt::BottomEdge) {
-            hints.append(u"bottom-edge"_s);
+        // Some applications use the "_breeze_borders_sides" as a way to drive the Breeze application style,
+        // keep it for backwards compatibility.
+        if (frameOption->styleObject && frameOption->styleObject->property("_breeze_borders_sides").isValid()) {
+            const auto edges = frameOption->styleObject->property("_breeze_borders_sides").value<Qt::Edges>();
+            if (edges & Qt::LeftEdge) {
+                hints.append(u"left-edge"_s);
+            }
+            if (edges & Qt::RightEdge) {
+                hints.append(u"right-edge"_s);
+            }
+            if (edges & Qt::TopEdge) {
+                hints.append(u"top-edge"_s);
+            }
+            if (edges & Qt::BottomEdge) {
+                hints.append(u"bottom-edge"_s);
+            }
         }
     }
     return hints;

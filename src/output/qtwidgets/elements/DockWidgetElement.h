@@ -17,15 +17,15 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetTitleBarText> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetFloatButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetIcon> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_DockWidgetTitle> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetFrameWidth> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarNormalButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarCloseButton> : public TypeHelper<DockWidgetElement, QStyleOptionDockWidget>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetTitleBarText> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetFloatButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetIcon> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_DockWidgetTitle> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetFrameWidth> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarNormalButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -35,10 +35,10 @@ class DockWidgetElement : public AbstractElement
     Q_OBJECT
 
 public:
-    DockWidgetElement(const QStyleOptionDockWidget *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    DockWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~DockWidgetElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 

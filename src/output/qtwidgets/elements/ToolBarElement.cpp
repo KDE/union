@@ -18,18 +18,21 @@ using namespace Union::Properties;
 
 ToolBarElement::ToolBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_toolBarOption(qstyleoption_cast<const QStyleOptionToolBar *>(option))
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 ToolBarElement::~ToolBarElement()
 {
 }
 
-void ToolBarElement::update()
+void ToolBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionToolBar *>(option)) {
+        m_toolBarOption = newOpt;
+    }
     updateSubElementList();
     layout();
 }
@@ -62,10 +65,10 @@ void ToolBarElement::draw(QPainter *painter, DrawEnums enums) const
 void ToolBarElement::layout()
 {
     // Background uses toolbarOption, separators etc use styleOption
-    m_elementList = prepareElements(m_toolBarOption, m_widget);
+    m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_toolBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
     }
 
     m_handleElementList = prepareElements(m_styleOption, m_widget, {ElementString::Handle});
@@ -122,7 +125,7 @@ void ToolBarElement::drawHandle(QPainter *painter) const
 {
     if (m_isValid && m_styleOption && m_handleProperties) {
         UnionPainter unionPainter(painter, m_handleProperties);
-        unionPainter.setRect(handleSeparatorRect(handleExtent()));
+        unionPainter.setRect(handleSeparatorRect(extent(m_handleProperties)));
         unionPainter.draw();
     }
 }
@@ -131,7 +134,7 @@ void ToolBarElement::drawSeparator(QPainter *painter) const
 {
     if (m_isValid && m_styleOption && m_separatorProperties) {
         UnionPainter unionPainter(painter, m_separatorProperties);
-        unionPainter.setRect(handleSeparatorRect(separatorExtent()));
+        unionPainter.setRect(handleSeparatorRect(extent(m_separatorProperties)));
         unionPainter.draw();
     }
 }
@@ -170,65 +173,23 @@ Union::IdentifierList ToolBarElement::elementHints() const
     return hints;
 }
 
-qreal ToolBarElement::separatorExtent() const
+qreal ToolBarElement::extent(Union::StylePropertyGroupPtr properties) const
 {
-    if (m_isValid && m_toolBarOption && m_separatorProperties) {
+    if (m_isValid && m_toolBarOption && properties) {
         switch (m_toolBarOption->toolBarArea) {
         case Qt::LeftToolBarArea:
         case Qt::RightToolBarArea:
-            return m_separatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+            return width(properties);
         case Qt::TopToolBarArea:
         case Qt::BottomToolBarArea:
-            return m_separatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
+            return height(properties);
         default:
             return 0;
             break;
         }
     }
-    if (m_separatorProperties) {
-        return m_separatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    }
-    return 0;
-}
-
-qreal ToolBarElement::handleExtent() const
-{
-    if (m_isValid && m_toolBarOption && m_handleProperties) {
-        switch (m_toolBarOption->toolBarArea) {
-        case Qt::LeftToolBarArea:
-        case Qt::RightToolBarArea:
-            return m_handleProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-        case Qt::TopToolBarArea:
-        case Qt::BottomToolBarArea:
-            return m_handleProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-        default:
-            return 0;
-            break;
-        }
-    }
-    if (m_handleProperties) {
-        return m_handleProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    }
-    return 0;
-}
-
-qreal ToolBarElement::extensionExtent() const
-{
-    if (m_isValid && m_toolBarOption && m_extensionProperties) {
-        switch (m_toolBarOption->toolBarArea) {
-        case Qt::LeftToolBarArea:
-        case Qt::RightToolBarArea:
-            return m_extensionProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-        case Qt::TopToolBarArea:
-        case Qt::BottomToolBarArea:
-            return m_extensionProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-        default:
-            return 0;
-            break;
-        }
-    }
-    if (m_extensionProperties) {
-        return m_extensionProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
+    if (properties) {
+        return width(properties);
     }
     return 0;
 }
@@ -237,13 +198,13 @@ qreal ToolBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolBarSeparatorExtent:
-        return separatorExtent();
+        return extent(m_separatorProperties);
     case QStyle::PM_ToolBarFrameWidth:
         return averageBorderSize(m_elementProperties);
     case QStyle::PM_ToolBarHandleExtent:
-        return handleExtent();
+        return extent(m_handleProperties);
     case QStyle::PM_ToolBarExtensionExtent:
-        return extensionExtent();
+        return extent(m_extensionProperties);
     case QStyle::PM_ToolBarItemSpacing:
         return spacing();
     case QStyle::PM_ToolBarItemMargin:

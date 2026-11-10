@@ -15,17 +15,17 @@ using namespace Qt::StringLiterals;
 
 StatusBarElement::StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_statusBarOption(option)
 {
-    update();
+    update(option);
 }
 
 StatusBarElement::~StatusBarElement()
 {
 }
 
-void StatusBarElement::update()
+void StatusBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     updateSubElementList();
     layout();
 }
@@ -71,6 +71,9 @@ void StatusBarElement::layout()
 
 void StatusBarElement::drawItem(QPainter *painter) const
 {
+    if (!m_styleOption) {
+        return;
+    }
     UnionPainter unionPainter(painter, m_contentProperties);
     unionPainter.setRect(m_styleOption->rect);
     unionPainter.draw();

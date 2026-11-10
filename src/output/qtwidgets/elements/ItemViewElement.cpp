@@ -20,63 +20,68 @@ using namespace Union::Properties;
 // backwards compatible. This means we can't give them custom layouts without breaking everything.
 // Instead, we rely on QCommonStyle for most things, but apply our looks to the items.
 
-ItemViewElement::ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget)
+ItemViewElement::ItemViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_viewItemOption(option)
 {
-    update();
+    update(option);
 }
 
 ItemViewElement::~ItemViewElement()
 {
 }
 
-void ItemViewElement::update()
+void ItemViewElement::update(const QStyleOption *option)
 {
-    if (!m_viewItemOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionViewItem *>(option)) {
+        m_viewItemOption = newOpt;
     }
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-        m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
-        if (!m_indicatorElementList.isEmpty()) {
-            m_indicatorProperties = queryProperties(m_indicatorElementList);
+    if (m_viewItemOption) {
+        if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
+            m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
+            if (!m_indicatorElementList.isEmpty()) {
+                m_indicatorProperties = queryProperties(m_indicatorElementList);
+            }
         }
+        setIcon(m_viewItemOption->icon);
+        setText(m_viewItemOption->text);
     }
-    setIcon(m_viewItemOption->icon);
-    setText(m_viewItemOption->text);
     layout();
 }
 
 void ItemViewElement::layout()
 {
-    m_elementList = prepareElements(m_viewItemOption, m_widget, {ElementString::ItemViewItem});
-
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
+        if (m_viewItemOption) {
+            auto opt = *m_viewItemOption;
+            opt.rect = backgroundRectangle(m_viewItemOption, m_elementProperties).toRect();
+            m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
+            m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
+            m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget);
 
-        auto opt = *m_viewItemOption;
-        opt.rect = backgroundRectangle(m_viewItemOption, m_elementProperties).toRect();
-
-        m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
-        m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
-        m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget);
-
-        // Apply our spacing
-        switch (m_viewItemOption->decorationPosition) {
-        case QStyleOptionViewItem::Left:
-            m_layoutMap[ElementString::Text].rect.moveLeft(m_layoutMap[ElementString::Icon].rect.right() + spacing());
-            break;
-        case QStyleOptionViewItem::Right:
-            m_layoutMap[ElementString::Text].rect.moveRight(m_layoutMap[ElementString::Icon].rect.left() - spacing());
-            break;
-        case QStyleOptionViewItem::Top:
-            m_layoutMap[ElementString::Text].rect.moveTop(m_layoutMap[ElementString::Icon].rect.bottom() + spacing());
-            break;
-        case QStyleOptionViewItem::Bottom:
-            m_layoutMap[ElementString::Text].rect.moveBottom(m_layoutMap[ElementString::Icon].rect.top() - spacing());
-            break;
+            // Apply our spacing
+            switch (m_viewItemOption->decorationPosition) {
+            case QStyleOptionViewItem::Left:
+                m_layoutMap[ElementString::Text].rect.moveLeft(m_layoutMap[ElementString::Icon].rect.right() + spacing());
+                break;
+            case QStyleOptionViewItem::Right:
+                m_layoutMap[ElementString::Text].rect.moveRight(m_layoutMap[ElementString::Icon].rect.left() - spacing());
+                break;
+            case QStyleOptionViewItem::Top:
+                m_layoutMap[ElementString::Text].rect.moveTop(m_layoutMap[ElementString::Icon].rect.bottom() + spacing());
+                break;
+            case QStyleOptionViewItem::Bottom:
+                m_layoutMap[ElementString::Text].rect.moveBottom(m_layoutMap[ElementString::Icon].rect.top() - spacing());
+                break;
+            }
+        } else {
+            // Fallback
+            m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, m_styleOption, m_widget);
+            m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, m_styleOption, m_widget);
+            m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_styleOption, m_widget);
         }
-
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -116,27 +121,24 @@ QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
-        qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return {};
+    if (m_isValid) {
+        QRectF rect;
+        if (element == QStyle::SE_ItemViewItemText) {
+            const auto adjustment = spacing() / 2.0;
+            rect = m_layoutMap[ElementString::Text].rect.adjusted(adjustment, 0, -adjustment, 0);
+        }
+        if (element == QStyle::SE_ItemViewItemDecoration) {
+            rect = m_layoutMap[ElementString::Icon].rect;
+        }
+        if (element == QStyle::SE_ItemViewItemCheckIndicator) {
+            rect = m_layoutMap[ElementString::CheckBox].rect;
+            // Center the checkbox with its proper size
+            rect = centerRect(rect, width(m_indicatorProperties), height(m_indicatorProperties));
+            rect.moveCenter(QPointF(rect.center().x() + spacing() / 2.0, rect.center().y()));
+        }
+        return rect;
     }
-
-    QRectF rect;
-    if (element == QStyle::SE_ItemViewItemText) {
-        const auto adjustment = spacing() / 2.0;
-        rect = m_layoutMap[ElementString::Text].rect.adjusted(adjustment, 0, -adjustment, 0);
-    }
-    if (element == QStyle::SE_ItemViewItemDecoration) {
-        rect = m_layoutMap[ElementString::Icon].rect;
-    }
-    if (element == QStyle::SE_ItemViewItemCheckIndicator) {
-        rect = m_layoutMap[ElementString::CheckBox].rect;
-        // Center the checkbox with its proper size
-        rect = centerRect(rect, width(m_indicatorProperties), height(m_indicatorProperties));
-        rect.moveCenter(QPointF(rect.center().x() + spacing() / 2.0, rect.center().y()));
-    }
-
-    return rect;
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
@@ -173,7 +175,10 @@ void ItemViewElement::drawBackground(QPainter *painter) const
     painter->setClipRegion(clipRegion);
 
     // Draw custom background color with simple rectangle if set and not selected
-    const bool hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption->state.testFlag(QStyle::State_Selected);
+    bool hasCustomBackground = false;
+    if (m_viewItemOption) {
+        hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption->state.testFlag(QStyle::State_Selected);
+    }
     if (hasCustomBackground) {
         const auto radius =
             safePropertyLookup(m_elementProperties, CornersPropertyGroup::CornerRadii(), &StylePropertyGroup::corners, &CornersPropertyGroup::radii);
@@ -206,7 +211,7 @@ void ItemViewElement::drawBackground(QPainter *painter) const
         UnionPainter unionPainter(painter, m_elementProperties);
         unionPainter.setOverrideBackgroundColor(overrideColor);
         unionPainter.setParts(parts);
-        unionPainter.setRect(m_viewItemOption->rect);
+        unionPainter.setRect(m_styleOption->rect);
         unionPainter.draw();
     }
     painter->restore();
@@ -233,46 +238,48 @@ void ItemViewElement::drawIcon(QPainter *painter) const
 Union::IdentifierVariantHash ItemViewElement::elementAttributes() const
 {
     Union::IdentifierVariantHash map;
-    if (!m_viewItemOption) {
-        return map;
-    }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Top) {
-        map[u"display"_s] = QVariant(u"text-below-icon"_s);
-    }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Bottom) {
-        map[u"display"_s] = QVariant(u"text-above-icon"_s);
-    }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Left) {
-        map[u"display"_s] = QVariant(u"text-after-icon"_s);
-    }
-    if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Right) {
-        map[u"display"_s] = QVariant(u"text-before-icon"_s);
-    }
+    if (m_viewItemOption) {
+        if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Top) {
+            map[u"display"_s] = QVariant(u"text-below-icon"_s);
+        }
+        if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Bottom) {
+            map[u"display"_s] = QVariant(u"text-above-icon"_s);
+        }
+        if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Left) {
+            map[u"display"_s] = QVariant(u"text-beside-icon"_s);
+        }
+        if (m_viewItemOption->decorationPosition == QStyleOptionViewItem::Right) {
+            map[u"display"_s] = QVariant(u"text-before-icon"_s);
+        }
 
-    auto viewItemPosition = m_viewItemOption->viewItemPosition;
+        auto viewItemPosition = m_viewItemOption->viewItemPosition;
 
-    // Override situations where we have treeview but only select one item
-    const auto abstractItemView = qobject_cast<const QAbstractItemView *>(m_viewItemOption->widget);
-    if (abstractItemView && abstractItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
-        viewItemPosition = QStyleOptionViewItem::OnlyOne;
-    }
+        // Override situations where we have treeview but only select one item
+        const auto abstractItemView = qobject_cast<const QAbstractItemView *>(m_viewItemOption->widget);
+        if (abstractItemView && abstractItemView->selectionBehavior() != QAbstractItemView::SelectRows) {
+            viewItemPosition = QStyleOptionViewItem::OnlyOne;
+        }
 
-    switch (viewItemPosition) {
-    case QStyleOptionViewItem::Invalid:
+        switch (viewItemPosition) {
+        case QStyleOptionViewItem::Invalid:
+            map[u"position"_s] = QVariant(u"invalid"_s);
+            break;
+        case QStyleOptionViewItem::Beginning:
+            map[u"position"_s] = QVariant(u"beginning"_s);
+            break;
+        case QStyleOptionViewItem::Middle:
+            map[u"position"_s] = QVariant(u"middle"_s);
+            break;
+        case QStyleOptionViewItem::End:
+            map[u"position"_s] = QVariant(u"end"_s);
+            break;
+        case QStyleOptionViewItem::OnlyOne:
+            map[u"position"_s] = QVariant(u"onlyone"_s);
+            break;
+        }
+    } else {
+        map[u"display"_s] = QVariant(u"text-beside-icon"_s);
         map[u"position"_s] = QVariant(u"invalid"_s);
-        break;
-    case QStyleOptionViewItem::Beginning:
-        map[u"position"_s] = QVariant(u"beginning"_s);
-        break;
-    case QStyleOptionViewItem::Middle:
-        map[u"position"_s] = QVariant(u"middle"_s);
-        break;
-    case QStyleOptionViewItem::End:
-        map[u"position"_s] = QVariant(u"end"_s);
-        break;
-    case QStyleOptionViewItem::OnlyOne:
-        map[u"position"_s] = QVariant(u"onlyone"_s);
-        break;
     }
     return map;
 }
@@ -280,35 +287,37 @@ Union::IdentifierVariantHash ItemViewElement::elementAttributes() const
 Union::IdentifierList ItemViewElement::elementHints() const
 {
     Union::IdentifierList hints;
-    const auto table = qobject_cast<const QTableView *>(m_viewItemOption->widget);
-    const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
-    const auto list = qobject_cast<const QListView *>(m_viewItemOption->widget);
-    // For tables and such, we just want to select one item.
-    if (table) {
-        hints.append(u"inside-table"_s);
-    }
-    if (tree) {
-        hints.append(u"inside-tree"_s);
-    }
-    if (list) {
-        hints.append(u"inside-list"_s);
-    }
+    if (m_viewItemOption) {
+        const auto table = qobject_cast<const QTableView *>(m_viewItemOption->widget);
+        const auto tree = qobject_cast<const QTreeView *>(m_viewItemOption->widget);
+        const auto list = qobject_cast<const QListView *>(m_viewItemOption->widget);
+        // For tables and such, we just want to select one item.
+        if (table) {
+            hints.append(u"inside-table"_s);
+        }
+        if (tree) {
+            hints.append(u"inside-tree"_s);
+        }
+        if (list) {
+            hints.append(u"inside-list"_s);
+        }
 
-    // These always have hover effect, i think
-    hints.append(u"hover-enabled"_s);
+        // These always have hover effect, i think
+        hints.append(u"hover-enabled"_s);
 
-    if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::Alternate)) {
-        hints.append(u"alternating-colors"_s);
-    }
+        if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::Alternate)) {
+            hints.append(u"alternating-colors"_s);
+        }
 
-    if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
-        hints.append(u"expanded"_s);
-    }
+        if (m_viewItemOption->state.testFlag(QStyle::State_Open)) {
+            hints.append(u"expanded"_s);
+        }
 
-    // For combobox popups, we want similar selector as QtQuick has,
-    // (popup.combobox) so we need to insert the combobox hint here.
-    if (m_widget && m_widget->inherits("QComboBoxListView")) {
-        hints.append(u"combobox"_s);
+        // For combobox popups, we want similar selector as QtQuick has,
+        // (popup.combobox) so we need to insert the combobox hint here.
+        if (m_widget && m_widget->inherits("QComboBoxListView")) {
+            hints.append(u"combobox"_s);
+        }
     }
 
     return hints;

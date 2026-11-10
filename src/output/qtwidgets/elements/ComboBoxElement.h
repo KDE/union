@@ -16,10 +16,10 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ComboBox> : public TypeHelper<ComboBoxElement, QStyleOptionComboBox>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ComboBoxLabel> : public TypeHelper<ComboBoxElement, QStyleOptionComboBox>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ComboBox> : public TypeHelper<ComboBoxElement, QStyleOptionComboBox>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ComboBoxFrameWidth> : public TypeHelper<ComboBoxElement, QStyleOptionComboBox>{};
+        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ComboBox> : public TypeHelper<ComboBoxElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ComboBoxLabel> : public TypeHelper<ComboBoxElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ComboBox> : public TypeHelper<ComboBoxElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ComboBoxFrameWidth> : public TypeHelper<ComboBoxElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -29,10 +29,10 @@ class ComboBoxElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ComboBoxElement(const QStyleOptionComboBox *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ComboBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ComboBoxElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     QRectF subControlRect(QStyle::SubControl subControl) const override;

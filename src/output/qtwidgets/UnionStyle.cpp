@@ -190,7 +190,7 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
                                         QStyle::CE_ItemViewItem,
                                         QStyle::CE_ShapedFrame>(controlElement, hash, this, option, widget);
     if (cached) {
-        cached->update();
+        cached->update(option);
 
         cached->draw(painter, drawEnums);
     } else {
@@ -227,7 +227,7 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
                                         QStyle::CC_TitleBar,
                                         QStyle::CC_GroupBox>(control, hash, this, option, widget);
     if (cached) {
-        cached->update();
+        cached->update(option);
         cached->draw(painter, drawEnums);
     } else {
         // TODO: Dial, MDI controls
@@ -321,7 +321,7 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
                                         QStyle::PE_PanelMenu,
                                         QStyle::PE_IndicatorDockWidgetResizeHandle>(element, hash, this, option, widget);
     if (cached) {
-        cached->update();
+        cached->update(option);
         cached->draw(painter, drawEnums);
     } else {
         // Handle some items that are just duplicates of the above, or need fallback
@@ -420,7 +420,7 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
                                         QStyle::SE_FrameContents>(element, hash, this, option, widget);
 
     if (cached) {
-        cached->update();
+        cached->update(option);
         return cached->subElementRect(element).toRect();
     }
 
@@ -440,7 +440,7 @@ QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOpti
                                         QStyle::CC_TitleBar,
                                         QStyle::CC_GroupBox>(complexControl, hash, this, option, widget);
     if (cached) {
-        cached->update();
+        cached->update(option);
         return cached->subControlRect(subControl).toRect();
     }
     // TODO: Leave Dial and MDIControls to QCommonStyle for now

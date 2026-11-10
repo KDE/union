@@ -114,31 +114,32 @@ QSizeF AbstractElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF AbstractElement::subElementRect(QStyle::SubElement element) const
 {
-    Q_UNUSED(element);
+    if (m_style) {
+        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    }
     return {};
 }
 
-QRectF AbstractElement::subControlRect(QStyle::SubControl subControl) const
+QRectF AbstractElement::subControlRect([[maybe_unused]] QStyle::SubControl subControl) const
 {
-    Q_UNUSED(subControl);
     return {};
 }
 
 qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
-    Q_UNUSED(pixelMetric);
+    if (m_style) {
+        return m_style->QCommonStyle::pixelMetric(pixelMetric, m_styleOption, m_widget);
+    }
     return 0;
 }
 
-int AbstractElement::styleHint(QStyle::StyleHint styleHint) const
+int AbstractElement::styleHint([[maybe_unused]] QStyle::StyleHint styleHint) const
 {
-    Q_UNUSED(styleHint);
     return 0;
 }
 
-QIcon AbstractElement::standardPixmap(QStyle::StandardPixmap pixmap) const
+QIcon AbstractElement::standardPixmap([[maybe_unused]] QStyle::StandardPixmap pixmap) const
 {
-    Q_UNUSED(pixmap);
     return QIcon();
 }
 
@@ -146,8 +147,11 @@ void AbstractElement::updateSubElementList()
 {
 }
 
-void AbstractElement::update()
+void AbstractElement::update(const QStyleOption *option)
 {
+    if (option) {
+        m_styleOption = option;
+    }
 }
 
 void AbstractElement::draw(QPainter *painter, DrawEnums enums) const

@@ -13,33 +13,34 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-GroupBoxElement::GroupBoxElement(const QStyleOptionGroupBox *option, const UnionStyle *style, const QWidget *widget)
+GroupBoxElement::GroupBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_groupBoxOption(option)
     , m_isCheckable(false)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 GroupBoxElement::~GroupBoxElement()
 {
 }
 
-void GroupBoxElement::update()
+void GroupBoxElement::update(const QStyleOption *option)
 {
-    // This info is only in the widget itself
-    if (!m_styleOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionGroupBox *>(option)) {
+        m_groupBoxOption = newOpt;
     }
+    // This info is only in the widget itself
     m_isCheckable = false;
     if (auto groupBox = qobject_cast<const QGroupBox *>(m_widget)) {
         if (groupBox->isCheckable()) {
             m_isCheckable = true;
         }
     }
-
-    setText(m_groupBoxOption->text);
+    if (m_groupBoxOption) {
+        setText(m_groupBoxOption->text);
+    }
     updateSubElementList();
     layout();
 }
@@ -91,45 +92,45 @@ void GroupBoxElement::layout()
 
 QRectF GroupBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_styleOption) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return {};
-    }
-
     QRectF finalRect;
+    if (m_isValid && m_groupBoxOption) {
+        switch (subControl) {
+        case QStyle::SC_GroupBoxLabel: {
+            finalRect = m_layoutMap[ElementString::Text].rect;
+        } break;
+        case QStyle::SC_GroupBoxContents: {
+            auto textRect = m_layoutMap[ElementString::Text].rect;
+            QMarginsF pad = padding();
+            QRectF frameRect = m_groupBoxOption->rect;
+            frameRect = frameRect.adjusted(0, textRect.height(), 0, 0);
+            frameRect.adjust(0, 0, 0, -pad.bottom());
+            const int fontMetricsHeight = hasText() ? 0 : m_groupBoxOption->fontMetrics.height();
+            int indicatorHeight = 0;
+            if (m_isCheckable) {
+                indicatorHeight = m_style->pixelMetric(QStyle::PM_IndicatorHeight, m_groupBoxOption, m_widget);
+            }
+            const int topMargin = std::max(indicatorHeight, fontMetricsHeight);
+            return frameRect.adjusted(pad.left(), pad.top() + topMargin, -pad.bottom(), -pad.right());
+        } break;
+        case QStyle::SC_GroupBoxCheckBox: {
+            const auto checkItem = m_layoutMap[ElementString::Icon];
+            const auto textItem = m_layoutMap[ElementString::Text];
+            finalRect = checkItem.rect;
+            // Ensure we align on the same level as text
+            if (checkItem.verticalAlignment == textItem.verticalAlignment) {
+                finalRect.moveCenter(QPointF(finalRect.center().x(), textItem.rect.center().y()));
+            }
+        } break;
+        case QStyle::SC_GroupBoxFrame: {
+            return m_groupBoxOption->rect;
+        }
+        default:
+            break;
+        }
 
-    switch (subControl) {
-    case QStyle::SC_GroupBoxLabel: {
-        finalRect = m_layoutMap[ElementString::Text].rect;
-    } break;
-    case QStyle::SC_GroupBoxContents: {
-        auto textRect = m_layoutMap[ElementString::Text].rect;
-        QMarginsF pad = padding();
-        QRectF frameRect = m_groupBoxOption->rect;
-        frameRect = frameRect.adjusted(0, textRect.height(), 0, 0);
-        frameRect.adjust(0, 0, 0, -pad.bottom());
-        const int fontMetricsHeight = hasText() ? 0 : m_groupBoxOption->fontMetrics.height();
-        int indicatorHeight = 0;
-        if (m_isCheckable) {
-            indicatorHeight = m_style->pixelMetric(QStyle::PM_IndicatorHeight, m_groupBoxOption, m_widget);
-        }
-        const int topMargin = std::max(indicatorHeight, fontMetricsHeight);
-        return frameRect.adjusted(pad.left(), pad.top() + topMargin, -pad.bottom(), -pad.right());
-    } break;
-    case QStyle::SC_GroupBoxCheckBox: {
-        const auto checkItem = m_layoutMap[ElementString::Icon];
-        const auto textItem = m_layoutMap[ElementString::Text];
-        finalRect = checkItem.rect;
-        // Ensure we align on the same level as text
-        if (checkItem.verticalAlignment == textItem.verticalAlignment) {
-            finalRect.moveCenter(QPointF(finalRect.center().x(), textItem.rect.center().y()));
-        }
-    } break;
-    case QStyle::SC_GroupBoxFrame: {
-        return m_groupBoxOption->rect;
-    }
-    default:
-        break;
+    } else {
+        finalRect =
+            m_style->QCommonStyle::subControlRect(QStyle::CC_GroupBox, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
     }
 
     return m_style->visualRect(m_groupBoxOption->direction, m_groupBoxOption->rect, finalRect);
@@ -156,14 +157,13 @@ void GroupBoxElement::drawIcon(QPainter *painter) const
 Union::IdentifierList GroupBoxElement::elementHints() const
 {
     Union::IdentifierList hints;
-    if (!m_groupBoxOption) {
-        return hints;
-    }
-    if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Flat)) {
-        hints.append(u"flat"_s);
-    }
-    if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Rounded)) {
-        hints.append(u"rounded"_s);
+    if (m_groupBoxOption) {
+        if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Flat)) {
+            hints.append(u"flat"_s);
+        }
+        if (m_groupBoxOption->features.testFlag(QStyleOptionFrame::Rounded)) {
+            hints.append(u"rounded"_s);
+        }
     }
     return hints;
 }

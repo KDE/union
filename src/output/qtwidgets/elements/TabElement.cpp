@@ -13,55 +13,70 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-TabElement::TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget)
+TabElement::TabElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_tabOption(option)
     , m_isVertical(false)
     , m_isStatic(false)
+    , m_shape(QTabBar::Shape::RoundedNorth)
+    , m_leftButtonSize(QSize())
+    , m_rightButtonSize(QSize())
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 TabElement::~TabElement()
 {
 }
 
-void TabElement::update()
+void TabElement::update(const QStyleOption *option)
 {
-    if (!m_tabOption) {
-        return;
-    }
-    m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
-        || m_tabOption->shape == QTabBar::TriangularWest;
-
-    if (const auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
-        m_isStatic = m_tabOption->documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
-    } else {
-        m_isStatic = false;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionTab *>(option)) {
+        m_tabOption = newOpt;
     }
 
-    setIcon(m_tabOption->icon);
-    setText(m_tabOption->text);
+    if (m_tabOption) {
+        m_shape = m_tabOption->shape;
+        m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
+            || m_tabOption->shape == QTabBar::TriangularWest;
+
+        if (const auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
+            m_isStatic = m_tabOption->documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
+        } else {
+            m_isStatic = false;
+        }
+
+        setIcon(m_tabOption->icon);
+        setText(m_tabOption->text);
+
+        m_leftButtonSize = m_tabOption->leftButtonSize;
+        m_rightButtonSize = m_tabOption->rightButtonSize;
+    }
+
     updateSubElementList();
     layout();
-    updateGraphicsEffect(m_tabOption->rect);
+    if (m_styleOption) {
+        updateGraphicsEffect(m_styleOption->rect);
+    }
 }
 
 void TabElement::draw(QPainter *painter, DrawEnums enums) const
 {
-    if (!m_isValid || !m_tabOption) {
+    if (!m_isValid || !m_styleOption) {
         return;
     }
 
     // Rotate the painter if needed, remember to restore after
+    // TODO: Tab buttons have some issues with shadows on vertical tabs
+    // The effect painter gets upset at saveAndRotatePainter
     auto saveAndRotatePainter = [this](QPainter *painter) {
         painter->save();
-        QRect tabRect = m_tabOption->rect;
+        QRect tabRect = m_styleOption->rect;
         if (m_isVertical) {
             int newX, newY, newRot;
-            if (m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::TriangularEast) {
+            if (m_shape == QTabBar::RoundedEast || m_shape == QTabBar::TriangularEast) {
                 newX = tabRect.width() + tabRect.x();
                 newY = tabRect.y();
                 newRot = 90;
@@ -126,41 +141,46 @@ void TabElement::drawText(QPainter *painter) const
 void TabElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_tabOption->icon.isNull()) {
+    if (hasIcon()) {
         m_subElementList.append(ElementString::Icon);
     }
-    if (!m_tabOption->text.isEmpty()) {
+    if (hasText()) {
         m_subElementList.append(ElementString::Text);
     }
 }
 
 void TabElement::layout()
 {
-    if (m_subElementList.isEmpty() || !m_tabOption) {
+    if (m_subElementList.isEmpty() || !m_styleOption) {
         m_isValid = false;
         return;
     }
 
-    m_elementList = prepareElements(m_tabOption, m_widget, {ElementString::Tab});
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        QRect tabRect = m_tabOption->rect;
+        QRect tabRect = m_styleOption->rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
             tabRect.setRect(0, 0, tabRect.height(), tabRect.width());
         }
 
-        // Leave space for the left and right button
-        if (!m_tabOption->leftButtonSize.isEmpty()) {
-            tabRect.setLeft(tabRect.left() + spacing() + (m_isVertical ? m_tabOption->leftButtonSize.height() : m_tabOption->leftButtonSize.width()));
+        // Leave space for the left and right button{
+        if (!m_rightButtonSize.isEmpty()) {
+            tabRect.setLeft(tabRect.left() + spacing() + (m_isVertical ? m_leftButtonSize.height() : m_leftButtonSize.width()));
         }
-        if (!m_tabOption->rightButtonSize.isEmpty()) {
-            tabRect.setRight(tabRect.right() - spacing() - (m_isVertical ? m_tabOption->rightButtonSize.height() : m_tabOption->rightButtonSize.width()));
+        if (!m_rightButtonSize.isEmpty()) {
+            tabRect.setRight(tabRect.right() - spacing() - (m_isVertical ? m_rightButtonSize.height() : m_rightButtonSize.width()));
         }
 
-        auto subopt = *m_tabOption;
-        subopt.rect = tabRect;
-        m_layoutMap = layoutMap(&subopt, m_subElementList);
+        // Needed for positioning the text and icon properly
+        if (m_tabOption) {
+            auto subopt = *m_tabOption;
+            subopt.rect = tabRect;
+            m_layoutMap = layoutMap(&subopt, m_subElementList);
+        } else {
+            m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        }
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -170,42 +190,42 @@ void TabElement::layout()
 QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
-    if (!m_isValid || !m_tabOption) {
-        return contentsSizeFromStyle;
+    if (m_isValid && m_styleOption) {
+        const bool leftButton = !m_leftButtonSize.isEmpty();
+        const bool rightButton = !m_rightButtonSize.isEmpty();
+        const bool text = hasText();
+        const bool icon = hasIcon();
+        const qreal offset = spacing();
+
+        // calculate width increment for horizontal tabs
+        int widthIncrement = 0;
+        if (icon && !(text || leftButton || rightButton)) {
+            widthIncrement -= offset;
+        }
+        if (text && icon) {
+            widthIncrement += offset;
+        }
+        if (leftButton && (text || icon)) {
+            widthIncrement += offset;
+        }
+        if (rightButton && (text || icon || leftButton)) {
+            widthIncrement += offset;
+        }
+
+        // add margins
+        auto size = contentsSizeFromStyle;
+
+        if (m_isVertical) {
+            size.rheight() += widthIncrement;
+        } else {
+            size.rwidth() += widthIncrement;
+        }
+        size = size.expandedTo(propertySize());
+
+        return applyPaddingToSize(size);
     }
 
-    const bool leftButton = !m_tabOption->leftButtonSize.isEmpty();
-    const bool rightButton = !m_tabOption->rightButtonSize.isEmpty();
-    const bool text = hasText();
-    const bool icon = hasIcon();
-    const qreal offset = spacing();
-
-    // calculate width increment for horizontal tabs
-    int widthIncrement = 0;
-    if (icon && !(text || leftButton || rightButton)) {
-        widthIncrement -= offset;
-    }
-    if (text && icon) {
-        widthIncrement += offset;
-    }
-    if (leftButton && (text || icon)) {
-        widthIncrement += offset;
-    }
-    if (rightButton && (text || icon || leftButton)) {
-        widthIncrement += offset;
-    }
-
-    // add margins
-    auto size = contentsSizeFromStyle;
-
-    if (m_isVertical) {
-        size.rheight() += widthIncrement;
-    } else {
-        size.rwidth() += widthIncrement;
-    }
-    size = size.expandedTo(propertySize());
-
-    return applyPaddingToSize(size);
+    return contentsSizeFromStyle;
 }
 
 QRectF TabElement::subElementRect(QStyle::SubElement element) const
@@ -243,14 +263,11 @@ Union::Element::States TabElement::elementStates() const
 Union::IdentifierVariantHash TabElement::elementAttributes() const
 {
     Union::IdentifierVariantHash map;
-    if (!m_tabOption) {
-        return map;
-    }
 
-    const bool top = m_tabOption->shape == QTabBar::RoundedNorth || m_tabOption->shape == QTabBar::TriangularNorth;
-    const bool bottom = m_tabOption->shape == QTabBar::RoundedSouth || m_tabOption->shape == QTabBar::TriangularSouth;
-    const bool left = m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularWest;
-    const bool right = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::TriangularEast;
+    const bool top = m_shape == QTabBar::RoundedNorth || m_shape == QTabBar::TriangularNorth;
+    const bool bottom = m_shape == QTabBar::RoundedSouth || m_shape == QTabBar::TriangularSouth;
+    const bool left = m_shape == QTabBar::RoundedWest || m_shape == QTabBar::TriangularWest;
+    const bool right = m_shape == QTabBar::RoundedEast || m_shape == QTabBar::TriangularEast;
 
     if (top) {
         map[u"direction"_s] = QVariant(u"top"_s);
@@ -278,21 +295,17 @@ Union::IdentifierVariantHash TabElement::elementAttributes() const
 Union::IdentifierList TabElement::elementHints() const
 {
     Union::IdentifierList hints;
-
     if (m_isStatic) {
         hints.append(u"immutable"_s);
     }
-
-    auto tabStyleOption = qstyleoption_cast<const QStyleOptionTab *>(m_styleOption);
-    auto tabBar = qobject_cast<const QTabBar *>(m_widget);
-    if (tabStyleOption && tabBar) {
-        if (tabStyleOption->tabIndex == 0) {
+    const auto tabBar = qobject_cast<const QTabBar *>(m_widget);
+    if (m_tabOption && tabBar) {
+        if (m_tabOption->tabIndex == 0) {
             hints.append(u"first"_s);
-        } else if (tabStyleOption->tabIndex == tabBar->count() - 1) {
+        } else if (m_tabOption->tabIndex == tabBar->count() - 1) {
             hints.append(u"last"_s);
         }
     }
-
     return hints;
 }
 

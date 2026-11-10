@@ -18,12 +18,12 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemText> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
-    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemDecoration> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
-    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemCheckIndicator> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
-    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ItemViewItem> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
-    template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelItemViewItem> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
-    template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ItemViewItem> : public TypeHelper<ItemViewElement, QStyleOptionViewItem>{};
+    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemText> : public TypeHelper<ItemViewElement, QStyleOption>{};
+    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemDecoration> : public TypeHelper<ItemViewElement, QStyleOption>{};
+    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ItemViewItemCheckIndicator> : public TypeHelper<ItemViewElement, QStyleOption>{};
+    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ItemViewItem> : public TypeHelper<ItemViewElement, QStyleOption>{};
+    template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelItemViewItem> : public TypeHelper<ItemViewElement, QStyleOption>{};
+    template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ItemViewItem> : public TypeHelper<ItemViewElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -33,10 +33,10 @@ class ItemViewElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ItemViewElement(const QStyleOptionViewItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ItemViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ItemViewElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 

@@ -14,20 +14,23 @@
 
 using namespace Qt::StringLiterals;
 
-ScrollBarElement::ScrollBarElement(const QStyleOptionSlider *option, const UnionStyle *style, const QWidget *widget)
+ScrollBarElement::ScrollBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_scrollBarOption(option)
     , m_horizontal(false)
 {
-    update();
+    update(option);
 }
 
 ScrollBarElement::~ScrollBarElement()
 {
 }
 
-void ScrollBarElement::update()
+void ScrollBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
+        m_scrollBarOption = newOpt;
+    }
     m_horizontal = (m_scrollBarOption && m_scrollBarOption->state.testFlag(QStyle::State_Horizontal));
     updateSubElementList();
     layout();
@@ -36,13 +39,12 @@ void ScrollBarElement::update()
 void ScrollBarElement::layout()
 {
     // Background and indicator (handle) is separate
-    m_elementList = prepareElements(m_scrollBarOption, m_widget);
+    m_elementList = prepareElements(m_styleOption, m_widget);
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_scrollBarOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
     }
-
-    m_indicatorElementList = prepareElements(m_scrollBarOption, m_widget, {ElementString::Handle});
+    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Handle});
     if (!m_indicatorElementList.empty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         m_isValid = true;
@@ -120,75 +122,72 @@ QSizeF ScrollBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_scrollBarOption) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return {};
-    }
-
-    // Copied from Breeze
-    auto rect = m_scrollBarOption->rect;
-    if (m_widget) {
-        rect = m_widget->visibleRegion().boundingRect();
-    }
-    if (subControl == QStyle::SC_ScrollBarSlider) {
-        auto groove = m_style->visualRect(m_scrollBarOption->direction, rect, subControlRect(QStyle::SC_ScrollBarGroove));
-
-        int space(m_horizontal ? groove.width() : groove.height());
-        int thickness = 0;
-        QMarginsF padding;
-
-        if (m_elementProperties->layout() && m_elementProperties->layout()->padding()) {
-            padding = m_elementProperties->layout()->padding()->toMargins().toMargins();
-            if (m_scrollBarOption->orientation == Qt::Horizontal) {
-                thickness = m_elementProperties->layout()->height().value_or(0);
-            } else {
-                thickness = m_elementProperties->layout()->width().value_or(0);
-            }
+    if (m_isValid && m_scrollBarOption) {
+        // Copied from Breeze
+        auto rect = m_scrollBarOption->rect;
+        if (m_widget) {
+            rect = m_widget->visibleRegion().boundingRect();
         }
+        if (subControl == QStyle::SC_ScrollBarSlider) {
+            auto groove = m_style->visualRect(m_scrollBarOption->direction, rect, subControlRect(QStyle::SC_ScrollBarGroove));
 
-        // Return early with just padding changes
-        if (m_scrollBarOption->minimum == m_scrollBarOption->maximum) {
+            int space(m_horizontal ? groove.width() : groove.height());
+            int thickness = 0;
+            QMarginsF padding;
+
+            if (m_elementProperties->layout() && m_elementProperties->layout()->padding()) {
+                padding = m_elementProperties->layout()->padding()->toMargins().toMargins();
+                if (m_scrollBarOption->orientation == Qt::Horizontal) {
+                    thickness = m_elementProperties->layout()->height().value_or(0);
+                } else {
+                    thickness = m_elementProperties->layout()->width().value_or(0);
+                }
+            }
+
+            // Return early with just padding changes
+            if (m_scrollBarOption->minimum == m_scrollBarOption->maximum) {
+                if (m_horizontal) {
+                    return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                } else {
+                    return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                }
+            }
+
+            int sliderSize =
+                space * qreal(m_scrollBarOption->pageStep) / (m_scrollBarOption->maximum - m_scrollBarOption->minimum + m_scrollBarOption->pageStep);
+            sliderSize = std::max({sliderSize, thickness, m_style->pixelMetric(QStyle::PM_ScrollBarSliderMin, m_scrollBarOption, m_widget)});
+            sliderSize = qMin(sliderSize, space);
+            space -= sliderSize;
+            if (space <= 0) {
+                if (m_horizontal) {
+                    return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                } else {
+                    return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                }
+            }
+            int pos = qRound(qreal(m_scrollBarOption->sliderPosition - m_scrollBarOption->minimum) / (m_scrollBarOption->maximum - m_scrollBarOption->minimum)
+                             * space);
+            if (m_scrollBarOption->upsideDown) {
+                pos = space - pos;
+            }
             if (m_horizontal) {
-                return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                const QRectF rect(groove.left() + pos, groove.top(), sliderSize, groove.height());
+                return m_style->visualRect(m_scrollBarOption->direction, rect, rect.marginsRemoved(padding));
             } else {
-                return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
+                const QRectF rect(groove.left(), groove.top() + pos, groove.width(), sliderSize);
+                return m_style->visualRect(m_scrollBarOption->direction, rect, rect.marginsRemoved(padding));
             }
+        } else if (subControl == QStyle::SC_ScrollBarGroove) {
+            return m_style->visualRect(m_scrollBarOption->direction, m_scrollBarOption->rect, rect);
         }
-
-        int sliderSize = space * qreal(m_scrollBarOption->pageStep) / (m_scrollBarOption->maximum - m_scrollBarOption->minimum + m_scrollBarOption->pageStep);
-        sliderSize = std::max({sliderSize, thickness, m_style->pixelMetric(QStyle::PM_ScrollBarSliderMin, m_scrollBarOption, m_widget)});
-        sliderSize = qMin(sliderSize, space);
-        space -= sliderSize;
-        if (space <= 0) {
-            if (m_horizontal) {
-                return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
-            } else {
-                return m_style->visualRect(m_scrollBarOption->direction, groove, groove.marginsRemoved(padding));
-            }
-        }
-        int pos =
-            qRound(qreal(m_scrollBarOption->sliderPosition - m_scrollBarOption->minimum) / (m_scrollBarOption->maximum - m_scrollBarOption->minimum) * space);
-        if (m_scrollBarOption->upsideDown) {
-            pos = space - pos;
-        }
-        if (m_horizontal) {
-            const QRectF rect(groove.left() + pos, groove.top(), sliderSize, groove.height());
-            return m_style->visualRect(m_scrollBarOption->direction, rect, rect.marginsRemoved(padding));
-        } else {
-            const QRectF rect(groove.left(), groove.top() + pos, groove.width(), sliderSize);
-            return m_style->visualRect(m_scrollBarOption->direction, rect, rect.marginsRemoved(padding));
-        }
-    } else if (subControl == QStyle::SC_ScrollBarGroove) {
-        return m_style->visualRect(m_scrollBarOption->direction, m_scrollBarOption->rect, rect);
-    } else {
-        return {};
     }
+    return m_style->QCommonStyle::subControlRect(QStyle::CC_ScrollBar, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
 }
 
 qreal ScrollBarElement::extent() const
 {
     if (m_isValid && m_elementProperties && m_elementProperties->layout()) {
-        if (m_scrollBarOption->orientation == Qt::Horizontal) {
+        if (m_horizontal) {
             return m_elementProperties->layout()->height().value_or(0);
         } else {
             return m_elementProperties->layout()->width().value_or(0);
@@ -204,7 +203,7 @@ qreal ScrollBarElement::controlThickness() const
         if (m_indicatorProperties->layout()->padding()) {
             size = size.shrunkBy(m_indicatorProperties->layout()->padding()->toMargins().toMargins());
         }
-        if (m_scrollBarOption->orientation == Qt::Horizontal) {
+        if (m_horizontal) {
             return size.height();
         } else {
             return size.width();
@@ -221,13 +220,12 @@ qreal ScrollBarElement::minimumSize() const
 Union::IdentifierList ScrollBarElement::elementHints() const
 {
     Union::IdentifierList hints;
-    if (!m_scrollBarOption) {
-        return hints;
-    }
-    if (m_scrollBarOption->orientation == Qt::Horizontal) {
-        hints.append(u"horizontal"_s);
-    } else {
-        hints.append(u"vertical"_s);
+    if (m_scrollBarOption) {
+        if (m_scrollBarOption->orientation == Qt::Horizontal) {
+            hints.append(u"horizontal"_s);
+        } else {
+            hints.append(u"vertical"_s);
+        }
     }
     return hints;
 }

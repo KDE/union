@@ -16,12 +16,11 @@ using namespace Qt::StringLiterals;
 
 MenuElement::MenuElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuOption(option)
 {
-    update();
-    if (m_elementProperties && m_menuOption) {
+    update(option);
+    if (m_elementProperties && m_styleOption) {
         m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
-        m_shadowWidget = qobject_cast<QWidget *>(m_menuOption->styleObject);
+        m_shadowWidget = qobject_cast<QWidget *>(m_styleOption->styleObject);
     }
 }
 
@@ -29,8 +28,9 @@ MenuElement::~MenuElement()
 {
 }
 
-void MenuElement::update()
+void MenuElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     updateSubElementList();
     layout();
 }

@@ -17,12 +17,12 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTab> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabLabel> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabShape> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabBarTab> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabHSpace> : public TypeHelper<TabElement, QStyleOptionTab>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabVSpace> : public TypeHelper<TabElement, QStyleOptionTab>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTab> : public TypeHelper<TabElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabLabel> : public TypeHelper<TabElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_TabBarTabShape> : public TypeHelper<TabElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabBarTab> : public TypeHelper<TabElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabHSpace> : public TypeHelper<TabElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarTabVSpace> : public TypeHelper<TabElement, QStyleOption>{};
 
 /* clang-format on */
 }
@@ -33,10 +33,10 @@ class TabElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TabElement(const QStyleOptionTab *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TabElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawText(QPainter *painter) const override;
@@ -54,6 +54,9 @@ private:
     const QStyleOptionTab *m_tabOption = nullptr;
     bool m_isVertical;
     bool m_isStatic;
+    QTabBar::Shape m_shape;
+    QSize m_leftButtonSize;
+    QSize m_rightButtonSize;
     int hSpace() const;
     int vSpace() const;
 };

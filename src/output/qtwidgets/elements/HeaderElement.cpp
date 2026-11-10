@@ -14,34 +14,27 @@ using namespace Union::Properties;
 
 HeaderElement::HeaderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_headerOption(qstyleoption_cast<const QStyleOptionHeader *>(option))
     , m_isHorizontal(false)
 {
-    update();
-}
-
-HeaderElement::HeaderElement(const QStyleOptionHeader *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
-    , m_headerOption(option)
-    , m_isHorizontal(false)
-{
-    update();
+    update(option);
 }
 
 HeaderElement::~HeaderElement()
 {
 }
 
-void HeaderElement::update()
+void HeaderElement::update(const QStyleOption *option)
 {
-    if (!m_headerOption) {
-        m_isValid = false;
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionHeader *>(option)) {
+        m_headerOption = newOpt;
     }
-    m_isHorizontal = (m_headerOption->orientation == Qt::Horizontal);
-    setText(m_headerOption->text);
-    setIcon(m_headerOption->icon);
-    updateSubElementList();
+    if (m_headerOption) {
+        m_isHorizontal = (m_headerOption->orientation == Qt::Horizontal);
+        setText(m_headerOption->text);
+        setIcon(m_headerOption->icon);
+        updateSubElementList();
+    }
     layout();
     setIndicator(sortIndicator());
 }
@@ -66,10 +59,10 @@ QIcon HeaderElement::sortIndicator()
 
 void HeaderElement::layout()
 {
-    m_elementList = prepareElements(m_headerOption, m_widget, {ElementString::HeaderViewDelegate});
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::HeaderViewDelegate});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_headerOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -127,41 +120,39 @@ void HeaderElement::updateSubElementList()
     if (hasText()) {
         m_subElementList.append(ElementString::Text);
     }
-    if (m_headerOption->sortIndicator != QStyleOptionHeader::None) {
+    if (m_headerOption && m_headerOption->sortIndicator != QStyleOptionHeader::None) {
         m_subElementList.append(ElementString::Indicator);
     }
 }
 
 QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid) {
-        qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return {};
-    }
-
-    QRectF rect;
-    switch (element) {
-    case QStyle::SE_HeaderLabel:
-        rect = m_layoutMap[ElementString::Text].rect;
-        break;
-    case QStyle::SE_HeaderArrow:
-        rect = m_layoutMap[ElementString::Indicator].rect;
-        break;
-    default:
-        break;
-    }
-
-    // Ensure we do not draw outside of the rectangle
-    if (m_headerOption) {
-        if (rect.x() < m_headerOption->rect.x() + padding().left()) {
-            rect.setX(m_headerOption->rect.x() + padding().left());
+    if (m_isValid) {
+        QRectF rect;
+        switch (element) {
+        case QStyle::SE_HeaderLabel:
+            rect = m_layoutMap[ElementString::Text].rect;
+            break;
+        case QStyle::SE_HeaderArrow:
+            rect = m_layoutMap[ElementString::Indicator].rect;
+            break;
+        default:
+            break;
         }
-        if (rect.width() > m_headerOption->rect.width() - padding().right()) {
-            rect.setWidth(m_headerOption->rect.width() - padding().right());
-        }
-    }
 
-    return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect);
+        // Ensure we do not draw outside of the rectangle
+        if (m_headerOption) {
+            if (rect.x() < m_headerOption->rect.x() + padding().left()) {
+                rect.setX(m_headerOption->rect.x() + padding().left());
+            }
+            if (rect.width() > m_headerOption->rect.width() - padding().right()) {
+                rect.setWidth(m_headerOption->rect.width() - padding().right());
+            }
+        }
+
+        return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect);
+    }
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
@@ -207,17 +198,19 @@ QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 Union::IdentifierList HeaderElement::elementHints() const
 {
     Union::IdentifierList hints;
-    switch (m_headerOption->sortIndicator) {
-    case QStyleOptionHeader::None:
-        return hints;
-    // Due to how Breeze style does this, these need to be inverted
-    // to follow QtQuick style
-    case QStyleOptionHeader::SortUp:
-        hints.append(u"sort-descending"_s);
-        break;
-    case QStyleOptionHeader::SortDown:
-        hints.append(u"sort-ascending"_s);
-        break;
+    if (m_headerOption) {
+        switch (m_headerOption->sortIndicator) {
+        case QStyleOptionHeader::None:
+            return hints;
+        // Due to how Breeze style does this, these need to be inverted
+        // to follow QtQuick style
+        case QStyleOptionHeader::SortUp:
+            hints.append(u"sort-descending"_s);
+            break;
+        case QStyleOptionHeader::SortDown:
+            hints.append(u"sort-ascending"_s);
+            break;
+        }
     }
     return hints;
 }
@@ -227,17 +220,13 @@ qreal HeaderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
     switch (pixelMetric) {
     case QStyle::PM_HeaderMargin:
     case QStyle::PM_HeaderGripMargin:
-        return spacing();
-    case QStyle::PM_HeaderDefaultSectionSizeHorizontal:
-        return width();
-    case QStyle::PM_HeaderDefaultSectionSizeVertical:
-        return height();
+        return averagePadding();
     case QStyle::PM_HeaderMarkSize:
         return iconSize().width();
     default:
         break;
     }
-    return 0;
+    return m_style->QCommonStyle::pixelMetric(pixelMetric, m_styleOption, m_widget);
 }
 
 QString HeaderElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

@@ -12,33 +12,47 @@
 
 using namespace Qt::StringLiterals;
 
-RadioButtonElement::RadioButtonElement(const QStyleOptionButton *option, const UnionStyle *style, const QWidget *widget)
+RadioButtonElement::RadioButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_buttonOption(option)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 RadioButtonElement::~RadioButtonElement()
 {
 }
 
-void RadioButtonElement::update()
+void RadioButtonElement::update(const QStyleOption *option)
 {
-    if (!m_buttonOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionButton *>(option)) {
+        m_buttonOption = newOpt;
     }
+    if (m_buttonOption) {
+        setIcon(m_buttonOption->icon);
+        setText(m_buttonOption->text);
+        updateSubElementList();
+        updateGraphicsEffect(m_buttonOption->rect);
+    }
+    layout();
+}
+
+void RadioButtonElement::layout()
+{
     m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::RadioButton, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
-
-    setIcon(m_buttonOption->icon);
-    setText(m_buttonOption->text);
-    updateSubElementList();
-    layout();
-    updateGraphicsEffect(m_buttonOption->rect);
+    m_elementList = prepareElements(m_styleOption, m_widget);
+    if (!m_elementList.isEmpty()) {
+        m_elementProperties = queryProperties(m_elementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_isValid = true;
+    } else {
+        m_isValid = false;
+        qCWarning(UNION_QTWIDGETS) << "Could not find elementlist for this element!";
+    }
 }
 
 void RadioButtonElement::draw(QPainter *painter, DrawEnums enums) const
@@ -75,35 +89,29 @@ QSizeF RadioButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) con
 
 QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
 {
-    if (!m_isValid || !m_buttonOption) {
-        qCWarning(UNION_QTWIDGETS) << "Subelementrect for " << element << "is not valid";
-        return {};
-    }
-
-    if (element == QStyle::SE_RadioButtonIndicator) {
-        if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
-            // The indicator is drawn as part of something
-            return m_layoutMap[ElementString::Indicator].rect;
+    if (m_isValid && m_buttonOption) {
+        if (element == QStyle::SE_RadioButtonIndicator) {
+            if (m_buttonOption->styleObject || m_widget) {
+                // The indicator is drawn as part of something
+                return m_layoutMap[ElementString::Indicator].rect;
+            }
         }
-        // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
-        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
     }
-
-    return unifiedRect(m_layoutMap);
+    // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
+    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
 void RadioButtonElement::updateSubElementList()
 {
-    if (!m_buttonOption) {
-        return;
-    }
     m_subElementList.clear();
     m_subElementList.append(ElementString::Indicator);
-    if (!m_buttonOption->icon.isNull()) {
-        m_subElementList.append(ElementString::Icon);
-    }
-    if (!m_buttonOption->text.isEmpty()) {
-        m_subElementList.append(ElementString::Text);
+    if (m_buttonOption) {
+        if (!m_buttonOption->icon.isNull()) {
+            m_subElementList.append(ElementString::Icon);
+        }
+        if (!m_buttonOption->text.isEmpty()) {
+            m_subElementList.append(ElementString::Text);
+        }
     }
 }
 

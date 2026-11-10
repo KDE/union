@@ -14,11 +14,10 @@
 
 using namespace Qt::StringLiterals;
 
-SizeGripElement::SizeGripElement(const QStyleOptionSizeGrip *option, const UnionStyle *style, const QWidget *widget)
+SizeGripElement::SizeGripElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_sizeGripOption(option)
 {
-    update();
+    update(option);
 }
 
 SizeGripElement::~SizeGripElement()
@@ -38,8 +37,12 @@ void SizeGripElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-void SizeGripElement::update()
+void SizeGripElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionSizeGrip *>(option)) {
+        m_sizeGripOption = newOpt;
+    }
     layout();
 }
 

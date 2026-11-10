@@ -17,8 +17,8 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOptionMenuItem>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOptionMenuItem>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -28,10 +28,10 @@ class MenuBarItemElement : public AbstractElement
     Q_OBJECT
 
 public:
-    MenuBarItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    MenuBarItemElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuBarItemElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void layout() override;
 

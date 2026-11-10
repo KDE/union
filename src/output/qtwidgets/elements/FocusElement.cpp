@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "FocusElement.h"
+#include "UnionPainter.h"
 #include "UnionStyle.h"
 #include <QApplication>
 #include <QDebug>
@@ -13,21 +14,26 @@
 
 using namespace Qt::StringLiterals;
 
-FocusElement::FocusElement(const QStyleOptionFocusRect *option, const UnionStyle *style, const QWidget *widget)
+FocusElement::FocusElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_focusOption(option)
 {
-    update();
+    update(option);
 }
 
 FocusElement::~FocusElement()
 {
 }
 
-void FocusElement::update()
+void FocusElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionFocusRect *>(option)) {
+        m_focusOption = newOpt;
+    }
+    if (m_styleOption) {
+        updateGraphicsEffect(m_styleOption->rect);
+    }
     layout();
-    updateGraphicsEffect(m_styleOption->rect);
 }
 
 void FocusElement::draw(QPainter *painter, DrawEnums enums) const
@@ -39,6 +45,18 @@ void FocusElement::draw(QPainter *painter, DrawEnums enums) const
     case QStyle::PE_FrameFocusRect:
         drawBackground(painter);
         break;
+    }
+}
+
+void FocusElement::drawBackground(QPainter *painter) const
+{
+    if (m_isValid && m_styleOption) {
+        UnionPainter unionPainter(painter, m_elementProperties);
+        unionPainter.setRect(m_styleOption->rect);
+        if (m_focusOption) {
+            unionPainter.setOverrideBackgroundColor(m_focusOption->backgroundColor);
+        }
+        unionPainter.draw();
     }
 }
 
@@ -56,7 +74,7 @@ void FocusElement::layout()
 Union::IdentifierList FocusElement::elementHints() const
 {
     Union::IdentifierList hints;
-    if (m_styleOption && m_focusOption->state.testFlag(QStyle::State_FocusAtBorder)) {
+    if (m_styleOption && m_styleOption->state.testFlag(QStyle::State_FocusAtBorder)) {
         hints.append(u"focus-at-border"_s);
     }
     return hints;

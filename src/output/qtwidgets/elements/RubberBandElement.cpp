@@ -12,19 +12,19 @@
 
 using namespace Qt::StringLiterals;
 
-RubberBandElement::RubberBandElement(const QStyleOptionRubberBand *option, const UnionStyle *style, const QWidget *widget)
+RubberBandElement::RubberBandElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_rubberBandOption(option)
 {
-    update();
+    update(option);
 }
 
 RubberBandElement::~RubberBandElement()
 {
 }
 
-void RubberBandElement::update()
+void RubberBandElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     layout();
 }
 

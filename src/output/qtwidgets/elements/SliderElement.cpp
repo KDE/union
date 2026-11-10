@@ -14,30 +14,33 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-SliderElement::SliderElement(const QStyleOptionSlider *option, const UnionStyle *style, const QWidget *widget)
+SliderElement::SliderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_sliderOption(option)
     , m_isHorizontal(false)
     , m_isInverted(false)
     , m_isReverse(false)
 {
-    update();
+    update(option);
 }
 
 SliderElement::~SliderElement()
 {
 }
 
-void SliderElement::update()
+void SliderElement::update(const QStyleOption *option)
 {
-    if (!m_sliderOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
+        m_sliderOption = newOpt;
     }
-    m_isHorizontal = m_sliderOption->state.testFlag(QStyle::State_Horizontal);
-    m_isInverted = m_sliderOption->upsideDown;
-    m_isReverse = m_isHorizontal && m_sliderOption->direction == Qt::RightToLeft;
-    if (m_isInverted) {
-        m_isReverse = !m_isReverse;
+
+    if (m_sliderOption) {
+        m_isHorizontal = m_sliderOption->state.testFlag(QStyle::State_Horizontal);
+        m_isInverted = m_sliderOption->upsideDown;
+        m_isReverse = m_isHorizontal && m_sliderOption->direction == Qt::RightToLeft;
+        if (m_isInverted) {
+            m_isReverse = !m_isReverse;
+        }
     }
     layout();
     updateGraphicsEffect(subControlRect(QStyle::SC_SliderHandle));
@@ -215,58 +218,55 @@ QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
 
 QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (!m_isValid || !m_sliderOption) {
-        qCWarning(UNION_QTWIDGETS) << "subControlRect for " << subControl << "is not valid";
-        return QRectF();
+    if (m_isValid && m_sliderOption) {
+        // Copied from Breeze
+        auto rect(m_sliderOption->rect);
+        auto frameWidth = m_style->pixelMetric(QStyle::PM_DefaultFrameWidth, m_sliderOption, m_widget);
+        if (m_widget) {
+            rect = m_widget->visibleRegion().boundingRect();
+        }
+
+        if (subControl == QStyle::SC_SliderHandle) {
+            int handleHeight = 1;
+            int handleWidth = 1;
+            if (m_indicatorProperties->layout()) {
+                handleHeight = m_indicatorProperties->layout()->height().value_or(6);
+                handleWidth = m_indicatorProperties->layout()->width().value_or(6);
+            }
+
+            QRectF handleRect(centerRect(rect, handleWidth, handleHeight));
+            const int sliderPos = m_style->sliderPositionFromValue(m_sliderOption->minimum,
+                                                                   m_sliderOption->maximum,
+                                                                   m_sliderOption->sliderPosition,
+                                                                   (m_isHorizontal ? (rect.width() - handleWidth) : (rect.height() - handleHeight)),
+                                                                   m_sliderOption->upsideDown);
+            if (m_isHorizontal) {
+                handleRect.moveLeft(rect.x() + sliderPos);
+            } else {
+                handleRect.moveTop(rect.y() + sliderPos);
+            }
+            handleRect = m_style->visualRect(m_sliderOption->direction, rect, handleRect);
+            return handleRect;
+        } else if (subControl == QStyle::SC_SliderGroove) {
+            int grooveHeight = 1;
+            int grooveWidth = 1;
+            if (m_elementProperties->layout()) {
+                grooveHeight = m_elementProperties->layout()->height().value_or(6);
+                grooveWidth = m_elementProperties->layout()->width().value_or(6);
+            }
+
+            QRectF grooveRect = rect.adjusted(frameWidth, frameWidth, -frameWidth, -frameWidth);
+
+            // centering
+            if (m_isHorizontal) {
+                grooveRect = centerRect(rect, grooveRect.width(), grooveHeight);
+            } else {
+                grooveRect = centerRect(rect, grooveWidth, grooveRect.height());
+            }
+            return m_style->visualRect(m_sliderOption->direction, rect, grooveRect);
+        }
     }
-
-    // Copied from Breeze
-    auto rect(m_sliderOption->rect);
-    auto frameWidth = m_style->pixelMetric(QStyle::PM_DefaultFrameWidth, m_sliderOption, m_widget);
-    if (m_widget) {
-        rect = m_widget->visibleRegion().boundingRect();
-    }
-
-    if (subControl == QStyle::SC_SliderHandle) {
-        int handleHeight = 1;
-        int handleWidth = 1;
-        if (m_indicatorProperties->layout()) {
-            handleHeight = m_indicatorProperties->layout()->height().value_or(6);
-            handleWidth = m_indicatorProperties->layout()->width().value_or(6);
-        }
-
-        QRectF handleRect(centerRect(rect, handleWidth, handleHeight));
-        const int sliderPos = m_style->sliderPositionFromValue(m_sliderOption->minimum,
-                                                               m_sliderOption->maximum,
-                                                               m_sliderOption->sliderPosition,
-                                                               (m_isHorizontal ? (rect.width() - handleWidth) : (rect.height() - handleHeight)),
-                                                               m_sliderOption->upsideDown);
-        if (m_isHorizontal) {
-            handleRect.moveLeft(rect.x() + sliderPos);
-        } else {
-            handleRect.moveTop(rect.y() + sliderPos);
-        }
-        handleRect = m_style->visualRect(m_sliderOption->direction, rect, handleRect);
-        return handleRect;
-    } else if (subControl == QStyle::SC_SliderGroove) {
-        int grooveHeight = 1;
-        int grooveWidth = 1;
-        if (m_elementProperties->layout()) {
-            grooveHeight = m_elementProperties->layout()->height().value_or(6);
-            grooveWidth = m_elementProperties->layout()->width().value_or(6);
-        }
-
-        QRectF grooveRect = rect.adjusted(frameWidth, frameWidth, -frameWidth, -frameWidth);
-
-        // centering
-        if (m_isHorizontal) {
-            grooveRect = centerRect(rect, grooveRect.width(), grooveHeight);
-        } else {
-            grooveRect = centerRect(rect, grooveWidth, grooveRect.height());
-        }
-        return m_style->visualRect(m_sliderOption->direction, rect, grooveRect);
-    }
-    return QRectF();
+    return m_style->QCommonStyle::subControlRect(QStyle::CC_Slider, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
 }
 
 QList<QRectF> SliderElement::tickLines() const
@@ -316,7 +316,7 @@ qreal SliderElement::controlThickness() const
         QMarginsF padding =
             m_indicatorProperties->safePropertyLookup(QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
         controlSize = controlSize.shrunkBy(padding);
-        if (m_sliderOption->orientation == Qt::Horizontal) {
+        if (m_isHorizontal) {
             return controlSize.height();
         } else {
             return controlSize.width();
@@ -331,7 +331,7 @@ Union::IdentifierList SliderElement::elementHints() const
     if (!m_sliderOption) {
         return hints;
     }
-    if (m_sliderOption->orientation == Qt::Horizontal) {
+    if (m_isHorizontal) {
         hints.append(u"horizontal"_s);
     } else {
         hints.append(u"vertical"_s);

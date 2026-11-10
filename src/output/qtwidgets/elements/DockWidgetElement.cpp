@@ -13,23 +13,28 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-DockWidgetElement::DockWidgetElement(const QStyleOptionDockWidget *option, const UnionStyle *style, const QWidget *widget)
+DockWidgetElement::DockWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_dockWidgetOption(option)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 DockWidgetElement::~DockWidgetElement()
 {
 }
 
-void DockWidgetElement::update()
+void DockWidgetElement::update(const QStyleOption *option)
 {
-    setIcon(QIcon());
-    setText(m_dockWidgetOption->title);
-    updateSubElementList();
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionDockWidget *>(option)) {
+        m_dockWidgetOption = newOpt;
+    }
+    if (m_dockWidgetOption) {
+        setIcon(QIcon());
+        setText(m_dockWidgetOption->title);
+        updateSubElementList();
+    }
     layout();
 }
 
@@ -50,27 +55,25 @@ void DockWidgetElement::draw(QPainter *painter, DrawEnums enums) const
 void DockWidgetElement::updateSubElementList()
 {
     m_subElementList.clear();
-    if (!m_styleOption) {
-        return;
-    }
-    if (m_dockWidgetOption->closable) {
-        m_subElementList.append(ElementString::CloseButton);
-    }
-    if (m_dockWidgetOption->floatable) {
-        m_subElementList.append(ElementString::FloatButton);
-    }
-    if (!m_dockWidgetOption->title.isEmpty()) {
-        m_subElementList.append(ElementString::Text);
+    if (m_dockWidgetOption) {
+        if (m_dockWidgetOption->closable) {
+            m_subElementList.append(ElementString::CloseButton);
+        }
+        if (m_dockWidgetOption->floatable) {
+            m_subElementList.append(ElementString::FloatButton);
+        }
+        if (!m_dockWidgetOption->title.isEmpty()) {
+            m_subElementList.append(ElementString::Text);
+        }
     }
 }
 
 void DockWidgetElement::layout()
 {
-    m_elementList = prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget});
-
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::DockWidget});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_dockWidgetOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -80,24 +83,19 @@ void DockWidgetElement::layout()
 
 QRectF DockWidgetElement::subElementRect(QStyle::SubElement subElement) const
 {
-    if (!m_isValid) {
-        return {};
+    if (m_isValid) {
+        if (subElement == QStyle::SE_DockWidgetTitleBarText) {
+            return m_layoutMap[ElementString::Text].rect;
+        } else if (subElement == QStyle::SE_DockWidgetFloatButton) {
+            return m_layoutMap[ElementString::FloatButton].rect;
+        } else if (subElement == QStyle::SE_DockWidgetCloseButton) {
+            return m_layoutMap[ElementString::CloseButton].rect;
+        } else if (subElement == QStyle::SE_DockWidgetIcon) {
+            // The styleoption has no icon, yet there is whole thing for an icon? Wtf.
+            return m_layoutMap[ElementString::Icon].rect;
+        }
     }
-
-    if (subElement == QStyle::SE_DockWidgetTitleBarText) {
-        return m_layoutMap[ElementString::Text].rect;
-    }
-    if (subElement == QStyle::SE_DockWidgetFloatButton) {
-        return m_layoutMap[ElementString::FloatButton].rect;
-    }
-    if (subElement == QStyle::SE_DockWidgetCloseButton) {
-        return m_layoutMap[ElementString::CloseButton].rect;
-    }
-    // The styleoption has no icon, yet there is whole thing for an icon? Wtf.
-    if (subElement == QStyle::SE_DockWidgetIcon) {
-        return m_layoutMap[ElementString::Icon].rect;
-    }
-    return {};
+    return m_style->QCommonStyle::subElementRect(subElement, m_styleOption, m_widget);
 }
 
 qreal DockWidgetElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
@@ -115,11 +113,11 @@ QIcon DockWidgetElement::standardPixmap(QStyle::StandardPixmap pixmap) const
 {
     switch (pixmap) {
     case QStyle::SP_TitleBarNormalButton:
-        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::FloatButton})),
+        return m_style->unionIcon(queryProperties(prepareElements(m_styleOption, m_widget, {ElementString::DockWidget, ElementString::FloatButton})),
                                   u"window-restore"_s);
     case QStyle::SP_TitleBarCloseButton:
     case QStyle::SP_DockWidgetCloseButton:
-        return m_style->unionIcon(queryProperties(prepareElements(m_dockWidgetOption, m_widget, {ElementString::DockWidget, ElementString::CloseButton})),
+        return m_style->unionIcon(queryProperties(prepareElements(m_styleOption, m_widget, {ElementString::DockWidget, ElementString::CloseButton})),
                                   u"window-close-symbolic"_s);
     default:
         break;

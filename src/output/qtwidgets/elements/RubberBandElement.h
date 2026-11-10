@@ -16,7 +16,7 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_RubberBand> : public TypeHelper<RubberBandElement, QStyleOptionRubberBand>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_RubberBand> : public TypeHelper<RubberBandElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -26,10 +26,10 @@ class RubberBandElement : public AbstractElement
     Q_OBJECT
 
 public:
-    RubberBandElement(const QStyleOptionRubberBand *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    RubberBandElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~RubberBandElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 

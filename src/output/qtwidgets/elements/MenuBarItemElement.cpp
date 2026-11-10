@@ -11,26 +11,28 @@
 
 using namespace Qt::StringLiterals;
 
-MenuBarItemElement::MenuBarItemElement(const QStyleOptionMenuItem *option, const UnionStyle *style, const QWidget *widget)
+MenuBarItemElement::MenuBarItemElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_menuItemOption(option)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update();
+    update(option);
 }
 
 MenuBarItemElement::~MenuBarItemElement()
 {
 }
 
-void MenuBarItemElement::update()
+void MenuBarItemElement::update(const QStyleOption *option)
 {
-    if (!m_menuItemOption) {
-        return;
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionMenuItem *>(option)) {
+        m_menuItemOption = newOpt;
     }
-    setIndicator(QIcon());
-    setIcon(m_menuItemOption->icon);
-    setText(m_menuItemOption->text);
+    if (m_menuItemOption) {
+        setIndicator(QIcon());
+        setIcon(m_menuItemOption->icon);
+        setText(m_menuItemOption->text);
+    }
     updateSubElementList();
     layout();
 }
@@ -65,10 +67,10 @@ void MenuBarItemElement::updateSubElementList()
 
 void MenuBarItemElement::layout()
 {
-    m_elementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuBarItem});
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::MenuBarItem});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_menuItemOption, m_subElementList);
+        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -78,14 +80,13 @@ void MenuBarItemElement::layout()
 Union::IdentifierList MenuBarItemElement::elementHints() const
 {
     Union::IdentifierList hints;
-    if (!m_menuItemOption) {
-        return hints;
-    }
-    if (m_menuItemOption->checked) {
-        hints.append(u"with-submenu"_s);
-    }
-    if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
-        hints.append(u"with-title"_s);
+    if (m_menuItemOption) {
+        if (m_menuItemOption->checked) {
+            hints.append(u"with-submenu"_s);
+        }
+        if (m_menuItemOption->menuItemType == QStyleOptionMenuItem::Separator && !m_menuItemOption->text.isEmpty()) {
+            hints.append(u"with-title"_s);
+        }
     }
     return hints;
 }

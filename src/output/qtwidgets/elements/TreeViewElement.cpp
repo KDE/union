@@ -15,18 +15,18 @@ using namespace Union::Properties;
 
 TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_treeViewOption(option)
     , m_itemIsOpen(false)
 {
-    update();
+    update(option);
 }
 
 TreeViewElement::~TreeViewElement()
 {
 }
 
-void TreeViewElement::update()
+void TreeViewElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
     if (!m_styleOption) {
         return;
     }

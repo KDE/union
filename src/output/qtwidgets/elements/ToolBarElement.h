@@ -16,17 +16,17 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBar> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBar> : public TypeHelper<ToolBarElement, QStyleOption>{};
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorToolBarHandle> : public TypeHelper<ToolBarElement, QStyleOption>{};
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorToolBarSeparator> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelToolBar> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarSeparatorExtent> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarFrameWidth> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarHandleExtent> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarExtensionExtent> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemSpacing> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemMargin> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarIconSize> : public TypeHelper<ToolBarElement, QStyleOptionToolBar>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelToolBar> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarSeparatorExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarFrameWidth> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarHandleExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarExtensionExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemSpacing> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemMargin> : public TypeHelper<ToolBarElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarIconSize> : public TypeHelper<ToolBarElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -39,7 +39,7 @@ public:
     ToolBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolBarElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
@@ -60,7 +60,5 @@ private:
     Union::ElementList m_extensionElementList;
     Union::StylePropertyGroupPtr m_extensionProperties;
 
-    qreal separatorExtent() const;
-    qreal handleExtent() const;
-    qreal extensionExtent() const;
+    qreal extent(Union::StylePropertyGroupPtr properties) const;
 };

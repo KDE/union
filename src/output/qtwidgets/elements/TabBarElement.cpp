@@ -14,20 +14,23 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-TabBarElement::TabBarElement(const QStyleOptionTabBarBase *option, const UnionStyle *style, const QWidget *widget)
+TabBarElement::TabBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_tabBarOption(option)
 {
-    setIcon(QIcon());
-    update();
+    update(option);
 }
 
 TabBarElement::~TabBarElement()
 {
 }
 
-void TabBarElement::update()
+void TabBarElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionTabBarBase *>(option)) {
+        m_tabBarOption = newOpt;
+    }
+    setIcon(QIcon());
     layout();
 }
 

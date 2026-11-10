@@ -14,21 +14,26 @@
 
 using namespace Qt::StringLiterals;
 
-ToolTipElement::ToolTipElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
+ToolTipElement::ToolTipElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
 {
-    update();
+    update(option);
 }
 
 ToolTipElement::~ToolTipElement()
 {
 }
 
-void ToolTipElement::update()
+void ToolTipElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOpt = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+        m_frameOption = newOpt;
+    }
     layout();
-    updateGraphicsEffect(m_frameOption->rect);
+    if (m_styleOption) {
+        updateGraphicsEffect(m_styleOption->rect);
+    }
 }
 
 void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const
@@ -45,7 +50,7 @@ void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolTipElement::layout()
 {
-    m_elementList = prepareElements(m_frameOption, m_widget, {ElementString::ToolTip});
+    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ToolTip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

@@ -17,11 +17,11 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOptionToolButton>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolButtonLabel> : public TypeHelper<ToolButtonElement, QStyleOptionToolButton>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameButtonTool> : public TypeHelper<ToolButtonElement, QStyleOptionToolButton>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelButtonTool> : public TypeHelper<ToolButtonElement, QStyleOptionToolButton>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOptionToolButton>{};
+        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolButtonLabel> : public TypeHelper<ToolButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameButtonTool> : public TypeHelper<ToolButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelButtonTool> : public TypeHelper<ToolButtonElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -38,10 +38,10 @@ class ToolButtonElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolButtonElement(const QStyleOptionToolButton *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolButtonElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void layout() override;
 
@@ -64,6 +64,7 @@ private:
     bool m_hasIcon;
     bool m_hasText;
     ArrowStyle m_arrowStyle;
+    Qt::ToolButtonStyle m_buttonStyle;
 
     QRectF m_mainButtonRect;
     QRectF m_menuButtonRect;

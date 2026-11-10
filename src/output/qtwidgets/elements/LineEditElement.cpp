@@ -17,20 +17,23 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-LineEditElement::LineEditElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget)
+LineEditElement::LineEditElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)
-    , m_frameOption(option)
     , m_hasFrame(true)
 {
-    update();
+    update(option);
 }
 
 LineEditElement::~LineEditElement()
 {
 }
 
-void LineEditElement::update()
+void LineEditElement::update(const QStyleOption *option)
 {
+    AbstractElement::update(option);
+    if (const auto newOption = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+        m_frameOption = newOption;
+    }
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
         m_hasFrame = lineEdit->hasFrame();
     } else if (!m_widget) {
@@ -70,21 +73,19 @@ void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
 
 void LineEditElement::drawBackground(QPainter *painter) const
 {
-    if (!m_isValid || !m_styleOption) {
-        return;
-    }
+    if (m_isValid && m_styleOption) {
+        QColor backgroundOverride;
+        const auto &palette = m_styleOption->palette;
+        if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
+            backgroundOverride = palette.base().color();
+        }
 
-    QColor backgroundOverride;
-    const auto &palette = m_styleOption->palette;
-    if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
-        backgroundOverride = palette.base().color();
+        UnionPainter unionPainter(painter, m_elementProperties);
+        unionPainter.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
+        unionPainter.setOverrideBackgroundColor(backgroundOverride);
+        unionPainter.setRect(m_styleOption->rect);
+        unionPainter.draw();
     }
-
-    UnionPainter unionPainter(painter, m_elementProperties);
-    unionPainter.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
-    unionPainter.setOverrideBackgroundColor(backgroundOverride);
-    unionPainter.setRect(m_styleOption->rect);
-    unionPainter.draw();
 }
 
 void LineEditElement::updateSubElementList()
@@ -111,7 +112,7 @@ QMarginsF LineEditElement::iconPadding() const
 
 QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 {
-    if (m_isValid && element == QStyle::SE_LineEditContents) {
+    if (m_isValid && m_frameOption && element == QStyle::SE_LineEditContents) {
         auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
         return rect.marginsRemoved(padding().toMargins());
     }

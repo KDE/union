@@ -17,13 +17,13 @@ namespace ElementCache
 namespace detail
 {
 /* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_FocusFrame> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ShapedFrame> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameDockWidget> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameWindow> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_Frame> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DefaultFrameWidth> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_FrameContents> : public TypeHelper<FrameElement, QStyleOptionFrame>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_FocusFrame> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ShapedFrame> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameDockWidget> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameWindow> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_Frame> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DefaultFrameWidth> : public TypeHelper<FrameElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_FrameContents> : public TypeHelper<FrameElement, QStyleOption>{};
 /* clang-format on */
 }
 }
@@ -33,10 +33,10 @@ class FrameElement : public AbstractElement
     Q_OBJECT
 
 public:
-    FrameElement(const QStyleOptionFrame *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    FrameElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
     ~FrameElement() override;
 
-    void update() override;
+    void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
     void drawFrame(QPainter *painter) const override;
