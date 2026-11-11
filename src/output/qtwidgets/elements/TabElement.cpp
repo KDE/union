@@ -57,9 +57,6 @@ void TabElement::update(const QStyleOption *option)
 
     updateSubElementList();
     layout();
-    if (m_styleOption) {
-        updateGraphicsEffect(m_styleOption->rect);
-    }
 }
 
 void TabElement::draw(QPainter *painter, DrawEnums enums) const
