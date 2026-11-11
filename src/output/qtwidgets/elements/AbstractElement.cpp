@@ -221,8 +221,8 @@ QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, const Union::StylePro
 
     auto size = oldSize;
     if (m_flags.testFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding)) {
-        size.rwidth() = size.width() - (padding.left() + padding.right()) / 2;
-        size.rheight() = size.height() - (padding.left() + padding.right()) / 2;
+        size.rwidth() = size.width() - (padding.left() + padding.right()) / 2.0;
+        size.rheight() = size.height() - (padding.left() + padding.right()) / 2.0;
     }
 
     // We need to apply the maximum of each component of either padding or inset
