@@ -93,6 +93,20 @@ void Element::setStates(States newStates)
     Q_EMIT updated();
 }
 
+void Element::setState(State state, bool active)
+{
+    if (d->states.testFlag(state) == active) {
+        return;
+    }
+
+    d->states.setFlag(state, active);
+
+    sendChangeEvent(Change::States);
+
+    Q_EMIT statesChanged();
+    Q_EMIT updated();
+}
+
 IdentifierList Element::hints() const
 {
     return d->hints;

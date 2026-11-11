@@ -150,6 +150,8 @@ public:
     void setStates(States newStates);
     Q_SIGNAL void statesChanged();
 
+    void setState(State state, bool active = true);
+
     /*!
      * \property Union::Element::hints
      *
