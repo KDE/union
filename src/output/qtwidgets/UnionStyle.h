@@ -10,6 +10,7 @@
 
 #include "DragEventFilter.h"
 #include "elements/AbstractElement.h"
+#include "elements/AbstractElementV2.h"
 #include "elements/CheckBoxElement.h"
 #include <QCommonStyle>
 
@@ -25,6 +26,8 @@ class UnionStyle : public QCommonStyle
 public:
     UnionStyle();
     ~UnionStyle() override;
+
+    Union::Widgets::AbstractElementV2 *widgetElement(const QWidget *widget, const QStyleOption *option) const;
 
     void drawControl(QStyle::ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = nullptr) const override;

@@ -44,6 +44,8 @@
 #include "elements/TreeViewElement.h"
 #include "elements/WidgetElement.h"
 
+#include "elements/ButtonElementV2.h"
+
 #include <ElementQuery.h>
 #include <QApplication>
 #include <StyleRegistry.h>
@@ -140,13 +142,36 @@ UnionStyle::~UnionStyle() noexcept
     ElementCache::clear();
 }
 
+Union::Widgets::AbstractElementV2 *UnionStyle::widgetElement(const QWidget *widget, const QStyleOption *option) const
+{
+    if (!widget || !option) {
+        return nullptr;
+    }
+
+    auto w = widget ? widget : qobject_cast<QWidget *>(option->styleObject);
+    if (!w) {
+        return nullptr;
+    }
+
+    return widget->property(Union::Widgets::UnionElementProperty).value<Union::Widgets::AbstractElementV2 *>();
+}
+
 void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ControlElement, controlElement, option, widget);
+
     auto drawEnums = DrawEnums();
     drawEnums.ControlElement = controlElement;
+
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        element->draw(painter, {controlElement});
+        return;
+    }
+
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ControlElement, controlElement, option, widget);
     auto cached = ElementCache::element<QStyle::ControlElement,
                                         QStyle::CE_PushButton,
                                         QStyle::CE_PushButtonBevel,
@@ -214,6 +239,14 @@ void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionCo
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
+
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        element->draw(painter, {control});
+        return;
+    }
+
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ComplexControl, control, option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.ComplexControl = control;
@@ -269,13 +302,21 @@ UnionStyle::hitTestComplexControl(ComplexControl control, const QStyleOptionComp
     }
 }
 
-void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+void UnionStyle::drawPrimitive(QStyle::PrimitiveElement primitive, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
     // Make lines not look completely terrible on fractional scales
     painter->setRenderHint(QPainter::Antialiasing, true);
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PrimitiveElement, element, option, widget);
+
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        element->draw(painter, {primitive});
+        return;
+    }
+
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PrimitiveElement, primitive, option, widget);
     auto drawEnums = DrawEnums();
-    drawEnums.PrimitiveElement = element;
+    drawEnums.PrimitiveElement = primitive;
     auto cached = ElementCache::element<QStyle::PrimitiveElement,
                                         QStyle::PE_Frame,
                                         QStyle::PE_FrameDefaultButton,
@@ -319,13 +360,13 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
                                         QStyle::PE_PanelStatusBar,
                                         QStyle::PE_IndicatorTabClose,
                                         QStyle::PE_PanelMenu,
-                                        QStyle::PE_IndicatorDockWidgetResizeHandle>(element, hash, this, option, widget);
+                                        QStyle::PE_IndicatorDockWidgetResizeHandle>(primitive, hash, this, option, widget);
     if (cached) {
         cached->update();
         cached->draw(painter, drawEnums);
     } else {
         // Handle some items that are just duplicates of the above, or need fallback
-        switch (element) {
+        switch (primitive) {
         case QStyle::PE_IndicatorMenuCheckMark:
         case QStyle::PE_IndicatorItemViewItemCheck:
             drawPrimitive(PE_IndicatorCheckBox, option, painter, widget);
@@ -351,12 +392,18 @@ void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOpt
             // QStyle::PE_IndicatorDockWidgetResizeHandle
             // QStyle::PE_CustomBase
         }
-        QCommonStyle::drawPrimitive(element, option, painter, widget);
+        QCommonStyle::drawPrimitive(primitive, option, painter, widget);
     }
 }
 
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QStyleOption *option, const QSize &contentsSize, const QWidget *widget) const
 {
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        return element->contentsSize(contentsSize).toSize();
+    }
+
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ContentsType, contentsSize, option, widget);
     auto cached = ElementCache::element<QStyle::ContentsType,
                                         QStyle::CT_PushButton,
@@ -391,9 +438,15 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QSty
     }
 }
 
-QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption *option, const QWidget *widget) const
+QRect UnionStyle::subElementRect(QStyle::SubElement subElement, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::SubElement, element, option, widget);
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        return element->subElementRect(subElement).toRect();
+    }
+
+    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::SubElement, subElement, option, widget);
 
     auto cached = ElementCache::element<QStyle::SubElement,
                                         QStyle::SE_ItemViewItemText,
@@ -417,18 +470,24 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
                                         QStyle::SE_DockWidgetFloatButton,
                                         QStyle::SE_DockWidgetIcon,
                                         QStyle::SE_ToolBoxTabContents,
-                                        QStyle::SE_FrameContents>(element, hash, this, option, widget);
+                                        QStyle::SE_FrameContents>(subElement, hash, this, option, widget);
 
     if (cached) {
         cached->update();
-        return cached->subElementRect(element).toRect();
+        return cached->subElementRect(subElement).toRect();
     }
 
-    return QCommonStyle::subElementRect(element, option, widget);
+    return QCommonStyle::subElementRect(subElement, option, widget);
 }
 
 QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOptionComplex *option, SubControl subControl, const QWidget *widget) const
 {
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        return element->subControlRect(subControl).toRect();
+    }
+
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ComplexControl, complexControl, option, widget);
 
     auto cached = ElementCache::element<QStyle::ComplexControl,
@@ -449,6 +508,12 @@ QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOpti
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
+    auto element = widgetElement(widget, option);
+    if (element) {
+        element->update(option);
+        return element->pixelMetric(metric);
+    }
+
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PixelMetric, metric, option, widget);
     auto cached = ElementCache::element<QStyle::PixelMetric,
                                         QStyle::PM_ButtonMargin,
@@ -738,6 +803,15 @@ void UnionStyle::polish(QWidget *widget)
     }
     if (qobject_cast<QMenu *>(widget)) {
         widget->setAttribute(Qt::WA_TranslucentBackground);
+    }
+
+    if (auto button = qobject_cast<QPushButton *>(widget); button) {
+        auto element = button->property(Union::Widgets::UnionElementProperty).value<Union::Widgets::AbstractElementV2 *>();
+        if (!element) {
+            element = new Union::Widgets::ButtonElementV2(this, button);
+            button->setProperty(Union::Widgets::UnionElementProperty, QVariant::fromValue(element));
+        }
+        // element->update(nullptr);
     }
 
     QCommonStyle::polish(widget);

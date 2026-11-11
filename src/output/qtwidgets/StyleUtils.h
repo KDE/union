@@ -76,3 +76,9 @@ QString styleOptionToElementName(const QStyleOption *option);
 
 // Calculates the bounding box rectangle from items inside layoutMap
 QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap);
+
+// Helper type for std::visit()
+template<class... Ts>
+struct overloaded : Ts... {
+    using Ts::operator()...;
+};

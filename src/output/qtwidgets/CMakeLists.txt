@@ -103,6 +103,10 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/IndicatorElement.h
         elements/TreeViewElement.cpp
         elements/TreeViewElement.h
+
+        elements/AbstractElementV2.cpp
+        elements/ButtonElementV2.cpp
+        elements/TextSubElement.cpp
 )
 target_link_libraries(UnionWidgetsStyle
         PUBLIC
