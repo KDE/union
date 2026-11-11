@@ -31,20 +31,13 @@ template<typename EnumType, int enumValue>
 void element(std::shared_ptr<AbstractElement> &output, size_t hash, const UnionStyle *style, const QStyleOption *option, const QWidget *widget)
 {
     using ElementType = EnumToType<EnumType, enumValue>::elementType;
-    using OptionType = EnumToType<EnumType, enumValue>::optionType;
 
     if (detail::s_elementCache.contains(hash)) {
         output = detail::s_elementCache.value(hash).value();
         return;
     }
-
-    if constexpr (std::is_same_v<OptionType, QStyleOption>) {
-        output = std::make_shared<ElementType>(option, style, widget);
-        detail::s_elementCache.insert(hash, output);
-    } else if (const auto cast = qstyleoption_cast<const OptionType *>(option)) {
-        output = std::make_shared<ElementType>(cast, style, widget);
-        detail::s_elementCache.insert(hash, output);
-    }
+    output = std::make_shared<ElementType>(option, style, widget);
+    detail::s_elementCache.insert(hash, output);
     return;
 }
 }
