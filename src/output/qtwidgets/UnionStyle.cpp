@@ -262,10 +262,12 @@ UnionStyle::hitTestComplexControl(ComplexControl control, const QStyleOptionComp
                 return SC_ScrollBarAddPage;
             }
         }
+        break;
     }
     default:
-        return QCommonStyle::hitTestComplexControl(control, option, point, widget);
+        break;
     }
+    return QCommonStyle::hitTestComplexControl(control, option, point, widget);
 }
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
