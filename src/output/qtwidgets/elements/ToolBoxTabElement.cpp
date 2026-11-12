@@ -90,7 +90,7 @@ QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
             }
             unifiedRect.setSize(applyPaddingToSize(unifiedRect.size()));
         }
-        return m_toolBoxOption->rect;
+        return visualRect(m_toolBoxOption->rect);
     }
     return m_style->subElementRect(element, m_styleOption, m_widget);
 }
