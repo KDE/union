@@ -382,7 +382,6 @@ void Icon::updateTexture(QSGImageNode *node)
                               }
                               auto dpr = renderWindow->devicePixelRatio();
                               auto mode = isEnabled() ? QIcon::Mode::Normal : QIcon::Mode::Disabled;
-                              auto image = icon.pixmap(m_iconSize, dpr, mode).toImage();
                               node->setTexture(
                                   window()->createTextureFromImage(icon.pixmap(m_iconSize, dpr, mode).toImage(), QQuickWindow::TextureCanUseAtlas));
                           },

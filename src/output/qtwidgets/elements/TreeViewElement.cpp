@@ -81,7 +81,6 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
     auto icon = m_style->unionIcon(m_indicatorProperties, defaultIconName);
     const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
 
-    const QPalette activePalette = m_styleOption->palette;
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
     QSize iconSize = size.toSize().boundedTo(m_styleOption->rect.size());
     if (iconSize.isEmpty()) {

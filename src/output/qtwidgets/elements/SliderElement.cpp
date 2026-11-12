@@ -127,7 +127,6 @@ void SliderElement::draw(QPainter *painter, DrawEnums enums) const
             // Offset the tickmarks to the center of the handle
             const int handleOffset(pixelMetric(QStyle::PM_SliderLength) / 2);
             int current(m_sliderOption->minimum);
-            auto tickmarkElements = m_tickElementList;
 
             // store tick lines
             QList<QRectF> ticks = tickLines();
