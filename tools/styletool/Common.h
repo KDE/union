@@ -68,7 +68,7 @@ void readInput(QString &output, QStringView message, const std::function<bool(QS
         QTextStream inputStream(stdin);
         QString input;
         while (input.isEmpty()) {
-            std::cout << message.toUtf8().data();
+            std::cout << message.toUtf8().constData();
             if (!defaultValue.isEmpty()) {
                 std::cout << " [Enter to use: " << qPrintable(defaultValue) << "]" << std::endl;
             } else {
