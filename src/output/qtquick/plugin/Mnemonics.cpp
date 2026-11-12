@@ -356,8 +356,10 @@ void Mnemonics::updateSequence()
         return;
     }
 
+    static const QRegularExpression mnemonicExpression{u"\\&([^\\&])"_s};
+
     m_mnemonicLabel = m_escapedRichTextLabel;
-    m_mnemonicLabel.replace(QRegularExpression(QLatin1String("\\&([^\\&])")), QStringLiteral("\\1"));
+    m_mnemonicLabel.replace(mnemonicExpression, QStringLiteral("\\1"));
 
     if (!m_weights.isEmpty()) {
         QMap<int, QChar>::const_iterator i = m_weights.constEnd();
@@ -378,7 +380,7 @@ void Mnemonics::updateSequence()
                 s_sequenceToObject[ks] = this;
                 m_sequence = ks;
                 m_richTextLabel = m_escapedRichTextLabel;
-                m_richTextLabel.replace(QRegularExpression(QLatin1String("\\&([^\\&])")), QStringLiteral("\\1"));
+                m_richTextLabel.replace(mnemonicExpression, QStringLiteral("\\1"));
                 m_mnemonicLabel = m_escapedRichTextLabel;
                 const int mnemonicPos = m_mnemonicLabel.indexOf(c);
 
