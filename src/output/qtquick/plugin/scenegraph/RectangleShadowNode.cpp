@@ -25,7 +25,7 @@ void RectangleShadowNode::setItemRect(const QRectF &newItemRect)
     m_changed = true;
 }
 
-void RectangleShadowNode::setRadius(const QVector4D &radius)
+void RectangleShadowNode::setRadius(QVector4D radius)
 {
     if (radius == m_radius) {
         return;
@@ -55,7 +55,7 @@ void RectangleShadowNode::setSpread(float spread)
     m_changed = true;
 }
 
-void RectangleShadowNode::setOffset(const QVector2D &offset)
+void RectangleShadowNode::setOffset(QVector2D offset)
 {
     if (offset == m_offset) {
         return;

@@ -54,7 +54,7 @@ void MenuElement::updateSubElementList()
     m_subElementList.append(ElementString::Frame);
 }
 
-QSizeF MenuElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF MenuElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     return contentsSizeFromStyle;
 }

@@ -98,7 +98,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setVisible(const std::optional<bool> &newValue);
+    void setVisible(std::optional<bool> newValue);
 
     /*!
         The opacity of the element.
@@ -110,7 +110,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setOpacity(const std::optional<qreal> &newValue);
+    void setOpacity(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

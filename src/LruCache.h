@@ -128,7 +128,7 @@ public:
      * cached and future calls to load() for the same path and size will return
      * the cached image.
      */
-    QImage load(const std::filesystem::path &path, const QSizeF &size)
+    QImage load(const std::filesystem::path &path, QSizeF size)
     {
         auto key = qHashMulti(QHashSeed::globalSeed(), path.string(), size.width(), size.height());
         if (contains(key)) {

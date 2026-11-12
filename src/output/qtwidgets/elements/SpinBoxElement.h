@@ -41,13 +41,13 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
     QRectF subControlRect(QStyle::SubControl subControl) const override;
-    QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
+    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
 
 private:
     Union::IdentifierList elementHints() const override;
     void updateSubElementList() override;
     QString fallbackElementName(const QStyleOption *opt) const override;
-    void drawSpinIndicator(QPainter *painter, const QStyle::PrimitiveElement &primitive) const;
+    void drawSpinIndicator(QPainter *painter, QStyle::PrimitiveElement primitive) const;
     const QStyleOptionSpinBox *m_spinBoxOption = nullptr;
     bool m_hasButtons;
     bool m_hasFrame;

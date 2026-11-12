@@ -178,7 +178,7 @@ void TabElement::layout()
     }
 }
 
-QSizeF TabElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF TabElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
     if (m_isValid && m_styleOption) {

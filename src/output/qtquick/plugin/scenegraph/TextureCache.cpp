@@ -41,7 +41,7 @@ std::shared_ptr<QSGTexture> TextureCache::loadTexture(QQuickWindow *window, cons
 }
 
 std::shared_ptr<QSGTexture>
-TextureCache::loadTexture(QQuickWindow *window, const std::filesystem::path &source, const QSizeF &size, QQuickWindow::CreateTextureOptions options)
+TextureCache::loadTexture(QQuickWindow *window, const std::filesystem::path &source, QSizeF size, QQuickWindow::CreateTextureOptions options)
 {
     auto image = s_imageCache.load(source, size);
     if (image.isNull()) {

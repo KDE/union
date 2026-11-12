@@ -101,7 +101,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setHorizontal(const std::optional<qreal> &newValue);
+    void setHorizontal(std::optional<qreal> newValue);
 
     /*!
         The vertical offset of the shadow.
@@ -113,7 +113,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setVertical(const std::optional<qreal> &newValue);
+    void setVertical(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

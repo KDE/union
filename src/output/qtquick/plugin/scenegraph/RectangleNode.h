@@ -13,7 +13,7 @@ public:
     RectangleNode();
 
     void setColor(const QColor &color);
-    void setRadius(const QVector4D &radius);
+    void setRadius(QVector4D radius);
     void setImage(Union::Properties::ImagePropertyGroup *image);
     void setWindow(QQuickWindow *window);
 

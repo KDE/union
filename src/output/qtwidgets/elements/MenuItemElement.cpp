@@ -153,7 +153,7 @@ void MenuItemElement::layout()
     }
 }
 
-QSizeF MenuItemElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF MenuItemElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     QSizeF preferredSize = contentsSizeFromStyle;
     // Handle separator separately (pun not intended)

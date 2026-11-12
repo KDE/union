@@ -98,7 +98,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setRadius(const std::optional<qreal> &newValue);
+    void setRadius(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

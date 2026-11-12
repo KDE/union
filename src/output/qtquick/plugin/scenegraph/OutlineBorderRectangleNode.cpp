@@ -9,7 +9,7 @@ using namespace Union;
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
 
-inline QVector4D mix(const QVector4D &first, const QVector4D &second, float amount = 0.5)
+inline QVector4D mix(QVector4D first, QVector4D second, float amount = 0.5)
 {
     const float inverseAmount = 1.0f - amount;
     return QVector4D{first.x() * amount + second.x() * inverseAmount,
@@ -174,7 +174,7 @@ void OutlineBorderRectangleNode::updateGeometry(QSGGeometry *geometry)
     markDirty(QSGNode::DirtyGeometry);
 }
 
-void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize)
+void OutlineBorderRectangleNode::updateVertices(const QRectF &rect, QVector4D radii, QVector4D borderSize, QVector4D outlineSize)
 {
     // Correction factor for borders so that fractional borders are properly
     // rendered rather than cut off.
@@ -337,11 +337,7 @@ void OutlineBorderRectangleNode::updateOutlineColors(const Union::Properties::Ou
     updateColors(&Vertex::outline, left, right, top, bottom);
 }
 
-void OutlineBorderRectangleNode::updateColors(QVector4D(Vertex::*destination),
-                                              const QVector4D &left,
-                                              const QVector4D &right,
-                                              const QVector4D &top,
-                                              const QVector4D &bottom)
+void OutlineBorderRectangleNode::updateColors(QVector4D(Vertex::*destination), QVector4D left, QVector4D right, QVector4D top, QVector4D bottom)
 {
     // Left-Top
     m_vertices[0].*destination = mix(left, top);

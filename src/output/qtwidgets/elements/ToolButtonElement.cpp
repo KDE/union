@@ -86,7 +86,7 @@ void ToolButtonElement::updateSubElementList()
     }
 }
 
-QSizeF ToolButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF ToolButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     QSizeF size = applyPaddingToSize(contentsSizeFromStyle);
     if (hasIndicator() && arrowStyle() == ArrowStyle::Menu) {

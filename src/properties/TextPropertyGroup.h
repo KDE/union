@@ -137,7 +137,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setWrapMode(const std::optional<Union::Properties::TextWrapMode> &newValue);
+    void setWrapMode(std::optional<Union::Properties::TextWrapMode> newValue);
 
     /*!
         The elide mode for the text of an element.
@@ -149,7 +149,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setElide(const std::optional<Union::Properties::TextElide> &newValue);
+    void setElide(std::optional<Union::Properties::TextElide> newValue);
 
     /*!
      * Returns if this property group has any value set.

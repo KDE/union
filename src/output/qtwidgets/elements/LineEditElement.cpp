@@ -88,7 +88,7 @@ void LineEditElement::updateSubElementList()
     m_subElementList.append(ElementString::TextField);
 }
 
-QSizeF LineEditElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF LineEditElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
     QMarginsF padding =

@@ -81,7 +81,7 @@ std::optional<qreal> IconPropertyGroup::width() const
     return d->width;
 }
 
-void IconPropertyGroup::setWidth(const std::optional<qreal> &newValue)
+void IconPropertyGroup::setWidth(std::optional<qreal> newValue)
 {
     if (newValue == d->width) {
         return;
@@ -95,7 +95,7 @@ std::optional<qreal> IconPropertyGroup::height() const
     return d->height;
 }
 
-void IconPropertyGroup::setHeight(const std::optional<qreal> &newValue)
+void IconPropertyGroup::setHeight(std::optional<qreal> newValue)
 {
     if (newValue == d->height) {
         return;

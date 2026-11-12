@@ -100,7 +100,7 @@ public:
      */
     Q_PROPERTY(bool spellCheckEnabled READ spellCheckEnabled WRITE setSpellCheckEnabled NOTIFY spellCheckEnabledChanged)
     bool spellCheckEnabled() const;
-    void setSpellCheckEnabled(const bool &enabled);
+    void setSpellCheckEnabled(bool enabled);
     Q_SIGNAL void spellCheckEnabledChanged();
 
     /*!

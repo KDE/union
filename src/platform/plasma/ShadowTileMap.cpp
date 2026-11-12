@@ -16,7 +16,7 @@ ShadowTileMap::ShadowTileMap()
     m_pixmaps.reserve(tileMapSize);
 }
 
-ShadowTileMap::ShadowTileMap(const QPixmap &texture, const QSizeF &topLeftSize, const QSizeF &middleSize)
+ShadowTileMap::ShadowTileMap(const QPixmap &texture, QSizeF topLeftSize, QSizeF middleSize)
     : m_texture(texture)
     , m_pixmaps(QVector<QPixmap>())
     , m_topLeft(topLeftSize)
@@ -64,7 +64,7 @@ ShadowTileMap::ShadowTileMap(const QPixmap &texture, const QSizeF &topLeftSize, 
                    QRectF(m_topLeft.width() + m_middle.width(), m_topLeft.height() + m_middle.height(), m_bottomRight.width(), m_bottomRight.height()));
 }
 
-void ShadowTileMap::initializeTile(const QSizeF &size, const QRectF &targetRect)
+void ShadowTileMap::initializeTile(QSizeF size, const QRectF &targetRect)
 {
     if (!(size.isValid() && targetRect.isValid())) {
         m_pixmaps.append(QPixmap());

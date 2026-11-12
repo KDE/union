@@ -124,7 +124,7 @@ int printPackageError(const Union::StylePackage &package)
     return 0;
 }
 
-int printErrorCode(const Union::StylePackage &package, const std::error_code &errorCode)
+int printErrorCode(const Union::StylePackage &package, std::error_code errorCode)
 {
     std::cerr << "Operation on package " << package.path() << " failed: " << errorCode.message() << "\n";
     return errorCode.value();

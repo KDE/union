@@ -183,7 +183,7 @@ void ShaderNode::setTexture(Channel channel,
                             Binding sampler,
                             const std::filesystem::path &path,
                             QQuickWindow *window,
-                            const QSizeF &size,
+                            QSizeF size,
                             ShaderNode::TextureFlags flags)
 {
     QQuickWindow::CreateTextureOptions options =
@@ -274,11 +274,7 @@ void ShaderNode::setExtraDataChannels(unsigned char count)
     m_geometryRebuildNeeded = true;
 }
 
-void ShaderNode::setExtraDataChannelData(Channel channel,
-                                         const QVector4D &topLeft,
-                                         const QVector4D &topRight,
-                                         const QVector4D &bottomLeft,
-                                         const QVector4D &bottomRight)
+void ShaderNode::setExtraDataChannelData(Channel channel, QVector4D topLeft, QVector4D topRight, QVector4D bottomLeft, QVector4D bottomRight)
 {
     if (channel >= m_extraChannels) {
         return;
@@ -293,11 +289,7 @@ void ShaderNode::setExtraDataChannelData(Channel channel,
     m_geometryUpdateNeeded = true;
 }
 
-void ShaderNode::setExtraDataChannelData(Channel channel, //
-                                         const QColor &topLeft,
-                                         const QColor &topRight,
-                                         const QColor &bottomLeft,
-                                         const QColor &bottomRight)
+void ShaderNode::setExtraDataChannelData(Channel channel, QColor topLeft, QColor topRight, QColor bottomLeft, QColor bottomRight)
 {
     if (channel >= m_extraChannels) {
         return;

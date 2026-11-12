@@ -98,7 +98,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setContainer(const std::optional<Union::Properties::AlignmentContainer> &newValue);
+    void setContainer(std::optional<Union::Properties::AlignmentContainer> newValue);
 
     /*!
         The horizontal alignment.
@@ -110,7 +110,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setHorizontal(const std::optional<Union::Properties::Alignment> &newValue);
+    void setHorizontal(std::optional<Union::Properties::Alignment> newValue);
 
     /*!
         The vertical alignment.
@@ -122,7 +122,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setVertical(const std::optional<Union::Properties::Alignment> &newValue);
+    void setVertical(std::optional<Union::Properties::Alignment> newValue);
 
     /*!
         The order determines which elements come before others in the same alignment group.
@@ -134,7 +134,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setOrder(const std::optional<int> &newValue);
+    void setOrder(std::optional<int> newValue);
 
     /*!
      * Returns if this property group has any value set.

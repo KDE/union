@@ -88,7 +88,7 @@ void ButtonElement::updateSubElementList()
     }
 }
 
-QSizeF ButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF ButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     if (m_buttonOption) {
         auto size = applyPaddingToSize(contentsSizeFromStyle);

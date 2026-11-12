@@ -64,7 +64,7 @@ std::optional<Union::Properties::AlignmentContainer> AlignmentPropertyGroup::con
     return d->container;
 }
 
-void AlignmentPropertyGroup::setContainer(const std::optional<Union::Properties::AlignmentContainer> &newValue)
+void AlignmentPropertyGroup::setContainer(std::optional<Union::Properties::AlignmentContainer> newValue)
 {
     if (newValue == d->container) {
         return;
@@ -78,7 +78,7 @@ std::optional<Union::Properties::Alignment> AlignmentPropertyGroup::horizontal()
     return d->horizontal;
 }
 
-void AlignmentPropertyGroup::setHorizontal(const std::optional<Union::Properties::Alignment> &newValue)
+void AlignmentPropertyGroup::setHorizontal(std::optional<Union::Properties::Alignment> newValue)
 {
     if (newValue == d->horizontal) {
         return;
@@ -92,7 +92,7 @@ std::optional<Union::Properties::Alignment> AlignmentPropertyGroup::vertical() c
     return d->vertical;
 }
 
-void AlignmentPropertyGroup::setVertical(const std::optional<Union::Properties::Alignment> &newValue)
+void AlignmentPropertyGroup::setVertical(std::optional<Union::Properties::Alignment> newValue)
 {
     if (newValue == d->vertical) {
         return;
@@ -106,7 +106,7 @@ std::optional<int> AlignmentPropertyGroup::order() const
     return d->order;
 }
 
-void AlignmentPropertyGroup::setOrder(const std::optional<int> &newValue)
+void AlignmentPropertyGroup::setOrder(std::optional<int> newValue)
 {
     if (newValue == d->order) {
         return;

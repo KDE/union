@@ -27,7 +27,7 @@ public:
     qreal animationSpeedMultiplier() override;
 
     // QWidget Window shadows
-    void installWindowShadow(QWindow *window, const QImage &shadowImage, const QMargins &shadowMargins) override;
+    void installWindowShadow(QWindow *window, const QImage &shadowImage, QMargins shadowMargins) override;
     void uninstallWindowShadow(QObject *object) override;
 
 private:

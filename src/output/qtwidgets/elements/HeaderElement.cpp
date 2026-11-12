@@ -150,7 +150,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
-QSizeF HeaderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF HeaderElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     if (!m_isValid || !m_headerOption) {
         return contentsSizeFromStyle;

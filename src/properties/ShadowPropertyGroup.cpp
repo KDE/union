@@ -89,7 +89,7 @@ std::optional<qreal> ShadowPropertyGroup::size() const
     return d->size;
 }
 
-void ShadowPropertyGroup::setSize(const std::optional<qreal> &newValue)
+void ShadowPropertyGroup::setSize(std::optional<qreal> newValue)
 {
     if (newValue == d->size) {
         return;
@@ -103,7 +103,7 @@ std::optional<qreal> ShadowPropertyGroup::blur() const
     return d->blur;
 }
 
-void ShadowPropertyGroup::setBlur(const std::optional<qreal> &newValue)
+void ShadowPropertyGroup::setBlur(std::optional<qreal> newValue)
 {
     if (newValue == d->blur) {
         return;

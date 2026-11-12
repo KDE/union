@@ -72,9 +72,7 @@ AnimationSpeedMultiplierChangedEvent::AnimationSpeedMultiplierChangedEvent()
 {
 }
 
-void PlatformPlugin::installWindowShadow([[maybe_unused]] QWindow *window,
-                                         [[maybe_unused]] const QImage &shadowImage,
-                                         [[maybe_unused]] const QMargins &shadowMargins)
+void PlatformPlugin::installWindowShadow([[maybe_unused]] QWindow *window, [[maybe_unused]] const QImage &shadowImage, [[maybe_unused]] QMargins shadowMargins)
 {
 }
 

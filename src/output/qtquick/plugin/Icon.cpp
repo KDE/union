@@ -23,7 +23,7 @@ using namespace Qt::StringLiterals;
 // This will try to find a size that matches size as close as possible without
 // it ever ending up larger. Unlike `QIcon::actualSize()` this ignores scalable
 // icons in favour of using a smaller icon.
-QSize iconSizeForSize(const QIcon &icon, const QSizeF &size)
+QSize iconSizeForSize(const QIcon &icon, QSizeF size)
 {
     if (icon.isNull()) {
         return size.toSize();
@@ -34,7 +34,7 @@ QSize iconSizeForSize(const QIcon &icon, const QSizeF &size)
         return icon.actualSize(size.toSize());
     }
 
-    std::ranges::sort(availableSizes, [](const QSize &first, const QSize &second) {
+    std::ranges::sort(availableSizes, [](QSize first, QSize second) {
         return first.width() < second.width();
     });
 

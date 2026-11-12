@@ -79,7 +79,7 @@ public:
     }
 
     // QStyle::visualPos, but constexpr and using QRectF/QPointF
-    static constexpr QPointF visualPos(Qt::LayoutDirection direction, const QRectF &boundingRect, const QPointF &logicalPos)
+    static constexpr QPointF visualPos(Qt::LayoutDirection direction, const QRectF &boundingRect, QPointF logicalPos)
     {
         if (direction == Qt::LeftToRight) {
             return logicalPos;
@@ -90,7 +90,7 @@ public:
     // QStyle::alignedRect, but constexpr, no direction parameter and using QSizeF/QRectF.
     // Unlike QStyle::alignedRect, you need to do RTL alignment adjustments with
     // visualAlignment outside of this function.
-    static constexpr QRectF alignedRect(Qt::Alignment alignment, const QSizeF &contentSize, const QRectF &containerRect)
+    static constexpr QRectF alignedRect(Qt::Alignment alignment, QSizeF contentSize, const QRectF &containerRect)
     {
         QRectF contentRect{containerRect.topLeft(), contentSize};
         if (alignment.testFlag(Qt::AlignVCenter)) {
@@ -108,7 +108,7 @@ public:
 
     // QStyle::alignedRect, but constexpr and using QSizeF/QRectF
     // A mostly drop-in replacement for QStyle::alignedRect.
-    static constexpr QRectF alignedRect(Qt::LayoutDirection direction, Qt::Alignment alignment, const QSizeF &contentSize, const QRectF &containerRect)
+    static constexpr QRectF alignedRect(Qt::LayoutDirection direction, Qt::Alignment alignment, QSizeF contentSize, const QRectF &containerRect)
     {
         alignment = visualAlignment(direction, alignment);
         return alignedRect(alignment, contentSize, containerRect);

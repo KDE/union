@@ -33,7 +33,7 @@ public:
      * \p size and then create a texture from that image.
      */
     static std::shared_ptr<QSGTexture>
-    loadTexture(QQuickWindow *window, const std::filesystem::path &source, const QSizeF &size, QQuickWindow::CreateTextureOptions options = {});
+    loadTexture(QQuickWindow *window, const std::filesystem::path &source, QSizeF size, QQuickWindow::CreateTextureOptions options = {});
 
 private:
     inline static QHash<QPair<qint64, QWindow *>, std::weak_ptr<QSGTexture>> s_cache;

@@ -103,7 +103,7 @@ std::optional<Union::Properties::TextWrapMode> TextPropertyGroup::wrapMode() con
     return d->wrapMode;
 }
 
-void TextPropertyGroup::setWrapMode(const std::optional<Union::Properties::TextWrapMode> &newValue)
+void TextPropertyGroup::setWrapMode(std::optional<Union::Properties::TextWrapMode> newValue)
 {
     if (newValue == d->wrapMode) {
         return;
@@ -117,7 +117,7 @@ std::optional<Union::Properties::TextElide> TextPropertyGroup::elide() const
     return d->elide;
 }
 
-void TextPropertyGroup::setElide(const std::optional<Union::Properties::TextElide> &newValue)
+void TextPropertyGroup::setElide(std::optional<Union::Properties::TextElide> newValue)
 {
     if (newValue == d->elide) {
         return;

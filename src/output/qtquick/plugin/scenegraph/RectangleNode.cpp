@@ -23,7 +23,7 @@ void RectangleNode::setColor(const QColor &color)
     m_changed = true;
 }
 
-void RectangleNode::setRadius(const QVector4D &radius)
+void RectangleNode::setRadius(QVector4D radius)
 {
     if (radius == m_radius) {
         return;

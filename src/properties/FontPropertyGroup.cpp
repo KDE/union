@@ -95,7 +95,7 @@ std::optional<qreal> FontPropertyGroup::size() const
     return d->size;
 }
 
-void FontPropertyGroup::setSize(const std::optional<qreal> &newValue)
+void FontPropertyGroup::setSize(std::optional<qreal> newValue)
 {
     if (newValue == d->size) {
         return;
@@ -123,7 +123,7 @@ std::optional<QFont::Style> FontPropertyGroup::style() const
     return d->style;
 }
 
-void FontPropertyGroup::setStyle(const std::optional<QFont::Style> &newValue)
+void FontPropertyGroup::setStyle(std::optional<QFont::Style> newValue)
 {
     if (newValue == d->style) {
         return;
@@ -137,7 +137,7 @@ std::optional<int> FontPropertyGroup::stretch() const
     return d->stretch;
 }
 
-void FontPropertyGroup::setStretch(const std::optional<int> &newValue)
+void FontPropertyGroup::setStretch(std::optional<int> newValue)
 {
     if (newValue == d->stretch) {
         return;
@@ -151,7 +151,7 @@ std::optional<QFont::Capitalization> FontPropertyGroup::capitalization() const
     return d->capitalization;
 }
 
-void FontPropertyGroup::setCapitalization(const std::optional<QFont::Capitalization> &newValue)
+void FontPropertyGroup::setCapitalization(std::optional<QFont::Capitalization> newValue)
 {
     if (newValue == d->capitalization) {
         return;
@@ -165,7 +165,7 @@ std::optional<Union::Properties::TextDecorations> FontPropertyGroup::decorations
     return d->decorations;
 }
 
-void FontPropertyGroup::setDecorations(const std::optional<Union::Properties::TextDecorations> &newValue)
+void FontPropertyGroup::setDecorations(std::optional<Union::Properties::TextDecorations> newValue)
 {
     if (newValue == d->decorations) {
         return;
@@ -179,7 +179,7 @@ std::optional<qreal> FontPropertyGroup::letterSpacing() const
     return d->letterSpacing;
 }
 
-void FontPropertyGroup::setLetterSpacing(const std::optional<qreal> &newValue)
+void FontPropertyGroup::setLetterSpacing(std::optional<qreal> newValue)
 {
     if (newValue == d->letterSpacing) {
         return;
@@ -193,7 +193,7 @@ std::optional<qreal> FontPropertyGroup::wordSpacing() const
     return d->wordSpacing;
 }
 
-void FontPropertyGroup::setWordSpacing(const std::optional<qreal> &newValue)
+void FontPropertyGroup::setWordSpacing(std::optional<qreal> newValue)
 {
     if (newValue == d->wordSpacing) {
         return;

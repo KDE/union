@@ -91,7 +91,7 @@ void ComboBoxElement::updateSubElementList()
     m_subElementList.append(ElementString::Indicator);
 }
 
-QSizeF ComboBoxElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF ComboBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     // Follow the contents width
     auto size = applyPaddingToSize(contentsSizeFromStyle);

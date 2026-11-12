@@ -55,7 +55,7 @@ std::optional<qreal> CornerPropertyGroup::radius() const
     return d->radius;
 }
 
-void CornerPropertyGroup::setRadius(const std::optional<qreal> &newValue)
+void CornerPropertyGroup::setRadius(std::optional<qreal> newValue)
 {
     if (newValue == d->radius) {
         return;

@@ -150,7 +150,7 @@ const QVector<KWindowShadowTile::Ptr> &PlasmaPlatformPlugin::createShadowTiles(c
     }
     return m_tiles;
 }
-void PlasmaPlatformPlugin::installWindowShadow(QWindow *window, const QImage &shadowImage, const QMargins &shadowMargins)
+void PlasmaPlatformPlugin::installWindowShadow(QWindow *window, const QImage &shadowImage, QMargins shadowMargins)
 {
     if (!window) {
         return;

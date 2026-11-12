@@ -99,7 +99,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setLeft(const std::optional<qreal> &newValue);
+    void setLeft(std::optional<qreal> newValue);
 
     /*!
         The size of the right side.
@@ -111,7 +111,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setRight(const std::optional<qreal> &newValue);
+    void setRight(std::optional<qreal> newValue);
 
     /*!
         The size of the top side.
@@ -123,7 +123,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setTop(const std::optional<qreal> &newValue);
+    void setTop(std::optional<qreal> newValue);
 
     /*!
         The size of the bottom side.
@@ -135,7 +135,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBottom(const std::optional<qreal> &newValue);
+    void setBottom(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

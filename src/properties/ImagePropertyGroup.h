@@ -112,7 +112,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setWidth(const std::optional<qreal> &newValue);
+    void setWidth(std::optional<qreal> newValue);
 
     /*!
         The height to use for the image. If unset, the source's image height is used.
@@ -124,7 +124,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setHeight(const std::optional<qreal> &newValue);
+    void setHeight(std::optional<qreal> newValue);
 
     /*!
         An offset on placement of the image horizontally.
@@ -136,7 +136,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setXOffset(const std::optional<qreal> &newValue);
+    void setXOffset(std::optional<qreal> newValue);
 
     /*!
         An offset on placement of the image vertically.
@@ -148,7 +148,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setYOffset(const std::optional<qreal> &newValue);
+    void setYOffset(std::optional<qreal> newValue);
 
     /*!
         A set of flags to use for this image.
@@ -160,7 +160,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setFlags(const std::optional<Union::Properties::ImageFlags> &newValue);
+    void setFlags(std::optional<Union::Properties::ImageFlags> newValue);
 
     /*!
         The color to use for rendering the image when the image is used as a mask.

@@ -58,7 +58,7 @@ std::optional<qreal> OffsetPropertyGroup::horizontal() const
     return d->horizontal;
 }
 
-void OffsetPropertyGroup::setHorizontal(const std::optional<qreal> &newValue)
+void OffsetPropertyGroup::setHorizontal(std::optional<qreal> newValue)
 {
     if (newValue == d->horizontal) {
         return;
@@ -72,7 +72,7 @@ std::optional<qreal> OffsetPropertyGroup::vertical() const
     return d->vertical;
 }
 
-void OffsetPropertyGroup::setVertical(const std::optional<qreal> &newValue)
+void OffsetPropertyGroup::setVertical(std::optional<qreal> newValue)
 {
     if (newValue == d->vertical) {
         return;

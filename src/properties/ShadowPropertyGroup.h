@@ -126,7 +126,7 @@ as if the light were cast from a different angle.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setSize(const std::optional<qreal> &newValue);
+    void setSize(std::optional<qreal> newValue);
 
     /*!
         The amount of blur to use for the shadow. Increasing this will increase how smooth the shadow
@@ -140,7 +140,7 @@ goes from fully transparent to the full shadow color.
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setBlur(const std::optional<qreal> &newValue);
+    void setBlur(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

@@ -24,7 +24,7 @@ public:
     /*!
      * Set the corner radii to \p radius.
      */
-    void setRadius(const QVector4D &radius);
+    void setRadius(QVector4D radius);
     /*!
      * Set the blur size to \p blur.
      *
@@ -45,7 +45,7 @@ public:
      * The offset is a vector that determines how much the shadow is shifted
      * relative to the rectangle it is a shadow of.
      */
-    void setOffset(const QVector2D &offset);
+    void setOffset(QVector2D offset);
     /*!
      * Set the color to \p color.
      */

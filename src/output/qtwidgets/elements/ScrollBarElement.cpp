@@ -107,7 +107,7 @@ void ScrollBarElement::updateSubElementList()
     m_subElementList.append(ElementString::Handle);
 }
 
-QSizeF ScrollBarElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF ScrollBarElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     return contentsSizeFromStyle;
 }

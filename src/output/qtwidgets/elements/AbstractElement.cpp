@@ -106,7 +106,7 @@ void AbstractElement::layout()
     }
 }
 
-QSizeF AbstractElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF AbstractElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     return applyPaddingToSize(contentsSizeFromStyle);
 }
@@ -712,7 +712,7 @@ Union::Element::Ptr AbstractElement::createElement(const QString &name) const
     return unionElement;
 }
 
-LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const
+LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, BucketType type, const QRectF &containerRect) const
 {
     LayoutBucket bucket;
     bucket.type = type;

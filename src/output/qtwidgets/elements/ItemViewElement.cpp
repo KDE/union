@@ -108,7 +108,7 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
     }
 }
 
-QSizeF ItemViewElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF ItemViewElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
     return applyPaddingToSize(commonSize);

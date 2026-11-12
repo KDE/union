@@ -33,10 +33,10 @@ private:
         QVector4D outline;
     };
 
-    void updateVertices(const QRectF &rect, const QVector4D &radii, const QVector4D &borderSize, const QVector4D &outlineSize);
+    void updateVertices(const QRectF &rect, QVector4D radii, QVector4D borderSize, QVector4D outlineSize);
     void updateBorderColors(const Union::Properties::BorderPropertyGroup *border);
     void updateOutlineColors(const Union::Properties::OutlinePropertyGroup *border);
-    void updateColors(QVector4D(Vertex::*destination), const QVector4D &left, const QVector4D &right, const QVector4D &top, const QVector4D &bottom);
+    void updateColors(QVector4D(Vertex::*destination), QVector4D left, QVector4D right, QVector4D top, QVector4D bottom);
 
     std::array<Vertex, 28> m_vertices;
 };

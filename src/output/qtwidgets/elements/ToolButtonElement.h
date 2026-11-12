@@ -46,7 +46,7 @@ public:
     void layout() override;
 
     QRectF subControlRect(QStyle::SubControl subControl) const override;
-    QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
+    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
 
 private:
     Union::IdentifierVariantHash elementAttributes() const override;

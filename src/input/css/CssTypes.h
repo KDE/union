@@ -19,7 +19,7 @@ namespace CssInput
  * These convert from cssparser types to Union types.
  */
 
-inline float to_px(const cssparser::Dimension &value)
+inline float to_px(cssparser::Dimension value)
 {
     switch (value.unit()) {
     case cssparser::Dimension::Unit::Px:

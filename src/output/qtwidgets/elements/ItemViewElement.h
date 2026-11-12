@@ -40,7 +40,7 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
 
     QRectF subElementRect(QStyle::SubElement element) const override;
-    QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
+    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
 
 private:
     void drawBackground(QPainter *painter) const override;

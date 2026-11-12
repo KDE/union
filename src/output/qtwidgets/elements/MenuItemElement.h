@@ -36,7 +36,7 @@ public:
     void layout() override;
     void draw(QPainter *painter, DrawEnums enums) const override;
 
-    QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const override;
+    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:

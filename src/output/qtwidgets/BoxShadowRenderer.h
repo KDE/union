@@ -28,7 +28,7 @@ public:
     struct Shadow {
         Shadow() = default;
 
-        Shadow(const QPoint &offset, qreal blur, qreal spread, const QColor &color)
+        Shadow(QPoint offset, qreal blur, qreal spread, const QColor &color)
             : offset(offset)
             , blur(blur)
             , spread(spread)
@@ -52,7 +52,7 @@ public:
      * Set the size of the box.
      * @param size The size of the box.
      **/
-    void setBoxSize(const QSizeF &size);
+    void setBoxSize(QSizeF size);
 
     /**
      * Add a shadow.
@@ -84,7 +84,7 @@ public:
      * @param boxSize The size of the box.
      * @param shadow The shadow struct.
      **/
-    static QSizeF calculateMinimumShadowTextureSize(const QSizeF &boxSize, const BoxShadowRenderer::Shadow &shadow);
+    static QSizeF calculateMinimumShadowTextureSize(QSizeF boxSize, const BoxShadowRenderer::Shadow &shadow);
 
 private:
     QSizeF m_boxSize;

@@ -110,6 +110,18 @@ def group_name(type_name):
     return f"{ucfirst(type_name)}PropertyGroup"
 
 
+def needs_constref(type_name):
+    match type_name:
+        case "bool" | "int" | "qreal":
+            return False
+        case "QFont::Style" | "QFont::Capitalization":
+            return False
+        case (x) if x.startswith("Union::Properties"):
+            return False
+        case _:
+            return True
+
+
 def implicit_css_name(description):
     parts = []
     while description:
@@ -307,6 +319,7 @@ if __name__ == "__main__":
     )
     jinja_env.filters["ucfirst"] = ucfirst
     jinja_env.filters["render"] = render_template_filter
+    jinja_env.tests["constref"] = needs_constref
 
     shutil.rmtree(src_directory, ignore_errors = True)
     shutil.rmtree(tests_directory, ignore_errors = True)

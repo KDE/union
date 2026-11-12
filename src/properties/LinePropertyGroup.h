@@ -99,7 +99,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setSize(const std::optional<qreal> &newValue);
+    void setSize(std::optional<qreal> newValue);
 
     /*!
         The color of the line.
@@ -123,7 +123,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setStyle(const std::optional<Union::Properties::LineStyle> &newValue);
+    void setStyle(std::optional<Union::Properties::LineStyle> newValue);
 
     /*!
      * Returns if this property group has any value set.

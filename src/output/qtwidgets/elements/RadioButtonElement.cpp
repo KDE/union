@@ -73,7 +73,7 @@ void RadioButtonElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-QSizeF RadioButtonElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF RadioButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     auto size = applyPaddingToSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label

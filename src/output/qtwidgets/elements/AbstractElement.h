@@ -74,7 +74,7 @@ public:
     /*!
      * \brief Return the contents size of the element with padding applied by default.
      */
-    virtual QSizeF contentsSize(const QSizeF &contentsSizeFromStyle) const;
+    virtual QSizeF contentsSize(QSizeF contentsSizeFromStyle) const;
 
     /*!
      * \brief Return a subelement rectangle. If not found, empty QRectF() is returned instead.
@@ -257,7 +257,7 @@ protected:
 private:
     Union::Element::Ptr createElement(const QString &name) const;
 
-    LayoutBucket createBucket(const QList<LayoutItem> &items, const BucketType &type, const QRectF &containerRect) const;
+    LayoutBucket createBucket(const QList<LayoutItem> &items, BucketType type, const QRectF &containerRect) const;
     QRectF resizeBucket(const LayoutBucket &bucket) const;
     void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
 

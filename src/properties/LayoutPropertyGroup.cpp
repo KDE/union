@@ -87,7 +87,7 @@ std::optional<qreal> LayoutPropertyGroup::width() const
     return d->width;
 }
 
-void LayoutPropertyGroup::setWidth(const std::optional<qreal> &newValue)
+void LayoutPropertyGroup::setWidth(std::optional<qreal> newValue)
 {
     if (newValue == d->width) {
         return;
@@ -101,7 +101,7 @@ std::optional<qreal> LayoutPropertyGroup::height() const
     return d->height;
 }
 
-void LayoutPropertyGroup::setHeight(const std::optional<qreal> &newValue)
+void LayoutPropertyGroup::setHeight(std::optional<qreal> newValue)
 {
     if (newValue == d->height) {
         return;
@@ -115,7 +115,7 @@ std::optional<qreal> LayoutPropertyGroup::spacing() const
     return d->spacing;
 }
 
-void LayoutPropertyGroup::setSpacing(const std::optional<qreal> &newValue)
+void LayoutPropertyGroup::setSpacing(std::optional<qreal> newValue)
 {
     if (newValue == d->spacing) {
         return;

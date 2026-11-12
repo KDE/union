@@ -58,7 +58,7 @@ std::optional<bool> DisplayPropertyGroup::visible() const
     return d->visible;
 }
 
-void DisplayPropertyGroup::setVisible(const std::optional<bool> &newValue)
+void DisplayPropertyGroup::setVisible(std::optional<bool> newValue)
 {
     if (newValue == d->visible) {
         return;
@@ -72,7 +72,7 @@ std::optional<qreal> DisplayPropertyGroup::opacity() const
     return d->opacity;
 }
 
-void DisplayPropertyGroup::setOpacity(const std::optional<qreal> &newValue)
+void DisplayPropertyGroup::setOpacity(std::optional<qreal> newValue)
 {
     if (newValue == d->opacity) {
         return;

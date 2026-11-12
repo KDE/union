@@ -25,7 +25,7 @@ public:
         BottomRight
     };
 
-    ShadowTileMap(const QPixmap &texture, const QSizeF &topLeftSize, const QSizeF &middleSize);
+    ShadowTileMap(const QPixmap &texture, QSizeF topLeftSize, QSizeF middleSize);
 
     ShadowTileMap();
 
@@ -40,7 +40,7 @@ public:
     QVector<QPixmap> pixmaps() const;
 
 private:
-    void initializeTile(const QSizeF &size, const QRectF &targetRect);
+    void initializeTile(QSizeF size, const QRectF &targetRect);
 
     QPixmap m_texture;
     QVector<QPixmap> m_pixmaps;

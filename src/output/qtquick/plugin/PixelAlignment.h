@@ -20,12 +20,12 @@ inline qreal devicePixelRatioFor(QQuickItem *item)
     return renderWindow->devicePixelRatio();
 }
 
-inline QPointF roundPoint(const QPointF &unrounded, float factor)
+inline QPointF roundPoint(QPointF unrounded, float factor)
 {
     return QPointF{std::round(unrounded.x() * factor) / factor, std::round(unrounded.y() * factor) / factor};
 }
 
-inline QPointF alignPoint(const QPointF &unaligned, QQuickItem *item)
+inline QPointF alignPoint(QPointF unaligned, QQuickItem *item)
 {
     auto dpr = devicePixelRatioFor(item);
     auto scenePoint = item->mapToScene(unaligned);

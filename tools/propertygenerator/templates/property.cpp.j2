@@ -111,7 +111,11 @@ std::optional<{{ property.type }}> {{ type }}::{{ property.name }}() const
     return d->{{ property.name }};
 }
 
+{% if property.type is constref %}
 void {{ type }}::set{{ property.name | ucfirst }}(const std::optional<{{ property.type }}> &newValue)
+{% else %}
+void {{ type }}::set{{ property.name | ucfirst }}(std::optional<{{ property.type }}> newValue)
+{% endif %}
 {
     if (newValue == d->{{ property.name }}) {
         return;

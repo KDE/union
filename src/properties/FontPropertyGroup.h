@@ -112,7 +112,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setSize(const std::optional<qreal> &newValue);
+    void setSize(std::optional<qreal> newValue);
 
     /*!
         The weight of the font used for an element.
@@ -136,7 +136,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setStyle(const std::optional<QFont::Style> &newValue);
+    void setStyle(std::optional<QFont::Style> newValue);
 
     /*!
         The amount the font used for an element is stretched.
@@ -148,7 +148,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setStretch(const std::optional<int> &newValue);
+    void setStretch(std::optional<int> newValue);
 
     /*!
         The capitalization style of the font used for an element.
@@ -160,7 +160,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setCapitalization(const std::optional<QFont::Capitalization> &newValue);
+    void setCapitalization(std::optional<QFont::Capitalization> newValue);
 
     /*!
         The decorations enabled for the font used for an element.
@@ -172,7 +172,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setDecorations(const std::optional<Union::Properties::TextDecorations> &newValue);
+    void setDecorations(std::optional<Union::Properties::TextDecorations> newValue);
 
     /*!
         The spacing between individual letters of the font used for an element.
@@ -184,7 +184,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setLetterSpacing(const std::optional<qreal> &newValue);
+    void setLetterSpacing(std::optional<qreal> newValue);
 
     /*!
         The spacing between words of the font used for an element.
@@ -196,7 +196,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setWordSpacing(const std::optional<qreal> &newValue);
+    void setWordSpacing(std::optional<qreal> newValue);
 
     /*!
      * Returns if this property group has any value set.

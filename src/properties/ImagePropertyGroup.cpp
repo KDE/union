@@ -87,7 +87,7 @@ std::optional<qreal> ImagePropertyGroup::width() const
     return d->width;
 }
 
-void ImagePropertyGroup::setWidth(const std::optional<qreal> &newValue)
+void ImagePropertyGroup::setWidth(std::optional<qreal> newValue)
 {
     if (newValue == d->width) {
         return;
@@ -101,7 +101,7 @@ std::optional<qreal> ImagePropertyGroup::height() const
     return d->height;
 }
 
-void ImagePropertyGroup::setHeight(const std::optional<qreal> &newValue)
+void ImagePropertyGroup::setHeight(std::optional<qreal> newValue)
 {
     if (newValue == d->height) {
         return;
@@ -115,7 +115,7 @@ std::optional<qreal> ImagePropertyGroup::xOffset() const
     return d->xOffset;
 }
 
-void ImagePropertyGroup::setXOffset(const std::optional<qreal> &newValue)
+void ImagePropertyGroup::setXOffset(std::optional<qreal> newValue)
 {
     if (newValue == d->xOffset) {
         return;
@@ -129,7 +129,7 @@ std::optional<qreal> ImagePropertyGroup::yOffset() const
     return d->yOffset;
 }
 
-void ImagePropertyGroup::setYOffset(const std::optional<qreal> &newValue)
+void ImagePropertyGroup::setYOffset(std::optional<qreal> newValue)
 {
     if (newValue == d->yOffset) {
         return;
@@ -143,7 +143,7 @@ std::optional<Union::Properties::ImageFlags> ImagePropertyGroup::flags() const
     return d->flags;
 }
 
-void ImagePropertyGroup::setFlags(const std::optional<Union::Properties::ImageFlags> &newValue)
+void ImagePropertyGroup::setFlags(std::optional<Union::Properties::ImageFlags> newValue)
 {
     if (newValue == d->flags) {
         return;

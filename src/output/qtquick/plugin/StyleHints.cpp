@@ -107,7 +107,7 @@ bool StyleHints::spellCheckEnabled() const
     return m_spellCheckEnabled;
 }
 
-void StyleHints::setSpellCheckEnabled(const bool &enabled)
+void StyleHints::setSpellCheckEnabled(bool enabled)
 {
     if (m_spellCheckEnabled != enabled) {
         m_spellCheckEnabled = enabled;

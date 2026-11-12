@@ -173,7 +173,7 @@ void SliderElement::drawBackground(QPainter *painter) const
     unionPainter.draw();
 }
 
-QSizeF SliderElement::contentsSize(const QSizeF &contentsSizeFromStyle) const
+QSizeF SliderElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     if (!m_sliderOption) {
         return applyPaddingToSize(contentsSizeFromStyle);

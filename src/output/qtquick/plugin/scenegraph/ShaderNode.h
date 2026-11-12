@@ -143,8 +143,7 @@ public:
      * coordinates for the texture, such that textures from a texture atlas work
      * correctly.
      */
-    void
-    setTexture(Channel channel, Binding binding, const std::filesystem::path &path, QQuickWindow *window, const QSizeF &size = {}, TextureFlags flags = {});
+    void setTexture(Channel channel, Binding binding, const std::filesystem::path &path, QQuickWindow *window, QSizeF size = {}, TextureFlags flags = {});
 
     /*!
      * Set the texture for a binding to a texture.
@@ -188,11 +187,7 @@ public:
      * \p topLeft, \p topRight, \p bottomLeft and \p bottomRight are used to set
      * the data value of the default quad's vertices to the specified value.
      */
-    void setExtraDataChannelData(Channel channel, //
-                                 const QVector4D &topLeft,
-                                 const QVector4D &topRight,
-                                 const QVector4D &bottomLeft,
-                                 const QVector4D &bottomRight);
+    void setExtraDataChannelData(Channel channel, QVector4D topLeft, QVector4D topRight, QVector4D bottomLeft, QVector4D bottomRight);
 
     /*!
      * Set the data for channel \p channel to the provided colors.
@@ -201,7 +196,7 @@ public:
      * the data value of the default quad's vertices to the specified color
      * value.
      */
-    void setExtraDataChannelData(Channel channel, const QColor &topLeft, const QColor &topRight, const QColor &bottomLeft, const QColor &bottomRight);
+    void setExtraDataChannelData(Channel channel, QColor topLeft, QColor topRight, QColor bottomLeft, QColor bottomRight);
 
     /*!
      * Update internal state based on newly-set parameters.

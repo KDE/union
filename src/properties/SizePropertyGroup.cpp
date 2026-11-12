@@ -64,7 +64,7 @@ std::optional<qreal> SizePropertyGroup::left() const
     return d->left;
 }
 
-void SizePropertyGroup::setLeft(const std::optional<qreal> &newValue)
+void SizePropertyGroup::setLeft(std::optional<qreal> newValue)
 {
     if (newValue == d->left) {
         return;
@@ -78,7 +78,7 @@ std::optional<qreal> SizePropertyGroup::right() const
     return d->right;
 }
 
-void SizePropertyGroup::setRight(const std::optional<qreal> &newValue)
+void SizePropertyGroup::setRight(std::optional<qreal> newValue)
 {
     if (newValue == d->right) {
         return;
@@ -92,7 +92,7 @@ std::optional<qreal> SizePropertyGroup::top() const
     return d->top;
 }
 
-void SizePropertyGroup::setTop(const std::optional<qreal> &newValue)
+void SizePropertyGroup::setTop(std::optional<qreal> newValue)
 {
     if (newValue == d->top) {
         return;
@@ -106,7 +106,7 @@ std::optional<qreal> SizePropertyGroup::bottom() const
     return d->bottom;
 }
 
-void SizePropertyGroup::setBottom(const std::optional<qreal> &newValue)
+void SizePropertyGroup::setBottom(std::optional<qreal> newValue)
 {
     if (newValue == d->bottom) {
         return;

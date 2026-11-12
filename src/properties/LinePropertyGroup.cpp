@@ -61,7 +61,7 @@ std::optional<qreal> LinePropertyGroup::size() const
     return d->size;
 }
 
-void LinePropertyGroup::setSize(const std::optional<qreal> &newValue)
+void LinePropertyGroup::setSize(std::optional<qreal> newValue)
 {
     if (newValue == d->size) {
         return;
@@ -89,7 +89,7 @@ std::optional<Union::Properties::LineStyle> LinePropertyGroup::style() const
     return d->style;
 }
 
-void LinePropertyGroup::setStyle(const std::optional<Union::Properties::LineStyle> &newValue)
+void LinePropertyGroup::setStyle(std::optional<Union::Properties::LineStyle> newValue)
 {
     if (newValue == d->style) {
         return;

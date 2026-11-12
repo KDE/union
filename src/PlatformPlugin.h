@@ -81,7 +81,7 @@ public:
     Q_SIGNAL void animationSpeedMultiplierChanged();
 
     // QWidgets shadows
-    virtual void installWindowShadow(QWindow *window, const QImage &shadowImage, const QMargins &shadowMargins);
+    virtual void installWindowShadow(QWindow *window, const QImage &shadowImage, QMargins shadowMargins);
     virtual void uninstallWindowShadow(QObject *object);
 
 protected:

@@ -112,7 +112,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setWidth(const std::optional<qreal> &newValue);
+    void setWidth(std::optional<qreal> newValue);
 
     /*!
         The implicit (initial) height of an element.
@@ -124,7 +124,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setHeight(const std::optional<qreal> &newValue);
+    void setHeight(std::optional<qreal> newValue);
 
     /*!
         The spacing between various elements.
@@ -136,7 +136,7 @@ public:
      *
      * \a newValue The new value or \c{std::nullopt} to unset the value.
      */
-    void setSpacing(const std::optional<qreal> &newValue);
+    void setSpacing(std::optional<qreal> newValue);
 
     /*!
      * Padding defines extra spacing around the content of an element.
