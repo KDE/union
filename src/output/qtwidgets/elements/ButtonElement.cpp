@@ -106,7 +106,7 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
 {
     if (m_buttonOption && m_isValid) {
         if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-            return backgroundRectangle(m_buttonOption, m_elementProperties);
+            return visualRect(backgroundRectangle(m_buttonOption, m_elementProperties));
         }
     }
 
