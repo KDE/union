@@ -108,7 +108,7 @@ QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
 {
     if (m_isValid && m_frameOption && element == QStyle::SE_LineEditContents) {
         auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
-        return rect.marginsRemoved(padding().toMargins());
+        return visualRect(rect.marginsRemoved(padding().toMargins()));
     }
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
