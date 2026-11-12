@@ -19,3 +19,10 @@ scrollbar.vertical
     border-left: none;
     border-right: 1px solid var(--bar-track-active-border-color);
 }
+
+treeviewdelegate {
+    & > indicator {
+        icon-name: "arrow-left-symbolic";
+    }
+}
+

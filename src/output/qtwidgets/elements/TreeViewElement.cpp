@@ -77,8 +77,9 @@ void TreeViewElement::drawIndicator(QPainter *painter) const
     const qreal height = m_indicatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     QSizeF size(width, height);
 
-    auto defaultIconName = m_itemIsOpen ? u"arrow-down-symbolic"_s : u"arrow-right-symbolic"_s;
-    auto icon = m_style->unionIcon(m_indicatorProperties, defaultIconName);
+    const auto arrowName = m_styleOption->direction == Qt::RightToLeft ? u"arrow-left-symbolic"_s : u"arrow-right-symbolic"_s;
+    const auto defaultIconName = m_itemIsOpen ? u"arrow-down-symbolic"_s : arrowName;
+    const auto icon = m_style->unionIcon(m_indicatorProperties, defaultIconName);
     const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
 
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
