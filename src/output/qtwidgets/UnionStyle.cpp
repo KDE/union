@@ -3,50 +3,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "UnionStyle.h"
-#include "SharedNames.h"
-#include "StyleUtils.h"
-
-#include "elements/AbstractElement.h"
-#include "elements/ButtonElement.h"
-#include "elements/CheckBoxElement.h"
-#include "elements/ComboBoxElement.h"
-#include "elements/DockWidgetElement.h"
-#include "elements/FocusElement.h"
-#include "elements/FrameElement.h"
-#include "elements/GroupBoxElement.h"
-#include "elements/HeaderElement.h"
-#include "elements/IndicatorElement.h"
-#include "elements/ItemViewElement.h"
-#include "elements/LineEditElement.h"
-#include "elements/MenuBarElement.h"
-#include "elements/MenuBarItemElement.h"
-#include "elements/MenuElement.h"
-#include "elements/MenuItemElement.h"
-#include "elements/ProgressBarElement.h"
-#include "elements/RadioButtonElement.h"
-#include "elements/RubberBandElement.h"
-#include "elements/ScrollAreaCornerElement.h"
-#include "elements/ScrollBarElement.h"
-#include "elements/SizeGripElement.h"
-#include "elements/SliderElement.h"
-#include "elements/SpinBoxElement.h"
-#include "elements/SplitterElement.h"
-#include "elements/StatusBarElement.h"
-#include "elements/TabBarElement.h"
-#include "elements/TabCloseButtonElement.h"
-#include "elements/TabElement.h"
-#include "elements/TabWidgetElement.h"
-#include "elements/TitleBarElement.h"
-#include "elements/ToolBarElement.h"
-#include "elements/ToolBoxTabElement.h"
-#include "elements/ToolButtonElement.h"
-#include "elements/ToolTipElement.h"
-#include "elements/TreeViewElement.h"
-#include "elements/WidgetElement.h"
-
-#include <ElementQuery.h>
-#include <QApplication>
-#include <StyleRegistry.h>
 
 #include <QAbstractScrollArea>
 #include <QAbstractSpinBox>
@@ -108,8 +64,50 @@
 #include <QWidget>
 #include <QWidgetAction>
 
+#include <StyleRegistry.h>
+
 #include "ElementCache.h"
+#include "SharedNames.h"
+#include "StyleUtils.h"
 #include "UnionGraphicsEffect.h"
+
+#include "elements/AbstractElement.h"
+#include "elements/ButtonElement.h"
+#include "elements/CheckBoxElement.h"
+#include "elements/ComboBoxElement.h"
+#include "elements/DockWidgetElement.h"
+#include "elements/FocusElement.h"
+#include "elements/FrameElement.h"
+#include "elements/GroupBoxElement.h"
+#include "elements/HeaderElement.h"
+#include "elements/IndicatorElement.h"
+#include "elements/ItemViewElement.h"
+#include "elements/LineEditElement.h"
+#include "elements/MenuBarElement.h"
+#include "elements/MenuBarItemElement.h"
+#include "elements/MenuElement.h"
+#include "elements/MenuItemElement.h"
+#include "elements/ProgressBarElement.h"
+#include "elements/RadioButtonElement.h"
+#include "elements/RubberBandElement.h"
+#include "elements/ScrollAreaCornerElement.h"
+#include "elements/ScrollBarElement.h"
+#include "elements/SizeGripElement.h"
+#include "elements/SliderElement.h"
+#include "elements/SpinBoxElement.h"
+#include "elements/SplitterElement.h"
+#include "elements/StatusBarElement.h"
+#include "elements/TabBarElement.h"
+#include "elements/TabCloseButtonElement.h"
+#include "elements/TabElement.h"
+#include "elements/TabWidgetElement.h"
+#include "elements/TitleBarElement.h"
+#include "elements/ToolBarElement.h"
+#include "elements/ToolBoxTabElement.h"
+#include "elements/ToolButtonElement.h"
+#include "elements/ToolTipElement.h"
+#include "elements/TreeViewElement.h"
+#include "elements/WidgetElement.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

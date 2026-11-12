@@ -3,11 +3,11 @@
 
 #pragma once
 
+#include <QPainter>
 #include <QPainterPath>
 #include <QStyle>
-#include <properties/StylePropertyGroup.h>
 
-class QPainter;
+#include <properties/StylePropertyGroup.h>
 
 namespace Union
 {

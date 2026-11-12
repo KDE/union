@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include "LruCache.h"
+#include <QCommonStyle>
+
 #include <Element.h>
+#include <LruCache.h>
 #include <Style.h>
 
 #include "DragEventFilter.h"
 #include "elements/AbstractElement.h"
-#include "elements/CheckBoxElement.h"
-#include <QCommonStyle>
 
 namespace Union
 {

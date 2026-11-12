@@ -4,16 +4,12 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "ElementCache.h"
-#include <QObject>
-#include <QStyleOption>
 
 namespace Union
 {
 namespace Widgets
 {
 
-class UnionStyle;
 class ToolTipElement;
 
 namespace ElementCache

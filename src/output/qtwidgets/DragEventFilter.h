@@ -5,7 +5,7 @@
 
 #include <QEvent>
 #include <QObject>
-#include <QPoint>
+#include <QPointF>
 #include <QTimer>
 #include <QWidget>
 

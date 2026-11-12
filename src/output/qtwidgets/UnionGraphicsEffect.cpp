@@ -2,8 +2,8 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "UnionGraphicsEffect.h"
+
 #include "UnionPainter.h"
-#include <QPainter>
 
 using namespace Union::Properties;
 using namespace Union::Widgets;

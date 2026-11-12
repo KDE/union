@@ -3,18 +3,16 @@
 
 #include "UnionPainter.h"
 
-#include "StyleUtils.h"
-#include <Element.h>
-#include <ElementQuery.h>
+#include <algorithm>
+
 #include <QGuiApplication>
 #include <QPainter>
 #include <QPainterPath>
 #include <QStyleOption>
-#include <StyleRegistry.h>
-#include <StyleUtils.h>
-#include <algorithm>
 
-#include "LruCache.h"
+#include <LruCache.h>
+
+#include "StyleUtils.h"
 
 using namespace Union::Properties;
 using namespace Union::Widgets;
@@ -24,20 +22,16 @@ static Union::LruImageCache imageCache;
 template<typename F>
 Borders borderFromProperties(Union::StylePropertyGroupPtr properties, F getter)
 {
-    using BorderType = std::remove_pointer_t<std::invoke_result_t<F, Union::Properties::StylePropertyGroup *>>;
+    using BorderType = std::remove_pointer_t<std::invoke_result_t<F, StylePropertyGroup *>>;
     Borders borders;
-    borders.top.size = safePropertyLookup(properties, 0.0, getter, &BorderType::top, &Union::Properties::LinePropertyGroup::size);
-    borders.left.size = safePropertyLookup(properties, 0.0, getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-    borders.bottom.size = safePropertyLookup(properties, 0.0, getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-    borders.right.size = safePropertyLookup(properties, 0.0, getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::size);
-    borders.top.color =
-        safePropertyLookup(properties, Union::Color(), getter, &BorderType::top, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
-    borders.left.color =
-        safePropertyLookup(properties, Union::Color(), getter, &BorderType::left, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
-    borders.bottom.color =
-        safePropertyLookup(properties, Union::Color(), getter, &BorderType::bottom, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
-    borders.right.color =
-        safePropertyLookup(properties, Union::Color(), getter, &BorderType::right, &Union::Properties::LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.top.size = safePropertyLookup(properties, 0.0, getter, &BorderType::top, &LinePropertyGroup::size);
+    borders.left.size = safePropertyLookup(properties, 0.0, getter, &BorderType::left, &LinePropertyGroup::LinePropertyGroup::size);
+    borders.bottom.size = safePropertyLookup(properties, 0.0, getter, &BorderType::bottom, &LinePropertyGroup::LinePropertyGroup::size);
+    borders.right.size = safePropertyLookup(properties, 0.0, getter, &BorderType::right, &LinePropertyGroup::LinePropertyGroup::size);
+    borders.top.color = safePropertyLookup(properties, Union::Color(), getter, &BorderType::top, &LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.left.color = safePropertyLookup(properties, Union::Color(), getter, &BorderType::left, &LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.bottom.color = safePropertyLookup(properties, Union::Color(), getter, &BorderType::bottom, &LinePropertyGroup::LinePropertyGroup::color).toQColor();
+    borders.right.color = safePropertyLookup(properties, Union::Color(), getter, &BorderType::right, &LinePropertyGroup::LinePropertyGroup::color).toQColor();
     return borders;
 }
 

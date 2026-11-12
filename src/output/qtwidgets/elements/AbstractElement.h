@@ -3,18 +3,20 @@
 
 #pragma once
 
-#include "StyleUtils.h"
-#include <ElementQuery.h>
-#include <QIcon>
-#include <QObject>
 #include <QStyleOption>
+
+#include <ElementQuery.h>
+
+#include "ElementCache.h"
+#include "StyleUtils.h"
+#include "UnionPainter.h"
+#include "UnionStyle.h"
 
 namespace Union
 {
 namespace Widgets
 {
 
-class UnionStyle;
 
 struct DrawEnums {
     int ControlElement = -1;

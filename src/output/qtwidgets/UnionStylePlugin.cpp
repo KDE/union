@@ -3,9 +3,10 @@
 
 #include "UnionStylePlugin.h"
 
+#include <QApplication>
+
 #include "UnionStyle.h"
 
-#include <QApplication>
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 

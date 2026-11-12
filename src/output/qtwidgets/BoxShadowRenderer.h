@@ -6,11 +6,12 @@
 
 #pragma once
 
-#include "properties/CornersPropertyGroup.h"
 #include <QColor>
 #include <QImage>
 #include <QPoint>
 #include <QSize>
+
+#include "properties/CornersPropertyGroup.h"
 
 namespace Union
 {

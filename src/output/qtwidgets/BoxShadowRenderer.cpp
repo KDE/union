@@ -18,11 +18,11 @@
 // This implementation has been copied over from Breeze.
 
 #include "BoxShadowRenderer.h"
-#include "ShadowRenderer.h"
-#include "UnionPainter.h"
 
 #include <QPainter>
 #include <QtMath>
+
+#include "UnionPainter.h"
 
 using namespace Union::Widgets;
 

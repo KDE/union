@@ -3,7 +3,6 @@
 
 #pragma once
 
-#include "elements/AbstractElement.h"
 #include <QStyleOption>
 
 #include <LruCache.h>

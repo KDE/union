@@ -2,20 +2,16 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "FrameElement.h"
-#include "SharedNames.h"
-#include "UnionStyle.h"
+
 #include <QAbstractScrollArea>
-#include <QApplication>
 #include <QComboBox>
-#include <QDebug>
 #include <QDockWidget>
-#include <QLayout>
 #include <QLineEdit>
 #include <QMenu>
-#include <QPainter>
 #include <QStackedLayout>
-#include <QStyle>
 #include <QTextBrowser>
+
+#include "ShadowRenderer.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

@@ -3,22 +3,13 @@
 
 #include "ShadowRenderer.h"
 
-#include "UnionPainter.h"
-
-#include <ElementQuery.h>
-#include <QApplication>
 #include <QDockWidget>
-#include <QEvent>
-#include <QMdiArea>
-#include <QMdiSubWindow>
 #include <QMenu>
 #include <QPainter>
-#include <QPixmap>
-#include <QPlatformSurfaceEvent>
-#include <QTextStream>
 #include <QToolBar>
 
-using namespace Union::Properties;
+#include "UnionPainter.h"
+
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;

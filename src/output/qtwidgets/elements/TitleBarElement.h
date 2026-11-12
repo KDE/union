@@ -4,18 +4,12 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "ElementCache.h"
-#include <QIcon>
-#include <QObject>
-#include <QStyleOption>
-#include <qstyleoption.h>
 
 namespace Union
 {
 namespace Widgets
 {
 
-class UnionStyle;
 class TitleBarElement;
 
 namespace ElementCache

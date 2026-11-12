@@ -2,14 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "ToolBoxTabElement.h"
-#include "SharedNames.h"
-#include "UnionStyle.h"
-#include "elements/AbstractElement.h"
-#include <QApplication>
-#include <QDebug>
-#include <QPainter>
-#include <QStyle>
-#include <QTabBar>
 
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;

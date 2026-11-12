@@ -2,20 +2,17 @@
 // SPDX-FileCopyrightText: 2025 Joshua Goins <josh@redstrate.com>
 
 #include "StyleUtils.h"
-#include "SharedNames.h"
-#include <ElementQuery.h>
-#include <StyleRegistry.h>
 
 #include <QCheckBox>
 #include <QListView>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QStyleOption>
 #include <QStyleOptionFrame>
 #include <QTableView>
 #include <QTextOption>
 #include <QTreeView>
-#include <qstyleoption.h>
+
+#include "SharedNames.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

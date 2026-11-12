@@ -2,16 +2,14 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "AbstractElement.h"
-#include "SharedNames.h"
-#include "UnionGraphicsEffect.h"
-#include "UnionPainter.h"
-#include "UnionStyle.h"
-#include "qtwidgets_logging.h"
+
 #include <QApplication>
-#include <QDebug>
-#include <QPainter>
-#include <QStyle>
+
 #include <StyleRegistry.h>
+
+#include "UnionGraphicsEffect.h"
+
+#include "qtwidgets_logging.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

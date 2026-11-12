@@ -2,14 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "StatusBarElement.h"
-#include "SharedNames.h"
-#include "UnionPainter.h"
-#include "UnionStyle.h"
-#include <QApplication>
-#include <QDebug>
-#include <QLineEdit>
-#include <QPainter>
-#include <QStyle>
 
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;

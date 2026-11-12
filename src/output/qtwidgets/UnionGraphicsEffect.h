@@ -3,12 +3,9 @@
 
 #pragma once
 
-#include <ElementQuery.h>
 #include <QGraphicsDropShadowEffect>
-#include <QGraphicsEffect>
-#include <QIcon>
-#include <QObject>
-#include <QStyleOption>
+
+#include <properties/StylePropertyGroup.h>
 
 namespace Union
 {

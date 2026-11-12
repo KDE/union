@@ -4,17 +4,12 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "ElementCache.h"
-#include <QIcon>
-#include <QObject>
-#include <QStyleOption>
 
 namespace Union
 {
 namespace Widgets
 {
 
-class UnionStyle;
 class HeaderElement;
 
 namespace ElementCache
@@ -35,7 +30,6 @@ namespace detail
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderDefaultSectionSizeVertical> : public TypeHelper<HeaderElement, QStyleOption>{};
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderGripMargin> : public TypeHelper<HeaderElement, QStyleOption>{};
     template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderMarkSize> : public TypeHelper<HeaderElement, QStyleOption>{};
-
 /* clang-format on */
 }
 }

@@ -2,15 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "ButtonElement.h"
-#include "SharedNames.h"
-#include "StyleUtils.h"
-#include "UnionStyle.h"
-#include <QApplication>
-#include <QDebug>
-#include <QPainter>
-#include <QStyle>
-
-#include "PropertiesTypes.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;

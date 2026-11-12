@@ -4,17 +4,12 @@
 #pragma once
 
 #include "AbstractElement.h"
-#include "ElementCache.h"
-#include <QIcon>
-#include <QObject>
-#include <QStyleOption>
 
 namespace Union
 {
 namespace Widgets
 {
 
-class UnionStyle;
 class ProgressBarElement;
 
 namespace ElementCache

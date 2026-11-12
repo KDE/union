@@ -3,18 +3,12 @@
 
 #pragma once
 
-#include "BoxShadowRenderer.h"
-#include "StyleRegistry.h"
-
-#include "properties/StylePropertyGroup.h"
-
-#include <QColor>
-#include <QMap>
-#include <QMargins>
 #include <QObject>
-#include <QPointer>
-#include <QSet>
-#include <QWindow>
+
+#include <StyleRegistry.h>
+#include <properties/StylePropertyGroup.h>
+
+#include "BoxShadowRenderer.h"
 
 namespace Union
 {

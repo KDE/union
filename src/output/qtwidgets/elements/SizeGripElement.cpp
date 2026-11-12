@@ -2,13 +2,6 @@
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
 
 #include "SizeGripElement.h"
-#include "UnionStyle.h"
-#include <QApplication>
-#include <QDebug>
-#include <QLineEdit>
-#include <QPainter>
-#include <QStyle>
-#include <qstyleoption.h>
 
 #include "SharedNames.h"
 

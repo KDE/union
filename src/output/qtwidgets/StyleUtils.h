@@ -3,15 +3,16 @@
 
 #pragma once
 
-#include "qtwidgets_logging.h"
+#include <QMargins>
+#include <QPainterPath>
+
 #include <Element.h>
 #include <properties/SizePropertyGroup.h>
 #include <properties/StylePropertyGroup.h>
 
 #include "SharedNames.h"
-#include <QMargins>
-#include <QPainterPath>
-#include <QStyleOption>
+
+#include "qtwidgets_logging.h"
 
 class QStyleOption;
 
