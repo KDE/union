@@ -108,13 +108,13 @@ QRectF ToolButtonElement::subControlRect(QStyle::SubControl subControl) const
 {
     if (m_isValid) {
         if (subControl == QStyle::SC_ToolButton) {
-            return m_mainButtonRect;
+            return visualRect(m_mainButtonRect);
         }
         if (subControl == QStyle::SC_ToolButtonMenu) {
-            return m_menuButtonRect;
+            return visualRect(m_menuButtonRect);
         }
     }
-    return {};
+    return m_style->QCommonStyle::subControlRect(QStyle::CC_ToolButton, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
 }
 
 void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
