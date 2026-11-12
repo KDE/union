@@ -3,7 +3,6 @@
 
 #include "Units.h"
 
-#include "ElementQuery.h"
 #include "StyleRegistry.h"
 
 using namespace Qt::StringLiterals;

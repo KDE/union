@@ -10,7 +10,6 @@
 #include <KConfigGroup>
 
 #include <LruCache.h>
-#include <Style.h>
 
 #include "kcolorscheme_logging.h"
 

@@ -3,8 +3,6 @@
 
 #include "Selector.h"
 
-#include <ranges>
-
 #include <QMetaEnum>
 
 #include "Element.h"
