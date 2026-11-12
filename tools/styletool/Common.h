@@ -34,7 +34,7 @@ void showCommandHelp(QCommandLineParser *parser, const QString &command, const Q
 }
 
 [[nodiscard]] std::unique_ptr<QCommandLineParser>
-parseCommand(const QString &command, const QStringList &arguments, std::function<void(QCommandLineParser *)> customiseFunction)
+parseCommand(const QString &command, const QStringList &arguments, const std::function<void(QCommandLineParser *)> &customiseFunction)
 {
     auto commandParser = std::make_unique<QCommandLineParser>();
     commandParser->addOption({u"help"_s, u"Displays help for the current command."_s});
@@ -60,7 +60,7 @@ parseCommand(const QString &command, const QStringList &arguments, std::function
     return commandParser;
 }
 
-void readInput(QString &output, QStringView message, std::function<bool(QString)> validationFunction, QString defaultValue = {})
+void readInput(QString &output, QStringView message, const std::function<bool(QString)> &validationFunction, const QString &defaultValue = {})
 {
     Q_ASSERT(!message.isEmpty());
 
@@ -90,7 +90,7 @@ void readInput(QString &output, QStringView message, std::function<bool(QString)
     }
 }
 
-void readInput(QString &output, QStringView message, QString defaultValue = {})
+void readInput(QString &output, QStringView message, const QString &defaultValue = {})
 {
     readInput(
         output,

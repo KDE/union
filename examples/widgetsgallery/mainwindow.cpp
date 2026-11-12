@@ -47,7 +47,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     auto *tabList = new QListView(this);
     tabList->setModel(tabModel);
-    connect(tabList, &QListView::clicked, this, [contents](QModelIndex index) {
+    connect(tabList, &QListView::clicked, this, [contents](const QModelIndex &index) {
         contents->setCurrentIndex(index.row());
     });
 

@@ -209,7 +209,7 @@ void UnionPainter::draw()
     m_painter->restore();
 }
 
-QPainterPath UnionPainter::unevenRadiiRectPath(const QRectF &rect, const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii)
+QPainterPath UnionPainter::unevenRadiiRectPath(const QRectF &rect, const Union::Properties::CornersPropertyGroup::CornerRadii &cornerRadii)
 {
     QPainterPath path;
 
@@ -266,7 +266,7 @@ void UnionPainter::setRect(const QRectF &rect)
 }
 
 Union::Properties::CornersPropertyGroup::CornerRadii UnionPainter::constrainRadii(const QRectF &rect,
-                                                                                  const Union::Properties::CornersPropertyGroup::CornerRadii cornerRadii)
+                                                                                  const Union::Properties::CornersPropertyGroup::CornerRadii &cornerRadii)
 {
     auto topLeft = std::min({rect.width() / 2.0, rect.height() / 2.0, cornerRadii.topLeft});
     auto topRight = std::min({rect.width() / 2.0, rect.height() / 2.0, cornerRadii.topRight});

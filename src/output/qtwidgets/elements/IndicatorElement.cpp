@@ -46,7 +46,7 @@ void IndicatorElement::draw(QPainter *painter, DrawEnums enums) const
     }
 }
 
-void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIconName, QStringList targetHierarchy) const
+void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIconName, const QStringList &targetHierarchy) const
 {
     if (m_styleOption) {
         auto properties = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));

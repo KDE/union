@@ -167,13 +167,13 @@ protected:
     /*!
      * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.
      */
-    virtual QSizeF querySize(QStringList targetHierarchy) const;
+    virtual QSizeF querySize(const QStringList &targetHierarchy) const;
 
     /*!
      * \brief Prepares elements for a widget. Sometimes we cannot decipher the specific item from widget alone, such as itemviews.
      * In those cases you may need to manually choose a target hierarchy, such as {"ItemViewItem"}
      */
-    virtual Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget, QStringList targetHierarchy = {}) const;
+    virtual Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget, const QStringList &targetHierarchy = {}) const;
 
     /*!
      * \brief The element name used by prepareElements() when there is no widget, such as when
@@ -223,7 +223,7 @@ protected:
     /*!
      * \brief Draw given icon at the rectangle. Handles the enabled status.
      */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
+    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
     /*!
      * \brief Draw text at the given rectangle. Handles coloring, elision and

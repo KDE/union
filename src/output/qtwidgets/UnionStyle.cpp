@@ -243,7 +243,7 @@ UnionStyle::hitTestComplexControl(ComplexControl control, const QStyleOptionComp
         auto grooveRect = subControlRect(CC_ScrollBar, option, SC_ScrollBarGroove, widget);
         if (grooveRect.contains(point)) {
             const auto sliderRect = subControlRect(CC_ScrollBar, option, SC_ScrollBarSlider, widget);
-            const auto precedes = [](const QStyleOptionComplex *option, QPoint point, QRectF rect) {
+            const auto precedes = [](const QStyleOptionComplex *option, QPoint point, const QRectF &rect) {
                 if (option->state & QStyle::State_Horizontal) {
                     if (option->direction == Qt::LeftToRight) {
                         return point.x() < rect.right();

@@ -314,7 +314,7 @@ QRectF Union::Widgets::centerRect(const QRectF &rect, qreal width, qreal height)
     return {rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height};
 }
 
-QRectF Union::Widgets::unifiedRect(QMap<QString, LayoutItem> layoutMap)
+QRectF Union::Widgets::unifiedRect(const QMap<QString, LayoutItem> &layoutMap)
 {
     QRectF rect;
     for (const auto &m : layoutMap) {

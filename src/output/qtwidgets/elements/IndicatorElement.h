@@ -46,7 +46,8 @@ public:
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    void drawElement(QPainter *painter, const QString &defaultIconName, QStringList targetHierarchy) const;
+    void drawElement(QPainter *painter, const QString &defaultIconName, const QStringList &targetHierarchy) const;
+
     int m_listViewIconSize = 0;
     int m_smallIconSize = 0;
     int m_iconViewIconSize = 0;

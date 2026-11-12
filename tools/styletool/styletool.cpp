@@ -315,7 +315,7 @@ int handleUninstallCommand([[maybe_unused]] const QStringList &arguments)
     return 0;
 }
 
-int handlePackageCommand([[maybe_unused]] const QStringList arguments)
+int handlePackageCommand([[maybe_unused]] const QStringList &arguments)
 {
     auto parser = parseCommand(u"package"_s, arguments, [](QCommandLineParser *parser) {
         parser->setApplicationDescription(u"Package a style for easy sharing."_s);

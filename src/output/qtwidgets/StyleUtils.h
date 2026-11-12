@@ -81,6 +81,6 @@ QRectF centerRect(const QRectF &rect, qreal width, qreal height);
 QString styleOptionToElementName(const QStyleOption *option);
 
 // Calculates the bounding box rectangle from items inside layoutMap
-QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap);
+QRectF unifiedRect(const QMap<QString, LayoutItem> &layoutMap);
 }
 }
