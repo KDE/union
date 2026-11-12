@@ -51,7 +51,7 @@ void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIcon
     if (m_styleOption) {
         auto properties = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));
         auto icon = m_style->unionIcon(properties, defaultIconName);
-        drawIconAtRect(painter, icon, m_styleOption->rect, properties);
+        drawIconAtRect(painter, icon, visualRect(m_styleOption->rect), properties);
     }
 }
 
