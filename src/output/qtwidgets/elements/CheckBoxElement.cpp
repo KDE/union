@@ -79,7 +79,7 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
         if (element == QStyle::SE_CheckBoxIndicator) {
             if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
                 // The indicator is drawn as part of something
-                return m_layoutMap[ElementString::Indicator].rect;
+                return visualRect(m_layoutMap[ElementString::Indicator].rect);
             }
         }
     }
