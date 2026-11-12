@@ -29,6 +29,9 @@ static const QString DefaultFallbackStyle = u"breeze"_s;
 // fallback if we have no existing platform plugin for the current platform.
 class FallbackPlatformPlugin : public PlatformPlugin
 {
+    Q_OBJECT
+
+public:
     QString defaultStyleName() override
     {
         return DefaultFallbackStyle;
@@ -248,4 +251,4 @@ std::shared_ptr<StyleRegistry> StyleRegistry::instance()
     return inst;
 }
 
-#include "moc_StyleRegistry.cpp"
+#include "StyleRegistry.moc"

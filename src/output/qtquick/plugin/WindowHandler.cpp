@@ -12,6 +12,8 @@ using namespace Qt::StringLiterals;
 
 class WindowInactiveHint : public ElementHint
 {
+    Q_OBJECT
+
 public:
     WindowInactiveHint(QWindow *window, QObject *parent)
         : ElementHint(parent)
@@ -133,3 +135,5 @@ std::shared_ptr<WindowHandler> Union::Quick::WindowHandler::instance()
     static std::shared_ptr<WindowHandler> inst = std::make_shared<WindowHandler>();
     return inst;
 }
+
+#include "WindowHandler.moc"

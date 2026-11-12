@@ -12,6 +12,7 @@
 
 class KirigamiStyleHints : public Kirigami::Platform::StyleHints
 {
+    Q_OBJECT
 public:
     KirigamiStyleHints(QObject *parent = nullptr)
         : Kirigami::Platform::StyleHints(parent)
@@ -66,4 +67,4 @@ Kirigami::Platform::Units *PluginFactory::createUnits(QObject *parent)
     return new Units(parent);
 }
 
-#include "moc_PluginFactory.cpp"
+#include "PluginFactory.moc"

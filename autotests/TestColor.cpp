@@ -11,6 +11,7 @@ using namespace Qt::StringLiterals;
 
 class TestColorProvider : public ColorProvider
 {
+    Q_OBJECT
 public:
     std::optional<ColorProvider::Rgba> color(const QStringList &arguments) const override
     {
