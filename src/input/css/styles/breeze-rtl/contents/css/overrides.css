@@ -26,3 +26,9 @@ treeviewdelegate {
     }
 }
 
+menuitem {
+    arrow {
+        icon-name: "arrow-left-symbolic";
+    }
+}
+
