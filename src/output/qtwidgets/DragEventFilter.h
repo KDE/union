@@ -23,7 +23,7 @@ public:
         Dragging,
         Unlocked
     };
-    Q_ENUMS(DragState)
+    Q_ENUM(DragState)
 
     explicit DragEventFilter(QObject *parent);
 
