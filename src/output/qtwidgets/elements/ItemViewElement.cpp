@@ -54,7 +54,8 @@ void ItemViewElement::layout()
             opt.rect = visualRect(backgroundRectangle(m_viewItemOption, m_elementProperties).toRect()).toRect();
             m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
             m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
-            m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget);
+            m_layoutMap[ElementString::CheckBox].rect =
+                visualRect(m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget));
 
             // Apply our spacing
             auto textRect = visualRect(m_layoutMap[ElementString::Text].rect);
@@ -262,13 +263,13 @@ Union::IdentifierVariantHash ItemViewElement::elementAttributes() const
             map[u"position"_s] = QVariant(u"invalid"_s);
             break;
         case QStyleOptionViewItem::Beginning:
-            map[u"position"_s] = QVariant(u"beginning"_s);
+            map[u"position"_s] = m_viewItemOption->direction == Qt::RightToLeft ? QVariant(u"end"_s) : QVariant(u"beginning"_s);
             break;
         case QStyleOptionViewItem::Middle:
             map[u"position"_s] = QVariant(u"middle"_s);
             break;
         case QStyleOptionViewItem::End:
-            map[u"position"_s] = QVariant(u"end"_s);
+            map[u"position"_s] = m_viewItemOption->direction == Qt::RightToLeft ? QVariant(u"beginning"_s) : QVariant(u"end"_s);
             break;
         case QStyleOptionViewItem::OnlyOne:
             map[u"position"_s] = QVariant(u"onlyone"_s);
