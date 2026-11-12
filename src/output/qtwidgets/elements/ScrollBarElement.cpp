@@ -84,9 +84,8 @@ void ScrollBarElement::drawIndicator(QPainter *painter) const
 {
     if (m_scrollBarOption && m_scrollBarOption->subControls & QStyle::SC_ScrollBarSlider) {
         QStyleOptionSlider subopt = *m_scrollBarOption;
-        subopt.rect = m_scrollBarOption->rect;
         subopt.state = m_scrollBarOption->state;
-        subopt.rect = subControlRect(QStyle::SC_ScrollBarSlider).toRect();
+        subopt.rect = visualRect(subControlRect(QStyle::SC_ScrollBarSlider)).toRect();
         if (subopt.rect.isValid()) {
             if (!(m_scrollBarOption->activeSubControls & QStyle::SC_ScrollBarSlider)) {
                 subopt.state &= ~(QStyle::State_Sunken | QStyle::State_MouseOver);
