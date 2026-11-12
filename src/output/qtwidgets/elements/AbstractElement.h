@@ -237,6 +237,9 @@ protected:
      */
     void updateGraphicsEffect(const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
 
+    // Helper method for returning style->visualRect
+    QRectF visualRect(const QRectF &rect) const;
+
     const QStyleOption *m_styleOption = nullptr;
     const UnionStyle *m_style = nullptr;
     const QWidget *m_widget = nullptr;

@@ -861,3 +861,11 @@ Union::StylePropertyGroupPtr AbstractElement::defaultPropertyGroup(Union::StyleP
     }
     return properties;
 }
+
+QRectF AbstractElement::visualRect(const QRectF &rect) const
+{
+    if (m_style && m_styleOption) {
+        return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect);
+    }
+    return rect;
+}
