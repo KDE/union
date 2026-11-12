@@ -4,7 +4,6 @@
 #include "StyledRectangle.h"
 
 #include "PixelAlignment.h"
-#include "StyleRule.h"
 
 #include "scenegraph/OutlineBorderRectangleNode.h"
 #include "scenegraph/RectangleNode.h"

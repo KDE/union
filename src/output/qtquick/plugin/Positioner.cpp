@@ -5,10 +5,7 @@
 
 #include <EventHelper.h>
 
-#include "QuickStyle.h"
 #include "positioner/PositionerLayout.h"
-
-#include "qtquick_logging.h"
 
 using namespace Union;
 using namespace Union::Quick;

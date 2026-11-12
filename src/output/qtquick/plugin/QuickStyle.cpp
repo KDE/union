@@ -6,10 +6,8 @@
 #include <QCoreApplication>
 #include <QQmlEngine>
 
-#include <Element.h>
 #include <EventHelper.h>
 #include <Style.h>
-#include <StyleRule.h>
 
 #include "QuickElement.h"
 

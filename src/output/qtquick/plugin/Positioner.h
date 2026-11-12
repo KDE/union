@@ -12,6 +12,8 @@
 
 #include "Types.h"
 
+#include "unionquickimpl_export.h"
+
 namespace Union
 {
 namespace Quick

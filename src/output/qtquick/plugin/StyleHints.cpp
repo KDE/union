@@ -7,11 +7,9 @@
 #include <QCoreApplication>
 #include <QQmlEngine>
 
-#include <Element.h>
 #include <EventHelper.h>
 #include <PlatformPlugin.h>
 #include <StyleRegistry.h>
-#include <StyleRule.h>
 
 using namespace Union;
 using namespace Union::Quick;

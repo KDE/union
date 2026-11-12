@@ -10,8 +10,6 @@
 
 #include <QImage>
 
-#include "qtquick_logging.h"
-
 namespace fs = std::filesystem;
 
 std::shared_ptr<QSGTexture> TextureCache::loadTexture(QQuickWindow *window, const QImage &image, QQuickWindow::CreateTextureOptions options)

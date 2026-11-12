@@ -7,11 +7,10 @@
 #include <QQmlEngine>
 #include <QQuickItem>
 
-#include "Element.h"
-#include "EventHelper.h"
-#include "Style.h"
-#include "StyleRegistry.h"
-#include "StyleRule.h"
+#include <Element.h>
+#include <EventHelper.h>
+#include <Style.h>
+#include <StyleRegistry.h>
 
 #include "QuickStyle.h"
 #include "WindowHandler.h"
