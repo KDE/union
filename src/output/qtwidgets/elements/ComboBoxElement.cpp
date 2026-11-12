@@ -105,9 +105,9 @@ QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
     if (m_isValid && m_comboBoxOption) {
         switch (subControl) {
         case QStyle::SC_ComboBoxFrame:
-            return backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect();
+            return visualRect(backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect());
         case QStyle::SC_ComboBoxListBoxPopup:
-            return m_comboBoxOption->rect;
+            return visualRect(m_comboBoxOption->rect);
         case QStyle::SC_ComboBoxArrow: {
             auto rect = m_layoutMap[ElementString::Indicator].rect;
             rect = rect.adjusted(-spacing(), 0, spacing(), 0);
