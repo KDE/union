@@ -6,6 +6,7 @@
 #include <QPainter>
 
 using namespace Union::Properties;
+using namespace Union::Widgets;
 
 UnionGraphicsEffect::UnionGraphicsEffect(QObject *parent)
     : QGraphicsDropShadowEffect(parent)

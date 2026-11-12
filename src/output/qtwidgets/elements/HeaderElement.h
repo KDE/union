@@ -9,8 +9,12 @@
 #include <QObject>
 #include <QStyleOption>
 
-class UnionStyle;
+namespace Union
+{
+namespace Widgets
+{
 
+class UnionStyle;
 class HeaderElement;
 
 namespace ElementCache
@@ -61,3 +65,6 @@ private:
     QIcon sortIndicator();
     bool m_isHorizontal;
 };
+
+}
+}

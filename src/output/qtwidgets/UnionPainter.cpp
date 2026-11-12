@@ -17,6 +17,8 @@
 #include "LruCache.h"
 
 using namespace Union::Properties;
+using namespace Union::Widgets;
+
 static Union::LruImageCache imageCache;
 
 template<typename F>

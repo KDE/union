@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class DockWidgetElement;
 
@@ -51,3 +56,5 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionDockWidget *m_dockWidgetOption = nullptr;
 };
+}
+}

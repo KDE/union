@@ -15,6 +15,7 @@
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
+using namespace Union::Widgets;
 
 AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : QObject(nullptr)

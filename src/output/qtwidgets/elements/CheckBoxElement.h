@@ -9,8 +9,12 @@
 #include <QObject>
 #include <QStyleOption>
 
-class UnionStyle;
+namespace Union
+{
+namespace Widgets
+{
 
+class UnionStyle;
 class CheckBoxElement;
 
 namespace ElementCache
@@ -55,3 +59,6 @@ private:
     Union::ElementList m_indicatorElementList;
     Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
 };
+
+}
+}

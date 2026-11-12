@@ -12,6 +12,8 @@
 #include <QToolBar>
 #include <QWindow>
 
+using namespace Union::Widgets;
+
 DragEventFilter::DragEventFilter(QObject *parent)
     : QObject(parent)
     , m_dragTimer(new QTimer(this))

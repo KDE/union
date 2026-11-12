@@ -9,8 +9,14 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class GroupBoxElement;
+
 namespace ElementCache
 {
 namespace detail
@@ -45,3 +51,5 @@ private:
     const QStyleOptionGroupBox *m_groupBoxOption = nullptr;
     bool m_isCheckable;
 };
+}
+}

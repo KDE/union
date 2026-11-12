@@ -13,6 +13,7 @@
 #include <QStyle>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Widgets;
 
 ScrollBarElement::ScrollBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)

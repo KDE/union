@@ -10,6 +10,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionGraphicsEffect : public QGraphicsDropShadowEffect
 {
     Q_OBJECT
@@ -30,3 +35,5 @@ private:
     QMarginsF m_outlineSize;
     QRectF m_drawRect;
 };
+}
+}

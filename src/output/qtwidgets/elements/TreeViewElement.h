@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class TreeViewElement;
 
@@ -47,3 +52,6 @@ private:
     Union::ElementList m_indicatorElementList;
     Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
 };
+
+}
+}

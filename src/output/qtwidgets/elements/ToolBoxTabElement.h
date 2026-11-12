@@ -9,6 +9,10 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
 class UnionStyle;
 class ToolBoxTabElement;
 
@@ -44,3 +48,6 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionToolBox *m_toolBoxOption = nullptr;
 };
+
+}
+}

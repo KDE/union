@@ -20,6 +20,8 @@
 
 using namespace Union::Properties;
 using namespace Qt::StringLiterals;
+using namespace Union::Properties;
+using namespace Union::Widgets;
 
 ShadowRenderer::ShadowRenderer(const Union::StylePropertyGroupPtr &properties)
     : QObject()

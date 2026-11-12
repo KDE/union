@@ -113,6 +113,7 @@
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
+using namespace Union::Widgets;
 
 enum class EnumContext {
     ControlElement = 1,

@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class SizeGripElement;
 
@@ -40,3 +45,5 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionSizeGrip *m_sizeGripOption = nullptr;
 };
+}
+}

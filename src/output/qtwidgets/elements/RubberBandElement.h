@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class RubberBandElement;
 
@@ -37,3 +42,5 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionRubberBand *m_rubberBandOption = nullptr;
 };
+}
+}

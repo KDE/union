@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class FocusElement;
 
@@ -42,3 +47,5 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionFocusRect *m_focusOption = nullptr;
 };
+}
+}

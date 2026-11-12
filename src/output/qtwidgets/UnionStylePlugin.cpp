@@ -7,6 +7,7 @@
 
 #include <QApplication>
 using namespace Qt::StringLiterals;
+using namespace Union::Widgets;
 
 StylePlugin::StylePlugin(QObject *parent)
     : QStylePlugin(parent)

@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class SplitterElement;
 
@@ -41,3 +46,6 @@ public:
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
 };
+
+}
+}

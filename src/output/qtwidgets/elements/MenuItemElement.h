@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class MenuItemElement;
 
@@ -66,3 +71,5 @@ private:
     QString m_shortcutText;
     QIcon m_subMenuArrow;
 };
+}
+}

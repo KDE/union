@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class IndicatorElement;
 
@@ -53,3 +58,5 @@ private:
     int m_messageBoxIconSize = 0;
     int m_textCursorWidth = 0;
 };
+}
+}

@@ -15,6 +15,7 @@
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
+using namespace Union::Widgets;
 
 // ItemViewElements are often used in many weird ways within applications, so we need to ensure they're
 // backwards compatible. This means we can't give them custom layouts without breaking everything.

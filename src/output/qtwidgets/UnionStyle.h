@@ -13,6 +13,11 @@
 #include "elements/CheckBoxElement.h"
 #include <QCommonStyle>
 
+namespace Union
+{
+namespace Widgets
+{
+
 /*!
  * \brief Provides Union styling for QtWidgets applications.
  */
@@ -140,3 +145,5 @@ private:
 
     void setMnemonics(bool enabled);
 };
+}
+}

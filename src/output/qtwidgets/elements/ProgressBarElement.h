@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class ProgressBarElement;
 
@@ -63,3 +68,5 @@ private:
     Union::ElementList m_contentElementList;
     Union::StylePropertyGroupPtr m_contentProperties = nullptr;
 };
+}
+}

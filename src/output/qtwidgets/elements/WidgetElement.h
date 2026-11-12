@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class WidgetElement;
 
@@ -41,3 +46,6 @@ public:
 private:
     void drawKMultiTabBar(QPainter *painter) const;
 };
+
+}
+}

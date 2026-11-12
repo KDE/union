@@ -9,8 +9,14 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class SliderElement;
+
 namespace ElementCache
 {
 namespace detail
@@ -61,3 +67,5 @@ private:
     Union::ElementList m_contentElementList;
     Union::StylePropertyGroupPtr m_contentProperties = nullptr;
 };
+}
+}

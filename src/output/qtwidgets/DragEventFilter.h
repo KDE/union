@@ -9,6 +9,11 @@
 #include <QTimer>
 #include <QWidget>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class DragEventFilter : public QObject
 {
     Q_OBJECT
@@ -41,3 +46,6 @@ private:
     DragState m_currentState;
     QWidget *m_dragWidget;
 };
+
+}
+}

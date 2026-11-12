@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class TabBarElement;
 
@@ -48,3 +53,5 @@ private:
     const QStyleOptionTabBarBase *m_tabBarOption = nullptr;
     qreal scrollButtonWidth() const;
 };
+}
+}

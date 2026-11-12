@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class TabCloseButtonElement;
 
@@ -36,3 +41,5 @@ public:
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 };
+}
+}

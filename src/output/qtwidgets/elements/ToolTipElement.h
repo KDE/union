@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class ToolTipElement;
 
@@ -41,3 +46,6 @@ private:
     void layout() override;
     const QStyleOptionFrame *m_frameOption = nullptr;
 };
+
+}
+}

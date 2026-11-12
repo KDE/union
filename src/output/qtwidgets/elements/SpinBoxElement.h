@@ -9,8 +9,14 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class SpinBoxElement;
+
 namespace ElementCache
 {
 namespace detail
@@ -52,3 +58,5 @@ private:
     bool m_hasFrame;
     bool m_usesArrows;
 };
+}
+}

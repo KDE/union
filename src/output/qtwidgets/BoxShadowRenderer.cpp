@@ -24,6 +24,8 @@
 #include <QPainter>
 #include <QtMath>
 
+using namespace Union::Widgets;
+
 static inline int calculateBlurRadius(qreal stdDev)
 {
     // See https://www.w3.org/TR/SVG11/filters.html#feGaussianBlurElement

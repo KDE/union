@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class MenuBarElement;
 
@@ -41,3 +46,5 @@ public:
     QString fallbackElementName(const QStyleOption *opt) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
 };
+}
+}

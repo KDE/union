@@ -9,6 +9,11 @@
 
 class QPainter;
 
+namespace Union
+{
+namespace Widgets
+{
+
 struct Line {
     qreal size = 0.0;
     QColor color;
@@ -85,3 +90,5 @@ private:
     QRectF m_drawRect;
     QColor m_overrideColor;
 };
+}
+}

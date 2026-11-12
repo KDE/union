@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class FrameElement;
 
@@ -57,3 +62,5 @@ private:
     std::shared_ptr<ShadowRenderer> m_shadowRenderer;
     QWidget *m_shadowWidget;
 };
+}
+}

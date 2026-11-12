@@ -12,6 +12,11 @@
 #include <QPoint>
 #include <QSize>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class BoxShadowRenderer
 {
 public:
@@ -85,3 +90,6 @@ private:
 
     QVector<BoxShadowRenderer::Shadow> m_shadows;
 };
+
+}
+}

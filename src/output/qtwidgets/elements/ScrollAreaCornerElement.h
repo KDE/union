@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class ScrollAreaCornerElement;
 
@@ -36,3 +41,5 @@ public:
 private:
     QString fallbackElementName(const QStyleOption *opt) const override;
 };
+}
+}

@@ -9,8 +9,14 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class ScrollBarElement;
+
 namespace ElementCache
 {
 namespace detail
@@ -62,3 +68,5 @@ private:
     Union::ElementList m_indicatorElementList;
     Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
 };
+}
+}

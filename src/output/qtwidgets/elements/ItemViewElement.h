@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 
 class ItemViewElement;
@@ -56,3 +61,5 @@ private:
     Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
     qreal m_totalSpacing = 0;
 };
+}
+}

@@ -10,8 +10,14 @@
 #include <QStyleOption>
 #include <qstyleoption.h>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class TitleBarElement;
+
 namespace ElementCache
 {
 namespace detail
@@ -51,3 +57,6 @@ private:
     QIcon queryIcon(const QString &defaultIconName, const QStringList &targetHierarchy) const;
     qreal buttonWidth() const;
 };
+
+}
+}

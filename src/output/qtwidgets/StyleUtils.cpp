@@ -20,7 +20,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 
-Qt::Alignment toQtVerticalAlignment(Union::Properties::Alignment alignment)
+Qt::Alignment Union::Widgets::toQtVerticalAlignment(Alignment alignment)
 {
     switch (alignment) {
     case Union::Properties::Alignment::Unspecified:
@@ -40,7 +40,7 @@ Qt::Alignment toQtVerticalAlignment(Union::Properties::Alignment alignment)
     return Qt::AlignVCenter;
 }
 
-Qt::Alignment toQtHorizontalAlignment(Union::Properties::Alignment alignment)
+Qt::Alignment Union::Widgets::toQtHorizontalAlignment(Alignment alignment)
 {
     switch (alignment) {
     case Union::Properties::Alignment::Unspecified:
@@ -58,7 +58,7 @@ Qt::Alignment toQtHorizontalAlignment(Union::Properties::Alignment alignment)
     return Qt::AlignHCenter;
 }
 
-Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode)
+Qt::TextElideMode Union::Widgets::toQtElideMode(TextElide elideMode)
 {
     Qt::TextElideMode elide;
     switch (elideMode) {
@@ -77,7 +77,7 @@ Qt::TextElideMode toQtElideMode(Union::Properties::TextElide elideMode)
     }
     return elide;
 }
-Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode)
+Qt::TextFlag Union::Widgets::toQtWrapMode(TextWrapMode wrapMode)
 {
     Qt::TextFlag wrap = Qt::TextFlag::TextDontClip;
     switch (wrapMode) {
@@ -95,7 +95,7 @@ Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode)
     return wrap;
 }
 
-QRectF backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties)
+QRectF Union::Widgets::backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties)
 {
     // Shrink the widget rect by the insets
     if (!option) {
@@ -106,7 +106,7 @@ QRectF backgroundRectangle(const QStyleOption *option, const Union::StylePropert
     return rect.marginsRemoved(insets);
 }
 
-QString styleOptionToElementName(const QStyleOption *option)
+QString Union::Widgets::styleOptionToElementName(const QStyleOption *option)
 {
     if (!option) {
         return ElementString::Widget; // Default items that have no styleoption.
@@ -189,7 +189,7 @@ QString styleOptionToElementName(const QStyleOption *option)
     return ElementString::Widget;
 }
 
-QString textFromOption(const QStyleOption *opt)
+QString Union::Widgets::textFromOption(const QStyleOption *opt)
 {
     if (const auto comboBoxOption = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
         return comboBoxOption->currentText;
@@ -252,7 +252,7 @@ QString textFromOption(const QStyleOption *opt)
     return QString();
 }
 
-QSizeF iconSizeFromOption(const QStyleOption *opt)
+QSizeF Union::Widgets::iconSizeFromOption(const QStyleOption *opt)
 {
     switch ((QStyleOption::OptionType)opt->type) {
     case QStyleOption::SO_Button:
@@ -293,7 +293,7 @@ QSizeF iconSizeFromOption(const QStyleOption *opt)
     return QSizeF(-1, -1);
 }
 
-int textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties)
+int Union::Widgets::textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties)
 {
     int textFlags = Qt::AlignVCenter;
     const auto horizontalAlignment =
@@ -312,12 +312,12 @@ int textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties)
     return textFlags;
 }
 
-QRectF centerRect(const QRectF &rect, qreal width, qreal height)
+QRectF Union::Widgets::centerRect(const QRectF &rect, qreal width, qreal height)
 {
     return {rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height};
 }
 
-QRectF unifiedRect(QMap<QString, LayoutItem> layoutMap)
+QRectF Union::Widgets::unifiedRect(QMap<QString, LayoutItem> layoutMap)
 {
     QRectF rect;
     for (const auto &m : layoutMap) {

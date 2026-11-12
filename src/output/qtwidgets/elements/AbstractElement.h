@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 
 struct DrawEnums {
@@ -260,4 +265,7 @@ private:
     std::unique_ptr<Union::ElementQuery> m_elementQuery;
 };
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(AbstractElement::AbstractElementFlags);
+}
+}
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(Union::Widgets::AbstractElement::AbstractElementFlags);

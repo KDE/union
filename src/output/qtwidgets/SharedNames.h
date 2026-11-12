@@ -4,10 +4,15 @@
 #pragma once
 
 #include <QString>
-using namespace Qt::StringLiterals;
 
+namespace Union
+{
+namespace Widgets
+{
 namespace ElementString
 {
+
+using namespace Qt::StringLiterals;
 
 // Various elements
 static const QString ApplicationWindow = u"ApplicationWindow"_s;
@@ -117,4 +122,6 @@ static const QString TabBarIconSize = u"TabBarIconSize"_s;
 static const QString TextCursorWidth = u"TextCursorWidth"_s;
 static const QString ToolBarIconSize = u"ToolBarIconSize"_s;
 
+}
+}
 }

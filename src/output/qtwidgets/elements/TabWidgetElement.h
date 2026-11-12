@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class TabWidgetElement;
 
@@ -41,3 +46,6 @@ private:
 
     QTabBar::Shape m_shape;
 };
+
+}
+}

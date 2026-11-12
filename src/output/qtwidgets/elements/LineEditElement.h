@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 
 class LineEditElement;
@@ -52,3 +57,5 @@ private:
     const QStyleOptionFrame *m_frameOption = nullptr;
     bool m_hasFrame;
 };
+}
+}

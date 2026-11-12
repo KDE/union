@@ -5,6 +5,11 @@
 
 #include <QStylePlugin>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class StylePlugin : public QStylePlugin
 {
     Q_OBJECT
@@ -17,3 +22,5 @@ public:
 
     QStyle *create(const QString &) override;
 };
+}
+}

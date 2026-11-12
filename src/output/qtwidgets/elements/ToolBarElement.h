@@ -8,6 +8,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class ToolBarElement;
 
@@ -62,3 +67,5 @@ private:
 
     qreal extent(Union::StylePropertyGroupPtr properties) const;
 };
+}
+}

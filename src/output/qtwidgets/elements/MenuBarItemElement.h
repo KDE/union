@@ -9,6 +9,11 @@
 #include <QObject>
 #include <QStyleOption>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class UnionStyle;
 class MenuBarItemElement;
 
@@ -41,3 +46,5 @@ private:
     QString fallbackElementName(const QStyleOption *opt) const override;
     const QStyleOptionMenuItem *m_menuItemOption = nullptr;
 };
+}
+}

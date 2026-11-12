@@ -12,6 +12,7 @@
 #include <QTabBar>
 
 using namespace Qt::StringLiterals;
+using namespace Union::Widgets;
 
 ToolBoxTabElement::ToolBoxTabElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
     : AbstractElement(option, style, widget)

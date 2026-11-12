@@ -16,6 +16,11 @@
 #include <QSet>
 #include <QWindow>
 
+namespace Union
+{
+namespace Widgets
+{
+
 class ShadowRenderer : public QObject
 {
     Q_OBJECT
@@ -42,3 +47,6 @@ private:
 
     Union::StylePropertyGroupPtr m_properties;
 };
+
+}
+}
