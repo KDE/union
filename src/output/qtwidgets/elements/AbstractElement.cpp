@@ -313,7 +313,7 @@ void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const
         auto iconSize = rect.size();
         const QPixmap pixmap = unionIcon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
         painter->save();
-        m_style->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
+        m_style->drawItemPixmap(painter, visualRect(rect).toRect(), Qt::AlignCenter, pixmap);
         painter->restore();
     }
 }
@@ -339,7 +339,7 @@ void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, con
         painter->save();
         painter->setPen(textColor);
         painter->setFont(font);
-        m_style->drawItemText(painter, rect.toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, property));
+        m_style->drawItemText(painter, visualRect(rect).toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, property));
         painter->restore();
     }
 }
