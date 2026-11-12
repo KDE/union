@@ -101,11 +101,9 @@ private:
 using IdentifierList = QList<Identifier>;
 using IdentifierVariantHash = QHash<Identifier, QVariant>;
 
-}
-
 // Overload of qHash that ensures the same semantics for operator== also apply
 // to hashes.
-inline size_t qHash(const Union::Identifier &identifier, size_t seed = 0)
+inline size_t qHash(const Identifier &identifier, size_t seed = 0)
 {
     if (identifier.isEmpty()) {
         // Ensure empty identifiers have a unique hash, as they should never
@@ -115,6 +113,8 @@ inline size_t qHash(const Union::Identifier &identifier, size_t seed = 0)
 
     auto string = QString{identifier}.toLower().remove(u'-');
     return qHash(string, seed);
+}
+
 }
 
 inline QDataStream &operator<<(QDataStream &stream, const Union::Identifier &identifier)
