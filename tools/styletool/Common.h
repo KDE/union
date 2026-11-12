@@ -47,7 +47,7 @@ parseCommand(const QString &command, const QStringList &arguments, const std::fu
     if (!commandParser->parse(argumentsWithApplication)) {
         QString errorMessage;
         if (!commandParser->unknownOptionNames().isEmpty()) {
-            errorMessage = u"Unknown option for command "_s + command + u": " + commandParser->unknownOptionNames().first();
+            errorMessage = u"Unknown option for command "_s + command + u": " + commandParser->unknownOptionNames().constFirst();
         }
 
         showCommandHelp(commandParser.get(), command, errorMessage, 1);

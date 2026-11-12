@@ -40,7 +40,7 @@ bool CssPlugin::createPackage(const Union::StylePackage &package, std::error_cod
     }
 
     auto year = QDate::currentDate().year();
-    auto author = package.authors().isEmpty() ? u"Unknown"_s : package.authors().first();
+    auto author = package.authors().isEmpty() ? u"Unknown"_s : package.authors().constFirst();
 
     {
         std::ofstream stream{path / "contents" / "css" / "style.css", std::ios::out};

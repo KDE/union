@@ -22,7 +22,7 @@ int handleInstallCommand([[maybe_unused]] const QStringList &arguments)
         showCommandHelp(parser.get(), u"install"_s, u"Invalid arguments for command \"install\""_s, 1);
     }
 
-    auto packageName = parser->positionalArguments().first();
+    auto packageName = parser->positionalArguments().constFirst();
     auto packagePath = fs::absolute(fs::path(packageName.toStdString()));
 
     Union::StylePackage package;
@@ -155,7 +155,7 @@ int handleInspectCommand([[maybe_unused]] const QStringList &arguments)
         showCommandHelp(parser.get(), u"inspect"_s, u"Invalid arguments for command \"inspect\""_s, 1);
     }
 
-    auto pathOrId = parser->positionalArguments().first();
+    auto pathOrId = parser->positionalArguments().constFirst();
     auto packagePath = fs::absolute(fs::path(pathOrId.toStdString()));
 
     Union::StylePackage package;
@@ -248,7 +248,7 @@ int handleUpdateCommand([[maybe_unused]] const QStringList &arguments)
         showCommandHelp(parser.get(), u"update"_s, u"Invalid arguments for command \"update\""_s, 1);
     }
 
-    auto packageName = parser->positionalArguments().first();
+    auto packageName = parser->positionalArguments().constFirst();
     auto packagePath = fs::absolute(fs::path(packageName.toStdString()));
 
     Union::StylePackage package;
@@ -296,7 +296,7 @@ int handleUninstallCommand([[maybe_unused]] const QStringList &arguments)
         showCommandHelp(parser.get(), u"uninstall"_s, u"Invalid arguments for command \"uninstall\""_s, 1);
     }
 
-    auto style = parser->positionalArguments().first();
+    auto style = parser->positionalArguments().constFirst();
 
     auto handler = Union::StyleRegistry::instance()->packageHandler();
 
@@ -326,7 +326,7 @@ int handlePackageCommand([[maybe_unused]] const QStringList &arguments)
         showCommandHelp(parser.get(), u"inspect"_s, u"Invalid arguments for command \"inspect\""_s, 1);
     }
 
-    auto pathOrId = parser->positionalArguments().first();
+    auto pathOrId = parser->positionalArguments().constFirst();
 
     auto handler = Union::StyleRegistry::instance()->packageHandler();
 
