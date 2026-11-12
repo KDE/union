@@ -129,22 +129,22 @@ QRectF TitleBarElement::subControlRect(QStyle::SubControl subControl) const
     if (m_isValid) {
         switch (subControl) {
         case QStyle::SC_TitleBarSysMenu:
-            return m_layoutMap[ElementString::SystemMenu].rect;
+            return visualRect(m_layoutMap[ElementString::SystemMenu].rect);
         case QStyle::SC_TitleBarMinButton:
-            return m_layoutMap[ElementString::MinimizeButton].rect;
+            return visualRect(m_layoutMap[ElementString::MinimizeButton].rect);
         case QStyle::SC_TitleBarMaxButton:
-            return m_layoutMap[ElementString::MaximizeButton].rect;
+            return visualRect(m_layoutMap[ElementString::MaximizeButton].rect);
         case QStyle::SC_TitleBarCloseButton:
-            return m_layoutMap[ElementString::CloseButton].rect;
+            return visualRect(m_layoutMap[ElementString::CloseButton].rect);
         case QStyle::SC_TitleBarNormalButton:
-            return m_layoutMap[ElementString::NormalButton].rect;
+            return visualRect(m_layoutMap[ElementString::NormalButton].rect);
         case QStyle::SC_TitleBarShadeButton:
         case QStyle::SC_TitleBarUnshadeButton:
-            return m_layoutMap[ElementString::ShadeButton].rect;
+            return visualRect(m_layoutMap[ElementString::ShadeButton].rect);
         case QStyle::SC_TitleBarContextHelpButton:
-            return m_layoutMap[ElementString::HelpButton].rect;
+            return visualRect(m_layoutMap[ElementString::HelpButton].rect);
         case QStyle::SC_TitleBarLabel:
-            return m_layoutMap[ElementString::Text].rect;
+            return visualRect(m_layoutMap[ElementString::Text].rect);
             break;
         default:
             break;
