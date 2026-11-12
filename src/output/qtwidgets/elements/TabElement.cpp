@@ -125,7 +125,7 @@ void TabElement::drawText(QPainter *painter) const
             textRect.moveCenter(textContainer.center());
             break;
         }
-        drawTextAtRect(painter, m_text, textRect);
+        drawTextAtRect(painter, m_text, visualRect(textRect));
     }
 }
 
