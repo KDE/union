@@ -41,7 +41,7 @@ ElementProperties jsonToElementProperties(const QJsonObject &json)
             statesArray = {json.value(u"states")};
         }
         Element::States states;
-        for (auto state : statesArray) {
+        for (auto state : std::as_const(statesArray)) {
             states |= stateFromString(state.toString());
         }
         result.states = states;
@@ -182,7 +182,7 @@ private Q_SLOTS:
         const auto data = testDataFromJson();
         QVERIFY(!data.isEmpty());
 
-        for (auto entry : data) {
+        for (const auto &entry : data) {
             QTest::addRow("%s", entry.name.toUtf8().data()) << entry.structure << entry.selectors << entry.matchExpected;
         }
     }

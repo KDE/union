@@ -98,7 +98,7 @@ QList<StyleRule::Ptr> Union::Style::matches(const QList<Element::Ptr> &elements)
         qCInfo(UNION_QUERY) << "No style rules found for style" << d->path.filename().string() << "so we will never match anything!";
     }
 
-    for (auto rule : d->rules) {
+    for (const auto &rule : std::as_const(d->rules)) {
         const auto selectors = rule->selectors();
         if (selectors.matches(elements)) {
             qCDebug(UNION_QUERY) << "Matches selector" << selectors;

@@ -61,14 +61,14 @@ bool ElementQuery::execute()
 
     if (UNION_QUERY().isInfoEnabled()) {
         qCInfo(UNION_QUERY) << "Matched style rules:";
-        for (auto entry : std::as_const(d->styles)) {
+        for (const auto &entry : std::as_const(d->styles)) {
             qCInfo(UNION_QUERY) << entry;
         }
     }
 
     d->properties = std::make_shared<Properties::StylePropertyGroup>();
 
-    for (auto style : std::as_const(d->styles)) {
+    for (const auto &style : std::as_const(d->styles)) {
         Properties::StylePropertyGroup::resolveProperties(style->properties(), d->properties.get());
     }
 

@@ -249,7 +249,8 @@ class TestPositionerLayout : public QObject
             TestData data;
             data.name = entry.path().stem();
 
-            auto layout = layoutDataFromJson(json.object()[u"layout"].toObject());
+            auto jsonObject = json.object();
+            auto layout = layoutDataFromJson(jsonObject[u"layout"].toObject());
             if (!layout) {
                 qWarning() << "Invalid layout in test file" << entry.path().filename().string();
                 QTest::Internal::maybeThrowOnFail();
@@ -257,7 +258,7 @@ class TestPositionerLayout : public QObject
             }
             data.layout = layout.value();
 
-            auto expected = layoutDataFromJson(json.object()[u"expected"].toObject());
+            auto expected = layoutDataFromJson(jsonObject[u"expected"].toObject());
             if (!expected) {
                 qWarning() << "Invalid expected data in test file" << entry.path().filename().string();
                 QTest::Internal::maybeThrowOnFail();
@@ -284,7 +285,7 @@ class TestPositionerLayout : public QObject
             std::make_pair(&layout.backgroundContainer, data.background),
             std::make_pair(&layout.contentContainer, data.content),
         };
-        for (auto [container, containerData] : containers) {
+        for (const auto &[container, containerData] : containers) {
             if (!containerData) {
                 continue;
             }
@@ -295,7 +296,7 @@ class TestPositionerLayout : public QObject
                 std::make_pair(&container->end, containerData->end),
                 std::make_pair(&container->fill, containerData->fill),
             };
-            for (auto [bucket, bucketData] : buckets) {
+            for (const auto &[bucket, bucketData] : buckets) {
                 if (!bucketData) {
                     continue;
                 }
@@ -331,7 +332,7 @@ private Q_SLOTS:
         const auto data = testDataFromJson();
         QVERIFY(!data.isEmpty());
 
-        for (auto entry : data) {
+        for (const auto &entry : data) {
             QTest::addRow("%s", entry.name.data()) << entry.layout << entry.expected;
         }
     }
@@ -349,7 +350,7 @@ private Q_SLOTS:
             std::make_tuple("background"s, &layout.backgroundContainer, expectedData.background),
             std::make_tuple("content"s, &layout.contentContainer, expectedData.content),
         };
-        for (auto [containerName, container, expectedContainer] : containers) {
+        for (const auto &[containerName, container, expectedContainer] : containers) {
             if (!expectedContainer.has_value()) {
                 auto description = std::format("Container {} expected to be empty, it is not", containerName);
                 QVERIFY2(container->isEmpty(), description.data());
@@ -365,7 +366,7 @@ private Q_SLOTS:
                 std::make_tuple("end"s, &container->end, expectedContainer->end),
                 std::make_tuple("fill"s, &container->fill, expectedContainer->fill),
             };
-            for (auto [bucketName, bucket, expectedBucket] : buckets) {
+            for (const auto &[bucketName, bucket, expectedBucket] : buckets) {
                 if (!expectedBucket.has_value()) {
                     auto description = std::format("Bucket {} expected to be empty, it is not", bucketName);
                     QVERIFY2(bucket->isEmpty(), description.data());

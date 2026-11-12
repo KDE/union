@@ -99,7 +99,8 @@ int main(int argc, char **argv)
         .attributes = parser.values(u"attribute"_s),
     };
 
-    for (auto argument : parser.optionNames()) {
+    const auto optionNames = parser.optionNames();
+    for (const auto &argument : optionNames) {
         if (argument == u"type") {
             currentElement->setType(*data.currentType++);
         } else if (argument == u"id") {

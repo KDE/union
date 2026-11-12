@@ -497,14 +497,14 @@ Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, con
     if (elementTypes.isEmpty()) {
         elementTypes.append(targetHierarchy);
     } else {
-        for (const auto &target : targetHierarchy) {
+        for (const auto &target : std::as_const(targetHierarchy)) {
             if (elementTypes.last() != target) {
                 elementTypes.append(target);
             }
         }
     }
 
-    for (const auto &elementType : elementTypes) {
+    for (const auto &elementType : std::as_const(elementTypes)) {
         elements.append(createElement(elementType));
     }
     return elements;
@@ -547,7 +547,7 @@ QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, co
     const QRectF availableSpace = backgroundRectangle(opt, m_elementProperties).marginsRemoved(padding());
 
     // Prepare all subelements
-    for (const auto &subElement : subElements) {
+    for (const auto &subElement : std::as_const(subElements)) {
         // NOTE: Currently text and icon are part of the main element, but eventually
         // will be moved as their own elements
         if (subElement != ElementString::Icon && subElement != ElementString::Text) {

@@ -98,7 +98,7 @@ bool TarArchive::addEntry(const std::filesystem::path &path, const std::filesyst
     m_entries.append(tarEntry);
 
     if (fileInfo.isDir()) {
-        for (auto entry : fs::directory_iterator(path)) {
+        for (const auto &entry : fs::directory_iterator(path)) {
             if (!addEntry(entry.path(), baseDirectory, errorCode)) {
                 return false;
             }

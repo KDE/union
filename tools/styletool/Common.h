@@ -146,7 +146,7 @@ std::pair<QTemporaryDir, fs::path> extractStyleArchive(const fs::path &path, std
         return std::make_pair(std::move(tempDir), fs::path{});
     } else {
         QList<fs::path> paths;
-        for (auto entry : fs::directory_iterator(tempPath)) {
+        for (const auto &entry : fs::directory_iterator(tempPath)) {
             paths.append(tempPath / entry.path());
         }
 

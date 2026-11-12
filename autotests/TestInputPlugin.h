@@ -70,16 +70,18 @@ Union::SelectorList jsonToSelectorList(const QJsonArray &json)
                 statesArray = QJsonArray{states};
             }
 
-            for (const auto &state : statesArray) {
+            for (const auto &state : std::as_const(statesArray)) {
                 result.append(Selector::create<SelectorType::State>(stateFromString(state.toString())));
             }
         }
 
-        for (const auto &hint : entry[u"hints"].toArray()) {
+        const auto hints = entry[u"hints"].toArray();
+        for (const auto &hint : hints) {
             result.append(Selector::create<SelectorType::Hint>(Identifier{hint.toString()}));
         }
 
-        for (const auto &exists : entry[u"attributes_exists"].toArray()) {
+        const auto attributesExist = entry[u"attributes_exists"].toArray();
+        for (const auto &exists : attributesExist) {
             result.append(Selector::create<SelectorType::AttributeExists>(Identifier{exists.toString()}));
         }
 

@@ -544,7 +544,7 @@ void QuickElement::updateHints()
     }
 
     QList<Identifier> activeHints;
-    for (auto hint : m_hints) {
+    for (const auto &hint : std::as_const(m_hints)) {
         // Important: We may have duplicate hint declarations in the list. When
         // that happens, we need to override the previous declaration, either by
         // adding the hint if it was not there, or removing it if it is.
@@ -564,7 +564,7 @@ void QuickElement::updateAttributes()
     }
 
     QHash<Identifier, QVariant> activeAttributes;
-    for (auto attribute : m_attributes) {
+    for (const auto &attribute : std::as_const(m_attributes)) {
         if (attribute->when() && attribute->value().isValid()) {
             activeAttributes.insert(attribute->name(), attribute->value());
         } else {

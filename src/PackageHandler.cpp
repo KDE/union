@@ -115,7 +115,7 @@ QList<StylePackage> PackageHandler::allPackages(OperationFlags flags)
 
     const auto packagePaths = d->platform->stylePackagePaths();
     for (const auto &packagePath : packagePaths) {
-        for (auto entry : fs::directory_iterator(packagePath)) {
+        for (const auto &entry : fs::directory_iterator(packagePath)) {
             if (!entry.is_directory()) {
                 continue;
             }

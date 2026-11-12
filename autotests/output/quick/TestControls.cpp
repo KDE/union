@@ -213,7 +213,8 @@ private Q_SLOTS:
         component.setData(QString(u"import org.kde.union\n" + control + u" { }").toUtf8(), QUrl{});
 
         if (component.isError()) {
-            for (auto error : component.errors()) {
+            const auto errors = component.errors();
+            for (const auto &error : errors) {
                 qCritical() << error.toString();
             }
             QFAIL("Component failed to load");
@@ -221,7 +222,8 @@ private Q_SLOTS:
 
         auto instance = component.createWithInitialProperties(initialProperties, m_engine.rootContext());
         if (!instance) {
-            for (auto error : component.errors()) {
+            const auto errors = component.errors();
+            for (const auto &error : errors) {
                 qCritical() << error.toString();
             }
             QFAIL("Could not create an instance of component");

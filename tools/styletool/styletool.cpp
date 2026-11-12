@@ -218,7 +218,7 @@ int handleListCommand([[maybe_unused]] const QStringList &arguments)
         return first.id() < second.name();
     });
 
-    for (const auto &package : packages) {
+    for (const auto &package : std::as_const(packages)) {
         if (!parser->isSet(u"details"_s)) {
             std::cout << "- " << qPrintable(package.id()) << ": " << qPrintable(package.name()) << "\n";
         } else {
