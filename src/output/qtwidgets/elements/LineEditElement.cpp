@@ -77,7 +77,7 @@ void LineEditElement::drawBackground(QPainter *painter) const
         UnionPainter unionPainter(painter, m_elementProperties);
         unionPainter.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
         unionPainter.setOverrideBackgroundColor(backgroundOverride);
-        unionPainter.setRect(m_styleOption->rect);
+        unionPainter.setRect(visualRect(m_styleOption->rect));
         unionPainter.draw();
     }
 }
