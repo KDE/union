@@ -191,7 +191,7 @@ void ToolButtonElement::drawIndicator(QPainter *painter) const
     UnionPainter unionPainter(painter, m_indicatorProperties);
     unionPainter.setRect(rect);
     unionPainter.draw();
-    drawIconAtRect(painter, m_indicator, indicatorRect, m_indicatorProperties);
+    drawIconAtRect(painter, m_indicator, visualRect(indicatorRect), m_indicatorProperties);
 }
 
 Union::IdentifierVariantHash ToolButtonElement::elementAttributes() const
