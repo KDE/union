@@ -312,7 +312,7 @@ QRectF FrameElement::subElementRect(QStyle::SubElement element) const
 {
     const auto rect = m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
     if (element == QStyle::SE_FrameContents) {
-        return rect.marginsRemoved(borderSize().toMargins());
+        return visualRect(rect.marginsRemoved(borderSize().toMargins()));
     }
     return rect;
 }
