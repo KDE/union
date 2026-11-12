@@ -869,3 +869,26 @@ QRectF AbstractElement::visualRect(const QRectF &rect) const
     }
     return rect;
 }
+
+int AbstractElement::textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties) const
+{
+    int textFlags = Qt::AlignVCenter;
+    auto horizontalAlignment = toQtHorizontalAlignment(
+        properties->safePropertyLookup(Alignment::Start, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::horizontal));
+    auto verticalAlignment = toQtVerticalAlignment(
+        properties->safePropertyLookup(Alignment::Center, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::vertical));
+    if (m_styleOption) {
+        horizontalAlignment = m_style->visualAlignment(m_styleOption->direction, horizontalAlignment);
+        verticalAlignment = m_style->visualAlignment(m_styleOption->direction, verticalAlignment);
+    }
+    const auto textAlign = horizontalAlignment | verticalAlignment;
+    auto textWrap =
+        toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
+    textFlags |= textAlign;
+    // Do not add wrap flags if we get DontClip
+    // This could be done better
+    if (textWrap != Qt::TextDontClip) {
+        textFlags |= textWrap;
+    }
+    return textFlags;
+}

@@ -290,25 +290,6 @@ QSizeF Union::Widgets::iconSizeFromOption(const QStyleOption *opt)
     return QSizeF(-1, -1);
 }
 
-int Union::Widgets::textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties)
-{
-    int textFlags = Qt::AlignVCenter;
-    const auto horizontalAlignment =
-        properties->safePropertyLookup(Alignment::Start, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::horizontal);
-    const auto verticalAlignment =
-        properties->safePropertyLookup(Alignment::Center, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::vertical);
-    const auto textAlign = toQtHorizontalAlignment(horizontalAlignment) | toQtVerticalAlignment(verticalAlignment);
-    auto textWrap =
-        toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
-    textFlags |= textAlign;
-    // Do not add wrap flags if we get DontClip
-    // This could be done better
-    if (textWrap != Qt::TextDontClip) {
-        textFlags |= textWrap;
-    }
-    return textFlags;
-}
-
 QRectF Union::Widgets::centerRect(const QRectF &rect, qreal width, qreal height)
 {
     return {rect.left() + (rect.width() - width) / 2, rect.top() + (rect.height() - height) / 2, width, height};
