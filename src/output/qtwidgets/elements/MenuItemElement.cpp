@@ -72,7 +72,7 @@ void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
         drawBackground(painter);
         if (m_hasCheckBox || m_hasRadioButton) {
             UnionPainter unionPainter(painter, m_checkProperties);
-            unionPainter.setRect(m_layoutMap[ElementString::Indicator].rect);
+            unionPainter.setRect(visualRect(m_layoutMap[ElementString::Indicator].rect));
             unionPainter.draw();
         }
         drawIcon(painter);
