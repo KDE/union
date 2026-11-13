@@ -136,7 +136,7 @@ void GroupBoxElement::drawText(QPainter *painter) const
 {
     if (m_groupBoxOption && (m_groupBoxOption->subControls & QStyle::SC_GroupBoxLabel) && hasText()) {
         QRectF textRect = subControlRect(QStyle::SC_GroupBoxLabel);
-        drawTextAtRect(painter, m_text, textRect);
+        drawTextAtRect(painter, m_text, visualRect(textRect));
     }
 }
 
