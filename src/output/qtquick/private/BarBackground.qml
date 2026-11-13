@@ -75,7 +75,7 @@ Item {
                 required property int index
 
                 readonly property real value: root.from + root.tickMarkStepSize * index
-                readonly property real position: value / root.range
+                readonly property real position: (value - root.from) / root.range
                 property bool highlighted: root.startPosition <= position && root.endPosition >= position
 
                 style: highlighted ? tickMarkHighlight.Union.Style : tickMarkArea.Union.Style
