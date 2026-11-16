@@ -450,20 +450,148 @@ tumbler {
     }
 }
 
-button.changed,
-toolbutton.changed,
-combobox.changed,
-roundbutton.changed,
-delaybutton.changed {
-    background-color: var(--changed-background);
-    border: 1px solid var(--changed-foreground);
-}
-
-
 tabscrollbutton {
     icon-alignment: content fill fill 0;
     layout-alignment: content center center 0;
     icon-size: 16px;
     width: var(--button-default-size);
     height: var(--button-default-size);
+}
+
+button,
+toolbutton,
+combobox,
+roundbutton,
+delaybutton {
+    &.positive {
+        background-color: var(--positive-background);
+        border-color: var(--positive-foreground);
+
+        &:hovered {
+            background-color: mix(var(--positive-background), var(--positive-foreground), 0.25);
+            border-color: var(--positive-foreground);
+        }
+
+        &:visual-focus {
+            border-color: var(--positive-foreground);
+            outline-color: modify-color(var(--positive-foreground) set-alpha var(--focus-outline-alpha));
+        }
+
+        &.flat {
+            background: none;
+            icon-color: var(--positive-foreground);
+        }
+
+        &:checked {
+            background-color: var(--button-active-checked-color);
+        }
+
+        &:pressed {
+            background-color: var(--positive-foreground);
+            border-color: var(--positive-foreground);
+            color: var(--highlight-text-color);
+        }
+
+        &:disabled {
+            background-color: mix(var(--button-disabled-background-color), var(--positive-background), 0.25);
+            border-color: mix(var(--button-disabled-border-color), var(--positive-foreground), 0.25);
+
+            &.flat {
+                background: none;
+            }
+
+            &:checked {
+                background-color: var(--button-disabled-checked-color);
+            }
+        }
+    }
+
+    &.changed {
+        background-color: var(--changed-background);
+        border-color: var(--changed-foreground);
+
+        &:hovered {
+            background-color: mix(var(--changed-background), var(--changed-foreground), 0.25);
+            border-color: var(--changed-foreground);
+        }
+
+        &:visual-focus {
+            border-color: var(--changed-foreground);
+            outline-color: modify-color(var(--changed-foreground) set-alpha var(--focus-outline-alpha));
+        }
+
+        &.flat {
+            background: none;
+            icon-color: var(--changed-foreground);
+        }
+
+        &:checked {
+            background-color: var(--button-active-checked-color);
+        }
+
+        &:pressed {
+            background-color: var(--changed-foreground);
+            border-color: var(--changed-foreground);
+            color: var(--highlight-text-color);
+        }
+
+        &:disabled {
+            background-color: mix(var(--button-disabled-background-color), var(--changed-background), 0.5);
+            border-color: mix(var(--button-disabled-border-color), var(--changed-foreground), 0.25);
+
+            &.flat {
+                background: none;
+            }
+
+            &:checked {
+                background-color: var(--button-disabled-checked-color);
+            }
+        }
+    }
+
+    &.destructive,
+    &.negative
+    {
+        background-color: var(--negative-background);
+        border-color: var(--negative-foreground);
+
+        &:hovered {
+            background-color: mix(var(--negative-background), var(--negative-foreground), 0.25);
+            border-color: var(--negative-foreground);
+        }
+
+        &:visual-focus {
+            border-color: var(--negative-foreground);
+            outline-color: modify-color(var(--negative-foreground) set-alpha var(--focus-outline-alpha));
+        }
+
+        &.flat {
+            background: none;
+            icon-color: var(--negative-foreground);
+        }
+
+        &:checked {
+            background-color: var(--button-active-checked-color);
+        }
+
+        &:pressed {
+            background-color: var(--negative-foreground);
+            border-color: var(--negative-foreground);
+            color: var(--highlight-text-color);
+        }
+
+        &:disabled {
+            background-color: mix(var(--button-disabled-background-color), var(--negative-background), 0.5);
+            border-color: mix(var(--button-disabled-border-color), var(--negative-foreground), 0.25);
+            color: var(--button-disabled-text-color);
+
+            &.flat {
+                background: none;
+            }
+
+            &:checked {
+                background-color: var(--button-disabled-checked-color);
+            }
+        }
+    }
 }
