@@ -30,6 +30,7 @@
     --button-disabled-background-color: custom-color("kcolorscheme", "disabled", "button", "background", "normal");
     --button-disabled-border-color: custom-color("kcolorscheme", "disabled", "button", "decoration", "frame");
     --button-disabled-highlight-color: mix(var(--button-disabled-background-color), var(--highlight-color), 0.333);
+    --button-disabled-checked-color: mix(var(--button-disabled-background-color), var(--button-disabled-text-color), 0.125);
 
     --button-border: 1px solid var(--button-active-border-color);
     --button-border-highlight: 1px solid var(--button-active-border-highlight-color);
@@ -69,12 +70,6 @@ toolbutton.raised
     border: var(--button-border);
     background-color: var(--button-active-background-color);
 
-    &:checked
-    {
-        border: var(--button-border);
-        background-color: var(--button-active-checked-color);
-    }
-
     &:hovered
     {
         border-color: var(--button-active-border-highlight-color);
@@ -86,12 +81,45 @@ toolbutton.raised
         outline: var(--button-focus);
     }
 
+    &:highlighted
+    {
+        border-color: var(--button-active-border-highlight-color);
+        background-color: var(--button-active-highlight-color);
+
+        &:hovered {
+            background-color: mix(var(--button-active-highlight-color), var(--highlight-color), 0.25);
+        }
+
+        &:pressed {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color);
+        }
+
+        &:disabled {
+            background-color: mix(var(--button-disabled-background-color), var(--button-active-highlight-color), 0.25);
+            border-color: mix(var(--button-disabled-border-color), var(--button-active-border-highlight-color), 0.5);
+
+            &.flat {
+                background: none;
+            }
+        }
+    }
+
+    &:checked
+    {
+        background-color: var(--button-active-checked-color);
+    }
     &:disabled
     {
         color: var(--button-disabled-text-color);
         background-color: var(--button-disabled-background-color);
         border-color: var(--button-disabled-border-color);
+        outline-color: var(--button-disabled-border-color);
         box-shadow: none;
+
+        &:checked {
+            background-color: var(--button-disabled-checked-color);
+        }
     }
 
     &.with-menu > indicator {
@@ -167,6 +195,7 @@ toolbutton.raised:pressed
 {
     border-color: var(--button-active-border-highlight-color);
     background-color: var(--button-active-highlight-color);
+    color: var(--button-active-text-color);
     box-shadow: none;
 }
 
@@ -181,21 +210,37 @@ button.flat,
 combobox.flat,
 roundbutton.flat
 {
-    border: none;
+    border-style: none;
     background: none;
     box-shadow: none;
 
     &:hovered {
-        border: var(--button-border-highlight);
+        border-style: solid;
+        background: none;
     }
 
     &:visual-focus {
-        border: var(--button-border-highlight);
+        border-style: solid;
+        background: none;
+    }
+
+    &:checked {
+        border-style: solid;
+        background-color: var(--button-active-checked-color);
     }
 
     &:pressed {
-        border: var(--button-border-highlight);
+        border-style: solid;
         background-color: var(--button-active-highlight-color);
+    }
+
+    &:highlighted {
+        icon-color: var(--highlight-color);
+
+        &:pressed {
+            background-color: var(--highlight-color);
+            color: var(--highlight-text-color);
+        }
     }
 
     toolbar.header &:checked,
@@ -211,9 +256,9 @@ roundbutton.flat
         background-color: var(--button-active-header-highlight-color);
     }
 
-    &:disabled {
-        border: none;
-        background: none;
+    &:disabled:checked {
+        border-style: solid;
+        background-color: var(--button-disabled-checked-color);
     }
 
     &.with-menu-button > indicator {
