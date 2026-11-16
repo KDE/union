@@ -129,10 +129,10 @@ void QuickStyle::update()
         return;
     }
 
-    m_properties->update(query->properties().get());
     // Keep a reference to the style property group around so it does not get
     // deleted until we are done with it.
     m_stylePropertyGroup = query->properties();
+    m_properties->update(m_stylePropertyGroup.get());
 
     QuickStyleUpdatedEvent event;
     // Send to self to allow event filtering on this instance to react to changes.
