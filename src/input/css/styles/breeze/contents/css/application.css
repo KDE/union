@@ -236,9 +236,6 @@ treeview,
 tableview,
 columnview,
 scrollview {
-    &:visual-focus {
-        border: 1px solid var(--highlight-color);
-    }
     &[shape="no-frame"] {
         border: none;
     }
@@ -247,6 +244,10 @@ scrollview {
         border-radius: var(--corner-radius);
         border: 1px solid var(--window-border-color);
         background-color: var(--view-background-color);
+
+        &:visual-focus {
+            border: 1px solid var(--highlight-color);
+        }
 
         .inactive & {
             background-color: var(--window-inactive-background-color);
