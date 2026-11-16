@@ -876,6 +876,7 @@ void UnionStyle::drawItemPixmap(QPainter *painter, const QRectF &rect, Qt::Align
     QRectF aligned = alignedRect(alignment, pixmap.size(), pixmapRect).toRect();
     pixmapRect = aligned.intersected(pixmapRect);
     auto sourceRect = pixmapRect.translated(-aligned.topLeft());
+    painter->setRenderHint(QPainter::Antialiasing, true);
     painter->drawPixmap({pixmapRect.topLeft() / dpr, pixmapRect.size() / dpr}, pixmap, sourceRect);
 }
 
