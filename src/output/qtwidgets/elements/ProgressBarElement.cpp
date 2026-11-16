@@ -151,6 +151,9 @@ QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
                 reverse = !reverse;
             }
             const int progress(m_progressBarOption->progress - m_progressBarOption->minimum);
+            if (progress <= 0) {
+                return QRect();
+            }
             const int steps(std::max(m_progressBarOption->maximum - m_progressBarOption->minimum, 1));
             const qreal position = qreal(progress) / qreal(steps);
             const qreal indicatorSize(position * (m_isHorizontal ? rect.width() : rect.height()));
