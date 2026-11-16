@@ -109,6 +109,29 @@ toolbutton.raised
     {
         background-color: var(--button-active-checked-color);
     }
+
+    &.segmented-start {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }
+
+    &.segmented-middle,
+    &.segmented-end {
+        border-top-left-radius: 0px;
+        border-bottom-left-radius: 0px;
+        border-left-style: none;
+
+        &:hovered,
+        &:visual-focus,
+        &:pressed {
+            border-left-style: solid;
+        }
+    }
+
+    &.segmented-middle {
+        border-radius: 0px;
+    }
+
     &:disabled
     {
         color: var(--button-disabled-text-color);
@@ -312,6 +335,17 @@ roundbutton.flat
         &:disabled {
             color: var(--header-disabled-text-color);
         }
+    }
+
+    &.segmented-start,
+    &.segmented-middle,
+    &.segmented-end {
+        border-style: solid;
+    }
+
+    &.segmented-middle,
+    &.segmented-end {
+        border-left-style: none;
     }
 }
 
