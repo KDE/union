@@ -18,6 +18,7 @@ ecm_target_qml_sources(UnionQuickStyle SOURCES
     style/ApplicationWindow.qml
     style/BusyIndicator.qml
     style/Button.qml
+    style/ButtonGroup.qml
     style/Calendar.qml
     style/CheckBox.qml
     style/CheckDelegate.qml
