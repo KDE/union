@@ -19,7 +19,6 @@ T.ComboBox {
         visualFocus: control.visualFocus
         pressed: control.down
         enabled: control.enabled
-        highlighted: control.highlighted
     }
     Union.Element.hints: [
         Union.ElementHint { name: "flat"; when: control.flat },
