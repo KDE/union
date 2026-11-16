@@ -139,17 +139,17 @@ inlinemessage
 
     &[type="positive"] {
         background-color: var(--positive-background);
-        border: 1px solid var(--positive-text);
+        border: 1px solid var(--positive-foreground);
     }
 
     &[type="warning"] {
         background-color: var(--neutral-background);
-        border: 1px solid var(--neutral-text);
+        border: 1px solid var(--neutral-foreground);
     }
 
     &[type="error"] {
         background-color: var(--negative-background);
-        border: 1px solid var(--negative-text);
+        border: 1px solid var(--negative-foreground);
     }
 
     &[position="header"] {

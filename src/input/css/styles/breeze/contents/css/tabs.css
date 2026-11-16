@@ -173,7 +173,7 @@ tabbutton {
         &:hovered,
         &:pressed {
             color: var(--highlight-text-color);
-            background-color: var(--negative-text);
+            background-color: var(--negative-foreground);
             border-radius: var(--icon-size-small);
         }
 

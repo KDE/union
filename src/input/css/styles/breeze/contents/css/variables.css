@@ -57,14 +57,14 @@
     --complementary-text-color: custom-color("kcolorscheme", "active", "complementary", "foreground", "text");
     --complementary-background-color: custom-color("kcolorscheme", "active", "complementary", "background", "normal");
 
-    --positive-text: custom-color("kcolorscheme", "active", "view", "foreground","positive");
-    --neutral-text: custom-color("kcolorscheme", "active", "view", "foreground","neutral");
-    --negative-text: custom-color("kcolorscheme", "active", "view", "foreground","negative");
+    --positive-foreground: custom-color("kcolorscheme", "active", "view", "foreground","positive");
+    --neutral-foreground: custom-color("kcolorscheme", "active", "view", "foreground","neutral");
+    --negative-foreground: custom-color("kcolorscheme", "active", "view", "foreground","negative");
     --positive-background: custom-color("kcolorscheme", "active", "view", "background","positive");
     --neutral-background: custom-color("kcolorscheme", "active", "view", "background","neutral");
     --negative-background: custom-color("kcolorscheme", "active", "view", "background","negative");
 
-    --changed-foreground: var(--neutral-text);
+    --changed-foreground: var(--neutral-foreground);
     --changed-background: var(--neutral-background);
 
     --card-background-color: var(--view-background-color);
