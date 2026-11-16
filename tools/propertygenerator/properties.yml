@@ -618,6 +618,19 @@ children:
                 syntax: "none | (<length> (none | solid) <color>)"
                 doc: A shorthand to set all outline properties in a single property.
 
+            -   name: outline-width
+                syntax: <length>
+                doc: A shorthand to set all outline widths in a single property.
+
+            -   name: outline-color
+                syntax: <color>
+                doc: A shorthand to set all outline colors in a single property.
+
+            -   name: outline-style
+                syntax: "none | solid"
+                doc: A shorthand to set all outline styles in a single property.
+
+
         children:
             left:
                 type: line

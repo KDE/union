@@ -343,6 +343,18 @@
     syntax: "none | (<length> (none | solid) <color>)";
 }
 
+@property outline-width {
+    syntax: "<length>";
+}
+
+@property outline-color {
+    syntax: "<color>";
+}
+
+@property outline-style {
+    syntax: "none | solid";
+}
+
 @property outline-left {
     syntax: "none | (<length> (none | solid) <color>)";
 }

@@ -287,7 +287,7 @@ The amount the font used for an element is stretched.
 The capitalization style of the font used for an element.
 
 
-\section3 text-decoration (none | (underline | overline | line-through)+))
+\section3 text-decoration (none | ((underline | overline | line-through) (underline | overline | line-through) (underline | overline | line-through)) | ((underline | overline | line-through) (underline | overline | line-through)) | (underline | overline | line-through))
 
 The decorations enabled for the font used for an element.
 
@@ -605,6 +605,21 @@ extra border around the outside of an element.
 \section3 outline (none | (<length> (none | solid) <color>))
 
 A shorthand to set all outline properties in a single property.
+
+
+\section3 outline-width (<length>)
+
+A shorthand to set all outline widths in a single property.
+
+
+\section3 outline-color (<color>)
+
+A shorthand to set all outline colors in a single property.
+
+
+\section3 outline-style (none | solid)
+
+A shorthand to set all outline styles in a single property.
 
 
 
