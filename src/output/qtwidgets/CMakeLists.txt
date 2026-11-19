@@ -15,6 +15,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         BoxShadowRenderer.cpp
         DragEventFilter.cpp
         ShadowRenderer.cpp
+        StyleGroupWrapper.cpp
         StyleUtils.cpp
         UnionStyle.cpp
         UnionStylePlugin.cpp
@@ -67,6 +68,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         DragEventFilter.h
         ShadowRenderer.h
         SharedNames.h
+        StyleGroupWrapper.h
         StyleUtils.h
         UnionStyle.h
         UnionStylePlugin.h
