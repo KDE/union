@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #include "AbstractElement.h"
 
@@ -12,15 +13,13 @@
 #include "qtwidgets_logging.h"
 
 using namespace Qt::StringLiterals;
-using namespace Union::Properties;
 using namespace Union::Widgets;
+using namespace Union::Properties;
 
-AbstractElement::AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : QObject(nullptr)
-    , m_styleOption(option)
+AbstractElement::AbstractElement(const UnionStyle *style, QWidget *widget)
+    : QObject(widget)
     , m_style(style)
     , m_widget(widget)
-    , m_elementQuery(std::make_unique<Union::ElementQuery>(Union::StyleRegistry::instance()->defaultStyle()))
 {
 }
 
@@ -28,57 +27,17 @@ AbstractElement::~AbstractElement()
 {
 }
 
-QIcon AbstractElement::icon() const
+const UnionStyle *AbstractElement::style() const
 {
-    return m_icon;
+    return m_style;
 }
 
-void AbstractElement::setIcon(const QIcon &icon)
+QWidget *AbstractElement::widget() const
 {
-    m_icon = icon;
+    return m_widget;
 }
 
-bool AbstractElement::hasIcon() const
-{
-    return !m_icon.isNull();
-}
-
-QString AbstractElement::text() const
-{
-    return m_text;
-}
-
-void AbstractElement::setText(const QString &text)
-{
-    m_text = text;
-}
-
-bool AbstractElement::hasText() const
-{
-    return !m_text.isEmpty();
-}
-
-QIcon AbstractElement::indicator() const
-{
-    return m_indicator;
-}
-
-void AbstractElement::setIndicator(const QIcon &indicator)
-{
-    m_indicator = indicator;
-}
-
-bool AbstractElement::hasIndicator() const
-{
-    return !m_indicator.isNull();
-}
-
-bool AbstractElement::isValid() const
-{
-    return m_isValid;
-}
-
-AbstractElement::AbstractElementFlags AbstractElement::flags()
+AbstractElement::AbstractElementFlags AbstractElement::flags() const
 {
     return m_flags;
 }
@@ -93,802 +52,224 @@ void AbstractElement::setFlag(AbstractElementFlag flag, bool apply)
     m_flags.setFlag(flag, apply);
 }
 
-void AbstractElement::layout()
+bool AbstractElement::isFlagSet(AbstractElementFlag flag) const
 {
-    m_elementList = prepareElements(m_styleOption, m_widget);
-    if (!m_elementList.isEmpty()) {
-        m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
-        m_isValid = true;
-    } else {
-        m_isValid = false;
-        qCWarning(UNION_QTWIDGETS) << "Could not find elementlist for this element!";
-    }
+    return m_flags.testFlag(flag);
 }
 
-QSizeF AbstractElement::contentsSize(QSizeF contentsSizeFromStyle) const
+Union::Element::Ptr AbstractElement::element() const
 {
-    return applyPaddingToSize(contentsSizeFromStyle);
+    return m_element;
 }
 
-QRectF AbstractElement::subElementRect(QStyle::SubElement element) const
+QList<AbstractElement *> AbstractElement::childElements() const
 {
-    if (m_style) {
-        return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
-    }
-    return {};
+    return m_childElements;
 }
 
-QRectF AbstractElement::subControlRect([[maybe_unused]] QStyle::SubControl subControl) const
+void AbstractElement::addChildElement(AbstractElement *element)
 {
-    return {};
+    m_childElements.append(element);
 }
 
-qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+void AbstractElement::removeChildElement(AbstractElement *element)
 {
-    if (m_style) {
-        return m_style->QCommonStyle::pixelMetric(pixelMetric, m_styleOption, m_widget);
-    }
-    return 0;
+    m_childElements.removeAll(element);
 }
 
-int AbstractElement::styleHint([[maybe_unused]] QStyle::StyleHint styleHint) const
+StyleGroupWrapper AbstractElement::propertyWrapper() const
 {
-    return 0;
+    return m_elementProperties;
 }
 
-QIcon AbstractElement::standardPixmap([[maybe_unused]] QStyle::StandardPixmap pixmap) const
+Union::StylePropertyGroupPtr AbstractElement::properties() const
 {
-    return QIcon();
+    return m_elementProperties.properties();
 }
 
-void AbstractElement::updateSubElementList()
+QRectF AbstractElement::rect() const
 {
+    return m_rect;
+}
+
+Qt::LayoutDirection AbstractElement::direction() const
+{
+    return m_direction;
+}
+
+void AbstractElement::markDirty()
+{
+    m_changed = true;
 }
 
 void AbstractElement::update(const QStyleOption *option)
 {
     if (option) {
-        m_styleOption = option;
+        if (option->rect != m_rect) {
+            m_rect = option->rect;
+            layout();
+        }
+
+        if (m_element) {
+            Union::Element::States states;
+            auto state = option->state;
+            states.setFlag(Element::State::Hovered, state.testFlag(QStyle::State_MouseOver));
+            states.setFlag(Element::State::ActiveFocus, state.testFlag(QStyle::State_HasFocus));
+            states.setFlag(Element::State::VisualFocus, state.testFlag(QStyle::State_KeyboardFocusChange) && state.testFlag(QStyle::State_HasFocus));
+            states.setFlag(Element::State::Pressed, state.testFlag(QStyle::State_Sunken));
+            states.setFlag(Element::State::Checked, state.testFlag(QStyle::State_On));
+            states.setFlag(Element::State::Disabled, !state.testFlag(QStyle::State_Enabled));
+
+            if (state.testFlag(QStyle::State_Raised)) {
+                states.setFlag(Element::State::Pressed, false);
+            }
+
+            if (state.testFlag(QStyle::State_Off)) {
+                states.setFlag(Union::Element::State::Checked, false);
+            }
+
+            m_element->setStates(states);
+        }
+    }
+
+    if (m_changed) {
+        queryProperties();
+
+        for (const auto &child : std::as_const(m_childElements)) {
+            child->update(option);
+        }
+
+        layout();
+        m_changed = false;
     }
 }
 
-void AbstractElement::draw(QPainter *painter, DrawEnums enums) const
+void AbstractElement::layout()
 {
-    Q_UNUSED(painter);
-    qCWarning(UNION_QTWIDGETS) << "Drawing not implemented for " << enums.ComplexControl << enums.ControlElement << enums.PrimitiveElement;
 }
 
-Union::IdentifierVariantHash AbstractElement::elementAttributes() const
+void AbstractElement::draw([[maybe_unused]] QPainter *painter, [[maybe_unused]] DrawVariant what) const
 {
+    qCWarning(UNION_QTWIDGETS) << "Drawing not implemented for element" << this;
+}
+
+QSizeF AbstractElement::contentsSize(QSizeF contentsSizeFromStyle) const
+{
+    return m_elementProperties.adjustSize(contentsSizeFromStyle, m_flags.testFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding));
+}
+
+QRectF AbstractElement::subElementRect(QStyle::SubElement element) const
+{
+    Q_UNUSED(element);
     return {};
 }
 
-Union::IdentifierList AbstractElement::elementHints() const
+QRectF AbstractElement::subControlRect(QStyle::SubControl subControl) const
 {
+    Q_UNUSED(subControl);
     return {};
 }
 
-Union::Element::States AbstractElement::elementStates() const
+qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
-    Union::Element::States states;
-    if (!m_styleOption) {
-        return states;
-    }
-    if (m_styleOption->state.testFlag(QStyle::State_None)) {
-        return states;
-    }
-
-    states.setFlag(Union::Element::State::Hovered, m_styleOption->state.testFlag(QStyle::State_MouseOver));
-    states.setFlag(Union::Element::State::ActiveFocus, m_styleOption->state.testFlag(QStyle::State_HasFocus));
-    states.setFlag(Union::Element::State::VisualFocus,
-                   m_styleOption->state.testFlag(QStyle::State_KeyboardFocusChange) && m_styleOption->state.testFlag(QStyle::State_HasFocus));
-    states.setFlag(Union::Element::State::Disabled, !m_styleOption->state.testFlag(QStyle::State_Enabled));
-    states.setFlag(Union::Element::State::Highlighted, m_styleOption->state.testFlag(QStyle::State_Selected));
-
-    if (m_styleOption->state.testFlag(QStyle::State_On)) {
-        states.setFlag(Union::Element::State::Checked);
-    }
-    if (m_styleOption->state.testFlag(QStyle::State_Off)) {
-        states.setFlag(Union::Element::State::Checked, false);
-    }
-
-    if (m_styleOption->state.testFlag(QStyle::State_Sunken)) {
-        states.setFlag(Union::Element::State::Pressed);
-    }
-    if (m_styleOption->state.testFlag(QStyle::State_Raised)) {
-        states.setFlag(Union::Element::State::Pressed, false);
-    }
-
-    return states;
+    Q_UNUSED(pixelMetric);
+    return 0;
 }
 
-QSizeF AbstractElement::applyPaddingToSize(QSizeF oldSize, const Union::StylePropertyGroupPtr &properties) const
+int AbstractElement::styleHint(QStyle::StyleHint styleHint) const
 {
-    if (!m_isValid) {
-        return oldSize;
-    }
-    auto paddingProperties = defaultPropertyGroup(properties);
-    QMarginsF padding =
-        safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-    QMarginsF inset =
-        safePropertyLookup(paddingProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
+    Q_UNUSED(styleHint);
+    return 0;
+}
 
-    auto width = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    auto height = safePropertyLookup(paddingProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-    auto preferredSize = QSizeF(width, height);
+QIcon AbstractElement::standardPixmap(QStyle::StandardPixmap pixmap) const
+{
+    Q_UNUSED(pixmap);
+    return QIcon();
+}
 
-    auto size = oldSize;
-    if (m_flags.testFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding)) {
-        size.rwidth() = size.width() - (padding.left() + padding.right()) / 2.0;
-        size.rheight() = size.height() - (padding.left() + padding.right()) / 2.0;
+bool AbstractElement::eventFilter(QObject *target, QEvent *event)
+{
+    if (event->type() == ElementChangedEvent::s_type) {
+        m_changed = true;
     }
 
-    // We need to apply the maximum of each component of either padding or inset
-    // since we need to ensure things are large enough for either of these
-    // properties.
-    auto spacing = QMarginsF{
-        std::max(padding.left(), inset.left()),
-        std::max(padding.top(), inset.top()),
-        std::max(padding.right(), inset.right()),
-        std::max(padding.bottom(), inset.bottom()),
-    };
+    return QObject::eventFilter(target, event);
+}
 
-    size = size.grownBy(spacing);
-    if (size.width() < preferredSize.width()) {
-        size.setWidth(preferredSize.width());
-    }
-    if (size.height() < preferredSize.height()) {
-        size.setHeight(preferredSize.height());
+void AbstractElement::queryProperties()
+{
+    if (!m_changed) {
+        return;
     }
 
-    return size.toSize();
+    ElementQuery query(StyleRegistry::instance()->defaultStyle());
+
+    Union::ElementList elements;
+    QWidget *widget = nullptr;
+
+    if (m_element) {
+        elements.append(m_element);
+        widget = m_widget ? m_widget->parentWidget() : nullptr;
+    } else {
+        widget = m_widget;
+    }
+
+    while (widget) {
+        const auto element = widget->property(UnionElementProperty).value<AbstractElement *>();
+        if (element) {
+            elements.prepend(element->element());
+        }
+        widget = widget->parentWidget();
+    }
+
+    if (elements.isEmpty()) {
+        return;
+    }
+
+    query.setElements(elements);
+    query.execute();
+
+    m_elementProperties = query.properties();
+}
+
+void AbstractElement::setElement(const Union::Element::Ptr &element)
+{
+    if (element == m_element) {
+        return;
+    }
+
+    if (m_element) {
+        m_element->removeEventFilter(this);
+    }
+
+    m_element = element;
+    if (m_element) {
+        m_element->installEventFilter(this);
+    }
+
+    m_changed = true;
 }
 
 void AbstractElement::drawBackground(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        UnionPainter unionPainter(painter, m_elementProperties);
-        unionPainter.setRect(m_styleOption->rect);
-        unionPainter.draw();
-    }
+    UnionPainter unionPainter(painter, m_elementProperties.properties());
+    unionPainter.setRect(m_rect);
+    unionPainter.draw();
 }
 
 void AbstractElement::drawFrame(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        UnionPainter unionPainter(painter, m_elementProperties);
-        unionPainter.setParts(UnionPainter::Parts::FrameOnly);
-        unionPainter.setRect(m_styleOption->rect);
-        unionPainter.draw();
-    }
+    UnionPainter unionPainter(painter, m_elementProperties.properties());
+    unionPainter.setParts(UnionPainter::Parts::FrameOnly);
+    unionPainter.setRect(m_rect);
+    unionPainter.draw();
 }
 
 void AbstractElement::drawPanel(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
-        UnionPainter unionPainter(painter, m_elementProperties);
-        unionPainter.setParts(UnionPainter::Parts::PanelOnly);
-        unionPainter.setRect(m_styleOption->rect);
-        unionPainter.draw();
-    }
-}
-
-void AbstractElement::drawText(QPainter *painter) const
-{
-    if (hasText() && m_isValid) {
-        drawTextAtRect(painter, m_text, m_layoutMap[ElementString::Text].rect, m_elementProperties);
-    }
-}
-
-void AbstractElement::drawIcon(QPainter *painter) const
-{
-    if (hasIcon() && m_isValid) {
-        drawIconAtRect(painter, m_icon, m_layoutMap[ElementString::Icon].rect, m_elementProperties);
-    }
-}
-
-void AbstractElement::drawIndicator(QPainter *painter) const
-{
-    if (hasIndicator() && m_isValid) {
-        drawIconAtRect(painter, m_indicator, m_layoutMap[ElementString::Indicator].rect, m_elementProperties);
-    }
-}
-
-void AbstractElement::drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF &rect, const Union::StylePropertyGroupPtr &properties) const
-{
-    if (m_isValid) {
-        const auto property = defaultPropertyGroup(properties);
-        auto unionIcon = m_style->unionIcon(property, icon.name());
-        // Fallback if union icon cant be loaded
-        if (unionIcon.isNull()) {
-            unionIcon = icon;
-        }
-
-        bool enabled = true;
-        if (m_styleOption) {
-            enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        }
-        const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
-        auto iconSize = rect.size();
-        const QPixmap pixmap = unionIcon.pixmap(iconSize.toSize(), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
-        painter->save();
-        m_style->drawItemPixmap(painter, visualRect(rect).toRect(), Qt::AlignCenter, pixmap);
-        painter->restore();
-    }
-}
-
-void AbstractElement::drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, const Union::StylePropertyGroupPtr &properties) const
-{
-    if (m_isValid && m_styleOption) {
-        const auto property = defaultPropertyGroup(properties);
-        int textFlags = Qt::AlignLeading | Qt::AlignVCenter;
-        const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
-        auto font = safePropertyLookup(property, painter->font(), &StylePropertyGroup::text, &TextPropertyGroup::font, &FontPropertyGroup::toQFont);
-        auto textColor = m_styleOption->palette.text().color();
-        if (m_styleOption->palette.resolveMask() <= 0) {
-            auto unionColor = safePropertyLookup(property, Union::Color{}, &StylePropertyGroup::text, &TextPropertyGroup::color);
-            if (unionColor.isValid()) {
-                textColor = unionColor.toQColor();
-            }
-        }
-        textFlags = textFlagsFromProperties(property);
-        if (m_flags.testFlag(AbstractElementFlag::DrawMnemonics)) {
-            textFlags |= Qt::TextHideMnemonic;
-        }
-        painter->save();
-        painter->setPen(textColor);
-        painter->setFont(font);
-        m_style->drawItemText(painter, visualRect(rect).toRect(), textFlags, m_styleOption->palette, enabled, elidedText(text, rect, property));
-        painter->restore();
-    }
-}
-
-void AbstractElement::updateGraphicsEffect(const QRectF &rect, const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    if (m_styleOption && property) {
-        if (auto widget = qobject_cast<QWidget *>(m_styleOption->styleObject)) {
-            if (auto graphics = qobject_cast<UnionGraphicsEffect *>(widget->graphicsEffect())) {
-                graphics->setDrawRect(rect);
-                graphics->setProperties(property);
-            }
-        }
-    }
-}
-
-QMarginsF AbstractElement::padding(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    return safePropertyLookup(property, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-}
-
-QMarginsF AbstractElement::borderSize(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    return safePropertyLookup(property, QMarginsF{}, &StylePropertyGroup::border, &BorderPropertyGroup::sizes);
-}
-
-qreal AbstractElement::height(const Union::StylePropertyGroupPtr &properties) const
-{
-    constexpr qreal defaultValue = 0.0;
-    if (const auto property = defaultPropertyGroup(properties)) {
-        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-    } else if (m_styleOption) {
-        return m_styleOption->rect.height();
-    } else {
-        return defaultValue;
-    }
-}
-
-qreal AbstractElement::width(const Union::StylePropertyGroupPtr &properties) const
-{
-    constexpr qreal defaultValue = 0.0;
-    if (const auto property = defaultPropertyGroup(properties)) {
-        return property->safePropertyLookup(defaultValue, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    } else if (m_styleOption) {
-        return m_styleOption->rect.width();
-    } else {
-        return defaultValue;
-    }
-}
-
-qreal AbstractElement::spacing(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    return safePropertyLookup(property, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::spacing);
-}
-
-QSizeF AbstractElement::propertySize(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    return QSizeF(width(property), height(property));
-}
-
-QSizeF AbstractElement::iconSize(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    auto width = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width);
-    auto height = safePropertyLookup(property, 0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height);
-    return QSizeF(width, height);
-}
-
-qreal AbstractElement::averagePadding(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    const auto margins = padding(property);
-    if (margins.isNull()) {
-        return 0;
-    }
-    return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
-}
-
-qreal AbstractElement::averageHPadding(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    const auto margins = padding(property);
-    if (margins.isNull()) {
-        return 0;
-    }
-    return (margins.left() + margins.right()) / 2;
-}
-
-qreal AbstractElement::averageVPadding(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    const auto margins = padding(property);
-    if (margins.isNull()) {
-        return 0;
-    }
-    return (margins.top() + margins.bottom()) / 2;
-}
-
-qreal AbstractElement::averageBorderSize(const Union::StylePropertyGroupPtr &properties) const
-{
-    const auto property = defaultPropertyGroup(properties);
-    auto margins = borderSize(property);
-    if (margins.isNull()) {
-        return 0;
-    }
-    return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
-}
-
-QString AbstractElement::elidedText(const QString &text, const QRectF &textRect, const Union::StylePropertyGroupPtr &properties) const
-{
-    if (!text.isEmpty() && m_styleOption) {
-        const auto property = defaultPropertyGroup(properties);
-        auto elide = safePropertyLookup(property, TextElide::None, &StylePropertyGroup::text, &TextPropertyGroup::elide);
-        const qreal elideWidth = textRect.width() < m_styleOption->rect.width() ? textRect.width() : m_styleOption->rect.width();
-        return m_styleOption->fontMetrics.elidedText(text, toQtElideMode(elide), elideWidth);
-    }
-    return text;
-}
-
-QSizeF AbstractElement::querySize(const QStringList &targetHierarchy) const
-{
-    auto elements = prepareElements(m_styleOption, m_widget, targetHierarchy);
-    if (elements.isEmpty()) {
-        return QSize(0, 0);
-    }
-    auto properties = queryProperties(elements);
-    const auto width = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
-    const auto height = properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
-    return QSize(width, height);
-}
-
-Union::ElementList AbstractElement::prepareElements(const QStyleOption *opt, const QWidget *widget, const QStringList &targetHierarchy) const
-{
-    Union::ElementList elements;
-    QStringList elementTypes = {};
-
-    if (widget) {
-        elementTypes = widget->property(property_union_member_list).toStringList();
-        if (elementTypes.isEmpty()) {
-            elementTypes = m_style->widgetToElementHierarchy(widget);
-        }
-    }
-    // Skip fallback if we already have it
-    const auto fallback = fallbackElementName(opt);
-    if (!elementTypes.endsWith(fallback)) {
-        elementTypes.append(fallback);
-    }
-
-    // Meld duplicate elements that appear next to each other
-    if (elementTypes.isEmpty()) {
-        elementTypes.append(targetHierarchy);
-    } else {
-        for (const auto &target : std::as_const(targetHierarchy)) {
-            if (elementTypes.last() != target) {
-                elementTypes.append(target);
-            }
-        }
-    }
-
-    for (const auto &elementType : std::as_const(elementTypes)) {
-        elements.append(createElement(elementType));
-    }
-    return elements;
-}
-
-QString AbstractElement::fallbackElementName(const QStyleOption *opt) const
-{
-    return styleOptionToElementName(opt);
-}
-
-Union::StylePropertyGroupPtr AbstractElement::queryProperties(const Union::ElementList &elements) const
-{
-    Q_ASSERT(!elements.isEmpty());
-
-    if (m_elementQuery->elements() != elements) {
-        m_elementQuery->setElements(elements);
-    }
-    m_elementQuery->execute();
-    return m_elementQuery->properties();
-}
-
-QMap<QString, LayoutItem> AbstractElement::layoutMap(const QStyleOption *opt, const QStringList &subElementList) const
-{
-    QMap<QString, LayoutItem> map;
-    QList<LayoutItem> items;
-    QStringList subElements = subElementList;
-
-    if (!m_elementProperties || m_elementList.isEmpty()) {
-        return map;
-    }
-    // If subelement list is empty, just use default widget item.
-    // This ensures any custom components get layouted too.
-    if (subElements.empty()) {
-        qCDebug(UNION_QTWIDGETS) << "No subelements given, using Widget placeholder for" << subElements;
-        subElements = {ElementString::Widget};
-    }
-
-    // Setup the container rectangle
-    auto currentHierarchy = m_elementList;
-    const QRectF availableSpace = backgroundRectangle(opt, m_elementProperties).marginsRemoved(padding());
-
-    // Prepare all subelements
-    for (const auto &subElement : std::as_const(subElements)) {
-        // NOTE: Currently text and icon are part of the main element, but eventually
-        // will be moved as their own elements
-        if (subElement != ElementString::Icon && subElement != ElementString::Text) {
-            currentHierarchy.append(createElement(subElement));
-        }
-        const auto properties = queryProperties(currentHierarchy);
-        Union::Properties::Alignment horizontalAlignment;
-        Union::Properties::Alignment verticalAlignment;
-        int order = 0;
-        QRectF elementRect = availableSpace;
-        // NOTE: For now icon and text are their own things, so check them separately.
-        // in future this should be unnecessary.
-        if (subElement == ElementString::Icon) {
-            // Some styleoptions provide us an icon size, use it if its not null
-            auto iconSize = iconSizeFromOption(opt);
-            if (!iconSize.isValid()) {
-                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
-                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
-            } else {
-                elementRect.setWidth(iconSize.width());
-                elementRect.setHeight(iconSize.height());
-            }
-            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::icon,
-                                                                 &IconPropertyGroup::alignment,
-                                                                 &AlignmentPropertyGroup::horizontal);
-            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::icon,
-                                                               &IconPropertyGroup::alignment,
-                                                               &AlignmentPropertyGroup::vertical);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
-        } else if (subElement == ElementString::Text || subElement == ElementString::ShortcutText) {
-            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::text,
-                                                                 &TextPropertyGroup::alignment,
-                                                                 &AlignmentPropertyGroup::horizontal);
-            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::text,
-                                                               &TextPropertyGroup::alignment,
-                                                               &AlignmentPropertyGroup::vertical);
-            auto optionText = textFromOption(opt);
-            // if we are a menuitem and have a shortcut, we need to split the text with /t and place them according their alignments
-            const int tabPosition(optionText.indexOf(QLatin1Char('\t')));
-            if (tabPosition >= 0) {
-                QString accelerator(optionText.mid(tabPosition + 1));
-                if (subElement == ElementString::ShortcutText) {
-                    optionText = optionText.mid(tabPosition + 1);
-                } else {
-                    optionText = optionText.left(tabPosition);
-                }
-            }
-            // When layouting, ensure we take mnemonics into account
-            auto textFlags = textFlagsFromProperties(properties);
-            textFlags |= Qt::TextShowMnemonic;
-            auto fontMetrics = opt->fontMetrics;
-            if (m_widget) {
-                fontMetrics = QFontMetrics(m_widget->font());
-            }
-            if (properties->text() && properties->text()->font()) {
-                fontMetrics = QFontMetrics(properties->text()->font()->toQFont());
-            }
-            elementRect = fontMetrics.boundingRect(availableSpace.toRect(), textFlags, optionText);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::text, &TextPropertyGroup::alignment, &AlignmentPropertyGroup::order);
-        } else {
-            elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width));
-            elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height));
-            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                                 &StylePropertyGroup::layout,
-                                                                 &LayoutPropertyGroup::alignment,
-                                                                 &AlignmentPropertyGroup::horizontal);
-            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-                                                               &StylePropertyGroup::layout,
-                                                               &LayoutPropertyGroup::alignment,
-                                                               &AlignmentPropertyGroup::vertical);
-            order = properties->safePropertyLookup(0, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::order);
-        }
-        LayoutItem item = LayoutItem();
-        item.elementName = subElement;
-        item.horizontalAlignment = horizontalAlignment;
-        item.verticalAlignment = verticalAlignment;
-        item.order = order;
-        item.rect = elementRect;
-        items.append(item);
-    }
-
-    // Actual layouting starts here
-    // QtWidgets containment is always within Widget, since we can't draw outside of a widget due
-    // widgets limitations.
-
-    // Create buckets
-    LayoutBucket startBucket = createBucket(items, BucketType::Start, availableSpace);
-    LayoutBucket centerBucket = createBucket(items, BucketType::Center, availableSpace);
-    LayoutBucket endBucket = createBucket(items, BucketType::End, availableSpace);
-    LayoutBucket fillBucket = createBucket(items, BucketType::Fill, availableSpace);
-    auto startOffset = startBucket.rect.width();
-    auto endOffSet = endBucket.rect.width();
-
-    startBucket.rect.moveLeft(availableSpace.left());
-    mapBucketItems(startBucket, map);
-
-    endBucket.rect.moveRight(availableSpace.right());
-    mapBucketItems(endBucket, map);
-
-    // Do not apply offsets if the items do not even exist.
-    // Remove the spacing to avoid resizing the item too much:
-    // the spacing is already accounted in mapBucketItems.
-    centerBucket.rect.moveCenter(availableSpace.center());
-    if (startBucket.rect.intersects(centerBucket.rect)) {
-        if (startBucket.items.count() > 0) {
-            centerBucket.rect.setLeft(centerBucket.rect.left() + startOffset + spacing());
-        }
-    }
-    if (centerBucket.rect.intersects(endBucket.rect)) {
-        centerBucket.rect.setRight(availableSpace.right());
-        if (endBucket.items.count() > 0) {
-            centerBucket.rect.setRight(centerBucket.rect.right() - endOffSet - spacing());
-        }
-    }
-    mapBucketItems(centerBucket, map);
-
-    fillBucket.rect.setLeft(startBucket.rect.right());
-    fillBucket.rect.setRight(endBucket.rect.left());
-    mapBucketItems(fillBucket, map);
-
-    return map;
-}
-
-Union::Element::Ptr AbstractElement::createElement(const QString &name) const
-{
-    Union::Element::Ptr unionElement;
-    auto itr = std::find_if(m_elementList.begin(), m_elementList.end(), [name](const Union::Element::Ptr &element) {
-        return (element && element->type() == name);
-    });
-    if (itr == m_elementList.end()) {
-        unionElement = Union::Element::create();
-        unionElement->setType(name);
-    } else {
-        unionElement = *(itr);
-    }
-
-    unionElement->setStates(elementStates());
-    unionElement->setAttributes(elementAttributes());
-    auto hints = elementHints();
-
-    if (m_widget) {
-        // Window is a bit special and needs to be handled during element hierarchy creation,
-        // as the QStyle does not directly draw the window element.)
-        if (name == u"ApplicationWindow"_s) {
-            if (auto window = m_widget->window()) {
-                if (!window->isActiveWindow()) {
-                    hints.append(u"inactive"_s);
-                }
-            }
-        }
-        // Add support for Widget KCMs showing the changed items.
-        if (m_widget->property("_kde_highlight_neutral").toBool()) {
-            hints.append(u"changed"_s);
-        }
-    }
-
-    unionElement->setHints(hints);
-    return unionElement;
-}
-
-LayoutBucket AbstractElement::createBucket(const QList<LayoutItem> &items, BucketType type, const QRectF &containerRect) const
-{
-    LayoutBucket bucket;
-    bucket.type = type;
-    bucket.rect = containerRect;
-
-    for (auto &item : items) {
-        switch (item.horizontalAlignment) {
-        case Alignment::Unspecified:
-        case Alignment::StackCenter:
-        case Alignment::StackFill:
-        case Alignment::Start:
-            if (bucket.type == BucketType::Start) {
-                bucket.items.append(item);
-            }
-            break;
-        case Alignment::Center:
-            if (bucket.type == BucketType::Center) {
-                bucket.items.append(item);
-            }
-            break;
-        case Alignment::End:
-            if (bucket.type == BucketType::End) {
-                bucket.items.append(item);
-            }
-            break;
-        case Alignment::Fill:
-            if (bucket.type == BucketType::Fill) {
-                bucket.items.append(item);
-            }
-            break;
-        }
-    }
-
-    // Sort the items according their order
-    std::sort(bucket.items.begin(), bucket.items.end(), [bucket](const LayoutItem &lhs, const LayoutItem &rhs) {
-        return lhs.order < rhs.order;
-    });
-
-    // No need for spacing as there are no items
-    bucket.rect = bucket.items.count() > 0 ? resizeBucket(bucket) : QRectF();
-    return bucket;
-}
-
-QRectF AbstractElement::resizeBucket(const LayoutBucket &bucket) const
-{
-    qreal width = 0;
-    qreal height = 0;
-    QRectF bucketRect = bucket.rect;
-    bool stacked = false;
-    auto space = bucket.items.count() > 0 ? spacing() : 0;
-
-    // Check if we are stacking or not
-    for (auto &item : bucket.items) {
-        if (item.verticalAlignment == Union::Properties::Alignment::StackFill || item.verticalAlignment == Union::Properties::Alignment::StackCenter) {
-            stacked = true;
-            break;
-        }
-    }
-
-    for (auto &item : bucket.items) {
-        const qreal itemWidth = item.rect.width() + space;
-        const qreal itemHeight = item.rect.height();
-        if (stacked) {
-            width = std::max(bucketRect.width(), itemWidth);
-            height += (itemHeight + space);
-        } else {
-            width += itemWidth;
-            height = std::max(bucketRect.height(), itemHeight);
-        }
-    }
-    bucketRect.setWidth(width);
-    bucketRect.setHeight(height);
-
-    return bucketRect;
-}
-
-void AbstractElement::mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const
-{
-    auto bucketRect = bucket.rect;
-    int space = bucket.items.count() > 0 ? spacing() : 0;
-    for (auto &item : bucket.items) {
-        const auto itemWidth = item.rect.width() + space;
-        const auto itemHeight = item.rect.height() + space;
-
-        // For stackcenter/stackfill, we just want to center the rectangle based on its size.
-        if (item.horizontalAlignment == Union::Properties::Alignment::Center
-            && (item.verticalAlignment == Union::Properties::Alignment::StackCenter || item.verticalAlignment == Union::Properties::Alignment::StackFill)) {
-            item.rect = centerRect(bucketRect.toRect(), item.rect.width(), item.rect.height());
-        } else {
-            switch (item.horizontalAlignment) {
-            case Alignment::Unspecified:
-            case Alignment::StackCenter:
-            case Alignment::StackFill:
-            case Alignment::Start:
-            case Alignment::End:
-                item.rect.moveLeft(bucketRect.left());
-                bucketRect.setLeft(item.rect.left() + itemWidth);
-                break;
-            case Alignment::Center:
-                if (bucket.items.count() > 1) {
-                    item.rect.moveLeft(bucketRect.left());
-                    bucketRect.setLeft(item.rect.left() + itemWidth);
-                } else {
-                    item.rect.moveCenter(bucketRect.center());
-                }
-                break;
-            case Alignment::Fill:
-                item.rect.setLeft(bucketRect.left());
-                item.rect.setRight(bucketRect.right());
-                bucketRect.setLeft(item.rect.left() + itemWidth);
-                break;
-            }
-        }
-
-        switch (item.verticalAlignment) {
-        case Union::Properties::Alignment::Unspecified:
-        case Union::Properties::Alignment::Start:
-            item.rect.moveTop(bucketRect.top());
-            break;
-            // We can safely center the element within its rectangle here
-        case Union::Properties::Alignment::Center:
-            item.rect.moveCenter(QPoint(item.rect.center().x(), bucketRect.center().y()));
-            break;
-        case Union::Properties::Alignment::End:
-            item.rect.moveBottom(bucketRect.bottom());
-            break;
-        case Union::Properties::Alignment::Fill:
-            item.rect.setTop(bucketRect.top());
-            item.rect.setBottom(bucketRect.bottom());
-            break;
-        case Union::Properties::Alignment::StackFill:
-        case Union::Properties::Alignment::StackCenter:
-            item.rect.moveTop(bucketRect.top());
-            bucketRect.moveTop(item.rect.top() + itemHeight);
-            break;
-        }
-
-        map[item.elementName] = item;
-    }
-}
-
-Union::StylePropertyGroupPtr AbstractElement::defaultPropertyGroup(Union::StylePropertyGroupPtr properties) const
-{
-    if (!properties) {
-        return m_elementProperties;
-    }
-    return properties;
-}
-
-QRectF AbstractElement::visualRect(const QRectF &rect) const
-{
-    if (m_style && m_styleOption) {
-        return m_style->visualRect(m_styleOption->direction, m_styleOption->rect, rect);
-    }
-    return rect;
-}
-
-int AbstractElement::textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties) const
-{
-    int textFlags = Qt::AlignVCenter;
-    auto horizontalAlignment = toQtHorizontalAlignment(
-        properties->safePropertyLookup(Alignment::Start, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::horizontal));
-    auto verticalAlignment = toQtVerticalAlignment(
-        properties->safePropertyLookup(Alignment::Center, &StylePropertyGroup::layout, &LayoutPropertyGroup::alignment, &AlignmentPropertyGroup::vertical));
-    if (m_styleOption) {
-        horizontalAlignment = m_style->visualAlignment(m_styleOption->direction, horizontalAlignment);
-        verticalAlignment = m_style->visualAlignment(m_styleOption->direction, verticalAlignment);
-    }
-    const auto textAlign = horizontalAlignment | verticalAlignment;
-    auto textWrap =
-        toQtWrapMode(properties->safePropertyLookup(Union::Properties::TextWrapMode::NoWrap, &StylePropertyGroup::text, &TextPropertyGroup::wrapMode));
-    textFlags |= textAlign;
-    // Do not add wrap flags if we get DontClip
-    // This could be done better
-    if (textWrap != Qt::TextDontClip) {
-        textFlags |= textWrap;
-    }
-    return textFlags;
+    UnionPainter unionPainter(painter, m_elementProperties.properties());
+    unionPainter.setParts(UnionPainter::Parts::PanelOnly);
+    unionPainter.setRect(m_rect);
+    unionPainter.draw();
 }

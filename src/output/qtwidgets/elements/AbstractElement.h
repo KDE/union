@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #pragma once
 
@@ -8,7 +9,9 @@
 #include <ElementQuery.h>
 
 #include "ElementCache.h"
+#include "StyleGroupWrapper.h"
 #include "StyleUtils.h"
+#include "TypeMapping.h"
 #include "UnionPainter.h"
 #include "UnionStyle.h"
 
@@ -17,12 +20,7 @@ namespace Union
 namespace Widgets
 {
 
-
-struct DrawEnums {
-    int ControlElement = -1;
-    int ComplexControl = -1;
-    int PrimitiveElement = -1;
-};
+static constexpr char UnionElementProperty[] = "Union::Element";
 
 class AbstractElement : public QObject
 {
@@ -35,41 +33,48 @@ public:
     };
     Q_DECLARE_FLAGS(AbstractElementFlags, AbstractElementFlag)
 
-    AbstractElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    AbstractElement(const UnionStyle *style, QWidget *widget = nullptr);
     ~AbstractElement() override;
 
-    QIcon icon() const;
-    void setIcon(const QIcon &icon);
-    bool hasIcon() const;
+    const UnionStyle *style() const;
+    QWidget *widget() const;
 
-    QString text() const;
-    void setText(const QString &text);
-    bool hasText() const;
-
-    QIcon indicator() const;
-    void setIndicator(const QIcon &indicator);
-    bool hasIndicator() const;
-
-    AbstractElementFlags flags();
+    AbstractElementFlags flags() const;
     void setFlags(AbstractElementFlags newFlags);
     void setFlag(AbstractElementFlag flag, bool apply = true);
+    bool isFlagSet(AbstractElementFlag flag) const;
 
-    /*!
-     * \brief Returns the validity status. If the element has no properties loaded,
-     * it is not valid and can not be drawn.
-     */
-    bool isValid() const;
+    Union::Element::Ptr element() const;
 
-    /*!
-     * \brief Draw the whole element, including text, icon, background and indicator.
-     */
-    virtual void draw(QPainter *painter, DrawEnums enums) const;
+    QList<AbstractElement *> childElements() const;
+    void addChildElement(AbstractElement *element);
+    void removeChildElement(AbstractElement *element);
 
-    /*!
-     * \brief Prepare the layoutMap of the element, and create the required properties.
-     * By default this creates proeprties for background and content.
-     */
+    template<typename T>
+    inline T *firstChildOfType() const
+    {
+        for (const auto &child : std::as_const(m_childElements)) {
+            if (auto typedChild = qobject_cast<T *>(child); typedChild) {
+                return typedChild;
+            }
+        }
+        return nullptr;
+    }
+
+    StyleGroupWrapper propertyWrapper() const;
+    StylePropertyGroupPtr properties() const;
+
+    QRectF rect() const;
+    Qt::LayoutDirection direction() const;
+
+    void markDirty();
+
+    virtual void update(const QStyleOption *option);
+
     virtual void layout();
+
+    using DrawVariant = std::variant<std::nullopt_t, QStyle::ControlElement, QStyle::ComplexControl, QStyle::PrimitiveElement>;
+    virtual void draw(QPainter *painter, DrawVariant what) const;
 
     /*!
      * \brief Return the contents size of the element with padding applied by default.
@@ -97,25 +102,16 @@ public:
     virtual int styleHint(QStyle::StyleHint styleHint) const;
 
     /*!
-    * \brief Return the given standard pixmap. If not found, returns an empty QIcon.
+     * \brief Return the given standard pixmap. If not found, returns an empty QIcon.
      */
     virtual QIcon standardPixmap(QStyle::StandardPixmap pixmap) const;
 
-    /*!
-     * \brief Updates the properties of the element, such as text and layouting
-     */
-    virtual void update(const QStyleOption *option);
-
 protected:
-    /*!
-     * \brief Draw text of the element.
-     */
-    virtual void drawText(QPainter *painter) const;
+    bool eventFilter(QObject *target, QEvent *event) override;
 
-    /*!
-     * \brief Draw icon of the element.
-     */
-    virtual void drawIcon(QPainter *painter) const;
+    virtual void queryProperties();
+
+    void setElement(const Union::Element::Ptr &element);
 
     /*!
      * \brief Draw whole background of the element.
@@ -132,153 +128,25 @@ protected:
      */
     virtual void drawPanel(QPainter *painter) const;
 
-    /*!
-     * \brief Draw the indicator of the element. This can vary from secondary icon, such as drop-down
-     * arrow icon, to a checkbox, depending on the element.
-     */
-    virtual void drawIndicator(QPainter *painter) const;
-
-    /*!
-     * \brief Translate styleoption values into attributes for this element.
-     */
-    virtual Union::IdentifierVariantHash elementAttributes() const;
-
-    /*!
-     * \brief Translate styleoption values into attributes for this element.
-     */
-    virtual Union::IdentifierList elementHints() const;
-
-    /*!
-     * \brief Translate states of styleoption into Union states.
-     */
-    virtual Union::Element::States elementStates() const;
-
-    /*!
-     * \brief Updates the m_subElementList with any values that are used when fetching a layout, so
-     * that the element gets a proper hierarchy.
-     */
-    virtual void updateSubElementList();
-
-    /*!
-     * \brief Utilizes the background property to apply a padding to the given size.
-     */
-    QSizeF applyPaddingToSize(QSizeF oldSize, const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    /*!
-     * \brief Query the size of an element based on its hierarchy. Useful for one-off calculations.
-     */
-    virtual QSizeF querySize(const QStringList &targetHierarchy) const;
-
-    /*!
-     * \brief Prepares elements for a widget. Sometimes we cannot decipher the specific item from widget alone, such as itemviews.
-     * In those cases you may need to manually choose a target hierarchy, such as {"ItemViewItem"}
-     */
-    virtual Union::ElementList prepareElements(const QStyleOption *opt, const QWidget *widget, const QStringList &targetHierarchy = {}) const;
-
-    /*!
-     * \brief The element name used by prepareElements() when there is no widget, such as when
-     * drawing for QtQuick. By default it is guessed from the style option type.
-     */
-    virtual QString fallbackElementName(const QStyleOption *opt) const;
-
-    /*!
-     * \brief Queries the properties from list of elements. The properties match to the last element in the list,
-     * inheriting anything it needs from its parents.
-     */
-    virtual Union::StylePropertyGroupPtr queryProperties(const Union::ElementList &elements) const;
-
-    /*!
-     * \brief Layouts list of elements, then returns a map of LayoutItems that contain information such as rectangles.
-     * It will take list of elements, such as Button and any potential parents it has.
-     * Then it uses the subElements stringlist to construct a layout: For example button is the container, then
-     * Text, Icon and Indicator are the items to be layouted within the button container.
-     * Currently only one container is used, which is the rectangle of the parent of the subElements.
-     */
-    virtual QMap<QString, LayoutItem> layoutMap(const QStyleOption *opt, const QStringList &subElements) const;
-
-    virtual QMarginsF padding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual QMarginsF borderSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual qreal height(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual qreal width(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual qreal spacing(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual QSizeF propertySize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    virtual QSizeF iconSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    qreal averagePadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    qreal averageBorderSize(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    qreal averageVPadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    qreal averageHPadding(const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    QString elidedText(const QString &text, const QRectF &textRect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    /*!
-     * \brief Draw given icon at the rectangle. Handles the enabled status.
-     */
-    void drawIconAtRect(QPainter *painter, const QIcon &icon, const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    /*!
-     * \brief Draw text at the given rectangle. Handles coloring, elision and
-     * enabled status.
-     */
-    void drawTextAtRect(QPainter *painter, const QString &text, const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    /*!
-     * \brief Updates the outline and dropshadow for the element,
-     * if it has the graphics widget added.
-     */
-    void updateGraphicsEffect(const QRectF &rect, const Union::StylePropertyGroupPtr &properties = nullptr) const;
-
-    /*!
-     * \brief Helper method for returning visualRect from style(),
-     * using styleoption direction.
-     */
-    QRectF visualRect(const QRectF &rect) const;
-
-    /*!
-     * \brief Get the text flags from the properties. Also ensures we have the
-     * alignment set correctly according to styleoption direction.
-     */
-    int textFlagsFromProperties(const Union::StylePropertyGroupPtr &properties) const;
-
-    const QStyleOption *m_styleOption = nullptr;
+private:
     const UnionStyle *m_style = nullptr;
-    const QWidget *m_widget = nullptr;
-    QIcon m_icon = QIcon();
-    QString m_text = QString();
-    QIcon m_indicator = QIcon();
-    Union::ElementList m_elementList;
-    // Holds the properties for the background:
-    // This is the top-level properties of the item by default.
-    Union::StylePropertyGroupPtr m_elementProperties = nullptr;
-    QMap<QString, LayoutItem> m_layoutMap;
-    QStringList m_subElementList;
-    // Used to check if we have all elements properly prepared
-    bool m_isValid = false;
+    Union::Element::Ptr m_element;
+    StyleGroupWrapper m_elementProperties;
 
     AbstractElementFlags m_flags;
+    QWidget *m_widget = nullptr;
+    QList<AbstractElement *> m_childElements;
 
-private:
-    Union::Element::Ptr createElement(const QString &name) const;
-
-    LayoutBucket createBucket(const QList<LayoutItem> &items, BucketType type, const QRectF &containerRect) const;
-    QRectF resizeBucket(const LayoutBucket &bucket) const;
-    void mapBucketItems(LayoutBucket &bucket, QMap<QString, LayoutItem> &map) const;
-
-    // If given property is null, return m_elementProperties
-    Union::StylePropertyGroupPtr defaultPropertyGroup(const Union::StylePropertyGroupPtr properties) const;
-
-    std::unique_ptr<Union::ElementQuery> m_elementQuery;
+    QRectF m_rect;
+    Qt::LayoutDirection m_direction = Qt::LayoutDirectionAuto;
+    bool m_changed = false;
 };
 
+// Helper type for std::visit()
+template<class... Ts>
+struct overloaded : Ts... {
+    using Ts::operator()...;
+};
 }
 }
 
