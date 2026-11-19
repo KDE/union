@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2025 Joshua Goins <josh@redstrate.com>
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #pragma once
 
@@ -30,6 +31,8 @@ class UnionStyle : public QCommonStyle
 public:
     UnionStyle();
     ~UnionStyle() override;
+
+    AbstractElement *element(const QWidget *widget, const QStyleOption *option) const;
 
     void drawControl(QStyle::ControlElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const override;
     void drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget = nullptr) const override;
@@ -132,18 +135,15 @@ public:
 
     QIcon unionIcon(const Union::StylePropertyGroupPtr &properties, const QString &defaultName) const;
 
-    /*!
-     * \brief Matches the widget name/class to a matching CSS element name, and sets up
-     * property "_union_member_list" to the widget. This can be used to get the whole parental
-     * hierarchy of the widget
-     */
-    QStringList widgetToElementHierarchy(const QWidget *widget) const;
-
 private:
-    bool m_showMnemonics;
+    void setMnemonics(bool enabled);
+
+    bool m_showMnemonics = false;
     std::unique_ptr<DragEventFilter> m_dragFilter;
 
-    void setMnemonics(bool enabled);
+    // Cache for fallbacks when we do not have a widget element.
+    // Maps QStyleOptionType to an AbstractElement instance.
+    mutable LruCache<int, std::shared_ptr<AbstractElement>> m_optionElementCache;
 };
 }
 }

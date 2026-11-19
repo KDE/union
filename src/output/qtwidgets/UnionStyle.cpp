@@ -1,68 +1,17 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 // SPDX-FileCopyrightText: 2025 Joshua Goins <josh@redstrate.com>
 // SPDX-FileCopyrightText: 2026 Akseli Lahtinen <akselmo@akselmo.dev>
+// SPDX-FileCopyrightText: 2026 Arjen Hiemstra <ahiemstra@heimr.nl>
 
 #include "UnionStyle.h"
 
-#include <QAbstractScrollArea>
-#include <QAbstractSpinBox>
+#include <QAbstractItemView>
 #include <QApplication>
-#include <QBitmap>
-#include <QCheckBox>
-#include <QColumnView>
-#include <QComboBox>
-#include <QDial>
-#include <QDialog>
-#include <QDialogButtonBox>
-#include <QDockWidget>
-#include <QFocusFrame>
-#include <QFormLayout>
-#include <QFrame>
-#include <QGraphicsItem>
-#include <QGraphicsProxyWidget>
 #include <QGraphicsView>
-#include <QGroupBox>
-#include <QHeaderView>
-#include <QItemDelegate>
-#include <QKeySequenceEdit>
-#include <QLabel>
-#include <QLineEdit>
-#include <QListView>
+#include <QKeyEvent>
 #include <QMainWindow>
-#include <QMdiArea>
-#include <QMdiSubWindow>
 #include <QMenu>
-#include <QMenuBar>
-#include <QMetaEnum>
-#include <QPainter>
-#include <QPlainTextEdit>
-#include <QProgressBar>
-#include <QPushButton>
-#include <QRadioButton>
-#include <QRubberBand>
 #include <QScrollBar>
-#include <QSizeGrip>
-#include <QSlider>
-#include <QSplitter>
-#include <QSplitterHandle>
-#include <QStackedLayout>
-#include <QStatusBar>
-#include <QStyle>
-#include <QStyleFactory>
-#include <QStyleOption>
-#include <QStyleOptionFrame>
-#include <QTabBar>
-#include <QTabWidget>
-#include <QTableView>
-#include <QTextBrowser>
-#include <QTextEdit>
-#include <QTextOption>
-#include <QToolBar>
-#include <QToolBox>
-#include <QToolButton>
-#include <QTreeView>
-#include <QWidget>
-#include <QWidgetAction>
 
 #include <StyleRegistry.h>
 
@@ -72,62 +21,13 @@
 #include "UnionGraphicsEffect.h"
 
 #include "elements/AbstractElement.h"
-#include "elements/ButtonElement.h"
-#include "elements/CheckBoxElement.h"
-#include "elements/ComboBoxElement.h"
-#include "elements/DockWidgetElement.h"
-#include "elements/FocusElement.h"
-#include "elements/FrameElement.h"
-#include "elements/GroupBoxElement.h"
-#include "elements/HeaderElement.h"
-#include "elements/IndicatorElement.h"
-#include "elements/ItemViewElement.h"
-#include "elements/LineEditElement.h"
-#include "elements/MenuBarElement.h"
-#include "elements/MenuBarItemElement.h"
-#include "elements/MenuElement.h"
-#include "elements/MenuItemElement.h"
-#include "elements/ProgressBarElement.h"
-#include "elements/RadioButtonElement.h"
-#include "elements/RubberBandElement.h"
-#include "elements/ScrollAreaCornerElement.h"
-#include "elements/ScrollBarElement.h"
-#include "elements/SizeGripElement.h"
-#include "elements/SliderElement.h"
-#include "elements/SpinBoxElement.h"
-#include "elements/SplitterElement.h"
-#include "elements/StatusBarElement.h"
-#include "elements/TabBarElement.h"
-#include "elements/TabCloseButtonElement.h"
-#include "elements/TabElement.h"
-#include "elements/TabWidgetElement.h"
-#include "elements/TitleBarElement.h"
-#include "elements/ToolBarElement.h"
-#include "elements/ToolBoxTabElement.h"
-#include "elements/ToolButtonElement.h"
-#include "elements/ToolTipElement.h"
-#include "elements/TreeViewElement.h"
-#include "elements/WidgetElement.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-enum class EnumContext {
-    ControlElement = 1,
-    ComplexControl,
-    PrimitiveElement,
-    ContentsType,
-    SubElement,
-    SubControl,
-    PixelMetric,
-    StandardPixmap,
-    StyleHint,
-};
-
 UnionStyle::UnionStyle()
     : QCommonStyle()
-    , m_showMnemonics(false)
     , m_dragFilter(std::make_unique<DragEventFilter>(this))
 {
     qApp->installEventFilter(this);
@@ -139,95 +39,66 @@ UnionStyle::~UnionStyle() noexcept
     ElementCache::clear();
 }
 
+AbstractElement *UnionStyle::element(const QWidget *widget, const QStyleOption *option) const
+{
+    // Always use the widget if we have it.
+    if (widget) {
+        return widget->property(UnionElementProperty).value<AbstractElement *>();
+    }
+
+    // If we have neither widget nor option, we can't do anything useful here.
+    if (!option) {
+        return nullptr;
+    }
+
+    // We might be able to get the widget from the option instead, if so, use that.
+    if (auto w = qobject_cast<QWidget *>(option->styleObject)) {
+        return w->property(UnionElementProperty).value<AbstractElement *>();
+    }
+
+    if (m_optionElementCache.contains(option->type)) {
+        return m_optionElementCache.value(option->type).value().get();
+    }
+
+    auto element = TypeMapping::createElementForOption(this, option->type);
+    m_optionElementCache.insert(option->type, std::shared_ptr<AbstractElement>(element));
+    return element;
+}
+
 void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ControlElement, controlElement, option, widget);
-    auto drawEnums = DrawEnums();
-    drawEnums.ControlElement = controlElement;
-    auto cached = ElementCache::element<QStyle::ControlElement,
-                                        QStyle::CE_PushButton,
-                                        QStyle::CE_PushButtonBevel,
-                                        QStyle::CE_PushButtonLabel,
-                                        QStyle::CE_CheckBox,
-                                        QStyle::CE_CheckBoxLabel,
-                                        QStyle::CE_RadioButton,
-                                        QStyle::CE_RadioButtonLabel,
-                                        QStyle::CE_TabBarTab,
-                                        QStyle::CE_TabBarTabShape,
-                                        QStyle::CE_TabBarTabLabel,
-                                        QStyle::CE_ProgressBar,
-                                        QStyle::CE_ProgressBarGroove,
-                                        QStyle::CE_ProgressBarContents,
-                                        QStyle::CE_ProgressBarLabel,
-                                        QStyle::CE_MenuItem,
-                                        QStyle::CE_MenuBarItem,
-                                        QStyle::CE_MenuBarEmptyArea,
-                                        QStyle::CE_ToolButtonLabel,
-                                        QStyle::CE_Header,
-                                        QStyle::CE_HeaderSection,
-                                        QStyle::CE_HeaderLabel,
-                                        QStyle::CE_ToolBoxTab,
-                                        QStyle::CE_SizeGrip,
-                                        QStyle::CE_Splitter,
-                                        QStyle::CE_RubberBand,
-                                        QStyle::CE_DockWidgetTitle,
-                                        QStyle::CE_ScrollBarAddLine,
-                                        QStyle::CE_ScrollBarSubLine,
-                                        QStyle::CE_ScrollBarAddPage,
-                                        QStyle::CE_ScrollBarSubPage,
-                                        QStyle::CE_ScrollBarSlider,
-                                        QStyle::CE_ScrollBarFirst,
-                                        QStyle::CE_ScrollBarLast,
-                                        QStyle::CE_FocusFrame,
-                                        QStyle::CE_ComboBoxLabel,
-                                        QStyle::CE_ToolBar,
-                                        QStyle::CE_ToolBoxTabShape,
-                                        QStyle::CE_ToolBoxTabLabel,
-                                        QStyle::CE_HeaderEmptyArea,
-                                        QStyle::CE_ItemViewItem,
-                                        QStyle::CE_ShapedFrame>(controlElement, hash, this, option, widget);
-    if (cached) {
-        cached->update(option);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        e->draw(painter, {controlElement});
+        return;
+    }
 
-        cached->draw(painter, drawEnums);
-    } else {
-        switch (controlElement) {
-        case CE_MenuEmptyArea:
-        case CE_MenuVMargin:
-        case CE_MenuHMargin:
-            return;
-        default:
-            break;
-        }
+    switch (controlElement) {
+    case CE_MenuEmptyArea:
+    case CE_MenuVMargin:
+    case CE_MenuHMargin:
+        return;
         // Unimplemented
         // CE_MenuScroller
         // CE_MenuTearoff
         // CE_ColumnViewGrip
+    default:
         QCommonStyle::drawControl(controlElement, option, painter, widget);
+        break;
     }
 }
 
 void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ComplexControl, control, option, widget);
-    auto drawEnums = DrawEnums();
-    drawEnums.ComplexControl = control;
-
-    auto cached = ElementCache::element<QStyle::ComplexControl,
-                                        QStyle::CC_ToolButton,
-                                        QStyle::CC_SpinBox,
-                                        QStyle::CC_ComboBox,
-                                        QStyle::CC_ScrollBar,
-                                        QStyle::CC_Slider,
-                                        QStyle::CC_TitleBar,
-                                        QStyle::CC_GroupBox>(control, hash, this, option, widget);
-    if (cached) {
-        cached->update(option);
-        cached->draw(painter, drawEnums);
-    } else {
-        // TODO: Dial, MDI controls
-        QCommonStyle::drawComplexControl(control, option, painter, widget);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        e->draw(painter, {control});
+        return;
     }
+
+    QCommonStyle::drawComplexControl(control, option, painter, widget);
 }
 
 QStyle::SubControl
@@ -266,253 +137,91 @@ UnionStyle::hitTestComplexControl(ComplexControl control, const QStyleOptionComp
     return QCommonStyle::hitTestComplexControl(control, option, point, widget);
 }
 
-void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
+void UnionStyle::drawPrimitive(QStyle::PrimitiveElement primitive, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PrimitiveElement, element, option, widget);
-    auto drawEnums = DrawEnums();
-    drawEnums.PrimitiveElement = element;
-    auto cached = ElementCache::element<QStyle::PrimitiveElement,
-                                        QStyle::PE_Frame,
-                                        QStyle::PE_FrameDefaultButton,
-                                        QStyle::PE_FrameDockWidget,
-                                        QStyle::PE_FrameFocusRect,
-                                        QStyle::PE_FrameGroupBox,
-                                        QStyle::PE_FrameLineEdit,
-                                        QStyle::PE_FrameMenu,
-                                        QStyle::PE_FrameStatusBarItem,
-                                        QStyle::PE_FrameTabWidget,
-                                        QStyle::PE_FrameWindow,
-                                        QStyle::PE_FrameButtonBevel,
-                                        QStyle::PE_FrameButtonTool,
-                                        QStyle::PE_FrameTabBarBase,
-                                        QStyle::PE_PanelButtonCommand,
-                                        QStyle::PE_PanelButtonBevel,
-                                        QStyle::PE_PanelButtonTool,
-                                        QStyle::PE_PanelMenuBar,
-                                        QStyle::PE_PanelToolBar,
-                                        QStyle::PE_PanelLineEdit,
-                                        QStyle::PE_IndicatorArrowDown,
-                                        QStyle::PE_IndicatorArrowLeft,
-                                        QStyle::PE_IndicatorArrowRight,
-                                        QStyle::PE_IndicatorArrowUp,
-                                        QStyle::PE_IndicatorBranch,
-                                        QStyle::PE_IndicatorButtonDropDown,
-                                        QStyle::PE_IndicatorCheckBox,
-                                        QStyle::PE_IndicatorHeaderArrow,
-                                        QStyle::PE_IndicatorProgressChunk,
-                                        QStyle::PE_IndicatorRadioButton,
-                                        QStyle::PE_IndicatorSpinDown,
-                                        QStyle::PE_IndicatorSpinMinus,
-                                        QStyle::PE_IndicatorSpinPlus,
-                                        QStyle::PE_IndicatorSpinUp,
-                                        QStyle::PE_IndicatorToolBarHandle,
-                                        QStyle::PE_IndicatorToolBarSeparator,
-                                        QStyle::PE_PanelTipLabel,
-                                        QStyle::PE_PanelScrollAreaCorner,
-                                        QStyle::PE_Widget,
-                                        QStyle::PE_PanelItemViewItem,
-                                        QStyle::PE_PanelStatusBar,
-                                        QStyle::PE_IndicatorTabClose,
-                                        QStyle::PE_PanelMenu,
-                                        QStyle::PE_IndicatorDockWidgetResizeHandle>(element, hash, this, option, widget);
-    if (cached) {
-        cached->update(option);
-        cached->draw(painter, drawEnums);
-    } else {
-        // Handle some items that are just duplicates of the above, or need fallback
-        switch (element) {
-        case QStyle::PE_IndicatorMenuCheckMark:
-        case QStyle::PE_IndicatorItemViewItemCheck:
-            drawPrimitive(PE_IndicatorCheckBox, option, painter, widget);
-            return;
-        case QStyle::PE_IndicatorHeaderArrow:
-            // Fallback
-            if (option->state.testFlags(State_UpArrow)) {
-                drawPrimitive(PE_IndicatorArrowUp, option, painter, widget);
-            } else if (option->state.testFlags(State_DownArrow)) {
-                drawPrimitive(PE_IndicatorArrowDown, option, painter, widget);
-            }
-            return;
-        case QStyle::PE_IndicatorColumnViewArrow:
-            drawPrimitive(PE_IndicatorArrowRight, option, painter, widget);
-            return;
-        default:
-            break;
-            // Unhandled:
-            // QStyle::PE_PanelItemViewRow
-            // QStyle::PE_IndicatorTabTear
-            // QStyle::PE_IndicatorTabTearRight
-            // QStyle::PE_IndicatorItemViewItemDrop
-            // QStyle::PE_IndicatorDockWidgetResizeHandle
-            // QStyle::PE_CustomBase
-        }
-        QCommonStyle::drawPrimitive(element, option, painter, widget);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        e->draw(painter, {primitive});
+        return;
     }
+
+    // Handle some items that are just duplicates of the above, or need fallback
+    switch (primitive) {
+    case QStyle::PE_IndicatorMenuCheckMark:
+    case QStyle::PE_IndicatorItemViewItemCheck:
+        drawPrimitive(PE_IndicatorCheckBox, option, painter, widget);
+        return;
+    case QStyle::PE_IndicatorHeaderArrow:
+        // Fallback
+        if (option->state.testFlags(State_UpArrow)) {
+            drawPrimitive(PE_IndicatorArrowUp, option, painter, widget);
+        } else if (option->state.testFlags(State_DownArrow)) {
+            drawPrimitive(PE_IndicatorArrowDown, option, painter, widget);
+        }
+        return;
+    case QStyle::PE_IndicatorColumnViewArrow:
+        drawPrimitive(PE_IndicatorArrowRight, option, painter, widget);
+        return;
+    default:
+        break;
+        // Unhandled:
+        // QStyle::PE_PanelItemViewRow
+        // QStyle::PE_IndicatorTabTear
+        // QStyle::PE_IndicatorTabTearRight
+        // QStyle::PE_IndicatorItemViewItemDrop
+        // QStyle::PE_IndicatorDockWidgetResizeHandle
+        // QStyle::PE_CustomBase
+    }
+    QCommonStyle::drawPrimitive(primitive, option, painter, widget);
 }
 
 QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QStyleOption *option, const QSize &contentsSize, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ContentsType, contentsSize, option, widget);
-    auto cached = ElementCache::element<QStyle::ContentsType,
-                                        QStyle::CT_PushButton,
-                                        QStyle::CT_CheckBox,
-                                        QStyle::CT_RadioButton,
-                                        QStyle::CT_ToolButton,
-                                        QStyle::CT_ComboBox,
-                                        QStyle::CT_Splitter,
-                                        QStyle::CT_ProgressBar,
-                                        QStyle::CT_MenuItem,
-                                        QStyle::CT_MenuBarItem,
-                                        QStyle::CT_MenuBar,
-                                        QStyle::CT_Menu,
-                                        QStyle::CT_TabBarTab,
-                                        QStyle::CT_Slider,
-                                        QStyle::CT_ScrollBar,
-                                        QStyle::CT_LineEdit,
-                                        QStyle::CT_SpinBox,
-                                        QStyle::CT_SizeGrip,
-                                        QStyle::CT_TabWidget,
-                                        QStyle::CT_HeaderSection,
-                                        QStyle::CT_GroupBox,
-                                        QStyle::CT_ItemViewItem>(contentsType, hash, this, option, widget);
-    if (cached) {
-        return cached->contentsSize(contentsSize).toSize();
-    } else {
-        // Unhandled
-        // QStyle::CT_DialogButtons:
-        // QStyle::CT_MdiControls:
-        // QStyle::CT_CustomBase:
-        return QCommonStyle::sizeFromContents(contentsType, option, contentsSize, widget);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->contentsSize(contentsSize).toSize();
     }
+
+    // Unhandled
+    // QStyle::CT_DialogButtons:
+    // QStyle::CT_MdiControls:
+    // QStyle::CT_CustomBase:
+    return QCommonStyle::sizeFromContents(contentsType, option, contentsSize, widget);
 }
 
-QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption *option, const QWidget *widget) const
+QRect UnionStyle::subElementRect(QStyle::SubElement subElement, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::SubElement, element, option, widget);
-
-    auto cached = ElementCache::element<QStyle::SubElement,
-                                        QStyle::SE_ItemViewItemText,
-                                        QStyle::SE_ItemViewItemDecoration,
-                                        QStyle::SE_ItemViewItemCheckIndicator,
-                                        QStyle::SE_RadioButtonContents,
-                                        QStyle::SE_RadioButtonIndicator,
-                                        QStyle::SE_CheckBoxIndicator,
-                                        QStyle::SE_CheckBoxContents,
-                                        QStyle::SE_PushButtonFocusRect,
-                                        QStyle::SE_PushButtonContents,
-                                        QStyle::SE_PushButtonBevel,
-                                        QStyle::SE_LineEditContents,
-                                        QStyle::SE_HeaderArrow,
-                                        QStyle::SE_HeaderLabel,
-                                        QStyle::SE_ProgressBarLabel,
-                                        QStyle::SE_ProgressBarContents,
-                                        QStyle::SE_ProgressBarGroove,
-                                        QStyle::SE_DockWidgetTitleBarText,
-                                        QStyle::SE_DockWidgetCloseButton,
-                                        QStyle::SE_DockWidgetFloatButton,
-                                        QStyle::SE_DockWidgetIcon,
-                                        QStyle::SE_ToolBoxTabContents,
-                                        QStyle::SE_FrameContents>(element, hash, this, option, widget);
-
-    if (cached) {
-        cached->update(option);
-        return cached->subElementRect(element).toRect();
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->subElementRect(subElement).toRect();
     }
 
-    return QCommonStyle::subElementRect(element, option, widget);
+    return QCommonStyle::subElementRect(subElement, option, widget);
 }
 
 QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOptionComplex *option, SubControl subControl, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ComplexControl, complexControl, option, widget);
-
-    auto cached = ElementCache::element<QStyle::ComplexControl,
-                                        QStyle::CC_ToolButton,
-                                        QStyle::CC_SpinBox,
-                                        QStyle::CC_ComboBox,
-                                        QStyle::CC_ScrollBar,
-                                        QStyle::CC_Slider,
-                                        QStyle::CC_TitleBar,
-                                        QStyle::CC_GroupBox>(complexControl, hash, this, option, widget);
-    if (cached) {
-        cached->update(option);
-        return cached->subControlRect(subControl).toRect();
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->subControlRect(subControl).toRect();
     }
+
     // TODO: Leave Dial and MDIControls to QCommonStyle for now
     return QCommonStyle::subControlRect(complexControl, option, subControl, widget);
 }
 
 int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PixelMetric, metric, option, widget);
-    auto cached = ElementCache::element<QStyle::PixelMetric,
-                                        QStyle::PM_ButtonMargin,
-                                        QStyle::PM_ButtonDefaultIndicator,
-                                        QStyle::PM_MenuButtonIndicator,
-                                        QStyle::PM_DefaultFrameWidth,
-                                        QStyle::PM_SpinBoxFrameWidth,
-                                        QStyle::PM_ComboBoxFrameWidth,
-                                        QStyle::PM_ScrollBarExtent,
-                                        QStyle::PM_ScrollBarSliderMin,
-                                        QStyle::PM_SliderThickness,
-                                        QStyle::PM_SliderControlThickness,
-                                        QStyle::PM_SliderLength,
-                                        QStyle::PM_DockWidgetFrameWidth,
-                                        QStyle::PM_TabBarTabHSpace,
-                                        QStyle::PM_TabBarTabVSpace,
-                                        QStyle::PM_TabBarBaseHeight,
-                                        QStyle::PM_ProgressBarChunkWidth,
-                                        QStyle::PM_SplitterWidth,
-                                        QStyle::PM_TitleBarHeight,
-                                        QStyle::PM_MenuHMargin,
-                                        QStyle::PM_MenuVMargin,
-                                        QStyle::PM_MenuPanelWidth,
-                                        QStyle::PM_MenuDesktopFrameWidth,
-                                        QStyle::PM_MenuBarItemSpacing,
-                                        QStyle::PM_MenuBarVMargin,
-                                        QStyle::PM_MenuBarHMargin,
-                                        QStyle::PM_IndicatorWidth,
-                                        QStyle::PM_IndicatorHeight,
-                                        QStyle::PM_ExclusiveIndicatorWidth,
-                                        QStyle::PM_ExclusiveIndicatorHeight,
-                                        QStyle::PM_HeaderMargin,
-                                        QStyle::PM_HeaderGripMargin,
-                                        QStyle::PM_HeaderMarkSize,
-                                        QStyle::PM_TabBarScrollButtonWidth,
-                                        QStyle::PM_ToolBarFrameWidth,
-                                        QStyle::PM_ToolBarHandleExtent,
-                                        QStyle::PM_ToolBarItemSpacing,
-                                        QStyle::PM_ToolBarItemMargin,
-                                        QStyle::PM_ToolBarSeparatorExtent,
-                                        QStyle::PM_ToolBarExtensionExtent,
-                                        QStyle::PM_ToolBarIconSize,
-                                        QStyle::PM_ListViewIconSize,
-                                        QStyle::PM_IconViewIconSize,
-                                        QStyle::PM_SmallIconSize,
-                                        QStyle::PM_LargeIconSize,
-                                        QStyle::PM_FocusFrameVMargin,
-                                        QStyle::PM_FocusFrameHMargin,
-                                        QStyle::PM_ToolTipLabelFrameWidth,
-                                        QStyle::PM_CheckBoxLabelSpacing,
-                                        QStyle::PM_TabBarIconSize,
-                                        QStyle::PM_SizeGripSize,
-                                        QStyle::PM_MessageBoxIconSize,
-                                        QStyle::PM_ButtonIconSize,
-                                        QStyle::PM_RadioButtonLabelSpacing,
-                                        QStyle::PM_TextCursorWidth,
-                                        QStyle::PM_TabCloseIndicatorWidth,
-                                        QStyle::PM_TabCloseIndicatorHeight,
-                                        QStyle::PM_TreeViewIndentation,
-                                        QStyle::PM_HeaderDefaultSectionSizeHorizontal,
-                                        QStyle::PM_HeaderDefaultSectionSizeVertical,
-                                        QStyle::PM_TitleBarButtonIconSize,
-                                        QStyle::PM_TitleBarButtonSize,
-                                        QStyle::PM_LineEditIconSize,
-                                        QStyle::PM_LineEditIconMargin,
-                                        QStyle::PM_DockWidgetSeparatorExtent>(metric, hash, this, option, widget);
-    if (cached) {
-        return cached->pixelMetric(metric);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->pixelMetric(metric);
     }
+
     // Unimplemented, use QCommonStyle for now
     // QStyle::PM_MenuScrollerHeight
     // QStyle::PM_SpinBoxSliderHeight
@@ -563,16 +272,10 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
 
 QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption *option, const QWidget *widget) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::StandardPixmap, option, widget);
-    auto cached =
-        ElementCache::element<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton, QStyle::SP_TitleBarCloseButton, QStyle::SP_TitleBarNormalButton>(
-            pixmap,
-            hash,
-            this,
-            option,
-            widget);
-    if (cached) {
-        return cached->standardPixmap(pixmap);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->standardPixmap(pixmap);
     }
 
     return QCommonStyle::standardIcon(pixmap, option, widget);
@@ -582,16 +285,10 @@ QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption
 // TODO: Make these adjustable!
 int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWidget *widget, QStyleHintReturn *returnData) const
 {
-    const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::StyleHint, hint, option, widget);
-    auto cached = ElementCache::element<QStyle::StyleHint,
-                                        QStyle::SH_TabBar_Alignment,
-                                        QStyle::SH_TabBar_ElideMode,
-                                        QStyle::SH_FormLayoutFormAlignment,
-                                        QStyle::SH_FormLayoutLabelAlignment,
-                                        QStyle::SH_FormLayoutFieldGrowthPolicy,
-                                        QStyle::SH_FormLayoutWrapPolicy>(hint, hash, this, option, widget);
-    if (cached) {
-        return cached->styleHint(hint);
+    auto e = element(widget, option);
+    if (e) {
+        e->update(option);
+        return e->styleHint(hint);
     }
 
     switch (hint) {
@@ -705,8 +402,14 @@ void UnionStyle::polish(QWidget *widget)
     m_dragFilter->installWidget(widget);
     // enable mouse over effects for all necessary widgets
     if (widget) {
+        auto e = element(widget, nullptr);
+        if (!e) {
+            e = TypeMapping::createElementForWidget(this, widget);
+            widget->setProperty(UnionElementProperty, QVariant::fromValue(e));
+        }
+
         widget->setAttribute(Qt::WA_Hover);
-        widget->setProperty(property_union_member_list, widgetToElementHierarchy(widget));
+
         if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
@@ -743,124 +446,6 @@ void UnionStyle::unpolish(QWidget *widget)
     m_dragFilter->uninstallWidget(widget);
     QCommonStyle::unpolish(widget);
 }
-
-QStringList UnionStyle::widgetToElementHierarchy(const QWidget *widget) const
-{
-    if (!widget) {
-        return QStringList();
-    }
-    QStringList members;
-
-    // This mess of a ladder is used to create a proper order for the element hierarchy,
-    // based on the widget the item can be casted to.
-    // NOTE: These must be in correct order! See https://doc.qt.io/qt-6/hierarchy.html
-    // For example, QSplitter can be casted to both QFrame and QSplitter, so QSplitter is checked first.
-    // TODO: Probably need to implement all widgets?
-    auto currentWidget = widget;
-    while (currentWidget) {
-        // Buttons
-        if (qobject_cast<const QCheckBox *>(currentWidget)) {
-            members.prepend(ElementString::CheckBox);
-        } else if (qobject_cast<const QRadioButton *>(currentWidget)) {
-            members.prepend(ElementString::RadioButton);
-        } else if (qobject_cast<const QPushButton *>(currentWidget)) {
-            members.prepend(ElementString::Button);
-        } else if (qobject_cast<const QToolButton *>(currentWidget)) {
-            members.prepend(ElementString::ToolButton);
-        } else if (qobject_cast<const QAbstractButton *>(currentWidget)) {
-            members.prepend(ElementString::Button);
-            // Sliders
-        } else if (qobject_cast<const QDial *>(currentWidget)) {
-            members.prepend(ElementString::Dial);
-        } else if (qobject_cast<const QScrollBar *>(currentWidget)) {
-            members.prepend(ElementString::ScrollBar);
-        } else if (qobject_cast<const QSlider *>(currentWidget)) {
-            members.prepend(ElementString::Slider);
-        } else if (qobject_cast<const QAbstractSlider *>(currentWidget)) {
-            members.prepend(ElementString::Slider);
-            // Frames
-        } else if (qobject_cast<const QColumnView *>(currentWidget)) {
-            members.prepend(ElementString::ColumnView);
-        } else if (qobject_cast<const QHeaderView *>(currentWidget)) {
-            members.prepend(ElementString::HeaderView);
-        } else if (qobject_cast<const QTableView *>(currentWidget)) {
-            members.prepend(ElementString::TableView);
-        } else if (qobject_cast<const QTreeView *>(currentWidget)) {
-            members.prepend(ElementString::TreeView);
-        } else if (qobject_cast<const QListView *>(currentWidget)) {
-            if (currentWidget->inherits("QComboBoxListView")) {
-                members.prepend(ElementString::Popup);
-            } else {
-                members.prepend(ElementString::ListView);
-            }
-        } else if (qobject_cast<const QPlainTextEdit *>(currentWidget)) {
-            members.prepend(ElementString::TextArea);
-        } else if (qobject_cast<const QTextEdit *>(currentWidget)) {
-            members.prepend(ElementString::TextArea);
-        } else if (qobject_cast<const QGraphicsView *>(currentWidget)) {
-            members.prepend(ElementString::GraphicsView);
-        } else if (qobject_cast<const QScrollArea *>(currentWidget)) {
-            members.prepend(ElementString::ScrollArea);
-        } else if (qobject_cast<const QLabel *>(currentWidget)) {
-            members.prepend(ElementString::Label);
-        } else if (currentWidget->inherits("KMultiTabBar")) {
-            members.prepend(ElementString::TabBar);
-        } else if (qobject_cast<const QFrame *>(currentWidget)) {
-            if (currentWidget->inherits("QComboBoxPrivateContainer")) {
-                members.prepend(ElementString::Popup);
-            } else {
-                members.prepend(ElementString::Frame);
-            }
-            // Toplevels
-        } else if (qobject_cast<const QAbstractSpinBox *>(currentWidget)) {
-            members.prepend(ElementString::SpinBox);
-        } else if (qobject_cast<const QGroupBox *>(currentWidget)) {
-            members.prepend(ElementString::GroupBox);
-        } else if (qobject_cast<const QKeySequenceEdit *>(currentWidget)) {
-            members.prepend(ElementString::KeySequenceEdit);
-        } else if (qobject_cast<const QComboBox *>(currentWidget)) {
-            members.prepend(ElementString::ComboBox);
-        } else if (qobject_cast<const QDialog *>(currentWidget)) {
-            members.prepend(ElementString::Dialog);
-        } else if (qobject_cast<const QDialogButtonBox *>(currentWidget)) {
-            members.prepend(ElementString::DialogButtonBox);
-        } else if (qobject_cast<const QDockWidget *>(currentWidget)) {
-            members.prepend(ElementString::DockWidget);
-        } else if (qobject_cast<const QFocusFrame *>(currentWidget)) {
-            members.prepend(ElementString::FocusFrame);
-        } else if (qobject_cast<const QLineEdit *>(currentWidget)) {
-            members.prepend(ElementString::TextField);
-        } else if (qobject_cast<const QMainWindow *>(currentWidget)) {
-            members.prepend(ElementString::ApplicationWindow);
-        } else if (qobject_cast<const QMdiSubWindow *>(currentWidget)) {
-            members.prepend(ElementString::MdiSubWindow);
-        } else if (qobject_cast<const QMenu *>(currentWidget)) {
-            members.prepend(ElementString::Menu);
-        } else if (qobject_cast<const QMenuBar *>(currentWidget)) {
-            members.prepend(ElementString::MenuBar);
-        } else if (qobject_cast<const QProgressBar *>(currentWidget)) {
-            members.prepend(ElementString::ProgressBar);
-        } else if (currentWidget->inherits("KCapacityBar")) {
-            members.prepend(ElementString::ProgressBar);
-        } else if (qobject_cast<const QRubberBand *>(currentWidget)) {
-            members.prepend(ElementString::RubberBand);
-        } else if (qobject_cast<const QSizeGrip *>(currentWidget)) {
-            members.prepend(ElementString::SizeGrip);
-        } else if (qobject_cast<const QStatusBar *>(currentWidget)) {
-            members.prepend(ElementString::StatusBar);
-        } else if (qobject_cast<const QTabBar *>(currentWidget)) {
-            members.prepend(ElementString::TabBar);
-        } else if (qobject_cast<const QTabWidget *>(currentWidget)) {
-            members.prepend(ElementString::TabWidget);
-        } else if (qobject_cast<const QToolBar *>(currentWidget)) {
-            members.prepend(ElementString::ToolBar);
-        }
-        currentWidget = currentWidget->parentWidget();
-    }
-
-    return members;
-}
-
 
 void UnionStyle::drawItemPixmap(QPainter *painter, const QRectF &rect, Qt::Alignment alignment, const QPixmap &pixmap) const
 {
