@@ -54,6 +54,8 @@ void UnionPainter::draw()
 
     m_painter->save();
 
+    m_painter->setRenderHint(QPainter::Antialiasing, true);
+
     QRectF rect = m_drawRect;
     // Remove any insets we may have, we do not want to draw them
     if (m_properties->layout() && m_properties->layout()->inset()) {

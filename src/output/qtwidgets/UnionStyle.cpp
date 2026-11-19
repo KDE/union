@@ -141,8 +141,6 @@ UnionStyle::~UnionStyle() noexcept
 
 void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    // Make lines not look completely terrible on fractional scales
-    painter->setRenderHint(QPainter::Antialiasing, true);
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ControlElement, controlElement, option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.ControlElement = controlElement;
@@ -211,8 +209,6 @@ void UnionStyle::drawControl(QStyle::ControlElement controlElement, const QStyle
 
 void UnionStyle::drawComplexControl(ComplexControl control, const QStyleOptionComplex *option, QPainter *painter, const QWidget *widget) const
 {
-    // Make lines not look completely terrible on fractional scales
-    painter->setRenderHint(QPainter::Antialiasing, true);
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::ComplexControl, control, option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.ComplexControl = control;
@@ -272,8 +268,6 @@ UnionStyle::hitTestComplexControl(ComplexControl control, const QStyleOptionComp
 
 void UnionStyle::drawPrimitive(QStyle::PrimitiveElement element, const QStyleOption *option, QPainter *painter, const QWidget *widget) const
 {
-    // Make lines not look completely terrible on fractional scales
-    painter->setRenderHint(QPainter::Antialiasing, true);
     const auto hash = qHashMulti(QHashSeed::globalSeed(), EnumContext::PrimitiveElement, element, option, widget);
     auto drawEnums = DrawEnums();
     drawEnums.PrimitiveElement = element;
