@@ -60,6 +60,8 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/WidgetElement.cpp
         elements/IndicatorElement.cpp
         elements/TreeViewElement.cpp
+
+        elements/TextSubElement.cpp
 )
 
 target_sources(UnionWidgetsStyle PUBLIC
@@ -114,6 +116,8 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/WidgetElement.h
         elements/IndicatorElement.h
         elements/TreeViewElement.h
+
+        elements/TextSubElement.h
 )
 
 target_link_libraries(UnionWidgetsStyle
