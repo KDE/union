@@ -3,164 +3,149 @@
 
 #include "ComboBoxElement.h"
 
+#include <QComboBox>
+
+#include "TextSubElement.h"
+
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-ComboBoxElement::ComboBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+static OptionToElementRegistration<ComboBoxElement, QStyleOption::SO_ComboBox> comboBoxOptionRegistration;
+static WidgetToElementRegistration<ComboBoxElement, QComboBox> comboBoxWidgetRegistration;
+
+ComboBoxElement::ComboBoxElement(const UnionStyle *style, QWidget *widget)
+    : AbstractElement(style, widget)
     , m_editable(false)
     , m_hasFrame(true)
 {
-    update(option);
 }
 
 void ComboBoxElement::update(const QStyleOption *option)
 {
-    AbstractElement::update(option);
-    if (const auto newOpt = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
-        m_comboBoxOption = newOpt;
+    auto e = element();
+    if (!e) {
+        e = Union::Element::create();
+        e->setType(ElementString::ComboBox);
+        setElement(e);
     }
-    if (m_comboBoxOption) {
-        m_editable = m_comboBoxOption->editable;
-        m_hasFrame = m_comboBoxOption->frame;
 
-        setIndicator(QIcon());
-        m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
-        if (!m_indicatorElementList.isEmpty()) {
-            m_indicatorProperties = queryProperties(m_indicatorElementList);
-            if (m_indicatorProperties->icon()) {
-                setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
+    if (const auto comboOption = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
+        m_editable = comboOption->editable;
+        e->setHint(u"editable"_s, m_editable);
+        m_hasFrame = comboOption->frame;
+        e->setHint(u"flat"_s, !m_hasFrame);
+
+        if (!comboOption->currentText.isEmpty()) {
+            auto textSubElement = firstChildOfType<TextSubElement>();
+            if (!textSubElement) {
+                textSubElement = new TextSubElement(style(), widget());
+                textSubElement->setFlag(AbstractElementFlag::DrawMnemonics);
+                addChildElement(textSubElement);
             }
+            textSubElement->setText(comboOption->currentText);
         }
 
-        setIcon(m_comboBoxOption->currentIcon);
-        setText(m_comboBoxOption->currentText);
-        updateSubElementList();
+        // setIndicator(QIcon());
+        // m_indicatorElementList = prepareElements(m_comboBoxOption, m_widget, {ElementString::Indicator});
+        // if (!m_indicatorElementList.isEmpty()) {
+        //     m_indicatorProperties = queryProperties(m_indicatorElementList);
+        //     if (m_indicatorProperties->icon()) {
+        //         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
+        //     }
+        // }
+
+        // setIcon(m_comboBoxOption->currentIcon);
+        // setText(m_comboBoxOption->currentText);
+        // updateSubElementList();
         // Adding shadows to editable widgets seems to cause issues with the painter
-        if (!m_editable) {
-            updateGraphicsEffect(m_comboBoxOption->rect);
-        }
+        // if (!m_editable) {
+        //     updateGraphicsEffect(m_comboBoxOption->rect);
+        // }
     }
-    layout();
+    // layout();
+    AbstractElement::update(option);
 }
 
-ComboBoxElement::~ComboBoxElement()
+void ComboBoxElement::draw(QPainter *painter, DrawVariant what) const
 {
-}
-
-void ComboBoxElement::draw(QPainter *painter, DrawEnums enums) const
-{
-    if (!m_isValid) {
-        return;
-    }
-
-    switch (enums.ControlElement) {
-    case QStyle::CE_ComboBoxLabel:
-        drawIcon(painter);
-        if (!isEditable()) {
-            drawText(painter);
-        }
-        break;
-    }
-
-    switch (enums.ComplexControl) {
-    case QStyle::CC_ComboBox:
-        if (m_hasFrame) {
-            drawBackground(painter);
-        } else {
-            drawPanel(painter);
-        }
-        drawIcon(painter);
-        drawIndicator(painter);
-        break;
-    }
-}
-
-bool ComboBoxElement::isEditable() const
-{
-    return m_editable;
-}
-
-void ComboBoxElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(ElementString::Text);
-    if (hasIcon()) {
-        m_subElementList.append(ElementString::Icon);
-    }
-    m_subElementList.append(ElementString::Indicator);
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [](QStyle::PrimitiveElement) { },
+                          [&](QStyle::ControlElement controlElement) {
+                              switch (controlElement) {
+                              case QStyle::CE_ComboBoxLabel:
+                                  // drawIcon(painter);
+                                  if (!m_editable) {
+                                      firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  }
+                                  break;
+                              default:
+                                  break;
+                              }
+                          },
+                          [&](QStyle::ComplexControl complexControl) {
+                              switch (complexControl) {
+                              case QStyle::CC_ComboBox:
+                                  if (m_hasFrame) {
+                                      drawBackground(painter);
+                                  } else {
+                                      drawPanel(painter);
+                                  }
+                                  // drawIcon(painter);
+                                  // drawIndicator(painter);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          }},
+               what);
 }
 
 QSizeF ComboBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     // Follow the contents width
-    auto size = applyPaddingToSize(contentsSizeFromStyle);
-    const auto indicatorSize = applyPaddingToSize(m_layoutMap[ElementString::Indicator].rect.size());
-    size.rwidth() += indicatorSize.width() + spacing();
+    auto size = propertyWrapper().adjustSize(contentsSizeFromStyle, false);
+    // const auto indicatorSize = applyPaddingToSize(m_layoutMap[ElementString::Indicator].rect.size());
+    // size.rwidth() += indicatorSize.width() + spacing();
     return size;
 }
 
 QRectF ComboBoxElement::subControlRect(QStyle::SubControl subControl) const
 {
-    if (m_isValid && m_comboBoxOption) {
-        switch (subControl) {
-        case QStyle::SC_ComboBoxFrame:
-            return visualRect(backgroundRectangle(m_comboBoxOption, m_elementProperties).toRect());
-        case QStyle::SC_ComboBoxListBoxPopup:
-            return visualRect(m_comboBoxOption->rect);
-        case QStyle::SC_ComboBoxArrow: {
-            auto rect = m_layoutMap[ElementString::Indicator].rect;
-            rect = rect.adjusted(-spacing(), 0, spacing(), 0);
-            return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
-        }
-        case QStyle::SC_ComboBoxEditField: {
-            QRectF rect = m_comboBoxOption->rect.marginsRemoved(borderSize().toMargins());
-            rect.setWidth(rect.width() - subControlRect(QStyle::SC_ComboBoxArrow).width());
-            // When drawing the text editor, it has padding of its own.
-            // Remove our own padding and rely on the text editor padding.
-            auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
-            rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
-            return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
-        }
-        default:
-            break;
-        }
+    switch (subControl) {
+    case QStyle::SC_ComboBoxFrame:
+        return /*visualRect(*/ backgroundRectangle(rect(), properties()).toRect();
+    case QStyle::SC_ComboBoxListBoxPopup:
+        return rect();
+        // return visualRect(m_comboBoxOption->rect);
+    case QStyle::SC_ComboBoxArrow: {
+        // auto rect = m_layoutMap[ElementString::Indicator].rect;
+        // rect = rect.adjusted(-spacing(), 0, spacing(), 0);
+        // return m_style->visualRect(m_comboBoxOption->direction, m_comboBoxOption->rect, rect);
     }
-    return m_style->QCommonStyle::subControlRect(QStyle::CC_ComboBox, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
-}
+    case QStyle::SC_ComboBoxEditField: {
+        QRectF r = rect().marginsRemoved(propertyWrapper().borderSize());
+        // rect.setWidth(rect.width() - subControlRect(QStyle::SC_ComboBoxArrow).width());
+        // When drawing the text editor, it has padding of its own.
+        // Remove our own padding and rely on the text editor padding.
+        // auto paddingAdjustment = padding().left() + (hasIcon() ? spacing() : 0);
+        // rect.moveLeft(m_layoutMap[ElementString::Text].rect.left() - paddingAdjustment - m_layoutMap[ElementString::Icon].rect.width());
+        return UnionStyle::visualRect(direction(), rect(), r);
+    }
+    default:
+        break;
+    }
 
-Union::IdentifierList ComboBoxElement::elementHints() const
-{
-    Union::IdentifierList hints;
-    if (!m_comboBoxOption->frame) {
-        hints.append(u"flat"_s);
-    }
-    if (m_comboBoxOption->editable) {
-        hints.append(u"editable"_s);
-    }
-    return hints;
-}
-
-void ComboBoxElement::drawText(QPainter *painter) const
-{
-    if (m_editable) {
-        return;
-    }
-    AbstractElement::drawText(painter);
+    return style()->QCommonStyle::subControlRect(QStyle::CC_ComboBox, nullptr, subControl, widget());
 }
 
 qreal ComboBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ComboBoxFrameWidth:
-        return averageBorderSize();
+        return propertyWrapper().averageBorderSize();
     default:
         break;
     }
     return 0;
-}
-
-QString ComboBoxElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::ComboBox;
 }

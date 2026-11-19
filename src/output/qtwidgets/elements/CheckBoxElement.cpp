@@ -3,143 +3,135 @@
 
 #include "CheckBoxElement.h"
 
+#include <QCheckBox>
+
+#include "TextSubElement.h"
+
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-CheckBoxElement::CheckBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
-{
-    setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
-}
+static WidgetToElementRegistration<CheckBoxElement, QCheckBox> checkBoxRegistration;
 
-CheckBoxElement::~CheckBoxElement()
+CheckBoxElement::CheckBoxElement(const UnionStyle *style, QWidget *widget)
+    : AbstractElement(style, widget)
 {
 }
 
 void CheckBoxElement::update(const QStyleOption *option)
 {
+    auto e = element();
+    if (!e) {
+        e = Union::Element::create();
+        e->setType(ElementString::CheckBox);
+        setElement(e);
+    }
+
+    if (auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option); buttonOption) {
+        e->setHint(u"with-icon"_s, !buttonOption->icon.isNull());
+
+        if (buttonOption->state.testFlag(QStyle::State_NoChange)) {
+            e->setHint(u"indeterminate"_s, true);
+        } else {
+            e->setHint(u"indeterminate"_s, false);
+        }
+
+        if (!buttonOption->text.isEmpty()) {
+            auto textSubElement = firstChildOfType<TextSubElement>();
+            if (!textSubElement) {
+                textSubElement = new TextSubElement(style(), widget());
+                textSubElement->setFlag(AbstractElementFlag::DrawMnemonics);
+                addChildElement(textSubElement);
+            }
+            textSubElement->setText(buttonOption->text);
+        }
+        // setIcon(m_buttonOption->icon);
+        // setText(m_buttonOption->text);
+        // updateSubElementList();
+        // updateGraphicsEffect(m_buttonOption->rect);
+    }
+
     AbstractElement::update(option);
-    if (const auto newOpt = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-        m_buttonOption = newOpt;
-    }
-    if (m_buttonOption) {
-        setIcon(m_buttonOption->icon);
-        setText(m_buttonOption->text);
-        updateSubElementList();
-        updateGraphicsEffect(m_buttonOption->rect);
-    }
-    layout();
 }
 
 void CheckBoxElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
-    if (!m_indicatorElementList.isEmpty()) {
-        m_indicatorProperties = queryProperties(m_indicatorElementList);
-    }
+    // m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::CheckBox, ElementString::Indicator});
+    // if (!m_indicatorElementList.isEmpty()) {
+    //     m_indicatorProperties = queryProperties(m_indicatorElementList);
+    // }
     AbstractElement::layout();
 }
 
-void CheckBoxElement::draw(QPainter *painter, DrawEnums enums) const
+void CheckBoxElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid) {
-        return;
-    }
-
-    switch (enums.ControlElement) {
-    case QStyle::CE_CheckBox:
-        drawBackground(painter);
-        drawText(painter);
-        drawIndicator(painter);
-        break;
-    case QStyle::CE_CheckBoxLabel:
-        drawText(painter);
-        break;
-    }
-
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_IndicatorCheckBox:
-        drawIndicator(painter);
-        break;
-    }
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [](QStyle::ComplexControl) { },
+                          [&](QStyle::ControlElement controlElement) {
+                              switch (controlElement) {
+                              case QStyle::CE_CheckBox:
+                                  drawBackground(painter);
+                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  // drawIndicator(painter);
+                                  break;
+                              case QStyle::CE_CheckBoxLabel:
+                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          },
+                          [&](QStyle::PrimitiveElement primitiveElement) {
+                              switch (primitiveElement) {
+                              case QStyle::PE_IndicatorCheckBox:
+                                  // drawIndicator(painter);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          }},
+               what);
 }
 
 QSizeF CheckBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
-    auto size = applyPaddingToSize(contentsSizeFromStyle);
+    auto size = AbstractElement::contentsSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label
-    size.rwidth() += spacing() + width(m_indicatorProperties);
+    // size.rwidth() += spacing() + width(m_indicatorProperties);
     return size;
 }
 
 QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
 {
-    if (m_isValid) {
-        if (element == QStyle::SE_CheckBoxIndicator) {
-            if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
-                // The indicator is drawn as part of something
-                return visualRect(m_layoutMap[ElementString::Indicator].rect);
-            }
-        }
+    switch (element) {
+    case QStyle::SE_CheckBoxClickRect:
+        return rect();
+    case QStyle::SE_CheckBoxIndicator:
+    default:
+        break;
     }
+
+    // if (element == QStyle::SE_CheckBoxIndicator) {
+    //     if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
+    //         // The indicator is drawn as part of something
+    //         return visualRect(m_layoutMap[ElementString::Indicator].rect);
+    //     }
+    // }
     // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
-}
-
-void CheckBoxElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(ElementString::Indicator);
-    if (m_buttonOption) {
-        if (!m_buttonOption->icon.isNull()) {
-            m_subElementList.append(ElementString::Icon);
-        }
-        if (!m_buttonOption->text.isEmpty()) {
-            m_subElementList.append(ElementString::Text);
-        }
-    }
-}
-
-void CheckBoxElement::drawIndicator(QPainter *painter) const
-{
-    UnionPainter unionPainter(painter, m_indicatorProperties);
-    unionPainter.setRect(subElementRect(QStyle::SE_CheckBoxIndicator));
-    unionPainter.draw();
-}
-
-Union::IdentifierList CheckBoxElement::elementHints() const
-{
-    Union::IdentifierList hints;
-    if (m_buttonOption) {
-        if (!m_buttonOption->icon.isNull()) {
-            hints.append(u"with-icon"_s);
-        }
-        // Used for "partial" checkbox
-        if (m_buttonOption->state.testFlag(QStyle::State_NoChange)) {
-            hints.append(u"indeterminate"_s);
-        }
-    }
-    return hints;
+    return style()->QCommonStyle::subElementRect(element, nullptr, widget());
 }
 
 qreal CheckBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
-    case QStyle::PM_IndicatorWidth:
-        return propertySize(m_indicatorProperties).width();
-    case QStyle::PM_IndicatorHeight:
-        return propertySize(m_indicatorProperties).height();
     case QStyle::PM_CheckBoxLabelSpacing:
-        return spacing();
+        return propertyWrapper().spacing();
+    case QStyle::PM_IndicatorWidth:
+        // return propertySize(m_elementProperties).width();
+    case QStyle::PM_IndicatorHeight:
+        // return propertySize(m_indicatorProperties).height();
     default:
         break;
     }
     return 0;
-}
-
-QString CheckBoxElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    // QStyleOptionButton is also used by push buttons, so the option type would make this a Button
-    return ElementString::CheckBox;
 }

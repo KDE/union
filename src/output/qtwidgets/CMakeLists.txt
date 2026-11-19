@@ -27,39 +27,39 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/ButtonElement.cpp
         elements/CheckBoxElement.cpp
         elements/ComboBoxElement.cpp
-        elements/DockWidgetElement.cpp
-        elements/MenuElement.cpp
-        elements/MenuBarElement.cpp
-        elements/MenuBarItemElement.cpp
-        elements/FrameElement.cpp
-        elements/FocusElement.cpp
-        elements/GroupBoxElement.cpp
-        elements/HeaderElement.cpp
-        elements/ItemViewElement.cpp
-        elements/LineEditElement.cpp
-        elements/MenuItemElement.cpp
-        elements/ProgressBarElement.cpp
-        elements/RadioButtonElement.cpp
-        elements/RubberBandElement.cpp
-        elements/ScrollBarElement.cpp
-        elements/ScrollAreaCornerElement.cpp
-        elements/SliderElement.cpp
-        elements/SizeGripElement.cpp
-        elements/SpinBoxElement.cpp
-        elements/SplitterElement.cpp
-        elements/StatusBarElement.cpp
-        elements/TabElement.cpp
-        elements/TabCloseButtonElement.cpp
-        elements/TabBarElement.cpp
-        elements/TabWidgetElement.cpp
-        elements/TitleBarElement.cpp
-        elements/ToolBarElement.cpp
-        elements/ToolBoxTabElement.cpp
-        elements/ToolButtonElement.cpp
-        elements/ToolTipElement.cpp
-        elements/WidgetElement.cpp
-        elements/IndicatorElement.cpp
-        elements/TreeViewElement.cpp
+        # elements/DockWidgetElement.cpp
+        # elements/MenuElement.cpp
+        # elements/MenuBarElement.cpp
+        # elements/MenuBarItemElement.cpp
+        # elements/FrameElement.cpp
+        # elements/FocusElement.cpp
+        # elements/GroupBoxElement.cpp
+        # elements/HeaderElement.cpp
+        # elements/ItemViewElement.cpp
+        # elements/LineEditElement.cpp
+        # elements/MenuItemElement.cpp
+        # elements/ProgressBarElement.cpp
+        # elements/RadioButtonElement.cpp
+        # elements/RubberBandElement.cpp
+        # elements/ScrollBarElement.cpp
+        # elements/ScrollAreaCornerElement.cpp
+        # elements/SliderElement.cpp
+        # elements/SizeGripElement.cpp
+        # elements/SpinBoxElement.cpp
+        # elements/SplitterElement.cpp
+        # elements/StatusBarElement.cpp
+        # elements/TabElement.cpp
+        # elements/TabCloseButtonElement.cpp
+        # elements/TabBarElement.cpp
+        # elements/TabWidgetElement.cpp
+        # elements/TitleBarElement.cpp
+        # elements/ToolBarElement.cpp
+        # elements/ToolBoxTabElement.cpp
+        # elements/ToolButtonElement.cpp
+        # elements/ToolTipElement.cpp
+        # elements/WidgetElement.cpp
+        # elements/IndicatorElement.cpp
+        # elements/TreeViewElement.cpp
 
         elements/TextSubElement.cpp
 )
@@ -83,39 +83,39 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/ButtonElement.h
         elements/CheckBoxElement.h
         elements/ComboBoxElement.h
-        elements/DockWidgetElement.h
-        elements/MenuElement.h
-        elements/MenuBarElement.h
-        elements/MenuBarItemElement.h
-        elements/FrameElement.h
-        elements/FocusElement.h
-        elements/GroupBoxElement.h
-        elements/HeaderElement.h
-        elements/ItemViewElement.h
-        elements/LineEditElement.h
-        elements/MenuItemElement.h
-        elements/ProgressBarElement.h
-        elements/RadioButtonElement.h
-        elements/RubberBandElement.h
-        elements/ScrollBarElement.h
-        elements/ScrollAreaCornerElement.h
-        elements/SliderElement.h
-        elements/SizeGripElement.h
-        elements/SpinBoxElement.h
-        elements/SplitterElement.h
-        elements/StatusBarElement.h
-        elements/TabElement.h
-        elements/TabCloseButtonElement.h
-        elements/TabBarElement.h
-        elements/TabWidgetElement.h
-        elements/TitleBarElement.h
-        elements/ToolBarElement.h
-        elements/ToolBoxTabElement.h
-        elements/ToolButtonElement.h
-        elements/ToolTipElement.h
-        elements/WidgetElement.h
-        elements/IndicatorElement.h
-        elements/TreeViewElement.h
+        # elements/DockWidgetElement.h
+        # elements/MenuElement.h
+        # elements/MenuBarElement.h
+        # elements/MenuBarItemElement.h
+        # elements/FrameElement.h
+        # elements/FocusElement.h
+        # elements/GroupBoxElement.h
+        # elements/HeaderElement.h
+        # elements/ItemViewElement.h
+        # elements/LineEditElement.h
+        # elements/MenuItemElement.h
+        # elements/ProgressBarElement.h
+        # elements/RadioButtonElement.h
+        # elements/RubberBandElement.h
+        # elements/ScrollBarElement.h
+        # elements/ScrollAreaCornerElement.h
+        # elements/SliderElement.h
+        # elements/SizeGripElement.h
+        # elements/SpinBoxElement.h
+        # elements/SplitterElement.h
+        # elements/StatusBarElement.h
+        # elements/TabElement.h
+        # elements/TabCloseButtonElement.h
+        # elements/TabBarElement.h
+        # elements/TabWidgetElement.h
+        # elements/TitleBarElement.h
+        # elements/ToolBarElement.h
+        # elements/ToolBoxTabElement.h
+        # elements/ToolButtonElement.h
+        # elements/ToolTipElement.h
+        # elements/WidgetElement.h
+        # elements/IndicatorElement.h
+        # elements/TreeViewElement.h
 
         elements/TextSubElement.h
 )

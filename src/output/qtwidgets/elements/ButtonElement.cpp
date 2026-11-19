@@ -3,162 +3,129 @@
 
 #include "ButtonElement.h"
 
+#include <QPushButton>
+
+#include "TextSubElement.h"
+
 using namespace Qt::StringLiterals;
-using namespace Union::Properties;
 using namespace Union::Widgets;
+using namespace Union::Properties;
 
-ButtonElement::ButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
-{
-    setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
-}
+static OptionToElementRegistration<ButtonElement, QStyleOption::SO_Button> buttonOptionRegistration;
+static WidgetToElementRegistration<ButtonElement, QPushButton> buttonWidgetRegistration;
 
-ButtonElement::~ButtonElement()
+ButtonElement::ButtonElement(const UnionStyle *style, QWidget *widget)
+    : AbstractElement(style, widget)
 {
 }
 
 void ButtonElement::update(const QStyleOption *option)
 {
+    auto e = element();
+    if (!e) {
+        e = Union::Element::create();
+        e->setType(ElementString::Button);
+        setElement(e);
+    }
+
+    auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
+    if (!buttonOption) {
+        return AbstractElement::update(option);
+    }
+
+    if (buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
+        || buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
+        e->setState(Union::Element::State::Highlighted, true);
+    }
+
+    e->setHint(u"with-icon"_s, !buttonOption->icon.isNull());
+    e->setHint(u"flat"_s, buttonOption->features.testFlag(QStyleOptionButton::Flat));
+    e->setHint(u"with-menu"_s, buttonOption->features.testFlag(QStyleOptionButton::HasMenu));
+    e->setHint(u"command-link-button"_s, buttonOption->features.testFlag(QStyleOptionButton::CommandLinkButton));
+
+    if (!buttonOption->text.isEmpty()) {
+        auto textSubElement = firstChildOfType<TextSubElement>();
+        if (!textSubElement) {
+            textSubElement = new TextSubElement(style(), widget());
+            textSubElement->setFlag(AbstractElementFlag::DrawMnemonics);
+            addChildElement(textSubElement);
+        }
+        textSubElement->setText(buttonOption->text);
+    }
+
     AbstractElement::update(option);
-    if (const auto newOpt = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-        m_buttonOption = newOpt;
-    }
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-            m_indicatorElementList = prepareElements(m_buttonOption, m_widget, {ElementString::Indicator});
-            if (!m_indicatorElementList.isEmpty()) {
-                m_indicatorProperties = queryProperties(m_indicatorElementList);
-                setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
-            }
-        }
-        setIcon(m_buttonOption->icon);
-        setText(m_buttonOption->text);
-        updateSubElementList();
-        updateGraphicsEffect(m_buttonOption->rect);
-    }
-    layout();
 }
 
-void ButtonElement::draw(QPainter *painter, DrawEnums enums) const
+void ButtonElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid || !m_buttonOption) {
-        return;
-    }
-    switch (enums.ControlElement) {
-    case QStyle::CE_PushButtonBevel:
-        drawBackground(painter);
-        break;
-    case QStyle::CE_PushButtonLabel:
-        drawIcon(painter);
-        drawText(painter);
-        break;
-    case QStyle::CE_PushButton:
-        drawBackground(painter);
-        drawIcon(painter);
-        drawText(painter);
-        drawIndicator(painter);
-        break;
-    }
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_FrameButtonBevel:
-    case QStyle::PE_FrameDefaultButton:
-        drawFrame(painter);
-        break;
-    case QStyle::PE_PanelButtonCommand:
-    case QStyle::PE_PanelButtonBevel:
-        drawBackground(painter);
-        break;
-    }
-}
-
-void ButtonElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-            m_subElementList.append(ElementString::Indicator);
-        }
-        if (!m_buttonOption->icon.isNull()) {
-            m_subElementList.append(ElementString::Icon);
-        }
-        if (!m_buttonOption->text.isEmpty()) {
-            m_subElementList.append(ElementString::Text);
-        }
-    }
-}
-
-QSizeF ButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
-{
-    if (m_buttonOption) {
-        auto size = applyPaddingToSize(contentsSizeFromStyle);
-        // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
-        // to get the proper contentSize
-        if (hasIndicator()) {
-            size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
-        }
-        return size;
-    }
-    return contentsSizeFromStyle;
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [this, painter](QStyle::ControlElement element) {
+                              switch (element) {
+                              case QStyle::CE_PushButtonBevel:
+                                  drawBackground(painter);
+                                  break;
+                              case QStyle::CE_PushButtonLabel:
+                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  break;
+                              case QStyle::CE_PushButton:
+                                  drawBackground(painter);
+                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          },
+                          [](QStyle::ComplexControl) { },
+                          [this, painter](QStyle::PrimitiveElement primitive) {
+                              switch (primitive) {
+                              case QStyle::PE_FrameButtonBevel:
+                              case QStyle::PE_FrameDefaultButton:
+                                  drawFrame(painter);
+                                  break;
+                              case QStyle::PE_PanelButtonCommand:
+                              case QStyle::PE_PanelButtonBevel:
+                                  drawBackground(painter);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          }},
+               what);
 }
 
 QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
 {
-    if (m_buttonOption && m_isValid) {
-        if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-            return visualRect(backgroundRectangle(m_buttonOption, m_elementProperties));
-        }
+    if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
+        // return visualRect(backgroundRectangle(m_rect, m_elementProperties));
+        return backgroundRectangle(rect(), properties());
     }
 
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, nullptr, widget());
 }
 
-Union::Element::States ButtonElement::elementStates() const
+QSizeF ButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
-    auto states = AbstractElement::elementStates();
-    if (m_buttonOption) {
-        if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::DefaultButton)
-            || m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::AutoDefaultButton)) {
-            states.setFlag(Union::Element::State::Highlighted, true);
-        }
-    }
-    return states;
-}
-
-Union::IdentifierList ButtonElement::elementHints() const
-{
-    Union::IdentifierList hints;
-    if (!m_buttonOption) {
-        return hints;
-    }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::Flat)) {
-        hints.append(u"flat"_s);
-    }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::HasMenu)) {
-        hints.append(u"with-menu"_s);
-    }
-    if (m_buttonOption->features.testFlag(QStyleOptionButton::ButtonFeature::CommandLinkButton)) {
-        hints.append(u"command-link-button"_s);
-    }
-    return hints;
+    auto size = AbstractElement::contentsSize(contentsSizeFromStyle);
+    // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
+    // to get the proper contentSize
+    // if (hasIndicator()) {
+    //     size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
+    // }
+    return size;
 }
 
 qreal ButtonElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ButtonMargin:
-        return averagePadding();
+        return propertyWrapper().averagePadding();
     case QStyle::PM_ButtonDefaultIndicator:
-        return averageBorderSize();
+        return propertyWrapper().averageBorderSize();
     case QStyle::PM_ButtonIconSize:
-        return iconSize().width();
+        return propertyWrapper().iconSize().width();
     default:
         break;
     }
     return 0;
-}
-
-QString ButtonElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::Button;
 }
