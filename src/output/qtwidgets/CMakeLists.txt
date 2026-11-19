@@ -17,6 +17,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         ShadowRenderer.cpp
         StyleGroupWrapper.cpp
         StyleUtils.cpp
+        TypeMapping.cpp
         UnionStyle.cpp
         UnionStylePlugin.cpp
         UnionGraphicsEffect.cpp
@@ -70,6 +71,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         SharedNames.h
         StyleGroupWrapper.h
         StyleUtils.h
+        TypeMapping.h
         UnionStyle.h
         UnionStylePlugin.h
         UnionGraphicsEffect.h
