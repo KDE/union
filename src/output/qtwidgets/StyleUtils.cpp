@@ -92,13 +92,9 @@ Qt::TextFlag Union::Widgets::toQtWrapMode(TextWrapMode wrapMode)
     return wrap;
 }
 
-QRectF Union::Widgets::backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties)
+QRectF Union::Widgets::backgroundRectangle(const QRectF &rect, const Union::StylePropertyGroupPtr &properties)
 {
     // Shrink the widget rect by the insets
-    if (!option) {
-        return QRectF();
-    }
-    QRectF rect = option->rect;
     const auto insets = safePropertyLookup(properties, QMarginsF(), &StylePropertyGroup::layout, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
     return rect.marginsRemoved(insets);
 }

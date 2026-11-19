@@ -52,7 +52,7 @@ Qt::TextFlag toQtWrapMode(Union::Properties::TextWrapMode wrapMode);
 /*!
  * \brief Returns the background rectangle of an option, but removes its insets according to the properties first.
  */
-QRectF backgroundRectangle(const QStyleOption *option, const Union::StylePropertyGroupPtr &properties);
+QRectF backgroundRectangle(const QRectF &rect, const Union::StylePropertyGroupPtr &properties);
 
 /*!
  * \brief Helper function to get text from any QStyleOption that has a field with QString (text/title)
