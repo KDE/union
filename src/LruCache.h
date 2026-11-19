@@ -42,7 +42,7 @@ public:
     /*!
      * Returns if the cache contains the specified key.
      */
-    bool contains(const Key &key)
+    bool contains(const Key &key) const
     {
         return m_values.contains(key);
     }
