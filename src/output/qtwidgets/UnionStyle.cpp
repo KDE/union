@@ -418,7 +418,9 @@ QRect UnionStyle::subElementRect(QStyle::SubElement element, const QStyleOption 
                                         QStyle::SE_DockWidgetFloatButton,
                                         QStyle::SE_DockWidgetIcon,
                                         QStyle::SE_ToolBoxTabContents,
-                                        QStyle::SE_FrameContents>(element, hash, this, option, widget);
+                                        QStyle::SE_FrameContents,
+                                        QStyle::SE_TabWidgetLeftCorner,
+                                        QStyle::SE_TabWidgetRightCorner>(element, hash, this, option, widget);
 
     if (cached) {
         cached->update(option);

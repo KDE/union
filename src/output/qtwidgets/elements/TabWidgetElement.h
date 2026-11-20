@@ -19,7 +19,9 @@ namespace detail
 /* clang-format off */
         template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameTabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
         template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
-/* clang-format on */
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_TabWidgetLeftCorner> : public TypeHelper<TabWidgetElement, QStyleOption>{};
+        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_TabWidgetRightCorner> : public TypeHelper<TabWidgetElement, QStyleOption>{};
+        /* clang-format on */
 }
 }
 
@@ -33,6 +35,7 @@ public:
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;
+    QRectF subElementRect(QStyle::SubElement element) const override;
 
 private:
     Union::IdentifierVariantHash elementAttributes() const override;
@@ -41,6 +44,7 @@ private:
     const QStyleOptionTabWidgetFrame *m_tabFrameOption = nullptr;
 
     QTabBar::Shape m_shape;
+    bool m_isVertical;
 };
 
 }
