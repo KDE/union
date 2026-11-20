@@ -47,6 +47,9 @@ void TabElement::update(const QStyleOption *option)
 
         m_leftButtonSize = m_tabOption->leftButtonSize;
         m_rightButtonSize = m_tabOption->rightButtonSize;
+    } else if (m_styleOption) {
+        m_leftButtonSize = m_styleOption->rect.size();
+        m_rightButtonSize = m_styleOption->rect.size();
     }
 
     updateSubElementList();
