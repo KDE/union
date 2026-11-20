@@ -31,5 +31,6 @@ install(FILES
     NavigationTabBar.qml
     NavigationTabButton.qml
     OverlayDrawer.qml
+    SegmentedControl.qml
     DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/kirigami/styles/org.kde.union
 )
