@@ -146,6 +146,11 @@ void AbstractElement::update(const QStyleOption *option)
 
 void AbstractElement::layout()
 {
+    m_layout.layout(this);
+
+    for (auto child : std::as_const(m_childElements)) {
+        child->m_rect = m_layout.m_layoutMap.value(child).rect;
+    }
 }
 
 void AbstractElement::draw([[maybe_unused]] QPainter *painter, [[maybe_unused]] DrawVariant what) const

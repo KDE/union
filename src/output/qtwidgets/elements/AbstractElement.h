@@ -9,6 +9,7 @@
 #include <ElementQuery.h>
 
 #include "ElementCache.h"
+#include "Layout.h"
 #include "StyleGroupWrapper.h"
 #include "StyleUtils.h"
 #include "TypeMapping.h"
@@ -136,6 +137,8 @@ private:
     AbstractElementFlags m_flags;
     QWidget *m_widget = nullptr;
     QList<AbstractElement *> m_childElements;
+
+    Layout m_layout;
 
     QRectF m_rect;
     Qt::LayoutDirection m_direction = Qt::LayoutDirectionAuto;
