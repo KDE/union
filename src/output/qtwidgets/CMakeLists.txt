@@ -14,6 +14,7 @@ ecm_qt_declare_logging_category(UnionWidgetsStyle
 target_sources(UnionWidgetsStyle PRIVATE
         BoxShadowRenderer.cpp
         DragEventFilter.cpp
+        Layout.cpp
         ShadowRenderer.cpp
         StyleGroupWrapper.cpp
         StyleUtils.cpp
@@ -69,6 +70,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         FILES
         BoxShadowRenderer.h
         DragEventFilter.h
+        Layout.h
         ShadowRenderer.h
         SharedNames.h
         StyleGroupWrapper.h
