@@ -37,6 +37,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/GroupBoxElement.cpp
         # elements/HeaderElement.cpp
         elements/IconSubElement.cpp
+        elements/IndicatorSubElement.cpp
         # elements/ItemViewElement.cpp
         # elements/LineEditElement.cpp
         # elements/MenuItemElement.cpp
@@ -95,6 +96,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/GroupBoxElement.h
         # elements/HeaderElement.h
         elements/IconSubElement.h
+        elements/IndicatorSubElement.h
         # elements/ItemViewElement.h
         # elements/LineEditElement.h
         # elements/MenuItemElement.h
