@@ -5,6 +5,7 @@
 
 #include <QPushButton>
 
+#include "IconSubElement.h"
 #include "TextSubElement.h"
 
 using namespace Qt::StringLiterals;
@@ -53,6 +54,16 @@ void ButtonElement::update(const QStyleOption *option)
         textSubElement->setText(buttonOption->text);
     }
 
+    if (!buttonOption->icon.isNull()) {
+        auto iconSubElement = firstChildOfType<IconSubElement>();
+        if (!iconSubElement) {
+            iconSubElement = new IconSubElement(style(), widget());
+            addChildElement(iconSubElement);
+        }
+        iconSubElement->setIcon(buttonOption->icon);
+        iconSubElement->setSize(buttonOption->iconSize);
+    }
+
     AbstractElement::update(option);
 }
 
@@ -70,7 +81,7 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
                                   break;
                               case QStyle::CE_PushButton:
                                   drawBackground(painter);
-                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  drawChildren(painter, std::nullopt);
                                   break;
                               default:
                                   break;
