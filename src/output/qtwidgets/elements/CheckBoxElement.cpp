@@ -18,6 +18,8 @@ static WidgetToElementRegistration<CheckBoxElement, QCheckBox, QRadioButton> che
 CheckBoxElement::CheckBoxElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
+    auto indicator = new IndicatorSubElement(style, widget);
+    addChildElement(indicator);
 }
 
 void CheckBoxElement::update(const QStyleOption *option)
@@ -42,6 +44,8 @@ void CheckBoxElement::update(const QStyleOption *option)
             e->setHint(u"indeterminate"_s, false);
         }
 
+        // auto indicatorSubElement = firstChildOfType<IndicatorSubElement>();
+
         if (!buttonOption->text.isEmpty()) {
             auto textSubElement = firstChildOfType<TextSubElement>();
             if (!textSubElement) {
@@ -51,11 +55,15 @@ void CheckBoxElement::update(const QStyleOption *option)
             }
             textSubElement->setText(buttonOption->text);
         }
+
+        // if
         // setIcon(m_buttonOption->icon);
         // setText(m_buttonOption->text);
         // updateSubElementList();
         // updateGraphicsEffect(m_buttonOption->rect);
     }
+
+    // qDebug() << firstChildOfType<IndicatorSubElement>();
 
     AbstractElement::update(option);
 }
@@ -79,7 +87,8 @@ void CheckBoxElement::draw(QPainter *painter, DrawVariant what) const
                               case QStyle::CE_CheckBox:
                               case QStyle::CE_RadioButton:
                                   drawBackground(painter);
-                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  drawChildren(painter, std::nullopt);
+                                  // firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
                                   // drawIndicator(painter);
                                   break;
                               case QStyle::CE_CheckBoxLabel:
@@ -93,8 +102,8 @@ void CheckBoxElement::draw(QPainter *painter, DrawVariant what) const
                           [&](QStyle::PrimitiveElement primitiveElement) {
                               switch (primitiveElement) {
                               case QStyle::PE_IndicatorCheckBox:
-                                  // drawIndicator(painter);
                               case QStyle::PE_IndicatorRadioButton:
+                                  firstChildOfType<IndicatorSubElement>()->draw(painter, std::nullopt);
                                   break;
                               default:
                                   break;
@@ -107,7 +116,7 @@ QSizeF CheckBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
 {
     auto size = AbstractElement::contentsSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label
-    // size.rwidth() += spacing() + width(m_indicatorProperties);
+    size.rwidth() += propertyWrapper().spacing() + firstChildOfType<IndicatorSubElement>()->rect().width();
     return size;
 }
 
@@ -119,6 +128,7 @@ QRectF CheckBoxElement::subElementRect(QStyle::SubElement element) const
         return rect();
     case QStyle::SE_CheckBoxIndicator:
     case QStyle::SE_RadioButtonIndicator:
+        return firstChildOfType<IndicatorSubElement>()->rect();
     default:
         break;
     }
@@ -141,9 +151,11 @@ qreal CheckBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
         return propertyWrapper().spacing();
     case QStyle::PM_IndicatorWidth:
     case QStyle::PM_ExclusiveIndicatorWidth:
+        return firstChildOfType<IndicatorSubElement>()->rect().width();
         // return propertySize(m_elementProperties).width();
     case QStyle::PM_IndicatorHeight:
     case QStyle::PM_ExclusiveIndicatorHeight:
+        return firstChildOfType<IndicatorSubElement>()->rect().height();
         // return propertySize(m_indicatorProperties).height();
     default:
         break;
