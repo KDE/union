@@ -129,6 +129,8 @@ protected:
      */
     virtual void drawPanel(QPainter *painter) const;
 
+    virtual void drawChildren(QPainter *painter, DrawVariant what) const;
+
 private:
     const UnionStyle *m_style = nullptr;
     Union::Element::Ptr m_element;

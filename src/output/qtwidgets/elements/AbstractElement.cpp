@@ -278,3 +278,10 @@ void AbstractElement::drawPanel(QPainter *painter) const
     unionPainter.setRect(m_rect);
     unionPainter.draw();
 }
+
+void AbstractElement::drawChildren(QPainter *painter, DrawVariant what) const
+{
+    for (auto child : std::as_const(m_childElements)) {
+        child->draw(painter, what);
+    }
+}
