@@ -9,6 +9,7 @@ using namespace Union::Properties;
 TextSubElement::TextSubElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
+    setFlag(AbstractElementFlag::SubElement);
 }
 
 QString TextSubElement::text() const

@@ -146,6 +146,10 @@ void AbstractElement::update(const QStyleOption *option)
 
 void AbstractElement::layout()
 {
+    if (m_flags.testFlag(AbstractElementFlag::SubElement)) {
+        return;
+    }
+
     m_layout.layout(this);
 
     for (auto child : std::as_const(m_childElements)) {
@@ -215,9 +219,14 @@ void AbstractElement::queryProperties()
 
     if (m_element) {
         elements.append(m_element);
-        widget = m_widget ? m_widget->parentWidget() : nullptr;
-    } else {
-        widget = m_widget;
+    }
+
+    if (m_widget) {
+        if (!m_flags.testFlag(AbstractElementFlag::SubElement)) {
+            widget = m_widget->parentWidget();
+        } else {
+            widget = m_widget;
+        }
     }
 
     while (widget) {
