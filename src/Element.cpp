@@ -129,7 +129,9 @@ void Element::setHints(const IdentifierList &newHints)
 void Element::setHint(const Identifier &name, bool present)
 {
     if (present) {
-        d->hints.append(name);
+        if (!d->hints.contains(name)) {
+            d->hints.append(name);
+        }
     } else {
         d->hints.removeAll(name);
     }
