@@ -6,6 +6,7 @@
 
 #include "StyleGroupWrapper.h"
 #include "elements/AbstractElement.h"
+#include "elements/IconSubElement.h"
 #include "elements/TextSubElement.h"
 
 using namespace Union::Widgets;
@@ -58,27 +59,26 @@ Layout::LayoutMap Layout::layout(AbstractElement *element)
         QRectF elementRect = availableSpace;
         // NOTE: For now icon and text are their own things, so check them separately.
         // in future this should be unnecessary.
-        // if (subElement == ElementString::Icon) {
-        //     // Some styleoptions provide us an icon size, use it if its not null
-        //     auto iconSize = iconSizeFromOption(opt);
-        //     if (!iconSize.isValid()) {
-        //         elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
-        //         elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
-        //     } else {
-        //         elementRect.setWidth(iconSize.width());
-        //         elementRect.setHeight(iconSize.height());
-        //     }
-        //     horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-        //                                                      &StylePropertyGroup::icon,
-        //                                                      &IconPropertyGroup::alignment,
-        //                                                      &AlignmentPropertyGroup::horizontal);
-        //     verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
-        //                                                    &StylePropertyGroup::icon,
-        //                                                    &IconPropertyGroup::alignment,
-        //                                                    &AlignmentPropertyGroup::vertical);
-        //     order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
-        // } else* if (subElement == ElementString::Text || subElement == ElementString::ShortcutText) {
-        if (auto textElement = qobject_cast<TextSubElement *>(subElement)) {
+        if (auto iconElement = qobject_cast<IconSubElement *>(subElement)) {
+            // Some styleoptions provide us an icon size, use it if its not null
+            auto iconSize = iconElement->size();
+            if (!iconSize.isValid()) {
+                elementRect.setWidth(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::width));
+                elementRect.setHeight(properties->safePropertyLookup(0.0, &StylePropertyGroup::icon, &IconPropertyGroup::height));
+            } else {
+                elementRect.setWidth(iconSize.width());
+                elementRect.setHeight(iconSize.height());
+            }
+            horizontalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                                 &StylePropertyGroup::icon,
+                                                                 &IconPropertyGroup::alignment,
+                                                                 &AlignmentPropertyGroup::horizontal);
+            verticalAlignment = properties->safePropertyLookup(Union::Properties::Alignment::Unspecified,
+                                                               &StylePropertyGroup::icon,
+                                                               &IconPropertyGroup::alignment,
+                                                               &AlignmentPropertyGroup::vertical);
+            order = properties->safePropertyLookup(0, &StylePropertyGroup::icon, &IconPropertyGroup::alignment, &AlignmentPropertyGroup::order);
+        } else if (auto textElement = qobject_cast<TextSubElement *>(subElement) /*|| subElement == ElementString::ShortcutText */) {
             horizontalAlignment = safePropertyLookup(properties,
                                                      Alignment::Unspecified,
                                                      &StylePropertyGroup::text,
