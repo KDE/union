@@ -9,7 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class TextSubElement : public AbstractElement
 {
     Q_OBJECT

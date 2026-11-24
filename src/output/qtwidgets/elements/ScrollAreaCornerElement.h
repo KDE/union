@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class ScrollAreaCornerElement;
-
 class ScrollAreaCornerElement : public AbstractElement
 {
     Q_OBJECT

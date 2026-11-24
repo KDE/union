@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class SpinBoxElement;
-
 class SpinBoxElement : public AbstractElement
 {
     Q_OBJECT

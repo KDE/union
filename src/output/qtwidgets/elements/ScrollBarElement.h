@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class ScrollBarElement;
-
 class ScrollBarElement : public AbstractElement
 {
     Q_OBJECT

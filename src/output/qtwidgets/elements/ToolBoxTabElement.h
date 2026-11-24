@@ -9,8 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-class ToolBoxTabElement;
-
 class ToolBoxTabElement : public AbstractElement
 {
     Q_OBJECT

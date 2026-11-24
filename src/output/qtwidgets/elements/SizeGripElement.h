@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class SizeGripElement;
-
 class SizeGripElement : public AbstractElement
 {
     Q_OBJECT

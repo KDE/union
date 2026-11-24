@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class TabCloseButtonElement;
-
 class TabCloseButtonElement : public AbstractElement
 {
     Q_OBJECT

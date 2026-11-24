@@ -9,7 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class IndicatorSubElement : public AbstractElement
 {
     Q_OBJECT

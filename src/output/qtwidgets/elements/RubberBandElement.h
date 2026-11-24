@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class RubberBandElement;
-
 class RubberBandElement : public AbstractElement
 {
     Q_OBJECT

@@ -10,7 +10,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class DockWidgetElement : public AbstractElement
 {
     Q_OBJECT

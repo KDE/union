@@ -9,9 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
-class HeaderElement;
-
 class HeaderElement : public AbstractElement
 {
     Q_OBJECT

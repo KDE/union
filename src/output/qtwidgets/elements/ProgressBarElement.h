@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class ProgressBarElement;
-
 class ProgressBarElement : public AbstractElement
 {
     Q_OBJECT

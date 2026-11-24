@@ -9,8 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-class StatusBarElement;
-
 class StatusBarElement : public AbstractElement
 {
     Q_OBJECT

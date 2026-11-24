@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class MenuBarElement;
-
 class MenuBarElement : public AbstractElement
 {
     Q_OBJECT

@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class WidgetElement;
-
 class WidgetElement : public AbstractElement
 {
     Q_OBJECT

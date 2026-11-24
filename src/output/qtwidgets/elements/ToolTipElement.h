@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class ToolTipElement;
-
 class ToolTipElement : public AbstractElement
 {
     Q_OBJECT

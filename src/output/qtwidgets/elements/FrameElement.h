@@ -12,7 +12,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class FrameElement : public AbstractElement
 {
     Q_OBJECT

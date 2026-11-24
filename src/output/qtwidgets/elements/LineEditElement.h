@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class LineEditElement;
-
 class LineEditElement : public AbstractElement
 {
     Q_OBJECT

@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class SplitterElement;
-
 class SplitterElement : public AbstractElement
 {
     Q_OBJECT

@@ -9,7 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class GroupBoxElement : public AbstractElement
 {
     Q_OBJECT

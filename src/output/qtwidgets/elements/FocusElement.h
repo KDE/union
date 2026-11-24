@@ -9,7 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class FocusElement : public AbstractElement
 {
     Q_OBJECT

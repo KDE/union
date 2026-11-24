@@ -10,10 +10,7 @@ namespace Union
 namespace Widgets
 {
 
-class TreeViewElement;
-
 // This is a kitchen-sink element class to draw any various indicators
-
 class TreeViewElement : public AbstractElement
 {
     Q_OBJECT

@@ -10,8 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class RadioButtonElement;
-
 class RadioButtonElement : public AbstractElement
 {
     Q_OBJECT

@@ -9,7 +9,6 @@ namespace Union
 {
 namespace Widgets
 {
-
 class IconSubElement : public AbstractElement
 {
     Q_OBJECT

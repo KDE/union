@@ -10,10 +10,7 @@ namespace Union
 namespace Widgets
 {
 
-class IndicatorElement;
-
 // This is a kitchen-sink element class to draw any various indicators
-
 class IndicatorElement : public AbstractElement
 {
     Q_OBJECT
