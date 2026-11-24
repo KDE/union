@@ -36,11 +36,14 @@ void ComboBoxElement::update(const QStyleOption *option)
         m_hasFrame = comboOption->frame;
         e->setHint(u"flat"_s, !m_hasFrame);
 
-        firstChildOfType<TextSubElement>(true)->setText(comboOption->currentText);
+        withFirstChild<TextSubElement>(!comboOption->currentText.isEmpty(), [&](auto element) {
+            element->setText(comboOption->currentText);
+        });
 
-        auto iconSubElement = firstChildOfType<IconSubElement>(true);
-        iconSubElement->setIcon(comboOption->currentIcon);
-        iconSubElement->setSize(comboOption->iconSize);
+        withFirstChild<IconSubElement>(!comboOption->currentIcon.isNull(), [&](auto element) {
+            element->setIcon(comboOption->currentIcon);
+            element->setSize(comboOption->iconSize);
+        });
 
         // Adding shadows to editable widgets seems to cause issues with the painter
         // if (!m_editable) {

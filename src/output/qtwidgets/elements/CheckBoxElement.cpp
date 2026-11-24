@@ -43,17 +43,14 @@ void CheckBoxElement::update(const QStyleOption *option)
             e->setHint(u"indeterminate"_s, false);
         }
 
-        if (!buttonOption->text.isEmpty()) {
-            firstChildOfType<TextSubElement>(true)->setText(buttonOption->text);
-        }
+        withFirstChild<TextSubElement>(!buttonOption->text.isEmpty(), [&](auto element) {
+            element->setText(buttonOption->text);
+        });
 
-        if (!buttonOption->icon.isNull()) {
-            auto iconSubElement = firstChildOfType<IconSubElement>(true);
-            iconSubElement->setIcon(buttonOption->icon);
-            iconSubElement->setSize(buttonOption->iconSize);
-        }
-
-        // updateGraphicsEffect(m_buttonOption->rect);
+        withFirstChild<IconSubElement>(!buttonOption->icon.isNull(), [&](auto element) {
+            element->setIcon(buttonOption->icon);
+            element->setSize(buttonOption->iconSize);
+        });
     }
 
     AbstractElement::update(option);
@@ -105,17 +102,11 @@ QRectF CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubEl
     switch (element) {
     case QStyle::SE_CheckBoxIndicator:
     case QStyle::SE_RadioButtonIndicator:
-        return m_indicatorElement->rect();
+        return visualRect(m_indicatorElement);
     default:
         break;
     }
 
-    // if (element == QStyle::SE_CheckBoxIndicator) {
-    //     if (m_buttonOption && (m_buttonOption->styleObject || m_widget)) {
-    //         // The indicator is drawn as part of something
-    //         return visualRect(m_layoutMap[ElementString::Indicator].rect);
-    //     }
-    // }
     // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
     return style()->QCommonStyle::subElementRect(element, option, widget());
 }
