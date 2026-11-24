@@ -181,7 +181,7 @@ QSize UnionStyle::sizeFromContents(QStyle::ContentsType contentsType, const QSty
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->contentsSize(contentsSize).toSize();
+        return e->contentsSize(option, contentsSize).toSize();
     }
 
     // Unhandled
@@ -196,7 +196,7 @@ QRect UnionStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->subElementRect(subElement).toRect();
+        return e->subElementRect(option, subElement).toRect();
     }
 
     return QCommonStyle::subElementRect(subElement, option, widget);
@@ -207,7 +207,7 @@ QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOpti
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->subControlRect(subControl).toRect();
+        return e->subControlRect(option, subControl).toRect();
     }
 
     // TODO: Leave Dial and MDIControls to QCommonStyle for now
@@ -219,7 +219,7 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->pixelMetric(metric);
+        return e->pixelMetric(option, metric);
     }
 
     // Unimplemented, use QCommonStyle for now
@@ -275,7 +275,7 @@ QIcon UnionStyle::standardIcon(QStyle::StandardPixmap pixmap, const QStyleOption
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->standardPixmap(pixmap);
+        return e->standardPixmap(option, pixmap);
     }
 
     return QCommonStyle::standardIcon(pixmap, option, widget);
@@ -288,7 +288,7 @@ int UnionStyle::styleHint(StyleHint hint, const QStyleOption *option, const QWid
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->styleHint(hint);
+        return e->styleHint(option, hint);
     }
 
     switch (hint) {
