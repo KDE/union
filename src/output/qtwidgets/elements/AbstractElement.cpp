@@ -63,6 +63,14 @@ Union::Element::Ptr AbstractElement::element() const
     return m_element;
 }
 
+Union::Element::Ptr AbstractElement::ensureElement()
+{
+    if (!m_element) {
+        m_element = Union::Element::create();
+    }
+    return m_element;
+}
+
 QList<AbstractElement *> AbstractElement::childElements() const
 {
     return m_childElements;

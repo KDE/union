@@ -48,6 +48,7 @@ public:
     bool isFlagSet(AbstractElementFlag flag) const;
 
     Union::Element::Ptr element() const;
+    Union::Element::Ptr ensureElement();
 
     QList<AbstractElement *> childElements() const;
     void addChildElement(AbstractElement *element);
