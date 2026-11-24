@@ -10,38 +10,22 @@ namespace Union
 namespace Widgets
 {
 
-class FocusElement;
-
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameFocusRect> : public TypeHelper<FocusElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameVMargin> : public TypeHelper<FocusElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_FocusFrameHMargin> : public TypeHelper<FocusElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class FocusElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    FocusElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
-    ~FocusElement() override;
+    FocusElement(const UnionStyle *style, QWidget *widget = nullptr);
 
     void update(const QStyleOption *option) override;
-    void layout() override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
-    void drawBackground(QPainter *painter) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+
+protected:
+    void drawBackground(QPainter *painter, UnionPainter::Parts parts = UnionPainter::Parts::All) const override;
 
 private:
-    Union::IdentifierList elementHints() const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionFocusRect *m_focusOption = nullptr;
+    QColor m_backgroundColor;
 };
 }
 }
