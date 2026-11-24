@@ -10,41 +10,21 @@ namespace Union
 namespace Widgets
 {
 
-class GroupBoxElement;
-
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_GroupBox> : public TypeHelper<GroupBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameGroupBox> : public TypeHelper<GroupBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_GroupBox> : public TypeHelper<GroupBoxElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class GroupBoxElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    GroupBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
-    ~GroupBoxElement() override;
+    GroupBoxElement(const UnionStyle *style, QWidget *widget = nullptr);
 
     void update(const QStyleOption *option) override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
-    QRectF subControlRect(QStyle::SubControl subControl) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
+    QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
+    int styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    void updateSubElementList() override;
-    Union::IdentifierList elementHints() const override;
-    void layout() override;
-    void drawText(QPainter *painter) const override;
-    void drawIcon(QPainter *painter) const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionGroupBox *m_groupBoxOption = nullptr;
-    bool m_isCheckable;
+    bool m_isCheckable = false;
 };
 }
 }
