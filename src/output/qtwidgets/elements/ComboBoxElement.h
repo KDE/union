@@ -9,6 +9,7 @@ namespace Union
 {
 namespace Widgets
 {
+class IndicatorSubElement;
 
 class ComboBoxElement : public AbstractElement
 {
@@ -21,9 +22,9 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what) const override;
 
-    QRectF subControlRect(QStyle::SubControl subControl) const override;
-    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
+    QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     // bool isEditable() const;
@@ -32,8 +33,10 @@ private:
     // void drawText(QPainter *painter) const override;
     // QString fallbackElementName(const QStyleOption *opt) const override;
     // const QStyleOptionComboBox *m_comboBoxOption = nullptr;
-    bool m_editable;
-    bool m_hasFrame;
+    bool m_editable = false;
+    bool m_hasFrame = true;
+
+    IndicatorSubElement *m_indicatorElement = nullptr;
 
     // Union::ElementList m_indicatorElementList;
     // Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
