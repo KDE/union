@@ -31,7 +31,7 @@ void ScrollAreaCornerElement::draw(QPainter *painter, DrawVariant what) const
 
 void ScrollAreaCornerElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ScrollAreaCorner});
+    m_elementList = prepareElements(option, widget(), {ElementString::ScrollAreaCorner});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

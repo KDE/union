@@ -44,10 +44,10 @@ void IndicatorElement::draw(QPainter *painter, DrawVariant what) const
 
 void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIconName, const QStringList &targetHierarchy) const
 {
-    if (m_styleOption) {
-        auto properties = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));
-        auto icon = m_style->unionIcon(properties, defaultIconName);
-        drawIconAtRect(painter, icon, visualRect(m_styleOption->rect), properties);
+    if (option) {
+        auto properties = queryProperties(prepareElements(option, widget(), targetHierarchy));
+        auto icon = style()->unionIcon(properties, defaultIconName);
+        drawIconAtRect(painter, icon, visualRect(option->rect), properties);
     }
 }
 

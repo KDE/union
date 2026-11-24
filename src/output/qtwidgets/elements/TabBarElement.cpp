@@ -41,7 +41,7 @@ void TabBarElement::drawBackground(QPainter *painter) const
     }
     UnionPainter unionPainter(painter, m_elementProperties);
     unionPainter.setParts(UnionPainter::Parts::FrameOnly);
-    unionPainter.setRect(m_styleOption->rect);
+    unionPainter.setRect(option->rect);
     unionPainter.draw();
 }
 
@@ -53,7 +53,7 @@ qreal TabBarElement::scrollButtonWidth() const
 Union::IdentifierList TabBarElement::elementHints() const
 {
     Union::IdentifierList hints;
-    if (m_widget && m_widget->inherits("KMultiTabBar")) {
+    if (widget() && widget()->inherits("KMultiTabBar")) {
         hints.append(u"KMultiTabBar"_s);
     }
     return hints;

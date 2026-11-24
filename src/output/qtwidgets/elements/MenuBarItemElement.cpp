@@ -35,7 +35,7 @@ void MenuBarItemElement::draw(QPainter *painter, DrawVariant what) const
 
     switch (enums.ControlElement) {
     case QStyle::CE_MenuBarItem:
-        m_style->drawControl(QStyle::CE_MenuBarEmptyArea, m_styleOption, painter, m_widget);
+        style()->drawControl(QStyle::CE_MenuBarEmptyArea, option, painter, widget());
         drawBackground(painter);
         drawIcon(painter);
         drawText(painter);
@@ -57,10 +57,10 @@ void MenuBarItemElement::updateSubElementList()
 
 void MenuBarItemElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::MenuBarItem});
+    m_elementList = prepareElements(option, widget(), {ElementString::MenuBarItem});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;

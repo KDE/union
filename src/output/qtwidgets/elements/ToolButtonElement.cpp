@@ -94,7 +94,7 @@ void ToolButtonElement::update(const QStyleOption *option)
         removeChildElement(firstChildOfType<TextSubElement>());
     }
 
-    // updateGraphicsEffect(m_styleOption->rect);
+    // updateGraphicsEffect(option->rect);
 
     AbstractElement::update(option);
 
@@ -103,17 +103,17 @@ void ToolButtonElement::update(const QStyleOption *option)
 
 // void ToolButtonElement::layout()
 // {
-//     m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Indicator});
+//     m_indicatorElementList = prepareElements(option, widget(), {ElementString::Indicator});
 //     setIndicator(QIcon());
 //     if (!m_indicatorElementList.isEmpty()) {
 //         m_indicatorProperties = queryProperties(m_indicatorElementList);
-//         setIndicator(m_style->unionIcon(m_indicatorProperties, QString()));
+//         setIndicator(style()->unionIcon(m_indicatorProperties, QString()));
 //     }
 //
-//     m_elementList = prepareElements(m_styleOption, m_widget);
+//     m_elementList = prepareElements(option, widget());
 //     if (!m_elementList.isEmpty()) {
 //         m_elementProperties = queryProperties(m_elementList);
-//         m_indicatorMap = layoutMap(m_styleOption, {ElementString::Indicator});
+//         m_indicatorMap = layoutMap(option, {ElementString::Indicator});
 //         layoutButtons();
 //         // Update layoutmap so that the text and icon are within the main button
 //         if (m_toolButtonOption) {
@@ -121,7 +121,7 @@ void ToolButtonElement::update(const QStyleOption *option)
 //             subopt.rect = m_mainButtonRect.toRect();
 //             m_layoutMap = layoutMap(&subopt, m_subElementList);
 //         } else {
-//             m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+//             m_layoutMap = layoutMap(option, m_subElementList);
 //         }
 //         m_isValid = true;
 //     } else {
@@ -216,16 +216,16 @@ void ToolButtonElement::draw(QPainter *painter, DrawVariant what) const
 //         subopt.rect = iconRect.toRect();
 //         switch (m_toolButtonOption->arrowType) {
 //         case Qt::LeftArrow:
-//             m_style->drawPrimitive(QStyle::PE_IndicatorArrowLeft, &subopt, painter);
+//             style()->drawPrimitive(QStyle::PE_IndicatorArrowLeft, &subopt, painter);
 //             break;
 //         case Qt::RightArrow:
-//             m_style->drawPrimitive(QStyle::PE_IndicatorArrowRight, &subopt, painter);
+//             style()->drawPrimitive(QStyle::PE_IndicatorArrowRight, &subopt, painter);
 //             break;
 //         case Qt::UpArrow:
-//             m_style->drawPrimitive(QStyle::PE_IndicatorArrowUp, &subopt, painter);
+//             style()->drawPrimitive(QStyle::PE_IndicatorArrowUp, &subopt, painter);
 //             break;
 //         case Qt::DownArrow:
-//             m_style->drawPrimitive(QStyle::PE_IndicatorArrowDown, &subopt, painter);
+//             style()->drawPrimitive(QStyle::PE_IndicatorArrowDown, &subopt, painter);
 //             break;
 //         default:
 //             break;

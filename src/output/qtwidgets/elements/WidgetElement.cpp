@@ -29,7 +29,7 @@ void WidgetElement::draw(QPainter *painter, DrawVariant what) const
     case QStyle::PE_Widget:
         // Custom KDE widget. It uses PE_Widget for drawing,
         // but we want to redirect it to TabBar instead.
-        if (m_widget && m_widget->inherits("KMultiTabBar")) {
+        if (widget() && widget()->inherits("KMultiTabBar")) {
             drawKMultiTabBar(painter);
         } else {
             drawBackground(painter);
@@ -59,18 +59,18 @@ int WidgetElement::styleHint(const QStyleOption *option, QStyle::StyleHint style
 
 void WidgetElement::drawKMultiTabBar(QPainter *painter) const
 {
-    if (!m_widget) {
+    if (!widget()) {
         return;
     }
     QStyleOptionTabBarBase opt;
-    opt.initFrom(m_widget);
+    opt.initFrom(widget());
     enum class Position {
         Left,
         Right,
         Top,
         Bottom,
     };
-    const Position position = static_cast<Position>(m_widget->property("position").toInt());
+    const Position position = static_cast<Position>(widget()->property("position").toInt());
     switch (position) {
     case Position::Left:
         opt.shape = QTabBar::RoundedWest;
@@ -85,5 +85,5 @@ void WidgetElement::drawKMultiTabBar(QPainter *painter) const
         opt.shape = QTabBar::RoundedSouth;
         break;
     }
-    m_style->drawPrimitive(QStyle::PE_FrameTabBarBase, &opt, painter, m_widget);
+    style()->drawPrimitive(QStyle::PE_FrameTabBarBase, &opt, painter, widget());
 }

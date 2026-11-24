@@ -31,7 +31,7 @@ void TabElement::update(const QStyleOption *option)
         m_isVertical = m_tabOption->shape == QTabBar::RoundedEast || m_tabOption->shape == QTabBar::RoundedWest || m_tabOption->shape == QTabBar::TriangularEast
             || m_tabOption->shape == QTabBar::TriangularWest;
 
-        if (const auto tabBar = qobject_cast<const QTabBar *>(m_widget)) {
+        if (const auto tabBar = qobject_cast<const QTabBar *>(widget())) {
             m_isStatic = m_tabOption->documentMode && tabBar && !tabBar->tabsClosable() && !tabBar->isMovable() && (tabBar->expanding() || m_isVertical);
         } else {
             m_isStatic = false;
@@ -50,7 +50,7 @@ void TabElement::update(const QStyleOption *option)
 
 void TabElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid || !option) {
         return;
     }
 
@@ -59,7 +59,7 @@ void TabElement::draw(QPainter *painter, DrawVariant what) const
     // The effect painter gets upset at saveAndRotatePainter
     auto saveAndRotatePainter = [this](QPainter *painter) {
         painter->save();
-        QRect tabRect = m_styleOption->rect;
+        QRect tabRect = option->rect;
         if (m_isVertical) {
             int newX, newY, newRot;
             if (m_shape == QTabBar::RoundedEast || m_shape == QTabBar::TriangularEast) {
@@ -101,7 +101,7 @@ void TabElement::draw(QPainter *painter, DrawVariant what) const
 void TabElement::drawText(QPainter *painter) const
 {
     if (hasText() && m_isValid) {
-        auto textContainer = m_style->subElementRect(QStyle::SE_TabBarTabText, m_styleOption, m_widget);
+        auto textContainer = style()->subElementRect(QStyle::SE_TabBarTabText, option, widget());
         auto alignment = m_layoutMap[ElementString::Text].horizontalAlignment;
         auto textRect = m_layoutMap[ElementString::Text].rect;
 
@@ -137,15 +137,15 @@ void TabElement::updateSubElementList()
 
 void TabElement::layout()
 {
-    if (m_subElementList.isEmpty() || !m_styleOption) {
+    if (m_subElementList.isEmpty() || !option) {
         m_isValid = false;
         return;
     }
 
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Tab});
+    m_elementList = prepareElements(option, widget(), {ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        QRect tabRect = m_styleOption->rect;
+        QRect tabRect = option->rect;
         // Reset the coordinates for vertical tabs
         if (m_isVertical) {
             tabRect.setRect(0, 0, tabRect.height(), tabRect.width());
@@ -165,7 +165,7 @@ void TabElement::layout()
             subopt.rect = tabRect;
             m_layoutMap = layoutMap(&subopt, m_subElementList);
         } else {
-            m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+            m_layoutMap = layoutMap(option, m_subElementList);
         }
         m_isValid = true;
     } else {
@@ -176,7 +176,7 @@ void TabElement::layout()
 QSizeF TabElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
-    if (m_isValid && m_styleOption) {
+    if (m_isValid && option) {
         const bool leftButton = !m_leftButtonSize.isEmpty();
         const bool rightButton = !m_rightButtonSize.isEmpty();
         const bool text = hasText();
@@ -216,7 +216,7 @@ QSizeF TabElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeF
 
 QRectF TabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
 // Padding of the tab content and the edge, only one value is taken so take the average
@@ -242,7 +242,7 @@ Union::Element::States TabElement::elementStates() const
 {
     auto states = AbstractElement::elementStates();
     states.setFlag(Union::Element::State::Highlighted, false);
-    states.setFlag(Union::Element::State::Checked, m_styleOption->state.testFlag(QStyle::State_Selected));
+    states.setFlag(Union::Element::State::Checked, option->state.testFlag(QStyle::State_Selected));
     return states;
 }
 
@@ -284,7 +284,7 @@ Union::IdentifierList TabElement::elementHints() const
     if (m_isStatic) {
         hints.append(u"immutable"_s);
     }
-    const auto tabBar = qobject_cast<const QTabBar *>(m_widget);
+    const auto tabBar = qobject_cast<const QTabBar *>(widget());
     if (m_tabOption && tabBar) {
         if (m_tabOption->tabIndex == 0) {
             hints.append(u"first"_s);

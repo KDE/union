@@ -23,9 +23,9 @@ void LineEditElement::update(const QStyleOption *option)
     if (const auto newOption = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
         m_frameOption = newOption;
     }
-    if (const auto lineEdit = qobject_cast<const QLineEdit *>(m_widget)) {
+    if (const auto lineEdit = qobject_cast<const QLineEdit *>(widget())) {
         m_hasFrame = lineEdit->hasFrame();
-    } else if (!m_widget) {
+    } else if (!widget()) {
         // Widget-less callers indicate the frame through lineWidth, not frameShape.
         m_hasFrame = m_frameOption && m_frameOption->lineWidth > 0;
     } else {
@@ -43,8 +43,8 @@ void LineEditElement::draw(QPainter *painter, DrawVariant what) const
     }
     // For spinboxes and comboboxes, we do not want to draw this element
     // TODO: maybe this should be handleable by the CSS
-    if (m_widget && m_widget->parentWidget()) {
-        const auto parent = m_widget->parentWidget();
+    if (widget() && widget()->parentWidget()) {
+        const auto parent = widget()->parentWidget();
         if (parent->inherits("QComboBox") || parent->inherits("QAbstractSpinBox")) {
             return;
         }
@@ -62,9 +62,9 @@ void LineEditElement::draw(QPainter *painter, DrawVariant what) const
 
 void LineEditElement::drawBackground(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption) {
+    if (m_isValid && option) {
         QColor backgroundOverride;
-        const auto &palette = m_styleOption->palette;
+        const auto &palette = option->palette;
         if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
             backgroundOverride = palette.base().color();
         }
@@ -72,7 +72,7 @@ void LineEditElement::drawBackground(QPainter *painter) const
         UnionPainter unionPainter(painter, m_elementProperties);
         unionPainter.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
         unionPainter.setOverrideBackgroundColor(backgroundOverride);
-        unionPainter.setRect(visualRect(m_styleOption->rect));
+        unionPainter.setRect(visualRect(option->rect));
         unionPainter.draw();
     }
 }
@@ -105,12 +105,12 @@ QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubEl
         auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
         return visualRect(rect.marginsRemoved(padding().toMargins()));
     }
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
 Union::IdentifierVariantHash LineEditElement::elementAttributes() const
 {
-    return FrameElement::frameAttributesFor(m_frameOption, m_widget);
+    return FrameElement::frameAttributesFor(m_frameOption, widget());
 }
 
 Union::IdentifierList LineEditElement::elementHints() const
@@ -118,8 +118,8 @@ Union::IdentifierList LineEditElement::elementHints() const
     auto hints = FrameElement::frameHintsFor(m_frameOption);
     // Due to how Line Edits work, we have to first check the parent, then it's parent
     // to figure out if we're inside a table. The first parent is just the scrollview.
-    if (m_widget && m_widget->parentWidget()) {
-        if (auto realParent = m_widget->parentWidget()->parentWidget()) {
+    if (widget() && widget()->parentWidget()) {
+        if (auto realParent = widget()->parentWidget()->parentWidget()) {
             if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
                 hints.append(u"inside-table"_s);
             }

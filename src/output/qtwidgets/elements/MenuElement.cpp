@@ -9,9 +9,9 @@ using namespace Union::Widgets;
 MenuElement::MenuElement(const UnionStyle *style, const QWidget *widget)
     : AbstractElement(style, widget)
 {
-    if (m_elementProperties && m_styleOption) {
+    if (m_elementProperties && option) {
         m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
-        m_shadowWidget = qobject_cast<QWidget *>(m_styleOption->styleObject);
+        m_shadowWidget = qobject_cast<QWidget *>(option->styleObject);
     }
 }
 

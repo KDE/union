@@ -37,32 +37,32 @@ void SliderElement::update(const QStyleOption *option)
 void SliderElement::layout()
 {
     // Background is the groove
-    m_elementList = prepareElements(m_sliderOption, m_widget);
+    m_elementList = prepareElements(m_sliderOption, widget());
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
     }
 
     // Indicator is the handle
-    m_indicatorElementList = prepareElements(m_sliderOption, m_widget, {ElementString::Handle});
+    m_indicatorElementList = prepareElements(m_sliderOption, widget(), {ElementString::Handle});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
 
     // Tickmarks
-    m_tickElementList = prepareElements(m_sliderOption, m_widget, {ElementString::TickMark});
+    m_tickElementList = prepareElements(m_sliderOption, widget(), {ElementString::TickMark});
     if (!m_tickElementList.isEmpty()) {
         m_tickProperties = queryProperties(m_tickElementList);
     }
 
-    auto highlightedTickElements = prepareElements(m_sliderOption, m_widget, {ElementString::TickMark});
+    auto highlightedTickElements = prepareElements(m_sliderOption, widget(), {ElementString::TickMark});
     if (!highlightedTickElements.isEmpty()) {
         highlightedTickElements.last()->setStates(Union::Element::State::Highlighted);
         m_highlightedTickProperties = queryProperties(highlightedTickElements);
     }
 
     // Contents is the fill
-    m_contentElementList = prepareElements(m_sliderOption, m_widget, {ElementString::Filled});
+    m_contentElementList = prepareElements(m_sliderOption, widget(), {ElementString::Filled});
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
         m_isValid = true;
@@ -113,7 +113,7 @@ void SliderElement::draw(QPainter *painter, DrawVariant what) const
     // Tickmark drawing is copied from breeze
     if (m_sliderOption && m_tickProperties && m_sliderOption->subControls.testFlag(QStyle::SC_SliderTickmarks)) {
         const auto &rect(m_sliderOption->rect);
-        const int available(m_style->pixelMetric(QStyle::PM_SliderSpaceAvailable, m_styleOption, m_widget));
+        const int available(style()->pixelMetric(QStyle::PM_SliderSpaceAvailable, option, widget()));
         int interval = m_sliderOption->tickInterval;
         if (interval < 1) {
             interval = m_sliderOption->pageStep;
@@ -134,7 +134,7 @@ void SliderElement::draw(QPainter *painter, DrawVariant what) const
                 }
 
                 // calculate positions and draw lines
-                const int position(m_style->sliderPositionFromValue(m_sliderOption->minimum, m_sliderOption->maximum, current, available, m_isInverted)
+                const int position(style()->sliderPositionFromValue(m_sliderOption->minimum, m_sliderOption->maximum, current, available, m_isInverted)
                                    + handleOffset);
                 for (const auto &tickLine : std::as_const(ticks)) {
                     QRectF translatedRect;
@@ -208,9 +208,9 @@ QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubCont
     if (m_isValid && m_sliderOption) {
         // Copied from Breeze
         auto rect(m_sliderOption->rect);
-        auto frameWidth = m_style->pixelMetric(QStyle::PM_DefaultFrameWidth, m_sliderOption, m_widget);
-        if (m_widget) {
-            rect = m_widget->visibleRegion().boundingRect();
+        auto frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth, m_sliderOption, widget());
+        if (widget()) {
+            rect = widget()->visibleRegion().boundingRect();
         }
 
         if (subControl == QStyle::SC_SliderHandle) {
@@ -222,7 +222,7 @@ QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubCont
             }
 
             QRectF handleRect(centerRect(rect, handleWidth, handleHeight));
-            const int sliderPos = m_style->sliderPositionFromValue(m_sliderOption->minimum,
+            const int sliderPos = style()->sliderPositionFromValue(m_sliderOption->minimum,
                                                                    m_sliderOption->maximum,
                                                                    m_sliderOption->sliderPosition,
                                                                    (m_isHorizontal ? (rect.width() - handleWidth) : (rect.height() - handleHeight)),
@@ -232,7 +232,7 @@ QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubCont
             } else {
                 handleRect.moveTop(rect.y() + sliderPos);
             }
-            handleRect = m_style->visualRect(m_sliderOption->direction, rect, handleRect);
+            handleRect = style()->visualRect(m_sliderOption->direction, rect, handleRect);
             return handleRect;
         } else if (subControl == QStyle::SC_SliderGroove) {
             int grooveHeight = 1;
@@ -250,10 +250,10 @@ QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubCont
             } else {
                 grooveRect = centerRect(rect, grooveWidth, grooveRect.height());
             }
-            return m_style->visualRect(m_sliderOption->direction, rect, grooveRect);
+            return style()->visualRect(m_sliderOption->direction, rect, grooveRect);
         }
     }
-    return m_style->QCommonStyle::subControlRect(QStyle::CC_Slider, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
+    return style()->QCommonStyle::subControlRect(QStyle::CC_Slider, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
 }
 
 QList<QRectF> SliderElement::tickLines() const

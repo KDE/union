@@ -32,7 +32,7 @@ void RubberBandElement::draw(QPainter *painter, DrawVariant what) const
 
 void RubberBandElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::RubberBand});
+    m_elementList = prepareElements(option, widget(), {ElementString::RubberBand});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

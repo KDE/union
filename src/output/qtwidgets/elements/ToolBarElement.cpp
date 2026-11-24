@@ -54,21 +54,21 @@ void ToolBarElement::draw(QPainter *painter, DrawVariant what) const
 void ToolBarElement::layout()
 {
     // Background uses toolbarOption, separators etc use styleOption
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(option, widget());
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
     }
 
-    m_handleElementList = prepareElements(m_styleOption, m_widget, {ElementString::Handle});
+    m_handleElementList = prepareElements(option, widget(), {ElementString::Handle});
     if (!m_handleElementList.isEmpty()) {
         m_handleProperties = queryProperties(m_handleElementList);
     }
-    m_separatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::Separator});
+    m_separatorElementList = prepareElements(option, widget(), {ElementString::Separator});
     if (!m_separatorElementList.isEmpty()) {
         m_separatorProperties = queryProperties(m_separatorElementList);
     }
-    m_extensionElementList = prepareElements(m_styleOption, m_widget, {ElementString::Extension});
+    m_extensionElementList = prepareElements(option, widget(), {ElementString::Extension});
     if (!m_extensionElementList.isEmpty()) {
         m_extensionProperties = queryProperties(m_extensionElementList);
     }
@@ -83,10 +83,10 @@ void ToolBarElement::layout()
 
 QRectF ToolBarElement::handleSeparatorRect(qreal extent) const
 {
-    if (!m_styleOption) {
+    if (!option) {
         return QRectF();
     }
-    QRectF rect = m_styleOption->rect;
+    QRectF rect = option->rect;
     if (m_toolBarOption) {
         switch (m_toolBarOption->toolBarArea) {
         case Qt::LeftToolBarArea:
@@ -112,7 +112,7 @@ QRectF ToolBarElement::handleSeparatorRect(qreal extent) const
 
 void ToolBarElement::drawHandle(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption && m_handleProperties) {
+    if (m_isValid && option && m_handleProperties) {
         UnionPainter unionPainter(painter, m_handleProperties);
         unionPainter.setRect(handleSeparatorRect(extent(m_handleProperties)));
         unionPainter.draw();
@@ -121,7 +121,7 @@ void ToolBarElement::drawHandle(QPainter *painter) const
 
 void ToolBarElement::drawSeparator(QPainter *painter) const
 {
-    if (m_isValid && m_styleOption && m_separatorProperties) {
+    if (m_isValid && option && m_separatorProperties) {
         UnionPainter unionPainter(painter, m_separatorProperties);
         unionPainter.setRect(handleSeparatorRect(extent(m_separatorProperties)));
         unionPainter.draw();

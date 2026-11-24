@@ -66,10 +66,10 @@ void ToolBoxTabElement::layout()
         m_isValid = false;
         return;
     }
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ToolBox, ElementString::Tab});
+    m_elementList = prepareElements(option, widget(), {ElementString::ToolBox, ElementString::Tab});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -88,7 +88,7 @@ QRectF ToolBoxTabElement::subElementRect(const QStyleOption *option, QStyle::Sub
         }
         return visualRect(m_toolBoxOption->rect);
     }
-    return m_style->subElementRect(element, m_styleOption, m_widget);
+    return style()->subElementRect(element, option, widget());
 }
 
 QString ToolBoxTabElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

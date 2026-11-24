@@ -39,7 +39,7 @@ void SplitterElement::draw(QPainter *painter, DrawVariant what) const
 
 void SplitterElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::Splitter});
+    m_elementList = prepareElements(option, widget(), {ElementString::Splitter});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

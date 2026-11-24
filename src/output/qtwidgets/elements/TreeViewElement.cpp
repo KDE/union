@@ -19,18 +19,18 @@ TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *s
 void TreeViewElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);
-    if (!m_styleOption) {
+    if (!option) {
         return;
     }
-    if (!m_styleOption->state.testFlag(QStyle::State_Children)) {
+    if (!option->state.testFlag(QStyle::State_Children)) {
         m_isValid = false;
         return;
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Item)) {
+    if (option->state.testFlag(QStyle::State_Item)) {
         m_itemIsOpen = false;
         m_isValid = true;
     }
-    if (m_styleOption->state.testFlag(QStyle::State_Open)) {
+    if (option->state.testFlag(QStyle::State_Open)) {
         m_itemIsOpen = true;
         m_isValid = true;
     }
@@ -39,7 +39,7 @@ void TreeViewElement::update(const QStyleOption *option)
 
 void TreeViewElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::TreeViewDelegate, ElementString::Indicator});
+    m_indicatorElementList = prepareElements(option, widget(), {ElementString::TreeViewDelegate, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
         m_isValid = true;
@@ -63,39 +63,39 @@ void TreeViewElement::draw(QPainter *painter, DrawVariant what) const
 void TreeViewElement::drawIndicator(QPainter *painter) const
 {
     // For some reason treeview related items can have null styleoption :(
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid || !option) {
         return;
     }
-    if (!m_styleOption->state.testFlag(QStyle::State_Children)) {
+    if (!option->state.testFlag(QStyle::State_Children)) {
         return;
     }
     const qreal width = m_indicatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
     const qreal height = m_indicatorProperties->safePropertyLookup(0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::height);
     QSizeF size(width, height);
 
-    const auto arrowName = m_styleOption->direction == Qt::RightToLeft ? u"arrow-left-symbolic"_s : u"arrow-right-symbolic"_s;
+    const auto arrowName = option->direction == Qt::RightToLeft ? u"arrow-left-symbolic"_s : u"arrow-right-symbolic"_s;
     const auto defaultIconName = m_itemIsOpen ? u"arrow-down-symbolic"_s : arrowName;
-    const auto icon = m_style->unionIcon(m_indicatorProperties, defaultIconName);
-    const bool enabled = m_styleOption->state.testFlag(QStyle::State_Enabled);
+    const auto icon = style()->unionIcon(m_indicatorProperties, defaultIconName);
+    const bool enabled = option->state.testFlag(QStyle::State_Enabled);
 
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();
-    QSize iconSize = size.toSize().boundedTo(m_styleOption->rect.size());
+    QSize iconSize = size.toSize().boundedTo(option->rect.size());
     if (iconSize.isEmpty()) {
-        iconSize = m_styleOption->rect.size();
+        iconSize = option->rect.size();
     }
     const int side = std::min(iconSize.width(), iconSize.height());
     const QPixmap pixmap = icon.pixmap(QSize(side, side), dpr, enabled ? QIcon::Normal : QIcon::Disabled);
 
     painter->save();
-    auto rect = centerRect(m_styleOption->rect, size.width(), size.height());
-    m_style->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
+    auto rect = centerRect(option->rect, size.width(), size.height());
+    style()->drawItemPixmap(painter, rect, Qt::AlignCenter, pixmap);
     painter->restore();
 }
 
 Union::IdentifierList TreeViewElement::elementHints() const
 {
     Union::IdentifierList elementHints;
-    if (m_styleOption && m_styleOption->state.testFlag(QStyle::State_Open)) {
+    if (option && option->state.testFlag(QStyle::State_Open)) {
         elementHints.append(u"expanded"_s);
     }
     return elementHints;

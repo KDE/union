@@ -103,10 +103,10 @@ void DockWidgetElement::draw(QPainter *painter, DrawVariant what) const
 
 // void DockWidgetElement::layout()
 // {
-//     m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::DockWidget});
+//     m_elementList = prepareElements(option, widget(), {ElementString::DockWidget});
 //     if (!m_elementList.isEmpty()) {
 //         m_elementProperties = queryProperties(m_elementList);
-//         m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+//         m_layoutMap = layoutMap(option, m_subElementList);
 //         m_isValid = true;
 //     } else {
 //         m_isValid = false;

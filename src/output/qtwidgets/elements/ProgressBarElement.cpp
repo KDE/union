@@ -89,14 +89,14 @@ void ProgressBarElement::updateSubElementList()
 
 void ProgressBarElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(option, widget());
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
     }
 
-    m_contentElementList = prepareElements(m_styleOption, m_widget, {ElementString::ProgressBar, ElementString::Filled});
+    m_contentElementList = prepareElements(option, widget(), {ElementString::ProgressBar, ElementString::Filled});
 
     if (!m_contentElementList.isEmpty()) {
         m_contentProperties = queryProperties(m_contentElementList);
@@ -132,7 +132,7 @@ QRectF ProgressBarElement::subElementRect(const QStyleOption *option, QStyle::Su
                                      m_progressBarOption->fontMetrics.size(textFlags, u"100%"_s).width());
             auto rect = centerRect(m_progressBarOption->rect, textWidth, m_progressBarOption->rect.height());
             rect.setLeft(rect.right() - textWidth + 1);
-            rect = m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
+            rect = style()->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
             return rect;
         } else if (element == QStyle::SE_ProgressBarContents) {
             // Copied from Breeze
@@ -172,17 +172,17 @@ QRectF ProgressBarElement::subElementRect(const QStyleOption *option, QStyle::Su
             } else {
                 rect = centerRect(m_progressBarOption->rect, styleWidth, height).toRect();
             }
-            return m_style->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
+            return style()->visualRect(m_progressBarOption->direction, m_progressBarOption->rect, rect);
         }
     }
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
 void ProgressBarElement::drawChunk(QPainter *painter) const
 {
-    if (m_styleOption) {
+    if (option) {
         UnionPainter unionPainter(painter, m_contentProperties);
-        unionPainter.setRect(m_styleOption->rect);
+        unionPainter.setRect(option->rect);
         unionPainter.draw();
     }
 }

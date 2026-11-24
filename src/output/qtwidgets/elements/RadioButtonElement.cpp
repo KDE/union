@@ -29,14 +29,14 @@ void RadioButtonElement::update(const QStyleOption *option)
 
 void RadioButtonElement::layout()
 {
-    m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::RadioButton, ElementString::Indicator});
+    m_indicatorElementList = prepareElements(option, widget(), {ElementString::RadioButton, ElementString::Indicator});
     if (!m_indicatorElementList.isEmpty()) {
         m_indicatorProperties = queryProperties(m_indicatorElementList);
     }
-    m_elementList = prepareElements(m_styleOption, m_widget);
+    m_elementList = prepareElements(option, widget());
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -80,14 +80,14 @@ QRectF RadioButtonElement::subElementRect(const QStyleOption *option, QStyle::Su
 {
     if (m_isValid && m_buttonOption) {
         if (element == QStyle::SE_RadioButtonIndicator) {
-            if (m_buttonOption->styleObject || m_widget) {
+            if (m_buttonOption->styleObject || widget()) {
                 // The indicator is drawn as part of something
                 return visualRect(m_layoutMap[ElementString::Indicator].rect);
             }
         }
     }
     // The indicator is drawn standalone (PE_IndicatorRadioButton for example)
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
 void RadioButtonElement::updateSubElementList()

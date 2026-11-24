@@ -46,13 +46,13 @@ void SpinBoxElement::draw(QPainter *painter, DrawVariant what) const
         // For spinbox we need to manually create the indicator buttons
         if (m_hasButtons) {
             // Increase
-            auto up = *m_styleOption;
+            auto up = *option;
             up.rect = subControlRect(QStyle::SC_SpinBoxUp).toRect();
-            m_style->drawPrimitive(m_usesArrows ? QStyle::PE_IndicatorSpinUp : QStyle::PE_IndicatorSpinPlus, &up, painter);
+            style()->drawPrimitive(m_usesArrows ? QStyle::PE_IndicatorSpinUp : QStyle::PE_IndicatorSpinPlus, &up, painter);
             // Decrease
-            auto down = *m_styleOption;
+            auto down = *option;
             down.rect = subControlRect(QStyle::SC_SpinBoxDown).toRect();
-            m_style->drawPrimitive(m_usesArrows ? QStyle::PE_IndicatorSpinDown : QStyle::PE_IndicatorSpinMinus, &down, painter);
+            style()->drawPrimitive(m_usesArrows ? QStyle::PE_IndicatorSpinDown : QStyle::PE_IndicatorSpinMinus, &down, painter);
         }
         break;
     }
@@ -75,7 +75,7 @@ void SpinBoxElement::updateSubElementList()
 
 QSizeF SpinBoxElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
-    const int frameWidth = m_style->pixelMetric(QStyle::PM_SpinBoxFrameWidth, m_styleOption, m_widget);
+    const int frameWidth = style()->pixelMetric(QStyle::PM_SpinBoxFrameWidth, option, widget());
     auto size = contentsSizeFromStyle;
     size += QSize(2 * frameWidth, 2 * frameWidth);
     size.rwidth() += padding().left() + padding().right();
@@ -94,7 +94,7 @@ QSizeF SpinBoxElement::contentsSize(const QStyleOption *option, QSizeF contentsS
 QRectF SpinBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_spinBoxOption) {
-        QRectF rect = m_styleOption->rect;
+        QRectF rect = option->rect;
         // Based on QCommonStyle. We only draw the "constrained" look for now.
         const QRectF buttonRect = m_layoutMap[ElementString::Indicator].rect;
         QRectF bgRect = m_spinBoxOption->rect;
@@ -118,36 +118,36 @@ QRectF SpinBoxElement::subControlRect(const QStyleOption *option, QStyle::SubCon
         if (subControl == QStyle::SC_SpinBoxFrame) {
             rect = bgRect;
         }
-        rect = m_style->visualRect(m_spinBoxOption->direction, m_spinBoxOption->rect, rect);
+        rect = style()->visualRect(m_spinBoxOption->direction, m_spinBoxOption->rect, rect);
         return rect;
     }
-    return m_style->QCommonStyle::subControlRect(QStyle::CC_SpinBox, qstyleoption_cast<const QStyleOptionSpinBox *>(m_styleOption), subControl, m_widget);
+    return style()->QCommonStyle::subControlRect(QStyle::CC_SpinBox, qstyleoption_cast<const QStyleOptionSpinBox *>(option), subControl, widget());
 }
 
 void SpinBoxElement::drawSpinIndicator(QPainter *painter, QStyle::PrimitiveElement primitive) const
 {
-    if (!m_isValid || !m_styleOption) {
+    if (!m_isValid || !option) {
         return;
     }
 
     QIcon indicatorIcon;
     switch (primitive) {
     case QStyle::PE_IndicatorSpinPlus:
-        indicatorIcon = m_style->unionIcon(m_elementProperties, u"spinbox-increase"_s);
+        indicatorIcon = style()->unionIcon(m_elementProperties, u"spinbox-increase"_s);
         break;
     case QStyle::PE_IndicatorSpinMinus:
-        indicatorIcon = m_style->unionIcon(m_elementProperties, u"spinbox-decrease"_s);
+        indicatorIcon = style()->unionIcon(m_elementProperties, u"spinbox-decrease"_s);
         break;
     case QStyle::PE_IndicatorSpinUp:
-        indicatorIcon = m_style->unionIcon(m_elementProperties, u"arrow-up-symbolic"_s);
+        indicatorIcon = style()->unionIcon(m_elementProperties, u"arrow-up-symbolic"_s);
         break;
     case QStyle::PE_IndicatorSpinDown:
-        indicatorIcon = m_style->unionIcon(m_elementProperties, u"arrow-down-symbolic"_s);
+        indicatorIcon = style()->unionIcon(m_elementProperties, u"arrow-down-symbolic"_s);
         break;
     default:
         return;
     }
-    drawIconAtRect(painter, indicatorIcon, m_styleOption->rect);
+    drawIconAtRect(painter, indicatorIcon, option->rect);
 }
 
 Union::IdentifierList SpinBoxElement::elementHints() const

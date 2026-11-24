@@ -36,15 +36,15 @@ void MenuItemElement::update(const QStyleOption *option)
         m_hasCheckableItems = m_menuItemOption->menuHasCheckableItems;
 
         if (m_hasSubMenu) {
-            m_arrowElementList = prepareElements(m_menuItemOption, m_widget, {ElementString::MenuItem, ElementString::Arrow});
+            m_arrowElementList = prepareElements(m_menuItemOption, widget(), {ElementString::MenuItem, ElementString::Arrow});
             m_arrowProperties = queryProperties(m_arrowElementList);
-            m_subMenuArrow = m_style->unionIcon(m_arrowProperties, u"arrow-right-symbolic"_s);
+            m_subMenuArrow = style()->unionIcon(m_arrowProperties, u"arrow-right-symbolic"_s);
         }
         if (m_hasCheckBox || m_hasRadioButton) {
             QStyleOptionButton button;
-            button.initFrom(m_widget);
+            button.initFrom(widget());
             m_checkElementList =
-                prepareElements(&button, m_widget, {m_hasCheckBox ? ElementString::CheckBox : ElementString::RadioButton, ElementString::Indicator});
+                prepareElements(&button, widget(), {m_hasCheckBox ? ElementString::CheckBox : ElementString::RadioButton, ElementString::Indicator});
             m_checkProperties = queryProperties(m_checkElementList);
         }
 
@@ -121,8 +121,8 @@ void MenuItemElement::updateSubElementList()
 
 void MenuItemElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::MenuItem});
-    m_separatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::MenuSeparator});
+    m_elementList = prepareElements(option, widget(), {ElementString::MenuItem});
+    m_separatorElementList = prepareElements(option, widget(), {ElementString::MenuSeparator});
 
     if (!m_separatorElementList.isEmpty()) {
         m_separatorProperties = queryProperties(m_separatorElementList);
@@ -130,7 +130,7 @@ void MenuItemElement::layout()
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
         // IconRect in MenuItemElements are the maximum size by default.
         // Instead center the icon rectangle within the maximum size rect.
         const auto iconsize = iconSize();
@@ -144,7 +144,7 @@ void MenuItemElement::layout()
     }
 
     if (!m_shortcutText.isEmpty()) {
-        m_shortcutElementList = prepareElements(m_styleOption, m_widget, {ElementString::MenuItem, ElementString::ShortcutText});
+        m_shortcutElementList = prepareElements(option, widget(), {ElementString::MenuItem, ElementString::ShortcutText});
         m_shortcutProperties = queryProperties(m_shortcutElementList);
     }
 }
@@ -181,8 +181,8 @@ QSizeF MenuItemElement::contentsSize(const QStyleOption *option, QSizeF contents
         if (m_menuItemOption && m_menuItemOption->menuHasCheckableItems) {
             const bool exclusive = (m_menuItemOption->checkType == QStyleOptionMenuItem::Exclusive);
             const qreal labelSpacing =
-                m_style->pixelMetric(exclusive ? QStyle::PM_RadioButtonLabelSpacing : QStyle::PM_CheckBoxLabelSpacing, m_menuItemOption, m_widget) + spacing;
-            itemSize.rwidth() += m_style->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, m_widget)
+                style()->pixelMetric(exclusive ? QStyle::PM_RadioButtonLabelSpacing : QStyle::PM_CheckBoxLabelSpacing, m_menuItemOption, widget()) + spacing;
+            itemSize.rwidth() += style()->pixelMetric(exclusive ? QStyle::PM_ExclusiveIndicatorWidth : QStyle::PM_IndicatorWidth, m_menuItemOption, widget())
                 + spacing + labelSpacing;
         }
         if (!m_shortcutText.isEmpty()) {
@@ -216,7 +216,7 @@ void MenuItemElement::drawBackground(QPainter *painter) const
         unionPainter.draw();
     } else {
         UnionPainter unionPainter(painter, m_elementProperties);
-        unionPainter.setRect(m_styleOption->rect);
+        unionPainter.setRect(option->rect);
         unionPainter.draw();
     }
 }

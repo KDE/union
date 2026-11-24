@@ -37,7 +37,7 @@ void SizeGripElement::update(const QStyleOption *option)
 
 void SizeGripElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::SizeGrip});
+    m_elementList = prepareElements(option, widget(), {ElementString::SizeGrip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;

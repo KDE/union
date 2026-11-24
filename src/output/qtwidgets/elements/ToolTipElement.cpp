@@ -21,8 +21,8 @@ void ToolTipElement::update(const QStyleOption *option)
         m_frameOption = newOpt;
     }
     layout();
-    if (m_styleOption) {
-        updateGraphicsEffect(m_styleOption->rect);
+    if (option) {
+        updateGraphicsEffect(option->rect);
     }
 }
 
@@ -40,7 +40,7 @@ void ToolTipElement::draw(QPainter *painter, DrawVariant what) const
 
 void ToolTipElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ToolTip});
+    m_elementList = prepareElements(option, widget(), {ElementString::ToolTip});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         m_isValid = true;
@@ -51,7 +51,7 @@ void ToolTipElement::layout()
 
 Union::IdentifierVariantHash ToolTipElement::elementAttributes() const
 {
-    return FrameElement::frameAttributesFor(m_frameOption, m_widget);
+    return FrameElement::frameAttributesFor(m_frameOption, widget());
 }
 
 Union::IdentifierList ToolTipElement::elementHints() const

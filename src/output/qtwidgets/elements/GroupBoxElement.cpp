@@ -161,6 +161,6 @@ qreal GroupBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
 //         QStyleOptionButton checkbox;
 //         checkbox.rect = subControlRect(QStyle::SC_GroupBoxCheckBox).toRect();
 //         checkbox.state = m_groupBoxOption->state;
-//         m_style->drawPrimitive(QStyle::PE_IndicatorCheckBox, &checkbox, painter);
+//         style()->drawPrimitive(QStyle::PE_IndicatorCheckBox, &checkbox, painter);
 //     }
 // }

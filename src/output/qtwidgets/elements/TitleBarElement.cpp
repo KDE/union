@@ -102,11 +102,11 @@ void TitleBarElement::updateSubElementList()
 
 void TitleBarElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::TitleBar});
+    m_elementList = prepareElements(option, widget(), {ElementString::TitleBar});
 
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
+        m_layoutMap = layoutMap(option, m_subElementList);
         m_isValid = true;
     } else {
         m_isValid = false;
@@ -146,7 +146,7 @@ QRectF TitleBarElement::subControlRect(const QStyleOption *option, QStyle::SubCo
         }
         return {};
     }
-    return m_style->subControlRect(QStyle::CC_TitleBar, qstyleoption_cast<const QStyleOptionComplex *>(m_styleOption), subControl, m_widget);
+    return style()->subControlRect(QStyle::CC_TitleBar, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
 }
 
 qreal TitleBarElement::buttonWidth() const
@@ -156,8 +156,8 @@ qreal TitleBarElement::buttonWidth() const
 
 QIcon TitleBarElement::queryIcon(const QString &defaultIconName, const QStringList &targetHierarchy) const
 {
-    auto props = queryProperties(prepareElements(m_styleOption, m_widget, targetHierarchy));
-    return m_style->unionIcon(props, defaultIconName);
+    auto props = queryProperties(prepareElements(option, widget(), targetHierarchy));
+    return style()->unionIcon(props, defaultIconName);
 }
 
 Union::IdentifierList TitleBarElement::elementHints() const

@@ -28,7 +28,7 @@ void ItemViewElement::update(const QStyleOption *option)
     }
     if (m_viewItemOption) {
         if (m_viewItemOption->features.testFlag(QStyleOptionViewItem::HasCheckIndicator)) {
-            m_indicatorElementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem, ElementString::CheckBox});
+            m_indicatorElementList = prepareElements(option, widget(), {ElementString::ItemViewItem, ElementString::CheckBox});
             if (!m_indicatorElementList.isEmpty()) {
                 m_indicatorProperties = queryProperties(m_indicatorElementList);
             }
@@ -41,16 +41,16 @@ void ItemViewElement::update(const QStyleOption *option)
 
 void ItemViewElement::layout()
 {
-    m_elementList = prepareElements(m_styleOption, m_widget, {ElementString::ItemViewItem});
+    m_elementList = prepareElements(option, widget(), {ElementString::ItemViewItem});
     if (!m_elementList.isEmpty()) {
         m_elementProperties = queryProperties(m_elementList);
         if (m_viewItemOption) {
             auto opt = *m_viewItemOption;
             opt.rect = visualRect(backgroundRectangle(m_viewItemOption, m_elementProperties).toRect()).toRect();
-            m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, m_widget);
-            m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, m_widget);
+            m_layoutMap[ElementString::Text].rect = style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, &opt, widget());
+            m_layoutMap[ElementString::Icon].rect = style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, &opt, widget());
             m_layoutMap[ElementString::CheckBox].rect =
-                visualRect(m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, m_widget));
+                visualRect(style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, &opt, widget()));
 
             // Apply our spacing
             auto textRect = visualRect(m_layoutMap[ElementString::Text].rect);
@@ -71,9 +71,9 @@ void ItemViewElement::layout()
             }
         } else {
             // Fallback
-            m_layoutMap[ElementString::Text].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, m_styleOption, m_widget);
-            m_layoutMap[ElementString::Icon].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, m_styleOption, m_widget);
-            m_layoutMap[ElementString::CheckBox].rect = m_style->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, m_styleOption, m_widget);
+            m_layoutMap[ElementString::Text].rect = style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemText, option, widget());
+            m_layoutMap[ElementString::Icon].rect = style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemDecoration, option, widget());
+            m_layoutMap[ElementString::CheckBox].rect = style()->QCommonStyle::subElementRect(QStyle::SE_ItemViewItemCheckIndicator, option, widget());
         }
         m_isValid = true;
     } else {
@@ -101,14 +101,14 @@ void ItemViewElement::drawIndicator(QPainter *painter) const
         checkbox.state.setFlag(QStyle::State_Enabled, m_viewItemOption->state.testFlag(QStyle::State_Enabled));
         checkbox.rect = subElementRect(QStyle::SE_ItemViewItemCheckIndicator).toRect();
         painter->save();
-        m_style->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
+        style()->drawPrimitive(QStyle::PE_IndicatorItemViewItemCheck, &checkbox, painter);
         painter->restore();
     }
 }
 
 QSizeF ItemViewElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
-    const QSizeF commonSize = m_style->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, m_styleOption, contentsSizeFromStyle.toSize(), m_widget);
+    const QSizeF commonSize = style()->QCommonStyle::sizeFromContents(QStyle::CT_ItemViewItem, option, contentsSizeFromStyle.toSize(), widget());
     return applyPaddingToSize(commonSize);
 }
 
@@ -131,7 +131,7 @@ QRectF ItemViewElement::subElementRect(const QStyleOption *option, QStyle::SubEl
         }
         return visualRect(rect);
     }
-    return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
 void ItemViewElement::draw(QPainter *painter, DrawVariant what) const
@@ -158,19 +158,19 @@ void ItemViewElement::draw(QPainter *painter, DrawVariant what) const
 
 void ItemViewElement::drawBackground(QPainter *painter) const
 {
-    if (!m_styleOption) {
+    if (!option) {
         return;
     }
     painter->save();
     // Apply clip region in case the user has set one for painter.
-    const QRect rect = m_styleOption->rect;
+    const QRect rect = option->rect;
     const QRegion clipRegion = painter->hasClipping() ? (painter->clipRegion() & rect) : rect;
     painter->setClipRegion(clipRegion);
 
     // Draw custom background color with simple rectangle if set and not selected
     bool hasCustomBackground = false;
     if (m_viewItemOption) {
-        hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !m_styleOption->state.testFlag(QStyle::State_Selected);
+        hasCustomBackground = m_viewItemOption->backgroundBrush.style() != Qt::NoBrush && !option->state.testFlag(QStyle::State_Selected);
     }
     if (hasCustomBackground) {
         const auto radius =
@@ -184,16 +184,16 @@ void ItemViewElement::drawBackground(QPainter *painter) const
         QColor overrideColor;
         UnionPainter::Parts parts = UnionPainter::Parts::All;
         // Ignore borders in these cases, as they will use different color from style, and we have no border color in qpalette
-        if (m_styleOption) {
+        if (option) {
             // Either set different highlight or alternateBase color if they're set
-            const bool selected = m_styleOption->state.testFlag(QStyle::State_Selected);
-            const auto palette = m_styleOption->palette;
+            const bool selected = option->state.testFlag(QStyle::State_Selected);
+            const auto palette = option->palette;
             if (selected && palette.isBrushSet(palette.currentColorGroup(), QPalette::Highlight)) {
-                overrideColor = m_styleOption->palette.highlight().color();
+                overrideColor = option->palette.highlight().color();
                 parts = UnionPainter::Parts::PanelOnly;
             }
             if (!selected && palette.isBrushSet(palette.currentColorGroup(), QPalette::AlternateBase)) {
-                overrideColor = m_styleOption->palette.alternateBase().color();
+                overrideColor = option->palette.alternateBase().color();
                 parts = UnionPainter::Parts::PanelOnly;
             }
         }
@@ -204,7 +204,7 @@ void ItemViewElement::drawBackground(QPainter *painter) const
         UnionPainter unionPainter(painter, m_elementProperties);
         unionPainter.setOverrideBackgroundColor(overrideColor);
         unionPainter.setParts(parts);
-        unionPainter.setRect(m_styleOption->rect);
+        unionPainter.setRect(option->rect);
         unionPainter.draw();
     }
     painter->restore();
@@ -213,9 +213,9 @@ void ItemViewElement::drawBackground(QPainter *painter) const
 void ItemViewElement::drawText(QPainter *painter) const
 {
     if (hasText()) {
-        QRectF textRect = m_style->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, m_widget);
+        QRectF textRect = style()->subElementRect(QStyle::SE_ItemViewItemText, m_viewItemOption, widget());
         if (textRect.isEmpty()) {
-            textRect = m_styleOption->rect;
+            textRect = option->rect;
         }
         drawTextAtRect(painter, m_text, textRect);
     }
@@ -308,7 +308,7 @@ Union::IdentifierList ItemViewElement::elementHints() const
 
         // For combobox popups, we want similar selector as QtQuick has,
         // (popup.combobox) so we need to insert the combobox hint here.
-        if (m_widget && m_widget->inherits("QComboBoxListView")) {
+        if (widget() && widget()->inherits("QComboBoxListView")) {
             hints.append(u"combobox"_s);
         }
     }
