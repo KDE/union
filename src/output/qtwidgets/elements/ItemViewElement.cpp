@@ -134,7 +134,7 @@ QRectF ItemViewElement::subElementRect(QStyle::SubElement element) const
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
-void ItemViewElement::draw(QPainter *painter, DrawEnums enums) const
+void ItemViewElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

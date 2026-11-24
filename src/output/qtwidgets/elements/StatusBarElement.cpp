@@ -18,7 +18,7 @@ void StatusBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void StatusBarElement::draw(QPainter *painter, DrawEnums enums) const
+void StatusBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -30,7 +30,7 @@ void SpinBoxElement::update(const QStyleOption *option)
     layout();
 }
 
-void SpinBoxElement::draw(QPainter *painter, DrawEnums enums) const
+void SpinBoxElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -26,7 +26,7 @@ void ToolBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void ToolBarElement::draw(QPainter *painter, DrawEnums enums) const
+void ToolBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

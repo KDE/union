@@ -36,7 +36,7 @@ void LineEditElement::update(const QStyleOption *option)
     layout();
 }
 
-void LineEditElement::draw(QPainter *painter, DrawEnums enums) const
+void LineEditElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -28,7 +28,7 @@ void ProgressBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void ProgressBarElement::draw(QPainter *painter, DrawEnums enums) const
+void ProgressBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

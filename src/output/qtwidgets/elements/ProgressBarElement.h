@@ -21,7 +21,7 @@ public:
 
     void update(const QStyleOption *option) override;
     void layout() override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     void drawText(QPainter *painter) const override;
 
     QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;

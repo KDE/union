@@ -38,7 +38,7 @@ void TabCloseButtonElement::layout()
     }
 }
 
-void TabCloseButtonElement::draw(QPainter *painter, DrawEnums enums) const
+void TabCloseButtonElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

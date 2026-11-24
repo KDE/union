@@ -13,7 +13,7 @@ SizeGripElement::SizeGripElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-void SizeGripElement::draw(QPainter *painter, DrawEnums enums) const
+void SizeGripElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

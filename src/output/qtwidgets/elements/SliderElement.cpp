@@ -72,7 +72,7 @@ void SliderElement::layout()
     }
 }
 
-void SliderElement::draw(QPainter *painter, DrawEnums enums) const
+void SliderElement::draw(QPainter *painter, DrawVariant what) const
 {
     Q_UNUSED(enums);
     if (!m_isValid || !m_sliderOption) {

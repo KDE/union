@@ -57,7 +57,7 @@ void MenuItemElement::update(const QStyleOption *option)
     layout();
 }
 
-void MenuItemElement::draw(QPainter *painter, DrawEnums enums) const
+void MenuItemElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -48,7 +48,7 @@ void TreeViewElement::layout()
     }
 }
 
-void TreeViewElement::draw(QPainter *painter, DrawEnums enums) const
+void TreeViewElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -17,7 +17,7 @@ void MenuBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void MenuBarElement::draw(QPainter *painter, DrawEnums enums) const
+void MenuBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -26,7 +26,7 @@ void ToolTipElement::update(const QStyleOption *option)
     }
 }
 
-void ToolTipElement::draw(QPainter *painter, DrawEnums enums) const
+void ToolTipElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

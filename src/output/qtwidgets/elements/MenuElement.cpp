@@ -22,7 +22,7 @@ void MenuElement::update(const QStyleOption *option)
     layout();
 }
 
-void MenuElement::draw(QPainter *painter, DrawEnums enums) const
+void MenuElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

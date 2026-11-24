@@ -26,7 +26,7 @@ void TitleBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void TitleBarElement::draw(QPainter *painter, DrawEnums enums) const
+void TitleBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     Q_UNUSED(enums);
     if (!m_isValid || !m_titleBarOption) {

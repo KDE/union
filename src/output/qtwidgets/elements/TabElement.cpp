@@ -48,7 +48,7 @@ void TabElement::update(const QStyleOption *option)
     layout();
 }
 
-void TabElement::draw(QPainter *painter, DrawEnums enums) const
+void TabElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid || !m_styleOption) {
         return;

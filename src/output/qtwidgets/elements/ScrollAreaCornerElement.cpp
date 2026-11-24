@@ -17,7 +17,7 @@ void ScrollAreaCornerElement::update(const QStyleOption *option)
     layout();
 }
 
-void ScrollAreaCornerElement::draw(QPainter *painter, DrawEnums enums) const
+void ScrollAreaCornerElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

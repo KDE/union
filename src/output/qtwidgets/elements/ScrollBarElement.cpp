@@ -41,7 +41,7 @@ void ScrollBarElement::layout()
     }
 }
 
-void ScrollBarElement::draw(QPainter *painter, DrawEnums enums) const
+void ScrollBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

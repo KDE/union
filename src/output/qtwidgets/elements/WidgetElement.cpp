@@ -20,7 +20,7 @@ void WidgetElement::update(const QStyleOption *option)
     layout();
 }
 
-void WidgetElement::draw(QPainter *painter, DrawEnums enums) const
+void WidgetElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

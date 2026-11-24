@@ -20,7 +20,7 @@ public:
     MenuBarItemElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     void layout() override;
 
 private:

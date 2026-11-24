@@ -19,7 +19,7 @@ IndicatorElement::IndicatorElement(const UnionStyle *style, const QWidget *widge
     m_isValid = true;
 }
 
-void IndicatorElement::draw(QPainter *painter, DrawEnums enums) const
+void IndicatorElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (m_isValid) {
         switch (enums.PrimitiveElement) {

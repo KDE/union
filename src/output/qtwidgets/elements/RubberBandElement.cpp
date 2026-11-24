@@ -17,7 +17,7 @@ void RubberBandElement::update(const QStyleOption *option)
     layout();
 }
 
-void RubberBandElement::draw(QPainter *painter, DrawEnums enums) const
+void RubberBandElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

@@ -22,7 +22,7 @@ void TabBarElement::update(const QStyleOption *option)
     layout();
 }
 
-void TabBarElement::draw(QPainter *painter, DrawEnums enums) const
+void TabBarElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

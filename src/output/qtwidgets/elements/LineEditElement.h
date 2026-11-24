@@ -20,7 +20,7 @@ public:
     LineEditElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     void drawBackground(QPainter *painter) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
     QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;

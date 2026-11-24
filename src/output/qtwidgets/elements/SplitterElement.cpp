@@ -19,7 +19,7 @@ void SplitterElement::update(const QStyleOption *option)
     layout();
 }
 
-void SplitterElement::draw(QPainter *painter, DrawEnums enums) const
+void SplitterElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;

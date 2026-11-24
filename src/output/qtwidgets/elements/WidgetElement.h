@@ -20,7 +20,7 @@ public:
     WidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
     int styleHint(QStyle::StyleHint styleHint) const override;
 

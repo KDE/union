@@ -44,7 +44,7 @@ void RadioButtonElement::layout()
     }
 }
 
-void RadioButtonElement::draw(QPainter *painter, DrawEnums enums) const
+void RadioButtonElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;
