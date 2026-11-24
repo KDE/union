@@ -60,7 +60,7 @@ void HeaderElement::layout()
     }
 }
 
-void HeaderElement::draw(QPainter *painter, DrawEnums enums) const
+void HeaderElement::draw(QPainter *painter, DrawVariant what) const
 {
     if (!m_isValid) {
         return;
