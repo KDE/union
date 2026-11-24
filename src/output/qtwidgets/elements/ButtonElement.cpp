@@ -45,25 +45,16 @@ void ButtonElement::update(const QStyleOption *option)
     e->setHint(u"with-menu"_s, buttonOption->features.testFlag(QStyleOptionButton::HasMenu));
     e->setHint(u"command-link-button"_s, buttonOption->features.testFlag(QStyleOptionButton::CommandLinkButton));
 
-    if (!buttonOption->text.isEmpty()) {
-        firstChildOfType<TextSubElement>(true)->setText(buttonOption->text);
-    } else {
-        removeChildElement(firstChildOfType<TextSubElement>());
-    }
+    withFirstChild<TextSubElement>(!buttonOption->text.isEmpty(), [&](auto element) {
+        element->setText(buttonOption->text);
+    });
 
-    if (!buttonOption->icon.isNull()) {
-        auto iconSubElement = firstChildOfType<IconSubElement>(true);
-        iconSubElement->setIcon(buttonOption->icon);
-        iconSubElement->setSize(buttonOption->iconSize);
-    } else {
-        removeChildElement(firstChildOfType<IconSubElement>());
-    }
+    withFirstChild<IconSubElement>(!buttonOption->icon.isNull(), [&](auto element) {
+        element->setIcon(buttonOption->icon);
+        element->setSize(buttonOption->iconSize);
+    });
 
-    if (buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
-        firstChildOfType<IndicatorSubElement>(true);
-    } else {
-        removeChildElement(firstChildOfType<IndicatorSubElement>());
-    }
+    withFirstChild<IndicatorSubElement>(buttonOption->features.testFlag(QStyleOptionButton::HasMenu), [](auto) { });
 
     AbstractElement::update(option);
 }
@@ -109,8 +100,7 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
 QRectF ButtonElement::subElementRect([[maybe_unused]] const QStyleOption *option, QStyle::SubElement element) const
 {
     if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
-        // return visualRect(backgroundRectangle(m_rect, m_elementProperties));
-        return backgroundRectangle(rect(), properties());
+        return UnionStyle::visualRect(direction(), rect(), propertyWrapper().backgroundRectangle(rect()));
     }
 
     return style()->QCommonStyle::subElementRect(element, nullptr, widget());
