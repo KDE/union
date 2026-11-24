@@ -158,6 +158,15 @@ void AbstractElement::update(const QStyleOption *option)
         }
 
         layout();
+
+        if (m_widget) {
+            auto effect = qobject_cast<UnionGraphicsEffect *>(m_widget->graphicsEffect());
+            if (effect) {
+                effect->setDrawRect(m_rect);
+                effect->setProperties(m_elementProperties.properties());
+            }
+        }
+
         m_changed = false;
     }
 }
