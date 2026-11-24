@@ -17,7 +17,7 @@ class ToolTipElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolTipElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolTipElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;

@@ -17,7 +17,7 @@ class TabWidgetElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TabWidgetElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    TabWidgetElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;

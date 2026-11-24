@@ -17,7 +17,7 @@ class CheckBoxElement : public AbstractElement
     Q_OBJECT
 
 public:
-    CheckBoxElement(const UnionStyle *style, QWidget *widget = nullptr);
+    CheckBoxElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what) const override;

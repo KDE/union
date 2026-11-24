@@ -17,7 +17,7 @@ class LineEditElement : public AbstractElement
     Q_OBJECT
 
 public:
-    LineEditElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    LineEditElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;

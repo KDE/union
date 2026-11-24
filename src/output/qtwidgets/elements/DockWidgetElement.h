@@ -16,7 +16,7 @@ class DockWidgetElement : public AbstractElement
     Q_OBJECT
 
 public:
-    DockWidgetElement(const UnionStyle *style, QWidget *widget = nullptr);
+    DockWidgetElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     // void layout() override;

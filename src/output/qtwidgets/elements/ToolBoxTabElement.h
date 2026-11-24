@@ -16,7 +16,7 @@ class ToolBoxTabElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolBoxTabElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolBoxTabElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

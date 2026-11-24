@@ -17,7 +17,7 @@ class TitleBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TitleBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    TitleBarElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

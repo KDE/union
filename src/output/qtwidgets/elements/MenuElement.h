@@ -18,7 +18,7 @@ class MenuElement : public AbstractElement
     Q_OBJECT
 
 public:
-    MenuElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    MenuElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawEnums enums) const override;

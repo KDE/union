@@ -16,7 +16,7 @@ class ButtonElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ButtonElement(const UnionStyle *style, QWidget *widget = nullptr);
+    ButtonElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
 

@@ -35,7 +35,7 @@ public:
     };
     Q_DECLARE_FLAGS(AbstractElementFlags, AbstractElementFlag)
 
-    AbstractElement(const UnionStyle *style, QWidget *widget = nullptr);
+    AbstractElement(const UnionStyle *style, QWidget *widget);
 
     const UnionStyle *style() const;
     QWidget *widget() const;

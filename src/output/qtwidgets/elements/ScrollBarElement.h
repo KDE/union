@@ -17,7 +17,7 @@ class ScrollBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ScrollBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    ScrollBarElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

@@ -16,7 +16,7 @@ class ComboBoxElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ComboBoxElement(const UnionStyle *style, QWidget *widget = nullptr);
+    ComboBoxElement(const UnionStyle *style, QWidget *widget);
     // ~ComboBoxElement() override;
 
     void update(const QStyleOption *option) override;

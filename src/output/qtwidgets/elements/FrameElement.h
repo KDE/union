@@ -18,7 +18,7 @@ class FrameElement : public AbstractElement
     Q_OBJECT
 
 public:
-    FrameElement(const UnionStyle *style, QWidget *widget = nullptr);
+    FrameElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;

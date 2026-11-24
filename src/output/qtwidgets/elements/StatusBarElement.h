@@ -16,7 +16,7 @@ class StatusBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    StatusBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    StatusBarElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

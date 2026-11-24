@@ -17,7 +17,7 @@ class TabCloseButtonElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TabCloseButtonElement(const UnionStyle *style, const QWidget *widget = nullptr);
+    TabCloseButtonElement(const UnionStyle *style, const QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

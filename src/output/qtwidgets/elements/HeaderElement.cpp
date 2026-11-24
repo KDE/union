@@ -7,11 +7,10 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-HeaderElement::HeaderElement(const UnionStyle *style, const QWidget *widget)
+HeaderElement::HeaderElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_isHorizontal(false)
 {
-    update(option);
 }
 
 void HeaderElement::update(const QStyleOption *option)
