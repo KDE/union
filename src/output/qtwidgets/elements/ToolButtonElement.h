@@ -10,22 +10,6 @@ namespace Union
 namespace Widgets
 {
 
-class ToolButtonElement;
-
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolButtonLabel> : public TypeHelper<ToolButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameButtonTool> : public TypeHelper<ToolButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelButtonTool> : public TypeHelper<ToolButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ToolButton> : public TypeHelper<ToolButtonElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 enum class ArrowStyle {
     None,
     Menu,
@@ -38,41 +22,32 @@ class ToolButtonElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolButtonElement(const UnionStyle *style, QWidget *widget = nullptr);
     ~ToolButtonElement() override;
 
     void update(const QStyleOption *option) override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
-    void layout() override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    QRectF subControlRect(QStyle::SubControl subControl) const override;
-    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
+    QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
+    QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
 
 private:
-    Union::IdentifierVariantHash elementAttributes() const override;
-    Union::IdentifierList elementHints() const override;
-    void updateSubElementList() override;
-    void drawIcon(QPainter *painter) const override;
-    void drawIndicator(QPainter *painter) const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    void layoutButtons();
+    // void drawIcon(QPainter *painter) const override;
+    // void drawIndicator(QPainter *painter) const override;
+    // void layoutButtons();
     ArrowStyle arrowStyle() const;
-
-    const QStyleOptionToolButton *m_toolButtonOption = nullptr;
-    bool m_hasIndicator;
-    bool m_hasArrows;
-    bool m_hasIcon;
-    bool m_hasText;
-    ArrowStyle m_arrowStyle;
-    Qt::ToolButtonStyle m_buttonStyle;
-
-    QRectF m_mainButtonRect;
-    QRectF m_menuButtonRect;
-
-    QMap<QString, LayoutItem> m_indicatorMap;
-
-    Union::ElementList m_indicatorElementList;
-    Union::StylePropertyGroupPtr m_indicatorProperties = nullptr;
+    //
+    // const QStyleOptionToolButton *m_toolButtonOption = nullptr;
+    // bool m_hasIndicator;
+    // bool m_hasArrows;
+    // bool m_hasIcon;
+    // bool m_hasText;
+    ArrowStyle m_arrowStyle = ArrowStyle::None;
+    Qt::ToolButtonStyle m_toolButtonStyle = Qt::ToolButtonFollowStyle;
+    //
+    // QRectF m_mainButtonRect;
+    // QRectF m_menuButtonRect;
+    //
 };
 }
 }
