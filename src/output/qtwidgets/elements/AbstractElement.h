@@ -76,37 +76,37 @@ public:
     virtual void layout();
 
     using DrawVariant = std::variant<std::nullopt_t, QStyle::ControlElement, QStyle::ComplexControl, QStyle::PrimitiveElement>;
-    virtual void draw(QPainter *painter, DrawVariant what) const;
+    virtual void draw(QPainter *painter, DrawVariant what = std::nullopt) const;
 
     /*!
      * \brief Return the contents size of the element with padding applied by default.
      */
-    virtual QSizeF contentsSize(QSizeF contentsSizeFromStyle) const;
+    virtual QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const;
 
     /*!
      * \brief Return a subelement rectangle. If not found, empty QRectF() is returned instead.
      */
-    virtual QRectF subElementRect(QStyle::SubElement element) const;
+    virtual QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const;
 
     /*!
      * \brief Return a subcontrol rectangle. If not found, empty QRectF() is returned instead.
      */
-    virtual QRectF subControlRect(QStyle::SubControl subControl) const;
+    virtual QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const;
 
     /*!
      * \brief Return the given pixelmetric value. If not found, returns 0
      */
-    virtual qreal pixelMetric(QStyle::PixelMetric pixelMetric) const;
+    virtual qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const;
 
     /*!
      * \brief Return the given Stylehint value. If not found, returns 0
      */
-    virtual int styleHint(QStyle::StyleHint styleHint) const;
+    virtual int styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const;
 
     /*!
      * \brief Return the given standard pixmap. If not found, returns an empty QIcon.
      */
-    virtual QIcon standardPixmap(QStyle::StandardPixmap pixmap) const;
+    virtual QIcon standardPixmap(const QStyleOption *option, QStyle::StandardPixmap pixmap) const;
 
 protected:
     bool eventFilter(QObject *target, QEvent *event) override;
