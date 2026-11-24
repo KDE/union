@@ -18,7 +18,6 @@ class ScrollAreaCornerElement : public AbstractElement
 
 public:
     ScrollAreaCornerElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~ScrollAreaCornerElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

@@ -17,7 +17,6 @@ class TabElement : public AbstractElement
 
 public:
     TabElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~TabElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

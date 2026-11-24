@@ -15,10 +15,6 @@ MenuElement::MenuElement(const UnionStyle *style, const QWidget *widget)
     }
 }
 
-MenuElement::~MenuElement()
-{
-}
-
 void MenuElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

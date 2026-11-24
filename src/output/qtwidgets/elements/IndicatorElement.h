@@ -20,7 +20,6 @@ class IndicatorElement : public AbstractElement
 
 public:
     IndicatorElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~IndicatorElement() override;
 
     void draw(QPainter *painter, DrawEnums enums) const override;
     qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;

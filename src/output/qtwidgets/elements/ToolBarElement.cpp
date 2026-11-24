@@ -16,10 +16,6 @@ ToolBarElement::ToolBarElement(const QStyleOption *option, const UnionStyle *sty
     update(option);
 }
 
-ToolBarElement::~ToolBarElement()
-{
-}
-
 void ToolBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

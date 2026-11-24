@@ -19,10 +19,6 @@ TabElement::TabElement(const UnionStyle *style, const QWidget *widget)
     setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
-TabElement::~TabElement()
-{
-}
-
 void TabElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

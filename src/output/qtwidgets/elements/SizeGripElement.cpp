@@ -13,10 +13,6 @@ SizeGripElement::SizeGripElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-SizeGripElement::~SizeGripElement()
-{
-}
-
 void SizeGripElement::draw(QPainter *painter, DrawEnums enums) const
 {
     if (!m_isValid) {

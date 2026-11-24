@@ -12,10 +12,6 @@ ScrollBarElement::ScrollBarElement(const UnionStyle *style, const QWidget *widge
 {
 }
 
-ScrollBarElement::~ScrollBarElement()
-{
-}
-
 void ScrollBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

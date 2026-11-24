@@ -16,10 +16,6 @@ TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *s
     update(option);
 }
 
-TreeViewElement::~TreeViewElement()
-{
-}
-
 void TreeViewElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

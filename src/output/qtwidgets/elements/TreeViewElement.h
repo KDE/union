@@ -20,7 +20,6 @@ class TreeViewElement : public AbstractElement
 
 public:
     TreeViewElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~TreeViewElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

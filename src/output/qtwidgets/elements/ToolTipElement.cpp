@@ -14,10 +14,6 @@ ToolTipElement::ToolTipElement(const QStyleOption *option, const UnionStyle *sty
     update(option);
 }
 
-ToolTipElement::~ToolTipElement()
-{
-}
-
 void ToolTipElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

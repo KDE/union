@@ -18,7 +18,6 @@ class SliderElement : public AbstractElement
 
 public:
     SliderElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~SliderElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

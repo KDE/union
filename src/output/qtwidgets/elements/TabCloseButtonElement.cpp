@@ -11,10 +11,6 @@ TabCloseButtonElement::TabCloseButtonElement(const UnionStyle *style, const QWid
 {
 }
 
-TabCloseButtonElement::~TabCloseButtonElement()
-{
-}
-
 void TabCloseButtonElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

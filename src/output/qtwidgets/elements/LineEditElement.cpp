@@ -17,10 +17,6 @@ LineEditElement::LineEditElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-LineEditElement::~LineEditElement()
-{
-}
-
 void LineEditElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

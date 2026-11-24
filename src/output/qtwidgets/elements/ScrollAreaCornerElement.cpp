@@ -11,10 +11,6 @@ ScrollAreaCornerElement::ScrollAreaCornerElement(const UnionStyle *style, const 
 {
 }
 
-ScrollAreaCornerElement::~ScrollAreaCornerElement()
-{
-}
-
 void ScrollAreaCornerElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

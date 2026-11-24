@@ -21,10 +21,6 @@ ToolButtonElement::ToolButtonElement(const UnionStyle *style, QWidget *widget)
 {
 }
 
-ToolButtonElement::~ToolButtonElement()
-{
-}
-
 void ToolButtonElement::update(const QStyleOption *option)
 {
     auto e = element();

@@ -23,10 +23,6 @@ AbstractElement::AbstractElement(const UnionStyle *style, QWidget *widget)
 {
 }
 
-AbstractElement::~AbstractElement()
-{
-}
-
 const UnionStyle *AbstractElement::style() const
 {
     return m_style;

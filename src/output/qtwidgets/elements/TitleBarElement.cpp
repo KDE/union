@@ -12,10 +12,6 @@ TitleBarElement::TitleBarElement(const UnionStyle *style, const QWidget *widget)
     setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
-TitleBarElement::~TitleBarElement()
-{
-}
-
 void TitleBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

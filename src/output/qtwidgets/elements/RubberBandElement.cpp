@@ -11,10 +11,6 @@ RubberBandElement::RubberBandElement(const UnionStyle *style, const QWidget *wid
 {
 }
 
-RubberBandElement::~RubberBandElement()
-{
-}
-
 void RubberBandElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

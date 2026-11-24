@@ -36,7 +36,6 @@ public:
     Q_DECLARE_FLAGS(AbstractElementFlags, AbstractElementFlag)
 
     AbstractElement(const UnionStyle *style, QWidget *widget = nullptr);
-    ~AbstractElement() override;
 
     const UnionStyle *style() const;
     QWidget *widget() const;

@@ -14,10 +14,6 @@ WidgetElement::WidgetElement(const QStyleOption *option, const UnionStyle *style
     update(option);
 }
 
-WidgetElement::~WidgetElement()
-{
-}
-
 void WidgetElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

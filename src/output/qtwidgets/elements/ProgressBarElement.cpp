@@ -14,10 +14,6 @@ ProgressBarElement::ProgressBarElement(const UnionStyle *style, const QWidget *w
     setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
-ProgressBarElement::~ProgressBarElement()
-{
-}
-
 void ProgressBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

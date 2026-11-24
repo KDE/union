@@ -18,7 +18,6 @@ class MenuItemElement : public AbstractElement
 
 public:
     MenuItemElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~MenuItemElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

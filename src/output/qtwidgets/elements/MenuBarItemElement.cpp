@@ -12,10 +12,6 @@ MenuBarItemElement::MenuBarItemElement(const UnionStyle *style, const QWidget *w
     setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
-MenuBarItemElement::~MenuBarItemElement()
-{
-}
-
 void MenuBarItemElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

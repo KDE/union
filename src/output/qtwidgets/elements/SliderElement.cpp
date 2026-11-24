@@ -15,10 +15,6 @@ SliderElement::SliderElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-SliderElement::~SliderElement()
-{
-}
-
 void SliderElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

@@ -19,10 +19,6 @@ IndicatorElement::IndicatorElement(const UnionStyle *style, const QWidget *widge
     m_isValid = true;
 }
 
-IndicatorElement::~IndicatorElement()
-{
-}
-
 void IndicatorElement::draw(QPainter *painter, DrawEnums enums) const
 {
     if (m_isValid) {

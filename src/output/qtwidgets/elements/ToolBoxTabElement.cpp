@@ -13,10 +13,6 @@ ToolBoxTabElement::ToolBoxTabElement(const QStyleOption *option, const UnionStyl
     update(option);
 }
 
-ToolBoxTabElement::~ToolBoxTabElement()
-{
-}
-
 void ToolBoxTabElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

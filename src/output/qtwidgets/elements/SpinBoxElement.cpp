@@ -15,10 +15,6 @@ SpinBoxElement::SpinBoxElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-SpinBoxElement::~SpinBoxElement()
-{
-}
-
 void SpinBoxElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

@@ -22,10 +22,6 @@ MenuItemElement::MenuItemElement(const QStyleOption *option, const UnionStyle *s
     update(option);
 }
 
-MenuItemElement::~MenuItemElement()
-{
-}
-
 void MenuItemElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

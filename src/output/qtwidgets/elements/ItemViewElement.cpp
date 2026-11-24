@@ -20,10 +20,6 @@ ItemViewElement::ItemViewElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-ItemViewElement::~ItemViewElement()
-{
-}
-
 void ItemViewElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

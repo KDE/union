@@ -12,10 +12,6 @@ TabWidgetElement::TabWidgetElement(const UnionStyle *style, const QWidget *widge
 {
 }
 
-TabWidgetElement::~TabWidgetElement()
-{
-}
-
 void TabWidgetElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

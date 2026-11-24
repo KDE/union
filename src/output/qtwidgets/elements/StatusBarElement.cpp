@@ -11,10 +11,6 @@ StatusBarElement::StatusBarElement(const UnionStyle *style, const QWidget *widge
 {
 }
 
-StatusBarElement::~StatusBarElement()
-{
-}
-
 void StatusBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

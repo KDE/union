@@ -12,10 +12,6 @@ TabBarElement::TabBarElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-TabBarElement::~TabBarElement()
-{
-}
-
 void TabBarElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

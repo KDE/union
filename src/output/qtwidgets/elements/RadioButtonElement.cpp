@@ -12,10 +12,6 @@ RadioButtonElement::RadioButtonElement(const UnionStyle *style, const QWidget *w
     setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
-RadioButtonElement::~RadioButtonElement()
-{
-}
-
 void RadioButtonElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

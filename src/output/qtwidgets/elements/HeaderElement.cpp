@@ -14,10 +14,6 @@ HeaderElement::HeaderElement(const UnionStyle *style, const QWidget *widget)
     update(option);
 }
 
-HeaderElement::~HeaderElement()
-{
-}
-
 void HeaderElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

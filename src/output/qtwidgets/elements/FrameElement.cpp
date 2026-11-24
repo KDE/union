@@ -31,10 +31,6 @@ FrameElement::FrameElement(const UnionStyle *style, QWidget *widget)
     // }
 }
 
-FrameElement::~FrameElement()
-{
-}
-
 void FrameElement::update(const QStyleOption *option)
 {
     auto e = element();

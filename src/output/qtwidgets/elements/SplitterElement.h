@@ -18,7 +18,6 @@ class SplitterElement : public AbstractElement
 
 public:
     SplitterElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~SplitterElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

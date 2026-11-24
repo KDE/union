@@ -18,7 +18,6 @@ class SizeGripElement : public AbstractElement
 
 public:
     SizeGripElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~SizeGripElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

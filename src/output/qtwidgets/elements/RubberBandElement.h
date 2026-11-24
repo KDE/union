@@ -18,7 +18,6 @@ class RubberBandElement : public AbstractElement
 
 public:
     RubberBandElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~RubberBandElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;

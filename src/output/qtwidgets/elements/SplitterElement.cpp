@@ -13,10 +13,6 @@ SplitterElement::SplitterElement(const UnionStyle *style, const QWidget *widget)
 {
 }
 
-SplitterElement::~SplitterElement()
-{
-}
-
 void SplitterElement::update(const QStyleOption *option)
 {
     AbstractElement::update(option);

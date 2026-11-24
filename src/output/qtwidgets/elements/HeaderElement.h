@@ -18,7 +18,6 @@ class HeaderElement : public AbstractElement
 
 public:
     HeaderElement(const UnionStyle *style, const QWidget *widget = nullptr);
-    ~HeaderElement() override;
 
     void update(const QStyleOption *option) override;
     void layout() override;
