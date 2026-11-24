@@ -285,3 +285,12 @@ void AbstractElement::drawBackground(QPainter *painter, UnionPainter::Parts part
     unionPainter.setRect(m_rect);
     unionPainter.draw();
 }
+
+QRectF AbstractElement::visualRect(AbstractElement *childElement) const
+{
+    if (!childElement) {
+        return {};
+    }
+
+    return UnionStyle::visualRect(m_direction, m_rect, childElement->rect());
+}

@@ -153,6 +153,8 @@ protected:
         }
     }
 
+    QRectF visualRect(AbstractElement *childElement) const;
+
 private:
     const UnionStyle *m_style = nullptr;
     Union::Element::Ptr m_element;
