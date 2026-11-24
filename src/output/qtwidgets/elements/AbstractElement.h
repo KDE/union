@@ -83,6 +83,21 @@ public:
         return nullptr;
     }
 
+    template<typename T, typename F>
+        requires std::is_invocable_v<F, T *>
+    inline void withFirstChild(bool shouldExist, F &&function)
+    {
+        if (shouldExist) {
+            auto child = firstChildOfType<T>(true);
+            function(child);
+        } else {
+            auto child = firstChildOfType<T>(false);
+            if (child) {
+                removeChildElement(child);
+            }
+        }
+    }
+
     StyleGroupWrapper propertyWrapper() const;
     StylePropertyGroupPtr properties() const;
 
