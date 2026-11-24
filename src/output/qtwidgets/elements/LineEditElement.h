@@ -19,19 +19,19 @@ public:
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    void drawBackground(QPainter *painter) const override;
-    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
-
     QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+
+    // void drawBackground(QPainter *painter) const override;
 
 private:
-    void updateSubElementList() override;
-    Union::IdentifierVariantHash elementAttributes() const override;
-    Union::IdentifierList elementHints() const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    QMarginsF iconPadding() const;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    // void updateSubElementList() override;
+    // Union::IdentifierVariantHash elementAttributes() const override;
+    // Union::IdentifierList elementHints() const override;
+    // QString fallbackElementName(const QStyleOption *opt) const override;
+    // QMarginsF iconPadding() const;
+    // const QStyleOptionFrame *m_frameOption = nullptr;
     bool m_hasFrame;
 };
 }
