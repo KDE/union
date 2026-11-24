@@ -15,7 +15,7 @@ class LineEditElement : public AbstractElement
     Q_OBJECT
 
 public:
-    LineEditElement(const UnionStyle *style, const QWidget *widget);
+    LineEditElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
@@ -23,7 +23,8 @@ public:
     QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
     qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
-    // void drawBackground(QPainter *painter) const override;
+protected:
+    void drawBackground(QPainter *painter, UnionPainter::Parts parts = UnionPainter::Parts::All) const override;
 
 private:
     // void updateSubElementList() override;
@@ -32,7 +33,8 @@ private:
     // QString fallbackElementName(const QStyleOption *opt) const override;
     // QMarginsF iconPadding() const;
     // const QStyleOptionFrame *m_frameOption = nullptr;
-    bool m_hasFrame;
+    bool m_hasFrame = true;
+    std::optional<QBrush> m_backgroundBrush;
 };
 }
 }

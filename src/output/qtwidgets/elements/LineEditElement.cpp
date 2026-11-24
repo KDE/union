@@ -11,139 +11,161 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-LineEditElement::LineEditElement(const UnionStyle *style, const QWidget *widget)
+static WidgetToElementRegistration<FrameElement, QLineEdit> lineEditWidgetRegistration;
+
+LineEditElement::LineEditElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
-    , m_hasFrame(true)
 {
 }
 
 void LineEditElement::update(const QStyleOption *option)
 {
-    AbstractElement::update(option);
-    if (const auto newOption = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-        m_frameOption = newOption;
+    auto e = ensureElement();
+    e->setType(ElementString::TextField);
+
+    const auto &palette = option->palette;
+    if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
+        m_backgroundBrush = palette.base();
+    } else {
+        m_backgroundBrush = std::nullopt;
     }
+
+    auto frameOption = qstyleoption_cast<const QStyleOptionFrame *>(option);
     if (const auto lineEdit = qobject_cast<const QLineEdit *>(widget())) {
         m_hasFrame = lineEdit->hasFrame();
     } else if (!widget()) {
         // Widget-less callers indicate the frame through lineWidth, not frameShape.
-        m_hasFrame = m_frameOption && m_frameOption->lineWidth > 0;
+        m_hasFrame = frameOption && frameOption->lineWidth > 0;
     } else {
-        m_hasFrame = m_frameOption && m_frameOption->frameShape != QFrame::Shape::NoFrame;
+        m_hasFrame = frameOption && frameOption->frameShape != QFrame::Shape::NoFrame;
     }
 
-    updateSubElementList();
-    layout();
+    e->setHints(FrameElement::frameHintsFor(frameOption));
+    e->setAttributes(FrameElement::frameAttributesFor(frameOption, widget()));
+
+    e->setHint(u"inside-table"_s, false);
+    if (widget() && widget()->parentWidget()) {
+        if (auto realParent = widget()->parentWidget()->parentWidget()) {
+            if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
+                e->setHint(u"inside-table"_s, true);
+            }
+        }
+    }
+
+    // updateSubElementList();
+    // layout();
+    AbstractElement::update(option);
 }
 
 void LineEditElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid) {
-        return;
-    }
+    // if (!m_isValid) {
+    //     return;
+    // }
     // For spinboxes and comboboxes, we do not want to draw this element
     // TODO: maybe this should be handleable by the CSS
-    if (widget() && widget()->parentWidget()) {
-        const auto parent = widget()->parentWidget();
-        if (parent->inherits("QComboBox") || parent->inherits("QAbstractSpinBox")) {
-            return;
+    const auto parent = widget() ? widget()->parentWidget() : nullptr;
+    if (parent && (parent->inherits("QComboBox") || parent->inherits("QAbstractSpinBox"))) {
+        return;
+    }
+
+    if (std::holds_alternative<QStyle::PrimitiveElement>(what)) {
+        switch (std::get<QStyle::PrimitiveElement>(what)) {
+        case QStyle::PE_PanelLineEdit:
+            drawBackground(painter);
+            break;
+        case QStyle::PE_FrameLineEdit:
+            drawBackground(painter, UnionPainter::Parts::FrameOnly);
+            break;
+        default:
+            break;
         }
     }
-
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_PanelLineEdit:
-        drawBackground(painter);
-        break;
-    case QStyle::PE_FrameLineEdit:
-        drawFrame(painter);
-        break;
-    }
 }
 
-void LineEditElement::drawBackground(QPainter *painter) const
+void LineEditElement::drawBackground(QPainter *painter, UnionPainter::Parts parts) const
 {
-    if (m_isValid && option) {
-        QColor backgroundOverride;
-        const auto &palette = option->palette;
-        if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
-            backgroundOverride = palette.base().color();
-        }
-
-        UnionPainter unionPainter(painter, m_elementProperties);
-        unionPainter.setParts(m_hasFrame ? UnionPainter::Parts::All : UnionPainter::Parts::PanelOnly);
-        unionPainter.setOverrideBackgroundColor(backgroundOverride);
-        unionPainter.setRect(visualRect(option->rect));
-        unionPainter.draw();
+    if (!m_hasFrame && parts == UnionPainter::Parts::FrameOnly) {
+        return;
     }
+
+    UnionPainter unionPainter(painter, properties());
+    unionPainter.setParts(m_hasFrame ? parts : UnionPainter::Parts::PanelOnly);
+
+    if (m_backgroundBrush) {
+        // TODO Allow using the full brush
+        unionPainter.setOverrideBackgroundColor(m_backgroundBrush.value().color());
+    }
+
+    unionPainter.setRect(rect());
+    unionPainter.draw();
 }
 
-void LineEditElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(ElementString::TextField);
-}
+// void LineEditElement::updateSubElementList()
+// {
+//     m_subElementList.clear();
+//     m_subElementList.append(ElementString::TextField);
+// }
 
-QSizeF LineEditElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
+QSizeF LineEditElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
-    QMarginsF padding =
-        safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+    QMarginsF padding = propertyWrapper().padding();
     return contentsSizeFromStyle.grownBy(padding);
 }
 
-QMarginsF LineEditElement::iconPadding() const
-{
-    if (!m_isValid) {
-        return QMarginsF();
-    }
-    return safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
-}
+// QMarginsF LineEditElement::iconPadding() const
+// {
+//     if (!m_isValid) {
+//         return QMarginsF();
+//     }
+//     return safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
+// }
 
 QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    if (m_isValid && m_frameOption && element == QStyle::SE_LineEditContents) {
-        auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
-        return visualRect(rect.marginsRemoved(padding().toMargins()));
+    if (element == QStyle::SE_LineEditContents) {
+        auto r = propertyWrapper().backgroundRectangle(rect());
+        return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().padding()));
     }
     return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
-Union::IdentifierVariantHash LineEditElement::elementAttributes() const
-{
-    return FrameElement::frameAttributesFor(m_frameOption, widget());
-}
+// Union::IdentifierVariantHash LineEditElement::elementAttributes() const
+// {
+//     return FrameElement::frameAttributesFor(m_frameOption, widget());
+// }
 
-Union::IdentifierList LineEditElement::elementHints() const
-{
-    auto hints = FrameElement::frameHintsFor(m_frameOption);
-    // Due to how Line Edits work, we have to first check the parent, then it's parent
-    // to figure out if we're inside a table. The first parent is just the scrollview.
-    if (widget() && widget()->parentWidget()) {
-        if (auto realParent = widget()->parentWidget()->parentWidget()) {
-            if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
-                hints.append(u"inside-table"_s);
-            }
-        }
-    }
-    return hints;
-}
+// Union::IdentifierList LineEditElement::elementHints() const
+// {
+//     auto hints = FrameElement::frameHintsFor(m_frameOption);
+//     // Due to how Line Edits work, we have to first check the parent, then it's parent
+//     // to figure out if we're inside a table. The first parent is just the scrollview.
+//     if (widget() && widget()->parentWidget()) {
+//         if (auto realParent = widget()->parentWidget()->parentWidget()) {
+//             if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
+//                 hints.append(u"inside-table"_s);
+//             }
+//         }
+//     }
+//     return hints;
+// }
 
 qreal LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_LineEditIconMargin: {
-        const auto margins = iconPadding();
-        return (margins.left() + margins.right() + margins.top() + margins.bottom()) / 4;
+        return propertyWrapper().averagePadding();
     }
     case QStyle::PM_LineEditIconSize:
-        return querySize({ElementString::LineEditIconSize}).width();
+        // return querySize({ElementString::LineEditIconSize}).width();
     default:
         break;
     }
-    return 0;
+    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
 }
 
-QString LineEditElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::TextField;
-}
+// QString LineEditElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
+// {
+//     return ElementString::TextField;
+// }

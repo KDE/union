@@ -39,7 +39,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/IconSubElement.cpp
         elements/IndicatorSubElement.cpp
         # elements/ItemViewElement.cpp
-        # elements/LineEditElement.cpp
+        elements/LineEditElement.cpp
         # elements/MenuItemElement.cpp
         # elements/ProgressBarElement.cpp
         # elements/RadioButtonElement.cpp
@@ -98,7 +98,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/IconSubElement.h
         elements/IndicatorSubElement.h
         # elements/ItemViewElement.h
-        # elements/LineEditElement.h
+        elements/LineEditElement.h
         # elements/MenuItemElement.h
         # elements/ProgressBarElement.h
         # elements/RadioButtonElement.h
