@@ -17,16 +17,18 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-FrameElement::FrameElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+static OptionToElementRegistration<FrameElement, QStyleOption::SO_Frame> frameOptionRegistration;
+static WidgetToElementRegistration<FrameElement, QFrame> frameWidgetRegistration;
+
+FrameElement::FrameElement(const UnionStyle *style, QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
-    if (m_elementProperties && m_frameOption) {
-        m_shadowWidget = qobject_cast<QWidget *>(m_frameOption->styleObject);
-        if (m_shadowWidget) {
-            m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
-        }
-    }
+    // if (m_elementProperties && m_frameOption) {
+    //     m_shadowWidget = qobject_cast<QWidget *>(m_frameOption->styleObject);
+    //     if (m_shadowWidget) {
+    //         m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
+    //     }
+    // }
 }
 
 FrameElement::~FrameElement()
@@ -35,176 +37,159 @@ FrameElement::~FrameElement()
 
 void FrameElement::update(const QStyleOption *option)
 {
+    auto e = element();
+    if (!e) {
+        e = Union::Element::create();
+        e->setType({ElementString::Frame});
+        setElement(e);
+    }
+
+    auto frameOption = qstyleoption_cast<const QStyleOptionFrame *>(option);
+    if (!frameOption) {
+        return AbstractElement::update(option);
+    }
+
+    m_frameShape = frameOption->frameShape;
+
+    e->setHints(frameHintsFor(frameOption));
+
+    auto w = widget();
+    if (w) {
+        if (w->inherits("KDEPrivate::KPageListView") || w->inherits("KDEPrivate::KPageTreeView")) {
+            const bool reverseLayout(direction() == Qt::RightToLeft);
+            if (reverseLayout) {
+                e->setHint(u"panel-left"_s, false);
+                e->setHint(u"panel-right"_s, true);
+            } else {
+                e->setHint(u"panel-left"_s, true);
+                e->setHint(u"panel-right"_s, false);
+            }
+        }
+
+        if (w->parentWidget()) {
+            if (const auto dock = qobject_cast<const QDockWidget *>(w->parentWidget())) {
+                // For some reason the dock->dockLocation segfaults if there are no dockWidgetFeatures set
+                // so check for that.
+                if (!dock->features().testFlag(QDockWidget::NoDockWidgetFeatures)) {
+                    // switch (dock->dockLocation()) {
+                    //     case Qt::LeftDockWidgetArea:
+                    //         e->setHint(u"dock-left"_s, true);
+                    //         break;
+                    //     case Qt::RightDockWidgetArea:
+                    //         hints.append(u"dock-right"_s);
+                    //         break;
+                    //     case Qt::TopDockWidgetArea:
+                    //         hints.append(u"dock-top"_s);
+                    //         break;
+                    //     case Qt::BottomDockWidgetArea:
+                    //         hints.append(u"dock-bottom"_s);
+                    //         break;
+                    //     case Qt::DockWidgetArea_Mask:
+                    //     case Qt::NoDockWidgetArea:
+                    //         break;
+                    // }
+                }
+            }
+        }
+    }
+
+    e->setAttributes(frameAttributesFor(frameOption, widget()));
+
     AbstractElement::update(option);
-    if (const auto newOpt = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-        m_frameOption = newOpt;
-    }
-    updateSubElementList();
-    layout();
 }
 
-void FrameElement::layout()
+void FrameElement::draw(QPainter *painter, DrawVariant what) const
 {
-    m_elementList = prepareElements(m_styleOption, m_widget);
-    if (!m_elementList.isEmpty()) {
-        m_elementProperties = queryProperties(m_elementList);
-        m_layoutMap = layoutMap(m_styleOption, m_subElementList);
-    }
-    if (m_elementProperties) {
-        m_isValid = true;
-    } else {
-        m_isValid = false;
-    }
-}
-
-void FrameElement::draw(QPainter *painter, DrawEnums enums) const
-{
-    if (!m_isValid) {
-        return;
-    }
     // Application has requested to disable frames for this element
-    if (m_widget) {
-        const auto forceFrame = m_widget->property("_breeze_force_frame");
+    if (widget()) {
+        const auto forceFrame = widget()->property("_breeze_force_frame");
         if (forceFrame.isValid() && !forceFrame.toBool()) {
             return;
         }
     }
 
-    if (m_frameOption) {
-        switch (enums.ControlElement) {
-        case QStyle::CE_FocusFrame:
-        case QStyle::CE_ShapedFrame:
-            switch (m_frameOption->frameShape) {
-            // Do nothing
-            case QFrame::NoFrame:
-                break;
-            // We always allow HLine/VLine
-            case QFrame::HLine:
-            case QFrame::VLine:
-                drawBackground(painter);
-                break;
-            case QFrame::Box:
-            case QFrame::Panel:
-            case QFrame::WinPanel:
-                drawBackground(painter);
-                drawShadow();
-                break;
-            // Skip drawing frames for items that have framewidth of 0
-            case QFrame::StyledPanel:
-                if (pixelMetric(QStyle::PM_DefaultFrameWidth) != 0) {
-                    drawBackground(painter);
-                }
-                drawShadow();
-                break;
-            }
-            break;
-        }
-    }
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [](QStyle::ComplexControl) { },
+                          [&](QStyle::ControlElement controlElement) {
+                              if (controlElement != QStyle::CE_FocusFrame && controlElement != QStyle::CE_ShapedFrame) {
+                                  return;
+                              }
 
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_Frame:
-        drawFrame(painter);
-        break;
-    case QStyle::PE_FrameWindow:
-        drawFrame(painter);
-        drawShadow();
-        break;
-    case QStyle::PE_FrameDockWidget:
-        drawFrame(painter);
-        drawShadow();
-        break;
-    }
+                              switch (m_frameShape) {
+                              // Do nothing
+                              case QFrame::NoFrame:
+                                  break;
+                              // We always allow HLine/VLine
+                              case QFrame::HLine:
+                              case QFrame::VLine:
+                                  drawBackground(painter);
+                                  break;
+                              case QFrame::Box:
+                              case QFrame::Panel:
+                              case QFrame::WinPanel:
+                                  drawBackground(painter);
+                                  // drawShadow();
+                                  break;
+                              // Skip drawing frames for items that have framewidth of 0
+                              case QFrame::StyledPanel:
+                                  if (pixelMetric(nullptr, QStyle::PM_DefaultFrameWidth) != 0) {
+                                      drawBackground(painter);
+                                  }
+                                  // drawShadow();
+                                  break;
+                              }
+                          },
+                          [&](QStyle::PrimitiveElement primitive) {
+                              switch (primitive) {
+                              case QStyle::PE_Frame:
+                                  drawBackground(painter, UnionPainter::Parts::FrameOnly);
+                                  break;
+                              case QStyle::PE_FrameWindow:
+                              case QStyle::PE_FrameDockWidget:
+                                  drawBackground(painter, UnionPainter::Parts::FrameOnly);
+                                  // drawShadow();
+                                  break;
+                              default:
+                                  break;
+                              }
+                          }},
+               what);
 }
 
-void FrameElement::drawShadow() const
-{
-    if (m_shadowRenderer && m_shadowWidget) {
-        m_shadowRenderer->drawShadow(m_shadowWidget);
-    }
-}
-
-void FrameElement::drawFrame(QPainter *painter) const
-{
-    // Follow the expectations: If frame has panel shape,
-    // we need to draw the background too. In HLine/VLine cases
-    // we can just skip it
-    if (m_frameOption) {
-        switch (m_frameOption->frameShape) {
-        case QFrame::NoFrame:
-            // Only draw panel if we have autoFillBackground set
-            if (m_widget && m_widget->autoFillBackground()) {
-                drawPanel(painter);
-            }
-            return;
-        case QFrame::Box:
-        case QFrame::Panel:
-        case QFrame::WinPanel:
-        case QFrame::StyledPanel:
-            drawBackground(painter);
-            break;
-        case QFrame::HLine:
-        case QFrame::VLine:
-            AbstractElement::drawBackground(painter);
-            break;
-        }
-    }
-}
-
-void FrameElement::updateSubElementList()
-{
-    m_subElementList.clear();
-    m_subElementList.append(ElementString::Frame);
-}
-
-Union::IdentifierVariantHash FrameElement::elementAttributes() const
-{
-    return frameAttributesFor(m_frameOption, m_widget);
-}
-
-Union::IdentifierList FrameElement::elementHints() const
-{
-    Union::IdentifierList hints = frameHintsFor(m_frameOption);
-
-    // Backwards compatibility:
-    // Custom KDE style hint used by KDE widgets applications, for declaring sidebars
-    if (m_widget) {
-        if (m_widget->inherits("KDEPrivate::KPageListView") || m_widget->inherits("KDEPrivate::KPageTreeView")) {
-            const bool reverseLayout(m_styleOption && m_styleOption->direction == Qt::RightToLeft);
-            if (reverseLayout) {
-                hints.append(u"panel-right"_s);
-            } else {
-                hints.append(u"panel-left"_s);
-            }
-        }
-    }
-
-    if (m_widget && m_widget->parentWidget()) {
-        if (const auto dock = qobject_cast<const QDockWidget *>(m_widget->parentWidget())) {
-            // For some reason the dock->dockLocation segfaults if there are no dockWidgetFeatures set
-            // so check for that.
-            if (!dock->features().testFlag(QDockWidget::NoDockWidgetFeatures)) {
-                switch (dock->dockLocation()) {
-                case Qt::LeftDockWidgetArea:
-                    hints.append(u"dock-left"_s);
-                    break;
-                case Qt::RightDockWidgetArea:
-                    hints.append(u"dock-right"_s);
-                    break;
-                case Qt::TopDockWidgetArea:
-                    hints.append(u"dock-top"_s);
-                    break;
-                case Qt::BottomDockWidgetArea:
-                    hints.append(u"dock-bottom"_s);
-                    break;
-                case Qt::DockWidgetArea_Mask:
-                case Qt::NoDockWidgetArea:
-                    break;
-                }
-            }
-        }
-    }
-    return hints;
-}
+// void FrameElement::drawShadow() const
+// {
+//     if (m_shadowRenderer && m_shadowWidget) {
+//         m_shadowRenderer->drawShadow(m_shadowWidget);
+//     }
+// }
+//
+// void FrameElement::drawFrame(QPainter *painter) const
+// {
+//     // Follow the expectations: If frame has panel shape,
+//     // we need to draw the background too. In HLine/VLine cases
+//     // we can just skip it
+//     if (m_frameOption) {
+//         switch (m_frameOption->frameShape) {
+//         case QFrame::NoFrame:
+//             // Only draw panel if we have autoFillBackground set
+//             if (m_widget && m_widget->autoFillBackground()) {
+//                 drawPanel(painter);
+//             }
+//             return;
+//         case QFrame::Box:
+//         case QFrame::Panel:
+//         case QFrame::WinPanel:
+//         case QFrame::StyledPanel:
+//             drawBackground(painter);
+//             break;
+//         case QFrame::HLine:
+//         case QFrame::VLine:
+//             AbstractElement::drawBackground(painter);
+//             break;
+//         }
+//     }
+// }
 
 QLayout *findParentLayout(const QWidget *widget)
 {
@@ -240,38 +225,39 @@ QLayout *findParentLayout(const QWidget *widget)
     return nullptr;
 }
 
-qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal FrameElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     // Use same heuristics for drawing frames as Breeze does.
     // TODO: We may want to expose this to the user somehow.
     if (pixelMetric == QStyle::PM_DefaultFrameWidth) {
-        if (!m_widget) {
+        auto w = widget();
+        if (!w) {
             return 0;
         }
-        const auto frameWidth = averageBorderSize();
+        const auto frameWidth = propertyWrapper().averageBorderSize();
 
-        if (qobject_cast<const QMenu *>(m_widget)) {
+        if (qobject_cast<const QMenu *>(w)) {
             return frameWidth;
-        } else if (qobject_cast<const QLineEdit *>(m_widget)) {
+        } else if (qobject_cast<const QLineEdit *>(w)) {
             return frameWidth;
-        } else if (qobject_cast<const QComboBox *>(m_widget)) {
+        } else if (qobject_cast<const QComboBox *>(w)) {
             return frameWidth;
         }
 
-        const auto forceFrame = m_widget->property("_breeze_force_frame");
+        const auto forceFrame = w->property("_breeze_force_frame");
         if (forceFrame.isValid() && !forceFrame.toBool()) {
             return 0;
         }
-        if ((forceFrame.isValid() && forceFrame.toBool()) || m_widget->property("_breeze_borders_sides").isValid()) {
+        if ((forceFrame.isValid() && forceFrame.toBool()) || w->property("_breeze_borders_sides").isValid()) {
             return frameWidth;
         }
 
-        if (qobject_cast<const QAbstractScrollArea *>(m_widget)) {
-            auto layout = findParentLayout(m_widget);
+        if (qobject_cast<const QAbstractScrollArea *>(w)) {
+            auto layout = findParentLayout(w);
 
             if (!layout) {
-                if (m_widget->parentWidget() && m_widget->parentWidget()->layout()) {
-                    layout = m_widget->parentWidget()->layout();
+                if (w->parentWidget() && w->parentWidget()->layout()) {
+                    layout = w->parentWidget()->layout();
                 }
             }
 
@@ -294,42 +280,28 @@ qreal FrameElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
             }
         }
 
-        if (qobject_cast<const QTabWidget *>(m_widget) || qobject_cast<const QTextBrowser *>(m_widget)) {
+        if (qobject_cast<const QTabWidget *>(w) || qobject_cast<const QTextBrowser *>(w)) {
             return frameWidth;
         }
 
-        if (m_widget->inherits("QComboBoxPrivateContainer") || m_widget->inherits("KCompletionBox")) {
+        if (w->inherits("QComboBoxPrivateContainer") || w->inherits("KCompletionBox")) {
             return frameWidth;
         }
 
         // fallback
         return 0;
     }
-    return 0;
+
+    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
 }
 
-QRectF FrameElement::subElementRect(QStyle::SubElement element) const
+QRectF FrameElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    const auto rect = m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
+    const auto r = style()->QCommonStyle::subElementRect(element, option, widget());
     if (element == QStyle::SE_FrameContents) {
-        return visualRect(rect.marginsRemoved(borderSize().toMargins()));
+        return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().borderSize().toMargins()));
     }
-    return rect;
-}
-
-QString FrameElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    // This is the frame for the combobox popup
-    if (m_widget && m_widget->inherits("QComboBoxPrivateContainer")) {
-        return ElementString::Popup;
-    }
-
-    // This is the dockwidget frame
-    if (qobject_cast<const QDockWidget *>(m_widget)) {
-        return ElementString::DockWidget;
-    }
-
-    return ElementString::Frame;
+    return r;
 }
 
 Union::IdentifierVariantHash FrameElement::frameAttributesFor(const QStyleOptionFrame *frameOption, const QWidget *widget)

@@ -32,7 +32,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/MenuElement.cpp
         # elements/MenuBarElement.cpp
         # elements/MenuBarItemElement.cpp
-        # elements/FrameElement.cpp
+        elements/FrameElement.cpp
         elements/FocusElement.cpp
         elements/GroupBoxElement.cpp
         # elements/HeaderElement.cpp
@@ -91,7 +91,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/MenuElement.h
         # elements/MenuBarElement.h
         # elements/MenuBarItemElement.h
-        # elements/FrameElement.h
+        elements/FrameElement.h
         elements/FocusElement.h
         elements/GroupBoxElement.h
         # elements/HeaderElement.h

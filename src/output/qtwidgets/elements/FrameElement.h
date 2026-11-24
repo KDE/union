@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <QFrame>
+
 #include "AbstractElement.h"
 #include "ShadowRenderer.h"
 
@@ -11,52 +13,36 @@ namespace Union
 namespace Widgets
 {
 
-class FrameElement;
-
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_FocusFrame> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ShapedFrame> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameDockWidget> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameWindow> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_Frame> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DefaultFrameWidth> : public TypeHelper<FrameElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_FrameContents> : public TypeHelper<FrameElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class FrameElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    FrameElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    FrameElement(const UnionStyle *style, QWidget *widget = nullptr);
     ~FrameElement() override;
 
     void update(const QStyleOption *option) override;
-    void layout() override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
-    void drawFrame(QPainter *painter) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
-    QRectF subElementRect(QStyle::SubElement element) const override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+
+    // void layout() override;
+    // void drawFrame(QPainter *painter) const override;
     // These are shared between any element that uses QStyleOptionFrame
     static Union::IdentifierVariantHash frameAttributesFor(const QStyleOptionFrame *frameOption, const QWidget *widget);
     static Union::IdentifierList frameHintsFor(const QStyleOptionFrame *frameOption);
 
 private:
-    Union::IdentifierVariantHash elementAttributes() const override;
-    Union::IdentifierList elementHints() const override;
-    void updateSubElementList() override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    void drawShadow() const;
-    const QStyleOptionFrame *m_frameOption = nullptr;
-    std::shared_ptr<ShadowRenderer> m_shadowRenderer;
-    QWidget *m_shadowWidget;
+    QFrame::Shape m_frameShape = QFrame::Shape::NoFrame;
+    // Union::IdentifierVariantHash elementAttributes() const override;
+    // Union::IdentifierList elementHints() const override;
+    // void updateSubElementList() override;
+    // QString fallbackElementName(const QStyleOption *opt) const override;
+    // void drawShadow() const;
+    // const QStyleOptionFrame *m_frameOption = nullptr;
+    // std::shared_ptr<ShadowRenderer> m_shadowRenderer;
+    // QWidget *m_shadowWidget;
 };
 }
 }
