@@ -65,6 +65,11 @@ QSizeF StyleGroupWrapper::adjustSize(QSizeF contentsSize, bool includesAveragePa
     return size.toSize();
 }
 
+QRectF StyleGroupWrapper::backgroundRectangle(const QRectF &input)
+{
+    return input.marginsRemoved(inset());
+}
+
 QSizeF StyleGroupWrapper::size() const
 {
     return QSizeF(width(), height());
@@ -110,6 +115,11 @@ qreal StyleGroupWrapper::averageVPadding() const
         return 0;
     }
     return (p.top() + p.bottom()) / 2;
+}
+
+QMarginsF StyleGroupWrapper::inset() const
+{
+    return safePropertyLookup(m_properties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::inset, &SizePropertyGroup::toMargins);
 }
 
 qreal StyleGroupWrapper::spacing() const

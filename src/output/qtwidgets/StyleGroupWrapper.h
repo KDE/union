@@ -21,6 +21,8 @@ public:
 
     QSizeF adjustSize(QSizeF contentsSize, bool includesAveragePadding) const;
 
+    QRectF backgroundRectangle(const QRectF &input);
+
     QSizeF size() const;
     qreal width() const;
     qreal height() const;
@@ -29,6 +31,8 @@ public:
     qreal averagePadding() const;
     qreal averageHPadding() const;
     qreal averageVPadding() const;
+
+    QMarginsF inset() const;
 
     qreal spacing() const;
 
