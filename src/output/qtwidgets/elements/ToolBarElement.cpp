@@ -183,7 +183,7 @@ qreal ToolBarElement::extent(Union::StylePropertyGroupPtr properties) const
     return 0;
 }
 
-qreal ToolBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal ToolBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolBarSeparatorExtent:

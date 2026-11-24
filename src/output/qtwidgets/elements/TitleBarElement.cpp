@@ -114,12 +114,12 @@ void TitleBarElement::layout()
     }
 }
 
-QSizeF TitleBarElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF TitleBarElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     return contentsSizeFromStyle;
 }
 
-QRectF TitleBarElement::subControlRect(QStyle::SubControl subControl) const
+QRectF TitleBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid) {
         switch (subControl) {
@@ -175,7 +175,7 @@ Union::IdentifierList TitleBarElement::elementHints() const
     return hints;
 }
 
-qreal TitleBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal TitleBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TitleBarHeight:

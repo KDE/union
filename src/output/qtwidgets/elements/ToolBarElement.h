@@ -22,7 +22,7 @@ public:
     void update(const QStyleOption *option) override;
     void layout() override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     Union::IdentifierList elementHints() const override;

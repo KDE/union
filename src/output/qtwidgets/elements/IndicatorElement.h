@@ -22,7 +22,7 @@ public:
     IndicatorElement(const UnionStyle *style, const QWidget *widget);
 
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     void drawElement(QPainter *painter, const QString &defaultIconName, const QStringList &targetHierarchy) const;

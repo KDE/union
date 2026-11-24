@@ -173,7 +173,7 @@ void TabElement::layout()
     }
 }
 
-QSizeF TabElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF TabElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // Follow what Breeze does here
     if (m_isValid && m_styleOption) {
@@ -214,7 +214,7 @@ QSizeF TabElement::contentsSize(QSizeF contentsSizeFromStyle) const
     return contentsSizeFromStyle;
 }
 
-QRectF TabElement::subElementRect(QStyle::SubElement element) const
+QRectF TabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
@@ -295,7 +295,7 @@ Union::IdentifierList TabElement::elementHints() const
     return hints;
 }
 
-qreal TabElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal TabElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TabBarTabHSpace:

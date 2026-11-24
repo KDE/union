@@ -205,7 +205,7 @@ Union::IdentifierList HeaderElement::elementHints() const
     return hints;
 }
 
-qreal HeaderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal HeaderElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_HeaderMargin:

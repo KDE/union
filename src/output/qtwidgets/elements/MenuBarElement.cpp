@@ -36,7 +36,7 @@ void MenuBarElement::draw(QPainter *painter, DrawVariant what) const
     }
 }
 
-qreal MenuBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal MenuBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuBarVMargin:

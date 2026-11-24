@@ -22,9 +22,9 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     void layout() override;
-    QRectF subElementRect(QStyle::SubElement element) const override;
-    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     void updateSubElementList() override;

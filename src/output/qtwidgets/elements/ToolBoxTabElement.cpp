@@ -76,7 +76,7 @@ void ToolBoxTabElement::layout()
     }
 }
 
-QRectF ToolBoxTabElement::subElementRect(QStyle::SubElement element) const
+QRectF ToolBoxTabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid && m_toolBoxOption) {
         if (element == QStyle::SE_ToolBoxTabContents) {

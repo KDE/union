@@ -167,7 +167,7 @@ void SliderElement::drawBackground(QPainter *painter) const
     unionPainter.draw();
 }
 
-QSizeF SliderElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF SliderElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     if (!m_sliderOption) {
         return applyPaddingToSize(contentsSizeFromStyle);
@@ -203,7 +203,7 @@ QSizeF SliderElement::contentsSize(QSizeF contentsSizeFromStyle) const
     return applyPaddingToSize(size);
 }
 
-QRectF SliderElement::subControlRect(QStyle::SubControl subControl) const
+QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_sliderOption) {
         // Copied from Breeze
@@ -326,7 +326,7 @@ Union::IdentifierList SliderElement::elementHints() const
     return hints;
 }
 
-qreal SliderElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal SliderElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SliderLength:

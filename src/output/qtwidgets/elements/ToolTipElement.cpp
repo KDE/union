@@ -59,7 +59,7 @@ Union::IdentifierList ToolTipElement::elementHints() const
     return FrameElement::frameHintsFor(m_frameOption);
 }
 
-qreal ToolTipElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal ToolTipElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolTipLabelFrameWidth:

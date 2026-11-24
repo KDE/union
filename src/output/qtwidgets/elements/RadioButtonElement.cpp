@@ -68,7 +68,7 @@ void RadioButtonElement::draw(QPainter *painter, DrawVariant what) const
     }
 }
 
-QSizeF RadioButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF RadioButtonElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     auto size = applyPaddingToSize(contentsSizeFromStyle);
     // Ensure indicator size is taken into account with the label
@@ -76,7 +76,7 @@ QSizeF RadioButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
     return size;
 }
 
-QRectF RadioButtonElement::subElementRect(QStyle::SubElement element) const
+QRectF RadioButtonElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid && m_buttonOption) {
         if (element == QStyle::SE_RadioButtonIndicator) {
@@ -120,7 +120,7 @@ Union::IdentifierList RadioButtonElement::elementHints() const
     return hints;
 }
 
-qreal RadioButtonElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal RadioButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ExclusiveIndicatorWidth:

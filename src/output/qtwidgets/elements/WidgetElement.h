@@ -22,7 +22,7 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    int styleHint(QStyle::StyleHint styleHint) const override;
+    int styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const override;
 
 private:
     void drawKMultiTabBar(QPainter *painter) const;

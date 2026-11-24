@@ -101,12 +101,12 @@ void ScrollBarElement::updateSubElementList()
     m_subElementList.append(ElementString::Handle);
 }
 
-QSizeF ScrollBarElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF ScrollBarElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     return contentsSizeFromStyle;
 }
 
-QRectF ScrollBarElement::subControlRect(QStyle::SubControl subControl) const
+QRectF ScrollBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_scrollBarOption) {
         // Copied from Breeze
@@ -216,7 +216,7 @@ Union::IdentifierList ScrollBarElement::elementHints() const
     return hints;
 }
 
-qreal ScrollBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal ScrollBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ScrollBarExtent:

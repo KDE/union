@@ -51,7 +51,7 @@ void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIcon
     }
 }
 
-qreal IndicatorElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal IndicatorElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ListViewIconSize:

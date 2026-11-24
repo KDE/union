@@ -83,7 +83,7 @@ void LineEditElement::updateSubElementList()
     m_subElementList.append(ElementString::TextField);
 }
 
-QSizeF LineEditElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF LineEditElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
     QMarginsF padding =
@@ -99,7 +99,7 @@ QMarginsF LineEditElement::iconPadding() const
     return safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 }
 
-QRectF LineEditElement::subElementRect(QStyle::SubElement element) const
+QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid && m_frameOption && element == QStyle::SE_LineEditContents) {
         auto rect = backgroundRectangle(m_frameOption, m_elementProperties).toRect();
@@ -128,7 +128,7 @@ Union::IdentifierList LineEditElement::elementHints() const
     return hints;
 }
 
-qreal LineEditElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_LineEditIconMargin: {

@@ -48,7 +48,7 @@ void SplitterElement::layout()
     }
 }
 
-qreal SplitterElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal SplitterElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SplitterWidth:

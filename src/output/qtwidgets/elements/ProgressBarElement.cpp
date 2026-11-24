@@ -107,7 +107,7 @@ void ProgressBarElement::layout()
     }
 }
 
-QSizeF ProgressBarElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF ProgressBarElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // If the bar is vertical, make sure text has room
     auto size = applyPaddingToSize(contentsSizeFromStyle);
@@ -117,7 +117,7 @@ QSizeF ProgressBarElement::contentsSize(QSizeF contentsSizeFromStyle) const
     return size;
 }
 
-QRectF ProgressBarElement::subElementRect(QStyle::SubElement element) const
+QRectF ProgressBarElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_progressBarOption) {
         if (element == QStyle::SE_ProgressBarLabel) {
@@ -192,7 +192,7 @@ int ProgressBarElement::chunkWidth() const
     return safePropertyLookup(m_contentProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
 }
 
-qreal ProgressBarElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal ProgressBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ProgressBarChunkWidth:

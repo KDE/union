@@ -149,7 +149,7 @@ void MenuItemElement::layout()
     }
 }
 
-QSizeF MenuItemElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF MenuItemElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     QSizeF preferredSize = contentsSizeFromStyle;
     // Handle separator separately (pun not intended)
@@ -255,7 +255,7 @@ Union::IdentifierList MenuItemElement::elementHints() const
     return hints;
 }
 
-qreal MenuItemElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal MenuItemElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuButtonIndicator:

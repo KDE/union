@@ -106,7 +106,7 @@ qreal TreeViewElement::indentation() const
     return querySize({ElementString::TreeViewDelegate, ElementString::Indentation}).width();
 }
 
-qreal TreeViewElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal TreeViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TreeViewIndentation:

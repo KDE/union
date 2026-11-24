@@ -49,12 +49,12 @@ void MenuElement::updateSubElementList()
     m_subElementList.append(ElementString::Frame);
 }
 
-QSizeF MenuElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF MenuElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     return contentsSizeFromStyle;
 }
 
-qreal MenuElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal MenuElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuVMargin:

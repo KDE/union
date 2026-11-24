@@ -73,7 +73,7 @@ void SpinBoxElement::updateSubElementList()
     m_subElementList.append(ElementString::Indicator);
 }
 
-QSizeF SpinBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF SpinBoxElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     const int frameWidth = m_style->pixelMetric(QStyle::PM_SpinBoxFrameWidth, m_styleOption, m_widget);
     auto size = contentsSizeFromStyle;
@@ -91,7 +91,7 @@ QSizeF SpinBoxElement::contentsSize(QSizeF contentsSizeFromStyle) const
     return size;
 }
 
-QRectF SpinBoxElement::subControlRect(QStyle::SubControl subControl) const
+QRectF SpinBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_spinBoxOption) {
         QRectF rect = m_styleOption->rect;
@@ -158,7 +158,7 @@ Union::IdentifierList SpinBoxElement::elementHints() const
     return hints;
 }
 
-qreal SpinBoxElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal SpinBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SpinBoxFrameWidth:

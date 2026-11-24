@@ -23,8 +23,8 @@ public:
     void layout() override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    QSizeF contentsSize(QSizeF contentsSizeFromStyle) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
+    QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     Union::IdentifierList elementHints() const override;

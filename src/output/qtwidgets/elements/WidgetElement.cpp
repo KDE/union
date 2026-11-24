@@ -39,7 +39,7 @@ void WidgetElement::draw(QPainter *painter, DrawVariant what) const
     }
 }
 
-int WidgetElement::styleHint(QStyle::StyleHint styleHint) const
+int WidgetElement::styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const
 {
     // TODO: We need to figure a way to expose these in CSS in a nice manner
     switch (styleHint) {
