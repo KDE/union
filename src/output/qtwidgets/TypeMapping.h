@@ -5,6 +5,8 @@
 
 #include <QStyleOption>
 
+#include "qtwidgets_logging.h"
+
 namespace Union
 {
 namespace Widgets
@@ -37,14 +39,19 @@ struct WidgetToElementRegistration {
             return new ElementType(style, widget);
         };
 
+        const auto elementName = ElementType::staticMetaObject.className();
+
         (
             [&] {
-                TypeMapping::registerWidgetToElement(WidgetType::staticMetaObject.className(), createFunction);
+                const auto widgetName = WidgetType::staticMetaObject.className();
+                qCDebug(UNION_QTWIDGETS) << "Registered element type" << elementName << "for widget type" << widgetName;
+                TypeMapping::registerWidgetToElement(widgetName, createFunction);
             }(),
             ... //
         );
 
         for (const auto &name : extraNames) {
+            qCDebug(UNION_QTWIDGETS) << "Registered element type" << elementName << "for widget type" << name;
             TypeMapping::registerWidgetToElement(name, createFunction);
         }
     }
@@ -58,8 +65,11 @@ struct OptionToElementRegistration {
             return new ElementType(style, widget);
         };
 
+        const auto elementName = ElementType::staticMetaObject.className();
+
         (
             [&] {
+                qCDebug(UNION_QTWIDGETS) << "Registered element type" << elementName << "for option type" << OptionType;
                 TypeMapping::registerOptionToElement(OptionType, createFunction);
             }(),
             ... //

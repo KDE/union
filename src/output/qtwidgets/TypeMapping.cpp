@@ -24,29 +24,23 @@ AbstractElement *TypeMapping::createElementForWidget(const UnionStyle *style, QW
     const QMetaObject *metaObject = widget->metaObject();
     while (metaObject && !factoryFunction) {
         factoryFunction = s_widgetToElementMap.value(metaObject->className());
-        if (factoryFunction) {
-            qDebug() << "found factory function for" << widget->metaObject()->className() << "from" << metaObject->className();
-        }
         metaObject = metaObject->superClass();
     }
 
     if (factoryFunction) {
-        auto element = factoryFunction(style, widget);
-        qDebug() << "Created" << element << "for" << widget;
-        return element;
+        return factoryFunction(style, widget);
     } else {
+        qCDebug(UNION_QTWIDGETS) << "No element type found for widget type" << widget->metaObject()->className();
         return nullptr;
     }
 }
 
 void TypeMapping::registerOptionToElement(int optionType, const ElementCreateFunction &function)
 {
-    qDebug() << "Type registration for" << optionType;
     s_optionToElementMap.insert(optionType, function);
 }
 
 void Union::Widgets::TypeMapping::registerWidgetToElement(const QByteArray &className, const ElementCreateFunction &function)
 {
-    qDebug() << "Type registration for" << className;
     s_widgetToElementMap.insert(className, function);
 }
