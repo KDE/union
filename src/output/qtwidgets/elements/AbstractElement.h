@@ -40,6 +40,8 @@ public:
     const UnionStyle *style() const;
     QWidget *widget() const;
 
+    bool isValid() const;
+
     AbstractElementFlags flags() const;
     void setFlags(AbstractElementFlags newFlags);
     void setFlag(AbstractElementFlag flag, bool apply = true);

@@ -33,6 +33,11 @@ QWidget *AbstractElement::widget() const
     return m_widget;
 }
 
+bool AbstractElement::isValid() const
+{
+    return m_elementProperties.properties() != nullptr;
+}
+
 AbstractElement::AbstractElementFlags AbstractElement::flags() const
 {
     return m_flags;
