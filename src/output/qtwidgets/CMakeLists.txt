@@ -35,7 +35,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/FrameElement.cpp
         elements/FocusElement.cpp
         elements/GroupBoxElement.cpp
-        # elements/HeaderElement.cpp
+        # elements/HeaderViewElement.cpp
         elements/IconSubElement.cpp
         elements/IndicatorSubElement.cpp
         # elements/ItemViewElement.cpp
@@ -94,7 +94,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/FrameElement.h
         elements/FocusElement.h
         elements/GroupBoxElement.h
-        # elements/HeaderElement.h
+        # elements/HeaderViewElement.h
         elements/IconSubElement.h
         elements/IndicatorSubElement.h
         # elements/ItemViewElement.h
