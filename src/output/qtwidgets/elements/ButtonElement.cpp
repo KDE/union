@@ -6,6 +6,7 @@
 #include <QPushButton>
 
 #include "IconSubElement.h"
+#include "IndicatorSubElement.h"
 #include "TextSubElement.h"
 
 using namespace Qt::StringLiterals;
@@ -45,23 +46,23 @@ void ButtonElement::update(const QStyleOption *option)
     e->setHint(u"command-link-button"_s, buttonOption->features.testFlag(QStyleOptionButton::CommandLinkButton));
 
     if (!buttonOption->text.isEmpty()) {
-        auto textSubElement = firstChildOfType<TextSubElement>();
-        if (!textSubElement) {
-            textSubElement = new TextSubElement(style(), widget());
-            textSubElement->setFlag(AbstractElementFlag::DrawMnemonics);
-            addChildElement(textSubElement);
-        }
-        textSubElement->setText(buttonOption->text);
+        firstChildOfType<TextSubElement>(true)->setText(buttonOption->text);
+    } else {
+        removeChildElement(firstChildOfType<TextSubElement>());
     }
 
     if (!buttonOption->icon.isNull()) {
-        auto iconSubElement = firstChildOfType<IconSubElement>();
-        if (!iconSubElement) {
-            iconSubElement = new IconSubElement(style(), widget());
-            addChildElement(iconSubElement);
-        }
+        auto iconSubElement = firstChildOfType<IconSubElement>(true);
         iconSubElement->setIcon(buttonOption->icon);
         iconSubElement->setSize(buttonOption->iconSize);
+    } else {
+        removeChildElement(firstChildOfType<IconSubElement>());
+    }
+
+    if (buttonOption->features.testFlag(QStyleOptionButton::HasMenu)) {
+        firstChildOfType<IndicatorSubElement>(true);
+    } else {
+        removeChildElement(firstChildOfType<IndicatorSubElement>());
     }
 
     AbstractElement::update(option);
@@ -77,7 +78,7 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
                                   drawBackground(painter);
                                   break;
                               case QStyle::CE_PushButtonLabel:
-                                  firstChildOfType<TextSubElement>()->draw(painter, std::nullopt);
+                                  drawChildren<TextSubElement>(painter, std::nullopt);
                                   break;
                               case QStyle::CE_PushButton:
                                   drawBackground(painter);
@@ -92,7 +93,7 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
                               switch (primitive) {
                               case QStyle::PE_FrameButtonBevel:
                               case QStyle::PE_FrameDefaultButton:
-                                  drawFrame(painter);
+                                  drawBackground(painter, UnionPainter::Parts::FrameOnly);
                                   break;
                               case QStyle::PE_PanelButtonCommand:
                               case QStyle::PE_PanelButtonBevel:
@@ -105,7 +106,7 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
                what);
 }
 
-QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
+QRectF ButtonElement::subElementRect([[maybe_unused]] const QStyleOption *option, QStyle::SubElement element) const
 {
     if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
         // return visualRect(backgroundRectangle(m_rect, m_elementProperties));
@@ -115,18 +116,19 @@ QRectF ButtonElement::subElementRect(QStyle::SubElement element) const
     return style()->QCommonStyle::subElementRect(element, nullptr, widget());
 }
 
-QSizeF ButtonElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF ButtonElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
-    auto size = AbstractElement::contentsSize(contentsSizeFromStyle);
+    auto size = AbstractElement::contentsSize(option, contentsSizeFromStyle);
     // Since text and icon are parts of background, we need to apply the indicator width and spacing from background
     // to get the proper contentSize
-    // if (hasIndicator()) {
-    //     size.rwidth() += m_layoutMap[ElementString::Indicator].rect.width() + spacing();
-    // }
+    auto indicator = firstChildOfType<IndicatorSubElement>();
+    if (indicator) {
+        size.rwidth() += indicator->rect().width() + propertyWrapper().spacing();
+    }
     return size;
 }
 
-qreal ButtonElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+qreal ButtonElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ButtonMargin:
