@@ -10,6 +10,7 @@ TextSubElement::TextSubElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
     setFlag(AbstractElementFlag::SubElement);
+    setFlag(AbstractElementFlag::DrawMnemonics);
 }
 
 QString TextSubElement::text() const
