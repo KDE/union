@@ -115,7 +115,7 @@ void HeaderElement::updateSubElementList()
     }
 }
 
-QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
+QRectF HeaderElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid) {
         QRectF rect;
@@ -145,7 +145,7 @@ QRectF HeaderElement::subElementRect(QStyle::SubElement element) const
     return m_style->QCommonStyle::subElementRect(element, m_styleOption, m_widget);
 }
 
-QSizeF HeaderElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF HeaderElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     if (!m_isValid || !m_headerOption) {
         return contentsSizeFromStyle;
