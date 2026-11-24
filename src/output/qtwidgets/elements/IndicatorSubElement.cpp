@@ -8,8 +8,9 @@
 using namespace Union::Widgets;
 using namespace Union::Properties;
 
-IndicatorSubElement::IndicatorSubElement(const UnionStyle *style, QWidget *widget)
+IndicatorSubElement::IndicatorSubElement(const UnionStyle *style, QWidget *widget, const QString &type)
     : AbstractElement(style, widget)
+    , m_type(type)
 {
     setFlag(AbstractElementFlag::SubElement);
 }
@@ -49,7 +50,7 @@ void IndicatorSubElement::update(const QStyleOption *option)
     auto e = element();
     if (!e) {
         e = Union::Element::create();
-        e->setType(ElementString::Indicator);
+        e->setType(m_type);
         setElement(e);
     }
 
@@ -60,14 +61,9 @@ void IndicatorSubElement::draw(QPainter *painter, [[maybe_unused]] DrawVariant w
 {
     drawBackground(painter);
 
-    if (m_icon.isNull()) {
-        return;
-    }
-
     auto unionIcon = style()->unionIcon(properties(), m_icon.name());
-    // Fallback if union icon cant be loaded
     if (unionIcon.isNull()) {
-        unionIcon = m_icon;
+        return;
     }
 
     const qreal dpr = painter->device() ? painter->device()->devicePixelRatioF() : qApp->devicePixelRatio();

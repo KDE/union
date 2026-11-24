@@ -14,19 +14,17 @@ class IndicatorSubElement : public AbstractElement
 {
     Q_OBJECT
 public:
-    IndicatorSubElement(const UnionStyle *style, QWidget *widget);
+    IndicatorSubElement(const UnionStyle *style, QWidget *widget, const QString &type = ElementString::Indicator);
 
     QIcon icon() const;
     void setIcon(const QIcon &icon);
-
-    // QSize size() const;
-    // void setSize(QSize size);
 
     void update(const QStyleOption *option) override;
 
     void draw(QPainter *painter, DrawVariant what) const override;
 
 private:
+    const QString m_type;
     QIcon m_icon;
     QSize m_size;
     bool m_enabled = true;
