@@ -69,12 +69,18 @@ QList<AbstractElement *> AbstractElement::childElements() const
 
 void AbstractElement::addChildElement(AbstractElement *element)
 {
-    m_childElements.append(element);
+    if (element) {
+        m_childElements.append(element);
+        m_changed = true;
+    }
 }
 
 void AbstractElement::removeChildElement(AbstractElement *element)
 {
-    m_childElements.removeAll(element);
+    if (element) {
+        m_childElements.removeAll(element);
+        m_changed = true;
+    }
 }
 
 StyleGroupWrapper AbstractElement::propertyWrapper() const
@@ -92,6 +98,19 @@ QRectF AbstractElement::rect() const
     return m_rect;
 }
 
+void AbstractElement::setRect(const QRectF &newRect)
+{
+    if (newRect == m_rect) {
+        return;
+    }
+
+    m_rect = newRect;
+
+    if (!m_flags.testFlag(AbstractElementFlag::SubElement)) {
+        layout();
+    }
+}
+
 Qt::LayoutDirection AbstractElement::direction() const
 {
     return m_direction;
@@ -104,11 +123,8 @@ void AbstractElement::markDirty()
 
 void AbstractElement::update(const QStyleOption *option)
 {
-    if (option) {
-        if (option->rect != m_rect) {
-            m_rect = option->rect;
-            layout();
-        }
+    if (option && !m_flags.testFlag(AbstractElementFlag::SubElement)) {
+        setRect(option->rect);
 
         if (m_element) {
             Union::Element::States states;
@@ -136,6 +152,7 @@ void AbstractElement::update(const QStyleOption *option)
         queryProperties();
 
         for (const auto &child : std::as_const(m_childElements)) {
+            child->markDirty();
             child->update(option);
         }
 
@@ -153,7 +170,7 @@ void AbstractElement::layout()
     m_layout.layout(this);
 
     for (auto child : std::as_const(m_childElements)) {
-        child->m_rect = m_layout.m_layoutMap.value(child).rect;
+        child->setRect(m_layout.m_layoutMap.value(child).rect);
     }
 }
 
@@ -162,39 +179,34 @@ void AbstractElement::draw([[maybe_unused]] QPainter *painter, [[maybe_unused]] 
     qCWarning(UNION_QTWIDGETS) << "Drawing not implemented for element" << this;
 }
 
-QSizeF AbstractElement::contentsSize(QSizeF contentsSizeFromStyle) const
+QSizeF AbstractElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     return m_elementProperties.adjustSize(contentsSizeFromStyle, m_flags.testFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding));
 }
 
-QRectF AbstractElement::subElementRect(QStyle::SubElement element) const
+QRectF AbstractElement::subElementRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubElement element) const
 {
-    Q_UNUSED(element);
+    return style()->QCommonStyle::subElementRect(element, option, widget());
+}
+
+QRectF AbstractElement::subControlRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubControl subControl) const
+{
     return {};
 }
 
-QRectF AbstractElement::subControlRect(QStyle::SubControl subControl) const
+qreal AbstractElement::pixelMetric([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::PixelMetric pixelMetric) const
 {
-    Q_UNUSED(subControl);
-    return {};
+    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
 }
 
-qreal AbstractElement::pixelMetric(QStyle::PixelMetric pixelMetric) const
+int AbstractElement::styleHint([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::StyleHint styleHint) const
 {
-    Q_UNUSED(pixelMetric);
-    return 0;
+    return style()->QCommonStyle::styleHint(styleHint, option, widget());
 }
 
-int AbstractElement::styleHint(QStyle::StyleHint styleHint) const
+QIcon AbstractElement::standardPixmap([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::StandardPixmap pixmap) const
 {
-    Q_UNUSED(styleHint);
-    return 0;
-}
-
-QIcon AbstractElement::standardPixmap(QStyle::StandardPixmap pixmap) const
-{
-    Q_UNUSED(pixmap);
-    return QIcon();
+    return style()->standardPixmap(pixmap, option, widget());
 }
 
 bool AbstractElement::eventFilter(QObject *target, QEvent *event)
@@ -265,32 +277,11 @@ void AbstractElement::setElement(const Union::Element::Ptr &element)
     m_changed = true;
 }
 
-void AbstractElement::drawBackground(QPainter *painter) const
+void AbstractElement::drawBackground(QPainter *painter, UnionPainter::Parts parts) const
 {
+
     UnionPainter unionPainter(painter, m_elementProperties.properties());
+    unionPainter.setParts(parts);
     unionPainter.setRect(m_rect);
     unionPainter.draw();
-}
-
-void AbstractElement::drawFrame(QPainter *painter) const
-{
-    UnionPainter unionPainter(painter, m_elementProperties.properties());
-    unionPainter.setParts(UnionPainter::Parts::FrameOnly);
-    unionPainter.setRect(m_rect);
-    unionPainter.draw();
-}
-
-void AbstractElement::drawPanel(QPainter *painter) const
-{
-    UnionPainter unionPainter(painter, m_elementProperties.properties());
-    unionPainter.setParts(UnionPainter::Parts::PanelOnly);
-    unionPainter.setRect(m_rect);
-    unionPainter.draw();
-}
-
-void AbstractElement::drawChildren(QPainter *painter, DrawVariant what) const
-{
-    for (auto child : std::as_const(m_childElements)) {
-        child->draw(painter, what);
-    }
 }

@@ -86,6 +86,8 @@ public:
     StylePropertyGroupPtr properties() const;
 
     QRectF rect() const;
+    void setRect(const QRectF &newRect);
+
     Qt::LayoutDirection direction() const;
 
     void markDirty();
@@ -137,19 +139,19 @@ protected:
     /*!
      * \brief Draw whole background of the element.
      */
-    virtual void drawBackground(QPainter *painter) const;
+    virtual void drawBackground(QPainter *painter, UnionPainter::Parts parts = UnionPainter::Parts::All) const;
 
-    /*!
-     * \brief Draw only the background frame of the element.
-     */
-    virtual void drawFrame(QPainter *painter) const;
-
-    /*!
-     * \brief Draw only the background panel of the element.
-     */
-    virtual void drawPanel(QPainter *painter) const;
-
-    virtual void drawChildren(QPainter *painter, DrawVariant what) const;
+    template<typename FilterType = void>
+    void drawChildren(QPainter *painter, DrawVariant what = std::nullopt) const
+    {
+        for (auto child : std::as_const(m_childElements)) {
+            if constexpr (std::is_same_v<FilterType, void>) {
+                child->draw(painter, what);
+            } else if (qobject_cast<FilterType *>(child)) {
+                child->draw(painter, what);
+            }
+        }
+    }
 
 private:
     const UnionStyle *m_style = nullptr;
