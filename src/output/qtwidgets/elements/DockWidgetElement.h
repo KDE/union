@@ -4,52 +4,35 @@
 #pragma once
 
 #include "AbstractElement.h"
+#include "IndicatorSubElement.h"
 
 namespace Union
 {
 namespace Widgets
 {
 
-class DockWidgetElement;
-
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetTitleBarText> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetFloatButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_DockWidgetIcon> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_DockWidgetTitle> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetFrameWidth> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_DockWidgetCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarNormalButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::StandardPixmap, QStyle::SP_TitleBarCloseButton> : public TypeHelper<DockWidgetElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class DockWidgetElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    DockWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
-    ~DockWidgetElement() override;
+    DockWidgetElement(const UnionStyle *style, QWidget *widget = nullptr);
 
     void update(const QStyleOption *option) override;
-    void layout() override;
-    void draw(QPainter *painter, DrawEnums enums) const override;
+    // void layout() override;
+    void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    QRectF subElementRect(QStyle::SubElement subElement) const override;
-    qreal pixelMetric(QStyle::PixelMetric pixelMetric) const override;
-    QIcon standardPixmap(QStyle::StandardPixmap pixmap) const override;
+    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement subElement) const override;
+    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    QIcon standardPixmap(const QStyleOption *option, QStyle::StandardPixmap pixmap) const override;
 
 private:
-    void updateSubElementList() override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    const QStyleOptionDockWidget *m_dockWidgetOption = nullptr;
+    // void updateSubElementList() override;
+    // QString fallbackElementName(const QStyleOption *opt) const override;
+    // const QStyleOptionDockWidget *m_dockWidgetOption = nullptr;
+
+    IndicatorSubElement *m_closeIndicator = nullptr;
+    IndicatorSubElement *m_floatIndicator = nullptr;
 };
 }
 }

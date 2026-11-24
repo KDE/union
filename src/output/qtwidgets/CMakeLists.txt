@@ -28,7 +28,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/ButtonElement.cpp
         elements/CheckBoxElement.cpp
         elements/ComboBoxElement.cpp
-        # elements/DockWidgetElement.cpp
+        elements/DockWidgetElement.cpp
         # elements/MenuElement.cpp
         # elements/MenuBarElement.cpp
         # elements/MenuBarItemElement.cpp
@@ -87,7 +87,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/ButtonElement.h
         elements/CheckBoxElement.h
         elements/ComboBoxElement.h
-        # elements/DockWidgetElement.h
+        elements/DockWidgetElement.h
         # elements/MenuElement.h
         # elements/MenuBarElement.h
         # elements/MenuBarItemElement.h
