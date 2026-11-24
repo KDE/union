@@ -243,7 +243,7 @@ void AbstractElement::queryProperties()
 
     while (widget) {
         const auto element = widget->property(UnionElementProperty).value<AbstractElement *>();
-        if (element) {
+        if (element && element->element()) {
             elements.prepend(element->element());
         }
         widget = widget->parentWidget();
