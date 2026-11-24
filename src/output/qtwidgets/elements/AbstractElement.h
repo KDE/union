@@ -53,6 +53,24 @@ public:
     void removeChildElement(AbstractElement *element);
 
     template<typename T>
+    inline T *firstChildOfType(bool create = false)
+    {
+        for (const auto &child : std::as_const(m_childElements)) {
+            if (auto typedChild = qobject_cast<T *>(child); typedChild) {
+                return typedChild;
+            }
+        }
+
+        if (create) {
+            auto child = new T{style(), widget()};
+            addChildElement(child);
+            return child;
+        }
+
+        return nullptr;
+    }
+
+    template<typename T>
     inline T *firstChildOfType() const
     {
         for (const auto &child : std::as_const(m_childElements)) {
@@ -60,6 +78,7 @@ public:
                 return typedChild;
             }
         }
+
         return nullptr;
     }
 
