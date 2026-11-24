@@ -6,10 +6,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-RubberBandElement::RubberBandElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+RubberBandElement::RubberBandElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 RubberBandElement::~RubberBandElement()

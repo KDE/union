@@ -12,23 +12,12 @@ namespace Widgets
 
 class MenuBarItemElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_MenuBarItem> : public TypeHelper<MenuBarItemElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class MenuBarItemElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    MenuBarItemElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    MenuBarItemElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuBarItemElement() override;
 
     void update(const QStyleOption *option) override;

@@ -6,11 +6,10 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-MenuBarItemElement::MenuBarItemElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+MenuBarItemElement::MenuBarItemElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
 }
 
 MenuBarItemElement::~MenuBarItemElement()

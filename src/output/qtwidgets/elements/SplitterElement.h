@@ -12,26 +12,12 @@ namespace Widgets
 
 class SplitterElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_Splitter> : public TypeHelper<SplitterElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_Splitter> : public TypeHelper<SplitterElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SplitterWidth> : public TypeHelper<SplitterElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_DockWidgetSeparatorExtent> : public TypeHelper<SplitterElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorDockWidgetResizeHandle> : public TypeHelper<SplitterElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class SplitterElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    SplitterElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    SplitterElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~SplitterElement() override;
 
     void update(const QStyleOption *option) override;

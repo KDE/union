@@ -7,13 +7,12 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-SliderElement::SliderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+SliderElement::SliderElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_isHorizontal(false)
     , m_isInverted(false)
     , m_isReverse(false)
 {
-    update(option);
 }
 
 SliderElement::~SliderElement()

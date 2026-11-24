@@ -11,23 +11,12 @@ namespace Widgets
 {
 class StatusBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelStatusBar> : public TypeHelper<StatusBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameStatusBarItem> : public TypeHelper<StatusBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class StatusBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    StatusBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~StatusBarElement() override;
 
     void update(const QStyleOption *option) override;

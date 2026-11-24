@@ -12,32 +12,12 @@ namespace Widgets
 
 class ScrollBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_ScrollBar> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarAddLine> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarSubLine> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarAddPage> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarSubPage> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarSlider> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarFirst> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ScrollBarLast> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_ScrollBar> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ScrollBarExtent> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ScrollBarSliderMin> : public TypeHelper<ScrollBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class ScrollBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    ScrollBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ScrollBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~ScrollBarElement() override;
 
     void update(const QStyleOption *option) override;

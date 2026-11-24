@@ -12,24 +12,12 @@ namespace Widgets
 
 class TabCloseButtonElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorTabClose> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorWidth> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabCloseIndicatorHeight> : public TypeHelper<TabCloseButtonElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class TabCloseButtonElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    TabCloseButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TabCloseButtonElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabCloseButtonElement() override;
 
     void update(const QStyleOption *option) override;

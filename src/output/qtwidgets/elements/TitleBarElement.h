@@ -12,26 +12,12 @@ namespace Widgets
 
 class TitleBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_TitleBar> : public TypeHelper<TitleBarElement, QStyleOption>{};
-
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TitleBarHeight> : public TypeHelper<TitleBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TitleBarButtonSize> : public TypeHelper<TitleBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TitleBarButtonIconSize> : public TypeHelper<TitleBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class TitleBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    TitleBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TitleBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~TitleBarElement() override;
 
     void update(const QStyleOption *option) override;

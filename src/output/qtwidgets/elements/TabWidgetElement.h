@@ -12,23 +12,12 @@ namespace Widgets
 
 class TabWidgetElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameTabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_TabWidget> : public TypeHelper<TabWidgetElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class TabWidgetElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    TabWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TabWidgetElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabWidgetElement() override;
 
     void update(const QStyleOption *option) override;

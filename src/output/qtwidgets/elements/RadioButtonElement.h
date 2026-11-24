@@ -12,30 +12,12 @@ namespace Widgets
 
 class RadioButtonElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-		template<> struct EnumToType<QStyle::SubElement, QStyle::SE_RadioButtonContents> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-		template<> struct EnumToType<QStyle::SubElement, QStyle::SE_RadioButtonIndicator> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_RadioButton> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_RadioButtonLabel> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorRadioButton> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_RadioButton> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ExclusiveIndicatorWidth> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ExclusiveIndicatorHeight> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_RadioButtonLabelSpacing> : public TypeHelper<RadioButtonElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class RadioButtonElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    RadioButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    RadioButtonElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~RadioButtonElement() override;
 
     void update(const QStyleOption *option) override;

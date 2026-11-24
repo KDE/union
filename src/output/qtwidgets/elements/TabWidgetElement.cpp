@@ -6,11 +6,10 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-TabWidgetElement::TabWidgetElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+TabWidgetElement::TabWidgetElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_shape(QTabBar::Shape::RoundedNorth)
 {
-    update(option);
 }
 
 TabWidgetElement::~TabWidgetElement()

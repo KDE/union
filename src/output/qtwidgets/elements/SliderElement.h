@@ -12,26 +12,12 @@ namespace Widgets
 
 class SliderElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_Slider> : public TypeHelper<SliderElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_Slider> : public TypeHelper<SliderElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SliderLength> : public TypeHelper<SliderElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SliderThickness> : public TypeHelper<SliderElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SliderControlThickness> : public TypeHelper<SliderElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class SliderElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    SliderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    SliderElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~SliderElement() override;
 
     void update(const QStyleOption *option) override;

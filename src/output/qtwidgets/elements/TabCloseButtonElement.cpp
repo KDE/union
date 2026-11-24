@@ -6,10 +6,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-TabCloseButtonElement::TabCloseButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+TabCloseButtonElement::TabCloseButtonElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 TabCloseButtonElement::~TabCloseButtonElement()

@@ -12,17 +12,6 @@ namespace Widgets
 
 class TreeViewElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorBranch> : public TypeHelper<TreeViewElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TreeViewIndentation> : public TypeHelper<TreeViewElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 // This is a kitchen-sink element class to draw any various indicators
 
 class TreeViewElement : public AbstractElement
@@ -30,7 +19,7 @@ class TreeViewElement : public AbstractElement
     Q_OBJECT
 
 public:
-    TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TreeViewElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~TreeViewElement() override;
 
     void update(const QStyleOption *option) override;

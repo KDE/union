@@ -6,11 +6,10 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-TitleBarElement::TitleBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+TitleBarElement::TitleBarElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
 }
 
 TitleBarElement::~TitleBarElement()

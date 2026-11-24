@@ -12,22 +12,12 @@ namespace Widgets
 
 class ScrollAreaCornerElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelScrollAreaCorner> : public TypeHelper<ScrollAreaCornerElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class ScrollAreaCornerElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    ScrollAreaCornerElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ScrollAreaCornerElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~ScrollAreaCornerElement() override;
 
     void update(const QStyleOption *option) override;

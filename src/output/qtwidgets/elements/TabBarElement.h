@@ -12,27 +12,12 @@ namespace Widgets
 
 class TabBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_FrameTabBarBase> : public TypeHelper<TabBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarScrollButtonWidth> : public TypeHelper<TabBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarBaseHeight> : public TypeHelper<TabBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_TabBarIconSize> : public TypeHelper<TabBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_TabBar_Alignment> : public TypeHelper<TabBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::StyleHint, QStyle::SH_TabBar_ElideMode> : public TypeHelper<TabBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class TabBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    TabBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    TabBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~TabBarElement() override;
 
     void update(const QStyleOption *option) override;

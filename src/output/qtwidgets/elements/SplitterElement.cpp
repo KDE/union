@@ -8,10 +8,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-SplitterElement::SplitterElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+SplitterElement::SplitterElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 SplitterElement::~SplitterElement()

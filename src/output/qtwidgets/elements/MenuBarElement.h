@@ -12,28 +12,12 @@ namespace Widgets
 
 class MenuBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_MenuBarEmptyArea> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelMenuBar> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_MenuBar> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_MenuBarVMargin> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_MenuBarHMargin> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_MenuBarPanelWidth> : public TypeHelper<MenuBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_MenuBarItemSpacing> : public TypeHelper<MenuBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class MenuBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    MenuBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    MenuBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~MenuBarElement() override;
 
     void update(const QStyleOption *option) override;

@@ -12,22 +12,12 @@ namespace Widgets
 
 class RubberBandElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_RubberBand> : public TypeHelper<RubberBandElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class RubberBandElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    RubberBandElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    RubberBandElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~RubberBandElement() override;
 
     void update(const QStyleOption *option) override;

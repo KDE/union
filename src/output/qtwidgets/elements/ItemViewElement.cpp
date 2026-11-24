@@ -15,10 +15,9 @@ using namespace Union::Widgets;
 // backwards compatible. This means we can't give them custom layouts without breaking everything.
 // Instead, we rely on QCommonStyle for most things, but apply our looks to the items.
 
-ItemViewElement::ItemViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+ItemViewElement::ItemViewElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 ItemViewElement::~ItemViewElement()

@@ -7,13 +7,12 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-SpinBoxElement::SpinBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+SpinBoxElement::SpinBoxElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_hasButtons(true)
     , m_hasFrame(true)
     , m_usesArrows(true)
 {
-    update(option);
 }
 
 SpinBoxElement::~SpinBoxElement()

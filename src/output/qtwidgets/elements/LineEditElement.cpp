@@ -11,11 +11,10 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-LineEditElement::LineEditElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+LineEditElement::LineEditElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_hasFrame(true)
 {
-    update(option);
 }
 
 LineEditElement::~LineEditElement()

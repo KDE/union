@@ -6,10 +6,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-StatusBarElement::StatusBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+StatusBarElement::StatusBarElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 StatusBarElement::~StatusBarElement()

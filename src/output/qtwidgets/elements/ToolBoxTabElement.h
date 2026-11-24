@@ -11,25 +11,12 @@ namespace Widgets
 {
 class ToolBoxTabElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::SubElement, QStyle::SE_ToolBoxTabContents> : public TypeHelper<ToolBoxTabElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBoxTabShape> : public TypeHelper<ToolBoxTabElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBoxTabLabel> : public TypeHelper<ToolBoxTabElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBoxTab> : public TypeHelper<ToolBoxTabElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class ToolBoxTabElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    ToolBoxTabElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolBoxTabElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolBoxTabElement() override;
 
     void update(const QStyleOption *option) override;

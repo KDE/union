@@ -12,28 +12,12 @@ namespace Widgets
 
 class SpinBoxElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ComplexControl, QStyle::CC_SpinBox> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorSpinPlus> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorSpinMinus> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorSpinUp> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorSpinDown> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_SpinBox> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SpinBoxFrameWidth> : public TypeHelper<SpinBoxElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class SpinBoxElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    SpinBoxElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    SpinBoxElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~SpinBoxElement() override;
 
     void update(const QStyleOption *option) override;

@@ -7,8 +7,8 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-TabElement::TabElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+TabElement::TabElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_isVertical(false)
     , m_isStatic(false)
     , m_shape(QTabBar::Shape::RoundedNorth)
@@ -17,7 +17,6 @@ TabElement::TabElement(const QStyleOption *option, const UnionStyle *style, cons
 {
     setFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding);
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
 }
 
 TabElement::~TabElement()

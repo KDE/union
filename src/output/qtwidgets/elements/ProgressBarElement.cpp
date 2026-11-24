@@ -7,12 +7,11 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-ProgressBarElement::ProgressBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+ProgressBarElement::ProgressBarElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
     , m_isHorizontal(true)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
 }
 
 ProgressBarElement::~ProgressBarElement()

@@ -12,24 +12,12 @@ namespace Widgets
 
 class SizeGripElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_SizeGrip> : public TypeHelper<SizeGripElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_SizeGrip> : public TypeHelper<SizeGripElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_SizeGripSize> : public TypeHelper<SizeGripElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class SizeGripElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    SizeGripElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    SizeGripElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~SizeGripElement() override;
 
     void update(const QStyleOption *option) override;

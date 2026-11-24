@@ -6,11 +6,10 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-RadioButtonElement::RadioButtonElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+RadioButtonElement::RadioButtonElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);
-    update(option);
 }
 
 RadioButtonElement::~RadioButtonElement()

@@ -6,10 +6,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-MenuElement::MenuElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+MenuElement::MenuElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
     if (m_elementProperties && m_styleOption) {
         m_shadowRenderer = std::make_unique<ShadowRenderer>(m_elementProperties);
         m_shadowWidget = qobject_cast<QWidget *>(m_styleOption->styleObject);

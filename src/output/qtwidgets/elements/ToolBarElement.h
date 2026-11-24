@@ -12,32 +12,12 @@ namespace Widgets
 
 class ToolBarElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-        template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_ToolBar> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorToolBarHandle> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorToolBarSeparator> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_PanelToolBar> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarSeparatorExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarFrameWidth> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarHandleExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarExtensionExtent> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemSpacing> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarItemMargin> : public TypeHelper<ToolBarElement, QStyleOption>{};
-        template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_ToolBarIconSize> : public TypeHelper<ToolBarElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class ToolBarElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    ToolBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    ToolBarElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~ToolBarElement() override;
 
     void update(const QStyleOption *option) override;

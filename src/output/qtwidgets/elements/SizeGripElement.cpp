@@ -8,10 +8,9 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-SizeGripElement::SizeGripElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
-    : AbstractElement(option, style, widget)
+SizeGripElement::SizeGripElement(const UnionStyle *style, const QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
 }
 
 SizeGripElement::~SizeGripElement()

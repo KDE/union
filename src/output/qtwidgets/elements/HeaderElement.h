@@ -12,34 +12,12 @@ namespace Widgets
 
 class HeaderElement;
 
-namespace ElementCache
-{
-namespace detail
-{
-/* clang-format off */
-    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_HeaderArrow> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::SubElement, QStyle::SE_HeaderLabel> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_Header> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_HeaderSection> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_HeaderLabel> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::ControlElement, QStyle::CE_HeaderEmptyArea> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PrimitiveElement, QStyle::PE_IndicatorHeaderArrow> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::ContentsType, QStyle::CT_HeaderSection> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderMargin> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderDefaultSectionSizeHorizontal> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderDefaultSectionSizeVertical> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderGripMargin> : public TypeHelper<HeaderElement, QStyleOption>{};
-    template<> struct EnumToType<QStyle::PixelMetric, QStyle::PM_HeaderMarkSize> : public TypeHelper<HeaderElement, QStyleOption>{};
-/* clang-format on */
-}
-}
-
 class HeaderElement : public AbstractElement
 {
     Q_OBJECT
 
 public:
-    HeaderElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget = nullptr);
+    HeaderElement(const UnionStyle *style, const QWidget *widget = nullptr);
     ~HeaderElement() override;
 
     void update(const QStyleOption *option) override;
