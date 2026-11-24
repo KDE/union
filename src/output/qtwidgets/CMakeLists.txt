@@ -33,8 +33,8 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/MenuBarElement.cpp
         # elements/MenuBarItemElement.cpp
         # elements/FrameElement.cpp
-        # elements/FocusElement.cpp
-        # elements/GroupBoxElement.cpp
+        elements/FocusElement.cpp
+        elements/GroupBoxElement.cpp
         # elements/HeaderElement.cpp
         elements/IconSubElement.cpp
         elements/IndicatorSubElement.cpp
@@ -58,7 +58,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/TitleBarElement.cpp
         # elements/ToolBarElement.cpp
         # elements/ToolBoxTabElement.cpp
-        # elements/ToolButtonElement.cpp
+        elements/ToolButtonElement.cpp
         # elements/ToolTipElement.cpp
         # elements/WidgetElement.cpp
         # elements/IndicatorElement.cpp
@@ -92,8 +92,8 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/MenuBarElement.h
         # elements/MenuBarItemElement.h
         # elements/FrameElement.h
-        # elements/FocusElement.h
-        # elements/GroupBoxElement.h
+        elements/FocusElement.h
+        elements/GroupBoxElement.h
         # elements/HeaderElement.h
         elements/IconSubElement.h
         elements/IndicatorSubElement.h
@@ -117,7 +117,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/TitleBarElement.h
         # elements/ToolBarElement.h
         # elements/ToolBoxTabElement.h
-        # elements/ToolButtonElement.h
+        elements/ToolButtonElement.h
         # elements/ToolTipElement.h
         # elements/WidgetElement.h
         # elements/IndicatorElement.h
