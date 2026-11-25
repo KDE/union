@@ -125,6 +125,7 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
     switch (enums.ControlElement) {
     case QStyle::CE_ToolButtonLabel:
+        drawIcon(painter);
         drawText(painter);
         break;
     }
@@ -150,12 +151,12 @@ void ToolButtonElement::draw(QPainter *painter, DrawEnums enums) const
 
 void ToolButtonElement::drawIcon(QPainter *painter) const
 {
-    if (m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
+    if (!m_toolButtonOption || m_toolButtonOption->toolButtonStyle == Qt::ToolButtonTextOnly) {
         return;
     }
 
     QRectF iconRect = m_layoutMap[ElementString::Icon].rect;
-    if (m_toolButtonOption && m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
+    if (m_toolButtonOption->features.testFlag(QStyleOptionToolButton::Arrow)) {
         auto subopt = *m_toolButtonOption;
         subopt.rect = iconRect.toRect();
         switch (m_toolButtonOption->arrowType) {
