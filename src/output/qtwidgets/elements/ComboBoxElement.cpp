@@ -23,12 +23,8 @@ ComboBoxElement::ComboBoxElement(const UnionStyle *style, QWidget *widget)
 
 void ComboBoxElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        e->setType(ElementString::ComboBox);
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType(ElementString::ComboBox);
 
     if (const auto comboOption = qstyleoption_cast<const QStyleOptionComboBox *>(option)) {
         m_editable = comboOption->editable;

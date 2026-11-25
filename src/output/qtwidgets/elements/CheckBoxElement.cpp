@@ -23,15 +23,11 @@ CheckBoxElement::CheckBoxElement(const UnionStyle *style, QWidget *widget)
 
 void CheckBoxElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        if (qobject_cast<QCheckBox *>(widget())) {
-            e->setType(ElementString::CheckBox);
-        } else {
-            e->setType(ElementString::RadioButton);
-        }
-        setElement(e);
+    auto e = ensureElement();
+    if (qobject_cast<QCheckBox *>(widget())) {
+        e->setType(ElementString::CheckBox);
+    } else {
+        e->setType(ElementString::RadioButton);
     }
 
     if (auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option); buttonOption) {

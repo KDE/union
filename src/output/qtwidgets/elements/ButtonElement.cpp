@@ -23,12 +23,8 @@ ButtonElement::ButtonElement(const UnionStyle *style, QWidget *widget)
 
 void ButtonElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        e->setType(ElementString::Button);
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType(ElementString::Button);
 
     auto buttonOption = qstyleoption_cast<const QStyleOptionButton *>(option);
     if (!buttonOption) {
