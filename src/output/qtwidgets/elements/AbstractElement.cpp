@@ -66,7 +66,7 @@ Union::Element::Ptr AbstractElement::element() const
 Union::Element::Ptr AbstractElement::ensureElement()
 {
     if (!m_element) {
-        m_element = Union::Element::create();
+        setElement(Union::Element::create());
     }
     return m_element;
 }
