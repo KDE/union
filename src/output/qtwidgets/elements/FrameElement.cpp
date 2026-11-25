@@ -33,12 +33,8 @@ FrameElement::FrameElement(const UnionStyle *style, QWidget *widget)
 
 void FrameElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        e->setType({ElementString::Frame});
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType({ElementString::Frame});
 
     auto frameOption = qstyleoption_cast<const QStyleOptionFrame *>(option);
     if (!frameOption) {

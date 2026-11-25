@@ -18,12 +18,8 @@ FocusElement::FocusElement(const UnionStyle *style, QWidget *widget)
 
 void FocusElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        e->setType({ElementString::FocusFrame});
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType({ElementString::FocusFrame});
 
     const auto focusOption = qstyleoption_cast<const QStyleOptionFocusRect *>(option);
     if (focusOption) {

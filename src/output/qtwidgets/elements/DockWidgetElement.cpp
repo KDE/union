@@ -23,12 +23,8 @@ DockWidgetElement::DockWidgetElement(const UnionStyle *style, QWidget *widget)
 
 void DockWidgetElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (e) {
-        e = Union::Element::create();
-        e->setType(ElementString::DockWidget);
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType(ElementString::DockWidget);
 
     const auto dockOption = qstyleoption_cast<const QStyleOptionDockWidget *>(option);
     if (dockOption) {
@@ -149,11 +145,13 @@ QIcon DockWidgetElement::standardPixmap(const QStyleOption *option, QStyle::Stan
         if (m_floatIndicator) {
             return style()->unionIcon(m_floatIndicator->properties(), u"window-restore"_s);
         }
+        break;
     case QStyle::SP_TitleBarCloseButton:
     case QStyle::SP_DockWidgetCloseButton:
         if (m_closeIndicator) {
             return style()->unionIcon(m_closeIndicator->properties(), u"window-close-symbolic"_s);
         }
+        break;
     default:
         break;
     }

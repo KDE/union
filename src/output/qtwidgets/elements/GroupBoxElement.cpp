@@ -22,12 +22,8 @@ GroupBoxElement::GroupBoxElement(const UnionStyle *style, QWidget *widget)
 
 void GroupBoxElement::update(const QStyleOption *option)
 {
-    auto e = element();
-    if (!e) {
-        e = Union::Element::create();
-        e->setType({ElementString::GroupBox});
-        setElement(e);
-    }
+    auto e = ensureElement();
+    e->setType({ElementString::GroupBox});
 
     const auto groupOption = qstyleoption_cast<const QStyleOptionGroupBox *>(option);
     if (!groupOption) {
