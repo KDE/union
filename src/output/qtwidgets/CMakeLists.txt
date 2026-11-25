@@ -30,7 +30,6 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/ComboBoxElement.cpp
         elements/DockWidgetElement.cpp
         # elements/MenuElement.cpp
-        # elements/MenuBarElement.cpp
         # elements/MenuBarItemElement.cpp
         elements/FrameElement.cpp
         elements/FocusElement.cpp
@@ -40,6 +39,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/IndicatorSubElement.cpp
         # elements/ItemViewElement.cpp
         elements/LineEditElement.cpp
+        elements/MenuBarElement.cpp
         # elements/MenuItemElement.cpp
         # elements/ProgressBarElement.cpp
         # elements/RadioButtonElement.cpp
@@ -89,7 +89,6 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/ComboBoxElement.h
         elements/DockWidgetElement.h
         # elements/MenuElement.h
-        # elements/MenuBarElement.h
         # elements/MenuBarItemElement.h
         elements/FrameElement.h
         elements/FocusElement.h
@@ -99,6 +98,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/IndicatorSubElement.h
         # elements/ItemViewElement.h
         elements/LineEditElement.h
+        elements/MenuBarElement.h
         # elements/MenuItemElement.h
         # elements/ProgressBarElement.h
         # elements/RadioButtonElement.h

@@ -3,56 +3,53 @@
 
 #include "MenuBarElement.h"
 
+#include <QMenuBar>
+
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-MenuBarElement::MenuBarElement(const UnionStyle *style, const QWidget *widget)
+static WidgetToElementRegistration<MenuBarElement, QMenuBar> menuBarWidgetRegistration;
+
+MenuBarElement::MenuBarElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
 }
 
 void MenuBarElement::update(const QStyleOption *option)
 {
+    auto e = ensureElement();
+    e->setType(ElementString::MenuBar);
+
     AbstractElement::update(option);
-    layout();
 }
 
 void MenuBarElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid) {
-        return;
-    }
-
-    switch (enums.ControlElement) {
-    case QStyle::CE_MenuBarEmptyArea:
-        drawBackground(painter);
-        break;
-    }
-
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_PanelMenuBar:
-        drawBackground(painter);
-        break;
-    }
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [](QStyle::ComplexControl) { },
+                          [&](QStyle::ControlElement) {
+                              drawBackground(painter);
+                          },
+                          [&](QStyle::PrimitiveElement) {
+                              drawBackground(painter);
+                          }},
+               what);
 }
 
 qreal MenuBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuBarVMargin:
-        return averageVPadding();
+        return propertyWrapper().averageVPadding();
     case QStyle::PM_MenuBarHMargin:
-        return averageHPadding();
+        return propertyWrapper().averageHPadding();
     case QStyle::PM_MenuBarPanelWidth:
-        return width();
+        return propertyWrapper().width();
     case QStyle::PM_MenuBarItemSpacing:
-        return spacing();
+        return propertyWrapper().spacing();
     default:
         break;
     }
-    return 0;
-}
-QString MenuBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::MenuBar;
+    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
 }

@@ -15,11 +15,10 @@ class MenuBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    MenuBarElement(const UnionStyle *style, const QWidget *widget);
+    MenuBarElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
     qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 };
 }
