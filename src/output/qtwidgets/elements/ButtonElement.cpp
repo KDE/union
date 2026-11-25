@@ -114,7 +114,7 @@ QSizeF ButtonElement::contentsSize([[maybe_unused]] const QStyleOption *option, 
     return size;
 }
 
-qreal ButtonElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> ButtonElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ButtonMargin:
@@ -126,5 +126,5 @@ qreal ButtonElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QS
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }

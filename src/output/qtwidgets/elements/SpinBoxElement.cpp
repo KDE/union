@@ -158,7 +158,7 @@ Union::IdentifierList SpinBoxElement::elementHints() const
     return hints;
 }
 
-qreal SpinBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> SpinBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SpinBoxFrameWidth:
@@ -166,7 +166,7 @@ qreal SpinBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetri
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString SpinBoxElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

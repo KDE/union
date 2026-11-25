@@ -192,7 +192,7 @@ int ProgressBarElement::chunkWidth() const
     return safePropertyLookup(m_contentProperties, 0.0, &StylePropertyGroup::layout, &LayoutPropertyGroup::width);
 }
 
-qreal ProgressBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> ProgressBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ProgressBarChunkWidth:
@@ -200,7 +200,7 @@ qreal ProgressBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelM
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 Union::IdentifierList ProgressBarElement::elementHints() const

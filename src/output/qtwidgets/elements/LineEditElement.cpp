@@ -121,7 +121,7 @@ QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubEl
     return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
-qreal LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_DefaultFrameWidth:
@@ -133,5 +133,5 @@ qreal LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }

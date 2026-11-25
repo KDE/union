@@ -46,7 +46,7 @@ void FocusElement::draw(QPainter *painter, DrawVariant what) const
     }
 }
 
-qreal FocusElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> FocusElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_FocusFrameVMargin:
@@ -56,7 +56,7 @@ qreal FocusElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QSt
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 void FocusElement::drawBackground(QPainter *painter, UnionPainter::Parts parts) const

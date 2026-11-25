@@ -20,7 +20,7 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
     int styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const override;
     Union::IdentifierVariantHash elementAttributes() const override;
     Union::IdentifierList elementHints() const override;

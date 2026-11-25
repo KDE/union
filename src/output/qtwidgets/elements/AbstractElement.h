@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <optional>
+
 #include <QStyleOption>
 
 #include <ElementQuery.h>
@@ -134,7 +136,7 @@ public:
     /*!
      * \brief Return the given pixelmetric value. If not found, returns 0
      */
-    virtual qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const;
+    virtual std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const;
 
     /*!
      * \brief Return the given Stylehint value. If not found, returns 0

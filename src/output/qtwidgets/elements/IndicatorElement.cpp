@@ -51,7 +51,7 @@ void IndicatorElement::drawElement(QPainter *painter, const QString &defaultIcon
     }
 }
 
-qreal IndicatorElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> IndicatorElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ListViewIconSize:
@@ -69,5 +69,5 @@ qreal IndicatorElement::pixelMetric(const QStyleOption *option, QStyle::PixelMet
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }

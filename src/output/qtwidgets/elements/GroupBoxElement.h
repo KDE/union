@@ -20,7 +20,7 @@ public:
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
     int styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const override;
-    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     bool m_isCheckable = false;

@@ -175,7 +175,7 @@ Union::IdentifierList TitleBarElement::elementHints() const
     return hints;
 }
 
-qreal TitleBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> TitleBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TitleBarHeight:
@@ -187,7 +187,7 @@ qreal TitleBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString TitleBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

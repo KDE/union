@@ -295,7 +295,7 @@ Union::IdentifierList TabElement::elementHints() const
     return hints;
 }
 
-qreal TabElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> TabElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TabBarTabHSpace:
@@ -305,7 +305,7 @@ qreal TabElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pi
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString TabElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

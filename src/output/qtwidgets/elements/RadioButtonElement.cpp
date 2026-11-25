@@ -120,7 +120,7 @@ Union::IdentifierList RadioButtonElement::elementHints() const
     return hints;
 }
 
-qreal RadioButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> RadioButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ExclusiveIndicatorWidth:
@@ -132,7 +132,7 @@ qreal RadioButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelM
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString RadioButtonElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

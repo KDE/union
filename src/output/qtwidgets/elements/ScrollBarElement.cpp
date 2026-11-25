@@ -216,7 +216,7 @@ Union::IdentifierList ScrollBarElement::elementHints() const
     return hints;
 }
 
-qreal ScrollBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> ScrollBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ScrollBarExtent:
@@ -228,7 +228,7 @@ qreal ScrollBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMet
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString ScrollBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

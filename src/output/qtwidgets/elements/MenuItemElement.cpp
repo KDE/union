@@ -255,7 +255,7 @@ Union::IdentifierList MenuItemElement::elementHints() const
     return hints;
 }
 
-qreal MenuItemElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> MenuItemElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuButtonIndicator:
@@ -265,7 +265,7 @@ qreal MenuItemElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 Union::Element::States MenuItemElement::elementStates() const

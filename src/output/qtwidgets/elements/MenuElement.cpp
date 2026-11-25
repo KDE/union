@@ -54,7 +54,7 @@ QSizeF MenuElement::contentsSize(const QStyleOption *option, QSizeF contentsSize
     return contentsSizeFromStyle;
 }
 
-qreal MenuElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> MenuElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuVMargin:
@@ -68,7 +68,7 @@ qreal MenuElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric p
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString MenuElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

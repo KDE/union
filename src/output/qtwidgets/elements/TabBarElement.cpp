@@ -86,7 +86,7 @@ Union::IdentifierVariantHash TabBarElement::elementAttributes() const
     return map;
 }
 
-qreal TabBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> TabBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TabBarScrollButtonWidth:
@@ -98,7 +98,7 @@ qreal TabBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 int TabBarElement::styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const

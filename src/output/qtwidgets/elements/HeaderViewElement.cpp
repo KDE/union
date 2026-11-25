@@ -248,7 +248,7 @@ QSizeF HeaderViewElement::contentsSize(const QStyleOption *option, QSizeF conten
 //     return hints;
 // }
 
-qreal HeaderViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> HeaderViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_HeaderMargin:
@@ -259,7 +259,7 @@ qreal HeaderViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMe
     default:
         break;
     }
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }
 
 // QString HeaderViewElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

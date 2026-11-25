@@ -212,9 +212,9 @@ QRectF AbstractElement::subControlRect([[maybe_unused]] const QStyleOption *opti
     return {};
 }
 
-qreal AbstractElement::pixelMetric([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> AbstractElement::pixelMetric([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::PixelMetric pixelMetric) const
 {
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }
 
 int AbstractElement::styleHint([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::StyleHint styleHint) const

@@ -22,7 +22,7 @@ public:
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
     QRectF subElementRect(const QStyleOption *option, QStyle::SubElement subElement) const override;
-    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
     QIcon standardPixmap(const QStyleOption *option, QStyle::StandardPixmap pixmap) const override;
 
 private:

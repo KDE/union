@@ -127,7 +127,7 @@ QRectF DockWidgetElement::subElementRect(const QStyleOption *option, QStyle::Sub
     return style()->QCommonStyle::subElementRect(subElement, option, widget());
 }
 
-qreal DockWidgetElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> DockWidgetElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_DockWidgetFrameWidth:
@@ -135,7 +135,7 @@ qreal DockWidgetElement::pixelMetric(const QStyleOption *option, QStyle::PixelMe
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QIcon DockWidgetElement::standardPixmap(const QStyleOption *option, QStyle::StandardPixmap pixmap) const

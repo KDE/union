@@ -37,7 +37,7 @@ void MenuBarElement::draw(QPainter *painter, DrawVariant what) const
                what);
 }
 
-qreal MenuBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> MenuBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_MenuBarVMargin:
@@ -51,5 +51,5 @@ qreal MenuBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetri
     default:
         break;
     }
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }

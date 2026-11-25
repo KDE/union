@@ -121,7 +121,7 @@ QRectF ComboBoxElement::subControlRect([[maybe_unused]] const QStyleOption *opti
     return style()->QCommonStyle::subControlRect(QStyle::CC_ComboBox, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
 }
 
-qreal ComboBoxElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> ComboBoxElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ComboBoxFrameWidth:
@@ -129,5 +129,5 @@ qreal ComboBoxElement::pixelMetric([[maybe_unused]] const QStyleOption *option, 
     default:
         break;
     }
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }

@@ -326,7 +326,7 @@ Union::IdentifierList SliderElement::elementHints() const
     return hints;
 }
 
-qreal SliderElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> SliderElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SliderLength:
@@ -336,7 +336,7 @@ qreal SliderElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QSizeF SliderElement::tickMarkSize() const

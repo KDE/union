@@ -46,7 +46,7 @@ void SizeGripElement::layout()
     }
 }
 
-qreal SizeGripElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> SizeGripElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SizeGripSize:
@@ -54,7 +54,7 @@ qreal SizeGripElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString SizeGripElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

@@ -217,14 +217,14 @@ QLayout *findParentLayout(const QWidget *widget)
     return nullptr;
 }
 
-qreal FrameElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> FrameElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     // Use same heuristics for drawing frames as Breeze does.
     // TODO: We may want to expose this to the user somehow.
     if (pixelMetric == QStyle::PM_DefaultFrameWidth) {
         auto w = widget();
         if (!w) {
-            return 0;
+            return std::nullopt;
         }
         const auto frameWidth = propertyWrapper().averageBorderSize();
 
@@ -281,10 +281,10 @@ qreal FrameElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric 
         }
 
         // fallback
-        return 0;
+        return std::nullopt;
     }
 
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }
 
 QRectF FrameElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const

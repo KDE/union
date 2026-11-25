@@ -48,7 +48,7 @@ void SplitterElement::layout()
     }
 }
 
-qreal SplitterElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> SplitterElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_SplitterWidth:
@@ -57,7 +57,7 @@ qreal SplitterElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString SplitterElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

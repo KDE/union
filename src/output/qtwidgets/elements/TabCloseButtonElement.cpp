@@ -52,7 +52,7 @@ void TabCloseButtonElement::draw(QPainter *painter, DrawVariant what) const
     }
 }
 
-qreal TabCloseButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric metric) const
+std::optional<qreal> TabCloseButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric metric) const
 {
     switch (metric) {
     case QStyle::PM_TabCloseIndicatorWidth:
@@ -62,5 +62,5 @@ qreal TabCloseButtonElement::pixelMetric(const QStyleOption *option, QStyle::Pix
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }

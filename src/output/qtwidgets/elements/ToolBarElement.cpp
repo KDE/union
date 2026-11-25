@@ -183,7 +183,7 @@ qreal ToolBarElement::extent(Union::StylePropertyGroupPtr properties) const
     return 0;
 }
 
-qreal ToolBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> ToolBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolBarSeparatorExtent:
@@ -203,7 +203,7 @@ qreal ToolBarElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetri
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString ToolBarElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

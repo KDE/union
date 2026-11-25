@@ -122,7 +122,7 @@ int GroupBoxElement::styleHint(const QStyleOption *option, QStyle::StyleHint sty
     return style()->QCommonStyle::styleHint(styleHint, option, widget());
 }
 
-qreal GroupBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric metric) const
+std::optional<qreal> GroupBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric metric) const
 {
     switch (metric) {
     case QStyle::PM_LayoutLeftMargin:
@@ -140,7 +140,7 @@ qreal GroupBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
         break;
     }
 
-    return style()->QCommonStyle::pixelMetric(metric, option, widget());
+    return std::nullopt;
 }
 
 // void GroupBoxElement::drawText(QPainter *painter) const

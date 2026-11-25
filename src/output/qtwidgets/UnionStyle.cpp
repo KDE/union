@@ -219,7 +219,11 @@ int UnionStyle::pixelMetric(PixelMetric metric, const QStyleOption *option, cons
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->pixelMetric(option, metric);
+        if (auto value = e->pixelMetric(option, metric); value) {
+            return *value;
+        } else {
+            qCDebug(UNION_QTWIDGETS) << "Pixel metric" << metric << "not handled by element" << e;
+        }
     }
 
     // Unimplemented, use QCommonStyle for now

@@ -106,7 +106,7 @@ qreal TreeViewElement::indentation() const
     return querySize({ElementString::TreeViewDelegate, ElementString::Indentation}).width();
 }
 
-qreal TreeViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> TreeViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_TreeViewIndentation:
@@ -114,7 +114,7 @@ qreal TreeViewElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return 0;
+    return std::nullopt;
 }
 
 QString TreeViewElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

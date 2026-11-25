@@ -23,7 +23,7 @@ public:
     void draw(QPainter *painter, DrawVariant what) const override;
     QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
-    qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
     static AbstractElement *create(const UnionStyle *style, QWidget *widget)
     {

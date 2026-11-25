@@ -107,7 +107,7 @@ QRectF CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubEl
     return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
-qreal CheckBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
+std::optional<qreal> CheckBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_CheckBoxLabelSpacing:
@@ -122,5 +122,5 @@ qreal CheckBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetr
     default:
         break;
     }
-    return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
+    return std::nullopt;
 }
