@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-RubberBandElement::RubberBandElement(const UnionStyle *style, const QWidget *widget)
+RubberBandElement::RubberBandElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
 }

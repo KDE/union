@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-ScrollBarElement::ScrollBarElement(const UnionStyle *style, const QWidget *widget)
+ScrollBarElement::ScrollBarElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_horizontal(false)
 {

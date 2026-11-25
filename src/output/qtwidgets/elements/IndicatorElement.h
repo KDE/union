@@ -16,7 +16,7 @@ class IndicatorElement : public AbstractElement
     Q_OBJECT
 
 public:
-    IndicatorElement(const UnionStyle *style, const QWidget *widget);
+    IndicatorElement(const UnionStyle *style, QWidget *widget);
 
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     qreal pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;

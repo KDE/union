@@ -15,7 +15,7 @@ class SliderElement : public AbstractElement
     Q_OBJECT
 
 public:
-    SliderElement(const UnionStyle *style, const QWidget *widget);
+    SliderElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

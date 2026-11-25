@@ -15,7 +15,7 @@ class SplitterElement : public AbstractElement
     Q_OBJECT
 
 public:
-    SplitterElement(const UnionStyle *style, const QWidget *widget);
+    SplitterElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

@@ -15,7 +15,7 @@ class ProgressBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ProgressBarElement(const UnionStyle *style, const QWidget *widget);
+    ProgressBarElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

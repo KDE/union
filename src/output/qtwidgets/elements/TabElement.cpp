@@ -7,7 +7,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-TabElement::TabElement(const UnionStyle *style, const QWidget *widget)
+TabElement::TabElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_isVertical(false)
     , m_isStatic(false)

@@ -8,7 +8,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-ToolTipElement::ToolTipElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
+ToolTipElement::ToolTipElement(const QStyleOption *option, const UnionStyle *style, QWidget *widget)
     : AbstractElement(option, style, widget)
 {
     update(option);

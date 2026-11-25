@@ -9,7 +9,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-ToolBarElement::ToolBarElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
+ToolBarElement::ToolBarElement(const QStyleOption *option, const UnionStyle *style, QWidget *widget)
     : AbstractElement(option, style, widget)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);

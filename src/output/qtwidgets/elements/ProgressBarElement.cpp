@@ -7,7 +7,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-ProgressBarElement::ProgressBarElement(const UnionStyle *style, const QWidget *widget)
+ProgressBarElement::ProgressBarElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_isHorizontal(true)
 {

@@ -15,7 +15,7 @@ class ToolBarElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ToolBarElement(const UnionStyle *style, const QWidget *widget);
+    ToolBarElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

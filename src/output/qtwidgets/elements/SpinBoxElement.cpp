@@ -7,7 +7,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-SpinBoxElement::SpinBoxElement(const UnionStyle *style, const QWidget *widget)
+SpinBoxElement::SpinBoxElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_hasButtons(true)
     , m_hasFrame(true)

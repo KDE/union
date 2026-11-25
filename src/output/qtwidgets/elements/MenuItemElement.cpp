@@ -9,7 +9,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-MenuItemElement::MenuItemElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
+MenuItemElement::MenuItemElement(const QStyleOption *option, const UnionStyle *style, QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_isSeparator(false)
     , m_hasSubMenu(false)

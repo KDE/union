@@ -15,7 +15,7 @@ class RadioButtonElement : public AbstractElement
     Q_OBJECT
 
 public:
-    RadioButtonElement(const UnionStyle *style, const QWidget *widget);
+    RadioButtonElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;

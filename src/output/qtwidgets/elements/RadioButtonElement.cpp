@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-RadioButtonElement::RadioButtonElement(const UnionStyle *style, const QWidget *widget)
+RadioButtonElement::RadioButtonElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
     setFlag(AbstractElementFlag::DrawMnemonics);

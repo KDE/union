@@ -15,7 +15,7 @@ class SpinBoxElement : public AbstractElement
     Q_OBJECT
 
 public:
-    SpinBoxElement(const UnionStyle *style, const QWidget *widget);
+    SpinBoxElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;

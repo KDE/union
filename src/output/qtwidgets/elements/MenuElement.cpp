@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-MenuElement::MenuElement(const UnionStyle *style, const QWidget *widget)
+MenuElement::MenuElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
     if (m_elementProperties && option) {

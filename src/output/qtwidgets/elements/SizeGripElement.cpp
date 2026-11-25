@@ -8,7 +8,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-SizeGripElement::SizeGripElement(const UnionStyle *style, const QWidget *widget)
+SizeGripElement::SizeGripElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
 }

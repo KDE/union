@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-IndicatorElement::IndicatorElement(const UnionStyle *style, const QWidget *widget)
+IndicatorElement::IndicatorElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
     m_listViewIconSize = querySize({ElementString::ListViewIconSize}).width();

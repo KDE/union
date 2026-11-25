@@ -9,7 +9,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *style, const QWidget *widget)
+TreeViewElement::TreeViewElement(const QStyleOption *option, const UnionStyle *style, QWidget *widget)
     : AbstractElement(option, style, widget)
     , m_itemIsOpen(false)
 {

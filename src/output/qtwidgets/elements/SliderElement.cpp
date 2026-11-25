@@ -7,7 +7,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-SliderElement::SliderElement(const UnionStyle *style, const QWidget *widget)
+SliderElement::SliderElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
     , m_isHorizontal(false)
     , m_isInverted(false)

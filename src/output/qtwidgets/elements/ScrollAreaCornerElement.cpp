@@ -6,7 +6,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-ScrollAreaCornerElement::ScrollAreaCornerElement(const UnionStyle *style, const QWidget *widget)
+ScrollAreaCornerElement::ScrollAreaCornerElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
 }

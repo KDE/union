@@ -15,7 +15,7 @@ class ItemViewElement : public AbstractElement
     Q_OBJECT
 
 public:
-    ItemViewElement(const UnionStyle *style, const QWidget *widget);
+    ItemViewElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
     void layout() override;

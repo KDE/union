@@ -8,7 +8,7 @@
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-SplitterElement::SplitterElement(const UnionStyle *style, const QWidget *widget)
+SplitterElement::SplitterElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
 }
