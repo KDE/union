@@ -11,7 +11,7 @@ using namespace Qt::StringLiterals;
 using namespace Union::Properties;
 using namespace Union::Widgets;
 
-static WidgetToElementRegistration<FrameElement, QLineEdit> lineEditWidgetRegistration;
+static WidgetToElementRegistration<LineEditElement, QLineEdit> lineEditWidgetRegistration;
 
 LineEditElement::LineEditElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
@@ -23,11 +23,12 @@ void LineEditElement::update(const QStyleOption *option)
     auto e = ensureElement();
     e->setType(ElementString::TextField);
 
-    const auto &palette = option->palette;
-    if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
-        m_backgroundBrush = palette.base();
-    } else {
-        m_backgroundBrush = std::nullopt;
+    m_backgroundBrush = std::nullopt;
+    if (option) {
+        const auto &palette = option->palette;
+        if (palette.isBrushSet(palette.currentColorGroup(), QPalette::Base)) {
+            m_backgroundBrush = palette.base();
+        }
     }
 
     auto frameOption = qstyleoption_cast<const QStyleOptionFrame *>(option);
@@ -52,16 +53,11 @@ void LineEditElement::update(const QStyleOption *option)
         }
     }
 
-    // updateSubElementList();
-    // layout();
     AbstractElement::update(option);
 }
 
 void LineEditElement::draw(QPainter *painter, DrawVariant what) const
 {
-    // if (!m_isValid) {
-    //     return;
-    // }
     // For spinboxes and comboboxes, we do not want to draw this element
     // TODO: maybe this should be handleable by the CSS
     const auto parent = widget() ? widget()->parentWidget() : nullptr;
@@ -101,12 +97,6 @@ void LineEditElement::drawBackground(QPainter *painter, UnionPainter::Parts part
     unionPainter.draw();
 }
 
-// void LineEditElement::updateSubElementList()
-// {
-//     m_subElementList.clear();
-//     m_subElementList.append(ElementString::TextField);
-// }
-
 QSizeF LineEditElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     // LineEdit wants much more simplified size in Widgets, we ignore the width/height set in CSS.
@@ -131,41 +121,17 @@ QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubEl
     return style()->QCommonStyle::subElementRect(element, option, widget());
 }
 
-// Union::IdentifierVariantHash LineEditElement::elementAttributes() const
-// {
-//     return FrameElement::frameAttributesFor(m_frameOption, widget());
-// }
-
-// Union::IdentifierList LineEditElement::elementHints() const
-// {
-//     auto hints = FrameElement::frameHintsFor(m_frameOption);
-//     // Due to how Line Edits work, we have to first check the parent, then it's parent
-//     // to figure out if we're inside a table. The first parent is just the scrollview.
-//     if (widget() && widget()->parentWidget()) {
-//         if (auto realParent = widget()->parentWidget()->parentWidget()) {
-//             if (realParent->inherits("QTableView") || realParent->inherits("QTableWidget")) {
-//                 hints.append(u"inside-table"_s);
-//             }
-//         }
-//     }
-//     return hints;
-// }
-
 qreal LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
-    case QStyle::PM_LineEditIconMargin: {
+    case QStyle::PM_DefaultFrameWidth:
+        return propertyWrapper().averageBorderSize();
+    case QStyle::PM_LineEditIconMargin:
         return propertyWrapper().averagePadding();
-    }
     case QStyle::PM_LineEditIconSize:
-        // return querySize({ElementString::LineEditIconSize}).width();
+        return propertyWrapper().iconSize().width();
     default:
         break;
     }
     return style()->QCommonStyle::pixelMetric(pixelMetric, option, widget());
 }
-
-// QString LineEditElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-// {
-//     return ElementString::TextField;
-// }

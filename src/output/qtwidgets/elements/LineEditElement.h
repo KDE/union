@@ -27,10 +27,6 @@ protected:
     void drawBackground(QPainter *painter, UnionPainter::Parts parts = UnionPainter::Parts::All) const override;
 
 private:
-    // void updateSubElementList() override;
-    // Union::IdentifierVariantHash elementAttributes() const override;
-    // Union::IdentifierList elementHints() const override;
-    // QString fallbackElementName(const QStyleOption *opt) const override;
     // QMarginsF iconPadding() const;
     // const QStyleOptionFrame *m_frameOption = nullptr;
     bool m_hasFrame = true;
