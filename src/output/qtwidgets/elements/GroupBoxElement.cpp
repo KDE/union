@@ -70,7 +70,7 @@ void GroupBoxElement::draw(QPainter *painter, DrawVariant what) const
                what);
 }
 
-QRectF GroupBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> GroupBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     // QRectF finalRect;
 
@@ -96,7 +96,7 @@ QRectF GroupBoxElement::subControlRect(const QStyleOption *option, QStyle::SubCo
         if (m_isCheckable) {
             return firstChildOfType<IndicatorSubElement>()->rect();
         } else {
-            return {};
+            return std::nullopt;
         }
         // const auto checkItem = m_layoutMap[ElementString::Icon];
         // const auto textItem = m_layoutMap[ElementString::Text];
@@ -114,7 +114,7 @@ QRectF GroupBoxElement::subControlRect(const QStyleOption *option, QStyle::SubCo
         break;
     }
 
-    return style()->QCommonStyle::subControlRect(QStyle::CC_GroupBox, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
+    return std::nullopt;
 }
 
 int GroupBoxElement::styleHint(const QStyleOption *option, QStyle::StyleHint styleHint) const

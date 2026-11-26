@@ -131,7 +131,7 @@ public:
     /*!
      * \brief Return a subcontrol rectangle. If not found, empty QRectF() is returned instead.
      */
-    virtual QRectF subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const;
+    virtual std::optional<QRectF> subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const;
 
     /*!
      * \brief Return the given pixelmetric value. If not found, returns 0

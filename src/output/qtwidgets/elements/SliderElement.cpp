@@ -203,7 +203,7 @@ QSizeF SliderElement::contentsSize(const QStyleOption *option, QSizeF contentsSi
     return applyPaddingToSize(size);
 }
 
-QRectF SliderElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> SliderElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_sliderOption) {
         // Copied from Breeze

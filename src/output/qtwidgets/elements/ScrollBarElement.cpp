@@ -106,7 +106,7 @@ QSizeF ScrollBarElement::contentsSize(const QStyleOption *option, QSizeF content
     return contentsSizeFromStyle;
 }
 
-QRectF ScrollBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> ScrollBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_scrollBarOption) {
         // Copied from Breeze

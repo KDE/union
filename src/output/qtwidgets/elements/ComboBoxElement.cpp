@@ -92,7 +92,7 @@ QSizeF ComboBoxElement::contentsSize([[maybe_unused]] const QStyleOption *option
     return size;
 }
 
-QRectF ComboBoxElement::subControlRect([[maybe_unused]] const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> ComboBoxElement::subControlRect([[maybe_unused]] const QStyleOption *option, QStyle::SubControl subControl) const
 {
     switch (subControl) {
     case QStyle::SC_ComboBoxFrame:
@@ -107,7 +107,7 @@ QRectF ComboBoxElement::subControlRect([[maybe_unused]] const QStyleOption *opti
     }
     case QStyle::SC_ComboBoxEditField: {
         QRectF r = rect().marginsRemoved(propertyWrapper().borderSize());
-        r.setWidth(r.width() - subControlRect(option, QStyle::SC_ComboBoxArrow).width());
+        r.setWidth(r.width() - subControlRect(option, QStyle::SC_ComboBoxArrow).value_or(QRectF{}).width());
         // When drawing the text editor, it has padding of its own.
         // Remove our own padding and rely on the text editor padding.
         auto paddingAdjustment = propertyWrapper().padding().left(); //+ (hasIcon() ? spacing() : 0);
@@ -118,7 +118,7 @@ QRectF ComboBoxElement::subControlRect([[maybe_unused]] const QStyleOption *opti
         break;
     }
 
-    return style()->QCommonStyle::subControlRect(QStyle::CC_ComboBox, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
+    return std::nullopt;
 }
 
 std::optional<qreal> ComboBoxElement::pixelMetric([[maybe_unused]] const QStyleOption *option, QStyle::PixelMetric pixelMetric) const

@@ -119,7 +119,7 @@ QSizeF TitleBarElement::contentsSize(const QStyleOption *option, QSizeF contents
     return contentsSizeFromStyle;
 }
 
-QRectF TitleBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> TitleBarElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid) {
         switch (subControl) {
@@ -144,7 +144,7 @@ QRectF TitleBarElement::subControlRect(const QStyleOption *option, QStyle::SubCo
         default:
             break;
         }
-        return {};
+        return std::nullopt;
     }
     return style()->subControlRect(QStyle::CC_TitleBar, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
 }

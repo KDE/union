@@ -207,9 +207,9 @@ std::optional<QRectF> AbstractElement::subElementRect([[maybe_unused]] const QSt
     return std::nullopt;
 }
 
-QRectF AbstractElement::subControlRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubControl subControl) const
+std::optional<QRectF> AbstractElement::subControlRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubControl subControl) const
 {
-    return {};
+    return std::nullopt;
 }
 
 std::optional<qreal> AbstractElement::pixelMetric([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::PixelMetric pixelMetric) const

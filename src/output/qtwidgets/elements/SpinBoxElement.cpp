@@ -91,7 +91,7 @@ QSizeF SpinBoxElement::contentsSize(const QStyleOption *option, QSizeF contentsS
     return size;
 }
 
-QRectF SpinBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> SpinBoxElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (m_isValid && m_spinBoxOption) {
         QRectF rect = option->rect;

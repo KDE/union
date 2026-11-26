@@ -161,7 +161,7 @@ QSizeF ToolButtonElement::contentsSize([[maybe_unused]] const QStyleOption *opti
     return size;
 }
 
-QRectF ToolButtonElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
+std::optional<QRectF> ToolButtonElement::subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const
 {
     if (subControl == QStyle::SC_ToolButton) {
         return rect();
@@ -171,7 +171,7 @@ QRectF ToolButtonElement::subControlRect(const QStyleOption *option, QStyle::Sub
         // return visualRect(m_menuButtonRect);
     }
 
-    return style()->QCommonStyle::subControlRect(QStyle::CC_ToolButton, qstyleoption_cast<const QStyleOptionComplex *>(option), subControl, widget());
+    return std::nullopt;
 }
 
 void ToolButtonElement::draw(QPainter *painter, DrawVariant what) const
