@@ -110,7 +110,7 @@ void DockWidgetElement::draw(QPainter *painter, DrawVariant what) const
 //     }
 // }
 
-QRectF DockWidgetElement::subElementRect(const QStyleOption *option, QStyle::SubElement subElement) const
+std::optional<QRectF> DockWidgetElement::subElementRect(const QStyleOption *option, QStyle::SubElement subElement) const
 {
     if (subElement == QStyle::SE_DockWidgetTitleBarText) {
         return visualRect(firstChildOfType<TextSubElement>());
@@ -124,7 +124,7 @@ QRectF DockWidgetElement::subElementRect(const QStyleOption *option, QStyle::Sub
     //    // return visualRect(m_layoutMap[ElementString::Icon].rect);
     // }
 
-    return style()->QCommonStyle::subElementRect(subElement, option, widget());
+    return std::nullopt;
 }
 
 std::optional<qreal> DockWidgetElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const

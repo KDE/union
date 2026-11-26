@@ -112,7 +112,7 @@ QSizeF ItemViewElement::contentsSize(const QStyleOption *option, QSizeF contents
     return applyPaddingToSize(commonSize);
 }
 
-QRectF ItemViewElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> ItemViewElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid) {
         QRectF rect;
@@ -131,7 +131,7 @@ QRectF ItemViewElement::subElementRect(const QStyleOption *option, QStyle::SubEl
         }
         return visualRect(rect);
     }
-    return style()->QCommonStyle::subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 void ItemViewElement::draw(QPainter *painter, DrawVariant what) const

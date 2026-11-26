@@ -93,13 +93,13 @@ void ButtonElement::draw(QPainter *painter, DrawVariant what) const
                what);
 }
 
-QRectF ButtonElement::subElementRect([[maybe_unused]] const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> ButtonElement::subElementRect([[maybe_unused]] const QStyleOption *option, QStyle::SubElement element) const
 {
     if (element == QStyle::SE_PushButtonBevel || element == QStyle::SE_PushButtonFocusRect) {
         return UnionStyle::visualRect(direction(), rect(), propertyWrapper().backgroundRectangle(rect()));
     }
 
-    return style()->QCommonStyle::subElementRect(element, nullptr, widget());
+    return std::nullopt;
 }
 
 QSizeF ButtonElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const

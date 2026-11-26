@@ -20,7 +20,7 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
-    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
     std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 protected:

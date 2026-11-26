@@ -126,7 +126,7 @@ public:
     /*!
      * \brief Return a subelement rectangle. If not found, empty QRectF() is returned instead.
      */
-    virtual QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const;
+    virtual std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const;
 
     /*!
      * \brief Return a subcontrol rectangle. If not found, empty QRectF() is returned instead.

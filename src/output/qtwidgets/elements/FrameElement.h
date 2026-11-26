@@ -23,7 +23,7 @@ public:
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
     std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
-    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
 
     // void layout() override;
     // void drawFrame(QPainter *painter) const override;

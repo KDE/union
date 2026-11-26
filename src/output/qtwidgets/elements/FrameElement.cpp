@@ -287,13 +287,14 @@ std::optional<qreal> FrameElement::pixelMetric(const QStyleOption *option, QStyl
     return std::nullopt;
 }
 
-QRectF FrameElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> FrameElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    const auto r = style()->QCommonStyle::subElementRect(element, option, widget());
     if (element == QStyle::SE_FrameContents) {
+        const auto r = style()->QCommonStyle::subElementRect(element, option, widget());
         return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().borderSize().toMargins()));
     }
-    return r;
+
+    return std::nullopt;
 }
 
 Union::IdentifierVariantHash FrameElement::frameAttributesFor(const QStyleOptionFrame *frameOption, const QWidget *widget)

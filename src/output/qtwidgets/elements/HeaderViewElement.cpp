@@ -154,7 +154,7 @@ void HeaderViewElement::draw(QPainter *painter, DrawVariant what) const
 //     }
 // }
 
-QRectF HeaderViewElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> HeaderViewElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     // if (m_isValid) {
     QRectF r;
@@ -184,7 +184,7 @@ QRectF HeaderViewElement::subElementRect(const QStyleOption *option, QStyle::Sub
     if (r.isValid()) {
         return UnionStyle::visualRect(direction(), rect(), r);
     } else {
-        return style()->QCommonStyle::subElementRect(element, option, widget());
+        return std::nullopt;
     }
 }
 

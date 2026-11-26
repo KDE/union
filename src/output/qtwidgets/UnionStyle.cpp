@@ -196,7 +196,12 @@ QRect UnionStyle::subElementRect(QStyle::SubElement subElement, const QStyleOpti
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->subElementRect(option, subElement).toRect();
+        auto rect = e->subElementRect(option, subElement);
+        if (rect) {
+            return rect->toRect();
+        } else {
+            qCDebug(UNION_QTWIDGETS) << "SubElement" << subElement << "not handled by element" << e;
+        }
     }
 
     return QCommonStyle::subElementRect(subElement, option, widget);

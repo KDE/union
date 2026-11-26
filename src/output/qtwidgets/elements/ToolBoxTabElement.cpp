@@ -76,7 +76,7 @@ void ToolBoxTabElement::layout()
     }
 }
 
-QRectF ToolBoxTabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> ToolBoxTabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (m_isValid && m_toolBoxOption) {
         if (element == QStyle::SE_ToolBoxTabContents) {
@@ -88,7 +88,7 @@ QRectF ToolBoxTabElement::subElementRect(const QStyleOption *option, QStyle::Sub
         }
         return visualRect(m_toolBoxOption->rect);
     }
-    return style()->subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 QString ToolBoxTabElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const

@@ -214,9 +214,9 @@ QSizeF TabElement::contentsSize(const QStyleOption *option, QSizeF contentsSizeF
     return contentsSizeFromStyle;
 }
 
-QRectF TabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> TabElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    return style()->QCommonStyle::subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 // Padding of the tab content and the edge, only one value is taken so take the average

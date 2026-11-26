@@ -112,13 +112,13 @@ QSizeF LineEditElement::contentsSize([[maybe_unused]] const QStyleOption *option
 //     return safePropertyLookup(m_elementProperties, QMarginsF{}, &StylePropertyGroup::layout, &LayoutPropertyGroup::padding, &SizePropertyGroup::toMargins);
 // }
 
-QRectF LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> LineEditElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     if (element == QStyle::SE_LineEditContents) {
         auto r = propertyWrapper().backgroundRectangle(rect());
         return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().padding()));
     }
-    return style()->QCommonStyle::subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 std::optional<qreal> LineEditElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const

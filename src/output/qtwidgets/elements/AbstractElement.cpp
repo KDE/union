@@ -202,9 +202,9 @@ QSizeF AbstractElement::contentsSize([[maybe_unused]] const QStyleOption *option
     return m_elementProperties.adjustSize(contentsSizeFromStyle, m_flags.testFlag(AbstractElementFlag::ContentsSizeIncludesAveragePadding));
 }
 
-QRectF AbstractElement::subElementRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubElement element) const
+std::optional<QRectF> AbstractElement::subElementRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubElement element) const
 {
-    return style()->QCommonStyle::subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 QRectF AbstractElement::subControlRect([[maybe_unused]] const QStyleOption *option, [[maybe_unused]] QStyle::SubControl subControl) const

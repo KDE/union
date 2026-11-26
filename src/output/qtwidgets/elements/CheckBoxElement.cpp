@@ -93,7 +93,7 @@ QSizeF CheckBoxElement::contentsSize(const QStyleOption *option, QSizeF contents
     return size;
 }
 
-QRectF CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+std::optional<QRectF> CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     switch (element) {
     case QStyle::SE_CheckBoxIndicator:
@@ -104,7 +104,7 @@ QRectF CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubEl
     }
 
     // The indicator is drawn standalone (PE_IndicatorCheckBox for example)
-    return style()->QCommonStyle::subElementRect(element, option, widget());
+    return std::nullopt;
 }
 
 std::optional<qreal> CheckBoxElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const

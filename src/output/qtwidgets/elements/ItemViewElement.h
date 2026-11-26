@@ -21,7 +21,7 @@ public:
     void layout() override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
 
 private:
