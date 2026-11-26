@@ -212,7 +212,12 @@ QRect UnionStyle::subControlRect(ComplexControl complexControl, const QStyleOpti
     auto e = element(widget, option);
     if (e) {
         e->update(option);
-        return e->subControlRect(option, subControl).toRect();
+        auto rect = e->subControlRect(option, subControl);
+        if (rect) {
+            return rect->toRect();
+        } else {
+            qCDebug(UNION_QTWIDGETS) << "SubControl" << subControl << "not handled by element" << e;
+        }
     }
 
     // TODO: Leave Dial and MDIControls to QCommonStyle for now
