@@ -42,7 +42,6 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/MenuBarElement.cpp
         # elements/MenuItemElement.cpp
         elements/ProgressBarElement.cpp
-        # elements/RadioButtonElement.cpp
         # elements/RubberBandElement.cpp
         # elements/ScrollBarElement.cpp
         # elements/ScrollAreaCornerElement.cpp
@@ -101,7 +100,6 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/MenuBarElement.h
         # elements/MenuItemElement.h
         elements/ProgressBarElement.h
-        # elements/RadioButtonElement.h
         # elements/RubberBandElement.h
         # elements/ScrollBarElement.h
         # elements/ScrollAreaCornerElement.h
