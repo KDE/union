@@ -130,6 +130,8 @@ std::optional<qreal> LineEditElement::pixelMetric(const QStyleOption *option, QS
         return propertyWrapper().averagePadding();
     case QStyle::PM_LineEditIconSize:
         return propertyWrapper().iconSize().width();
+    case QStyle::PM_TextCursorWidth:
+        return style()->QCommonStyle::pixelMetric(pixelMetric, nullptr, widget());
     default:
         break;
     }
