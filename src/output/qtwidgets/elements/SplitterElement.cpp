@@ -15,37 +15,28 @@ SplitterElement::SplitterElement(const UnionStyle *style, QWidget *widget)
 
 void SplitterElement::update(const QStyleOption *option)
 {
+    auto e = ensureElement();
+    e->setType(ElementString::Splitter);
+
     AbstractElement::update(option);
-    layout();
 }
 
 void SplitterElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid) {
-        return;
-    }
-    switch (enums.ControlElement) {
-    case QStyle::CE_Splitter:
-        drawBackground(painter);
-        break;
-    }
-
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_IndicatorDockWidgetResizeHandle:
-        drawBackground(painter);
-        break;
-    }
-}
-
-void SplitterElement::layout()
-{
-    m_elementList = prepareElements(option, widget(), {ElementString::Splitter});
-    if (!m_elementList.isEmpty()) {
-        m_elementProperties = queryProperties(m_elementList);
-        m_isValid = true;
-    } else {
-        m_isValid = false;
-    }
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [](QStyle::ComplexControl) { },
+                          [&](QStyle::ControlElement controlElement) {
+                              if (controlElement == QStyle::CE_Splitter) {
+                                  drawBackground(painter);
+                              }
+                          },
+                          [&](QStyle::PrimitiveElement primitive) {
+                              if (primitive == QStyle::PE_IndicatorDockWidgetResizeHandle) {
+                                  drawBackground(painter);
+                              }
+                          }},
+               what);
 }
 
 std::optional<qreal> SplitterElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
@@ -53,14 +44,9 @@ std::optional<qreal> SplitterElement::pixelMetric(const QStyleOption *option, QS
     switch (pixelMetric) {
     case QStyle::PM_SplitterWidth:
     case QStyle::PM_DockWidgetSeparatorExtent:
-        return width();
+        return propertyWrapper().width();
     default:
         break;
     }
     return std::nullopt;
-}
-
-QString SplitterElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::Splitter;
 }

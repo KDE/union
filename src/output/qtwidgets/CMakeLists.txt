@@ -48,7 +48,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/SliderElement.cpp
         # elements/SizeGripElement.cpp
         # elements/SpinBoxElement.cpp
-        # elements/SplitterElement.cpp
+        elements/SplitterElement.cpp
         # elements/StatusBarElement.cpp
         # elements/TabElement.cpp
         # elements/TabCloseButtonElement.cpp
@@ -106,7 +106,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/SliderElement.h
         # elements/SizeGripElement.h
         # elements/SpinBoxElement.h
-        # elements/SplitterElement.h
+        elements/SplitterElement.h
         # elements/StatusBarElement.h
         # elements/TabElement.h
         # elements/TabCloseButtonElement.h
