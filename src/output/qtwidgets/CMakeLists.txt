@@ -55,7 +55,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         # elements/TabBarElement.cpp
         # elements/TabWidgetElement.cpp
         # elements/TitleBarElement.cpp
-        # elements/ToolBarElement.cpp
+        elements/ToolBarElement.cpp
         # elements/ToolBoxTabElement.cpp
         elements/ToolButtonElement.cpp
         elements/ToolTipElement.cpp
@@ -113,7 +113,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         # elements/TabBarElement.h
         # elements/TabWidgetElement.h
         # elements/TitleBarElement.h
-        # elements/ToolBarElement.h
+        elements/ToolBarElement.h
         # elements/ToolBoxTabElement.h
         elements/ToolButtonElement.h
         elements/ToolTipElement.h

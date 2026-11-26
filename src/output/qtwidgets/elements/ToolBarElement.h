@@ -18,27 +18,27 @@ public:
     ToolBarElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
-    void layout() override;
+    // void layout() override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
     std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
-    Union::IdentifierList elementHints() const override;
-    void updateSubElementList() override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    void drawHandle(QPainter *painter) const;
-    void drawSeparator(QPainter *painter) const;
-    QRectF handleSeparatorRect(qreal extent) const;
-    const QStyleOptionToolBar *m_toolBarOption = nullptr;
-
-    Union::ElementList m_handleElementList;
-    Union::StylePropertyGroupPtr m_handleProperties;
-    Union::ElementList m_separatorElementList;
-    Union::StylePropertyGroupPtr m_separatorProperties;
-    Union::ElementList m_extensionElementList;
-    Union::StylePropertyGroupPtr m_extensionProperties;
-
-    qreal extent(Union::StylePropertyGroupPtr properties) const;
+    // Union::IdentifierList elementHints() const override;
+    // void updateSubElementList() override;
+    // QString fallbackElementName(const QStyleOption *opt) const override;
+    // void drawHandle(QPainter *painter) const;
+    // void drawSeparator(QPainter *painter) const;
+    // QRectF handleSeparatorRect(qreal extent) const;
+    // const QStyleOptionToolBar *m_toolBarOption = nullptr;
+    //
+    // Union::ElementList m_handleElementList;
+    // Union::StylePropertyGroupPtr m_handleProperties;
+    // Union::ElementList m_separatorElementList;
+    // Union::StylePropertyGroupPtr m_separatorProperties;
+    // Union::ElementList m_extensionElementList;
+    // Union::StylePropertyGroupPtr m_extensionProperties;
+    //
+    // qreal extent(Union::StylePropertyGroupPtr properties) const;
 };
 }
 }
