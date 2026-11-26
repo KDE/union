@@ -31,29 +31,34 @@ private:
     static QHash<QByteArray, ElementCreateFunction> s_widgetToElementMap;
 };
 
-template<typename ElementType, typename... WidgetType>
-struct WidgetToElementRegistration {
-    WidgetToElementRegistration(const QByteArrayList &extraNames = {})
+template<typename ElementType>
+struct NameToElementRegistration {
+    NameToElementRegistration(const QByteArrayList &names)
     {
         auto createFunction = [](const UnionStyle *style, QWidget *widget) {
             return new ElementType(style, widget);
         };
 
         const auto elementName = ElementType::staticMetaObject.className();
-
-        (
-            [&] {
-                const auto widgetName = WidgetType::staticMetaObject.className();
-                qCDebug(UNION_QTWIDGETS) << "Registered element type" << elementName << "for widget type" << widgetName;
-                TypeMapping::registerWidgetToElement(widgetName, createFunction);
-            }(),
-            ... //
-        );
-
-        for (const auto &name : extraNames) {
+        for (const auto &name : names) {
             qCDebug(UNION_QTWIDGETS) << "Registered element type" << elementName << "for widget type" << name;
             TypeMapping::registerWidgetToElement(name, createFunction);
         }
+    }
+};
+
+template<typename ElementType, typename... WidgetType>
+struct WidgetToElementRegistration {
+    WidgetToElementRegistration()
+    {
+        QByteArrayList names;
+
+        ( //
+            (names.append(WidgetType::staticMetaObject.className())),
+            ... //
+        );
+
+        NameToElementRegistration<ElementType>{names};
     }
 };
 
