@@ -27,8 +27,9 @@ public:
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
 
-    std::optional<QRectF> subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
+    std::optional<QRectF> subControlRect(const QStyleOption *option, QStyle::SubControl subControl) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
 private:
     // void drawIcon(QPainter *painter) const override;

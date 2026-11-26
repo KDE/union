@@ -141,6 +141,36 @@ void ToolButtonElement::update(const QStyleOption *option)
 //     }
 // }
 
+void ToolButtonElement::draw(QPainter *painter, DrawVariant what) const
+{
+    std::visit(overloaded{//
+                          [](std::nullopt_t) { },
+                          [&](QStyle::ComplexControl complexControl) {
+                              if (complexControl == QStyle::CC_ToolButton) {
+                                  drawBackground(painter);
+                                  drawChildren(painter);
+                              }
+                          },
+                          [&](QStyle::ControlElement controlElement) {
+                              if (controlElement == QStyle::CE_ToolButtonLabel) {
+                                  drawChildren<TextSubElement>(painter);
+                              }
+                          },
+                          [&](QStyle::PrimitiveElement primitiveElement) {
+                              switch (primitiveElement) {
+                              case QStyle::PE_FrameButtonTool:
+                                  drawBackground(painter, UnionPainter::Parts::FrameOnly);
+                                  break;
+                              case QStyle::PE_PanelButtonTool:
+                                  drawBackground(painter);
+                                  break;
+                              default:
+                                  break;
+                              }
+                          }},
+               what);
+}
+
 QSizeF ToolButtonElement::contentsSize([[maybe_unused]] const QStyleOption *option, QSizeF contentsSizeFromStyle) const
 {
     QSizeF size = propertyWrapper().adjustSize(contentsSizeFromStyle, false);
@@ -174,34 +204,16 @@ std::optional<QRectF> ToolButtonElement::subControlRect(const QStyleOption *opti
     return std::nullopt;
 }
 
-void ToolButtonElement::draw(QPainter *painter, DrawVariant what) const
+std::optional<qreal> ToolButtonElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
-    std::visit(overloaded{//
-                          [](std::nullopt_t) { },
-                          [&](QStyle::ComplexControl complexControl) {
-                              if (complexControl == QStyle::CC_ToolButton) {
-                                  drawBackground(painter);
-                                  drawChildren(painter);
-                              }
-                          },
-                          [&](QStyle::ControlElement controlElement) {
-                              if (controlElement == QStyle::CE_ToolButtonLabel) {
-                                  drawChildren<TextSubElement>(painter);
-                              }
-                          },
-                          [&](QStyle::PrimitiveElement primitiveElement) {
-                              switch (primitiveElement) {
-                              case QStyle::PE_FrameButtonTool:
-                                  drawBackground(painter, UnionPainter::Parts::FrameOnly);
-                                  break;
-                              case QStyle::PE_PanelButtonTool:
-                                  drawBackground(painter);
-                                  break;
-                              default:
-                                  break;
-                              }
-                          }},
-               what);
+    switch (pixelMetric) {
+    case QStyle::PM_ButtonIconSize:
+        return std::max(propertyWrapper().iconSize().width(), propertyWrapper().iconSize().height());
+    default:
+        break;
+    }
+
+    return std::nullopt;
 }
 
 // void ToolButtonElement::drawIcon(QPainter *painter) const
