@@ -41,7 +41,7 @@ target_sources(UnionWidgetsStyle PRIVATE
         elements/LineEditElement.cpp
         elements/MenuBarElement.cpp
         # elements/MenuItemElement.cpp
-        # elements/ProgressBarElement.cpp
+        elements/ProgressBarElement.cpp
         # elements/RadioButtonElement.cpp
         # elements/RubberBandElement.cpp
         # elements/ScrollBarElement.cpp
@@ -100,7 +100,7 @@ target_sources(UnionWidgetsStyle PUBLIC
         elements/LineEditElement.h
         elements/MenuBarElement.h
         # elements/MenuItemElement.h
-        # elements/ProgressBarElement.h
+        elements/ProgressBarElement.h
         # elements/RadioButtonElement.h
         # elements/RubberBandElement.h
         # elements/ScrollBarElement.h

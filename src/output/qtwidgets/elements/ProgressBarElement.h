@@ -4,6 +4,7 @@
 #pragma once
 
 #include "AbstractElement.h"
+#include "IndicatorSubElement.h"
 
 namespace Union
 {
@@ -18,27 +19,29 @@ public:
     ProgressBarElement(const UnionStyle *style, QWidget *widget);
 
     void update(const QStyleOption *option) override;
-    void layout() override;
+    // void layout() override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    void drawText(QPainter *painter) const override;
+    // void drawText(QPainter *painter) const override;
 
     QSizeF contentsSize(const QStyleOption *option, QSizeF contentsSizeFromStyle) const override;
-    QRectF subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
     std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
-    Union::IdentifierList elementHints() const override;
+protected:
+    void drawBackground(QPainter *painter, UnionPainter::Parts parts = UnionPainter::Parts::All) const override;
 
 private:
-    void updateSubElementList() override;
-    void drawBackground(QPainter *painter) const override;
-    void drawIndicator(QPainter *painter) const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    void drawChunk(QPainter *painter) const;
-    const QStyleOptionProgressBar *m_progressBarOption = nullptr;
-    int chunkWidth() const;
-    bool m_isHorizontal;
-    Union::ElementList m_contentElementList;
-    Union::StylePropertyGroupPtr m_contentProperties = nullptr;
+    QRectF filledIndicatorRect(const QStyleOptionProgressBar *progressOption);
+    // void updateSubElementList() override;
+    // void drawIndicator(QPainter *painter) const override;
+    // QString fallbackElementName(const QStyleOption *opt) const override;
+    // void drawChunk(QPainter *painter) const;
+    // const QStyleOptionProgressBar *m_progressBarOption = nullptr;
+    // int chunkWidth() const;
+    bool m_isHorizontal = true;
+    IndicatorSubElement *m_filledIndicator = nullptr;
+    // Union::ElementList m_contentElementList;
+    // Union::StylePropertyGroupPtr m_contentProperties = nullptr;
 };
 }
 }
