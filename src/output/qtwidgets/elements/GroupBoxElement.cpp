@@ -35,17 +35,12 @@ void GroupBoxElement::update(const QStyleOption *option)
 
     // This info is only in the widget itself
     m_isCheckable = widget() ? qobject_cast<const QGroupBox *>(widget())->isCheckable() : false;
-    if (m_isCheckable) {
-        firstChildOfType<IndicatorSubElement>(true);
-    } else {
-        removeChildElement(firstChildOfType<IndicatorSubElement>());
-    }
+    withFirstChild<IndicatorSubElement>(m_isCheckable, [](auto) { });
 
-    if (!groupOption->text.isEmpty() && groupOption->subControls & QStyle::SC_GroupBoxLabel) {
-        firstChildOfType<TextSubElement>(true)->setText(groupOption->text);
-    } else {
-        removeChildElement(firstChildOfType<TextSubElement>());
-    }
+    auto hasText = !groupOption->text.isEmpty() && groupOption->subControls & QStyle::SC_GroupBoxLabel;
+    withFirstChild<TextSubElement>(hasText, [&](auto element) {
+        element->setText(groupOption->text);
+    });
 
     AbstractElement::update(option);
 }
@@ -96,7 +91,7 @@ std::optional<QRectF> GroupBoxElement::subControlRect(const QStyleOption *option
         if (m_isCheckable) {
             return firstChildOfType<IndicatorSubElement>()->rect();
         } else {
-            return std::nullopt;
+            return QRectF{};
         }
         // const auto checkItem = m_layoutMap[ElementString::Icon];
         // const auto textItem = m_layoutMap[ElementString::Text];
@@ -135,6 +130,20 @@ std::optional<qreal> GroupBoxElement::pixelMetric(const QStyleOption *option, QS
         return propertyWrapper().padding().bottom();
     case QStyle::PM_LayoutHorizontalSpacing:
     case QStyle::PM_LayoutVerticalSpacing:
+        return propertyWrapper().spacing();
+    case QStyle::PM_IndicatorWidth:
+        if (m_isCheckable) {
+            return firstChildOfType<IndicatorSubElement>()->rect().width();
+        } else {
+            return 0;
+        }
+    case QStyle::PM_IndicatorHeight:
+        if (m_isCheckable) {
+            return firstChildOfType<IndicatorSubElement>()->rect().height();
+        } else {
+            return 0;
+        }
+    case QStyle::PM_CheckBoxLabelSpacing:
         return propertyWrapper().spacing();
     default:
         break;
