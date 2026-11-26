@@ -414,17 +414,18 @@ void UnionStyle::polish(QApplication *application)
 void UnionStyle::polish(QWidget *widget)
 {
     m_dragFilter->installWidget(widget);
-    // enable mouse over effects for all necessary widgets
+
     if (widget) {
+        // enable mouse over effects for all necessary widgets
+        widget->setAttribute(Qt::WA_Hover);
+
         auto e = element(widget, nullptr);
         if (!e) {
             e = TypeMapping::createElementForWidget(this, widget);
             widget->setProperty(UnionElementProperty, QVariant::fromValue(e));
         }
 
-        widget->setAttribute(Qt::WA_Hover);
-
-        if (widget->inherits("QTipLabel") || widget->inherits("QComboBoxPrivateContainer")) {
+        if (widget->inherits("QComboBoxPrivateContainer")) {
             widget->setAttribute(Qt::WA_TranslucentBackground);
         }
         // Used to avoid korners bug, as the setAutoFillBackground is not rounded,
