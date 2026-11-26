@@ -3,74 +3,65 @@
 
 #include "ToolTipElement.h"
 
+#include <QToolTip>
+
 #include "FrameElement.h"
 
 using namespace Qt::StringLiterals;
 using namespace Union::Widgets;
 
-ToolTipElement::ToolTipElement(const QStyleOption *option, const UnionStyle *style, QWidget *widget)
-    : AbstractElement(option, style, widget)
+static NameToElementRegistration<ToolTipElement> toolTipRegistration{{"QTipLabel"}};
+
+ToolTipElement::ToolTipElement(const UnionStyle *style, QWidget *widget)
+    : AbstractElement(style, widget)
 {
-    update(option);
+    widget->setAttribute(Qt::WA_TranslucentBackground);
 }
 
 void ToolTipElement::update(const QStyleOption *option)
 {
+    auto e = ensureElement();
+    e->setType(ElementString::ToolTip);
+
+    if (auto frameOption = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+        e->setHints(FrameElement::frameHintsFor(frameOption));
+        e->setAttributes(FrameElement::frameAttributesFor(frameOption, widget()));
+    }
+
     AbstractElement::update(option);
-    if (const auto newOpt = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-        m_frameOption = newOpt;
-    }
-    layout();
-    if (option) {
-        updateGraphicsEffect(option->rect);
-    }
 }
 
 void ToolTipElement::draw(QPainter *painter, DrawVariant what) const
 {
-    if (!m_isValid) {
-        return;
+    if (std::holds_alternative<QStyle::PrimitiveElement>(what)) {
+        if (std::get<QStyle::PrimitiveElement>(what) == QStyle::PE_PanelTipLabel) {
+            drawBackground(painter);
+        }
     }
-    switch (enums.PrimitiveElement) {
-    case QStyle::PE_PanelTipLabel:
-        drawBackground(painter);
+}
+
+std::optional<QRectF> Union::Widgets::ToolTipElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
+{
+    switch (element) {
+    case QStyle::SE_ShapedFrameContents:
+        return rect().marginsRemoved(propertyWrapper().padding());
+    case QStyle::SE_FrameLayoutItem:
+        return QRectF{};
+    default:
         break;
     }
+
+    return std::nullopt;
 }
 
-void ToolTipElement::layout()
-{
-    m_elementList = prepareElements(option, widget(), {ElementString::ToolTip});
-    if (!m_elementList.isEmpty()) {
-        m_elementProperties = queryProperties(m_elementList);
-        m_isValid = true;
-    } else {
-        m_isValid = false;
-    }
-}
-
-Union::IdentifierVariantHash ToolTipElement::elementAttributes() const
-{
-    return FrameElement::frameAttributesFor(m_frameOption, widget());
-}
-
-Union::IdentifierList ToolTipElement::elementHints() const
-{
-    return FrameElement::frameHintsFor(m_frameOption);
-}
 
 std::optional<qreal> ToolTipElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
     switch (pixelMetric) {
     case QStyle::PM_ToolTipLabelFrameWidth:
-        return averageBorderSize();
+        return propertyWrapper().averageBorderSize();
     default:
         break;
     }
     return std::nullopt;
-}
-
-QString ToolTipElement::fallbackElementName([[maybe_unused]] const QStyleOption *opt) const
-{
-    return ElementString::ToolTip;
 }

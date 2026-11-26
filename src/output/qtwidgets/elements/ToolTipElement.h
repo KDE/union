@@ -19,14 +19,9 @@ public:
 
     void update(const QStyleOption *option) override;
     void draw(QPainter *painter, DrawVariant what = std::nullopt) const override;
-    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 
-private:
-    Union::IdentifierVariantHash elementAttributes() const override;
-    Union::IdentifierList elementHints() const override;
-    QString fallbackElementName(const QStyleOption *opt) const override;
-    void layout() override;
-    const QStyleOptionFrame *m_frameOption = nullptr;
+    std::optional<QRectF> subElementRect(const QStyleOption *option, QStyle::SubElement element) const override;
+    std::optional<qreal> pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const override;
 };
 
 }
