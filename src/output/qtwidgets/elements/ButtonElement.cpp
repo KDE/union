@@ -19,6 +19,7 @@ static WidgetToElementRegistration<ButtonElement, QPushButton> buttonWidgetRegis
 ButtonElement::ButtonElement(const UnionStyle *style, QWidget *widget)
     : AbstractElement(style, widget)
 {
+    widget->setGraphicsEffect(new UnionGraphicsEffect(widget));
 }
 
 void ButtonElement::update(const QStyleOption *option)

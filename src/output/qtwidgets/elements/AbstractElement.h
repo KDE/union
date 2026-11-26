@@ -15,6 +15,7 @@
 #include "StyleGroupWrapper.h"
 #include "StyleUtils.h"
 #include "TypeMapping.h"
+#include "UnionGraphicsEffect.h"
 #include "UnionPainter.h"
 #include "UnionStyle.h"
 
