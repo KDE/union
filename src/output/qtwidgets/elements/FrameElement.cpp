@@ -125,7 +125,7 @@ void FrameElement::draw(QPainter *painter, DrawVariant what) const
                                   break;
                               // Skip drawing frames for items that have framewidth of 0
                               case QFrame::StyledPanel:
-                                  if (pixelMetric(nullptr, QStyle::PM_DefaultFrameWidth) != 0) {
+                                  if (!qFuzzyIsNull(frameWidth())) {
                                       drawBackground(painter);
                                   }
                                   // drawShadow();
@@ -219,69 +219,22 @@ QLayout *findParentLayout(const QWidget *widget)
 
 std::optional<qreal> FrameElement::pixelMetric(const QStyleOption *option, QStyle::PixelMetric pixelMetric) const
 {
-    // Use same heuristics for drawing frames as Breeze does.
-    // TODO: We may want to expose this to the user somehow.
-    if (pixelMetric == QStyle::PM_DefaultFrameWidth) {
-        auto w = widget();
-        if (!w) {
-            return std::nullopt;
-        }
-        const auto frameWidth = propertyWrapper().averageBorderSize();
-
-        if (qobject_cast<const QMenu *>(w)) {
-            return frameWidth;
-        } else if (qobject_cast<const QLineEdit *>(w)) {
-            return frameWidth;
-        } else if (qobject_cast<const QComboBox *>(w)) {
-            return frameWidth;
-        }
-
-        const auto forceFrame = w->property("_breeze_force_frame");
-        if (forceFrame.isValid() && !forceFrame.toBool()) {
-            return 0;
-        }
-        if ((forceFrame.isValid() && forceFrame.toBool()) || w->property("_breeze_borders_sides").isValid()) {
-            return frameWidth;
-        }
-
-        if (qobject_cast<const QAbstractScrollArea *>(w)) {
-            auto layout = findParentLayout(w);
-
-            if (!layout) {
-                if (w->parentWidget() && w->parentWidget()->layout()) {
-                    layout = w->parentWidget()->layout();
-                }
-            }
-
-            if (layout) {
-                if (layout->inherits("QDockWidgetLayout") || layout->inherits("QMainWindowLayout") || qobject_cast<const QStackedLayout *>(layout)) {
-                    return 0;
-                }
-
-                if (auto grid = qobject_cast<const QGridLayout *>(layout)) {
-                    if (grid->horizontalSpacing() > 0 || grid->verticalSpacing() > 0) {
-                        return frameWidth;
-                    }
-                }
-
-                // Add frame when scroll area is in a layout with more than an item and the
-                // layout has some spacing.
-                if (layout->spacing() > 0 && layout->count() > 1) {
-                    return frameWidth;
-                }
-            }
-        }
-
-        if (qobject_cast<const QTabWidget *>(w) || qobject_cast<const QTextBrowser *>(w)) {
-            return frameWidth;
-        }
-
-        if (w->inherits("QComboBoxPrivateContainer") || w->inherits("KCompletionBox")) {
-            return frameWidth;
-        }
-
-        // fallback
-        return std::nullopt;
+    switch (pixelMetric) {
+    case QStyle::PM_DefaultFrameWidth:
+        return frameWidth();
+    case QStyle::PM_LayoutLeftMargin:
+        return propertyWrapper().padding().left();
+    case QStyle::PM_LayoutRightMargin:
+        return propertyWrapper().padding().right();
+    case QStyle::PM_LayoutTopMargin:
+        return propertyWrapper().padding().top();
+    case QStyle::PM_LayoutBottomMargin:
+        return propertyWrapper().padding().bottom();
+    case QStyle::PM_LayoutHorizontalSpacing:
+    case QStyle::PM_LayoutVerticalSpacing:
+        return propertyWrapper().spacing();
+    default:
+        break;
     }
 
     return std::nullopt;
@@ -289,9 +242,19 @@ std::optional<qreal> FrameElement::pixelMetric(const QStyleOption *option, QStyl
 
 std::optional<QRectF> FrameElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
-    if (element == QStyle::SE_FrameContents) {
+    switch (element) {
+    case QStyle::SE_FrameContents: {
         const auto r = style()->QCommonStyle::subElementRect(element, option, widget());
         return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().borderSize().toMargins()));
+    }
+    case QStyle::SE_ShapedFrameContents: {
+        const auto r = style()->QCommonStyle::subElementRect(element, option, widget());
+        return UnionStyle::visualRect(direction(), rect(), r.marginsRemoved(propertyWrapper().borderSize().toMargins()));
+    }
+    case QStyle::SE_FrameLayoutItem:
+        return rect();
+    default:
+        break;
     }
 
     return std::nullopt;
@@ -369,4 +332,70 @@ Union::IdentifierList FrameElement::frameHintsFor(const QStyleOptionFrame *frame
         }
     }
     return hints;
+}
+
+qreal Union::Widgets::FrameElement::frameWidth() const
+{
+    // Use same heuristics for drawing frames as Breeze does.
+    // TODO: We may want to expose this to the user somehow.
+    auto w = widget();
+    if (!w) {
+        return 0;
+    }
+    const auto frameWidth = propertyWrapper().averageBorderSize();
+
+    if (qobject_cast<const QMenu *>(w)) {
+        return frameWidth;
+    } else if (qobject_cast<const QLineEdit *>(w)) {
+        return frameWidth;
+    } else if (qobject_cast<const QComboBox *>(w)) {
+        return frameWidth;
+    }
+
+    const auto forceFrame = w->property("_breeze_force_frame");
+    if (forceFrame.isValid() && !forceFrame.toBool()) {
+        return 0;
+    }
+    if ((forceFrame.isValid() && forceFrame.toBool()) || w->property("_breeze_borders_sides").isValid()) {
+        return frameWidth;
+    }
+
+    if (qobject_cast<const QAbstractScrollArea *>(w)) {
+        auto layout = findParentLayout(w);
+
+        if (!layout) {
+            if (w->parentWidget() && w->parentWidget()->layout()) {
+                layout = w->parentWidget()->layout();
+            }
+        }
+
+        if (layout) {
+            if (layout->inherits("QDockWidgetLayout") || layout->inherits("QMainWindowLayout") || qobject_cast<const QStackedLayout *>(layout)) {
+                return 0;
+            }
+
+            if (auto grid = qobject_cast<const QGridLayout *>(layout)) {
+                if (grid->horizontalSpacing() > 0 || grid->verticalSpacing() > 0) {
+                    return frameWidth;
+                }
+            }
+
+            // Add frame when scroll area is in a layout with more than an item and the
+            // layout has some spacing.
+            if (layout->spacing() > 0 && layout->count() > 1) {
+                return frameWidth;
+            }
+        }
+    }
+
+    if (qobject_cast<const QTabWidget *>(w) || qobject_cast<const QTextBrowser *>(w)) {
+        return frameWidth;
+    }
+
+    if (w->inherits("QComboBoxPrivateContainer") || w->inherits("KCompletionBox")) {
+        return frameWidth;
+    }
+
+    // fallback
+    return 0;
 }

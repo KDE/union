@@ -32,6 +32,8 @@ public:
     static Union::IdentifierList frameHintsFor(const QStyleOptionFrame *frameOption);
 
 private:
+    qreal frameWidth() const;
+
     QFrame::Shape m_frameShape = QFrame::Shape::NoFrame;
     // Union::IdentifierVariantHash elementAttributes() const override;
     // Union::IdentifierList elementHints() const override;
