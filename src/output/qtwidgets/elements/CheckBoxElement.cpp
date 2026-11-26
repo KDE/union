@@ -96,6 +96,13 @@ QSizeF CheckBoxElement::contentsSize(const QStyleOption *option, QSizeF contents
 std::optional<QRectF> CheckBoxElement::subElementRect(const QStyleOption *option, QStyle::SubElement element) const
 {
     switch (element) {
+    case QStyle::SE_CheckBoxClickRect:
+    case QStyle::SE_CheckBoxFocusRect:
+    case QStyle::SE_CheckBoxContents:
+    case QStyle::SE_RadioButtonClickRect:
+    case QStyle::SE_RadioButtonFocusRect:
+    case QStyle::SE_RadioButtonContents:
+        return rect();
     case QStyle::SE_CheckBoxIndicator:
     case QStyle::SE_RadioButtonIndicator:
         return visualRect(m_indicatorElement);
@@ -119,6 +126,8 @@ std::optional<qreal> CheckBoxElement::pixelMetric(const QStyleOption *option, QS
     case QStyle::PM_IndicatorHeight:
     case QStyle::PM_ExclusiveIndicatorHeight:
         return m_indicatorElement->propertyWrapper().height();
+    case QStyle::PM_ButtonIconSize:
+        return std::max(propertyWrapper().iconSize().width(), propertyWrapper().iconSize().height());
     default:
         break;
     }
